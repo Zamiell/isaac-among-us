@@ -1,0 +1,10 @@
+<AnimatedActor>
+	<Info CreatedBy="Unknown" CreatedOn="10/16/2021 1:41:13 AM" Version="1" Fps="30"/>
+	<Content>
+		<Spritesheets/>
+		<Layers/>
+		<Nulls/>
+		<Events/>
+	</Content>
+	<Animations DefaultAnimation=""/>
+</AnimatedActor>

@@ -1,0 +1,12 @@
+{
+  "name": "mod",
+  "version": "0.0.0",
+  "description": "A mod for The Binding of Isaac: Repentance",
+  "license": "GPL-3.0",
+  "author": "Zamiell",
+  "dependencies": {
+    "isaac-typescript-definitions": "^1.0.241",
+    "isaacscript": "^1.1.27",
+    "isaacscript-common": "^1.0.352"
+  }
+}

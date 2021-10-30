@@ -1,0 +1,6 @@
+export enum StartMeetingState {
+  DISABLED,
+  ALERT_STRIP,
+  FADING_TO_BLACK_WITH_ALERT_STRIP,
+  FADING_TO_GAME,
+}

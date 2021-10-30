@@ -1,0 +1,24 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "license": "GPL-3.0",
+  "author": "Zamiell",
+  "scripts": {
+    "dev": "ts-node-dev --transpile-only ./src/main.ts",
+    "start": "ts-node ./src/main.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.2.1",
+    "argon2": "^0.28.2",
+    "reflect-metadata": "^0.1.13",
+    "struct": "^0.0.12",
+    "ts-node": "^10.3.0",
+    "typescript": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.1",
+    "@types/struct": "^0.0.3",
+    "prisma": "^3.2.1",
+    "ts-node-dev": "^1.1.8"
+  }
+}

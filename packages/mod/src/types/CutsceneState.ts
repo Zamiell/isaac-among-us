@@ -1,0 +1,8 @@
+export enum CutsceneState {
+  DISABLED,
+  FADING_TO_BLACK,
+  TEXT_FADING_IN,
+  TEXT,
+  TEXT_FADING_OUT,
+  FADING_TO_GAME,
+}

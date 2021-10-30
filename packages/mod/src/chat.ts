@@ -1,0 +1,31 @@
+import { log } from "isaacscript-common";
+import { ChatMessage } from "./types/ChatMessage";
+import { ChatDataToMod } from "./types/SocketCommands";
+
+const chatMessages: ChatMessage[] = [];
+
+export function add(data: ChatDataToMod, local = false): void {
+  const isaacFrameCount = Isaac.GetFrameCount();
+  const chatMessage: ChatMessage = {
+    time: os.date("%X"),
+    username: data.from,
+    msg: data.msg,
+    frameReceived: isaacFrameCount,
+    local,
+  };
+  chatMessages.unshift(chatMessage);
+}
+
+export function addLocal(msg: string): void {
+  const data: ChatDataToMod = {
+    gameID: -1,
+    from: "",
+    msg,
+  };
+  add(data, true);
+  log(msg);
+}
+
+export function getAll(): ChatMessage[] {
+  return [...chatMessages];
+}

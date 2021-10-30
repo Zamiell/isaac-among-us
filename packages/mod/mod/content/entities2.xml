@@ -1,0 +1,97 @@
+<!--
+	Notes:
+	- There is a gap in vanilla entities from 500 to 799.
+	- Lobby entities take 600-699.
+	- Room entities take 700-799.
+	- Room entities with no collision take 1001-1999.
+-->
+
+<entities anm2root="gfx/" version="5">
+	<!-- Lobby -->
+	<entity name="Large Box" id="601" variant="0" anm2path="lobby/largeBox.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="256" collisionRadius="40" friction="0" numGridCollisionPoints="256" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+	<entity name="Small Box" id="601" variant="1" anm2path="lobby/smallBox.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="256" collisionRadius="20" friction="0" numGridCollisionPoints="256" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- Cafeteria (0) -->
+	<entity name="Table" id="701" variant="0" anm2path="cafeteria/table.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="256" collisionRadius="70" collisionRadiusYMulti="0.75" friction="0" numGridCollisionPoints="256" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- Admin (2) -->
+	<entity name="Admin Table" id="721" variant="0" anm2path="admin/adminTable.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="256" collisionRadius="80" collisionRadiusYMulti="0.5" friction="0" numGridCollisionPoints="256" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+	<entity name="Admin Top" id="1021" variant="0" anm2path="admin/adminTop.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- Storage (3) -->
+	<entity name="Storage" id="1031" variant="0" anm2path="storage/storage.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="80" collisionRadiusYMulti="0.5" friction="0" numGridCollisionPoints="256" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- Medbay (5) -->
+	<entity name="Bed" id="1051" variant="0" anm2path="medbay/bed.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- Upper Engine (6) -->
+	<entity name="Engine" id="1061" variant="0" anm2path="engine/engine.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- Reactor (8) -->
+	<entity name="Reactor" id="1081" variant="0" anm2path="reactor/reactor.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- Security (9) -->
+	<entity name="Security Table" id="1091" variant="0" anm2path="security/securityTable.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- Electrical (12) -->
+	<entity name="Electrical" id="1121" variant="0" anm2path="electrical/electrical.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- Weapons (13) -->
+	<entity name="Weapons" id="1131" variant="0" anm2path="weapons/weapons.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- O2 (15) -->
+	<entity name="Tank" id="1151" variant="0" anm2path="o2/tank.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- Navigation (16) -->
+	<entity name="Ship Controls" id="1161" variant="0" anm2path="navigation/shipControls.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- Shields (18)-->
+	<entity name="Shields" id="1181" variant="0" anm2path="shields/shields.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- Communication (20) -->
+	<entity name="Computer" id="1201" variant="0" anm2path="communication/computer.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+	<entity name="Radio" id="1202" variant="0" anm2path="communication/radio.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+
+	<!-- Misc -->
+	<!-- (the final vanilla effect variant is 199)-->
+	<entity name="Vent" id="1000" variant="301" anm2path="vent.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+	<entity name="Button" id="1000" variant="302" anm2path="button.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+</entities>

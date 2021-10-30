@@ -1,0 +1,276 @@
+/* eslint-disable max-classes-per-file */
+
+import { Meeting } from "./Meeting";
+import { MeetingResolution } from "./MeetingResolution";
+import { MeetingType } from "./MeetingType";
+import { PlayerType } from "./PlayerType";
+import { SkeldRoom } from "./SkeldRoom";
+import { TaskList } from "./TaskList";
+
+// --------------
+// Mod --> Server
+// --------------
+
+export enum SocketCommandModToServer {
+  PING = "ping",
+  CHECK_USERNAME = "checkUsername",
+  LOGIN = "login",
+  GAME_LIST = "gameList",
+  CREATE = "create",
+  JOIN = "join",
+  LEAVE = "leave",
+  CHAT = "chat",
+  START = "start",
+  RECONNECT = "reconnect",
+  ROOM = "room",
+  KILL = "kill",
+  MEETING = "meeting",
+  VOTE = "vote",
+  TERMINATE = "terminate",
+  DEBUG = "debug",
+}
+
+export class CheckUsernameDataToServer {
+  username = "";
+}
+
+export class LoginDataToServer {
+  username = "";
+  password = "";
+}
+
+export class CreateDataToServer {
+  name = "";
+}
+
+export class JoinDataToServer {
+  name = "";
+  created = false;
+}
+
+export class LeaveDataToServer {
+  gameID = 0;
+}
+
+export class ChatDataToServer {
+  gameID = 0;
+  msg = "";
+}
+
+export class StartDataToServer {
+  gameID = 0;
+}
+
+export class ReconnectDataToServer {
+  gameID = 0;
+}
+
+export class RoomDataToServer {
+  gameID = 0;
+  room = SkeldRoom.CAFETERIA;
+  enterDoor = 0;
+}
+
+export class KillDataToServer {
+  gameID = 0;
+  userIDKilled = 0;
+  room = SkeldRoom.CAFETERIA;
+  x = 0;
+  y = 0;
+}
+
+export class MeetingDataToServer {
+  gameID = 0;
+  meetingType = MeetingType.NONE;
+  userIDKilled = 0;
+}
+
+export class VoteDataToServer {
+  gameID = 0;
+  userIDVotedFor = 0;
+  skip = false;
+}
+
+export class TerminateDataToServer {
+  gameID = 0;
+}
+
+export class NoData {}
+
+export const SocketCommandModToServerData = {
+  [SocketCommandModToServer.PING]: NoData,
+  [SocketCommandModToServer.CHECK_USERNAME]: CheckUsernameDataToServer,
+  [SocketCommandModToServer.LOGIN]: LoginDataToServer,
+  [SocketCommandModToServer.GAME_LIST]: NoData,
+  [SocketCommandModToServer.CREATE]: CreateDataToServer,
+  [SocketCommandModToServer.JOIN]: JoinDataToServer,
+  [SocketCommandModToServer.LEAVE]: LeaveDataToServer,
+  [SocketCommandModToServer.CHAT]: ChatDataToServer,
+  [SocketCommandModToServer.START]: StartDataToServer,
+  [SocketCommandModToServer.RECONNECT]: ReconnectDataToServer,
+  [SocketCommandModToServer.ROOM]: RoomDataToServer,
+  [SocketCommandModToServer.KILL]: KillDataToServer,
+  [SocketCommandModToServer.MEETING]: MeetingDataToServer,
+  [SocketCommandModToServer.VOTE]: VoteDataToServer,
+  [SocketCommandModToServer.TERMINATE]: TerminateDataToServer,
+  [SocketCommandModToServer.DEBUG]: NoData,
+};
+
+// --------------
+// Server --> Mod
+// --------------
+
+export enum SocketCommandServerToMod {
+  ERROR = "error",
+  USERNAME = "username",
+  LOGGED_IN = "loggedIn",
+  GAME_LIST = "gameList",
+  JOINED = "joined",
+  LEFT = "left",
+  GAME_DESCRIPTION = "gameDescription",
+  CHAT = "chat",
+  STARTED = "started",
+  RECONNECT = "reconnect",
+  KILLED = "killed",
+  START_MEETING = "startMeeting",
+  START_VOTING = "startVoting",
+  VOTE = "vote",
+  END_MEETING = "endMeeting",
+  TERMINATED = "terminated",
+}
+
+export class ErrorDataToMod {
+  msg!: string;
+}
+
+export class UsernameDataToMod {
+  username!: string;
+  exists!: boolean;
+}
+
+export class LoggedInDataToMod {
+  userID!: number;
+  username!: string;
+}
+
+export class GameListDataToMod {
+  gameList!: GameListDescription[];
+}
+
+export class GameListDescription {
+  id!: number;
+  name!: string;
+  numPlayers!: number;
+  started!: boolean;
+  joined!: boolean;
+}
+
+export class JoinedDataToMod {
+  gameID!: number;
+  name!: string;
+  created!: boolean;
+  reconnected!: boolean;
+}
+
+export class LeftDataToMod {
+  gameID!: number;
+}
+
+export class GameDescriptionDataToMod {
+  gameID!: number;
+  players!: GameDescriptionPlayer[];
+  started!: boolean;
+  meeting!: Meeting | null;
+}
+
+export class GameDescriptionPlayer {
+  userID!: number;
+  username!: string;
+  connected!: boolean;
+  character!: PlayerType;
+  alive!: boolean;
+  room!: SkeldRoom;
+  usedEmergencyMeeting!: boolean;
+}
+
+export class ChatDataToMod {
+  gameID!: number;
+  from!: string;
+  msg!: string;
+}
+
+export class StartedDataToMod {
+  gameID!: number;
+  imposters!: number[] | null;
+  tasks!: TaskList;
+}
+
+export class ReconnectDataToMod {
+  gameID!: number;
+  name!: string;
+  players!: GameDescriptionPlayer[];
+  imposters!: number[] | null;
+  meeting!: Meeting | null;
+  tasks!: TaskList;
+  room!: SkeldRoom;
+  enterDoor!: number;
+}
+
+export class KilledDataToMod {
+  gameID!: number;
+  userIDKilled!: number;
+  room!: SkeldRoom;
+  x!: number;
+  y!: number;
+}
+
+export class StartMeetingDataToMod {
+  gameID!: number;
+  meetingType!: MeetingType;
+  userIDInitiated!: number;
+  userIDKilled!: number;
+  playersKilledSinceLastMeeting!: number[];
+  timePhaseStarted!: number;
+  phaseLengthSeconds!: number;
+  votes!: number[];
+}
+
+export class StartVotingDataToMod {
+  gameID!: number;
+  timePhaseStarted!: number;
+  phaseLengthSeconds!: number;
+}
+
+export class VoteDataToMod {
+  gameID!: number;
+  votes!: number[];
+}
+
+export class EndMeetingDataToMod {
+  gameID!: number;
+  meetingResolution!: MeetingResolution;
+  userIDEjected!: number | null;
+}
+
+export class TerminatedDataToMod {
+  gameID!: number;
+}
+
+export const SocketCommandServerToModData = {
+  [SocketCommandServerToMod.ERROR]: ErrorDataToMod,
+  [SocketCommandServerToMod.USERNAME]: UsernameDataToMod,
+  [SocketCommandServerToMod.LOGGED_IN]: LoggedInDataToMod,
+  [SocketCommandServerToMod.GAME_LIST]: GameListDataToMod,
+  [SocketCommandServerToMod.JOINED]: JoinedDataToMod,
+  [SocketCommandServerToMod.LEFT]: LeftDataToMod,
+  [SocketCommandServerToMod.GAME_DESCRIPTION]: GameDescriptionDataToMod,
+  [SocketCommandServerToMod.CHAT]: ChatDataToMod,
+  [SocketCommandServerToMod.STARTED]: StartedDataToMod,
+  [SocketCommandServerToMod.RECONNECT]: ReconnectDataToMod,
+  [SocketCommandServerToMod.KILLED]: KilledDataToMod,
+  [SocketCommandServerToMod.START_MEETING]: StartMeetingDataToMod,
+  [SocketCommandServerToMod.START_VOTING]: StartVotingDataToMod,
+  [SocketCommandServerToMod.VOTE]: VoteDataToMod,
+  [SocketCommandServerToMod.END_MEETING]: EndMeetingDataToMod,
+  [SocketCommandServerToMod.TERMINATED]: TerminatedDataToMod,
+};
