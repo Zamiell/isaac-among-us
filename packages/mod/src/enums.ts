@@ -24,6 +24,8 @@ export enum EntityTypeCustom {
 
   // Electrical (12)
   ELECTRICAL = Isaac.GetEntityTypeByName("Electrical"),
+  WIRE_SIGN = Isaac.GetEntityTypeByName("Wire Sign"),
+  LINE = Isaac.GetEntityTypeByName("Line"),
 
   // Weapons (13)
   WEAPONS = Isaac.GetEntityTypeByName("Weapons"),
@@ -51,11 +53,26 @@ export enum EffectVariantCustom {
   STAGE_API_DOOR = Isaac.GetEntityVariantByName("StageAPIDoor"),
   VENT = Isaac.GetEntityVariantByName("Vent"),
   BUTTON = Isaac.GetEntityVariantByName("Button"),
+  BLOCK = Isaac.GetEntityVariantByName("Block"),
+}
+
+export enum CarpetSubTypeCustom {
+  BLOCK = 11,
 }
 
 export enum ButtonSubType {
-  TASK,
-  TASK_RETURN,
+  GO_TO_TASK,
   EMERGENCY,
-  SPECIAL,
+  CAMERA,
+  LIGHTS,
+  COMMS,
+  O2,
+  TASK_1,
+  TASK_2,
+  TASK_3,
+  TASK_4,
+  TASK_5,
+  TASK_6,
+  TASK_7,
+  TASK_8,
 }

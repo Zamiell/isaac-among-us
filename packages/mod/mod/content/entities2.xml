@@ -57,6 +57,12 @@
 	<entity name="Electrical" id="1121" variant="0" anm2path="electrical/electrical.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
+	<entity name="Wire Sign" id="1122" variant="0" anm2path="electrical/wireSign.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+	<entity name="Line" id="1123" variant="0" anm2path="electrical/line.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
 
 	<!-- Weapons (13) -->
 	<entity name="Weapons" id="1131" variant="0" anm2path="weapons/weapons.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
@@ -92,6 +98,9 @@
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
 	<entity name="Button" id="1000" variant="302" anm2path="button.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
+	<entity name="Block" id="1000" variant="74" subtype="11" anm2path="block.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
 </entities>

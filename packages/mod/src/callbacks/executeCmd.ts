@@ -1,5 +1,9 @@
-import { getRoomIndex, log } from "isaacscript-common";
+import { getGridEntities, getRoomIndex, log } from "isaacscript-common";
 import { debugFunction } from "../debugFunction";
+import { skeldRoomReverseMap } from "../skeldRoomMap";
+import { goToStageAPIRoom } from "../stageAPI";
+import { SkeldRoom } from "../types/SkeldRoom";
+import { removeGridEntity } from "../util";
 import { list } from "./executeCmdSubroutines";
 
 export function main(command: string, parameters: string): void {
@@ -21,6 +25,15 @@ export function main(command: string, parameters: string): void {
 
 const functionMap = new Map<string, (params: string) => void>();
 
+functionMap.set("center", () => {
+  const game = Game();
+  const room = game.GetRoom();
+  const centerPos = room.GetCenterPos();
+  const player = Isaac.GetPlayer();
+
+  player.Position = centerPos;
+});
+
 functionMap.set("debug", () => {
   debugFunction();
 });
@@ -36,6 +49,30 @@ functionMap.set("listall", (_params: string) => {
 functionMap.set("pos", () => {
   const player = Isaac.GetPlayer();
   print(`Player position: (${player.Position.X}, ${player.Position.Y})`);
+});
+
+functionMap.set("w", (params: string) => {
+  let roomName: string | undefined;
+  const num = tonumber(params);
+  if (num === undefined) {
+    roomName = params;
+  } else {
+    const skeldRoom = num as SkeldRoom;
+    roomName = skeldRoomReverseMap[skeldRoom];
+    if (roomName === undefined) {
+      print(`Failed to find the room name for room ID: ${skeldRoom}`);
+      return;
+    }
+  }
+
+  goToStageAPIRoom(roomName);
+  print(`Warped to room: ${roomName}`);
+});
+
+functionMap.set("removeallgrid", () => {
+  for (const gridEntity of getGridEntities()) {
+    removeGridEntity(gridEntity);
+  }
 });
 
 functionMap.set("roomindex", () => {

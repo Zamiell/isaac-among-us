@@ -1,14 +1,19 @@
-import { getPlayers, setBlindfold } from "isaacscript-common";
-import g from "./globals";
+import { getEnumValues } from "isaacscript-common";
+import { disableShooting } from "./util";
 
 export function setupPlayerAndUI(): void {
+  const player = Isaac.GetPlayer();
+
   disableHUD();
   disableShooting();
-  removeAllItems();
+  removeAllItems(player);
+  setStats(player);
+  fullHeal(player);
 }
 
 function disableHUD() {
-  const hud = g.g.GetHUD();
+  const game = Game();
+  const hud = game.GetHUD();
   hud.SetVisible(false);
 
   if (MinimapAPI !== undefined) {
@@ -16,17 +21,29 @@ function disableHUD() {
   }
 }
 
-function disableShooting() {
-  for (const player of getPlayers()) {
-    setBlindfold(player, true);
-    player.TryRemoveNullCostume(NullItemID.ID_BLINDFOLD);
+function removeAllItems(player: EntityPlayer) {
+  removeActiveItems(player);
+  player.AddCoins(-99);
+  player.AddBombs(-99);
+  player.AddKeys(-99);
+  player.TryRemoveTrinket(TrinketType.TRINKET_PETRIFIED_POOP);
+  player.RemoveCollectible(CollectibleType.COLLECTIBLE_BLACK_POWDER);
+}
+
+function removeActiveItems(player: EntityPlayer) {
+  for (const activeSlot of getEnumValues(ActiveSlot)) {
+    const activeItem = player.GetActiveItem(activeSlot);
+    if (activeItem !== 0) {
+      player.RemoveCollectible(activeItem);
+    }
   }
 }
 
-function removeAllItems() {
-  for (const player of getPlayers()) {
-    player.AddCoins(-99);
-    player.AddBombs(-99);
-    player.AddKeys(-99);
-  }
+function setStats(player: EntityPlayer) {
+  player.AddCacheFlags(CacheFlag.CACHE_ALL);
+  player.EvaluateItems();
+}
+
+function fullHeal(player: EntityPlayer) {
+  player.AddHearts(24);
 }

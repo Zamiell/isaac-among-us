@@ -12,6 +12,7 @@ import { commandPing } from "./commands/ping";
 import { commandReconnect } from "./commands/reconnect";
 import { commandRoom } from "./commands/room";
 import { commandStart } from "./commands/start";
+import { commandTaskComplete } from "./commands/taskComplete";
 import { commandTerminate } from "./commands/terminate";
 import { commandVote } from "./commands/vote";
 import { ExtraCommandData } from "./types/ExtraCommandData";
@@ -44,6 +45,7 @@ export const commandMap: CommandMap = {
   [SocketCommandModToServer.KILL]: commandKill,
   [SocketCommandModToServer.MEETING]: commandMeeting,
   [SocketCommandModToServer.VOTE]: commandVote,
+  [SocketCommandModToServer.TASK_COMPLETE]: commandTaskComplete,
   [SocketCommandModToServer.TERMINATE]: commandTerminate,
   [SocketCommandModToServer.DEBUG]: commandDebug,
 };

@@ -1,5 +1,6 @@
+import { runNextFrame } from "isaacscript-common";
+import { addCollision } from "../collisionObjects";
 import { EntityTypeCustom } from "../enums";
-import { spawnBlockLine } from "../spawnObjects";
 import { spawnEntity } from "../util";
 
 export function spawnMedbayObjects(): void {
@@ -13,11 +14,8 @@ export function spawnMedbayObjects(): void {
     sprite.FlipX = true;
   }
 
-  spawnBlockLine(16, 7, Direction.DOWN, false);
-  spawnBlockLine(17, 7, Direction.DOWN, false);
-  spawnBlockLine(18, 7, Direction.DOWN, false);
-
-  spawnBlockLine(26, 7, Direction.DOWN, false);
-  spawnBlockLine(27, 7, Direction.DOWN, false);
-  spawnBlockLine(28, 7, Direction.DOWN, false);
+  runNextFrame(() => {
+    addCollision(16, 108);
+    addCollision(26, 118);
+  });
 }

@@ -44,10 +44,11 @@ export function commandReconnect(data: ReconnectDataToMod): void {
     level.EnterDoor = data.enterDoor;
     fixRoomEntrancePosition();
   } else {
-    const roomName = skeldRoomReverseMap.get(data.room);
-    if (roomName !== undefined) {
-      goToStageAPIRoom(roomName, data.enterDoor);
+    const roomName = skeldRoomReverseMap[data.room];
+    if (roomName === undefined) {
+      error(`Failed to get the room name for room: ${data.room}`);
     }
+    goToStageAPIRoom(roomName, data.enterDoor);
   }
   enableSendingEvents(true);
 }

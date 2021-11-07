@@ -1,9 +1,9 @@
 /* eslint-disable max-classes-per-file */
-
 import { Meeting } from "./Meeting";
 import { MeetingResolution } from "./MeetingResolution";
 import { MeetingType } from "./MeetingType";
 import { PlayerType } from "./PlayerType";
+import { Role } from "./Role";
 import { SkeldRoom } from "./SkeldRoom";
 import { TaskList } from "./TaskList";
 
@@ -26,6 +26,7 @@ export enum SocketCommandModToServer {
   KILL = "kill",
   MEETING = "meeting",
   VOTE = "vote",
+  TASK_COMPLETE = "taskComplete",
   TERMINATE = "terminate",
   DEBUG = "debug",
 }
@@ -91,6 +92,11 @@ export class VoteDataToServer {
   skip = false;
 }
 
+export class TaskCompleteDataToServer {
+  gameID = 0;
+  task = 0;
+}
+
 export class TerminateDataToServer {
   gameID = 0;
 }
@@ -112,6 +118,7 @@ export const SocketCommandModToServerData = {
   [SocketCommandModToServer.KILL]: KillDataToServer,
   [SocketCommandModToServer.MEETING]: MeetingDataToServer,
   [SocketCommandModToServer.VOTE]: VoteDataToServer,
+  [SocketCommandModToServer.TASK_COMPLETE]: TaskCompleteDataToServer,
   [SocketCommandModToServer.TERMINATE]: TerminateDataToServer,
   [SocketCommandModToServer.DEBUG]: NoData,
 };
@@ -136,6 +143,7 @@ export enum SocketCommandServerToMod {
   START_VOTING = "startVoting",
   VOTE = "vote",
   END_MEETING = "endMeeting",
+  END_GAME = "endGame",
   TERMINATED = "terminated",
 }
 
@@ -246,10 +254,21 @@ export class VoteDataToMod {
   votes!: number[];
 }
 
+export class TaskCompleteDataToMod {
+  gameID!: number;
+  votes!: number[];
+}
+
 export class EndMeetingDataToMod {
   gameID!: number;
   meetingResolution!: MeetingResolution;
   userIDEjected!: number | null;
+}
+
+export class EndGameDataToMod {
+  gameID!: number;
+  winningRole!: Role;
+  roles!: Role[];
 }
 
 export class TerminatedDataToMod {
@@ -272,5 +291,6 @@ export const SocketCommandServerToModData = {
   [SocketCommandServerToMod.START_VOTING]: StartVotingDataToMod,
   [SocketCommandServerToMod.VOTE]: VoteDataToMod,
   [SocketCommandServerToMod.END_MEETING]: EndMeetingDataToMod,
+  [SocketCommandServerToMod.END_GAME]: EndGameDataToMod,
   [SocketCommandServerToMod.TERMINATED]: TerminatedDataToMod,
 };

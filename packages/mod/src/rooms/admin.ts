@@ -1,3 +1,5 @@
+import { runNextFrame } from "isaacscript-common";
+import { addCollision } from "../collisionObjects";
 import { EntityTypeCustom } from "../enums";
 import { spawnVent } from "../spawnObjects";
 import { spawnEntity } from "../util";
@@ -18,4 +20,8 @@ function spawnAdminTable() {
 function spawnAdminTop() {
   const topCenterGridIndex = 22; // We can't spawn it inside the wall, so we have to use an offset
   spawnEntity(EntityTypeCustom.ADMIN_TOP, 0, 0, topCenterGridIndex);
+
+  runNextFrame(() => {
+    addCollision(19, 26);
+  });
 }

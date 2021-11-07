@@ -1,5 +1,6 @@
+import { runNextFrame } from "isaacscript-common";
+import { addCollision } from "../collisionObjects";
 import { EntityTypeCustom } from "../enums";
-import { spawnBlockLine } from "../spawnObjects";
 import { spawnEntity } from "../util";
 
 export function spawnO2Objects(): void {
@@ -8,8 +9,7 @@ export function spawnO2Objects(): void {
     spawnEntity(EntityTypeCustom.TANK, 0, 0, gridIndex);
   }
 
-  // Collision for the tanks
-  for (const gridIndex of [16, 31, 46]) {
-    spawnBlockLine(gridIndex, 12, Direction.RIGHT, false);
-  }
+  runNextFrame(() => {
+    addCollision(16, 57);
+  });
 }

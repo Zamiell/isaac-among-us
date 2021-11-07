@@ -1,24 +1,28 @@
-import { getRoomIndex, getRoomVariant } from "isaacscript-common";
-import { TaskDescription } from "../types/TaskDescription";
-import { consoleCommand } from "../util";
+import g from "../globals";
+import { enableMinimapAPI } from "../minimapAPI";
+import { getStageAPIRoomName } from "../stageAPI";
+import { taskFunctions } from "../taskFunctions";
+import { clearRoomEntities } from "./taskSubroutines";
 
-// We use a room with no grid entities and a single Big Spider
-const ROOM_VARIANT_FOR_TASK = 7;
+export function inTask(): boolean {
+  const roomName = getStageAPIRoomName();
+  return roomName === "Task";
+}
 
-export function goToTaskRoom(_taskDescription: TaskDescription): void {
-  if (inTask()) {
+export function postStageAPINewRoom(): void {
+  setupTaskRoom();
+}
+
+function setupTaskRoom() {
+  if (!inTask() || g.game === null || g.game.currentTask === null) {
     return;
   }
 
-  consoleCommand(`goto d.${ROOM_VARIANT_FOR_TASK}`);
-}
+  enableMinimapAPI(false);
+  clearRoomEntities();
 
-function inTask() {
-  const roomIndex = getRoomIndex();
-  const roomVariant = getRoomVariant();
-
-  return (
-    roomIndex === GridRooms.ROOM_DEBUG_IDX &&
-    roomVariant === ROOM_VARIANT_FOR_TASK
-  );
+  const taskFunction = taskFunctions.get(g.game.currentTask);
+  if (taskFunction !== undefined) {
+    taskFunction();
+  }
 }

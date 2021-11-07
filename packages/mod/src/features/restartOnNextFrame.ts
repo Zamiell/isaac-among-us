@@ -2,7 +2,7 @@ import g from "../globals";
 import { consoleCommand } from "../util";
 
 const AMONG_US_CHARACTER = PlayerType.PLAYER_ISAAC;
-const AMONG_US_SEED = "H4C8 QKT3";
+const AMONG_US_SEED = "L8AK PRCH"; // H4C8 QKT3 // cspell:disable-line
 const AMONG_US_CHALLENGE = Challenge.CHALLENGE_NULL;
 
 let restartOnNextFrame = false;

@@ -1,24 +1,21 @@
 import { ensureAllCases, getPlayerCloserThan } from "isaacscript-common";
-import { taskDescriptions } from "../constants";
-import { ButtonSubType, EffectVariantCustom } from "../enums";
+import { ButtonSubType } from "../enums";
 import g from "../globals";
 import { sendTCP } from "../network/send";
-import { getSkeldRoom } from "../stageAPI";
+import { goToStageAPIRoom } from "../stageAPI";
+import { buttonsBehindKeyBlocksButtonPressed } from "../tasks/buttonsBehindKeyBlocks";
+import { fixWiresButtonPressed } from "../tasks/fixWires";
+import { identifyItemButtonPressed } from "../tasks/identifyItems";
+import { identiyPickupsInOrderButtonPressed } from "../tasks/identifyPickupsInOrder";
+import { identifyTrinketButtonPressed } from "../tasks/identifyTrinkets";
+import { pressButtonsWithGrudgeButtonPressed } from "../tasks/pressButtonsWithGrudge";
 import { MeetingType } from "../types/MeetingType";
 import { SocketCommandModToServer } from "../types/SocketCommands";
 import { Task } from "../types/Task";
-import { spawnEntity } from "../util";
-import { goToTaskRoom } from "./task";
-
-interface ButtonData {
-  task: Task;
-}
+import { getButtonAnimationSuffix, TaskButtonData } from "./buttonSubroutines";
+import { taskComplete } from "./taskSubroutines";
 
 const BUTTON_ACTIVATION_DISTANCE = 20;
-const EMERGENCY_BUTTON_GRID_INDEX = 265;
-
-const EMERGENCY_BUTTON_ANIMATION_SUFFIX = "Pentagram";
-const SPECIAL_BUTTON_ANIMATION_SUFFIX = "Red";
 
 export function postEffectUpdateButton(effect: EntityEffect): void {
   checkIfButtonIsPressed(effect);
@@ -50,30 +47,90 @@ function checkIfButtonIsPressed(effect: EntityEffect) {
   buttonPressed(effect);
 }
 
-function buttonPressed(effect: EntityEffect) {
-  const buttonSubType = effect.SubType as ButtonSubType;
+function buttonPressed(button: EntityEffect) {
+  const buttonSubType = button.SubType as ButtonSubType;
   switch (buttonSubType) {
     // 0
-    case ButtonSubType.TASK: {
-      buttonPressedTask(effect);
+    case ButtonSubType.GO_TO_TASK: {
+      buttonPressedGoToTask(button);
       break;
     }
 
     // 1
-    case ButtonSubType.TASK_RETURN: {
-      buttonPressedTaskReturn();
-      break;
-    }
-
-    // 2
     case ButtonSubType.EMERGENCY: {
       buttonPressedEmergency();
       break;
     }
 
+    // 2
+    case ButtonSubType.CAMERA: {
+      // TODO
+      break;
+    }
+
     // 3
-    case ButtonSubType.SPECIAL: {
-      buttonPressedSpecial();
+    case ButtonSubType.LIGHTS: {
+      // TODO
+      break;
+    }
+
+    // 4
+    case ButtonSubType.COMMS: {
+      // TODO
+      break;
+    }
+
+    // 5
+    case ButtonSubType.O2: {
+      // TODO
+      break;
+    }
+
+    // 6
+    case ButtonSubType.TASK_1: {
+      buttonPressedTask(button, 1);
+      break;
+    }
+
+    // 7
+    case ButtonSubType.TASK_2: {
+      buttonPressedTask(button, 2);
+      break;
+    }
+
+    // 8
+    case ButtonSubType.TASK_3: {
+      buttonPressedTask(button, 3);
+      break;
+    }
+
+    // 9
+    case ButtonSubType.TASK_4: {
+      buttonPressedTask(button, 4);
+      break;
+    }
+
+    // 10
+    case ButtonSubType.TASK_5: {
+      buttonPressedTask(button, 5);
+      break;
+    }
+
+    // 10
+    case ButtonSubType.TASK_6: {
+      buttonPressedTask(button, 6);
+      break;
+    }
+
+    // 10
+    case ButtonSubType.TASK_7: {
+      buttonPressedTask(button, 7);
+      break;
+    }
+
+    // 10
+    case ButtonSubType.TASK_8: {
+      buttonPressedTask(button, 8);
       break;
     }
 
@@ -83,24 +140,19 @@ function buttonPressed(effect: EntityEffect) {
   }
 }
 
-function buttonPressedTask(effect: EntityEffect) {
+function buttonPressedGoToTask(effect: EntityEffect) {
   if (g.game === null) {
     return;
   }
 
-  const data = effect.GetData() as unknown as ButtonData;
-  const task = data.task;
+  const data = effect.GetData() as unknown as TaskButtonData;
+  const { task } = data;
   if (task === undefined) {
     error("Failed to read the task from a task button.");
   }
   g.game.currentTask = task;
 
-  const taskDescription = taskDescriptions[task];
-  goToTaskRoom(taskDescription);
-}
-
-function buttonPressedTaskReturn() {
-  // TODO
+  goToStageAPIRoom("Task");
 }
 
 function buttonPressedEmergency() {
@@ -115,111 +167,68 @@ function buttonPressedEmergency() {
   });
 }
 
-function buttonPressedSpecial() {
-  // TODO
-}
-
-export function spawnTaskButtons(): void {
-  if (g.game === null) {
+function buttonPressedTask(button: EntityEffect, num: int) {
+  if (g.game === null || g.game.currentTask === null) {
     return;
   }
 
-  const room = getSkeldRoom();
-  if (room === null) {
-    return;
-  }
-
-  for (const [key, taskDescription] of Object.entries(taskDescriptions)) {
-    if (taskDescription.room !== room) {
-      continue;
+  switch (g.game.currentTask) {
+    // 2
+    case Task.SHORT_IDENTIFY_ITEMS: {
+      identifyItemButtonPressed(num);
+      break;
     }
 
-    const task = tonumber(key);
-    if (task === undefined) {
-      continue;
+    // 3
+    case Task.SHORT_IDENTIFY_TRINKETS: {
+      identifyTrinketButtonPressed(num);
+      break;
     }
 
-    const ourTasksOfThisType = g.game.ourTasks[taskDescription.taskType];
-    const enabled = ourTasksOfThisType.includes(task);
-    const button = spawnButton(
-      ButtonSubType.TASK,
-      taskDescription.gridIndex,
-      enabled,
-    );
-    const data = button.GetData() as unknown as ButtonData;
-    data.task = task;
-  }
-}
-
-export function spawnEmergencyButton(): void {
-  if (g.game === null) {
-    return;
-  }
-
-  spawnButton(
-    ButtonSubType.EMERGENCY,
-    EMERGENCY_BUTTON_GRID_INDEX,
-    !g.game.usedEmergencyMeeting,
-  );
-}
-
-function spawnButton(
-  buttonSubType: ButtonSubType,
-  gridIndex: int,
-  enabled: boolean,
-): EntityEffect {
-  const button = spawnEntity(
-    EntityType.ENTITY_EFFECT,
-    EffectVariantCustom.BUTTON,
-    buttonSubType,
-    gridIndex,
-  ).ToEffect();
-  if (button === undefined) {
-    error("Failed to convert the button to an effect.");
-  }
-
-  button.State = enabled
-    ? PressurePlateState.UNPRESSED
-    : PressurePlateState.PRESSURE_PLATE_PRESSED;
-
-  const sprite = button.GetSprite();
-  const animationSuffix = getButtonAnimationSuffix(buttonSubType);
-  const verb = enabled ? "Off" : "On";
-  const animation = verb + animationSuffix;
-  sprite.Play(animation, true);
-
-  return button;
-}
-
-function getButtonAnimationSuffix(buttonSubType: ButtonSubType) {
-  switch (buttonSubType) {
-    case ButtonSubType.TASK:
-    case ButtonSubType.TASK_RETURN: {
-      return "";
+    // 6
+    case Task.SHORT_PRESS_BUTTONS_WITH_GRUDGE: {
+      pressButtonsWithGrudgeButtonPressed();
+      break;
     }
 
-    case ButtonSubType.EMERGENCY: {
-      return EMERGENCY_BUTTON_ANIMATION_SUFFIX;
+    // 7
+    case Task.SHORT_FIX_WIRES: {
+      fixWiresButtonPressed(button, num);
+      break;
     }
 
-    case ButtonSubType.SPECIAL: {
-      return SPECIAL_BUTTON_ANIMATION_SUFFIX;
+    // 8
+    case Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES: {
+      taskComplete();
+      break;
+    }
+
+    // 9
+    case Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS: {
+      taskComplete();
+      break;
+    }
+
+    // 10
+    case Task.SHORT_WALK_BETWEEN_SLIDES: {
+      taskComplete();
+      break;
+    }
+
+    // 12
+    case Task.LONG_IDENTIFY_PICKUPS_IN_ORDER: {
+      identiyPickupsInOrderButtonPressed(button);
+      break;
+    }
+
+    // 15
+    case Task.LONG_BUTTONS_BEHIND_KEY_BLOCKS: {
+      buttonsBehindKeyBlocksButtonPressed();
+      break;
     }
 
     default: {
-      ensureAllCases(buttonSubType);
-      return "";
+      break;
     }
-  }
-}
-
-export function removeEmergencyButton(): void {
-  const buttons = Isaac.FindByType(
-    EntityType.ENTITY_EFFECT,
-    EffectVariantCustom.BUTTON,
-    ButtonSubType.EMERGENCY,
-  );
-  for (const button of buttons) {
-    button.Remove();
   }
 }

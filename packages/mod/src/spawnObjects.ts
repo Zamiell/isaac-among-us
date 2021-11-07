@@ -1,13 +1,42 @@
-import { BoxVariant, EffectVariantCustom, EntityTypeCustom } from "./enums";
-import { spawnEntity, spawnGridEntity } from "./util";
+import { spawnGridEntity } from "isaacscript-common";
+import {
+  BoxVariant,
+  CarpetSubTypeCustom,
+  EffectVariantCustom,
+  EntityTypeCustom,
+} from "./enums";
+import { spawnEntity } from "./util";
 
 export function spawnBlock(gridIndex: int, visible = true): GridEntity {
   const gridEntityType = visible
     ? GridEntityType.GRID_ROCKB
     : GridEntityType.GRID_WALL;
+
   const gridEntity = spawnGridEntity(gridEntityType, gridIndex);
 
   return gridEntity;
+}
+
+export function spawnFakeBlock(gridIndex: int): void {
+  spawnEntity(
+    EntityType.ENTITY_EFFECT,
+    EffectVariant.ISAACS_CARPET,
+    CarpetSubTypeCustom.BLOCK,
+    gridIndex,
+  );
+}
+
+export function spawnFakeBlockLine(
+  gridIndex: int,
+  num: int,
+  direction: Direction,
+): void {
+  const gridIncrement = getGridIncrement(direction);
+
+  for (let i = 0; i < num; i++) {
+    spawnFakeBlock(gridIndex);
+    gridIndex += gridIncrement;
+  }
 }
 
 export function spawnBlockLine(
@@ -76,6 +105,23 @@ export function spawnEngine(gridIndex: int): void {
 
   const electricBoxGridIndex = gridIndex + 108;
   spawnBlockLine(electricBoxGridIndex, 3, Direction.RIGHT, false);
+}
+
+function spawnSpikes(gridIndex: int) {
+  spawnGridEntity(GridEntityType.GRID_SPIKES, gridIndex);
+}
+
+export function spawnSpikesLine(
+  gridIndex: int,
+  num: int,
+  direction: Direction,
+): void {
+  const gridIncrement = getGridIncrement(direction);
+
+  for (let i = 0; i < num; i++) {
+    spawnSpikes(gridIndex);
+    gridIndex += gridIncrement;
+  }
 }
 
 export function spawnVent(gridIndex: int): void {

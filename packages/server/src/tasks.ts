@@ -2,12 +2,15 @@ import {
   DEFAULT_NUM_COMMON_TASKS,
   DEFAULT_NUM_LONG_TASKS,
   DEFAULT_NUM_SHORT_TASKS,
+  IS_DEV,
   taskDescriptions,
 } from "./constants";
 import { Game } from "./types/Game";
 import { Task } from "./types/Task";
 import { TaskType } from "./types/TaskType";
 import { ensureAllCases, getEnumValues, getRandomArrayElement } from "./util";
+
+const DEV_TASK = Task.LONG_IDENTIFY_PICKUPS_IN_ORDER;
 
 export function assignTasks(game: Game): void {
   const allTasks = getEnumValues(Task);
@@ -28,6 +31,14 @@ export function assignTasks(game: Game): void {
         player.tasks[taskType].push(task);
         remainingTasks.delete(task);
         remainingTasksOfThisType.delete(task);
+      }
+    }
+
+    if (IS_DEV) {
+      const taskDescription = taskDescriptions[DEV_TASK];
+      const tasks = player.tasks[taskDescription.taskType];
+      if (!tasks.includes(DEV_TASK)) {
+        tasks.push(DEV_TASK);
       }
     }
   }

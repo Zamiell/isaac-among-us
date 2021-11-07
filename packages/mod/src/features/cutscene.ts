@@ -3,15 +3,12 @@
 import { ensureAllCases, getScreenCenterPos } from "isaacscript-common";
 import g from "../globals";
 import { loadMap } from "../loadMap";
+import { enableMinimapAPI } from "../minimapAPI";
+import { setSpriteOpacity } from "../sprite";
 import { BlackSpriteState } from "../types/BlackSpriteState";
 import { CutsceneState } from "../types/CutsceneState";
 import { Role } from "../types/Role";
-import {
-  drawFontText,
-  enableMinimapAPI,
-  getRoleText,
-  setSpriteOpacity,
-} from "../util";
+import { drawFontText, getRoleText } from "../util";
 import { FADE_TO_BLACK_FRAMES, setBlackSpriteState } from "./blackSprite";
 
 const ITEM_SPRITE_OFFSET = Vector(0, -30);

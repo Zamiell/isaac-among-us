@@ -1,3 +1,31 @@
+// The task room is the final room added
+const TASK_ROOM_MINIMAP_ID = 22;
+
+export function enableMinimapAPI(enabled: boolean): void {
+  if (MinimapAPI === undefined) {
+    return;
+  }
+
+  MinimapAPI.OverrideConfig.Disable = !enabled;
+}
+
+export function setMapToFullVisibility(): void {
+  if (MinimapAPI === undefined) {
+    return;
+  }
+
+  enableMinimapAPI(true);
+
+  const minimapAPILevel = MinimapAPI.GetLevel();
+  for (const room of minimapAPILevel) {
+    if (room.ID !== TASK_ROOM_MINIMAP_ID) {
+      room.Visited = true;
+      room.Clear = true;
+      room.DisplayFlags = DisplayFlag.VISIBLE | DisplayFlag.SHOW_ICON;
+    }
+  }
+}
+
 export function setMinimapAPIRoomIcon(mapID: int, icon: string): void {
   if (MinimapAPI === undefined) {
     return;

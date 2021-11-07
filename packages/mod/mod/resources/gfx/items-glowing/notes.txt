@@ -1,0 +1,2 @@
+- These files are copied from the Rebirth Item Tracker: https://github.com/Rchardon/RebirthItemTracker
+- The image size is 64x64.

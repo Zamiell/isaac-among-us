@@ -10,9 +10,10 @@ import {
   removeEntities,
 } from "isaacscript-common";
 import g from "../globals";
+import { enableMinimapAPI } from "../minimapAPI";
 import { setupPlayerAndUI } from "../setupPlayersAndUI";
 import { spawnBox } from "../spawnObjects";
-import { consoleCommand, enableMinimapAPI } from "../util";
+import { consoleCommand } from "../util";
 
 // We use the Cellar because it is the cleanest floor
 const STAGE_ARGUMENT_FOR_LOBBY = "1a";

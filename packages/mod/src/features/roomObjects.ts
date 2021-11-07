@@ -22,7 +22,7 @@ import { spawnWeaponsObjects } from "../rooms/weapons";
 import { getSkeldRoom } from "../stageAPI";
 import { SkeldRoom } from "../types/SkeldRoom";
 import { removeGridEntity } from "../util";
-import { spawnTaskButtons } from "./button";
+import { spawnGoToTaskButtons } from "./buttonSpawn";
 
 export function postRoomLoad(): void {
   if (g.game === null || !g.game.started) {
@@ -35,7 +35,7 @@ export function postRoomLoad(): void {
   }
 
   emptyRoom();
-  spawnTaskButtons();
+  spawnGoToTaskButtons();
   const setupFunction = functionMap.get(skeldRoom);
   if (setupFunction !== undefined) {
     setupFunction();
@@ -48,11 +48,15 @@ function emptyRoom() {
     removeEntities(entities);
   }
 
-  for (const gridEntity of getGridEntities(GridEntityType.GRID_DECORATION)) {
+  for (const gridEntity of getGridEntities(
+    GridEntityType.GRID_DECORATION,
+    GridEntityType.GRID_ROCKB,
+  )) {
     removeGridEntity(gridEntity);
   }
 }
 
+// We use a map since some rooms have no objects
 const functionMap = new Map<SkeldRoom, () => void>();
 
 functionMap.set(SkeldRoom.CAFETERIA, spawnCafeteriaObjects); // 0

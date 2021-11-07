@@ -1,5 +1,7 @@
+import { runNextFrame } from "isaacscript-common";
+import { addCollision } from "../collisionObjects";
 import { EntityTypeCustom } from "../enums";
-import { spawnBlockLine, spawnVent } from "../spawnObjects";
+import { spawnVent } from "../spawnObjects";
 import { spawnEntity } from "../util";
 
 export function spawnElectricalObjects(): void {
@@ -9,6 +11,7 @@ export function spawnElectricalObjects(): void {
   const topLeftGridIndex = 16;
   spawnVent(topLeftGridIndex);
 
-  spawnBlockLine(17, 12, Direction.RIGHT, false);
-  spawnBlockLine(32, 12, Direction.RIGHT, false);
+  runNextFrame(() => {
+    addCollision(17, 43);
+  });
 }

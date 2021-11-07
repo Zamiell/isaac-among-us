@@ -3,7 +3,7 @@ import * as disableMultiplayer from "../features/disableMultiplayer";
 import * as errors from "../features/errors";
 import * as restartOnNextFrame from "../features/restartOnNextFrame";
 import * as welcomeNotification from "../features/welcomeNotification";
-import { enableMinimapAPI } from "../util";
+import { enableMinimapAPI } from "../minimapAPI";
 
 export function main(isContinued: boolean): void {
   const game = Game();

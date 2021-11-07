@@ -3,8 +3,8 @@ import { error } from "./error";
 import { getPlayer } from "./game";
 import { games, getGameByName } from "./games";
 import { ExtraCommandData } from "./types/ExtraCommandData";
-import { Game }from "./types/Game";
-import {Socket} from "./types/Socket";
+import { Game } from "./types/Game";
+import { Socket } from "./types/Socket";
 import {
   SocketCommandModToServer,
   SocketCommandModToServerData,
@@ -224,6 +224,7 @@ validateFunctionMap.set("userIDInitiated", validateNumberAndInteger);
 validateFunctionMap.set("userIDKilled", validateNumberAndInteger);
 validateFunctionMap.set("userIDVotedFor", validateNumberAndInteger);
 validateFunctionMap.set("skip", validateBoolean);
+validateFunctionMap.set("task", validateNumberAndInteger);
 
 function validateNumberAndInteger(socket: Socket, key: string, value: unknown) {
   if (!validateNumber(socket, key, value)) {

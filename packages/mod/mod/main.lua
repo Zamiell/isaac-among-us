@@ -2309,6 +2309,7 @@ return ____exports
 ["common.src.types.SkeldRoom"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
+local TASK_ROOM_VARIANT = 98
 ____exports.SkeldRoom = SkeldRoom or ({})
 ____exports.SkeldRoom.CAFETERIA = 0
 ____exports.SkeldRoom[____exports.SkeldRoom.CAFETERIA] = "CAFETERIA"
@@ -2352,6 +2353,8 @@ ____exports.SkeldRoom.COMMUNICATION_HALL = 19
 ____exports.SkeldRoom[____exports.SkeldRoom.COMMUNICATION_HALL] = "COMMUNICATION_HALL"
 ____exports.SkeldRoom.COMMUNICATION = 20
 ____exports.SkeldRoom[____exports.SkeldRoom.COMMUNICATION] = "COMMUNICATION"
+____exports.SkeldRoom.TASK = TASK_ROOM_VARIANT
+____exports.SkeldRoom[____exports.SkeldRoom.TASK] = "TASK"
 return ____exports
  end,
 ["common.src.types.Task"] = function(...) 
@@ -2362,10 +2365,10 @@ ____exports.Task.SHORT_DESTROY_GIANT_POOP = 0
 ____exports.Task[____exports.Task.SHORT_DESTROY_GIANT_POOP] = "SHORT_DESTROY_GIANT_POOP"
 ____exports.Task.SHORT_BOMB_ROCKS = 1
 ____exports.Task[____exports.Task.SHORT_BOMB_ROCKS] = "SHORT_BOMB_ROCKS"
-____exports.Task.SHORT_IDENTIFY_ITEM = 2
-____exports.Task[____exports.Task.SHORT_IDENTIFY_ITEM] = "SHORT_IDENTIFY_ITEM"
-____exports.Task.SHORT_IDENTIFY_TRINKET = 3
-____exports.Task[____exports.Task.SHORT_IDENTIFY_TRINKET] = "SHORT_IDENTIFY_TRINKET"
+____exports.Task.SHORT_IDENTIFY_ITEMS = 2
+____exports.Task[____exports.Task.SHORT_IDENTIFY_ITEMS] = "SHORT_IDENTIFY_ITEMS"
+____exports.Task.SHORT_IDENTIFY_TRINKETS = 3
+____exports.Task[____exports.Task.SHORT_IDENTIFY_TRINKETS] = "SHORT_IDENTIFY_TRINKETS"
 ____exports.Task.SHORT_LOAD_SLOT_MACHINES = 4
 ____exports.Task[____exports.Task.SHORT_LOAD_SLOT_MACHINES] = "SHORT_LOAD_SLOT_MACHINES"
 ____exports.Task.SHORT_MAKE_PENTAGRAM = 5
@@ -2378,27 +2381,25 @@ ____exports.Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES = 8
 ____exports.Task[____exports.Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES] = "SHORT_WALK_DIAGONALLY_THROUGH_SPIKES"
 ____exports.Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS = 9
 ____exports.Task[____exports.Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS] = "SHORT_WALK_BETWEEN_SUCTION_PITFALLS"
-____exports.Task.SHORT_WALK_BETWEEN_POKIES = 10
-____exports.Task[____exports.Task.SHORT_WALK_BETWEEN_POKIES] = "SHORT_WALK_BETWEEN_POKIES"
+____exports.Task.SHORT_WALK_BETWEEN_SLIDES = 10
+____exports.Task[____exports.Task.SHORT_WALK_BETWEEN_SLIDES] = "SHORT_WALK_BETWEEN_SLIDES"
 ____exports.Task.SHORT_PUSH_TNT_BARREL = 11
 ____exports.Task[____exports.Task.SHORT_PUSH_TNT_BARREL] = "SHORT_PUSH_TNT_BARREL"
 ____exports.Task.LONG_IDENTIFY_PICKUPS_IN_ORDER = 12
 ____exports.Task[____exports.Task.LONG_IDENTIFY_PICKUPS_IN_ORDER] = "LONG_IDENTIFY_PICKUPS_IN_ORDER"
-____exports.Task.LONG_BREAK_ASTEROIDS = 13
-____exports.Task[____exports.Task.LONG_BREAK_ASTEROIDS] = "LONG_BREAK_ASTEROIDS"
-____exports.Task.LONG_COLLECT_GOLDEN_PENNY = 14
+____exports.Task.LONG_COLLECT_GOLDEN_PENNY = 13
 ____exports.Task[____exports.Task.LONG_COLLECT_GOLDEN_PENNY] = "LONG_COLLECT_GOLDEN_PENNY"
-____exports.Task.LONG_KILL_WORMS = 15
+____exports.Task.LONG_KILL_WORMS = 14
 ____exports.Task[____exports.Task.LONG_KILL_WORMS] = "LONG_KILL_WORMS"
-____exports.Task.LONG_BUTTONS_BEHIND_KEY_BLOCKS = 16
+____exports.Task.LONG_BUTTONS_BEHIND_KEY_BLOCKS = 15
 ____exports.Task[____exports.Task.LONG_BUTTONS_BEHIND_KEY_BLOCKS] = "LONG_BUTTONS_BEHIND_KEY_BLOCKS"
-____exports.Task.LONG_DODGE_RETRACTING_SPIKES = 17
+____exports.Task.LONG_DODGE_RETRACTING_SPIKES = 16
 ____exports.Task[____exports.Task.LONG_DODGE_RETRACTING_SPIKES] = "LONG_DODGE_RETRACTING_SPIKES"
-____exports.Task.LONG_PUSH_BUTTONS_IN_ORDER = 18
+____exports.Task.LONG_PUSH_BUTTONS_IN_ORDER = 17
 ____exports.Task[____exports.Task.LONG_PUSH_BUTTONS_IN_ORDER] = "LONG_PUSH_BUTTONS_IN_ORDER"
-____exports.Task.LONG_DODGE_STONE_SHOOTERS = 19
+____exports.Task.LONG_DODGE_STONE_SHOOTERS = 18
 ____exports.Task[____exports.Task.LONG_DODGE_STONE_SHOOTERS] = "LONG_DODGE_STONE_SHOOTERS"
-____exports.Task.LONG_DEFEAT_MONSTRO = 20
+____exports.Task.LONG_DEFEAT_MONSTRO = 19
 ____exports.Task[____exports.Task.LONG_DEFEAT_MONSTRO] = "LONG_DEFEAT_MONSTRO"
 return ____exports
  end,
@@ -2425,7 +2426,7 @@ local ____Task = require("common.src.types.Task")
 local Task = ____Task.Task
 local ____TaskType = require("common.src.types.TaskType")
 local TaskType = ____TaskType.TaskType
-____exports.taskDescriptions = {[Task.SHORT_DESTROY_GIANT_POOP] = {name = "Toilet Cleaning", taskType = TaskType.SHORT, room = SkeldRoom.CAFETERIA, gridIndex = 418, returnGridIndex = 417}, [Task.SHORT_BOMB_ROCKS] = {name = "Debris Clearing", taskType = TaskType.SHORT, room = SkeldRoom.UPPER_ENGINE, gridIndex = 228, returnGridIndex = 229}, [Task.SHORT_IDENTIFY_ITEM] = {name = "Item Calibration", taskType = TaskType.SHORT, room = SkeldRoom.SECURITY, gridIndex = 56, returnGridIndex = 55}, [Task.SHORT_IDENTIFY_TRINKET] = {name = "Trinket Calibration", taskType = TaskType.SHORT, room = SkeldRoom.SECURITY, gridIndex = 102, returnGridIndex = 101}, [Task.SHORT_LOAD_SLOT_MACHINES] = {name = "Engine Boosting", taskType = TaskType.SHORT, room = SkeldRoom.LOWER_ENGINE, gridIndex = 368, returnGridIndex = 369}, [Task.SHORT_MAKE_PENTAGRAM] = {name = "Summon Devil", taskType = TaskType.SHORT, room = SkeldRoom.COMMUNICATION, gridIndex = 108, returnGridIndex = 109}, [Task.SHORT_PRESS_BUTTONS_WITH_GRUDGE] = {name = "Shutdown Robotics", taskType = TaskType.SHORT, room = SkeldRoom.SHIELDS, gridIndex = 91, returnGridIndex = 76}, [Task.SHORT_FIX_WIRES] = {name = "Fix Wires", taskType = TaskType.SHORT, room = SkeldRoom.ELECTRICAL, gridIndex = 57, returnGridIndex = 56}, [Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES] = {name = "Disengage Thruster", taskType = TaskType.SHORT, room = SkeldRoom.O2_HALL, gridIndex = 1, returnGridIndex = 0}, [Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS] = {name = "Repair Ship Hull", taskType = TaskType.SHORT, room = SkeldRoom.O2_HALL, gridIndex = 1, returnGridIndex = 0}, [Task.SHORT_WALK_BETWEEN_POKIES] = {name = "Deactivate Drones", taskType = TaskType.SHORT, room = SkeldRoom.O2_HALL, gridIndex = 1, returnGridIndex = 0}, [Task.SHORT_PUSH_TNT_BARREL] = {name = "Explode Excess Material", taskType = TaskType.SHORT, room = SkeldRoom.REACTOR, gridIndex = 106, returnGridIndex = 107}, [Task.LONG_IDENTIFY_PICKUPS_IN_ORDER] = {name = "Pickup Calibration", taskType = TaskType.LONG, room = SkeldRoom.O2_HALL, gridIndex = 1, returnGridIndex = 0}, [Task.LONG_BREAK_ASTEROIDS] = {name = "Astroid Removal", taskType = TaskType.LONG, room = SkeldRoom.O2_HALL, gridIndex = 1, returnGridIndex = 0}, [Task.LONG_COLLECT_GOLDEN_PENNY] = {name = "Collect Spare Cash", taskType = TaskType.LONG, room = SkeldRoom.ADMIN, gridIndex = 17, returnGridIndex = 32}, [Task.LONG_KILL_WORMS] = {name = "Kill Space Worms", taskType = TaskType.LONG, room = SkeldRoom.MEDBAY, gridIndex = 109, returnGridIndex = 110}, [Task.LONG_BUTTONS_BEHIND_KEY_BLOCKS] = {name = "Recover Locked Hard Drives", taskType = TaskType.LONG, room = SkeldRoom.O2_HALL, gridIndex = 1, returnGridIndex = 0}, [Task.LONG_DODGE_RETRACTING_SPIKES] = {name = "Retrieve Fuel", taskType = TaskType.LONG, room = SkeldRoom.STORAGE, gridIndex = 170, returnGridIndex = 169}, [Task.LONG_PUSH_BUTTONS_IN_ORDER] = {name = "Plot Ship Course", taskType = TaskType.LONG, room = SkeldRoom.NAVIGATION, gridIndex = 71, returnGridIndex = 70}, [Task.LONG_DODGE_STONE_SHOOTERS] = {name = "Suppress Enemy Fire", taskType = TaskType.LONG, room = SkeldRoom.WEAPONS, gridIndex = 244, returnGridIndex = 245}, [Task.LONG_DEFEAT_MONSTRO] = {name = "Defeat Space Blob", taskType = TaskType.LONG, room = SkeldRoom.O2, gridIndex = 61, returnGridIndex = 62}}
+____exports.taskDescriptions = {[Task.SHORT_DESTROY_GIANT_POOP] = {name = "Toilet Cleaning", taskType = TaskType.SHORT, room = SkeldRoom.CAFETERIA, gridIndex = 418, returnGridIndex = 416}, [Task.SHORT_BOMB_ROCKS] = {name = "Debris Clearing", taskType = TaskType.SHORT, room = SkeldRoom.UPPER_ENGINE, gridIndex = 228, returnGridIndex = 230}, [Task.SHORT_IDENTIFY_ITEMS] = {name = "Item Calibration", taskType = TaskType.SHORT, room = SkeldRoom.SECURITY, gridIndex = 56, returnGridIndex = 54}, [Task.SHORT_IDENTIFY_TRINKETS] = {name = "Trinket Calibration", taskType = TaskType.SHORT, room = SkeldRoom.SECURITY, gridIndex = 102, returnGridIndex = 100}, [Task.SHORT_LOAD_SLOT_MACHINES] = {name = "Engine Boosting", taskType = TaskType.SHORT, room = SkeldRoom.LOWER_ENGINE, gridIndex = 368, returnGridIndex = 370}, [Task.SHORT_MAKE_PENTAGRAM] = {name = "Summon Devil", taskType = TaskType.SHORT, room = SkeldRoom.COMMUNICATION, gridIndex = 108, returnGridIndex = 110}, [Task.SHORT_PRESS_BUTTONS_WITH_GRUDGE] = {name = "Shutdown Robotics", taskType = TaskType.SHORT, room = SkeldRoom.SHIELDS, gridIndex = 91, returnGridIndex = 93}, [Task.SHORT_FIX_WIRES] = {name = "Fix Wires", taskType = TaskType.SHORT, room = SkeldRoom.ELECTRICAL, gridIndex = 57, returnGridIndex = 55}, [Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES] = {name = "Disengage Thruster", taskType = TaskType.SHORT, room = SkeldRoom.WEAPONS, gridIndex = 101, returnGridIndex = 99}, [Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS] = {name = "Repair Ship Hull", taskType = TaskType.SHORT, room = SkeldRoom.STORAGE, gridIndex = 190, returnGridIndex = 192}, [Task.SHORT_WALK_BETWEEN_SLIDES] = {name = "Deactivate Drones", taskType = TaskType.SHORT, room = SkeldRoom.ELECTRICAL, gridIndex = 48, returnGridIndex = 50}, [Task.SHORT_PUSH_TNT_BARREL] = {name = "Explode Excess Material", taskType = TaskType.SHORT, room = SkeldRoom.REACTOR, gridIndex = 106, returnGridIndex = 108}, [Task.LONG_IDENTIFY_PICKUPS_IN_ORDER] = {name = "Pickup Calibration", taskType = TaskType.LONG, room = SkeldRoom.ADMIN, gridIndex = 118, returnGridIndex = 116}, [Task.LONG_COLLECT_GOLDEN_PENNY] = {name = "Collect Spare Cash", taskType = TaskType.LONG, room = SkeldRoom.ADMIN, gridIndex = 17, returnGridIndex = 47}, [Task.LONG_KILL_WORMS] = {name = "Kill Space Worms", taskType = TaskType.LONG, room = SkeldRoom.MEDBAY, gridIndex = 109, returnGridIndex = 111}, [Task.LONG_BUTTONS_BEHIND_KEY_BLOCKS] = {name = "Recover Locked Hard Drives", taskType = TaskType.LONG, room = SkeldRoom.COMMUNICATION, gridIndex = 46, returnGridIndex = 48}, [Task.LONG_DODGE_RETRACTING_SPIKES] = {name = "Retrieve Fuel", taskType = TaskType.LONG, room = SkeldRoom.STORAGE, gridIndex = 170, returnGridIndex = 168}, [Task.LONG_PUSH_BUTTONS_IN_ORDER] = {name = "Plot Ship Course", taskType = TaskType.LONG, room = SkeldRoom.NAVIGATION, gridIndex = 71, returnGridIndex = 69}, [Task.LONG_DODGE_STONE_SHOOTERS] = {name = "Suppress Enemy Fire", taskType = TaskType.LONG, room = SkeldRoom.WEAPONS, gridIndex = 244, returnGridIndex = 242}, [Task.LONG_DEFEAT_MONSTRO] = {name = "Defeat Space Blob", taskType = TaskType.LONG, room = SkeldRoom.O2, gridIndex = 61, returnGridIndex = 63}}
 return ____exports
  end,
 ["mod.src.constants"] = function(...) 
@@ -2650,6 +2651,7 @@ ____exports.SocketCommandModToServer.ROOM = "room"
 ____exports.SocketCommandModToServer.KILL = "kill"
 ____exports.SocketCommandModToServer.MEETING = "meeting"
 ____exports.SocketCommandModToServer.VOTE = "vote"
+____exports.SocketCommandModToServer.TASK_COMPLETE = "taskComplete"
 ____exports.SocketCommandModToServer.TERMINATE = "terminate"
 ____exports.SocketCommandModToServer.DEBUG = "debug"
 ____exports.CheckUsernameDataToServer = __TS__Class()
@@ -2737,6 +2739,13 @@ function VoteDataToServer.prototype.____constructor(self)
     self.userIDVotedFor = 0
     self.skip = false
 end
+____exports.TaskCompleteDataToServer = __TS__Class()
+local TaskCompleteDataToServer = ____exports.TaskCompleteDataToServer
+TaskCompleteDataToServer.name = "TaskCompleteDataToServer"
+function TaskCompleteDataToServer.prototype.____constructor(self)
+    self.gameID = 0
+    self.task = 0
+end
 ____exports.TerminateDataToServer = __TS__Class()
 local TerminateDataToServer = ____exports.TerminateDataToServer
 TerminateDataToServer.name = "TerminateDataToServer"
@@ -2748,7 +2757,7 @@ local NoData = ____exports.NoData
 NoData.name = "NoData"
 function NoData.prototype.____constructor(self)
 end
-____exports.SocketCommandModToServerData = {[____exports.SocketCommandModToServer.PING] = ____exports.NoData, [____exports.SocketCommandModToServer.CHECK_USERNAME] = ____exports.CheckUsernameDataToServer, [____exports.SocketCommandModToServer.LOGIN] = ____exports.LoginDataToServer, [____exports.SocketCommandModToServer.GAME_LIST] = ____exports.NoData, [____exports.SocketCommandModToServer.CREATE] = ____exports.CreateDataToServer, [____exports.SocketCommandModToServer.JOIN] = ____exports.JoinDataToServer, [____exports.SocketCommandModToServer.LEAVE] = ____exports.LeaveDataToServer, [____exports.SocketCommandModToServer.CHAT] = ____exports.ChatDataToServer, [____exports.SocketCommandModToServer.START] = ____exports.StartDataToServer, [____exports.SocketCommandModToServer.RECONNECT] = ____exports.ReconnectDataToServer, [____exports.SocketCommandModToServer.ROOM] = ____exports.RoomDataToServer, [____exports.SocketCommandModToServer.KILL] = ____exports.KillDataToServer, [____exports.SocketCommandModToServer.MEETING] = ____exports.MeetingDataToServer, [____exports.SocketCommandModToServer.VOTE] = ____exports.VoteDataToServer, [____exports.SocketCommandModToServer.TERMINATE] = ____exports.TerminateDataToServer, [____exports.SocketCommandModToServer.DEBUG] = ____exports.NoData}
+____exports.SocketCommandModToServerData = {[____exports.SocketCommandModToServer.PING] = ____exports.NoData, [____exports.SocketCommandModToServer.CHECK_USERNAME] = ____exports.CheckUsernameDataToServer, [____exports.SocketCommandModToServer.LOGIN] = ____exports.LoginDataToServer, [____exports.SocketCommandModToServer.GAME_LIST] = ____exports.NoData, [____exports.SocketCommandModToServer.CREATE] = ____exports.CreateDataToServer, [____exports.SocketCommandModToServer.JOIN] = ____exports.JoinDataToServer, [____exports.SocketCommandModToServer.LEAVE] = ____exports.LeaveDataToServer, [____exports.SocketCommandModToServer.CHAT] = ____exports.ChatDataToServer, [____exports.SocketCommandModToServer.START] = ____exports.StartDataToServer, [____exports.SocketCommandModToServer.RECONNECT] = ____exports.ReconnectDataToServer, [____exports.SocketCommandModToServer.ROOM] = ____exports.RoomDataToServer, [____exports.SocketCommandModToServer.KILL] = ____exports.KillDataToServer, [____exports.SocketCommandModToServer.MEETING] = ____exports.MeetingDataToServer, [____exports.SocketCommandModToServer.VOTE] = ____exports.VoteDataToServer, [____exports.SocketCommandModToServer.TASK_COMPLETE] = ____exports.TaskCompleteDataToServer, [____exports.SocketCommandModToServer.TERMINATE] = ____exports.TerminateDataToServer, [____exports.SocketCommandModToServer.DEBUG] = ____exports.NoData}
 ____exports.SocketCommandServerToMod = SocketCommandServerToMod or ({})
 ____exports.SocketCommandServerToMod.ERROR = "error"
 ____exports.SocketCommandServerToMod.USERNAME = "username"
@@ -2765,6 +2774,7 @@ ____exports.SocketCommandServerToMod.START_MEETING = "startMeeting"
 ____exports.SocketCommandServerToMod.START_VOTING = "startVoting"
 ____exports.SocketCommandServerToMod.VOTE = "vote"
 ____exports.SocketCommandServerToMod.END_MEETING = "endMeeting"
+____exports.SocketCommandServerToMod.END_GAME = "endGame"
 ____exports.SocketCommandServerToMod.TERMINATED = "terminated"
 ____exports.ErrorDataToMod = __TS__Class()
 local ErrorDataToMod = ____exports.ErrorDataToMod
@@ -2846,17 +2856,27 @@ local VoteDataToMod = ____exports.VoteDataToMod
 VoteDataToMod.name = "VoteDataToMod"
 function VoteDataToMod.prototype.____constructor(self)
 end
+____exports.TaskCompleteDataToMod = __TS__Class()
+local TaskCompleteDataToMod = ____exports.TaskCompleteDataToMod
+TaskCompleteDataToMod.name = "TaskCompleteDataToMod"
+function TaskCompleteDataToMod.prototype.____constructor(self)
+end
 ____exports.EndMeetingDataToMod = __TS__Class()
 local EndMeetingDataToMod = ____exports.EndMeetingDataToMod
 EndMeetingDataToMod.name = "EndMeetingDataToMod"
 function EndMeetingDataToMod.prototype.____constructor(self)
+end
+____exports.EndGameDataToMod = __TS__Class()
+local EndGameDataToMod = ____exports.EndGameDataToMod
+EndGameDataToMod.name = "EndGameDataToMod"
+function EndGameDataToMod.prototype.____constructor(self)
 end
 ____exports.TerminatedDataToMod = __TS__Class()
 local TerminatedDataToMod = ____exports.TerminatedDataToMod
 TerminatedDataToMod.name = "TerminatedDataToMod"
 function TerminatedDataToMod.prototype.____constructor(self)
 end
-____exports.SocketCommandServerToModData = {[____exports.SocketCommandServerToMod.ERROR] = ____exports.ErrorDataToMod, [____exports.SocketCommandServerToMod.USERNAME] = ____exports.UsernameDataToMod, [____exports.SocketCommandServerToMod.LOGGED_IN] = ____exports.LoggedInDataToMod, [____exports.SocketCommandServerToMod.GAME_LIST] = ____exports.GameListDataToMod, [____exports.SocketCommandServerToMod.JOINED] = ____exports.JoinedDataToMod, [____exports.SocketCommandServerToMod.LEFT] = ____exports.LeftDataToMod, [____exports.SocketCommandServerToMod.GAME_DESCRIPTION] = ____exports.GameDescriptionDataToMod, [____exports.SocketCommandServerToMod.CHAT] = ____exports.ChatDataToMod, [____exports.SocketCommandServerToMod.STARTED] = ____exports.StartedDataToMod, [____exports.SocketCommandServerToMod.RECONNECT] = ____exports.ReconnectDataToMod, [____exports.SocketCommandServerToMod.KILLED] = ____exports.KilledDataToMod, [____exports.SocketCommandServerToMod.START_MEETING] = ____exports.StartMeetingDataToMod, [____exports.SocketCommandServerToMod.START_VOTING] = ____exports.StartVotingDataToMod, [____exports.SocketCommandServerToMod.VOTE] = ____exports.VoteDataToMod, [____exports.SocketCommandServerToMod.END_MEETING] = ____exports.EndMeetingDataToMod, [____exports.SocketCommandServerToMod.TERMINATED] = ____exports.TerminatedDataToMod}
+____exports.SocketCommandServerToModData = {[____exports.SocketCommandServerToMod.ERROR] = ____exports.ErrorDataToMod, [____exports.SocketCommandServerToMod.USERNAME] = ____exports.UsernameDataToMod, [____exports.SocketCommandServerToMod.LOGGED_IN] = ____exports.LoggedInDataToMod, [____exports.SocketCommandServerToMod.GAME_LIST] = ____exports.GameListDataToMod, [____exports.SocketCommandServerToMod.JOINED] = ____exports.JoinedDataToMod, [____exports.SocketCommandServerToMod.LEFT] = ____exports.LeftDataToMod, [____exports.SocketCommandServerToMod.GAME_DESCRIPTION] = ____exports.GameDescriptionDataToMod, [____exports.SocketCommandServerToMod.CHAT] = ____exports.ChatDataToMod, [____exports.SocketCommandServerToMod.STARTED] = ____exports.StartedDataToMod, [____exports.SocketCommandServerToMod.RECONNECT] = ____exports.ReconnectDataToMod, [____exports.SocketCommandServerToMod.KILLED] = ____exports.KilledDataToMod, [____exports.SocketCommandServerToMod.START_MEETING] = ____exports.StartMeetingDataToMod, [____exports.SocketCommandServerToMod.START_VOTING] = ____exports.StartVotingDataToMod, [____exports.SocketCommandServerToMod.VOTE] = ____exports.VoteDataToMod, [____exports.SocketCommandServerToMod.END_MEETING] = ____exports.EndMeetingDataToMod, [____exports.SocketCommandServerToMod.END_GAME] = ____exports.EndGameDataToMod, [____exports.SocketCommandServerToMod.TERMINATED] = ____exports.TerminatedDataToMod}
 return ____exports
  end,
 ["mod.src.types.SocketCommands"] = function(...) 
@@ -3003,7 +3023,6 @@ ____exports.Globals = __TS__Class()
 local Globals = ____exports.Globals
 Globals.name = "Globals"
 function Globals.prototype.____constructor(self)
-    self.g = Game()
     self.loggedIn = false
     self.userID = nil
     self.username = nil
@@ -3022,23 +3041,106 @@ ____exports.default = globals
 g = globals
 return ____exports
  end,
-["mod.src.callbacks.evaluateCache"] = function(...) 
+["mod.src.minimapAPI"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
-local ____constants = require("mod.src.constants")
-local IS_DEV = ____constants.IS_DEV
-local ____globals = require("mod.src.globals")
-local g = ____globals.default
-function ____exports.main(self, player, cacheFlag)
-    if g.game == nil then
+local TASK_ROOM_MINIMAP_ID = 22
+function ____exports.enableMinimapAPI(self, enabled)
+    if MinimapAPI == nil then
         return
     end
-    if cacheFlag == CacheFlag.CACHE_SPEED then
-        player.MoveSpeed = player.MoveSpeed - 0.2
+    MinimapAPI.OverrideConfig.Disable = not enabled
+end
+function ____exports.setMapToFullVisibility(self)
+    if MinimapAPI == nil then
+        return
     end
-    if IS_DEV then
-        player.MoveSpeed = 2
+    ____exports.enableMinimapAPI(nil, true)
+    local minimapAPILevel = MinimapAPI:GetLevel()
+    for ____, room in ipairs(minimapAPILevel) do
+        if room.ID ~= TASK_ROOM_MINIMAP_ID then
+            room.Visited = true
+            room.Clear = true
+            room.DisplayFlags = 1 | 4
+        end
     end
+end
+function ____exports.setMinimapAPIRoomIcon(self, mapID, icon)
+    if MinimapAPI == nil then
+        return
+    end
+    local minimapAPILevel = MinimapAPI:GetLevel()
+    for ____, room in ipairs(minimapAPILevel) do
+        if room.ID == mapID then
+            room.ItemIcons = {icon}
+            return
+        end
+    end
+end
+return ____exports
+ end,
+["mod.src.types.PlayerMessage"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+return ____exports
+ end,
+["mod.src.network.pack"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local jsonDecode = ____isaacscript_2Dcommon.jsonDecode
+local jsonEncode = ____isaacscript_2Dcommon.jsonEncode
+local log = ____isaacscript_2Dcommon.log
+local ____constants = require("mod.src.constants")
+local UDP_POSITION_DATA_FORMAT = ____constants.UDP_POSITION_DATA_FORMAT
+local UDP_POSITION_FIELDS = ____constants.UDP_POSITION_FIELDS
+local struct = require("mod.src.network.struct")
+local DATA_SEPARATOR = " "
+local DEBUG = true
+function ____exports.packTCPMsg(self, command, data)
+    if data == nil then
+        return command .. "\n"
+    end
+    local dataString = jsonEncode(nil, data)
+    return ((command .. DATA_SEPARATOR) .. dataString) .. "\n"
+end
+function ____exports.unpackTCPMsg(self, msg)
+    msg = __TS__StringTrim(msg)
+    local msgArray = __TS__StringSplit(msg, DATA_SEPARATOR)
+    local command = msgArray[1]
+    local dataArray = __TS__ArraySlice(msgArray, 1)
+    local dataString = table.concat(dataArray, DATA_SEPARATOR or ",")
+    local data = jsonDecode(nil, dataString)
+    return {command, data}
+end
+function ____exports.unpackUDPPlayerMessage(self, rawData)
+    if DEBUG then
+        log(nil, "Unpacking UDP message:")
+    end
+    local dataArray = {
+        struct:unpack(UDP_POSITION_DATA_FORMAT, rawData)
+    }
+    local playerMessage = {}
+    do
+        local i = 0
+        while i < #UDP_POSITION_FIELDS do
+            local field = UDP_POSITION_FIELDS[i + 1]
+            local fieldData = dataArray[i + 1]
+            if type(fieldData) == "string" then
+                fieldData = __TS__StringTrim(fieldData)
+            end
+            playerMessage[field] = fieldData
+            if DEBUG then
+                log(
+                    nil,
+                    (("- " .. field) .. " - ") .. tostring(fieldData)
+                )
+            end
+            i = i + 1
+        end
+    end
+    return playerMessage
 end
 return ____exports
  end,
@@ -3080,6 +3182,67 @@ function ____exports.getAll(self)
 end
 return ____exports
  end,
+["mod.src.sprite"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+local ____exports = {}
+local getFileNum
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local MAX_VANILLA_COLLECTIBLE_TYPE = ____isaacscript_2Dcommon.MAX_VANILLA_COLLECTIBLE_TYPE
+function getFileNum(self, itemID)
+    local defaultReturn = "NEW"
+    if itemID < 1 then
+        return defaultReturn
+    end
+    if (itemID >= CollectibleType.COLLECTIBLE_SAD_ONION) and (itemID <= MAX_VANILLA_COLLECTIBLE_TYPE) then
+        return __TS__StringPadStart(
+            tostring(itemID),
+            3,
+            "0"
+        )
+    end
+    if (itemID > MAX_VANILLA_COLLECTIBLE_TYPE) and (itemID < 2001) then
+        return defaultReturn
+    end
+    if (itemID >= 2001) and (itemID <= 2189) then
+        return tostring(itemID)
+    end
+    if (itemID > 2189) and (itemID < 32769) then
+        return defaultReturn
+    end
+    if (itemID >= 32769) and (itemID <= 32957) then
+        return tostring(itemID)
+    end
+    return defaultReturn
+end
+local GLOWING_IMAGE_TRINKET_OFFSET = 2000
+function ____exports.initSprite(self, anm2Path, pngPath)
+    local sprite = Sprite()
+    if pngPath == nil then
+        sprite:Load(anm2Path, true)
+    else
+        sprite:Load(anm2Path, false)
+        sprite:ReplaceSpritesheet(0, pngPath)
+        sprite:LoadGraphics()
+    end
+    sprite:SetFrame("Default", 0)
+    return sprite
+end
+function ____exports.initGlowingItemSprite(self, collectibleOrTrinketType, trinket)
+    if trinket == nil then
+        trinket = false
+    end
+    if trinket then
+        collectibleOrTrinketType = collectibleOrTrinketType + GLOWING_IMAGE_TRINKET_OFFSET
+    end
+    local fileNum = getFileNum(nil, collectibleOrTrinketType)
+    return ____exports.initSprite(nil, "gfx/glowing_item.anm2", ("gfx/items-glowing/collectibles_" .. fileNum) .. ".png")
+end
+function ____exports.setSpriteOpacity(self, sprite, opacity)
+    sprite.Color = Color(1, 1, 1, opacity, 0, 0, 0)
+end
+return ____exports
+ end,
 ["mod.src.types.BlackSpriteState"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
@@ -3094,206 +3257,17 @@ ____exports.BlackSpriteState.FADING_TO_GAME = 3
 ____exports.BlackSpriteState[____exports.BlackSpriteState.FADING_TO_GAME] = "FADING_TO_GAME"
 return ____exports
  end,
-["mod.src.enums"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-____exports.EntityTypeCustom = EntityTypeCustom or ({})
-____exports.EntityTypeCustom.BOX = Isaac.GetEntityTypeByName("Large Box")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.BOX] = "BOX"
-____exports.EntityTypeCustom.TABLE = Isaac.GetEntityTypeByName("Table")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.TABLE] = "TABLE"
-____exports.EntityTypeCustom.ADMIN_TABLE = Isaac.GetEntityTypeByName("Admin Table")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.ADMIN_TABLE] = "ADMIN_TABLE"
-____exports.EntityTypeCustom.ADMIN_TOP = Isaac.GetEntityTypeByName("Admin Top")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.ADMIN_TOP] = "ADMIN_TOP"
-____exports.EntityTypeCustom.STORAGE = Isaac.GetEntityTypeByName("Storage")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.STORAGE] = "STORAGE"
-____exports.EntityTypeCustom.BED = Isaac.GetEntityTypeByName("Bed")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.BED] = "BED"
-____exports.EntityTypeCustom.ENGINE = Isaac.GetEntityTypeByName("Engine")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.ENGINE] = "ENGINE"
-____exports.EntityTypeCustom.REACTOR = Isaac.GetEntityTypeByName("Reactor")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.REACTOR] = "REACTOR"
-____exports.EntityTypeCustom.SECURITY_TABLE = Isaac.GetEntityTypeByName("Security Table")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.SECURITY_TABLE] = "SECURITY_TABLE"
-____exports.EntityTypeCustom.ELECTRICAL = Isaac.GetEntityTypeByName("Electrical")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.ELECTRICAL] = "ELECTRICAL"
-____exports.EntityTypeCustom.WEAPONS = Isaac.GetEntityTypeByName("Weapons")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.WEAPONS] = "WEAPONS"
-____exports.EntityTypeCustom.TANK = Isaac.GetEntityTypeByName("Tank")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.TANK] = "TANK"
-____exports.EntityTypeCustom.SHIP_CONTROLS = Isaac.GetEntityTypeByName("Ship Controls")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.SHIP_CONTROLS] = "SHIP_CONTROLS"
-____exports.EntityTypeCustom.SHIELDS = Isaac.GetEntityTypeByName("Shields")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.SHIELDS] = "SHIELDS"
-____exports.EntityTypeCustom.COMPUTER = Isaac.GetEntityTypeByName("Computer")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.COMPUTER] = "COMPUTER"
-____exports.EntityTypeCustom.RADIO = Isaac.GetEntityTypeByName("Radio")
-____exports.EntityTypeCustom[____exports.EntityTypeCustom.RADIO] = "RADIO"
-____exports.BoxVariant = BoxVariant or ({})
-____exports.BoxVariant.LARGE = Isaac.GetEntityVariantByName("Large Box")
-____exports.BoxVariant[____exports.BoxVariant.LARGE] = "LARGE"
-____exports.BoxVariant.SMALL = Isaac.GetEntityVariantByName("Small Box")
-____exports.BoxVariant[____exports.BoxVariant.SMALL] = "SMALL"
-____exports.EffectVariantCustom = EffectVariantCustom or ({})
-____exports.EffectVariantCustom.STAGE_API_DOOR = Isaac.GetEntityVariantByName("StageAPIDoor")
-____exports.EffectVariantCustom[____exports.EffectVariantCustom.STAGE_API_DOOR] = "STAGE_API_DOOR"
-____exports.EffectVariantCustom.VENT = Isaac.GetEntityVariantByName("Vent")
-____exports.EffectVariantCustom[____exports.EffectVariantCustom.VENT] = "VENT"
-____exports.EffectVariantCustom.BUTTON = Isaac.GetEntityVariantByName("Button")
-____exports.EffectVariantCustom[____exports.EffectVariantCustom.BUTTON] = "BUTTON"
-____exports.ButtonSubType = ButtonSubType or ({})
-____exports.ButtonSubType.TASK = 0
-____exports.ButtonSubType[____exports.ButtonSubType.TASK] = "TASK"
-____exports.ButtonSubType.TASK_RETURN = 1
-____exports.ButtonSubType[____exports.ButtonSubType.TASK_RETURN] = "TASK_RETURN"
-____exports.ButtonSubType.EMERGENCY = 2
-____exports.ButtonSubType[____exports.ButtonSubType.EMERGENCY] = "EMERGENCY"
-____exports.ButtonSubType.SPECIAL = 3
-____exports.ButtonSubType[____exports.ButtonSubType.SPECIAL] = "SPECIAL"
-return ____exports
- end,
-["mod.src.fonts"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-____exports.fonts = {
-    droid = Font(),
-    pf = Font()
-}
-____exports.fonts.droid:Load("font/droid.fnt")
-____exports.fonts.pf:Load("font/pftempestasevencondensed.fnt")
-return ____exports
- end,
-["mod.src.util"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
-local ensureAllCases = ____isaacscript_2Dcommon.ensureAllCases
-local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
-local log = ____isaacscript_2Dcommon.log
-local ____fonts = require("mod.src.fonts")
-local fonts = ____fonts.fonts
-local ____globals = require("mod.src.globals")
-local g = ____globals.default
-local ____Role = require("mod.src.types.Role")
-local Role = ____Role.Role
-function ____exports.amOwner(self)
-    if g.game == nil then
-        return false
-    end
-    local firstPlayer = g.game.players[1]
-    if firstPlayer == nil then
-        return false
-    end
-    return firstPlayer.username == g.username
-end
-function ____exports.consoleCommand(self, command)
-    log(nil, "Executing console command: " .. command)
-    Isaac.ExecuteCommand(command)
-    log(nil, "Finished executing console command: " .. command)
-end
-function ____exports.drawFontText(self, text, position, opacity)
-    if opacity == nil then
-        opacity = 1
-    end
-    local scale = 1
-    local length = fonts.droid:GetStringWidthUTF8(text) * scale
-    local color = KColor(1, 1, 1, opacity)
-    fonts.droid:DrawString(text, position.X - (length / 2), position.Y, color, 0, true)
-end
-function ____exports.enableMinimapAPI(self, enabled)
-    if MinimapAPI ~= nil then
-        MinimapAPI.OverrideConfig.Disable = not enabled
-    end
-end
-function ____exports.getRoleText(self, role)
-    repeat
-        local ____switch10 = role
-        local ____cond10 = ____switch10 == Role.CREW
-        if ____cond10 then
-            do
-                return "Crew"
-            end
-        end
-        ____cond10 = ____cond10 or (____switch10 == Role.IMPOSTER)
-        if ____cond10 then
-            do
-                return "Imposter"
-            end
-        end
-        do
-            do
-                ensureAllCases(nil, role)
-                return "Unknown"
-            end
-        end
-    until true
-end
-function ____exports.getScreenPosition(self, x, y)
-    local bottomRightPos = getScreenBottomRightPos(nil)
-    return Vector(x * bottomRightPos.X, y * bottomRightPos.Y)
-end
-function ____exports.initSprite(self, anm2Path, pngPath)
-    local sprite = Sprite()
-    if pngPath == nil then
-        sprite:Load(anm2Path, true)
-    else
-        sprite:Load(anm2Path, false)
-        sprite:ReplaceSpritesheet(0, pngPath)
-        sprite:LoadGraphics()
-    end
-    sprite:SetFrame("Default", 0)
-    return sprite
-end
-function ____exports.removeGridEntity(self, gridEntity)
-    local game = Game()
-    local room = game:GetRoom()
-    local gridIndex = gridEntity:GetGridIndex()
-    room:RemoveGridEntity(gridIndex, 0, false)
-    room:Update()
-end
-function ____exports.restart(self)
-    ____exports.consoleCommand(nil, "restart")
-end
-function ____exports.setSpriteOpacity(self, sprite, opacity)
-    sprite.Color = Color(1, 1, 1, opacity, 0, 0, 0)
-end
-function ____exports.spawnGridEntity(self, gridEntityType, gridIndex)
-    local game = Game()
-    local room = game:GetRoom()
-    local position = room:GetGridPosition(gridIndex)
-    return Isaac.GridSpawn(gridEntityType, 0, position, true)
-end
-function ____exports.spawnEntity(self, entityType, variant, subType, gridIndex, depthOffset)
-    if depthOffset == nil then
-        depthOffset = -100
-    end
-    local game = Game()
-    local room = game:GetRoom()
-    local position = room:GetGridPosition(gridIndex)
-    local entity = Isaac.Spawn(entityType, variant, subType, position, Vector.Zero, nil)
-    entity:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
-    entity.DepthOffset = depthOffset
-    return entity
-end
-function ____exports.traceback(self)
-    print(
-        debug.traceback()
-    )
-end
-return ____exports
- end,
 ["mod.src.features.blackSprite"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
 local drawBlackSprite, getBlackSpriteOpacity, sprite, state, startFrame
 local ____globals = require("mod.src.globals")
 local g = ____globals.default
+local ____sprite = require("mod.src.sprite")
+local initSprite = ____sprite.initSprite
+local setSpriteOpacity = ____sprite.setSpriteOpacity
 local ____BlackSpriteState = require("mod.src.types.BlackSpriteState")
 local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
-local ____util = require("mod.src.util")
-local initSprite = ____util.initSprite
-local setSpriteOpacity = ____util.setSpriteOpacity
 function drawBlackSprite(self)
     if (g.game == nil) or (state == BlackSpriteState.DISABLED) then
         return
@@ -3329,6 +3303,216 @@ function ____exports.setBlackSpriteState(self, newState)
     local isaacFrameCount = Isaac.GetFrameCount()
     state = newState
     startFrame = isaacFrameCount
+end
+return ____exports
+ end,
+["mod.src.enums"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+____exports.EntityTypeCustom = EntityTypeCustom or ({})
+____exports.EntityTypeCustom.BOX = Isaac.GetEntityTypeByName("Large Box")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.BOX] = "BOX"
+____exports.EntityTypeCustom.TABLE = Isaac.GetEntityTypeByName("Table")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.TABLE] = "TABLE"
+____exports.EntityTypeCustom.ADMIN_TABLE = Isaac.GetEntityTypeByName("Admin Table")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.ADMIN_TABLE] = "ADMIN_TABLE"
+____exports.EntityTypeCustom.ADMIN_TOP = Isaac.GetEntityTypeByName("Admin Top")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.ADMIN_TOP] = "ADMIN_TOP"
+____exports.EntityTypeCustom.STORAGE = Isaac.GetEntityTypeByName("Storage")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.STORAGE] = "STORAGE"
+____exports.EntityTypeCustom.BED = Isaac.GetEntityTypeByName("Bed")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.BED] = "BED"
+____exports.EntityTypeCustom.ENGINE = Isaac.GetEntityTypeByName("Engine")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.ENGINE] = "ENGINE"
+____exports.EntityTypeCustom.REACTOR = Isaac.GetEntityTypeByName("Reactor")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.REACTOR] = "REACTOR"
+____exports.EntityTypeCustom.SECURITY_TABLE = Isaac.GetEntityTypeByName("Security Table")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.SECURITY_TABLE] = "SECURITY_TABLE"
+____exports.EntityTypeCustom.ELECTRICAL = Isaac.GetEntityTypeByName("Electrical")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.ELECTRICAL] = "ELECTRICAL"
+____exports.EntityTypeCustom.WIRE_SIGN = Isaac.GetEntityTypeByName("Wire Sign")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.WIRE_SIGN] = "WIRE_SIGN"
+____exports.EntityTypeCustom.LINE = Isaac.GetEntityTypeByName("Line")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.LINE] = "LINE"
+____exports.EntityTypeCustom.WEAPONS = Isaac.GetEntityTypeByName("Weapons")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.WEAPONS] = "WEAPONS"
+____exports.EntityTypeCustom.TANK = Isaac.GetEntityTypeByName("Tank")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.TANK] = "TANK"
+____exports.EntityTypeCustom.SHIP_CONTROLS = Isaac.GetEntityTypeByName("Ship Controls")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.SHIP_CONTROLS] = "SHIP_CONTROLS"
+____exports.EntityTypeCustom.SHIELDS = Isaac.GetEntityTypeByName("Shields")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.SHIELDS] = "SHIELDS"
+____exports.EntityTypeCustom.COMPUTER = Isaac.GetEntityTypeByName("Computer")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.COMPUTER] = "COMPUTER"
+____exports.EntityTypeCustom.RADIO = Isaac.GetEntityTypeByName("Radio")
+____exports.EntityTypeCustom[____exports.EntityTypeCustom.RADIO] = "RADIO"
+____exports.BoxVariant = BoxVariant or ({})
+____exports.BoxVariant.LARGE = Isaac.GetEntityVariantByName("Large Box")
+____exports.BoxVariant[____exports.BoxVariant.LARGE] = "LARGE"
+____exports.BoxVariant.SMALL = Isaac.GetEntityVariantByName("Small Box")
+____exports.BoxVariant[____exports.BoxVariant.SMALL] = "SMALL"
+____exports.EffectVariantCustom = EffectVariantCustom or ({})
+____exports.EffectVariantCustom.STAGE_API_DOOR = Isaac.GetEntityVariantByName("StageAPIDoor")
+____exports.EffectVariantCustom[____exports.EffectVariantCustom.STAGE_API_DOOR] = "STAGE_API_DOOR"
+____exports.EffectVariantCustom.VENT = Isaac.GetEntityVariantByName("Vent")
+____exports.EffectVariantCustom[____exports.EffectVariantCustom.VENT] = "VENT"
+____exports.EffectVariantCustom.BUTTON = Isaac.GetEntityVariantByName("Button")
+____exports.EffectVariantCustom[____exports.EffectVariantCustom.BUTTON] = "BUTTON"
+____exports.EffectVariantCustom.BLOCK = Isaac.GetEntityVariantByName("Block")
+____exports.EffectVariantCustom[____exports.EffectVariantCustom.BLOCK] = "BLOCK"
+____exports.CarpetSubTypeCustom = CarpetSubTypeCustom or ({})
+____exports.CarpetSubTypeCustom.BLOCK = 11
+____exports.CarpetSubTypeCustom[____exports.CarpetSubTypeCustom.BLOCK] = "BLOCK"
+____exports.ButtonSubType = ButtonSubType or ({})
+____exports.ButtonSubType.GO_TO_TASK = 0
+____exports.ButtonSubType[____exports.ButtonSubType.GO_TO_TASK] = "GO_TO_TASK"
+____exports.ButtonSubType.EMERGENCY = 1
+____exports.ButtonSubType[____exports.ButtonSubType.EMERGENCY] = "EMERGENCY"
+____exports.ButtonSubType.CAMERA = 2
+____exports.ButtonSubType[____exports.ButtonSubType.CAMERA] = "CAMERA"
+____exports.ButtonSubType.LIGHTS = 3
+____exports.ButtonSubType[____exports.ButtonSubType.LIGHTS] = "LIGHTS"
+____exports.ButtonSubType.COMMS = 4
+____exports.ButtonSubType[____exports.ButtonSubType.COMMS] = "COMMS"
+____exports.ButtonSubType.O2 = 5
+____exports.ButtonSubType[____exports.ButtonSubType.O2] = "O2"
+____exports.ButtonSubType.TASK_1 = 6
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_1] = "TASK_1"
+____exports.ButtonSubType.TASK_2 = 7
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_2] = "TASK_2"
+____exports.ButtonSubType.TASK_3 = 8
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_3] = "TASK_3"
+____exports.ButtonSubType.TASK_4 = 9
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_4] = "TASK_4"
+____exports.ButtonSubType.TASK_5 = 10
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_5] = "TASK_5"
+____exports.ButtonSubType.TASK_6 = 11
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_6] = "TASK_6"
+____exports.ButtonSubType.TASK_7 = 12
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_7] = "TASK_7"
+____exports.ButtonSubType.TASK_8 = 13
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_8] = "TASK_8"
+return ____exports
+ end,
+["mod.src.fonts"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+____exports.fonts = {
+    droid = Font(),
+    pf = Font()
+}
+____exports.fonts.droid:Load("font/droid.fnt")
+____exports.fonts.pf:Load("font/pftempestasevencondensed.fnt")
+return ____exports
+ end,
+["mod.src.util"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local ensureAllCases = ____isaacscript_2Dcommon.ensureAllCases
+local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
+local log = ____isaacscript_2Dcommon.log
+local setBlindfold = ____isaacscript_2Dcommon.setBlindfold
+local ____fonts = require("mod.src.fonts")
+local fonts = ____fonts.fonts
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____Role = require("mod.src.types.Role")
+local Role = ____Role.Role
+function ____exports.amOwner(self)
+    if g.game == nil then
+        return false
+    end
+    local firstPlayer = g.game.players[1]
+    if firstPlayer == nil then
+        return false
+    end
+    return firstPlayer.username == g.username
+end
+function ____exports.consoleCommand(self, command)
+    log(nil, "Executing console command: " .. command)
+    Isaac.ExecuteCommand(command)
+    log(nil, "Finished executing console command: " .. command)
+end
+function ____exports.disableShooting(self)
+    local player = Isaac.GetPlayer()
+    setBlindfold(nil, player, true)
+    player:TryRemoveNullCostume(NullItemID.ID_BLINDFOLD)
+end
+function ____exports.drawFontText(self, text, position, opacity)
+    if opacity == nil then
+        opacity = 1
+    end
+    local scale = 1
+    local length = fonts.droid:GetStringWidthUTF8(text) * scale
+    local color = KColor(1, 1, 1, opacity)
+    fonts.droid:DrawString(text, position.X - (length / 2), position.Y, color, 0, true)
+end
+function ____exports.enableShooting(self)
+    local player = Isaac.GetPlayer()
+    setBlindfold(nil, player, false)
+end
+function ____exports.getRoleText(self, role)
+    repeat
+        local ____switch10 = role
+        local ____cond10 = ____switch10 == Role.CREW
+        if ____cond10 then
+            do
+                return "Crew"
+            end
+        end
+        ____cond10 = ____cond10 or (____switch10 == Role.IMPOSTER)
+        if ____cond10 then
+            do
+                return "Imposter"
+            end
+        end
+        do
+            do
+                ensureAllCases(nil, role)
+                return "Unknown"
+            end
+        end
+    until true
+end
+function ____exports.getScreenPosition(self, x, y)
+    local bottomRightPos = getScreenBottomRightPos(nil)
+    return Vector(x * bottomRightPos.X, y * bottomRightPos.Y)
+end
+function ____exports.movePlayerToGridIndex(self, gridIndex)
+    local game = Game()
+    local room = game:GetRoom()
+    local position = room:GetGridPosition(gridIndex)
+    local player = Isaac.GetPlayer()
+    player.Position = position
+    player.Velocity = Vector.Zero
+end
+function ____exports.removeGridEntity(self, gridEntity)
+    local game = Game()
+    local room = game:GetRoom()
+    local gridIndex = gridEntity:GetGridIndex()
+    room:RemoveGridEntity(gridIndex, 0, false)
+    room:Update()
+end
+function ____exports.restart(self)
+    ____exports.consoleCommand(nil, "restart")
+end
+function ____exports.spawnEntity(self, entityType, variant, subType, gridIndex, depthOffset)
+    if depthOffset == nil then
+        depthOffset = -100
+    end
+    local game = Game()
+    local room = game:GetRoom()
+    local position = room:GetGridPosition(gridIndex)
+    local entity = Isaac.Spawn(entityType, variant, subType, position, Vector.Zero, nil)
+    entity:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
+    entity.DepthOffset = depthOffset
+    return entity
+end
+function ____exports.traceback(self)
+    print(
+        debug.traceback()
+    )
 end
 return ____exports
  end,
@@ -3454,95 +3638,6 @@ function ____exports.getTime(self)
 end
 return ____exports
  end,
-["mod.src.chatCommands.connect"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-local chat = require("mod.src.chat")
-local ____constants = require("mod.src.constants")
-local MOD_NAME = ____constants.MOD_NAME
-local socketClient = require("mod.src.network.socketClient")
-function ____exports.connectChatCommand(self, autoLogin)
-    if socketClient:isConnected() then
-        chat:addLocal(("You are already connected to the " .. MOD_NAME) .. " server.")
-        return
-    end
-    if not socketClient:connect() then
-        chat:addLocal(("Failed to connect to the " .. MOD_NAME) .. " server.")
-        return
-    end
-    if not autoLogin then
-        chat:addLocal("Connected!")
-        chat:addLocal("Next, select your username with the \"/username\" command.")
-        chat:addLocal("For example: \"/username Alice\"")
-    end
-end
-return ____exports
- end,
-["mod.src.types.PlayerMessage"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["mod.src.network.pack"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-require("lualib_bundle");
-local ____exports = {}
-local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
-local jsonDecode = ____isaacscript_2Dcommon.jsonDecode
-local jsonEncode = ____isaacscript_2Dcommon.jsonEncode
-local log = ____isaacscript_2Dcommon.log
-local ____constants = require("mod.src.constants")
-local UDP_POSITION_DATA_FORMAT = ____constants.UDP_POSITION_DATA_FORMAT
-local UDP_POSITION_FIELDS = ____constants.UDP_POSITION_FIELDS
-local struct = require("mod.src.network.struct")
-local DATA_SEPARATOR = " "
-local DEBUG = true
-function ____exports.packTCPMsg(self, command, data)
-    if data == nil then
-        return command .. "\n"
-    end
-    local dataString = jsonEncode(nil, data)
-    return ((command .. DATA_SEPARATOR) .. dataString) .. "\n"
-end
-function ____exports.unpackTCPMsg(self, msg)
-    msg = __TS__StringTrim(msg)
-    local msgArray = __TS__StringSplit(msg, DATA_SEPARATOR)
-    local command = msgArray[1]
-    local dataArray = __TS__ArraySlice(msgArray, 1)
-    local dataString = table.concat(dataArray, DATA_SEPARATOR or ",")
-    local data = jsonDecode(nil, dataString)
-    return {command, data}
-end
-function ____exports.unpackUDPPlayerMessage(self, rawData)
-    if DEBUG then
-        log(nil, "Unpacking UDP message:")
-    end
-    local dataArray = {
-        struct:unpack(UDP_POSITION_DATA_FORMAT, rawData)
-    }
-    local playerMessage = {}
-    do
-        local i = 0
-        while i < #UDP_POSITION_FIELDS do
-            local field = UDP_POSITION_FIELDS[i + 1]
-            local fieldData = dataArray[i + 1]
-            if type(fieldData) == "string" then
-                fieldData = __TS__StringTrim(fieldData)
-            end
-            playerMessage[field] = fieldData
-            if DEBUG then
-                log(
-                    nil,
-                    (("- " .. field) .. " - ") .. tostring(fieldData)
-                )
-            end
-            i = i + 1
-        end
-    end
-    return playerMessage
-end
-return ____exports
- end,
 ["mod.src.network.send"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
@@ -3579,6 +3674,424 @@ function ____exports.sendUDP(self, data)
     if sentBytes == nil then
         log(nil, "Failed to send data over the UDP socket: " .. errMsg)
         socketClient:disconnect()
+    end
+end
+return ____exports
+ end,
+["mod.src.setupPlayersAndUI"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local disableHUD, removeAllItems, removeActiveItems, setStats, fullHeal
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local getEnumValues = ____isaacscript_2Dcommon.getEnumValues
+local ____util = require("mod.src.util")
+local disableShooting = ____util.disableShooting
+function disableHUD(self)
+    local game = Game()
+    local hud = game:GetHUD()
+    hud:SetVisible(false)
+    if MinimapAPI ~= nil then
+        MinimapAPI.OverrideConfig.DisplayOnNoHUD = true
+    end
+end
+function removeAllItems(self, player)
+    removeActiveItems(nil, player)
+    player:AddCoins(-99)
+    player:AddBombs(-99)
+    player:AddKeys(-99)
+    player:TryRemoveTrinket(TrinketType.TRINKET_PETRIFIED_POOP)
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_BLACK_POWDER)
+end
+function removeActiveItems(self, player)
+    for ____, activeSlot in ipairs(
+        getEnumValues(nil, ActiveSlot)
+    ) do
+        local activeItem = player:GetActiveItem(activeSlot)
+        if activeItem ~= 0 then
+            player:RemoveCollectible(activeItem)
+        end
+    end
+end
+function setStats(self, player)
+    player:AddCacheFlags(CacheFlag.CACHE_ALL)
+    player:EvaluateItems()
+end
+function fullHeal(self, player)
+    player:AddHearts(24)
+end
+function ____exports.setupPlayerAndUI(self)
+    local player = Isaac.GetPlayer()
+    disableHUD(nil)
+    disableShooting(nil)
+    removeAllItems(nil, player)
+    setStats(nil, player)
+    fullHeal(nil, player)
+end
+return ____exports
+ end,
+["mod.src.types.SkeldRoom"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+do
+    local ____export = require("common.src.types.SkeldRoom")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+return ____exports
+ end,
+["mod.src.skeldRoomMap"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+local ____exports = {}
+local ____SkeldRoom = require("mod.src.types.SkeldRoom")
+local SkeldRoom = ____SkeldRoom.SkeldRoom
+____exports.skeldRoomMap = __TS__New(Map, {{"Cafeteria", SkeldRoom.CAFETERIA}, {"Admin Hall", SkeldRoom.ADMIN_HALL}, {"Admin", SkeldRoom.ADMIN}, {"Storage", SkeldRoom.STORAGE}, {"Medbay Hall", SkeldRoom.MEDBAY_HALL}, {"Medbay", SkeldRoom.MEDBAY}, {"Upper Engine", SkeldRoom.UPPER_ENGINE}, {"Engine Hall", SkeldRoom.ENGINE_HALL}, {"Reactor", SkeldRoom.REACTOR}, {"Security", SkeldRoom.SECURITY}, {"Lower Engine", SkeldRoom.LOWER_ENGINE}, {"Electrical Hall", SkeldRoom.ELECTRICAL_HALL}, {"Electrical", SkeldRoom.ELECTRICAL}, {"Weapons", SkeldRoom.WEAPONS}, {"O2 Hall", SkeldRoom.O2_HALL}, {"O2", SkeldRoom.O2}, {"Navigation", SkeldRoom.NAVIGATION}, {"Navigation Hall", SkeldRoom.NAVIGATION_HALL}, {"Shields", SkeldRoom.SHIELDS}, {"Communication Hall", SkeldRoom.COMMUNICATION_HALL}, {"Communication", SkeldRoom.COMMUNICATION}, {"Task", SkeldRoom.TASK}})
+____exports.skeldRoomReverseMap = {[SkeldRoom.CAFETERIA] = "Cafeteria", [SkeldRoom.ADMIN_HALL] = "Admin Hall", [SkeldRoom.ADMIN] = "Admin", [SkeldRoom.STORAGE] = "Storage", [SkeldRoom.MEDBAY_HALL] = "Medbay Hall", [SkeldRoom.MEDBAY] = "Medbay", [SkeldRoom.UPPER_ENGINE] = "Upper Engine", [SkeldRoom.ENGINE_HALL] = "Engine Hall", [SkeldRoom.REACTOR] = "Reactor", [SkeldRoom.SECURITY] = "Security", [SkeldRoom.LOWER_ENGINE] = "Lower Engine", [SkeldRoom.ELECTRICAL_HALL] = "Electrical Hall", [SkeldRoom.ELECTRICAL] = "Electrical", [SkeldRoom.WEAPONS] = "Weapons", [SkeldRoom.O2_HALL] = "O2 Hall", [SkeldRoom.O2] = "O2", [SkeldRoom.NAVIGATION] = "Navigation", [SkeldRoom.NAVIGATION_HALL] = "Navigation Hall", [SkeldRoom.SHIELDS] = "Shields", [SkeldRoom.COMMUNICATION_HALL] = "Communication Hall", [SkeldRoom.COMMUNICATION] = "Communication", [SkeldRoom.TASK] = "Task"}
+return ____exports
+ end,
+["mod.src.stageAPI"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+local ____exports = {}
+local getStageAPIRoomID
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____skeldRoomMap = require("mod.src.skeldRoomMap")
+local skeldRoomMap = ____skeldRoomMap.skeldRoomMap
+local ____SkeldRoom = require("mod.src.types.SkeldRoom")
+local SkeldRoom = ____SkeldRoom.SkeldRoom
+function ____exports.getStageAPIRoomName(self)
+    local defaultReturn = "Unknown"
+    if StageAPI == nil then
+        return defaultReturn
+    end
+    local stageAPIRoom = StageAPI.GetCurrentRoom()
+    if stageAPIRoom == nil then
+        return defaultReturn
+    end
+    return stageAPIRoom.Layout.Name
+end
+function getStageAPIRoomID(self, levelMap, roomName)
+    for ____, roomData in ipairs(levelMap.Map) do
+        local levelRoom = levelMap:GetRoom(roomData)
+        if levelRoom.Layout.Name == roomName then
+            return roomData.MapID
+        end
+    end
+    return nil
+end
+local NULL_STAGE_API_ANIMATION = -1
+local DEFAULT_BACKDROP_TYPE = "security"
+local backdropMap = __TS__New(Map, {{SkeldRoom.CAFETERIA, "cafeteria"}, {SkeldRoom.ELECTRICAL, "electrical"}, {SkeldRoom.SECURITY, "security"}})
+function ____exports.fixRoomEntrancePosition(self)
+    local game = Game()
+    local level = game:GetLevel()
+    local room = game:GetRoom()
+    local player = Isaac.GetPlayer()
+    if level.EnterDoor == -1 then
+        return
+    end
+    local doorPos = room:GetDoorSlotPosition(level.EnterDoor)
+    local playerEnterPos = room:FindFreeTilePosition(doorPos, 0)
+    player.Position = playerEnterPos
+end
+function ____exports.getStageAPIRoomMapID(self, skeldRoom)
+    if StageAPI == nil then
+        return nil
+    end
+    local levelMap = StageAPI.GetCurrentLevelMap()
+    for ____, roomData in ipairs(levelMap.Map) do
+        local levelRoom = levelMap:GetRoom(roomData)
+        if levelRoom.Layout.Variant == skeldRoom then
+            return roomData.MapID
+        end
+    end
+    return nil
+end
+function ____exports.getSkeldRoom(self)
+    local roomName = ____exports.getStageAPIRoomName(nil)
+    local skeldRoom = skeldRoomMap:get(roomName)
+    return (((skeldRoom == nil) and (function() return nil end)) or (function() return skeldRoom end))()
+end
+function ____exports.getStageAPIDoors(self)
+    if StageAPI == nil then
+        error("StageAPI was not initialized.")
+    end
+    return StageAPI.GetCustomGrids(nil, "CustomDoor")
+end
+function ____exports.goToStageAPIRoom(self, roomName, enterDoor)
+    if StageAPI == nil then
+        return
+    end
+    local game = Game()
+    local level = game:GetLevel()
+    local levelMap = StageAPI.GetCurrentLevelMap()
+    local roomID = getStageAPIRoomID(nil, levelMap, roomName)
+    if roomID == nil then
+        return
+    end
+    StageAPI.ExtraRoomTransition(roomID, Direction.NO_DIRECTION, NULL_STAGE_API_ANIMATION, levelMap)
+    if enterDoor ~= nil then
+        level.EnterDoor = enterDoor
+    end
+    ____exports.fixRoomEntrancePosition(nil)
+end
+function ____exports.loadBackdrops(self)
+    if (g.game == nil) or (StageAPI == nil) then
+        return
+    end
+    local roomName = ____exports.getStageAPIRoomName(nil)
+    local room = skeldRoomMap:get(roomName)
+    if room == nil then
+        return
+    end
+    local backdropType = backdropMap:get(room)
+    if backdropType == nil then
+        backdropType = DEFAULT_BACKDROP_TYPE
+    end
+    local backdrops = StageAPI.BackdropHelper({Walls = {"wall"}, NFloors = {"nfloor"}, LFloors = {"lfloor"}, Corners = {"corner"}}, ("gfx/backdrop/" .. backdropType) .. "/", ".png")
+    local backdrop = backdrops[1]
+    if backdrop == nil then
+        return
+    end
+    StageAPI.ChangeBackdrop(backdrop, false, true)
+end
+return ____exports
+ end,
+["mod.src.wall"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+local ____exports = {}
+local ONE_BY_ONE_ROOM_WIDTH = 15
+local ONE_BY_ONE_ROOM_HEIGHT = 9
+local TOP_LEFT_GRID_INDEX = 0
+local TOP_WALL_GRID_INDEXES = {}
+do
+    local i = TOP_LEFT_GRID_INDEX
+    while i < (TOP_LEFT_GRID_INDEX + ONE_BY_ONE_ROOM_WIDTH) do
+        __TS__ArrayPush(TOP_WALL_GRID_INDEXES, i)
+        i = i + 1
+    end
+end
+local BOTTOM_LEFT_GRID_INDEX = 120
+local BOTTOM_WALL_GRID_INDEXES = {}
+do
+    local i = BOTTOM_LEFT_GRID_INDEX
+    while i < (BOTTOM_LEFT_GRID_INDEX + ONE_BY_ONE_ROOM_WIDTH) do
+        __TS__ArrayPush(BOTTOM_WALL_GRID_INDEXES, i)
+        i = i + 1
+    end
+end
+local LEFT_WALL_GRID_INDEXES = {}
+do
+    local i = 0
+    while i < ONE_BY_ONE_ROOM_HEIGHT do
+        local gridIndex = TOP_LEFT_GRID_INDEX + (i * ONE_BY_ONE_ROOM_WIDTH)
+        __TS__ArrayPush(LEFT_WALL_GRID_INDEXES, gridIndex)
+        i = i + 1
+    end
+end
+local TOP_RIGHT_GRID_INDEX = 14
+local RIGHT_WALL_GRID_INDEXES = {}
+do
+    local i = 0
+    while i < ONE_BY_ONE_ROOM_HEIGHT do
+        local gridIndex = TOP_RIGHT_GRID_INDEX + (i * ONE_BY_ONE_ROOM_WIDTH)
+        __TS__ArrayPush(RIGHT_WALL_GRID_INDEXES, gridIndex)
+        i = i + 1
+    end
+end
+local ALL_WALL_GRID_INDEXES = __TS__New(Set)
+for ____, gridIndexArray in ipairs({TOP_WALL_GRID_INDEXES, BOTTOM_WALL_GRID_INDEXES, LEFT_WALL_GRID_INDEXES, RIGHT_WALL_GRID_INDEXES}) do
+    for ____, gridIndex in ipairs(gridIndexArray) do
+        ALL_WALL_GRID_INDEXES:add(gridIndex)
+    end
+end
+function ____exports.isWallGridIndex(self, gridIndex)
+    return ALL_WALL_GRID_INDEXES:has(gridIndex)
+end
+return ____exports
+ end,
+["mod.src.features.taskSubroutines"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+local ____exports = {}
+local removeAllNPCs, removeAllGridEntities
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local arrayRemoveInPlace = ____isaacscript_2Dcommon.arrayRemoveInPlace
+local getNPCs = ____isaacscript_2Dcommon.getNPCs
+local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
+local ____constants = require("mod.src.constants")
+local taskDescriptions = ____constants.taskDescriptions
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____minimapAPI = require("mod.src.minimapAPI")
+local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
+local ____send = require("mod.src.network.send")
+local sendTCP = ____send.sendTCP
+local ____setupPlayersAndUI = require("mod.src.setupPlayersAndUI")
+local setupPlayerAndUI = ____setupPlayersAndUI.setupPlayerAndUI
+local ____skeldRoomMap = require("mod.src.skeldRoomMap")
+local skeldRoomReverseMap = ____skeldRoomMap.skeldRoomReverseMap
+local ____stageAPI = require("mod.src.stageAPI")
+local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
+local ____SocketCommands = require("mod.src.types.SocketCommands")
+local SocketCommandModToServer = ____SocketCommands.SocketCommandModToServer
+local ____util = require("mod.src.util")
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+local removeGridEntity = ____util.removeGridEntity
+local ____wall = require("mod.src.wall")
+local isWallGridIndex = ____wall.isWallGridIndex
+function ____exports.taskLeave(self)
+    if (g.game == nil) or (g.game.currentTask == nil) then
+        return
+    end
+    local taskDescription = taskDescriptions[g.game.currentTask]
+    local roomName = skeldRoomReverseMap[taskDescription.room]
+    if roomName == nil then
+        error(
+            "Failed to get the room name for room: " .. tostring(taskDescription.room)
+        )
+    end
+    g.game.currentTask = nil
+    setupPlayerAndUI(nil)
+    enableMinimapAPI(nil, true)
+    ____exports.clearRoomEntities(nil)
+    goToStageAPIRoom(nil, roomName)
+    movePlayerToGridIndex(nil, taskDescription.returnGridIndex)
+end
+function ____exports.clearRoomEntities(self)
+    removeAllMatchingEntities(nil, EntityType.ENTITY_BOMBDROP)
+    removeAllMatchingEntities(nil, EntityType.ENTITY_PICKUP)
+    removeAllNPCs(nil)
+    removeAllGridEntities(nil)
+end
+function removeAllNPCs(self)
+    local npcs = getNPCs(nil)
+    for ____, npc in ipairs(npcs) do
+        npc:Remove()
+    end
+end
+function removeAllGridEntities(self)
+    local game = Game()
+    local room = game:GetRoom()
+    do
+        local gridIndex = 0
+        while gridIndex < room:GetGridSize() do
+            do
+                if isWallGridIndex(nil, gridIndex) then
+                    goto __continue12
+                end
+                local gridEntity = room:GetGridEntity(gridIndex)
+                if gridEntity ~= nil then
+                    removeGridEntity(nil, gridEntity)
+                end
+            end
+            ::__continue12::
+            gridIndex = gridIndex + 1
+        end
+    end
+end
+local sfx = SFXManager()
+function ____exports.taskComplete(self)
+    if (g.game == nil) or (g.game.currentTask == nil) then
+        return
+    end
+    local task = g.game.currentTask
+    sfx:Stop(SoundEffect.SOUND_THUMBSUP)
+    sfx:Play(SoundEffect.SOUND_1UP)
+    sendTCP(nil, SocketCommandModToServer.TASK_COMPLETE, {gameID = g.game.id, task = task})
+    for ____, tasks in ipairs(
+        __TS__ObjectValues(g.game.ourTasks)
+    ) do
+        arrayRemoveInPlace(nil, tasks, task)
+    end
+    ____exports.taskLeave(nil)
+end
+return ____exports
+ end,
+["mod.src.callbacks.entityTakeDmg"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local entityTakeDmgPlayer, sfx, frameReturningFromTask
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskLeave = ____taskSubroutines.taskLeave
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+function entityTakeDmgPlayer(self, tookDamage, _damageAmount, _damageFlags, _damageSource, _damageCountdownFrames)
+    local game = Game()
+    local gameFrameCount = game:GetFrameCount()
+    if gameFrameCount == frameReturningFromTask then
+        return false
+    end
+    if (g.game == nil) or (g.game.currentTask == nil) then
+        return nil
+    end
+    local player = tookDamage:ToPlayer()
+    if player == nil then
+        return nil
+    end
+    sfx:Play(SoundEffect.SOUND_THUMBS_DOWN)
+    frameReturningFromTask = gameFrameCount
+    taskLeave(nil)
+    return false
+end
+sfx = SFXManager()
+frameReturningFromTask = nil
+function ____exports.init(self, mod)
+    mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, entityTakeDmgPlayer, EntityType.ENTITY_PLAYER)
+end
+return ____exports
+ end,
+["mod.src.callbacks.evaluateCache"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local ____constants = require("mod.src.constants")
+local IS_DEV = ____constants.IS_DEV
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____Task = require("mod.src.types.Task")
+local Task = ____Task.Task
+function ____exports.speed(self, player)
+    if g.game == nil then
+        return
+    end
+    player.MoveSpeed = 0.75
+    if g.game.currentTask == Task.SHORT_MAKE_PENTAGRAM then
+        player.MoveSpeed = 2
+    end
+    if IS_DEV then
+        player.MoveSpeed = 2
+    end
+end
+function ____exports.init(self, mod)
+    mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, ____exports.speed, CacheFlag.CACHE_SPEED)
+end
+return ____exports
+ end,
+["mod.src.chatCommands.connect"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local chat = require("mod.src.chat")
+local ____constants = require("mod.src.constants")
+local MOD_NAME = ____constants.MOD_NAME
+local socketClient = require("mod.src.network.socketClient")
+function ____exports.connectChatCommand(self, autoLogin)
+    if socketClient:isConnected() then
+        chat:addLocal(("You are already connected to the " .. MOD_NAME) .. " server.")
+        return
+    end
+    if not socketClient:connect() then
+        chat:addLocal(("Failed to connect to the " .. MOD_NAME) .. " server.")
+        return
+    end
+    if not autoLogin then
+        chat:addLocal("Connected!")
+        chat:addLocal("Next, select your username with the \"/username\" command.")
+        chat:addLocal("For example: \"/username Alice\"")
     end
 end
 return ____exports
@@ -3643,19 +4156,6 @@ do
 end
 return ____exports
  end,
-["mod.src.types.SkeldRoom"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-do
-    local ____export = require("common.src.types.SkeldRoom")
-    for ____exportKey, ____exportValue in pairs(____export) do
-        if ____exportKey ~= "default" then
-            ____exports[____exportKey] = ____exportValue
-        end
-    end
-end
-return ____exports
- end,
 ["mod.src.debugFunction"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
@@ -3711,15 +4211,6 @@ DEBUG_HOTKEY2 = Keyboard.KEY_F2
 hotkeyPressed1 = false
 hotkeyPressed2 = false
 function ____exports.debugFunction(self)
-    if MinimapAPI == nil then
-        return
-    end
-    local minimapAPILevel = MinimapAPI:GetLevel()
-    for ____, room in ipairs(minimapAPILevel) do
-        Isaac.DebugString(
-            "ROOM ID: " .. tostring(room.ID)
-        )
-    end
 end
 function ____exports.postUpdate(self)
     postUpdateHotkey1(nil)
@@ -3823,10 +4314,17 @@ require("lualib_bundle");
 local ____exports = {}
 local functionMap
 local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local getGridEntities = ____isaacscript_2Dcommon.getGridEntities
 local getRoomIndex = ____isaacscript_2Dcommon.getRoomIndex
 local log = ____isaacscript_2Dcommon.log
 local ____debugFunction = require("mod.src.debugFunction")
 local debugFunction = ____debugFunction.debugFunction
+local ____skeldRoomMap = require("mod.src.skeldRoomMap")
+local skeldRoomReverseMap = ____skeldRoomMap.skeldRoomReverseMap
+local ____stageAPI = require("mod.src.stageAPI")
+local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
+local ____util = require("mod.src.util")
+local removeGridEntity = ____util.removeGridEntity
 local ____executeCmdSubroutines = require("mod.src.callbacks.executeCmdSubroutines")
 local list = ____executeCmdSubroutines.list
 function ____exports.main(self, command, parameters)
@@ -3844,6 +4342,16 @@ function ____exports.main(self, command, parameters)
     end
 end
 functionMap = __TS__New(Map)
+functionMap:set(
+    "center",
+    function()
+        local game = Game()
+        local room = game:GetRoom()
+        local centerPos = room:GetCenterPos()
+        local player = Isaac.GetPlayer()
+        player.Position = centerPos
+    end
+)
 functionMap:set(
     "debug",
     function()
@@ -3872,6 +4380,37 @@ functionMap:set(
     end
 )
 functionMap:set(
+    "w",
+    function(____, params)
+        local roomName
+        local num = tonumber(params)
+        if num == nil then
+            roomName = params
+        else
+            local skeldRoom = num
+            roomName = skeldRoomReverseMap[skeldRoom]
+            if roomName == nil then
+                print(
+                    "Failed to find the room name for room ID: " .. tostring(skeldRoom)
+                )
+                return
+            end
+        end
+        goToStageAPIRoom(nil, roomName)
+        print("Warped to room: " .. roomName)
+    end
+)
+functionMap:set(
+    "removeallgrid",
+    function()
+        for ____, gridEntity in ipairs(
+            getGridEntities(nil)
+        ) do
+            removeGridEntity(nil, gridEntity)
+        end
+    end
+)
+functionMap:set(
     "roomindex",
     function()
         local roomIndex = getRoomIndex(nil)
@@ -3880,208 +4419,11 @@ functionMap:set(
 )
 return ____exports
  end,
-["mod.src.minimapAPI"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-function ____exports.setMinimapAPIRoomIcon(self, mapID, icon)
-    if MinimapAPI == nil then
-        return
-    end
-    local minimapAPILevel = MinimapAPI:GetLevel()
-    for ____, room in ipairs(minimapAPILevel) do
-        if room.ID == mapID then
-            room.ItemIcons = {icon}
-            return
-        end
-    end
-end
-return ____exports
- end,
-["mod.src.setupPlayersAndUI"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-local disableHUD, disableShooting, removeAllItems
-local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
-local getPlayers = ____isaacscript_2Dcommon.getPlayers
-local setBlindfold = ____isaacscript_2Dcommon.setBlindfold
-local ____globals = require("mod.src.globals")
-local g = ____globals.default
-function disableHUD(self)
-    local hud = g.g:GetHUD()
-    hud:SetVisible(false)
-    if MinimapAPI ~= nil then
-        MinimapAPI.OverrideConfig.DisplayOnNoHUD = true
-    end
-end
-function disableShooting(self)
-    for ____, player in ipairs(
-        getPlayers(nil)
-    ) do
-        setBlindfold(nil, player, true)
-        player:TryRemoveNullCostume(NullItemID.ID_BLINDFOLD)
-    end
-end
-function removeAllItems(self)
-    for ____, player in ipairs(
-        getPlayers(nil)
-    ) do
-        player:AddCoins(-99)
-        player:AddBombs(-99)
-        player:AddKeys(-99)
-    end
-end
-function ____exports.setupPlayerAndUI(self)
-    disableHUD(nil)
-    disableShooting(nil)
-    removeAllItems(nil)
-end
-return ____exports
- end,
-["mod.src.skeldRoomMap"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-require("lualib_bundle");
-local ____exports = {}
-local ____SkeldRoom = require("mod.src.types.SkeldRoom")
-local SkeldRoom = ____SkeldRoom.SkeldRoom
-____exports.skeldRoomMap = __TS__New(Map, {{"Cafeteria", SkeldRoom.CAFETERIA}, {"Admin Hall", SkeldRoom.ADMIN_HALL}, {"Admin", SkeldRoom.ADMIN}, {"Storage", SkeldRoom.STORAGE}, {"Medbay Hall", SkeldRoom.MEDBAY_HALL}, {"Medbay", SkeldRoom.MEDBAY}, {"Upper Engine", SkeldRoom.UPPER_ENGINE}, {"Engine Hall", SkeldRoom.ENGINE_HALL}, {"Reactor", SkeldRoom.REACTOR}, {"Security", SkeldRoom.SECURITY}, {"Lower Engine", SkeldRoom.LOWER_ENGINE}, {"Electrical Hall", SkeldRoom.ELECTRICAL_HALL}, {"Electrical", SkeldRoom.ELECTRICAL}, {"Weapons", SkeldRoom.WEAPONS}, {"O2 Hall", SkeldRoom.O2_HALL}, {"O2", SkeldRoom.O2}, {"Navigation", SkeldRoom.NAVIGATION}, {"Navigation Hall", SkeldRoom.NAVIGATION_HALL}, {"Shields", SkeldRoom.SHIELDS}, {"Communication Hall", SkeldRoom.COMMUNICATION_HALL}, {"Communication", SkeldRoom.COMMUNICATION}})
-____exports.skeldRoomReverseMap = __TS__New(Map, {{SkeldRoom.CAFETERIA, "Cafeteria"}, {SkeldRoom.ADMIN_HALL, "Admin Hall"}, {SkeldRoom.ADMIN, "Admin"}, {SkeldRoom.STORAGE, "Storage"}, {SkeldRoom.MEDBAY_HALL, "Medbay Hall"}, {SkeldRoom.MEDBAY, "Medbay"}, {SkeldRoom.UPPER_ENGINE, "Upper Engine"}, {SkeldRoom.ENGINE_HALL, "Engine Hall"}, {SkeldRoom.REACTOR, "Reactor"}, {SkeldRoom.SECURITY, "Security"}, {SkeldRoom.LOWER_ENGINE, "Lower Engine"}, {SkeldRoom.ELECTRICAL_HALL, "Electrical Hall"}, {SkeldRoom.ELECTRICAL, "Electrical"}, {SkeldRoom.WEAPONS, "Weapons"}, {SkeldRoom.O2_HALL, "O2 Hall"}, {SkeldRoom.O2, "O2"}, {SkeldRoom.NAVIGATION, "Navigation"}, {SkeldRoom.NAVIGATION_HALL, "Navigation Hall"}, {SkeldRoom.SHIELDS, "Shields"}, {SkeldRoom.COMMUNICATION_HALL, "Communication Hall"}, {SkeldRoom.COMMUNICATION, "Communication"}})
-return ____exports
- end,
-["mod.src.stageAPI"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-require("lualib_bundle");
-local ____exports = {}
-local getStageAPIRoomID
-local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
-local DISTANCE_OF_GRID_TILE = ____isaacscript_2Dcommon.DISTANCE_OF_GRID_TILE
-local ____globals = require("mod.src.globals")
-local g = ____globals.default
-local ____skeldRoomMap = require("mod.src.skeldRoomMap")
-local skeldRoomMap = ____skeldRoomMap.skeldRoomMap
-local ____SkeldRoom = require("mod.src.types.SkeldRoom")
-local SkeldRoom = ____SkeldRoom.SkeldRoom
-function ____exports.getStageAPIRoomName(self)
-    local defaultReturn = "Unknown"
-    if StageAPI == nil then
-        return defaultReturn
-    end
-    local stageAPIRoom = StageAPI.GetCurrentRoom()
-    if stageAPIRoom == nil then
-        return defaultReturn
-    end
-    return stageAPIRoom.Layout.Name
-end
-function getStageAPIRoomID(self, levelMap, roomName)
-    for ____, roomData in ipairs(levelMap.Map) do
-        local levelRoom = levelMap:GetRoom(roomData)
-        if levelRoom.Layout.Name == roomName then
-            return roomData.MapID
-        end
-    end
-    return nil
-end
-local BUG_FIX_OFFSET = Vector(0, DISTANCE_OF_GRID_TILE * -1)
-local NULL_STAGE_API_ANIMATION = -1
-local DEFAULT_BACKDROP_TYPE = "security"
-local backdropMap = __TS__New(Map, {{SkeldRoom.CAFETERIA, "cafeteria"}, {SkeldRoom.ELECTRICAL, "electrical"}, {SkeldRoom.SECURITY, "security"}})
-local topOfRoomPositionMap = __TS__New(
-    Map,
-    {
-        {
-            RoomShape.ROOMSHAPE_1x1,
-            Vector(320, 160)
-        },
-        {
-            RoomShape.ROOMSHAPE_1x2,
-            Vector(320, 160)
-        }
-    }
-)
-function ____exports.fixRoomEntrancePosition(self)
-    local level = g.g:GetLevel()
-    local room = g.g:GetRoom()
-    local roomShape = room:GetRoomShape()
-    local player = Isaac.GetPlayer()
-    if level.EnterDoor == -1 then
-        return
-    end
-    local doorPos = room:GetDoorSlotPosition(level.EnterDoor)
-    local playerEnterPos = room:FindFreeTilePosition(doorPos, 0)
-    local topOfRoomPosition = topOfRoomPositionMap:get(roomShape)
-    if topOfRoomPosition ~= nil then
-        local roomIsBugged = not room:IsPositionInRoom(topOfRoomPosition, 0)
-        if roomIsBugged and (level.EnterDoor == DoorSlot.DOWN0) then
-            playerEnterPos = playerEnterPos + BUG_FIX_OFFSET
-        end
-    end
-    player.Position = playerEnterPos
-end
-function ____exports.getStageAPIRoomMapID(self, skeldRoom)
-    if StageAPI == nil then
-        return nil
-    end
-    local levelMap = StageAPI.GetCurrentLevelMap()
-    for ____, roomData in ipairs(levelMap.Map) do
-        local levelRoom = levelMap:GetRoom(roomData)
-        if levelRoom.Layout.Variant == skeldRoom then
-            return roomData.MapID
-        end
-    end
-    return nil
-end
-function ____exports.getSkeldRoom(self)
-    local roomName = ____exports.getStageAPIRoomName(nil)
-    local skeldRoom = skeldRoomMap:get(roomName)
-    return (((skeldRoom == nil) and (function() return nil end)) or (function() return skeldRoom end))()
-end
-function ____exports.getStageAPIDoors(self)
-    if StageAPI == nil then
-        error("StageAPI was not initialized.")
-    end
-    return StageAPI.GetCustomGrids(nil, "CustomDoor")
-end
-function ____exports.goToStageAPIRoom(self, roomName, enterDoor)
-    if StageAPI == nil then
-        return
-    end
-    local game = Game()
-    local level = game:GetLevel()
-    local levelMap = StageAPI.GetCurrentLevelMap()
-    local roomID = getStageAPIRoomID(nil, levelMap, roomName)
-    if roomID == nil then
-        return
-    end
-    StageAPI.ExtraRoomTransition(roomID, Direction.NO_DIRECTION, NULL_STAGE_API_ANIMATION, levelMap)
-    level.EnterDoor = enterDoor
-    ____exports.fixRoomEntrancePosition(nil)
-end
-function ____exports.loadBackdrops(self)
-    if (g.game == nil) or (StageAPI == nil) then
-        return
-    end
-    local roomName = ____exports.getStageAPIRoomName(nil)
-    local room = skeldRoomMap:get(roomName)
-    if room == nil then
-        return
-    end
-    local backdropType = backdropMap:get(room)
-    if backdropType == nil then
-        backdropType = DEFAULT_BACKDROP_TYPE
-    end
-    local backdrops = StageAPI.BackdropHelper({Walls = {"wall"}, NFloors = {"nfloor"}, LFloors = {"lfloor"}, Corners = {"corner"}}, ("gfx/backdrop/" .. backdropType) .. "/", ".png")
-    local backdrop = backdrops[1]
-    if backdrop == nil then
-        return
-    end
-    StageAPI.ChangeBackdrop(backdrop, false, true)
-end
-return ____exports
- end,
 ["mod.src.loadMap"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
 local ____exports = {}
-local loadStageAPICustomLevel
+local loadStageAPICustomLevel, MAP_ROOM_VARIANT
 local ____constants = require("mod.src.constants")
 local MOD_NAME = ____constants.MOD_NAME
 local taskDescriptions = ____constants.taskDescriptions
@@ -4089,34 +4431,22 @@ local mapData = require("mod.src.data.map")
 local ____globals = require("mod.src.globals")
 local g = ____globals.default
 local ____minimapAPI = require("mod.src.minimapAPI")
+local setMapToFullVisibility = ____minimapAPI.setMapToFullVisibility
 local setMinimapAPIRoomIcon = ____minimapAPI.setMinimapAPIRoomIcon
 local ____setupPlayersAndUI = require("mod.src.setupPlayersAndUI")
 local setupPlayerAndUI = ____setupPlayersAndUI.setupPlayerAndUI
 local ____stageAPI = require("mod.src.stageAPI")
 local getStageAPIRoomMapID = ____stageAPI.getStageAPIRoomMapID
-local ____SkeldRoom = require("mod.src.types.SkeldRoom")
-local SkeldRoom = ____SkeldRoom.SkeldRoom
 function loadStageAPICustomLevel(self)
     if StageAPI == nil then
         return
     end
     local roomsList = StageAPI.RoomsList(MOD_NAME, mapData)
-    local levelMap = StageAPI.CreateMapFromRoomsList(roomsList)
+    local levelMap = StageAPI.CreateMapFromRoomsList(roomsList, MAP_ROOM_VARIANT)
     StageAPI.InitCustomLevel(levelMap, true)
 end
-function ____exports.setMapToFullVisibility(self)
-    if MinimapAPI == nil then
-        return
-    end
-    local minimapAPILevel = MinimapAPI:GetLevel()
-    for ____, room in ipairs(minimapAPILevel) do
-        room.Visited = true
-        room.Clear = true
-        room.DisplayFlags = 1 | 4
-    end
-end
 function ____exports.setTasksOnMap(self)
-    if (MinimapAPI == nil) or (g.game == nil) then
+    if g.game == nil then
         return
     end
     for ____, taskList in ipairs(
@@ -4126,25 +4456,17 @@ function ____exports.setTasksOnMap(self)
             local taskDescription = taskDescriptions[task]
             local taskRoom = taskDescription.room
             local mapID = getStageAPIRoomMapID(nil, taskRoom)
-            Isaac.DebugString(
-                (("Task " .. tostring(task)) .. " - ") .. taskDescription.name
-            )
-            Isaac.DebugString(
-                (("Room " .. tostring(taskRoom)) .. " - ") .. SkeldRoom[taskRoom]
-            )
             if mapID ~= nil then
                 setMinimapAPIRoomIcon(nil, mapID, "Item")
-                Isaac.DebugString("GETTING HERE 1")
-            else
-                Isaac.DebugString("GETTING HERE 2")
             end
         end
     end
 end
+MAP_ROOM_VARIANT = 99
 function ____exports.loadMap(self)
     setupPlayerAndUI(nil)
     loadStageAPICustomLevel(nil)
-    ____exports.setMapToFullVisibility(nil)
+    setMapToFullVisibility(nil)
     ____exports.setTasksOnMap(nil)
 end
 return ____exports
@@ -4160,6 +4482,10 @@ local ____globals = require("mod.src.globals")
 local g = ____globals.default
 local ____loadMap = require("mod.src.loadMap")
 local loadMap = ____loadMap.loadMap
+local ____minimapAPI = require("mod.src.minimapAPI")
+local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
+local ____sprite = require("mod.src.sprite")
+local setSpriteOpacity = ____sprite.setSpriteOpacity
 local ____BlackSpriteState = require("mod.src.types.BlackSpriteState")
 local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
 local ____CutsceneState = require("mod.src.types.CutsceneState")
@@ -4168,9 +4494,7 @@ local ____Role = require("mod.src.types.Role")
 local Role = ____Role.Role
 local ____util = require("mod.src.util")
 local drawFontText = ____util.drawFontText
-local enableMinimapAPI = ____util.enableMinimapAPI
 local getRoleText = ____util.getRoleText
-local setSpriteOpacity = ____util.setSpriteOpacity
 local ____blackSprite = require("mod.src.features.blackSprite")
 local FADE_TO_BLACK_FRAMES = ____blackSprite.FADE_TO_BLACK_FRAMES
 local setBlackSpriteState = ____blackSprite.setBlackSpriteState
@@ -4340,173 +4664,43 @@ function ____exports.inCutscene(self)
 end
 return ____exports
  end,
-["mod.src.types.TaskDescription"] = function(...) 
+["mod.src.features.buttonSubroutines"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
-return ____exports
- end,
-["mod.src.features.task"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-local inTask, ROOM_VARIANT_FOR_TASK
-local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
-local getRoomIndex = ____isaacscript_2Dcommon.getRoomIndex
-local getRoomVariant = ____isaacscript_2Dcommon.getRoomVariant
-local ____util = require("mod.src.util")
-local consoleCommand = ____util.consoleCommand
-function inTask(self)
-    local roomIndex = getRoomIndex(nil)
-    local roomVariant = getRoomVariant(nil)
-    return (roomIndex == GridRooms.ROOM_DEBUG_IDX) and (roomVariant == ROOM_VARIANT_FOR_TASK)
-end
-ROOM_VARIANT_FOR_TASK = 7
-function ____exports.goToTaskRoom(self, _taskDescription)
-    if inTask(nil) then
-        return
-    end
-    consoleCommand(
-        nil,
-        "goto d." .. tostring(ROOM_VARIANT_FOR_TASK)
-    )
-end
-return ____exports
- end,
-["mod.src.features.button"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-require("lualib_bundle");
-local ____exports = {}
-local checkIfButtonIsPressed, buttonPressed, buttonPressedTask, buttonPressedTaskReturn, buttonPressedEmergency, buttonPressedSpecial, spawnButton, getButtonAnimationSuffix, BUTTON_ACTIVATION_DISTANCE, EMERGENCY_BUTTON_ANIMATION_SUFFIX, SPECIAL_BUTTON_ANIMATION_SUFFIX
+local EMERGENCY_BUTTON_ANIMATION_SUFFIX, SPECIAL_BUTTON_ANIMATION_SUFFIX
 local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
 local ensureAllCases = ____isaacscript_2Dcommon.ensureAllCases
-local getPlayerCloserThan = ____isaacscript_2Dcommon.getPlayerCloserThan
-local ____constants = require("mod.src.constants")
-local taskDescriptions = ____constants.taskDescriptions
 local ____enums = require("mod.src.enums")
 local ButtonSubType = ____enums.ButtonSubType
 local EffectVariantCustom = ____enums.EffectVariantCustom
-local ____globals = require("mod.src.globals")
-local g = ____globals.default
-local ____send = require("mod.src.network.send")
-local sendTCP = ____send.sendTCP
-local ____stageAPI = require("mod.src.stageAPI")
-local getSkeldRoom = ____stageAPI.getSkeldRoom
-local ____MeetingType = require("mod.src.types.MeetingType")
-local MeetingType = ____MeetingType.MeetingType
-local ____SocketCommands = require("mod.src.types.SocketCommands")
-local SocketCommandModToServer = ____SocketCommands.SocketCommandModToServer
-local ____util = require("mod.src.util")
-local spawnEntity = ____util.spawnEntity
-local ____task = require("mod.src.features.task")
-local goToTaskRoom = ____task.goToTaskRoom
-function checkIfButtonIsPressed(self, effect)
-    if effect.State == 3 then
+function ____exports.resetButton(self, button)
+    local effect = button:ToEffect()
+    if effect == nil then
         return
     end
-    local player = getPlayerCloserThan(nil, effect.Position, BUTTON_ACTIVATION_DISTANCE)
-    if player == nil then
-        return
-    end
-    effect.State = 3
+    effect.State = 0
     local sprite = effect:GetSprite()
-    local animationSuffix = getButtonAnimationSuffix(nil, effect.SubType)
-    local animation = "Switched" .. animationSuffix
+    local animationSuffix = ____exports.getButtonAnimationSuffix(nil, effect.SubType)
+    local animation = "Off" .. animationSuffix
     sprite:Play(animation, true)
-    local sfx = SFXManager()
-    sfx:Play(SoundEffect.SOUND_BUTTON_PRESS)
-    buttonPressed(nil, effect)
 end
-function buttonPressed(self, effect)
-    local buttonSubType = effect.SubType
+function ____exports.getButtonAnimationSuffix(self, buttonSubType)
     repeat
-        local ____switch7 = buttonSubType
-        local ____cond7 = ____switch7 == ButtonSubType.TASK
-        if ____cond7 then
-            do
-                buttonPressedTask(nil, effect)
-                break
-            end
-        end
-        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.TASK_RETURN)
-        if ____cond7 then
-            do
-                buttonPressedTaskReturn(nil)
-                break
-            end
-        end
-        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.EMERGENCY)
-        if ____cond7 then
-            do
-                buttonPressedEmergency(nil)
-                break
-            end
-        end
-        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.SPECIAL)
-        if ____cond7 then
-            do
-                buttonPressedSpecial(nil)
-                break
-            end
-        end
-        do
-            do
-                ensureAllCases(nil, buttonSubType)
-            end
-        end
-    until true
-end
-function buttonPressedTask(self, effect)
-    if g.game == nil then
-        return
-    end
-    local data = effect:GetData()
-    local task = data.task
-    if task == nil then
-        error("Failed to read the task from a task button.")
-    end
-    g.game.currentTask = task
-    local taskDescription = taskDescriptions[task]
-    goToTaskRoom(nil, taskDescription)
-end
-function buttonPressedTaskReturn(self)
-end
-function buttonPressedEmergency(self)
-    if g.game == nil then
-        return
-    end
-    sendTCP(nil, SocketCommandModToServer.MEETING, {meetingType = MeetingType.EMERGENCY, gameID = g.game.id, userIDKilled = 0})
-end
-function buttonPressedSpecial(self)
-end
-function spawnButton(self, buttonSubType, gridIndex, enabled)
-    local button = spawnEntity(nil, EntityType.ENTITY_EFFECT, EffectVariantCustom.BUTTON, buttonSubType, gridIndex):ToEffect()
-    if button == nil then
-        error("Failed to convert the button to an effect.")
-    end
-    button.State = (enabled and 0) or 3
-    local sprite = button:GetSprite()
-    local animationSuffix = getButtonAnimationSuffix(nil, buttonSubType)
-    local verb = (enabled and "Off") or "On"
-    local animation = verb .. animationSuffix
-    sprite:Play(animation, true)
-    return button
-end
-function getButtonAnimationSuffix(self, buttonSubType)
-    repeat
-        local ____switch31 = buttonSubType
-        local ____cond31 = (____switch31 == ButtonSubType.TASK) or (____switch31 == ButtonSubType.TASK_RETURN)
-        if ____cond31 then
+        local ____switch13 = buttonSubType
+        local ____cond13 = ((((((((____switch13 == ButtonSubType.GO_TO_TASK) or (____switch13 == ButtonSubType.TASK_1)) or (____switch13 == ButtonSubType.TASK_2)) or (____switch13 == ButtonSubType.TASK_3)) or (____switch13 == ButtonSubType.TASK_4)) or (____switch13 == ButtonSubType.TASK_5)) or (____switch13 == ButtonSubType.TASK_6)) or (____switch13 == ButtonSubType.TASK_7)) or (____switch13 == ButtonSubType.TASK_8)
+        if ____cond13 then
             do
                 return ""
             end
         end
-        ____cond31 = ____cond31 or (____switch31 == ButtonSubType.EMERGENCY)
-        if ____cond31 then
+        ____cond13 = ____cond13 or (____switch13 == ButtonSubType.EMERGENCY)
+        if ____cond13 then
             do
                 return EMERGENCY_BUTTON_ANIMATION_SUFFIX
             end
         end
-        ____cond31 = ____cond31 or (____switch31 == ButtonSubType.SPECIAL)
-        if ____cond31 then
+        ____cond13 = ____cond13 or ((((____switch13 == ButtonSubType.CAMERA) or (____switch13 == ButtonSubType.LIGHTS)) or (____switch13 == ButtonSubType.COMMS)) or (____switch13 == ButtonSubType.O2))
+        if ____cond13 then
             do
                 return SPECIAL_BUTTON_ANIMATION_SUFFIX
             end
@@ -4519,14 +4713,112 @@ function getButtonAnimationSuffix(self, buttonSubType)
         end
     until true
 end
-BUTTON_ACTIVATION_DISTANCE = 20
-local EMERGENCY_BUTTON_GRID_INDEX = 265
 EMERGENCY_BUTTON_ANIMATION_SUFFIX = "Pentagram"
 SPECIAL_BUTTON_ANIMATION_SUFFIX = "Red"
-function ____exports.postEffectUpdateButton(self, effect)
-    checkIfButtonIsPressed(nil, effect)
+function ____exports.allButtonsPressed(self)
+    local buttons = Isaac.FindByType(EntityType.ENTITY_EFFECT, EffectVariantCustom.BUTTON)
+    for ____, button in ipairs(buttons) do
+        do
+            local effect = button:ToEffect()
+            if effect == nil then
+                goto __continue3
+            end
+            local pressed = effect.State == 3
+            if not pressed then
+                return false
+            end
+        end
+        ::__continue3::
+    end
+    return true
 end
-function ____exports.spawnTaskButtons(self)
+function ____exports.resetAllButtons(self)
+    local buttons = Isaac.FindByType(EntityType.ENTITY_EFFECT, EffectVariantCustom.BUTTON)
+    for ____, button in ipairs(buttons) do
+        ____exports.resetButton(nil, button)
+    end
+end
+function ____exports.removeEmergencyButton(self)
+    local buttons = Isaac.FindByType(EntityType.ENTITY_EFFECT, EffectVariantCustom.BUTTON, ButtonSubType.EMERGENCY)
+    for ____, button in ipairs(buttons) do
+        button:Remove()
+    end
+end
+return ____exports
+ end,
+["mod.src.features.buttonSpawn"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+local ____exports = {}
+local getTaskButtonSubType
+local ____constants = require("mod.src.constants")
+local taskDescriptions = ____constants.taskDescriptions
+local ____enums = require("mod.src.enums")
+local ButtonSubType = ____enums.ButtonSubType
+local EffectVariantCustom = ____enums.EffectVariantCustom
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____stageAPI = require("mod.src.stageAPI")
+local getSkeldRoom = ____stageAPI.getSkeldRoom
+local ____util = require("mod.src.util")
+local spawnEntity = ____util.spawnEntity
+local ____buttonSubroutines = require("mod.src.features.buttonSubroutines")
+local getButtonAnimationSuffix = ____buttonSubroutines.getButtonAnimationSuffix
+function getTaskButtonSubType(self, num)
+    repeat
+        local ____switch14 = num
+        local ____cond14 = ____switch14 == 1
+        if ____cond14 then
+            do
+                return ButtonSubType.TASK_1
+            end
+        end
+        ____cond14 = ____cond14 or (____switch14 == 2)
+        if ____cond14 then
+            do
+                return ButtonSubType.TASK_2
+            end
+        end
+        ____cond14 = ____cond14 or (____switch14 == 3)
+        if ____cond14 then
+            do
+                return ButtonSubType.TASK_3
+            end
+        end
+        ____cond14 = ____cond14 or (____switch14 == 4)
+        if ____cond14 then
+            do
+                return ButtonSubType.TASK_4
+            end
+        end
+        ____cond14 = ____cond14 or (____switch14 == 5)
+        if ____cond14 then
+            do
+                return ButtonSubType.TASK_5
+            end
+        end
+        do
+            do
+                return ButtonSubType.TASK_1
+            end
+        end
+    until true
+end
+local EMERGENCY_BUTTON_GRID_INDEX = 265
+local function spawnButton(self, buttonSubType, gridIndex, enabled)
+    local button = spawnEntity(nil, EntityType.ENTITY_EFFECT, EffectVariantCustom.BUTTON, buttonSubType, gridIndex):ToEffect()
+    if button == nil then
+        error("Failed to convert the button to an effect.")
+    end
+    button.State = (enabled and 0) or 3
+    local sprite = button:GetSprite()
+    local animationSuffix = getButtonAnimationSuffix(nil, buttonSubType)
+    local verb = (enabled and "Off") or "On"
+    local animation = verb .. animationSuffix
+    sprite:Play(animation, true)
+    return button
+end
+function ____exports.spawnGoToTaskButtons(self)
     if g.game == nil then
         return
     end
@@ -4543,19 +4835,19 @@ function ____exports.spawnTaskButtons(self)
         taskDescription = ____value[2]
         do
             if taskDescription.room ~= room then
-                goto __continue23
+                goto __continue7
             end
             local task = tonumber(key)
             if task == nil then
-                goto __continue23
+                goto __continue7
             end
             local ourTasksOfThisType = g.game.ourTasks[taskDescription.taskType]
             local enabled = __TS__ArrayIncludes(ourTasksOfThisType, task)
-            local button = spawnButton(nil, ButtonSubType.TASK, taskDescription.gridIndex, enabled)
+            local button = spawnButton(nil, ButtonSubType.GO_TO_TASK, taskDescription.gridIndex, enabled)
             local data = button:GetData()
             data.task = task
         end
-        ::__continue23::
+        ::__continue7::
     end
 end
 function ____exports.spawnEmergencyButton(self)
@@ -4564,11 +4856,9 @@ function ____exports.spawnEmergencyButton(self)
     end
     spawnButton(nil, ButtonSubType.EMERGENCY, EMERGENCY_BUTTON_GRID_INDEX, not g.game.usedEmergencyMeeting)
 end
-function ____exports.removeEmergencyButton(self)
-    local buttons = Isaac.FindByType(EntityType.ENTITY_EFFECT, EffectVariantCustom.BUTTON, ButtonSubType.EMERGENCY)
-    for ____, button in ipairs(buttons) do
-        button:Remove()
-    end
+function ____exports.spawnTaskButton(self, gridIndex, num)
+    local buttonSubType = getTaskButtonSubType(nil, num)
+    return spawnButton(nil, buttonSubType, gridIndex, true)
 end
 return ____exports
  end,
@@ -4578,8 +4868,8 @@ local ____exports = {}
 local spawnCafeteriaTable
 local ____enums = require("mod.src.enums")
 local EntityTypeCustom = ____enums.EntityTypeCustom
-local ____button = require("mod.src.features.button")
-local spawnEmergencyButton = ____button.spawnEmergencyButton
+local ____buttonSpawn = require("mod.src.features.buttonSpawn")
+local spawnEmergencyButton = ____buttonSpawn.spawnEmergencyButton
 local ____util = require("mod.src.util")
 local spawnEntity = ____util.spawnEntity
 function spawnCafeteriaTable(self, gridIndex, num)
@@ -4611,6 +4901,8 @@ local DISTANCE_OF_GRID_TILE = ____isaacscript_2Dcommon.DISTANCE_OF_GRID_TILE
 local getCircleDiscretizedPoints = ____isaacscript_2Dcommon.getCircleDiscretizedPoints
 local ____globals = require("mod.src.globals")
 local g = ____globals.default
+local ____minimapAPI = require("mod.src.minimapAPI")
+local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
 local ____cafeteria = require("mod.src.rooms.cafeteria")
 local CENTER_TABLE_GRID_INDEX = ____cafeteria.CENTER_TABLE_GRID_INDEX
 local ____stageAPI = require("mod.src.stageAPI")
@@ -4618,11 +4910,10 @@ local getSkeldRoom = ____stageAPI.getSkeldRoom
 local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
 local ____SkeldRoom = require("mod.src.types.SkeldRoom")
 local SkeldRoom = ____SkeldRoom.SkeldRoom
-local ____util = require("mod.src.util")
-local enableMinimapAPI = ____util.enableMinimapAPI
-local ____button = require("mod.src.features.button")
-local removeEmergencyButton = ____button.removeEmergencyButton
-local spawnEmergencyButton = ____button.spawnEmergencyButton
+local ____buttonSpawn = require("mod.src.features.buttonSpawn")
+local spawnEmergencyButton = ____buttonSpawn.spawnEmergencyButton
+local ____buttonSubroutines = require("mod.src.features.buttonSubroutines")
+local removeEmergencyButton = ____buttonSubroutines.removeEmergencyButton
 function enablePlayer(self, enable)
     if (g.game == nil) or (g.userID == nil) then
         return
@@ -4681,6 +4972,8 @@ local ensureAllCases = ____isaacscript_2Dcommon.ensureAllCases
 local getScreenCenterPos = ____isaacscript_2Dcommon.getScreenCenterPos
 local ____globals = require("mod.src.globals")
 local g = ____globals.default
+local ____minimapAPI = require("mod.src.minimapAPI")
+local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
 local ____BlackSpriteState = require("mod.src.types.BlackSpriteState")
 local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
 local ____EndMeetingState = require("mod.src.types.EndMeetingState")
@@ -4689,7 +4982,6 @@ local ____MeetingResolution = require("mod.src.types.MeetingResolution")
 local MeetingResolution = ____MeetingResolution.MeetingResolution
 local ____util = require("mod.src.util")
 local drawFontText = ____util.drawFontText
-local enableMinimapAPI = ____util.enableMinimapAPI
 local ____blackSprite = require("mod.src.features.blackSprite")
 local FADE_TO_BLACK_FRAMES = ____blackSprite.FADE_TO_BLACK_FRAMES
 local setBlackSpriteState = ____blackSprite.setBlackSpriteState
@@ -4945,18 +5237,1381 @@ function ____exports.main(self)
 end
 return ____exports
  end,
+["mod.src.collisionObjects"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local DISTANCE_OF_GRID_TILE = ____isaacscript_2Dcommon.DISTANCE_OF_GRID_TILE
+local collisionObjects = require("mod.src.lib.collisionObjects")
+function ____exports.addCollision(self, topLeftGridIndex, bottomRightGridIndex, bottomRightXModifier, bottomRightYModifier)
+    if bottomRightGridIndex == nil then
+        bottomRightGridIndex = topLeftGridIndex
+    end
+    if bottomRightXModifier == nil then
+        bottomRightXModifier = 0
+    end
+    if bottomRightYModifier == nil then
+        bottomRightYModifier = 0
+    end
+    local game = Game()
+    local room = game:GetRoom()
+    local halfTileDistance = DISTANCE_OF_GRID_TILE / 2
+    local halfTileVectorPlus = Vector(halfTileDistance, halfTileDistance)
+    local halfTileVectorMinus = halfTileVectorPlus * -1
+    local topLeftGridPosition = room:GetGridPosition(topLeftGridIndex)
+    local topLeftOfGridIndex = topLeftGridPosition + halfTileVectorMinus
+    local bottomRightGridPosition = room:GetGridPosition(bottomRightGridIndex)
+    local bottomRightOfGridIndex = bottomRightGridPosition + halfTileVectorPlus
+    local modifier = Vector(bottomRightXModifier, bottomRightYModifier)
+    local bottomRightPos = bottomRightOfGridIndex + modifier
+    collisionObjects:setCollisionRect(topLeftOfGridIndex, bottomRightPos)
+end
+return ____exports
+ end,
+["mod.src.features.teleporter"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local getPlayerCloserThan = ____isaacscript_2Dcommon.getPlayerCloserThan
+local log = ____isaacscript_2Dcommon.log
+local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskLeave = ____taskSubroutines.taskLeave
+local TELEPORTER_ACTIVATION_DISTANCE = 20
+function ____exports.spawnTeleporter(self, gridIndex)
+    spawnGridEntity(nil, GridEntityType.GRID_TELEPORTER, gridIndex)
+end
+function ____exports.postGridEntityUpdateTeleporter(self, gridEntity)
+    if (g.game == nil) or (g.game.currentTask == nil) then
+        return
+    end
+    local playerTouching = getPlayerCloserThan(nil, gridEntity.Position, TELEPORTER_ACTIVATION_DISTANCE)
+    if playerTouching == nil then
+        return
+    end
+    log(nil, "Player touched teleporter.")
+    taskLeave(nil)
+end
+return ____exports
+ end,
+["mod.src.spawnObjects"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local getGridIncrement
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
+local ____enums = require("mod.src.enums")
+local BoxVariant = ____enums.BoxVariant
+local CarpetSubTypeCustom = ____enums.CarpetSubTypeCustom
+local EffectVariantCustom = ____enums.EffectVariantCustom
+local EntityTypeCustom = ____enums.EntityTypeCustom
+local ____util = require("mod.src.util")
+local spawnEntity = ____util.spawnEntity
+function getGridIncrement(self, direction)
+    local game = Game()
+    local room = game:GetRoom()
+    local gridWidth = room:GetGridWidth()
+    repeat
+        local ____switch9 = direction
+        local ____cond9 = ____switch9 == Direction.LEFT
+        if ____cond9 then
+            do
+                return -1
+            end
+        end
+        ____cond9 = ____cond9 or (____switch9 == Direction.UP)
+        if ____cond9 then
+            do
+                return -gridWidth
+            end
+        end
+        ____cond9 = ____cond9 or (____switch9 == Direction.RIGHT)
+        if ____cond9 then
+            do
+                return 1
+            end
+        end
+        ____cond9 = ____cond9 or (____switch9 == Direction.DOWN)
+        if ____cond9 then
+            do
+                return gridWidth
+            end
+        end
+        do
+            do
+                error(
+                    "Unknown direction: " .. tostring(direction)
+                )
+                return 0
+            end
+        end
+    until true
+end
+function ____exports.spawnBlock(self, gridIndex, visible)
+    if visible == nil then
+        visible = true
+    end
+    local gridEntityType = (visible and GridEntityType.GRID_ROCKB) or GridEntityType.GRID_WALL
+    local gridEntity = spawnGridEntity(nil, gridEntityType, gridIndex)
+    return gridEntity
+end
+function ____exports.spawnFakeBlock(self, gridIndex)
+    spawnEntity(nil, EntityType.ENTITY_EFFECT, EffectVariant.ISAACS_CARPET, CarpetSubTypeCustom.BLOCK, gridIndex)
+end
+function ____exports.spawnFakeBlockLine(self, gridIndex, num, direction)
+    local gridIncrement = getGridIncrement(nil, direction)
+    do
+        local i = 0
+        while i < num do
+            ____exports.spawnFakeBlock(nil, gridIndex)
+            gridIndex = gridIndex + gridIncrement
+            i = i + 1
+        end
+    end
+end
+function ____exports.spawnBlockLine(self, gridIndex, num, direction, visible)
+    if visible == nil then
+        visible = true
+    end
+    local gridIncrement = getGridIncrement(nil, direction)
+    do
+        local i = 0
+        while i < num do
+            ____exports.spawnBlock(nil, gridIndex, visible)
+            gridIndex = gridIndex + gridIncrement
+            i = i + 1
+        end
+    end
+end
+function ____exports.spawnBox(self, gridIndex, large)
+    local variant = (large and BoxVariant.LARGE) or BoxVariant.SMALL
+    return spawnEntity(nil, EntityTypeCustom.BOX, variant, 0, gridIndex)
+end
+function ____exports.spawnEngine(self, gridIndex)
+    spawnEntity(nil, EntityTypeCustom.ENGINE, 0, 0, gridIndex)
+    local topLeftBlockGridIndex = gridIndex - 88
+    ____exports.spawnBlockLine(nil, topLeftBlockGridIndex, 9, Direction.RIGHT)
+    local topRightBlockGridIndex = gridIndex - 79
+    ____exports.spawnBlockLine(nil, topRightBlockGridIndex, 7, Direction.DOWN)
+    local bottomLeftBlockGridIndex = gridIndex + 80
+    ____exports.spawnBlockLine(nil, bottomLeftBlockGridIndex, 9, Direction.RIGHT)
+    local electricBoxGridIndex = gridIndex + 108
+    ____exports.spawnBlockLine(nil, electricBoxGridIndex, 3, Direction.RIGHT, false)
+end
+local function spawnSpikes(self, gridIndex)
+    spawnGridEntity(nil, GridEntityType.GRID_SPIKES, gridIndex)
+end
+function ____exports.spawnSpikesLine(self, gridIndex, num, direction)
+    local gridIncrement = getGridIncrement(nil, direction)
+    do
+        local i = 0
+        while i < num do
+            spawnSpikes(nil, gridIndex)
+            gridIndex = gridIndex + gridIncrement
+            i = i + 1
+        end
+    end
+end
+function ____exports.spawnVent(self, gridIndex)
+    spawnEntity(nil, EntityType.ENTITY_EFFECT, EffectVariantCustom.VENT, 0, gridIndex)
+end
+return ____exports
+ end,
+["mod.src.tasks.buttonsBehindKeyBlocks"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local spawnKeys
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local runNextFrame = ____isaacscript_2Dcommon.runNextFrame
+local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
+local ____collisionObjects = require("mod.src.collisionObjects")
+local addCollision = ____collisionObjects.addCollision
+local ____buttonSpawn = require("mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____buttonSubroutines = require("mod.src.features.buttonSubroutines")
+local allButtonsPressed = ____buttonSubroutines.allButtonsPressed
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____spawnObjects = require("mod.src.spawnObjects")
+local spawnFakeBlockLine = ____spawnObjects.spawnFakeBlockLine
+local ____util = require("mod.src.util")
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+local spawnEntity = ____util.spawnEntity
+function spawnKeys(self, gridIndex)
+    local bombs = spawnEntity(nil, EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, KeySubType.KEY_DOUBLEPACK, gridIndex)
+    local sprite = bombs:GetSprite()
+    sprite:SetLastFrame()
+end
+function ____exports.buttonsBehindKeyBlocks(self)
+    local leftGridIndex = 62
+    movePlayerToGridIndex(nil, leftGridIndex)
+    local topRightGridIndex = 42
+    spawnTeleporter(nil, topRightGridIndex)
+    spawnKeys(nil, 35)
+    spawnKeys(nil, 36)
+    spawnKeys(nil, 37)
+    spawnKeys(nil, 38)
+    spawnKeys(nil, 39)
+    spawnTaskButton(nil, 110, 1)
+    spawnTaskButton(nil, 112, 1)
+    spawnTaskButton(nil, 114, 1)
+    spawnFakeBlockLine(nil, 64, 4, Direction.DOWN)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 64, 109)
+        end
+    )
+    spawnFakeBlockLine(nil, 66, 4, Direction.DOWN)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 66, 111)
+        end
+    )
+    spawnFakeBlockLine(nil, 68, 4, Direction.DOWN)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 68, 113)
+        end
+    )
+    spawnFakeBlockLine(nil, 70, 4, Direction.DOWN)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 70, 115)
+        end
+    )
+    spawnGridEntity(nil, GridEntityType.GRID_LOCK, 65)
+    spawnGridEntity(nil, GridEntityType.GRID_LOCK, 80)
+    spawnGridEntity(nil, GridEntityType.GRID_LOCK, 95)
+    spawnGridEntity(nil, GridEntityType.GRID_LOCK, 67)
+    spawnGridEntity(nil, GridEntityType.GRID_LOCK, 82)
+    spawnGridEntity(nil, GridEntityType.GRID_LOCK, 97)
+    spawnGridEntity(nil, GridEntityType.GRID_LOCK, 69)
+    spawnGridEntity(nil, GridEntityType.GRID_LOCK, 84)
+    spawnGridEntity(nil, GridEntityType.GRID_LOCK, 99)
+end
+function ____exports.buttonsBehindKeyBlocksButtonPressed(self)
+    if allButtonsPressed(nil) then
+        taskComplete(nil)
+    end
+end
+return ____exports
+ end,
+["mod.src.tasks.fixWires"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+local ____exports = {}
+local leftSideButtonPressed, rightSideButtonPressed, resetLeftButtons, buttonColorActive, colorsComplete, lineSprites
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local arrayShuffle = ____isaacscript_2Dcommon.arrayShuffle
+local getEnumValues = ____isaacscript_2Dcommon.getEnumValues
+local ____enums = require("mod.src.enums")
+local ButtonSubType = ____enums.ButtonSubType
+local EffectVariantCustom = ____enums.EffectVariantCustom
+local EntityTypeCustom = ____enums.EntityTypeCustom
+local ____buttonSpawn = require("mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____buttonSubroutines = require("mod.src.features.buttonSubroutines")
+local resetButton = ____buttonSubroutines.resetButton
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local taskLeave = ____taskSubroutines.taskLeave
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____Task = require("mod.src.types.Task")
+local Task = ____Task.Task
+local ____util = require("mod.src.util")
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+local spawnEntity = ____util.spawnEntity
+function ____exports.fixWiresResetButtonColorActive(self)
+    buttonColorActive = nil
+end
+function leftSideButtonPressed(self, color, button)
+    resetLeftButtons(nil, color)
+    buttonColorActive = color
+    local spriteDescription = lineSprites[buttonColorActive]
+    spriteDescription.startPosition = Isaac.WorldToRenderPosition(button.Position)
+end
+function rightSideButtonPressed(self, color)
+    if color ~= buttonColorActive then
+        taskLeave(nil)
+        return
+    end
+    local spriteDescription = lineSprites[buttonColorActive]
+    spriteDescription.finished = true
+    __TS__ArrayPush(colorsComplete, buttonColorActive)
+    buttonColorActive = nil
+    local allColors = getEnumValues(nil, ____exports.WireColor)
+    if #colorsComplete == #allColors then
+        taskComplete(nil)
+    end
+end
+function resetLeftButtons(self, exceptColor)
+    local buttons = Isaac.FindByType(EntityType.ENTITY_EFFECT, EffectVariantCustom.BUTTON, ButtonSubType.TASK_1)
+    for ____, button in ipairs(buttons) do
+        local data = button:GetData()
+        local color = data.color
+        if (color ~= exceptColor) and (not __TS__ArrayIncludes(colorsComplete, color)) then
+            resetButton(nil, button)
+        end
+    end
+end
+local THIS_TASK = Task.SHORT_FIX_WIRES
+local NUM_BUTTONS = 4
+local WIRE_SIGN_OFFSET = Vector(-28, 0)
+____exports.WireColor = WireColor or ({})
+____exports.WireColor.YELLOW = 0
+____exports.WireColor[____exports.WireColor.YELLOW] = "YELLOW"
+____exports.WireColor.BLUE = 1
+____exports.WireColor[____exports.WireColor.BLUE] = "BLUE"
+____exports.WireColor.RED = 2
+____exports.WireColor[____exports.WireColor.RED] = "RED"
+____exports.WireColor.MAGENTA = 3
+____exports.WireColor[____exports.WireColor.MAGENTA] = "MAGENTA"
+local WIRE_COLORS = {
+    [____exports.WireColor.YELLOW] = Color(1, 1, 0),
+    [____exports.WireColor.BLUE] = Color(0, 0, 1),
+    [____exports.WireColor.RED] = Color(1, 0, 0),
+    [____exports.WireColor.MAGENTA] = Color(1, 0, 1)
+}
+buttonColorActive = nil
+colorsComplete = {}
+lineSprites = {
+    [____exports.WireColor.YELLOW] = {
+        startPosition = nil,
+        endPosition = nil,
+        sprite = Sprite(),
+        finished = false
+    },
+    [____exports.WireColor.BLUE] = {
+        startPosition = nil,
+        endPosition = nil,
+        sprite = Sprite(),
+        finished = false
+    },
+    [____exports.WireColor.RED] = {
+        startPosition = nil,
+        endPosition = nil,
+        sprite = Sprite(),
+        finished = false
+    },
+    [____exports.WireColor.MAGENTA] = {
+        startPosition = nil,
+        endPosition = nil,
+        sprite = Sprite(),
+        finished = false
+    }
+}
+for ____, spriteDescription in ipairs(
+    __TS__ObjectValues(lineSprites)
+) do
+    local sprite = spriteDescription.sprite
+    sprite:Load("gfx/electrical/line.anm2", true)
+    sprite:SetFrame("Default", 0)
+end
+function ____exports.fixWires(self)
+    local game = Game()
+    local room = game:GetRoom()
+    local gridWidth = room:GetGridWidth()
+    local centerGridIndex = 52
+    movePlayerToGridIndex(nil, centerGridIndex)
+    local bottomGridIndex = 97
+    spawnTeleporter(nil, bottomGridIndex)
+    local topLeftGridIndex = 16
+    do
+        local i = 0
+        while i < NUM_BUTTONS do
+            local gridIndex = topLeftGridIndex + ((i * gridWidth) * 2)
+            local button = spawnTaskButton(nil, gridIndex, 1)
+            local data = button:GetData()
+            data.color = i
+            local sign = spawnEntity(nil, EntityTypeCustom.WIRE_SIGN, 0, 0, gridIndex)
+            local sprite = sign:GetSprite()
+            sprite.Offset = WIRE_SIGN_OFFSET
+            sprite:SetFrame(i)
+            i = i + 1
+        end
+    end
+    local topRightGridIndex = 28
+    local wireColors = getEnumValues(nil, ____exports.WireColor)
+    local randomWireColors = arrayShuffle(nil, wireColors)
+    do
+        local i = 0
+        while i < NUM_BUTTONS do
+            local color = randomWireColors[i + 1]
+            local gridIndex = topRightGridIndex + ((i * gridWidth) * 2)
+            local button = spawnTaskButton(nil, gridIndex, 2)
+            local data = button:GetData()
+            data.color = color
+            local sign = spawnEntity(nil, EntityTypeCustom.WIRE_SIGN, 0, 0, gridIndex)
+            local sprite = sign:GetSprite()
+            sprite.Offset = WIRE_SIGN_OFFSET * -1
+            sprite:SetFrame(color)
+            i = i + 1
+        end
+    end
+    ____exports.fixWiresResetButtonColorActive(nil)
+end
+function ____exports.fixWiresButtonPressed(self, button, num)
+    local data = button:GetData()
+    local color = data.color
+    if num == 1 then
+        leftSideButtonPressed(nil, color, button)
+    else
+        rightSideButtonPressed(nil, color)
+    end
+end
+function ____exports.postRender(self)
+    if (g.game == nil) or (g.game.currentTask ~= THIS_TASK) then
+        return
+    end
+    local player = Isaac.GetPlayer()
+    if buttonColorActive ~= nil then
+        local spriteDescription = lineSprites[buttonColorActive]
+        spriteDescription.endPosition = Isaac.WorldToRenderPosition(player.Position)
+    end
+    for ____, ____value in ipairs(
+        __TS__ObjectEntries(lineSprites)
+    ) do
+        local colorString
+        colorString = ____value[1]
+        local spriteDescription
+        spriteDescription = ____value[2]
+        do
+            local color = colorString
+            local startPosition = spriteDescription.startPosition
+            local endPosition = spriteDescription.endPosition
+            local sprite = spriteDescription.sprite
+            local finished = spriteDescription.finished
+            if (startPosition == nil) or (endPosition == nil) then
+                goto __continue20
+            end
+            if (color ~= buttonColorActive) and (not finished) then
+                goto __continue20
+            end
+            local combinedVector = endPosition - startPosition
+            sprite.Rotation = combinedVector:GetAngleDegrees()
+            sprite.Scale = Vector(
+                combinedVector:Length(),
+                1
+            )
+            sprite.Color = WIRE_COLORS[color]
+            sprite:Render(startPosition, Vector.Zero, Vector.Zero)
+        end
+        ::__continue20::
+    end
+end
+return ____exports
+ end,
+["mod.src.tasks.identifyItems"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+local ____exports = {}
+local spawnButtons, setupRound, getRandomItems, correctSelection, incorrectSelection, drawItemSprites, drawItemText, NUM_ROUNDS, ROW_LENGTH, TEXT_GRID_INDEX, sfx, itemSprites, currentRound, currentItem, correctItemIndex
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local arrayEmpty = ____isaacscript_2Dcommon.arrayEmpty
+local getCollectibleSet = ____isaacscript_2Dcommon.getCollectibleSet
+local getItemName = ____isaacscript_2Dcommon.getItemName
+local getRandomArrayElement = ____isaacscript_2Dcommon.getRandomArrayElement
+local getRandomArrayIndex = ____isaacscript_2Dcommon.getRandomArrayIndex
+local ____buttonSpawn = require("mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____buttonSubroutines = require("mod.src.features.buttonSubroutines")
+local resetAllButtons = ____buttonSubroutines.resetAllButtons
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local taskLeave = ____taskSubroutines.taskLeave
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____sprite = require("mod.src.sprite")
+local initGlowingItemSprite = ____sprite.initGlowingItemSprite
+local ____Task = require("mod.src.types.Task")
+local Task = ____Task.Task
+local ____util = require("mod.src.util")
+local drawFontText = ____util.drawFontText
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+function spawnButtons(self)
+    local gridIndex = ____exports.IDENTIFY_ITEMS_BUTTON_1_GRID_INDEX
+    do
+        local i = 0
+        while i < ____exports.IDENTIFY_ITEMS_NUM_RANDOM_ITEMS do
+            spawnTaskButton(nil, gridIndex, i + 1)
+            gridIndex = gridIndex + ____exports.IDENTIFY_ITEMS_BUTTON_SPACING
+            i = i + 1
+        end
+    end
+end
+function setupRound(self)
+    local startGridIndex = 97
+    movePlayerToGridIndex(nil, startGridIndex)
+    local randomItems = getRandomItems(nil)
+    arrayEmpty(nil, itemSprites)
+    do
+        local i = 0
+        while i < ____exports.IDENTIFY_ITEMS_NUM_RANDOM_ITEMS do
+            local randomItem = randomItems[i + 1]
+            local sprite = initGlowingItemSprite(nil, randomItem)
+            __TS__ArrayPush(itemSprites, sprite)
+            i = i + 1
+        end
+    end
+    local randomIndex = getRandomArrayIndex(nil, randomItems)
+    local randomItem = randomItems[randomIndex + 1]
+    correctItemIndex = randomIndex
+    currentItem = getItemName(nil, randomItem)
+    resetAllButtons(nil)
+end
+function getRandomItems(self)
+    local collectibleSet = getCollectibleSet(nil)
+    local collectibleArray = {}
+    for ____, collectibleType in __TS__Iterator(
+        collectibleSet:values()
+    ) do
+        __TS__ArrayPush(collectibleArray, collectibleType)
+    end
+    local randomItems = {}
+    while #randomItems < ____exports.IDENTIFY_ITEMS_NUM_RANDOM_ITEMS do
+        local randomItem = getRandomArrayElement(nil, collectibleArray)
+        if not __TS__ArrayIncludes(randomItems, randomItem) then
+            __TS__ArrayPush(randomItems, randomItem)
+        end
+    end
+    return randomItems
+end
+function correctSelection(self)
+    sfx:Play(SoundEffect.SOUND_THUMBSUP)
+    currentRound = currentRound + 1
+    if currentRound >= NUM_ROUNDS then
+        taskComplete(nil)
+    else
+        setupRound(nil)
+    end
+end
+function incorrectSelection(self)
+    sfx:Play(SoundEffect.SOUND_THUMBS_DOWN)
+    taskLeave(nil)
+end
+function drawItemSprites(self)
+    local game = Game()
+    local room = game:GetRoom()
+    local buttonGridIndex = ____exports.IDENTIFY_ITEMS_BUTTON_1_GRID_INDEX
+    do
+        local i = 0
+        while i < ____exports.IDENTIFY_ITEMS_NUM_RANDOM_ITEMS do
+            local spriteGridIndex = buttonGridIndex - ROW_LENGTH
+            local gamePosition = room:GetGridPosition(spriteGridIndex)
+            local position = Isaac.WorldToRenderPosition(gamePosition)
+            local sprite = itemSprites[i + 1]
+            if sprite ~= nil then
+                sprite:RenderLayer(0, position)
+            end
+            buttonGridIndex = buttonGridIndex + ____exports.IDENTIFY_ITEMS_BUTTON_SPACING
+            i = i + 1
+        end
+    end
+end
+function drawItemText(self)
+    local game = Game()
+    local room = game:GetRoom()
+    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
+    local position = Isaac.WorldToRenderPosition(worldPosition)
+    local text = "Find: " .. currentItem
+    drawFontText(nil, text, position)
+end
+____exports.IDENTIFY_ITEMS_NUM_RANDOM_ITEMS = 5
+____exports.IDENTIFY_ITEMS_BUTTON_SPACING = 2
+____exports.IDENTIFY_ITEMS_BUTTON_1_GRID_INDEX = 48
+local THIS_TASK = Task.SHORT_IDENTIFY_ITEMS
+NUM_ROUNDS = 5
+ROW_LENGTH = 15
+TEXT_GRID_INDEX = 86
+local STARTING_ROUND = 1
+sfx = SFXManager()
+itemSprites = {}
+currentRound = STARTING_ROUND
+currentItem = ""
+correctItemIndex = 0
+function ____exports.identifyItems(self)
+    local bottomLeftGridIndex = 92
+    spawnTeleporter(nil, bottomLeftGridIndex)
+    spawnButtons(nil)
+    currentRound = STARTING_ROUND
+    setupRound(nil)
+end
+function ____exports.identifyItemButtonPressed(self, num)
+    Isaac.DebugString(
+        "correctItemIndex: " .. tostring(correctItemIndex)
+    )
+    if num == (correctItemIndex + 1) then
+        correctSelection(nil)
+    else
+        incorrectSelection(nil)
+    end
+end
+function ____exports.postRender(self)
+    if (g.game == nil) or (g.game.currentTask ~= THIS_TASK) then
+        return
+    end
+    drawItemSprites(nil)
+    drawItemText(nil)
+end
+return ____exports
+ end,
+["mod.src.tasks.identifyPickupsInOrder"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+local ____exports = {}
+local setupRound, drawPickupText, drawPickupSprites, spawnButtons, TEXT_GRID_INDEX, TEXT_SHOW_FRAMES, BUTTON_GRID_INDEXES, ROW_LENGTH, SPRITE_OFFSET, PickupType, pickupDescriptions, currentRound, showingPickupIndex, showingPickupFrame, pickupSprites, currentPickupOrder
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local arrayEmpty = ____isaacscript_2Dcommon.arrayEmpty
+local getEnumValues = ____isaacscript_2Dcommon.getEnumValues
+local getRandomArrayElement = ____isaacscript_2Dcommon.getRandomArrayElement
+local ____buttonSpawn = require("mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskLeave = ____taskSubroutines.taskLeave
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____Task = require("mod.src.types.Task")
+local Task = ____Task.Task
+local ____util = require("mod.src.util")
+local drawFontText = ____util.drawFontText
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+function setupRound(self)
+    local centerGridIndex = 82
+    movePlayerToGridIndex(nil, centerGridIndex)
+    do
+        local i = 0
+        while i < currentRound do
+            local pickupType = getEnumValues(nil, PickupType)
+            local randomPickupType = getRandomArrayElement(nil, pickupType)
+            __TS__ArrayPush(currentPickupOrder, randomPickupType)
+            i = i + 1
+        end
+    end
+    showingPickupIndex = 0
+    showingPickupFrame = Isaac.GetFrameCount()
+end
+function drawPickupText(self)
+    if (showingPickupIndex == nil) or (showingPickupFrame == nil) then
+        return
+    end
+    local isaacFrameCount = Isaac.GetFrameCount()
+    if isaacFrameCount >= (showingPickupFrame + TEXT_SHOW_FRAMES) then
+        showingPickupIndex = showingPickupIndex + 1
+        showingPickupFrame = isaacFrameCount
+        if showingPickupIndex >= #currentPickupOrder then
+            showingPickupIndex = nil
+            showingPickupFrame = nil
+            spawnButtons(nil)
+            return
+        end
+    end
+    local game = Game()
+    local room = game:GetRoom()
+    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
+    local position = Isaac.WorldToRenderPosition(worldPosition)
+    local pickupType = currentPickupOrder[showingPickupIndex + 1]
+    local pickupDescription = pickupDescriptions[pickupType]
+    local text = pickupDescription.name
+    drawFontText(nil, text, position)
+end
+function drawPickupSprites(self)
+    if (showingPickupIndex ~= nil) or (showingPickupFrame ~= nil) then
+        return
+    end
+    local game = Game()
+    local room = game:GetRoom()
+    do
+        local i = 0
+        while i < #BUTTON_GRID_INDEXES do
+            local buttonGridIndex = BUTTON_GRID_INDEXES[i + 1]
+            local spriteGridIndex = buttonGridIndex - ROW_LENGTH
+            local gamePosition = room:GetGridPosition(spriteGridIndex)
+            local renderPosition = Isaac.WorldToRenderPosition(gamePosition)
+            local position = renderPosition + SPRITE_OFFSET
+            local sprite = pickupSprites[i + 1]
+            if sprite ~= nil then
+                sprite:RenderLayer(0, position)
+            end
+            i = i + 1
+        end
+    end
+end
+function spawnButtons(self)
+    local pickupTypes = getEnumValues(nil, PickupType)
+    do
+        local i = 0
+        while i < #pickupTypes do
+            local gridIndex = BUTTON_GRID_INDEXES[i + 1]
+            local button = spawnTaskButton(nil, gridIndex, 1)
+            local data = button:GetData()
+            data.pickupType = pickupTypes[i + 1]
+            i = i + 1
+        end
+    end
+end
+local THIS_TASK = Task.LONG_IDENTIFY_PICKUPS_IN_ORDER
+local STARTING_ROUND = 1
+TEXT_GRID_INDEX = 86
+TEXT_SHOW_FRAMES = 30
+BUTTON_GRID_INDEXES = {32, 62, 92, 42, 72, 102, 35, 37, 39}
+ROW_LENGTH = 15
+SPRITE_OFFSET = Vector(0, 10)
+local MAX_ROUNDS = 6
+PickupType = PickupType or ({})
+PickupType.HEART = 0
+PickupType[PickupType.HEART] = "HEART"
+PickupType.COIN = 1
+PickupType[PickupType.COIN] = "COIN"
+PickupType.BOMB = 2
+PickupType[PickupType.BOMB] = "BOMB"
+PickupType.KEY = 3
+PickupType[PickupType.KEY] = "KEY"
+PickupType.PILL = 4
+PickupType[PickupType.PILL] = "PILL"
+PickupType.CARD = 5
+PickupType[PickupType.CARD] = "CARD"
+PickupType.CHEST = 6
+PickupType[PickupType.CHEST] = "CHEST"
+PickupType.SACK = 7
+PickupType[PickupType.SACK] = "SACK"
+PickupType.BATTERY = 8
+PickupType[PickupType.BATTERY] = "BATTERY"
+pickupDescriptions = {[PickupType.HEART] = {name = "Heart", gfx = "gfx/005.011_heart.anm2"}, [PickupType.COIN] = {name = "Coin", gfx = "gfx/005.021_penny.anm2"}, [PickupType.BOMB] = {name = "Bomb", gfx = "gfx/005.041_bomb.anm2"}, [PickupType.KEY] = {name = "Key", gfx = "gfx/005.031_key.anm2"}, [PickupType.PILL] = {name = "Pill", gfx = "gfx/005.071_pill blue-blue.anm2"}, [PickupType.CARD] = {name = "Card", gfx = "gfx/005.301_tarot card.anm2"}, [PickupType.CHEST] = {name = "Chest", gfx = "gfx/005.050_chest.anm2"}, [PickupType.SACK] = {name = "Sack", gfx = "gfx/005.069_grabbag.anm2"}, [PickupType.BATTERY] = {name = "Battery", gfx = "gfx/005.090_littlebattery.anm2"}}
+local sfx = SFXManager()
+currentRound = STARTING_ROUND
+showingPickupIndex = nil
+showingPickupFrame = nil
+pickupSprites = {}
+currentPickupOrder = {}
+local currentChoosingIndex = 0
+do
+    local i = 0
+    while i < #getEnumValues(nil, PickupType) do
+        local pickupDescription = pickupDescriptions[i]
+        local sprite = Sprite()
+        sprite:Load(pickupDescription.gfx, true)
+        sprite:SetFrame("Idle", 0)
+        __TS__ArrayPush(pickupSprites, sprite)
+        i = i + 1
+    end
+end
+function ____exports.identifyPickupsInOrder(self)
+    local bottomGridIndex = 112
+    spawnTeleporter(nil, bottomGridIndex)
+    currentRound = STARTING_ROUND
+    arrayEmpty(nil, currentPickupOrder)
+    setupRound(nil)
+end
+function ____exports.postRender(self)
+    if (g.game == nil) or (g.game.currentTask ~= THIS_TASK) then
+        return
+    end
+    drawPickupText(nil)
+    drawPickupSprites(nil)
+end
+function ____exports.identiyPickupsInOrderButtonPressed(self, button)
+    local data = button:GetData()
+    local pickupType = data.pickupType
+    if pickupType == nil then
+        return
+    end
+    local correctPickup = currentPickupOrder[currentChoosingIndex + 1]
+end
+local function incorrectSelection(self)
+    sfx:Play(SoundEffect.SOUND_THUMBS_DOWN)
+    taskLeave(nil)
+end
+return ____exports
+ end,
+["mod.src.tasks.identifyTrinkets"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+local ____exports = {}
+local spawnButtons, setupRound, getRandomTrinkets, correctSelection, incorrectSelection, drawTrinketSprites, drawTrinketText, NUM_ROUNDS, ROW_LENGTH, TEXT_GRID_INDEX, trinketSprites, currentTrinket, sfx, currentRound, correctTrinketIndex
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local arrayEmpty = ____isaacscript_2Dcommon.arrayEmpty
+local getItemName = ____isaacscript_2Dcommon.getItemName
+local getRandomArrayElement = ____isaacscript_2Dcommon.getRandomArrayElement
+local getRandomArrayIndex = ____isaacscript_2Dcommon.getRandomArrayIndex
+local getTrinketSet = ____isaacscript_2Dcommon.getTrinketSet
+local ____buttonSpawn = require("mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____buttonSubroutines = require("mod.src.features.buttonSubroutines")
+local resetAllButtons = ____buttonSubroutines.resetAllButtons
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local taskLeave = ____taskSubroutines.taskLeave
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____sprite = require("mod.src.sprite")
+local initGlowingItemSprite = ____sprite.initGlowingItemSprite
+local ____Task = require("mod.src.types.Task")
+local Task = ____Task.Task
+local ____util = require("mod.src.util")
+local drawFontText = ____util.drawFontText
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+function spawnButtons(self)
+    local gridIndex = ____exports.IDENTIFY_TRINKETS_BUTTON_1_GRID_INDEX
+    do
+        local i = 0
+        while i < ____exports.IDENTIFY_TRINKETS_NUM_RANDOM_TRINKETS do
+            spawnTaskButton(nil, gridIndex, i + 1)
+            gridIndex = gridIndex + ____exports.IDENTIFY_TRINKETS_BUTTON_SPACING
+            i = i + 1
+        end
+    end
+end
+function setupRound(self)
+    local startGridIndex = 97
+    movePlayerToGridIndex(nil, startGridIndex)
+    local randomTrinkets = getRandomTrinkets(nil)
+    arrayEmpty(nil, trinketSprites)
+    do
+        local i = 0
+        while i < ____exports.IDENTIFY_TRINKETS_NUM_RANDOM_TRINKETS do
+            local randomTrinket = randomTrinkets[i + 1]
+            local sprite = initGlowingItemSprite(nil, randomTrinket, true)
+            __TS__ArrayPush(trinketSprites, sprite)
+            i = i + 1
+        end
+    end
+    local randomIndex = getRandomArrayIndex(nil, randomTrinkets)
+    local randomTrinket = randomTrinkets[randomIndex + 1]
+    correctTrinketIndex = randomIndex
+    currentTrinket = getItemName(nil, randomTrinket, true)
+    resetAllButtons(nil)
+end
+function getRandomTrinkets(self)
+    local trinketSet = getTrinketSet(nil)
+    local trinketArray = {}
+    for ____, trinketType in __TS__Iterator(
+        trinketSet:values()
+    ) do
+        __TS__ArrayPush(trinketArray, trinketType)
+    end
+    local randomTrinkets = {}
+    while #randomTrinkets < ____exports.IDENTIFY_TRINKETS_NUM_RANDOM_TRINKETS do
+        local randomTrinket = getRandomArrayElement(nil, trinketArray)
+        if not __TS__ArrayIncludes(randomTrinkets, randomTrinket) then
+            __TS__ArrayPush(randomTrinkets, randomTrinket)
+        end
+    end
+    return randomTrinkets
+end
+function correctSelection(self)
+    sfx:Play(SoundEffect.SOUND_THUMBSUP)
+    currentRound = currentRound + 1
+    if currentRound >= NUM_ROUNDS then
+        taskComplete(nil)
+    else
+        setupRound(nil)
+    end
+end
+function incorrectSelection(self)
+    sfx:Play(SoundEffect.SOUND_THUMBS_DOWN)
+    taskLeave(nil)
+end
+function drawTrinketSprites(self)
+    local game = Game()
+    local room = game:GetRoom()
+    local buttonGridIndex = ____exports.IDENTIFY_TRINKETS_BUTTON_1_GRID_INDEX
+    do
+        local i = 0
+        while i < ____exports.IDENTIFY_TRINKETS_NUM_RANDOM_TRINKETS do
+            local spriteGridIndex = buttonGridIndex - ROW_LENGTH
+            local gamePosition = room:GetGridPosition(spriteGridIndex)
+            local position = Isaac.WorldToRenderPosition(gamePosition)
+            local sprite = trinketSprites[i + 1]
+            if sprite ~= nil then
+                sprite:RenderLayer(0, position)
+            end
+            buttonGridIndex = buttonGridIndex + ____exports.IDENTIFY_TRINKETS_BUTTON_SPACING
+            i = i + 1
+        end
+    end
+end
+function drawTrinketText(self)
+    local game = Game()
+    local room = game:GetRoom()
+    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
+    local position = Isaac.WorldToRenderPosition(worldPosition)
+    local text = "Find: " .. currentTrinket
+    drawFontText(nil, text, position)
+end
+____exports.IDENTIFY_TRINKETS_NUM_RANDOM_TRINKETS = 5
+____exports.IDENTIFY_TRINKETS_BUTTON_SPACING = 2
+____exports.IDENTIFY_TRINKETS_BUTTON_1_GRID_INDEX = 48
+local THIS_TASK = Task.SHORT_IDENTIFY_TRINKETS
+NUM_ROUNDS = 5
+ROW_LENGTH = 15
+TEXT_GRID_INDEX = 86
+local STARTING_ROUND = 1
+trinketSprites = {}
+currentTrinket = ""
+sfx = SFXManager()
+currentRound = STARTING_ROUND
+correctTrinketIndex = 0
+function ____exports.identifyTrinkets(self)
+    local bottomLeftGridIndex = 92
+    spawnTeleporter(nil, bottomLeftGridIndex)
+    spawnButtons(nil)
+    currentRound = STARTING_ROUND
+    setupRound(nil)
+end
+function ____exports.identifyTrinketButtonPressed(self, num)
+    if num == (correctTrinketIndex + 1) then
+        correctSelection(nil)
+    else
+        incorrectSelection(nil)
+    end
+end
+function ____exports.postRender(self)
+    if (g.game == nil) or (g.game.currentTask ~= THIS_TASK) then
+        return
+    end
+    drawTrinketSprites(nil)
+    drawTrinketText(nil)
+end
+return ____exports
+ end,
+["mod.src.tasks.pressButtonsWithGrudge"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local ____buttonSpawn = require("mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____buttonSubroutines = require("mod.src.features.buttonSubroutines")
+local allButtonsPressed = ____buttonSubroutines.allButtonsPressed
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____util = require("mod.src.util")
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+local spawnEntity = ____util.spawnEntity
+function ____exports.pressButtonsWithGrudge(self)
+    local centerGridIndex = 67
+    movePlayerToGridIndex(nil, centerGridIndex)
+    local bottomLeftGridIndex = 73
+    spawnTeleporter(nil, bottomLeftGridIndex)
+    local cornerGridIndexes = {16, 28, 106, 118}
+    for ____, gridIndex in ipairs(cornerGridIndexes) do
+        spawnEntity(nil, EntityType.ENTITY_GRUDGE, 0, 0, gridIndex)
+    end
+    local buttonGridIndexes = {19, 25, 109, 115, 61, 43, 103}
+    for ____, gridIndex in ipairs(buttonGridIndexes) do
+        spawnTaskButton(nil, gridIndex, 1)
+    end
+end
+function ____exports.pressButtonsWithGrudgeButtonPressed(self)
+    if allButtonsPressed(nil) then
+        taskComplete(nil)
+    end
+end
+return ____exports
+ end,
+["mod.src.features.button"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local checkIfButtonIsPressed, buttonPressed, buttonPressedGoToTask, buttonPressedEmergency, buttonPressedTask, BUTTON_ACTIVATION_DISTANCE
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local ensureAllCases = ____isaacscript_2Dcommon.ensureAllCases
+local getPlayerCloserThan = ____isaacscript_2Dcommon.getPlayerCloserThan
+local ____enums = require("mod.src.enums")
+local ButtonSubType = ____enums.ButtonSubType
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____send = require("mod.src.network.send")
+local sendTCP = ____send.sendTCP
+local ____stageAPI = require("mod.src.stageAPI")
+local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
+local ____buttonsBehindKeyBlocks = require("mod.src.tasks.buttonsBehindKeyBlocks")
+local buttonsBehindKeyBlocksButtonPressed = ____buttonsBehindKeyBlocks.buttonsBehindKeyBlocksButtonPressed
+local ____fixWires = require("mod.src.tasks.fixWires")
+local fixWiresButtonPressed = ____fixWires.fixWiresButtonPressed
+local ____identifyItems = require("mod.src.tasks.identifyItems")
+local identifyItemButtonPressed = ____identifyItems.identifyItemButtonPressed
+local ____identifyPickupsInOrder = require("mod.src.tasks.identifyPickupsInOrder")
+local identiyPickupsInOrderButtonPressed = ____identifyPickupsInOrder.identiyPickupsInOrderButtonPressed
+local ____identifyTrinkets = require("mod.src.tasks.identifyTrinkets")
+local identifyTrinketButtonPressed = ____identifyTrinkets.identifyTrinketButtonPressed
+local ____pressButtonsWithGrudge = require("mod.src.tasks.pressButtonsWithGrudge")
+local pressButtonsWithGrudgeButtonPressed = ____pressButtonsWithGrudge.pressButtonsWithGrudgeButtonPressed
+local ____MeetingType = require("mod.src.types.MeetingType")
+local MeetingType = ____MeetingType.MeetingType
+local ____SocketCommands = require("mod.src.types.SocketCommands")
+local SocketCommandModToServer = ____SocketCommands.SocketCommandModToServer
+local ____Task = require("mod.src.types.Task")
+local Task = ____Task.Task
+local ____buttonSubroutines = require("mod.src.features.buttonSubroutines")
+local getButtonAnimationSuffix = ____buttonSubroutines.getButtonAnimationSuffix
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+function checkIfButtonIsPressed(self, effect)
+    if effect.State == 3 then
+        return
+    end
+    local player = getPlayerCloserThan(nil, effect.Position, BUTTON_ACTIVATION_DISTANCE)
+    if player == nil then
+        return
+    end
+    effect.State = 3
+    local sprite = effect:GetSprite()
+    local animationSuffix = getButtonAnimationSuffix(nil, effect.SubType)
+    local animation = "Switched" .. animationSuffix
+    sprite:Play(animation, true)
+    local sfx = SFXManager()
+    sfx:Play(SoundEffect.SOUND_BUTTON_PRESS)
+    buttonPressed(nil, effect)
+end
+function buttonPressed(self, button)
+    local buttonSubType = button.SubType
+    repeat
+        local ____switch7 = buttonSubType
+        local ____cond7 = ____switch7 == ButtonSubType.GO_TO_TASK
+        if ____cond7 then
+            do
+                buttonPressedGoToTask(nil, button)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.EMERGENCY)
+        if ____cond7 then
+            do
+                buttonPressedEmergency(nil)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.CAMERA)
+        if ____cond7 then
+            do
+                break
+            end
+        end
+        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.LIGHTS)
+        if ____cond7 then
+            do
+                break
+            end
+        end
+        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.COMMS)
+        if ____cond7 then
+            do
+                break
+            end
+        end
+        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.O2)
+        if ____cond7 then
+            do
+                break
+            end
+        end
+        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.TASK_1)
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 1)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.TASK_2)
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 2)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.TASK_3)
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 3)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.TASK_4)
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 4)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.TASK_5)
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 5)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.TASK_6)
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 6)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.TASK_7)
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 7)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or (____switch7 == ButtonSubType.TASK_8)
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 8)
+                break
+            end
+        end
+        do
+            do
+                ensureAllCases(nil, buttonSubType)
+            end
+        end
+    until true
+end
+function buttonPressedGoToTask(self, effect)
+    if g.game == nil then
+        return
+    end
+    local data = effect:GetData()
+    local task = data.task
+    if task == nil then
+        error("Failed to read the task from a task button.")
+    end
+    g.game.currentTask = task
+    goToStageAPIRoom(nil, "Task")
+end
+function buttonPressedEmergency(self)
+    if g.game == nil then
+        return
+    end
+    sendTCP(nil, SocketCommandModToServer.MEETING, {meetingType = MeetingType.EMERGENCY, gameID = g.game.id, userIDKilled = 0})
+end
+function buttonPressedTask(self, button, num)
+    if (g.game == nil) or (g.game.currentTask == nil) then
+        return
+    end
+    repeat
+        local ____switch30 = g.game.currentTask
+        local ____cond30 = ____switch30 == Task.SHORT_IDENTIFY_ITEMS
+        if ____cond30 then
+            do
+                identifyItemButtonPressed(nil, num)
+                break
+            end
+        end
+        ____cond30 = ____cond30 or (____switch30 == Task.SHORT_IDENTIFY_TRINKETS)
+        if ____cond30 then
+            do
+                identifyTrinketButtonPressed(nil, num)
+                break
+            end
+        end
+        ____cond30 = ____cond30 or (____switch30 == Task.SHORT_PRESS_BUTTONS_WITH_GRUDGE)
+        if ____cond30 then
+            do
+                pressButtonsWithGrudgeButtonPressed(nil)
+                break
+            end
+        end
+        ____cond30 = ____cond30 or (____switch30 == Task.SHORT_FIX_WIRES)
+        if ____cond30 then
+            do
+                fixWiresButtonPressed(nil, button, num)
+                break
+            end
+        end
+        ____cond30 = ____cond30 or (____switch30 == Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES)
+        if ____cond30 then
+            do
+                taskComplete(nil)
+                break
+            end
+        end
+        ____cond30 = ____cond30 or (____switch30 == Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS)
+        if ____cond30 then
+            do
+                taskComplete(nil)
+                break
+            end
+        end
+        ____cond30 = ____cond30 or (____switch30 == Task.SHORT_WALK_BETWEEN_SLIDES)
+        if ____cond30 then
+            do
+                taskComplete(nil)
+                break
+            end
+        end
+        ____cond30 = ____cond30 or (____switch30 == Task.LONG_IDENTIFY_PICKUPS_IN_ORDER)
+        if ____cond30 then
+            do
+                identiyPickupsInOrderButtonPressed(nil, button)
+                break
+            end
+        end
+        ____cond30 = ____cond30 or (____switch30 == Task.LONG_BUTTONS_BEHIND_KEY_BLOCKS)
+        if ____cond30 then
+            do
+                buttonsBehindKeyBlocksButtonPressed(nil)
+                break
+            end
+        end
+        do
+            do
+                break
+            end
+        end
+    until true
+end
+BUTTON_ACTIVATION_DISTANCE = 20
+function ____exports.postEffectUpdateButton(self, effect)
+    checkIfButtonIsPressed(nil, effect)
+end
+return ____exports
+ end,
+["mod.src.tasks.makePentagram"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local getText
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____Task = require("mod.src.types.Task")
+local Task = ____Task.Task
+local ____util = require("mod.src.util")
+local drawFontText = ____util.drawFontText
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+function getText(self)
+    local pentagrams = Isaac.FindByType(EntityType.ENTITY_EFFECT, EffectVariant.PENTAGRAM_BLACKPOWDER)
+    if #pentagrams == 0 then
+        return "Make a pentagram."
+    end
+    return "Not big enough!"
+end
+local THIS_TASK = Task.SHORT_MAKE_PENTAGRAM
+local REQUIRED_PENTAGRAM_SIZE = 250
+local TEXT_GRID_INDEX = 93
+function ____exports.makePentagram(self)
+    local game = Game()
+    local room = game:GetRoom()
+    local centerPos = room:GetCenterPos()
+    local startGridIndex = 100
+    movePlayerToGridIndex(nil, startGridIndex)
+    local player = Isaac.GetPlayer()
+    player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+    player:EvaluateItems()
+    local topRightGridIndex = 42
+    spawnTeleporter(nil, topRightGridIndex)
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, CollectibleType.COLLECTIBLE_BLACK_POWDER, centerPos, Vector.Zero, nil)
+end
+function ____exports.postRender(self)
+    if (g.game == nil) or (g.game.currentTask ~= THIS_TASK) then
+        return
+    end
+    local game = Game()
+    local room = game:GetRoom()
+    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
+    local position = Isaac.WorldToRenderPosition(worldPosition)
+    local text = getText(nil)
+    drawFontText(nil, text, position)
+end
+function ____exports.postEffectUpdatePentagramBlackPowder(self, effect)
+    if (g.game == nil) or (g.game.currentTask ~= THIS_TASK) then
+        return
+    end
+    if effect.Scale > REQUIRED_PENTAGRAM_SIZE then
+        taskComplete(nil)
+    end
+end
+return ____exports
+ end,
 ["mod.src.callbacks.postEffectUpdate"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
-local postEffectUpdateButton
+local pentagramBlackPowder, postEffectUpdateButton
 local ____enums = require("mod.src.enums")
 local EffectVariantCustom = ____enums.EffectVariantCustom
 local button = require("mod.src.features.button")
+local makePentagram = require("mod.src.tasks.makePentagram")
+function pentagramBlackPowder(self, effect)
+    makePentagram:postEffectUpdatePentagramBlackPowder(effect)
+end
 function postEffectUpdateButton(self, effect)
     button:postEffectUpdateButton(effect)
 end
 function ____exports.init(self, mod)
+    mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, pentagramBlackPowder, EffectVariant.PENTAGRAM_BLACKPOWDER)
     mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, postEffectUpdateButton, EffectVariantCustom.BUTTON)
+end
+return ____exports
+ end,
+["mod.src.tasks.killWorms"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local getAliveNPCs = ____isaacscript_2Dcommon.getAliveNPCs
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____Task = require("mod.src.types.Task")
+local Task = ____Task.Task
+local ____util = require("mod.src.util")
+local enableShooting = ____util.enableShooting
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+local THIS_TASK = Task.LONG_KILL_WORMS
+function ____exports.killWorms(self)
+    local game = Game()
+    local room = game:GetRoom()
+    local centerGridIndex = 67
+    movePlayerToGridIndex(nil, centerGridIndex)
+    enableShooting(nil)
+    local rightGridIndex = 73
+    spawnTeleporter(nil, rightGridIndex)
+    local wormGridIndexes = {32, 37, 42, 92, 97, 102, 62, 72}
+    for ____, gridIndex in ipairs(wormGridIndexes) do
+        local position = room:GetGridPosition(gridIndex)
+        Isaac.Spawn(EntityType.ENTITY_ROUND_WORM, 0, 0, position, Vector.Zero, nil)
+    end
+end
+function ____exports.postEntityKill(self)
+    if (g.game == nil) or (g.game.currentTask ~= THIS_TASK) then
+        return
+    end
+    local aliveNPCs = getAliveNPCs(nil)
+    if #aliveNPCs == 0 then
+        taskComplete(nil)
+    end
+end
+return ____exports
+ end,
+["mod.src.callbacks.postEntityKill"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local killWorms = require("mod.src.tasks.killWorms")
+function ____exports.main(self, _entity)
+    killWorms:postEntityKill()
 end
 return ____exports
  end,
@@ -5144,7 +6799,7 @@ function validateSeed(self)
     return startSeedString == AMONG_US_SEED
 end
 AMONG_US_CHARACTER = PlayerType.PLAYER_ISAAC
-AMONG_US_SEED = "H4C8 QKT3"
+AMONG_US_SEED = "L8AK PRCH"
 local AMONG_US_CHALLENGE = Challenge.CHALLENGE_NULL
 local restartOnNextFrame = false
 function ____exports.postRender(self)
@@ -5241,8 +6896,8 @@ local disableMultiplayer = require("mod.src.features.disableMultiplayer")
 local errors = require("mod.src.features.errors")
 local restartOnNextFrame = require("mod.src.features.restartOnNextFrame")
 local welcomeNotification = require("mod.src.features.welcomeNotification")
-local ____util = require("mod.src.util")
-local enableMinimapAPI = ____util.enableMinimapAPI
+local ____minimapAPI = require("mod.src.minimapAPI")
+local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
 function ____exports.main(self, isContinued)
     local game = Game()
     local seeds = game:GetSeeds()
@@ -5262,99 +6917,6 @@ function ____exports.main(self, isContinued)
 end
 return ____exports
  end,
-["mod.src.spawnObjects"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-local getGridIncrement
-local ____enums = require("mod.src.enums")
-local BoxVariant = ____enums.BoxVariant
-local EffectVariantCustom = ____enums.EffectVariantCustom
-local EntityTypeCustom = ____enums.EntityTypeCustom
-local ____util = require("mod.src.util")
-local spawnEntity = ____util.spawnEntity
-local spawnGridEntity = ____util.spawnGridEntity
-function getGridIncrement(self, direction)
-    local game = Game()
-    local room = game:GetRoom()
-    local gridWidth = room:GetGridWidth()
-    repeat
-        local ____switch6 = direction
-        local ____cond6 = ____switch6 == Direction.LEFT
-        if ____cond6 then
-            do
-                return -1
-            end
-        end
-        ____cond6 = ____cond6 or (____switch6 == Direction.UP)
-        if ____cond6 then
-            do
-                return -gridWidth
-            end
-        end
-        ____cond6 = ____cond6 or (____switch6 == Direction.RIGHT)
-        if ____cond6 then
-            do
-                return 1
-            end
-        end
-        ____cond6 = ____cond6 or (____switch6 == Direction.DOWN)
-        if ____cond6 then
-            do
-                return gridWidth
-            end
-        end
-        do
-            do
-                error(
-                    "Unknown direction: " .. tostring(direction)
-                )
-                return 0
-            end
-        end
-    until true
-end
-function ____exports.spawnBlock(self, gridIndex, visible)
-    if visible == nil then
-        visible = true
-    end
-    local gridEntityType = (visible and GridEntityType.GRID_ROCKB) or GridEntityType.GRID_WALL
-    local gridEntity = spawnGridEntity(nil, gridEntityType, gridIndex)
-    return gridEntity
-end
-function ____exports.spawnBlockLine(self, gridIndex, num, direction, visible)
-    if visible == nil then
-        visible = true
-    end
-    local gridIncrement = getGridIncrement(nil, direction)
-    do
-        local i = 0
-        while i < num do
-            ____exports.spawnBlock(nil, gridIndex, visible)
-            gridIndex = gridIndex + gridIncrement
-            i = i + 1
-        end
-    end
-end
-function ____exports.spawnBox(self, gridIndex, large)
-    local variant = (large and BoxVariant.LARGE) or BoxVariant.SMALL
-    return spawnEntity(nil, EntityTypeCustom.BOX, variant, 0, gridIndex)
-end
-function ____exports.spawnEngine(self, gridIndex)
-    spawnEntity(nil, EntityTypeCustom.ENGINE, 0, 0, gridIndex)
-    local topLeftBlockGridIndex = gridIndex - 88
-    ____exports.spawnBlockLine(nil, topLeftBlockGridIndex, 9, Direction.RIGHT)
-    local topRightBlockGridIndex = gridIndex - 79
-    ____exports.spawnBlockLine(nil, topRightBlockGridIndex, 7, Direction.DOWN)
-    local bottomLeftBlockGridIndex = gridIndex + 80
-    ____exports.spawnBlockLine(nil, bottomLeftBlockGridIndex, 9, Direction.RIGHT)
-    local electricBoxGridIndex = gridIndex + 108
-    ____exports.spawnBlockLine(nil, electricBoxGridIndex, 3, Direction.RIGHT, false)
-end
-function ____exports.spawnVent(self, gridIndex)
-    spawnEntity(nil, EntityType.ENTITY_EFFECT, EffectVariantCustom.VENT, 0, gridIndex)
-end
-return ____exports
- end,
 ["mod.src.features.lobby"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
@@ -5371,13 +6933,14 @@ local getRoomVariant = ____isaacscript_2Dcommon.getRoomVariant
 local removeEntities = ____isaacscript_2Dcommon.removeEntities
 local ____globals = require("mod.src.globals")
 local g = ____globals.default
+local ____minimapAPI = require("mod.src.minimapAPI")
+local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
 local ____setupPlayersAndUI = require("mod.src.setupPlayersAndUI")
 local setupPlayerAndUI = ____setupPlayersAndUI.setupPlayerAndUI
 local ____spawnObjects = require("mod.src.spawnObjects")
 local spawnBox = ____spawnObjects.spawnBox
 local ____util = require("mod.src.util")
 local consoleCommand = ____util.consoleCommand
-local enableMinimapAPI = ____util.enableMinimapAPI
 function gotoLobby(self)
     if ____exports.inLobby(nil) then
         return
@@ -6349,8 +7912,12 @@ local ensureAllCases = ____isaacscript_2Dcommon.ensureAllCases
 local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
 local ____globals = require("mod.src.globals")
 local g = ____globals.default
+local ____minimapAPI = require("mod.src.minimapAPI")
+local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
 local ____players = require("mod.src.players")
 local getPlayer = ____players.getPlayer
+local ____sprite = require("mod.src.sprite")
+local initSprite = ____sprite.initSprite
 local ____BlackSpriteState = require("mod.src.types.BlackSpriteState")
 local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
 local ____MeetingType = require("mod.src.types.MeetingType")
@@ -6359,8 +7926,6 @@ local ____StartMeetingState = require("mod.src.types.StartMeetingState")
 local StartMeetingState = ____StartMeetingState.StartMeetingState
 local ____util = require("mod.src.util")
 local drawFontText = ____util.drawFontText
-local enableMinimapAPI = ____util.enableMinimapAPI
-local initSprite = ____util.initSprite
 local ____blackSprite = require("mod.src.features.blackSprite")
 local FADE_TO_BLACK_FRAMES = ____blackSprite.FADE_TO_BLACK_FRAMES
 local setBlackSpriteState = ____blackSprite.setBlackSpriteState
@@ -6801,12 +8366,493 @@ function ____exports.postRender(self)
 end
 return ____exports
  end,
+["mod.src.tasks.bombRocks"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+local ____exports = {}
+local spawnBombs, spawnRocks, spawnRock, everyRockBroken, NUM_ROCKS_TO_SPAWN, LEFT_SIDE_GRID_INDEXES, seed, rockBrokenMap
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local nextSeed = ____isaacscript_2Dcommon.nextSeed
+local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____Task = require("mod.src.types.Task")
+local Task = ____Task.Task
+local ____util = require("mod.src.util")
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+local spawnEntity = ____util.spawnEntity
+function spawnBombs(self, gridIndex)
+    local bombs = spawnEntity(nil, EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_DOUBLEPACK, gridIndex)
+    local sprite = bombs:GetSprite()
+    sprite:SetLastFrame()
+end
+function spawnRocks(self)
+    rockBrokenMap:clear()
+    do
+        local i = 0
+        while i < NUM_ROCKS_TO_SPAWN do
+            spawnRock(nil)
+            i = i + 1
+        end
+    end
+end
+function spawnRock(self)
+    local game = Game()
+    local room = game:GetRoom()
+    if seed == nil then
+        seed = room:GetSpawnSeed()
+    end
+    local gridIndex
+    local gridEntity
+    repeat
+        do
+            seed = nextSeed(nil, seed)
+            gridIndex = room:GetRandomTileIndex(seed)
+            gridEntity = room:GetGridEntity(gridIndex)
+        end
+    until not ((gridEntity ~= nil) or __TS__ArrayIncludes(LEFT_SIDE_GRID_INDEXES, gridIndex))
+    spawnGridEntity(nil, GridEntityType.GRID_ROCK, gridIndex)
+    rockBrokenMap:set(gridIndex, false)
+end
+function everyRockBroken(self)
+    for ____, broken in __TS__Iterator(
+        rockBrokenMap:values()
+    ) do
+        if not broken then
+            return false
+        end
+    end
+    return true
+end
+local THIS_TASK = Task.SHORT_BOMB_ROCKS
+NUM_ROCKS_TO_SPAWN = 20
+local TOP_LEFT_GRID_INDEX = 16
+local ONE_BY_ONE_ROOM_HEIGHT_WITHOUT_WALLS = 7
+local ONE_BY_ONE_ROOM_WIDTH = 15
+LEFT_SIDE_GRID_INDEXES = {}
+do
+    local i = 0
+    while i < ONE_BY_ONE_ROOM_HEIGHT_WITHOUT_WALLS do
+        local gridIndex = TOP_LEFT_GRID_INDEX + (i * ONE_BY_ONE_ROOM_WIDTH)
+        __TS__ArrayPush(LEFT_SIDE_GRID_INDEXES, gridIndex)
+        i = i + 1
+    end
+end
+seed = nil
+rockBrokenMap = __TS__New(Map)
+function ____exports.bombRocks(self)
+    spawnTeleporter(nil, TOP_LEFT_GRID_INDEX)
+    local belowTeleporterGridIndex = 46
+    movePlayerToGridIndex(nil, belowTeleporterGridIndex)
+    spawnBombs(nil, 76)
+    spawnBombs(nil, 91)
+    spawnBombs(nil, 106)
+    spawnRocks(nil)
+end
+function ____exports.postGridEntityUpdateRock(self, gridEntity)
+    if (g.game == nil) or (g.game.currentTask ~= THIS_TASK) then
+        return
+    end
+    local game = Game()
+    local room = game:GetRoom()
+    local gridIndex = room:GetGridIndex(gridEntity.Position)
+    local broken = gridEntity.State == 2
+    rockBrokenMap:set(gridIndex, broken)
+    if everyRockBroken(nil) then
+        taskComplete(nil)
+    end
+end
+return ____exports
+ end,
+["mod.src.tasks.destroyGiantPoop"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local spawnGiantPoop = ____isaacscript_2Dcommon.spawnGiantPoop
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____util = require("mod.src.util")
+local enableShooting = ____util.enableShooting
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+function ____exports.destroyGiantPoop(self)
+    local centerLeftGridIndex = 62
+    movePlayerToGridIndex(nil, centerLeftGridIndex)
+    enableShooting(nil)
+    local topLeftGridIndex = 32
+    spawnTeleporter(nil, topLeftGridIndex)
+    local centerRightGridIndex = 52
+    spawnGiantPoop(nil, centerRightGridIndex)
+end
+function ____exports.postGridEntityUpdatePoop(self, gridEntity)
+    if gridEntity.State == 1000 then
+        taskComplete(nil)
+    end
+end
+return ____exports
+ end,
+["mod.src.tasks.loadSlotMachines"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____Task = require("mod.src.types.Task")
+local Task = ____Task.Task
+local ____util = require("mod.src.util")
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+local spawnEntity = ____util.spawnEntity
+local THIS_TASK = Task.SHORT_LOAD_SLOT_MACHINES
+local NUM_SLOT_MACHINES = 4
+local SLOT_MACHINE_SPACING = 2
+function ____exports.loadSlotMachines(self)
+    local topRightGridIndex = 42
+    movePlayerToGridIndex(nil, topRightGridIndex)
+    local bottomRightGridIndex = 102
+    spawnTeleporter(nil, bottomRightGridIndex)
+    local startingGridIndex = 49
+    do
+        local i = 0
+        while i < NUM_SLOT_MACHINES do
+            local gridIndex = startingGridIndex + (i * SLOT_MACHINE_SPACING)
+            spawnEntity(nil, EntityType.ENTITY_SLOT, 1, 0, gridIndex)
+            i = i + 1
+        end
+    end
+    local coinGridIndexes = {79, 80, 81, 82, 83, 84, 85}
+    for ____, gridIndex in ipairs(coinGridIndexes) do
+        local coins = spawnEntity(nil, EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_DOUBLEPACK, gridIndex)
+        local sprite = coins:GetSprite()
+        sprite:SetLastFrame()
+    end
+end
+function ____exports.postUpdate(self)
+    if (g.game == nil) or (g.game.currentTask ~= THIS_TASK) then
+        return
+    end
+    removeAllMatchingEntities(nil, EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE)
+    local player = Isaac.GetPlayer()
+    local numCoins = player:GetNumCoins()
+    local coins = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN)
+    if (numCoins == 0) and (#coins == 0) then
+        taskComplete(nil)
+    end
+end
+return ____exports
+ end,
+["mod.src.tasks.pushTNTBarrel"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local allRocksBroken
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local getGridEntities = ____isaacscript_2Dcommon.getGridEntities
+local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____Task = require("mod.src.types.Task")
+local Task = ____Task.Task
+local ____util = require("mod.src.util")
+local enableShooting = ____util.enableShooting
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+function allRocksBroken(self)
+    local rocks = getGridEntities(nil, GridEntityType.GRID_ROCK)
+    for ____, rock in ipairs(rocks) do
+        if rock.State == 1 then
+            return false
+        end
+    end
+    return true
+end
+local THIS_TASK = Task.SHORT_PUSH_TNT_BARREL
+function ____exports.pushTNTBarrel(self)
+    local game = Game()
+    local room = game:GetRoom()
+    local bottomLeftGridIndex = 92
+    movePlayerToGridIndex(nil, bottomLeftGridIndex)
+    enableShooting(nil)
+    local topLeftGridIndex = 32
+    spawnTeleporter(nil, topLeftGridIndex)
+    local leftGridIndex = 63
+    local position = room:GetGridPosition(leftGridIndex)
+    Isaac.Spawn(EntityType.ENTITY_MOVABLE_TNT, 0, 0, position, Vector.Zero, nil)
+    local rockGridIndexes = {55, 56, 57, 85, 86, 87, 72}
+    for ____, gridIndex in ipairs(rockGridIndexes) do
+        spawnGridEntity(nil, GridEntityType.GRID_ROCK, gridIndex)
+    end
+end
+function ____exports.postUpdate(self)
+    if (g.game == nil) or (g.game.currentTask ~= THIS_TASK) then
+        return
+    end
+    if allRocksBroken(nil) then
+        taskComplete(nil)
+    end
+end
+return ____exports
+ end,
+["mod.src.tasks.walkBetweenSlides"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local runNextFrame = ____isaacscript_2Dcommon.runNextFrame
+local ____collisionObjects = require("mod.src.collisionObjects")
+local addCollision = ____collisionObjects.addCollision
+local ____buttonSpawn = require("mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____spawnObjects = require("mod.src.spawnObjects")
+local spawnFakeBlockLine = ____spawnObjects.spawnFakeBlockLine
+local ____util = require("mod.src.util")
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+local spawnEntity = ____util.spawnEntity
+function ____exports.walkBetweenSlides(self)
+    local topLeftGridIndex = 32
+    movePlayerToGridIndex(nil, topLeftGridIndex)
+    local bottomLeftGridIndex = 92
+    spawnTeleporter(nil, bottomLeftGridIndex)
+    local rightGridIndex = 72
+    spawnTaskButton(nil, rightGridIndex, 1)
+    spawnFakeBlockLine(nil, 19, 3, Direction.DOWN)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 19, 49)
+        end
+    )
+    spawnFakeBlockLine(nil, 79, 3, Direction.DOWN)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 79, 109)
+        end
+    )
+    spawnFakeBlockLine(nil, 21, 2, Direction.DOWN)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 21, 36)
+        end
+    )
+    spawnFakeBlockLine(nil, 66, 4, Direction.DOWN)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 66, 111)
+        end
+    )
+    spawnFakeBlockLine(nil, 23, 4, Direction.DOWN)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 23, 68)
+        end
+    )
+    spawnFakeBlockLine(nil, 98, 2, Direction.DOWN)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 98, 113)
+        end
+    )
+    spawnFakeBlockLine(nil, 25, 3, Direction.DOWN)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 25, 55)
+        end
+    )
+    spawnFakeBlockLine(nil, 85, 3, Direction.DOWN)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 85, 115)
+        end
+    )
+    local slideGridIndexes = {20, 110, 22, 112, 24, 114}
+    for ____, gridIndex in ipairs(slideGridIndexes) do
+        spawnEntity(nil, EntityType.ENTITY_POKY, 1, 0, gridIndex)
+    end
+end
+return ____exports
+ end,
+["mod.src.tasks.walkBetweenSuctionPitfalls"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local ____buttonSpawn = require("mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____spawnObjects = require("mod.src.spawnObjects")
+local spawnBlockLine = ____spawnObjects.spawnBlockLine
+local spawnSpikesLine = ____spawnObjects.spawnSpikesLine
+local ____util = require("mod.src.util")
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+local spawnEntity = ____util.spawnEntity
+function ____exports.walkBetweenSuctionPitfalls(self)
+    local bottomLeftGridIndex = 106
+    spawnTeleporter(nil, bottomLeftGridIndex)
+    local aboveTeleporterGridIndex = 91
+    movePlayerToGridIndex(nil, aboveTeleporterGridIndex)
+    spawnBlockLine(nil, 77, 3, Direction.DOWN)
+    spawnBlockLine(nil, 27, 3, Direction.DOWN)
+    local topRightGridIndex = 28
+    spawnTaskButton(nil, topRightGridIndex, 1)
+    spawnSpikesLine(nil, 108, 11, Direction.RIGHT)
+    spawnSpikesLine(nil, 78, 2, Direction.DOWN)
+    spawnSpikesLine(nil, 64, 2, Direction.DOWN)
+    spawnSpikesLine(nil, 80, 2, Direction.DOWN)
+    spawnSpikesLine(nil, 84, 2, Direction.DOWN)
+    spawnSpikesLine(nil, 70, 2, Direction.DOWN)
+    spawnSpikesLine(nil, 86, 2, Direction.DOWN)
+    spawnSpikesLine(nil, 16, 11, Direction.RIGHT)
+    spawnSpikesLine(nil, 31, 6, Direction.RIGHT)
+    spawnSpikesLine(nil, 38, 4, Direction.RIGHT)
+    spawnSpikesLine(nil, 46, 2, Direction.RIGHT)
+    spawnSpikesLine(nil, 51, 3, Direction.RIGHT)
+    spawnSpikesLine(nil, 67, 2, Direction.DOWN)
+    spawnSpikesLine(nil, 87, 2, Direction.DOWN)
+    spawnSpikesLine(nil, 88, 2, Direction.DOWN)
+    for ____, gridIndex in ipairs({94, 100, 37}) do
+        spawnEntity(nil, EntityType.ENTITY_PITFALL, 1, 0, gridIndex)
+    end
+end
+return ____exports
+ end,
+["mod.src.tasks.walkDiagonallyThroughSpikes"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
+local ____buttonSpawn = require("mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____teleporter = require("mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____util = require("mod.src.util")
+local movePlayerToGridIndex = ____util.movePlayerToGridIndex
+function ____exports.walkDiagonallyThroughSpikes(self)
+    local topLeftGridIndex = 32
+    movePlayerToGridIndex(nil, topLeftGridIndex)
+    local bottomLeftGridIndex = 92
+    spawnTeleporter(nil, bottomLeftGridIndex)
+    local bottomRightGridIndex = 117
+    spawnTaskButton(nil, bottomRightGridIndex, 1)
+    local spikeGridIndexes = {19, 20, 21, 22, 23, 25, 26, 27, 28, 34, 35, 36, 37, 39, 41, 42, 43, 49, 50, 51, 53, 54, 55, 57, 58, 65, 67, 68, 69, 71, 72, 73, 79, 81, 82, 83, 85, 86, 87, 88, 94, 95, 96, 97, 98, 99, 101, 102, 103, 109, 110, 111, 112, 113, 114, 115, 118}
+    for ____, gridIndex in ipairs(spikeGridIndexes) do
+        spawnGridEntity(nil, GridEntityType.GRID_SPIKES, gridIndex)
+    end
+end
+return ____exports
+ end,
+["mod.src.taskFunctions"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
+local ____exports = {}
+local ____bombRocks = require("mod.src.tasks.bombRocks")
+local bombRocks = ____bombRocks.bombRocks
+local ____buttonsBehindKeyBlocks = require("mod.src.tasks.buttonsBehindKeyBlocks")
+local buttonsBehindKeyBlocks = ____buttonsBehindKeyBlocks.buttonsBehindKeyBlocks
+local ____destroyGiantPoop = require("mod.src.tasks.destroyGiantPoop")
+local destroyGiantPoop = ____destroyGiantPoop.destroyGiantPoop
+local ____fixWires = require("mod.src.tasks.fixWires")
+local fixWires = ____fixWires.fixWires
+local ____identifyItems = require("mod.src.tasks.identifyItems")
+local identifyItems = ____identifyItems.identifyItems
+local ____identifyPickupsInOrder = require("mod.src.tasks.identifyPickupsInOrder")
+local identifyPickupsInOrder = ____identifyPickupsInOrder.identifyPickupsInOrder
+local ____identifyTrinkets = require("mod.src.tasks.identifyTrinkets")
+local identifyTrinkets = ____identifyTrinkets.identifyTrinkets
+local ____killWorms = require("mod.src.tasks.killWorms")
+local killWorms = ____killWorms.killWorms
+local ____loadSlotMachines = require("mod.src.tasks.loadSlotMachines")
+local loadSlotMachines = ____loadSlotMachines.loadSlotMachines
+local ____makePentagram = require("mod.src.tasks.makePentagram")
+local makePentagram = ____makePentagram.makePentagram
+local ____pressButtonsWithGrudge = require("mod.src.tasks.pressButtonsWithGrudge")
+local pressButtonsWithGrudge = ____pressButtonsWithGrudge.pressButtonsWithGrudge
+local ____pushTNTBarrel = require("mod.src.tasks.pushTNTBarrel")
+local pushTNTBarrel = ____pushTNTBarrel.pushTNTBarrel
+local ____walkBetweenSlides = require("mod.src.tasks.walkBetweenSlides")
+local walkBetweenSlides = ____walkBetweenSlides.walkBetweenSlides
+local ____walkBetweenSuctionPitfalls = require("mod.src.tasks.walkBetweenSuctionPitfalls")
+local walkBetweenSuctionPitfalls = ____walkBetweenSuctionPitfalls.walkBetweenSuctionPitfalls
+local ____walkDiagonallyThroughSpikes = require("mod.src.tasks.walkDiagonallyThroughSpikes")
+local walkDiagonallyThroughSpikes = ____walkDiagonallyThroughSpikes.walkDiagonallyThroughSpikes
+local ____Task = require("mod.src.types.Task")
+local Task = ____Task.Task
+____exports.taskFunctions = __TS__New(Map)
+____exports.taskFunctions:set(Task.SHORT_DESTROY_GIANT_POOP, destroyGiantPoop)
+____exports.taskFunctions:set(Task.SHORT_BOMB_ROCKS, bombRocks)
+____exports.taskFunctions:set(Task.SHORT_IDENTIFY_ITEMS, identifyItems)
+____exports.taskFunctions:set(Task.SHORT_IDENTIFY_TRINKETS, identifyTrinkets)
+____exports.taskFunctions:set(Task.SHORT_LOAD_SLOT_MACHINES, loadSlotMachines)
+____exports.taskFunctions:set(Task.SHORT_MAKE_PENTAGRAM, makePentagram)
+____exports.taskFunctions:set(Task.SHORT_PRESS_BUTTONS_WITH_GRUDGE, pressButtonsWithGrudge)
+____exports.taskFunctions:set(Task.SHORT_FIX_WIRES, fixWires)
+____exports.taskFunctions:set(Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES, walkDiagonallyThroughSpikes)
+____exports.taskFunctions:set(Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS, walkBetweenSuctionPitfalls)
+____exports.taskFunctions:set(Task.SHORT_WALK_BETWEEN_SLIDES, walkBetweenSlides)
+____exports.taskFunctions:set(Task.SHORT_PUSH_TNT_BARREL, pushTNTBarrel)
+____exports.taskFunctions:set(Task.LONG_IDENTIFY_PICKUPS_IN_ORDER, identifyPickupsInOrder)
+____exports.taskFunctions:set(Task.LONG_KILL_WORMS, killWorms)
+____exports.taskFunctions:set(Task.LONG_BUTTONS_BEHIND_KEY_BLOCKS, buttonsBehindKeyBlocks)
+return ____exports
+ end,
+["mod.src.features.task"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local setupTaskRoom
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+local ____minimapAPI = require("mod.src.minimapAPI")
+local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
+local ____stageAPI = require("mod.src.stageAPI")
+local getStageAPIRoomName = ____stageAPI.getStageAPIRoomName
+local ____taskFunctions = require("mod.src.taskFunctions")
+local taskFunctions = ____taskFunctions.taskFunctions
+local ____taskSubroutines = require("mod.src.features.taskSubroutines")
+local clearRoomEntities = ____taskSubroutines.clearRoomEntities
+function ____exports.inTask(self)
+    local roomName = getStageAPIRoomName(nil)
+    return roomName == "Task"
+end
+function setupTaskRoom(self)
+    if ((not ____exports.inTask(nil)) or (g.game == nil)) or (g.game.currentTask == nil) then
+        return
+    end
+    enableMinimapAPI(nil, false)
+    clearRoomEntities(nil)
+    local taskFunction = taskFunctions:get(g.game.currentTask)
+    if taskFunction ~= nil then
+        taskFunction(nil)
+    end
+end
+function ____exports.postStageAPINewRoom(self)
+    setupTaskRoom(nil)
+end
+return ____exports
+ end,
 ["mod.src.features.drawRoomDescription"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
 local ____constants = require("mod.src.constants")
 local IS_DEV = ____constants.IS_DEV
 local MAX_PLAYERS = ____constants.MAX_PLAYERS
+local taskDescriptions = ____constants.taskDescriptions
 local ____globals = require("mod.src.globals")
 local g = ____globals.default
 local ____stageAPI = require("mod.src.stageAPI")
@@ -6820,6 +8866,8 @@ local ____endMeeting = require("mod.src.features.endMeeting")
 local inEndMeeting = ____endMeeting.inEndMeeting
 local ____lobby = require("mod.src.features.lobby")
 local inLobby = ____lobby.inLobby
+local ____task = require("mod.src.features.task")
+local inTask = ____task.inTask
 local TEXT_GRID_INDEX = 7
 local SECOND_LINE_OFFSET = Vector(0, 20)
 function ____exports.postRender(self)
@@ -6830,6 +8878,11 @@ function ____exports.postRender(self)
     local room = game:GetRoom()
     local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
     local position = Isaac.WorldToRenderPosition(worldPosition)
+    if inTask(nil) and (g.game.currentTask ~= nil) then
+        local taskDescription = taskDescriptions[g.game.currentTask]
+        drawFontText(nil, "Task: " .. taskDescription.name, position)
+        return
+    end
     if inLobby(nil) then
         drawFontText(nil, "Lobby", position)
         local positionBelow = position + SECOND_LINE_OFFSET
@@ -6856,6 +8909,19 @@ local ____exports = {}
 local chat = require("mod.src.chat")
 function ____exports.commandChat(self, data)
     chat:add(data)
+end
+return ____exports
+ end,
+["mod.src.commands.endGame"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+function ____exports.commandEndGame(self, _data)
+    if g.game == nil then
+        return
+    end
+    local foo = "todo"
 end
 return ____exports
  end,
@@ -7042,6 +9108,8 @@ local ____skeldRoomMap = require("mod.src.skeldRoomMap")
 local skeldRoomMap = ____skeldRoomMap.skeldRoomMap
 local ____stageAPI = require("mod.src.stageAPI")
 local getStageAPIRoomName = ____stageAPI.getStageAPIRoomName
+local ____SkeldRoom = require("mod.src.types.SkeldRoom")
+local SkeldRoom = ____SkeldRoom.SkeldRoom
 local ____SocketCommands = require("mod.src.types.SocketCommands")
 local SocketCommandModToServer = ____SocketCommands.SocketCommandModToServer
 local sendEvents = true
@@ -7049,10 +9117,11 @@ function ____exports.postRoomLoad(self)
     if (((StageAPI == nil) or (g.game == nil)) or (not g.game.started)) or (not sendEvents) then
         return
     end
-    local level = g.g:GetLevel()
+    local game = Game()
+    local level = game:GetLevel()
     local roomName = getStageAPIRoomName(nil)
     local room = skeldRoomMap:get(roomName)
-    if room == nil then
+    if (room == nil) or (room == SkeldRoom.TASK) then
         return
     end
     sendTCP(nil, SocketCommandModToServer.ROOM, {gameID = g.game.id, room = room, enterDoor = level.EnterDoor})
@@ -7114,10 +9183,13 @@ function ____exports.commandReconnect(self, data)
         level.EnterDoor = data.enterDoor
         fixRoomEntrancePosition(nil)
     else
-        local roomName = skeldRoomReverseMap:get(data.room)
-        if roomName ~= nil then
-            goToStageAPIRoom(nil, roomName, data.enterDoor)
+        local roomName = skeldRoomReverseMap[data.room]
+        if roomName == nil then
+            error(
+                "Failed to get the room name for room: " .. tostring(data.room)
+            )
         end
+        goToStageAPIRoom(nil, roomName, data.enterDoor)
     end
     enableSendingEvents(nil, true)
 end
@@ -7237,6 +9309,8 @@ return ____exports
 local ____exports = {}
 local ____chat = require("mod.src.commands.chat")
 local commandChat = ____chat.commandChat
+local ____endGame = require("mod.src.commands.endGame")
+local commandEndGame = ____endGame.commandEndGame
 local ____endMeeting = require("mod.src.commands.endMeeting")
 local commandEndMeeting = ____endMeeting.commandEndMeeting
 local ____error = require("mod.src.commands.error")
@@ -7269,7 +9343,7 @@ local ____vote = require("mod.src.commands.vote")
 local commandVote = ____vote.commandVote
 local ____SocketCommands = require("mod.src.types.SocketCommands")
 local SocketCommandServerToMod = ____SocketCommands.SocketCommandServerToMod
-____exports.commandMap = {[SocketCommandServerToMod.ERROR] = commandError, [SocketCommandServerToMod.USERNAME] = commandUsername, [SocketCommandServerToMod.LOGGED_IN] = commandLoggedIn, [SocketCommandServerToMod.GAME_LIST] = commandGameList, [SocketCommandServerToMod.JOINED] = commandJoined, [SocketCommandServerToMod.LEFT] = commandLeft, [SocketCommandServerToMod.GAME_DESCRIPTION] = commandGameDescription, [SocketCommandServerToMod.CHAT] = commandChat, [SocketCommandServerToMod.STARTED] = commandStarted, [SocketCommandServerToMod.RECONNECT] = commandReconnect, [SocketCommandServerToMod.KILLED] = commandKilled, [SocketCommandServerToMod.START_MEETING] = commandStartMeeting, [SocketCommandServerToMod.START_VOTING] = commandStartVoting, [SocketCommandServerToMod.VOTE] = commandVote, [SocketCommandServerToMod.END_MEETING] = commandEndMeeting, [SocketCommandServerToMod.TERMINATED] = commandTerminated}
+____exports.commandMap = {[SocketCommandServerToMod.ERROR] = commandError, [SocketCommandServerToMod.USERNAME] = commandUsername, [SocketCommandServerToMod.LOGGED_IN] = commandLoggedIn, [SocketCommandServerToMod.GAME_LIST] = commandGameList, [SocketCommandServerToMod.JOINED] = commandJoined, [SocketCommandServerToMod.LEFT] = commandLeft, [SocketCommandServerToMod.GAME_DESCRIPTION] = commandGameDescription, [SocketCommandServerToMod.CHAT] = commandChat, [SocketCommandServerToMod.STARTED] = commandStarted, [SocketCommandServerToMod.RECONNECT] = commandReconnect, [SocketCommandServerToMod.KILLED] = commandKilled, [SocketCommandServerToMod.START_MEETING] = commandStartMeeting, [SocketCommandServerToMod.START_VOTING] = commandStartVoting, [SocketCommandServerToMod.VOTE] = commandVote, [SocketCommandServerToMod.END_MEETING] = commandEndMeeting, [SocketCommandServerToMod.END_GAME] = commandEndGame, [SocketCommandServerToMod.TERMINATED] = commandTerminated}
 return ____exports
  end,
 ["mod.src.network.socket"] = function(...) 
@@ -7477,6 +9551,11 @@ local startMeeting = require("mod.src.features.startMeeting")
 local welcomeNotification = require("mod.src.features.welcomeNotification")
 local socket = require("mod.src.network.socket")
 local udp = require("mod.src.network.udp")
+local fixWires = require("mod.src.tasks.fixWires")
+local identifyItems = require("mod.src.tasks.identifyItems")
+local identifyPickupsInOrder = require("mod.src.tasks.identifyPickupsInOrder")
+local identifyTrinkets = require("mod.src.tasks.identifyTrinkets")
+local makePentagram = require("mod.src.tasks.makePentagram")
 function ____exports.main(self)
     if errors:postRender() then
         return
@@ -7496,6 +9575,11 @@ function ____exports.main(self)
     startMeeting:postRender()
     drawMeeting:postRender()
     endMeeting:postRender()
+    identifyItems:postRender()
+    identifyTrinkets:postRender()
+    makePentagram:postRender()
+    fixWires:postRender()
+    identifyPickupsInOrder:postRender()
 end
 return ____exports
  end,
@@ -7537,10 +9621,14 @@ local ____exports = {}
 local debugFunction = require("mod.src.debugFunction")
 local disconnectHotkey = require("mod.src.features.disconnectHotkey")
 local doors = require("mod.src.features.doors")
+local loadSlotMachines = require("mod.src.tasks.loadSlotMachines")
+local pushTNTBarrel = require("mod.src.tasks.pushTNTBarrel")
 function ____exports.main(self)
     debugFunction:postUpdate()
     disconnectHotkey:postUpdate()
     doors:postUpdate()
+    pushTNTBarrel:postUpdate()
+    loadSlotMachines:postUpdate()
 end
 return ____exports
  end,
@@ -7556,6 +9644,31 @@ function ____exports.main(self, shouldSave)
         "MC_PRE_GAME_EXIT - shouldSave: " .. tostring(shouldSave)
     )
     disableMultiplayer:preGameExit(shouldSave)
+end
+return ____exports
+ end,
+["mod.src.callbacksCustom.postGridEntityUpdate"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local rock, poop, teleporter
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local ModCallbacksCustom = ____isaacscript_2Dcommon.ModCallbacksCustom
+local featureTeleporter = require("mod.src.features.teleporter")
+local bombRocks = require("mod.src.tasks.bombRocks")
+local destroyGiantPoop = require("mod.src.tasks.destroyGiantPoop")
+function rock(self, gridEntity)
+    bombRocks:postGridEntityUpdateRock(gridEntity)
+end
+function poop(self, gridEntity)
+    destroyGiantPoop:postGridEntityUpdatePoop(gridEntity)
+end
+function teleporter(self, gridEntity)
+    featureTeleporter:postGridEntityUpdateTeleporter(gridEntity)
+end
+function ____exports.init(self, mod)
+    mod:AddCallbackCustom(ModCallbacksCustom.MC_POST_GRID_ENTITY_UPDATE, rock, GridEntityType.GRID_ROCK)
+    mod:AddCallbackCustom(ModCallbacksCustom.MC_POST_GRID_ENTITY_UPDATE, poop, GridEntityType.GRID_POOP)
+    mod:AddCallbackCustom(ModCallbacksCustom.MC_POST_GRID_ENTITY_UPDATE, teleporter, GridEntityType.GRID_TELEPORTER)
 end
 return ____exports
  end,
@@ -7588,6 +9701,10 @@ return ____exports
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
 local spawnAdminTable, spawnAdminTop
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local runNextFrame = ____isaacscript_2Dcommon.runNextFrame
+local ____collisionObjects = require("mod.src.collisionObjects")
+local addCollision = ____collisionObjects.addCollision
 local ____enums = require("mod.src.enums")
 local EntityTypeCustom = ____enums.EntityTypeCustom
 local ____spawnObjects = require("mod.src.spawnObjects")
@@ -7601,6 +9718,12 @@ end
 function spawnAdminTop(self)
     local topCenterGridIndex = 22
     spawnEntity(nil, EntityTypeCustom.ADMIN_TOP, 0, 0, topCenterGridIndex)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 19, 26)
+        end
+    )
 end
 function ____exports.spawnAdminObjects(self)
     local bottomLeftGridIndex = 106
@@ -7613,34 +9736,42 @@ return ____exports
 ["mod.src.rooms.communication"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local runNextFrame = ____isaacscript_2Dcommon.runNextFrame
+local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
+local ____collisionObjects = require("mod.src.collisionObjects")
+local addCollision = ____collisionObjects.addCollision
 local ____enums = require("mod.src.enums")
 local EntityTypeCustom = ____enums.EntityTypeCustom
-local ____spawnObjects = require("mod.src.spawnObjects")
-local spawnBlockLine = ____spawnObjects.spawnBlockLine
 local ____util = require("mod.src.util")
 local spawnEntity = ____util.spawnEntity
-local spawnGridEntity = ____util.spawnGridEntity
 function ____exports.spawnCommunicationObjects(self)
     local topLeftGridIndex = 16
     spawnEntity(nil, EntityTypeCustom.COMPUTER, 0, 0, topLeftGridIndex)
-    spawnBlockLine(nil, topLeftGridIndex, 5, Direction.RIGHT)
-    local secondRowTopLeftGridIndex = 31
-    spawnBlockLine(nil, secondRowTopLeftGridIndex, 5, Direction.RIGHT)
     local topRightGridIndex = 26
     spawnEntity(nil, EntityTypeCustom.RADIO, 0, 0, topRightGridIndex)
-    spawnBlockLine(nil, topRightGridIndex, 3, Direction.RIGHT)
     local bottomLeftGridIndex = 106
     spawnGridEntity(nil, GridEntityType.GRID_STATUE, bottomLeftGridIndex)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 16, 35, -20)
+            addCollision(nil, 26, 28)
+        end
+    )
 end
 return ____exports
  end,
 ["mod.src.rooms.electrical"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local runNextFrame = ____isaacscript_2Dcommon.runNextFrame
+local ____collisionObjects = require("mod.src.collisionObjects")
+local addCollision = ____collisionObjects.addCollision
 local ____enums = require("mod.src.enums")
 local EntityTypeCustom = ____enums.EntityTypeCustom
 local ____spawnObjects = require("mod.src.spawnObjects")
-local spawnBlockLine = ____spawnObjects.spawnBlockLine
 local spawnVent = ____spawnObjects.spawnVent
 local ____util = require("mod.src.util")
 local spawnEntity = ____util.spawnEntity
@@ -7649,8 +9780,12 @@ function ____exports.spawnElectricalObjects(self)
     spawnEntity(nil, EntityTypeCustom.ELECTRICAL, 0, 0, nextToTopLeftGridIndex)
     local topLeftGridIndex = 16
     spawnVent(nil, topLeftGridIndex)
-    spawnBlockLine(nil, 17, 12, Direction.RIGHT, false)
-    spawnBlockLine(nil, 32, 12, Direction.RIGHT, false)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 17, 43)
+        end
+    )
 end
 return ____exports
  end,
@@ -7668,10 +9803,12 @@ return ____exports
 ["mod.src.rooms.medbay"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local runNextFrame = ____isaacscript_2Dcommon.runNextFrame
+local ____collisionObjects = require("mod.src.collisionObjects")
+local addCollision = ____collisionObjects.addCollision
 local ____enums = require("mod.src.enums")
 local EntityTypeCustom = ____enums.EntityTypeCustom
-local ____spawnObjects = require("mod.src.spawnObjects")
-local spawnBlockLine = ____spawnObjects.spawnBlockLine
 local ____util = require("mod.src.util")
 local spawnEntity = ____util.spawnEntity
 function ____exports.spawnMedbayObjects(self)
@@ -7683,55 +9820,66 @@ function ____exports.spawnMedbayObjects(self)
         local sprite = bed:GetSprite()
         sprite.FlipX = true
     end
-    spawnBlockLine(nil, 16, 7, Direction.DOWN, false)
-    spawnBlockLine(nil, 17, 7, Direction.DOWN, false)
-    spawnBlockLine(nil, 18, 7, Direction.DOWN, false)
-    spawnBlockLine(nil, 26, 7, Direction.DOWN, false)
-    spawnBlockLine(nil, 27, 7, Direction.DOWN, false)
-    spawnBlockLine(nil, 28, 7, Direction.DOWN, false)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 16, 108)
+            addCollision(nil, 26, 118)
+        end
+    )
 end
 return ____exports
  end,
 ["mod.src.rooms.navigation"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local runNextFrame = ____isaacscript_2Dcommon.runNextFrame
+local ____collisionObjects = require("mod.src.collisionObjects")
+local addCollision = ____collisionObjects.addCollision
 local ____enums = require("mod.src.enums")
 local EntityTypeCustom = ____enums.EntityTypeCustom
 local ____spawnObjects = require("mod.src.spawnObjects")
-local spawnBlockLine = ____spawnObjects.spawnBlockLine
 local spawnVent = ____spawnObjects.spawnVent
 local ____util = require("mod.src.util")
 local spawnEntity = ____util.spawnEntity
 function ____exports.spawnNavigationObjects(self)
     local rightGridIndex = 73
     spawnEntity(nil, EntityTypeCustom.SHIP_CONTROLS, 0, 0, rightGridIndex)
-    local topRightGridIndex = 28
-    spawnBlockLine(nil, topRightGridIndex, 7, Direction.DOWN, false)
-    local secondRowTopRightGridIndex = 27
-    spawnBlockLine(nil, secondRowTopRightGridIndex, 7, Direction.DOWN, false)
     local gridIndexTopLeft = 16
     spawnVent(nil, gridIndexTopLeft)
     local gridIndexBottomLeft = 106
     spawnVent(nil, gridIndexBottomLeft)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 27, 118)
+        end
+    )
 end
 return ____exports
  end,
 ["mod.src.rooms.o2"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local runNextFrame = ____isaacscript_2Dcommon.runNextFrame
+local ____collisionObjects = require("mod.src.collisionObjects")
+local addCollision = ____collisionObjects.addCollision
 local ____enums = require("mod.src.enums")
 local EntityTypeCustom = ____enums.EntityTypeCustom
-local ____spawnObjects = require("mod.src.spawnObjects")
-local spawnBlockLine = ____spawnObjects.spawnBlockLine
 local ____util = require("mod.src.util")
 local spawnEntity = ____util.spawnEntity
 function ____exports.spawnO2Objects(self)
     for ____, gridIndex in ipairs({17, 20, 23, 26}) do
         spawnEntity(nil, EntityTypeCustom.TANK, 0, 0, gridIndex)
     end
-    for ____, gridIndex in ipairs({16, 31, 46}) do
-        spawnBlockLine(nil, gridIndex, 12, Direction.RIGHT, false)
-    end
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 16, 57)
+        end
+    )
 end
 return ____exports
  end,
@@ -7755,57 +9903,96 @@ return ____exports
 ["mod.src.rooms.security"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local runNextFrame = ____isaacscript_2Dcommon.runNextFrame
+local ____collisionObjects = require("mod.src.collisionObjects")
+local addCollision = ____collisionObjects.addCollision
 local ____enums = require("mod.src.enums")
 local EntityTypeCustom = ____enums.EntityTypeCustom
-local ____spawnObjects = require("mod.src.spawnObjects")
-local spawnBlockLine = ____spawnObjects.spawnBlockLine
 local ____util = require("mod.src.util")
 local spawnEntity = ____util.spawnEntity
 function ____exports.spawnSecurityObjects(self)
     local rightWallGridIndex = 73
     spawnEntity(nil, EntityTypeCustom.SECURITY_TABLE, 0, 0, rightWallGridIndex)
-    spawnBlockLine(nil, 57, 2, Direction.RIGHT, false)
-    spawnBlockLine(nil, 72, 2, Direction.RIGHT, false)
-    spawnBlockLine(nil, 87, 2, Direction.RIGHT, false)
-    spawnBlockLine(nil, 103, 1, Direction.RIGHT, false)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 57, 88)
+            addCollision(nil, 103)
+        end
+    )
 end
 return ____exports
  end,
 ["mod.src.rooms.shields"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
+local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
+local runNextFrame = ____isaacscript_2Dcommon.runNextFrame
+local ____collisionObjects = require("mod.src.collisionObjects")
+local addCollision = ____collisionObjects.addCollision
 local ____enums = require("mod.src.enums")
 local EntityTypeCustom = ____enums.EntityTypeCustom
 local ____spawnObjects = require("mod.src.spawnObjects")
-local spawnBlockLine = ____spawnObjects.spawnBlockLine
+local spawnFakeBlockLine = ____spawnObjects.spawnFakeBlockLine
 local ____util = require("mod.src.util")
 local spawnEntity = ____util.spawnEntity
 function ____exports.spawnShieldsObjects(self)
+    spawnFakeBlockLine(nil, 196, 13, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 211, 13, Direction.RIGHT)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 196, 223)
+        end
+    )
+    spawnFakeBlockLine(nil, 151, 5, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 136, 5, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 121, 3, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 106, 2, Direction.RIGHT)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 121, 153)
+            addCollision(nil, 139, 154)
+            addCollision(nil, 155, 155, -20)
+        end
+    )
+    spawnFakeBlockLine(nil, 187, 7, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 173, 6, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 159, 5, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 144, 5, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 129, 5, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 115, 4, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 100, 4, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 100, 4, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 84, 4, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 69, 4, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 54, 4, Direction.RIGHT)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 188, 193)
+            addCollision(nil, 174, 178)
+            addCollision(nil, 129, 163)
+            addCollision(nil, 100, 148)
+            addCollision(nil, 54, 87)
+        end
+    )
+    spawnFakeBlockLine(nil, 61, 4, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 46, 5, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 31, 5, Direction.RIGHT)
+    spawnFakeBlockLine(nil, 16, 13, Direction.RIGHT)
+    runNextFrame(
+        nil,
+        function()
+            addCollision(nil, 16, 63)
+            addCollision(nil, 19, 49)
+            addCollision(nil, 20, 28)
+        end
+    )
     local gridIndex = 111
     spawnEntity(nil, EntityTypeCustom.SHIELDS, 0, 0, gridIndex, -500)
-    local bottomLeftGridIndex = 211
-    spawnBlockLine(nil, bottomLeftGridIndex, 13, Direction.RIGHT)
-    local secondRowBottomLeftGridIndex = 196
-    spawnBlockLine(nil, secondRowBottomLeftGridIndex, 13, Direction.RIGHT)
-    spawnBlockLine(nil, 151, 5, Direction.RIGHT)
-    spawnBlockLine(nil, 136, 5, Direction.RIGHT)
-    spawnBlockLine(nil, 121, 3, Direction.RIGHT)
-    spawnBlockLine(nil, 106, 2, Direction.RIGHT)
-    spawnBlockLine(nil, 187, 7, Direction.RIGHT)
-    spawnBlockLine(nil, 173, 6, Direction.RIGHT)
-    spawnBlockLine(nil, 159, 5, Direction.RIGHT)
-    spawnBlockLine(nil, 144, 5, Direction.RIGHT)
-    spawnBlockLine(nil, 129, 5, Direction.RIGHT)
-    spawnBlockLine(nil, 115, 4, Direction.RIGHT)
-    spawnBlockLine(nil, 100, 4, Direction.RIGHT)
-    spawnBlockLine(nil, 100, 4, Direction.RIGHT)
-    spawnBlockLine(nil, 84, 4, Direction.RIGHT)
-    spawnBlockLine(nil, 69, 4, Direction.RIGHT)
-    spawnBlockLine(nil, 54, 4, Direction.RIGHT)
-    spawnBlockLine(nil, 61, 3, Direction.RIGHT)
-    spawnBlockLine(nil, 46, 4, Direction.RIGHT)
-    spawnBlockLine(nil, 31, 4, Direction.RIGHT)
-    spawnBlockLine(nil, 16, 13, Direction.RIGHT)
 end
 return ____exports
  end,
@@ -7909,8 +10096,8 @@ local ____SkeldRoom = require("mod.src.types.SkeldRoom")
 local SkeldRoom = ____SkeldRoom.SkeldRoom
 local ____util = require("mod.src.util")
 local removeGridEntity = ____util.removeGridEntity
-local ____button = require("mod.src.features.button")
-local spawnTaskButtons = ____button.spawnTaskButtons
+local ____buttonSpawn = require("mod.src.features.buttonSpawn")
+local spawnGoToTaskButtons = ____buttonSpawn.spawnGoToTaskButtons
 function emptyRoom(self)
     for ____, entityType in ipairs(
         getEnumValues(nil, EntityTypeCustom)
@@ -7919,7 +10106,7 @@ function emptyRoom(self)
         removeEntities(nil, entities)
     end
     for ____, gridEntity in ipairs(
-        getGridEntities(nil, GridEntityType.GRID_DECORATION)
+        getGridEntities(nil, GridEntityType.GRID_DECORATION, GridEntityType.GRID_ROCKB)
     ) do
         removeGridEntity(nil, gridEntity)
     end
@@ -7933,7 +10120,7 @@ function ____exports.postRoomLoad(self)
         return
     end
     emptyRoom(nil)
-    spawnTaskButtons(nil)
+    spawnGoToTaskButtons(nil)
     local setupFunction = functionMap:get(skeldRoom)
     if setupFunction ~= nil then
         setupFunction(nil)
@@ -7978,15 +10165,53 @@ return ____exports
 ["mod.src.callbacksCustom.postStageAPINewRoom"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
+local fixOffsetBug, warpToCafeteriaAndBack, NORMAL_TOP_LEFT_POS, warping
 local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
 local log = ____isaacscript_2Dcommon.log
 local sendGameEvents = require("mod.src.features.sendGameEvents")
+local task = require("mod.src.features.task")
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
 local ____loadMap = require("mod.src.loadMap")
 local setTasksOnMap = ____loadMap.setTasksOnMap
+local ____stageAPI = require("mod.src.stageAPI")
+local getStageAPIRoomName = ____stageAPI.getStageAPIRoomName
+local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
+function fixOffsetBug(self)
+    local game = Game()
+    local room = game:GetRoom()
+    local topLeftPos = room:GetTopLeftPos()
+    if (topLeftPos.X ~= NORMAL_TOP_LEFT_POS.X) or (topLeftPos.Y ~= NORMAL_TOP_LEFT_POS.Y) then
+        log(nil, "Bugged room detected; attempting a warp fix.")
+        warpToCafeteriaAndBack(nil)
+    end
+end
+function warpToCafeteriaAndBack(self)
+    if (StageAPI == nil) or (g.game == nil) then
+        return
+    end
+    local game = Game()
+    local level = game:GetLevel()
+    local roomName = getStageAPIRoomName(nil)
+    warping = true
+    local enterDoor = level.EnterDoor
+    goToStageAPIRoom(nil, "Cafeteria")
+    level.EnterDoor = enterDoor
+    goToStageAPIRoom(nil, roomName, enterDoor)
+    warping = false
+end
+NORMAL_TOP_LEFT_POS = Vector(60, 140)
+warping = false
 function ____exports.main()
     log(nil, "POST_STAGE_API_NEW_ROOM")
+    if warping then
+        log(nil, "Warping; returning early.")
+        return
+    end
     sendGameEvents:postRoomLoad()
     setTasksOnMap(nil)
+    fixOffsetBug(nil)
+    task:postStageAPINewRoom()
 end
 return ____exports
  end,
@@ -8046,16 +10271,18 @@ return ____exports
 ["mod.src.main"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
-local initCallbacks, initCallbacksCustom, initCallbacksStageAPI, initExtra
+local initLibraries, initCallbacks, initCallbacksCustom, initCallbacksStageAPI, initExtra
 local ____isaacscript_2Dcommon = require("mod.node_modules.isaacscript-common.dist.index")
 local log = ____isaacscript_2Dcommon.log
 local ModCallbacksCustom = ____isaacscript_2Dcommon.ModCallbacksCustom
 local upgradeMod = ____isaacscript_2Dcommon.upgradeMod
+local entityTakeDmg = require("mod.src.callbacks.entityTakeDmg")
 local evaluateCache = require("mod.src.callbacks.evaluateCache")
 local executeCmd = require("mod.src.callbacks.executeCmd")
 local inputAction = require("mod.src.callbacks.inputAction")
 local postCurseEval = require("mod.src.callbacks.postCurseEval")
 local postEffectUpdate = require("mod.src.callbacks.postEffectUpdate")
+local postEntityKill = require("mod.src.callbacks.postEntityKill")
 local postGameStarted = require("mod.src.callbacks.postGameStarted")
 local postNewRoom = require("mod.src.callbacks.postNewRoom")
 local postNPCRender = require("mod.src.callbacks.postNPCRender")
@@ -8063,6 +10290,7 @@ local postPlayerInit = require("mod.src.callbacks.postPlayerInit")
 local postRender = require("mod.src.callbacks.postRender")
 local postUpdate = require("mod.src.callbacks.postUpdate")
 local preGameExit = require("mod.src.callbacks.preGameExit")
+local postGridEntityUpdate = require("mod.src.callbacksCustom.postGridEntityUpdate")
 local postPlayerInitLate = require("mod.src.callbacksCustom.postPlayerInitLate")
 local postRoomLoad = require("mod.src.callbacksCustom.postRoomLoad")
 local postStageAPINewRoom = require("mod.src.callbacksCustom.postStageAPINewRoom")
@@ -8071,17 +10299,21 @@ local MOD_NAME = ____constants.MOD_NAME
 local VERSION = ____constants.VERSION
 local ____initFeatures = require("mod.src.initFeatures")
 local initFeatures = ____initFeatures.initFeatures
+local collisionObjects = require("mod.src.lib.collisionObjects")
 local ____print = require("mod.src.print")
 local fixPrintFunction = ____print.fixPrintFunction
+function initLibraries(self, mod)
+    collisionObjects:init(mod)
+end
 function initCallbacks(self, mod)
     mod:AddCallback(ModCallbacks.MC_POST_UPDATE, postUpdate.main)
     mod:AddCallback(ModCallbacks.MC_POST_RENDER, postRender.main)
-    mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, evaluateCache.main)
     mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, postPlayerInit.main)
     mod:AddCallback(ModCallbacks.MC_POST_CURSE_EVAL, postCurseEval.main)
     mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, inputAction.main)
     mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, preGameExit.main)
     mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, executeCmd.main)
+    mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, postEntityKill.main)
 end
 function initCallbacksCustom(self, mod)
     mod:AddCallbackCustom(ModCallbacksCustom.MC_POST_NEW_ROOM_REORDERED, postNewRoom.main)
@@ -8098,13 +10330,17 @@ function initCallbacksStageAPI(self)
     StageAPI.AddCallback(MOD_NAME, "POST_ROOM_LOAD", callbackPriority, postRoomLoad.main)
 end
 function initExtra(self, mod)
+    entityTakeDmg:init(mod)
+    evaluateCache:init(mod)
     postNPCRender:init(mod)
     postEffectUpdate:init(mod)
+    postGridEntityUpdate:init(mod)
 end
 function ____exports.default(self)
     fixPrintFunction(nil)
     local modVanilla = RegisterMod("isaacAmongUsMod", 1)
     local mod = upgradeMod(nil, modVanilla)
+    initLibraries(nil, mod)
     initFeatures(nil)
     initCallbacks(nil, mod)
     initCallbacksCustom(nil, mod)
@@ -8120,6 +10356,18 @@ local ____exports = {}
 local ____main = require("mod.src.main")
 local main = ____main.default
 main(nil)
+return ____exports
+ end,
+["mod.src.tasks.breakAsteroids"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+function ____exports.breakAsteroids(self)
+end
+return ____exports
+ end,
+["mod.src.types.TaskDescription"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
 return ____exports
  end,
 ["mod.node_modules.isaacscript-common.dist.index"] = function(...) 
@@ -8379,6 +10627,14 @@ do
     end
 end
 do
+    local ____export = require("mod.node_modules.isaacscript-common.dist.functions.vector")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+do
     local ____export = require("mod.node_modules.isaacscript-common.dist.transformationMap")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
@@ -8581,6 +10837,7 @@ ____exports.MAX_PLAYER_SPEED_IN_UNITS = 9.8
 ____exports.MAX_PLAYER_TRINKET_SLOTS = 2
 ____exports.MAX_ROOM_INDEX = 168
 ____exports.MAX_VANILLA_COLLECTIBLE_TYPE = CollectibleType.COLLECTIBLE_DECAP_ATTACK
+____exports.ONE_BY_ONE_ROOM_GRID_SIZE = 135
 ____exports.SINGLE_USE_ACTIVE_COLLECTIBLE_TYPES = __TS__New(Set, {CollectibleType.COLLECTIBLE_FORGET_ME_NOW, CollectibleType.COLLECTIBLE_EDENS_SOUL, CollectibleType.COLLECTIBLE_ALABASTER_BOX, CollectibleType.COLLECTIBLE_PLAN_C, CollectibleType.COLLECTIBLE_MAMA_MEGA, CollectibleType.COLLECTIBLE_SACRIFICIAL_ALTAR, CollectibleType.COLLECTIBLE_DEATH_CERTIFICATE, CollectibleType.COLLECTIBLE_R_KEY})
 return ____exports
  end,
@@ -8827,8 +11084,8 @@ local ____debug = require("mod.node_modules.isaacscript-common.dist.debug")
 local DEBUG = ____debug.DEBUG
 local ____log = require("mod.node_modules.isaacscript-common.dist.functions.log")
 local log = ____log.log
-local ____util = require("mod.node_modules.isaacscript-common.dist.functions.util")
-local isVector = ____util.isVector
+local ____vector = require("mod.node_modules.isaacscript-common.dist.functions.vector")
+local isVector = ____vector.isVector
 function ____exports.deepCopy(self, oldObject, serializationType, traversalDescription)
     if serializationType == nil then
         serializationType = ____exports.SerializationType.NONE
@@ -9220,6 +11477,19 @@ require("lualib_bundle");
 local ____exports = {}
 local ____random = require("mod.node_modules.isaacscript-common.dist.functions.random")
 local getRandomInt = ____random.getRandomInt
+function ____exports.getRandomArrayIndex(self, array, seed)
+    if seed == nil then
+        seed = Random()
+    end
+    if #array == 0 then
+        error("Failed to get a random array index since the provided array is empty.")
+    end
+    local randomIndex = getRandomInt(nil, 0, #array - 1, seed)
+    return randomIndex
+end
+function ____exports.arrayEmpty(self, array)
+    __TS__ArraySplice(array, 0, #array)
+end
 function ____exports.arrayEquals(self, array1, array2)
     if #array1 ~= #array2 then
         return false
@@ -9235,16 +11505,6 @@ function ____exports.arrayEquals(self, array1, array2)
     end
     return true
 end
-function ____exports.arrayEmpty(self, array)
-    __TS__ArraySplice(array, 0, #array)
-end
-function ____exports.arraySum(self, array)
-    local sum = 0
-    for ____, element in ipairs(array) do
-        sum = sum + element
-    end
-    return sum
-end
 function ____exports.arrayInArray(self, arrayToMatch, parentArray)
     for ____, element in ipairs(parentArray) do
         if ____exports.arrayEquals(nil, element, arrayToMatch) then
@@ -9252,6 +11512,40 @@ function ____exports.arrayInArray(self, arrayToMatch, parentArray)
         end
     end
     return false
+end
+function ____exports.arrayInit(self, defaultValue, size)
+    local array = {}
+    do
+        local i = 0
+        while i < size do
+            __TS__ArrayPush(array, defaultValue)
+            i = i + 1
+        end
+    end
+    return array
+end
+function ____exports.arrayShuffle(self, originalArray, seed)
+    if seed == nil then
+        seed = Random()
+    end
+    local array = {
+        table.unpack(originalArray)
+    }
+    local currentIndex = #array
+    local randomIndex
+    while currentIndex ~= 0 do
+        randomIndex = ____exports.getRandomArrayIndex(nil, array, seed)
+        currentIndex = currentIndex - 1
+        array[currentIndex + 1], array[randomIndex + 1] = array[randomIndex + 1], array[currentIndex + 1]
+    end
+    return array
+end
+function ____exports.arraySum(self, array)
+    local sum = 0
+    for ____, element in ipairs(array) do
+        sum = sum + element
+    end
+    return sum
 end
 function ____exports.arrayToString(self, array)
     local strings = {}
@@ -9263,31 +11557,28 @@ function ____exports.arrayToString(self, array)
     end
     return ("[" .. table.concat(strings, ", " or ",")) .. "]"
 end
-function ____exports.getRandomArrayElement(self, array, seed)
-    if #array == 0 then
-        error("Failed to get a random array element since the provided array is empty.")
-    end
-    local randomIndex = getRandomInt(nil, 0, #array - 1, seed)
-    return array[randomIndex + 1]
-end
-function ____exports.arrayRemove(self, array, element)
-    local arrayCopy = {
-        table.unpack(array)
+function ____exports.arrayRemove(self, originalArray, element)
+    local array = {
+        table.unpack(originalArray)
     }
     local index = __TS__ArrayIndexOf(array, element)
-    __TS__ArraySplice(arrayCopy, index, 1)
-    return arrayCopy
-end
-function ____exports.initArray(self, defaultValue, size)
-    local array = {}
-    do
-        local i = 0
-        while i < size do
-            __TS__ArrayPush(array, defaultValue)
-            i = i + 1
-        end
-    end
+    __TS__ArraySplice(array, index, 1)
     return array
+end
+function ____exports.arrayRemoveInPlace(self, array, element)
+    local index = __TS__ArrayIndexOf(array, element)
+    if index == -1 then
+        return false
+    end
+    __TS__ArraySplice(array, index, 1)
+    return true
+end
+function ____exports.getRandomArrayElement(self, array, seed)
+    if seed == nil then
+        seed = Random()
+    end
+    local randomIndex = ____exports.getRandomArrayIndex(nil, array, seed)
+    return array[randomIndex + 1]
 end
 function ____exports.isArray(self, ____table)
     local metatable = getmetatable(____table)
@@ -9321,6 +11612,9 @@ return ____exports
 local ____exports = {}
 local RECOMMENDED_SHIFT_IDX
 function ____exports.initRNG(self, seed)
+    if seed == nil then
+        seed = Random()
+    end
     if seed == 0 then
         error("You cannot initialize an RNG object with a seed of 0, or the game will crash.")
     end
@@ -9334,11 +11628,22 @@ function ____exports.getRandom(self, seed)
     return rng:RandomFloat()
 end
 function ____exports.getRandomFloat(self, min, max, seed)
+    if seed == nil then
+        seed = Random()
+    end
     return min + (____exports.getRandom(nil, seed) * (max - min))
 end
 function ____exports.getRandomInt(self, min, max, seed)
+    if seed == nil then
+        seed = Random()
+    end
     local rng = ____exports.initRNG(nil, seed)
     return rng:RandomInt((max - min) + 1) + min
+end
+function ____exports.nextSeed(self, seed)
+    local rng = ____exports.initRNG(nil, seed)
+    rng:Next()
+    return rng:GetSeed()
 end
 return ____exports
  end,
@@ -9367,6 +11672,82 @@ function ____exports.removeFlag(self, flags, ...)
         flags = flags & ~f
     end
     return flags
+end
+return ____exports
+ end,
+["mod.node_modules.isaacscript-common.dist.functions.vector"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local ____util = require("mod.node_modules.isaacscript-common.dist.functions.util")
+local ensureAllCases = ____util.ensureAllCases
+function ____exports.directionToVector(self, direction)
+    repeat
+        local ____switch3 = direction
+        local ____cond3 = ____switch3 == Direction.DOWN
+        if ____cond3 then
+            do
+                return Vector(0, 1)
+            end
+        end
+        ____cond3 = ____cond3 or (____switch3 == Direction.LEFT)
+        if ____cond3 then
+            do
+                return Vector(-1, 0)
+            end
+        end
+        ____cond3 = ____cond3 or (____switch3 == Direction.RIGHT)
+        if ____cond3 then
+            do
+                return Vector(1, 0)
+            end
+        end
+        ____cond3 = ____cond3 or (____switch3 == Direction.UP)
+        if ____cond3 then
+            do
+                return Vector(0, -1)
+            end
+        end
+        ____cond3 = ____cond3 or (____switch3 == Direction.NO_DIRECTION)
+        if ____cond3 then
+            do
+                return Vector.Zero
+            end
+        end
+        do
+            do
+                ensureAllCases(nil, direction)
+                return Vector.Zero
+            end
+        end
+    until true
+end
+function ____exports.isVector(self, object)
+    local objectType = type(object)
+    if objectType ~= "userdata" then
+        return false
+    end
+    local metatable = getmetatable(object)
+    if metatable == nil then
+        return false
+    end
+    local vectorMetatable = metatable
+    return vectorMetatable.__type == "Vector"
+end
+function ____exports.vectorToDirection(self, vector)
+    local degrees = vector:GetAngleDegrees()
+    if (degrees > -45) and (degrees < 45) then
+        return Direction.RIGHT
+    end
+    if (degrees >= 45) and (degrees <= 135) then
+        return Direction.DOWN
+    end
+    if (degrees <= -45) and (degrees >= -135) then
+        return Direction.UP
+    end
+    if (degrees > 135) or (degrees < -135) then
+        return Direction.LEFT
+    end
+    return Direction.NO_DIRECTION
 end
 return ____exports
  end,
@@ -9424,18 +11805,6 @@ function ____exports.isGreedMode(self)
     local game = Game()
     return (game.Difficulty == Difficulty.DIFFICULTY_GREED) or (game.Difficulty == Difficulty.DIFFICULTY_GREEDIER)
 end
-function ____exports.isVector(self, object)
-    local objectType = type(object)
-    if objectType ~= "userdata" then
-        return false
-    end
-    local metatable = getmetatable(object)
-    if metatable == nil then
-        return false
-    end
-    local vectorMetatable = metatable
-    return vectorMetatable.__type == "Vector"
-end
 function ____exports.onSetSeed(self)
     local game = Game()
     local seeds = game:GetSeeds()
@@ -9459,22 +11828,6 @@ function ____exports.teleport(self, roomIndex, direction, roomTransitionAnim)
     local level = game:GetLevel()
     level.LeaveDoor = -1
     game:StartRoomTransition(roomIndex, direction, roomTransitionAnim)
-end
-function ____exports.vectorToDirection(self, vector)
-    local degrees = vector:GetAngleDegrees()
-    if (degrees > -45) and (degrees < 45) then
-        return Direction.RIGHT
-    end
-    if (degrees >= 45) and (degrees <= 135) then
-        return Direction.DOWN
-    end
-    if (degrees <= -45) and (degrees >= -135) then
-        return Direction.UP
-    end
-    if (degrees > 135) or (degrees < -135) then
-        return Direction.LEFT
-    end
-    return Direction.NO_DIRECTION
 end
 return ____exports
  end,
@@ -9824,7 +12177,7 @@ function postUpdate(self)
         func(nil)
     end
 end
-function ____exports.runInNFrames(self, frames, func)
+function ____exports.runInNFrames(self, func, frames)
     if not initialized then
         local msg = getUpgradeErrorMsg(nil, FEATURE_NAME)
         error(msg)
@@ -9848,7 +12201,7 @@ function ____exports.runNextFrame(self, func)
         local msg = getUpgradeErrorMsg(nil, FEATURE_NAME)
         error(msg)
     end
-    ____exports.runInNFrames(nil, 1, func)
+    ____exports.runInNFrames(nil, func, 1)
 end
 return ____exports
  end,
@@ -9891,6 +12244,7 @@ function ____exports.setCollectibleSprite(self, pickup, pngPath)
 end
 COLLECTIBLE_SPRITE_LAYER = 1
 local BLIND_ITEM_PNG_PATH = "gfx/items/collectibles/questionmark.png"
+local GLITCHED_ITEM_THRESHOLD = 4000000000
 local COLLECTIBLE_SET = __TS__New(Set)
 local function initSet(self)
     local itemConfig = Isaac.GetItemConfig()
@@ -9945,6 +12299,9 @@ function ____exports.getCollectibleSet(self)
         initSet(nil)
     end
     return copySet(nil, COLLECTIBLE_SET)
+end
+function ____exports.isGlitchedCollectible(self, entity)
+    return ((entity.Type == EntityType.ENTITY_PICKUP) and (entity.Variant == PickupVariant.PICKUP_COLLECTIBLE)) and (entity.SubType > GLITCHED_ITEM_THRESHOLD)
 end
 function ____exports.isQuestCollectible(self, collectibleType)
     return ____exports.collectibleHasTag(nil, collectibleType, 32768)
@@ -10385,7 +12742,6 @@ function ____exports.getNPCs(self)
     end
     return npcs
 end
-local GLITCHED_ITEM_THRESHOLD = 4000000000
 function ____exports.anyEntityCloserThan(self, entities, position, distance)
     for ____, entity in ipairs(entities) do
         if position:Distance(entity.Position) <= distance then
@@ -10405,8 +12761,16 @@ function ____exports.getAliveBosses(self)
     end
     return aliveBosses
 end
-function ____exports.isGlitchedCollectible(self, entity)
-    return ((entity.Type == EntityType.ENTITY_PICKUP) and (entity.Variant == PickupVariant.PICKUP_COLLECTIBLE)) and (entity.SubType > GLITCHED_ITEM_THRESHOLD)
+function ____exports.getAliveNPCs(self)
+    local aliveNPCs = {}
+    for ____, npc in ipairs(
+        ____exports.getNPCs(nil)
+    ) do
+        if not npc:IsDead() then
+            __TS__ArrayPush(aliveNPCs, npc)
+        end
+    end
+    return aliveNPCs
 end
 function ____exports.removeEntities(self, entities)
     for ____, entity in ipairs(entities) do
@@ -10429,10 +12793,18 @@ return ____exports
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
 local ____exports = {}
-function ____exports.getGridEntities(self, gridEntityType)
+function ____exports.spawnGridEntityWithVariant(self, gridEntityType, variant, gridIndex)
+    local game = Game()
+    local room = game:GetRoom()
+    local position = room:GetGridPosition(gridIndex)
+    return Isaac.GridSpawn(gridEntityType, variant, position, true)
+end
+function ____exports.getGridEntities(self, ...)
+    local gridEntityTypes = {...}
     local game = Game()
     local room = game:GetRoom()
     local gridSize = room:GetGridSize()
+    local gridEntityTypesSet = __TS__New(Set, gridEntityTypes)
     local gridEntities = {}
     do
         local gridIndex = 0
@@ -10442,11 +12814,11 @@ function ____exports.getGridEntities(self, gridEntityType)
                 if gridEntity == nil then
                     goto __continue3
                 end
-                if gridEntityType == nil then
+                if #gridEntityTypes == 0 then
                     __TS__ArrayPush(gridEntities, gridEntity)
                 else
                     local thisGridEntityType = gridEntity:GetType()
-                    if thisGridEntityType == gridEntityType then
+                    if gridEntityTypesSet:has(thisGridEntityType) then
                         __TS__ArrayPush(gridEntities, gridEntity)
                     end
                 end
@@ -10471,6 +12843,21 @@ function ____exports.getSurroundingGridEntities(self, gridEntity)
         end
     end
     return surroundingGridEntities
+end
+function ____exports.spawnGiantPoop(self, topLeftGridIndex)
+    local game = Game()
+    local room = game:GetRoom()
+    local gridWidth = room:GetGridWidth()
+    local topRightGridIndex = topLeftGridIndex + 1
+    local bottomLeftGridIndex = topLeftGridIndex + gridWidth
+    local bottomRightGridIndex = bottomLeftGridIndex + 1
+    ____exports.spawnGridEntityWithVariant(nil, GridEntityType.GRID_POOP, 7, topLeftGridIndex)
+    ____exports.spawnGridEntityWithVariant(nil, GridEntityType.GRID_POOP, 8, topRightGridIndex)
+    ____exports.spawnGridEntityWithVariant(nil, GridEntityType.GRID_POOP, 9, bottomLeftGridIndex)
+    ____exports.spawnGridEntityWithVariant(nil, GridEntityType.GRID_POOP, 10, bottomRightGridIndex)
+end
+function ____exports.spawnGridEntity(self, gridEntityType, gridIndex)
+    return ____exports.spawnGridEntityWithVariant(nil, gridEntityType, 0, gridIndex)
 end
 return ____exports
  end,
@@ -11100,6 +13487,22 @@ function ____exports.isLost(self, player)
     local character = player:GetPlayerType()
     return (character == PlayerType.PLAYER_THELOST) or (character == PlayerType.PLAYER_THELOST_B)
 end
+function ____exports.removeCostumeCollectible(self, player, collectibleType)
+    local itemConfig = Isaac.GetItemConfig()
+    local itemConfigItem = itemConfig:GetCollectible(collectibleType)
+    if itemConfigItem == nil then
+        return
+    end
+    player:RemoveCostume(itemConfigItem)
+end
+function ____exports.removeCostumeTrinket(self, player, trinketType)
+    local itemConfig = Isaac.GetItemConfig()
+    local itemConfigTrinket = itemConfig:GetTrinket(trinketType)
+    if itemConfigTrinket == nil then
+        return
+    end
+    player:RemoveCostume(itemConfigTrinket)
+end
 function ____exports.removeDeadEyeMultiplier(self, player)
     do
         local i = 0
@@ -11225,9 +13628,12 @@ return ____exports
  end,
 ["mod.node_modules.isaacscript-common.dist.functions.trinkets"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+require("lualib_bundle");
 local ____exports = {}
 local ____constants = require("mod.node_modules.isaacscript-common.dist.constants")
 local GOLDEN_TRINKET_SHIFT = ____constants.GOLDEN_TRINKET_SHIFT
+local ____util = require("mod.node_modules.isaacscript-common.dist.functions.util")
+local copySet = ____util.copySet
 function ____exports.temporarilyRemoveTrinkets(self, player, trinketType)
     if not player:HasTrinket(trinketType) then
         return nil
@@ -11276,6 +13682,30 @@ function ____exports.giveTrinketsBack(self, player, trinketSituation)
     if trinketSituation.trinket2 ~= TrinketType.TRINKET_NULL then
         player:AddTrinket(trinketSituation.trinket2, false)
     end
+end
+function ____exports.getMaxTrinketID(self)
+    local itemConfig = Isaac.GetItemConfig()
+    return itemConfig:GetTrinkets().Size - 1
+end
+local TRINKET_SET = __TS__New(Set)
+local function initSet(self)
+    local itemConfig = Isaac.GetItemConfig()
+    do
+        local trinketType = 1
+        while trinketType <= ____exports.getMaxTrinketID(nil) do
+            local itemConfigTrinket = itemConfig:GetTrinket(trinketType)
+            if itemConfigTrinket ~= nil then
+                TRINKET_SET:add(trinketType)
+            end
+            trinketType = trinketType + 1
+        end
+    end
+end
+function ____exports.getTrinketSet(self)
+    if TRINKET_SET.size == 0 then
+        initSet(nil)
+    end
+    return copySet(nil, TRINKET_SET)
 end
 return ____exports
  end,
@@ -14047,7 +16477,7 @@ local hasSubscriptions, postPlayerUpdateReorderedPlayer, v
 local ____main = require("mod.node_modules.isaacscript-common.dist.features.saveDataManager.main")
 local saveDataManager = ____main.saveDataManager
 local ____array = require("mod.node_modules.isaacscript-common.dist.functions.array")
-local initArray = ____array.initArray
+local arrayInit = ____array.arrayInit
 local ____player = require("mod.node_modules.isaacscript-common.dist.functions.player")
 local getPlayerIndex = ____player.getPlayerIndex
 local ____ModCallbacksCustom = require("mod.node_modules.isaacscript-common.dist.types.ModCallbacksCustom")
@@ -14063,7 +16493,7 @@ function postPlayerUpdateReorderedPlayer(self, player)
     local index = getPlayerIndex(nil, player)
     local transformations = v.run.transformations:get(index)
     if transformations == nil then
-        transformations = initArray(nil, false, PlayerForm.NUM_PLAYER_FORMS - 1)
+        transformations = arrayInit(nil, false, PlayerForm.NUM_PLAYER_FORMS - 1)
         v.run.transformations:set(index, transformations)
     end
     do
@@ -14325,129 +16755,6 @@ return struct
 
 return {
 	METADATA=nil,
-	{TYPE=1, VARIANT=99, SUBTYPE=0, NAME="Map", DIFFICULTY=1, WEIGHT=1, WIDTH=13, HEIGHT=7, SHAPE=1, METADATA=nil,
-		{ISDOOR=true, GRIDX=-1, GRIDY=3, SLOT=0, EXISTS=true},
-		{ISDOOR=true, GRIDX=6, GRIDY=-1, SLOT=1, EXISTS=true},
-		{ISDOOR=true, GRIDX=6, GRIDY=7, SLOT=3, EXISTS=true},
-		{ISDOOR=true, GRIDX=13, GRIDY=3, SLOT=2, EXISTS=true},
-		{ISDOOR=false, GRIDX=2, GRIDY=0,
-			{TYPE=199, VARIANT=40, SUBTYPE=28, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=3, GRIDY=0,
-			{TYPE=199, VARIANT=40, SUBTYPE=28, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=4, GRIDY=0,
-			{TYPE=199, VARIANT=40, SUBTYPE=20, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=5, GRIDY=0,
-			{TYPE=199, VARIANT=40, SUBTYPE=20, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=6, GRIDY=0,
-			{TYPE=199, VARIANT=40, SUBTYPE=5, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=7, GRIDY=0,
-			{TYPE=199, VARIANT=40, SUBTYPE=5, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=8, GRIDY=0,
-			{TYPE=199, VARIANT=40, SUBTYPE=56, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=9, GRIDY=0,
-			{TYPE=199, VARIANT=40, SUBTYPE=56, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=2, GRIDY=1,
-			{TYPE=199, VARIANT=40, SUBTYPE=28, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=4, GRIDY=1,
-			{TYPE=199, VARIANT=40, SUBTYPE=24, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=6, GRIDY=1,
-			{TYPE=199, VARIANT=40, SUBTYPE=5, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=7, GRIDY=1,
-			{TYPE=199, VARIANT=40, SUBTYPE=5, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=9, GRIDY=1,
-			{TYPE=199, VARIANT=40, SUBTYPE=56, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=1, GRIDY=2,
-			{TYPE=199, VARIANT=40, SUBTYPE=36, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=2, GRIDY=2,
-			{TYPE=199, VARIANT=40, SUBTYPE=32, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=3, GRIDY=2,
-			{TYPE=199, VARIANT=40, SUBTYPE=40, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=6, GRIDY=2,
-			{TYPE=199, VARIANT=40, SUBTYPE=8, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=8, GRIDY=2,
-			{TYPE=199, VARIANT=40, SUBTYPE=64, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=9, GRIDY=2,
-			{TYPE=199, VARIANT=40, SUBTYPE=60, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=10, GRIDY=2,
-			{TYPE=199, VARIANT=40, SUBTYPE=60, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=2, GRIDY=3,
-			{TYPE=199, VARIANT=40, SUBTYPE=44, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=4, GRIDY=3,
-			{TYPE=199, VARIANT=40, SUBTYPE=52, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=6, GRIDY=3,
-			{TYPE=199, VARIANT=40, SUBTYPE=8, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=7, GRIDY=3,
-			{TYPE=199, VARIANT=40, SUBTYPE=12, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=10, GRIDY=3,
-			{TYPE=199, VARIANT=40, SUBTYPE=72, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=11, GRIDY=3,
-			{TYPE=199, VARIANT=40, SUBTYPE=68, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=2, GRIDY=4,
-			{TYPE=199, VARIANT=40, SUBTYPE=44, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=3, GRIDY=4,
-			{TYPE=199, VARIANT=40, SUBTYPE=44, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=4, GRIDY=4,
-			{TYPE=199, VARIANT=40, SUBTYPE=48, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=5, GRIDY=4,
-			{TYPE=199, VARIANT=40, SUBTYPE=48, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=6, GRIDY=4,
-			{TYPE=199, VARIANT=40, SUBTYPE=16, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=9, GRIDY=4,
-			{TYPE=199, VARIANT=40, SUBTYPE=76, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=10, GRIDY=4,
-			{TYPE=199, VARIANT=40, SUBTYPE=72, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=6, GRIDY=5,
-			{TYPE=199, VARIANT=40, SUBTYPE=16, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=7, GRIDY=5,
-			{TYPE=199, VARIANT=40, SUBTYPE=80, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=8, GRIDY=5,
-			{TYPE=199, VARIANT=40, SUBTYPE=80, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=9, GRIDY=5,
-			{TYPE=199, VARIANT=40, SUBTYPE=76, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=0, GRIDY=6,
-			{TYPE=199, VARIANT=41, SUBTYPE=16, WEIGHT=1, METADATA=nil},
-		},
-		{ISDOOR=false, GRIDX=8, GRIDY=6,
-			{TYPE=199, VARIANT=40, SUBTYPE=84, WEIGHT=1, METADATA=nil},
-		},
-	},
 	{TYPE=1, VARIANT=0, SUBTYPE=0, NAME="Cafeteria", DIFFICULTY=1, WEIGHT=1, WIDTH=26, HEIGHT=14, SHAPE=8, METADATA=nil,
 		{ISDOOR=true, GRIDX=-1, GRIDY=3, SLOT=0, EXISTS=true},
 		{ISDOOR=true, GRIDX=-1, GRIDY=10, SLOT=4, EXISTS=true},
@@ -14606,6 +16913,567 @@ return {
 		{ISDOOR=true, GRIDX=6, GRIDY=7, SLOT=3, EXISTS=true},
 		{ISDOOR=true, GRIDX=13, GRIDY=3, SLOT=2, EXISTS=true},
 	},
+	{TYPE=1, VARIANT=98, SUBTYPE=0, NAME="Task", DIFFICULTY=1, WEIGHT=1, WIDTH=13, HEIGHT=7, SHAPE=1, METADATA=nil,
+		{ISDOOR=true, GRIDX=-1, GRIDY=3, SLOT=0, EXISTS=true},
+		{ISDOOR=true, GRIDX=6, GRIDY=-1, SLOT=1, EXISTS=true},
+		{ISDOOR=true, GRIDX=6, GRIDY=7, SLOT=3, EXISTS=true},
+		{ISDOOR=true, GRIDX=13, GRIDY=3, SLOT=2, EXISTS=true},
+	},
+	{TYPE=1, VARIANT=99, SUBTYPE=0, NAME="Map", DIFFICULTY=1, WEIGHT=1, WIDTH=13, HEIGHT=7, SHAPE=1, METADATA=nil,
+		{ISDOOR=true, GRIDX=-1, GRIDY=3, SLOT=0, EXISTS=true},
+		{ISDOOR=true, GRIDX=6, GRIDY=-1, SLOT=1, EXISTS=true},
+		{ISDOOR=true, GRIDX=6, GRIDY=7, SLOT=3, EXISTS=true},
+		{ISDOOR=true, GRIDX=13, GRIDY=3, SLOT=2, EXISTS=true},
+		{ISDOOR=false, GRIDX=2, GRIDY=0,
+			{TYPE=199, VARIANT=40, SUBTYPE=24, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=3, GRIDY=0,
+			{TYPE=199, VARIANT=40, SUBTYPE=24, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=4, GRIDY=0,
+			{TYPE=199, VARIANT=40, SUBTYPE=16, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=5, GRIDY=0,
+			{TYPE=199, VARIANT=40, SUBTYPE=16, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=6, GRIDY=0,
+			{TYPE=199, VARIANT=40, SUBTYPE=1, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=7, GRIDY=0,
+			{TYPE=199, VARIANT=40, SUBTYPE=3, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=8, GRIDY=0,
+			{TYPE=199, VARIANT=40, SUBTYPE=52, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=9, GRIDY=0,
+			{TYPE=199, VARIANT=40, SUBTYPE=52, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=2, GRIDY=1,
+			{TYPE=199, VARIANT=40, SUBTYPE=24, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=4, GRIDY=1,
+			{TYPE=199, VARIANT=40, SUBTYPE=20, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=6, GRIDY=1,
+			{TYPE=199, VARIANT=40, SUBTYPE=1, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=7, GRIDY=1,
+			{TYPE=199, VARIANT=40, SUBTYPE=1, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=9, GRIDY=1,
+			{TYPE=199, VARIANT=40, SUBTYPE=52, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=1, GRIDY=2,
+			{TYPE=199, VARIANT=40, SUBTYPE=32, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=2, GRIDY=2,
+			{TYPE=199, VARIANT=40, SUBTYPE=28, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=3, GRIDY=2,
+			{TYPE=199, VARIANT=40, SUBTYPE=36, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=6, GRIDY=2,
+			{TYPE=199, VARIANT=40, SUBTYPE=4, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=8, GRIDY=2,
+			{TYPE=199, VARIANT=40, SUBTYPE=60, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=9, GRIDY=2,
+			{TYPE=199, VARIANT=40, SUBTYPE=56, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=10, GRIDY=2,
+			{TYPE=199, VARIANT=40, SUBTYPE=56, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=2, GRIDY=3,
+			{TYPE=199, VARIANT=40, SUBTYPE=40, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=4, GRIDY=3,
+			{TYPE=199, VARIANT=40, SUBTYPE=48, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=6, GRIDY=3,
+			{TYPE=199, VARIANT=40, SUBTYPE=4, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=7, GRIDY=3,
+			{TYPE=199, VARIANT=40, SUBTYPE=8, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=10, GRIDY=3,
+			{TYPE=199, VARIANT=40, SUBTYPE=68, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=11, GRIDY=3,
+			{TYPE=199, VARIANT=40, SUBTYPE=64, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=2, GRIDY=4,
+			{TYPE=199, VARIANT=40, SUBTYPE=40, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=3, GRIDY=4,
+			{TYPE=199, VARIANT=40, SUBTYPE=40, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=4, GRIDY=4,
+			{TYPE=199, VARIANT=40, SUBTYPE=44, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=5, GRIDY=4,
+			{TYPE=199, VARIANT=40, SUBTYPE=44, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=6, GRIDY=4,
+			{TYPE=199, VARIANT=40, SUBTYPE=12, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=9, GRIDY=4,
+			{TYPE=199, VARIANT=40, SUBTYPE=72, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=10, GRIDY=4,
+			{TYPE=199, VARIANT=40, SUBTYPE=68, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=6, GRIDY=5,
+			{TYPE=199, VARIANT=40, SUBTYPE=12, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=7, GRIDY=5,
+			{TYPE=199, VARIANT=40, SUBTYPE=76, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=8, GRIDY=5,
+			{TYPE=199, VARIANT=40, SUBTYPE=76, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=9, GRIDY=5,
+			{TYPE=199, VARIANT=40, SUBTYPE=72, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=0, GRIDY=6,
+			{TYPE=199, VARIANT=41, SUBTYPE=16, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=1, GRIDY=6,
+			{TYPE=199, VARIANT=40, SUBTYPE=392, WEIGHT=1, METADATA=nil},
+		},
+		{ISDOOR=false, GRIDX=8, GRIDY=6,
+			{TYPE=199, VARIANT=40, SUBTYPE=80, WEIGHT=1, METADATA=nil},
+		},
+	},
 } end,
+["mod.src.lib.collisionObjects"] = function(...) 
+local exports = {}
+
+local collisionObjects
+local gridIndexToCollisionObjects
+local numCollisionObjectIds
+local collisionObjectsPresent
+
+--[[ places a collision object in the room
+- Vec1: Top-left of rectangle
+- Vec2: Bottom-right of rectangle
+- collisionClass: CollisionClass enum (optional)
+- conditions: Function(collObj, ent). Gets called on collision. Return true to allow collision (optional)
+Returns the collision object which you can dynamically adjust
+]]
+function exports:setCollisionRect(Vec1, Vec2, collisionClass, conditions)
+	numCollisionObjectIds = numCollisionObjectIds + 1
+	collisionObjectsPresent = true
+	local collisionObjId = numCollisionObjectIds
+	local collisionObject = {
+		Vec1 = {X=Vec1.X, Y=Vec1.Y}, -- saveable vector
+		Vec2 = {X=Vec2.X, Y=Vec2.Y},
+		Id = collisionObjId,
+		CollisionClass = collisionClass or GridCollisionClass.COLLISION_SOLID,
+		Conditions = conditions,
+		Remove = function()
+			collisionObjects[collisionObjId] = nil
+		end
+	}
+
+	collisionObjects[collisionObjId] = collisionObject
+	return collisionObject
+end
+
+-- collisionObjects is mapped by collisionObjId
+local function getCollisionObjects()
+	return collisionObjects
+end
+
+-- boolean
+local function areCollisionObjectsPresent()
+	return collisionObjectsPresent
+end
+
+--[[ checks if a EntityGridCollisionClass should collide with a GridCollisionClass
+- eColClass: EntityGridCollisionClass enum
+- gColClass: GridCollisionClass enum
+- isPlayer: boolean. Special case for COLLISION_WALL_EXCEPT_PLAYER
+]]
+local function canCollideWithGrid(eColClass, gColClass, isPlayer)
+	if gColClass == GridCollisionClass.COLLISION_PIT then
+		return eColClass == EntityGridCollisionClass.GRIDCOLL_GROUND
+
+	elseif gColClass == GridCollisionClass.COLLISION_SOLID or gColClass == GridCollisionClass.COLLISION_OBJECT then
+		return eColClass == EntityGridCollisionClass.GRIDCOLL_GROUND or eColClass == EntityGridCollisionClass.GRIDCOLL_NOPITS or eColClass == EntityGridCollisionClass.GRIDCOLL_BULLET
+
+	elseif gColClass == GridCollisionClass.COLLISION_WALL then
+		return eColClass ~= EntityGridCollisionClass.GRIDCOLL_NONE
+
+	elseif gColClass == GridCollisionClass.COLLISION_WALL_EXCEPT_PLAYER then
+		return eColClass ~= EntityGridCollisionClass.GRIDCOLL_NONE and not isPlayer
+	end
+
+	return false
+end
+
+-- count of all active collisionObjects in the room
+local function getNumCollisionObjects()
+	local n = 0
+	local collisionObjects = getCollisionObjects()
+	for i=1, getNumCollisionObjectIds() do
+		if collisionObjects[i] then
+			n = n + 1
+		end
+	end
+
+	return n
+end
+
+-- not necessarily the amount of collisionObjects in the room, as it also counts removed collision objects
+local function getNumCollisionObjectIds()
+	return numCollisionObjectIds
+end
+
+-- one-time operation that merges collision objects that could function as one together to improve performance
+-- collision objects with collObj.DontMerge = true ignore this
+local function mergeCollisionObjects()
+	local collisionObjects = getCollisionObjects()
+	for i=1, getNumCollisionObjectIds() do
+		local collObj = collisionObjects[i]
+
+		if collObj and not collObj.DontMerge then
+			for i2=1, getNumCollisionObjectIds() do
+				local collObj2 = collisionObjects[i2]
+				if collObj2 and not collObj2.DontMerge and collObj.CollisionClass == collObj2.CollisionClass and collObj.Conditions == collObj2.Conditions then
+					if collObj.Vec2.X == collObj2.Vec1.X and collObj.Vec1.Y == collObj2.Vec1.Y and (collObj.Vec2.Y-collObj.Vec1.Y) == (collObj2.Vec2.Y-collObj2.Vec1.Y)
+					or collObj.Vec1.X == collObj2.Vec1.X and collObj.Vec2.Y == collObj2.Vec1.Y and (collObj.Vec2.X-collObj.Vec1.X) == (collObj2.Vec2.X-collObj2.Vec1.X) then
+
+						collObj.Vec2 = collObj2.Vec2
+						collObj2:Remove()
+					end
+				end
+			end
+		end
+	end
+end
+
+-- a method to reconnect conditions to collisionObjects after reloading.
+-- works by setting a unique field for the collObjs (eg. collObj.IsCustomPoopGrid = true),
+-- which is something that can be saved and reloaded to connect the right conditions function which normally can't be saved
+local function reconnectCollisionObjectConditions(conditions, hasField)
+	local collisionObjects = getCollisionObjects()
+	for i=1, getNumCollisionObjectIds() do
+		local collObj = collisionObjects[i]
+		if collObj and (not hasField or collObj[hasField]) then
+			collObj.Conditions = conditions
+		end
+	end
+end
+
+-- assigns grid indices to all current collisionObjects to identify them by using getCollisionObjectsByGrid
+local function assignGridIndicesToCollisionObjects()
+	local room = Game():GetRoom()
+	local collisionObjects = getCollisionObjects()
+	gridIndexToCollisionObjects = {}
+
+	for i=1, getNumCollisionObjectIds() do
+		local collObj = collisionObjects[i]
+
+		if collObj then
+			local gridIndices = {}
+			local size = {X=collObj.Vec2.X - collObj.Vec1.X, Y=collObj.Vec2.Y - collObj.Vec1.Y}
+			for x=0, math.ceil(size.X/40) do
+				for y=0, math.ceil(size.Y/40) do
+					local index = room:GetGridIndex(Vector(collObj.Vec1.X + math.min(x*40, size.X), collObj.Vec1.Y + math.min(y*40, size.Y)))
+
+					local hasIndex = false
+					for _,index2 in ipairs(gridIndices) do
+						if index == index2 then
+							hasIndex = true
+							break
+						end
+					end
+
+					if not hasIndex then
+						table.insert(gridIndices, index)
+					end
+				end
+			end
+
+			for _,index in ipairs(gridIndices) do
+				gridIndexToCollisionObjects[tostring(index)] = gridIndexToCollisionObjects[tostring(index)] or {}
+				table.insert(gridIndexToCollisionObjects[tostring(index)], collObj)
+			end
+		end
+	end
+end
+
+-- only works if assignGridIndicesToCollisionObjects() is used. Not easily compatible with moving collObjs
+local function getCollisionObjectsByGrid(index)
+	return gridIndexToCollisionObjects[tostring(index)] or {}
+end
+
+-- whether the entity is currently colliding with a collObj
+local function collidesWithCollisionObject(ent)
+	return areCollisionObjectsPresent() and not not ent:GetData().CollidesWithCollisionObject
+end
+
+-- whether the entity either currently collides with a vanilla grid or a collObj
+local function collidesWithGrid(ent)
+	return collidesWithCollisionObject(ent) or ent:CollidesWithGrid()
+end
+
+-- checks whether the entity will collide with collObjs if it's at a certain position
+local function positionCollidesWithCollisionObject(pos, ent)
+	if not areCollisionObjectsPresent() then
+		return false
+	end
+
+	local collisionObjects = getCollisionObjects()
+	local viableCollObjects = collisionObjects
+	if ent then
+		viableCollObjects = {}
+
+		for i=1, getNumCollisionObjectIds() do
+			local collObj = collisionObjects[i]
+			if collObj and canCollideWithGrid(ent.GridCollisionClass, collObj.CollisionClass, ent.Type == EntityType.ENTITY_PLAYER)
+			and (not collObj.Conditions or collObj.Conditions(collObj, ent)) then
+				table.insert(viableCollObjects, collObj)
+			end
+		end
+	end
+
+	for _, collObj in pairs(viableCollObjects) do
+		if pos.X >= math.min(collObj.Vec1.X, collObj.Vec2.X) and pos.X <= math.max(collObj.Vec1.X, collObj.Vec2.X)
+		and pos.Y >= math.min(collObj.Vec1.Y, collObj.Vec2.Y) and pos.Y <= math.max(collObj.Vec1.Y, collObj.Vec2.Y) then
+			return true
+		end
+	end
+
+	return false
+end
+
+-- return value 1: distance. -1 if no collision object is found
+-- return value 2: nearest collObj. nil if no collision object is found
+local function distanceFromNearestCollisionObject(pos)
+	if not areCollisionObjectsPresent() then
+		return -1, nil
+	end
+
+	local collisionObjects = getCollisionObjects()
+	local distance, nearestCollObj
+	for i=1, getNumCollisionObjectIds() do
+		local collObj = collisionObjects[i]
+		if collObj then
+			local closestPoint = Vector(math.min(math.max(pos.X, collObj.Vec1.X), collObj.Vec2.X), math.min(math.max(pos.Y, collObj.Vec1.Y), collObj.Vec2.Y))
+			local dist = closestPoint:Distance(pos)
+			if not nearestCollObj or dist < distance then
+				distance = dist
+				nearestCollObj = collObj
+			end
+		end
+	end
+
+	if not nearestCollObj then
+		return -1, nil
+	else
+		return distanceSquared, nearestCollObj
+	end
+end
+
+local function entityGridCollisionUpdate(_, ent)
+	if areCollisionObjectsPresent() then
+		local data = ent:GetData()
+		data.CollidesWithCollisionObject = false
+		local collisionObjects = getCollisionObjects()
+		local viableCollObjects = {}
+		for i=1, getNumCollisionObjectIds() do
+			local collObj = collisionObjects[i]
+			if collObj and canCollideWithGrid(ent.GridCollisionClass, collObj.CollisionClass, ent.Type == EntityType.ENTITY_PLAYER)
+			and (not collObj.Conditions or collObj.Conditions(collObj, ent)) then
+				table.insert(viableCollObjects, collObj)
+			end
+		end
+
+		local entIdentifier = ent.Type == EntityType.ENTITY_TEAR and "TEAR"
+							or ent.Type == EntityType.ENTITY_PROJECTILE and "PROJECTILE"
+							or ent.Type == EntityType.ENTITY_PLAYER and "PLAYER"
+							or ent.Type == EntityType.ENTITY_PICKUP and "PICKUP"
+							or ent.Type == EntityType.ENTITY_BOMBDROP and "BOMB"
+							or "NPC"
+
+		local newTargetPos = ent.Position + ent.Velocity
+		local maxX, maxY, minX, minY = math.huge, math.huge, 0, 0
+		for _,collObj in ipairs(viableCollObjects) do
+			if ent.Type == EntityType.ENTITY_TEAR or ent.Type == EntityType.ENTITY_PROJECTILE then
+				local closestPoint = ent.Position:Clamped(collObj.Vec1.X, collObj.Vec1.Y, collObj.Vec2.X, collObj.Vec2.Y)
+
+				if ent.Position:Distance(closestPoint) < ent.Size then
+					local ignoreCollision = false
+					-- potential PRE_COLLISION_OBJECT callback setup, which stops collision with return false
+					-- PRE_TEAR_COLLISION_COLLOBJ, PRE_PROJECTILE_COLLISION_COLLOBJ
+					--[[local callbacks = StageAPI.GetCallbacks("PRE_" .. tostring(entIdentifier) .. "_COLLISION_COLLOBJ")
+					for _, callback in ipairs(callbacks) do
+						if (not callback.Params[1] or callback.Params[1] == ent.Variant) then
+							local ret = callback.Function(ent, data, collObj)
+							if ret ~= nil then ignoreCollision = not ret end
+						end
+					end]]
+
+					if not ignoreCollision then
+						ent:Die()
+						return
+					end
+				end
+			else
+				local centerPoint = Vector(collObj.Vec1.X + collObj.Vec2.X, collObj.Vec1.Y + collObj.Vec2.Y) * 0.5
+				local posDiff = ent.Position - centerPoint
+
+				local scaledPosDiff
+				if collObj.Vec2.X - collObj.Vec1.X ~= collObj.Vec2.Y - collObj.Vec1.Y then
+					local coef = math.sqrt((collObj.Vec2.X - collObj.Vec1.X) / (collObj.Vec2.Y - collObj.Vec1.Y))
+					scaledPosDiff = Vector(posDiff.X / coef, posDiff.Y * coef)
+				else
+					scaledPosDiff = posDiff
+				end
+
+				local ignoreCollision = false
+				local closestPoint = ent.Position:Clamped(collObj.Vec1.X, collObj.Vec1.Y, collObj.Vec2.X, collObj.Vec2.Y)
+
+				if ent.Position.X == closestPoint.X and ent.Position.Y == closestPoint.Y then
+					-- potential PRE_COLLISION_OBJECT callback setup, which stops collision with return false
+					-- PRE_PLAYER_COLLISION_COLLOBJ, PRE_PICKUP_COLLISION_COLLOBJ, PRE_BOMB_COLLISION_COLLOBJ
+					--[[local callbacks = StageAPI.GetCallbacks("PRE_" .. tostring(entIdentifier) .. "_COLLISION_COLLOBJ")
+					local ignoreCollision = false
+					for _, callback in ipairs(callbacks) do
+						if entIdentifier == "NPC" and (not callback.Params[1] or callback.Params[1] == ent.Type) and (not callback.Params[2] or callback.Params[2] == ent.Variant)
+						or entIdentifier ~= "NPC" and (not callback.Params[1] or callback.Params[1] == ent.Variant) then
+							local ret = callback.Function(ent, data, collObj)
+							if ret ~= nil then ignoreCollision = not ret end
+						end
+					end]]
+
+					if not ignoreCollision then
+						if math.abs(scaledPosDiff.X) > math.abs(scaledPosDiff.Y)  then
+							if scaledPosDiff.X > 0 then
+								minX = math.min(math.max(minX, collObj.Vec2.X + ent.Size), maxX)
+								ent.Position = Vector(minX, ent.Position.Y)
+							else
+								maxX = math.min(math.max(minX, collObj.Vec1.X - ent.Size), maxX)
+								ent.Position = Vector(maxX, ent.Position.Y)
+							end
+						else
+							if scaledPosDiff.Y > 0 then
+								minY = math.min(math.max(minY, collObj.Vec2.Y + ent.Size), maxY)
+								ent.Position = Vector(ent.Position.X, minY)
+							else
+								maxY = math.min(math.max(minY, collObj.Vec1.Y - ent.Size), maxY)
+								ent.Position = Vector(ent.Position.X, maxY)
+							end
+						end
+						newTargetPos = ent.Position + ent.Velocity
+						data.CollidesWithCollisionObject = true
+					end
+
+				elseif (ent.Position - closestPoint):LengthSquared() < ent.Size ^ 2 then
+					local ignoreCollision = false
+					-- potential PRE_COLLISION_OBJECT callback setup, which stops collision with return false
+					--PRE_PLAYER_COLLISION_COLLOBJ, PRE_PICKUP_COLLISION_COLLOBJ, PRE_BOMB_COLLISION_COLLOBJ
+					--[[local callbacks = StageAPI.GetCallbacks("PRE_" .. tostring(entIdentifier) .. "_COLLISION_COLLOBJ")
+					for _, callback in ipairs(callbacks) do
+						if entIdentifier == "NPC" and (not callback.Params[1] or callback.Params[1] == ent.Type) and (not callback.Params[2] or callback.Params[2] == ent.Variant)
+						or entIdentifier ~= "NPC" and (not callback.Params[1] or callback.Params[1] == ent.Variant) then
+							local ret = callback.Function(ent, data, collObj)
+							if ret ~= nil then ignoreCollision = not ret end
+						end
+					end]]
+
+					if not ignoreCollision then
+						if math.abs(scaledPosDiff.X) > math.abs(scaledPosDiff.Y)  then
+							if scaledPosDiff.X > 0 then
+								minX = math.min(math.max(minX, math.min(collObj.Vec2.X + ent.Size, (closestPoint + (ent.Position-closestPoint):Resized(ent.Size)).X)), maxX)
+								ent.Position = Vector(minX, ent.Position.Y)
+							else
+								maxX = math.min(math.max(minX, math.max(collObj.Vec1.X - ent.Size, (closestPoint + (ent.Position-closestPoint):Resized(ent.Size)).X)), maxX)
+								ent.Position = Vector(maxX, ent.Position.Y)
+							end
+						else
+							if scaledPosDiff.Y > 0 then
+								minY = math.min(math.max(minY, math.min(collObj.Vec2.Y + ent.Size, (closestPoint + (ent.Position-closestPoint):Resized(ent.Size)).Y)), maxY)
+								ent.Position = Vector(ent.Position.X, minY)
+							else
+								maxY = math.min(math.max(minY, math.max(collObj.Vec1.Y - ent.Size, (closestPoint + (ent.Position-closestPoint):Resized(ent.Size)).Y)), maxY)
+								ent.Position = Vector(ent.Position.X, maxY)
+							end
+						end
+						newTargetPos = ent.Position + ent.Velocity
+						data.CollidesWithCollisionObject = true
+					end
+				end
+
+				if not ignoreCollision then
+					local closestPointToTargetPos = Vector(math.min(math.max(newTargetPos.X, collObj.Vec1.X), collObj.Vec2.X), math.min(math.max(newTargetPos.Y, collObj.Vec1.Y), collObj.Vec2.Y))
+
+					if (newTargetPos - closestPointToTargetPos):LengthSquared() < ent.Size ^ 2 then
+						local ignoreCollision = false
+						-- potential PRE_COLLISION_OBJECT callback setup, which stops collision with return false
+						-- PRE_PLAYER_COLLISION_COLLOBJ, PRE_PICKUP_COLLISION_COLLOBJ, PRE_BOMB_COLLISION_COLLOBJ
+						--[[local callbacks = StageAPI.GetCallbacks("PRE_" .. tostring(entIdentifier) .. "_COLLISION_COLLOBJ")
+						for _, callback in ipairs(callbacks) do
+							if entIdentifier == "NPC" and (not callback.Params[1] or callback.Params[1] == ent.Type) and (not callback.Params[2] or callback.Params[2] == ent.Variant)
+							or entIdentifier ~= "NPC" and (not callback.Params[1] or callback.Params[1] == ent.Variant) then
+								local ret = callback.Function(ent, data, collObj)
+								if ret ~= nil then ignoreCollision = not ret end
+							end
+						end]]
+
+						if not ignoreCollision then
+							if math.abs(scaledPosDiff.X) > math.abs(scaledPosDiff.Y)  then
+								if scaledPosDiff.X > 0 then
+									minX = math.min(math.max(minX, math.min(collObj.Vec2.X + ent.Size, (closestPointToTargetPos + (newTargetPos-closestPointToTargetPos):Resized(ent.Size)).X)), maxX)
+									newTargetPos = Vector(minX, newTargetPos.Y)
+								else
+									maxX = math.min(math.max(minX, math.max(collObj.Vec1.X - ent.Size, (closestPointToTargetPos + (newTargetPos-closestPointToTargetPos):Resized(ent.Size)).X)), maxX)
+									newTargetPos = Vector(maxX, newTargetPos.Y)
+								end
+							else
+								if scaledPosDiff.Y > 0 then
+									minY = math.min(math.max(minY, math.min(collObj.Vec2.Y + ent.Size, (closestPointToTargetPos + (newTargetPos-closestPointToTargetPos):Resized(ent.Size)).Y)), maxY)
+									newTargetPos = Vector(newTargetPos.X, minY)
+								else
+									maxY = math.min(math.max(minY, math.max(collObj.Vec1.Y - ent.Size, (closestPointToTargetPos + (newTargetPos-closestPointToTargetPos):Resized(ent.Size)).Y)), maxY)
+									newTargetPos = Vector(newTargetPos.X, maxY)
+								end
+							end
+							data.CollidesWithCollisionObject = true
+						end
+					end
+				end
+			end
+		end
+
+		ent.Velocity = newTargetPos - ent.Position
+	end
+end
+
+function exports:init(mod)
+	mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
+		collisionObjects = {}
+		gridIndexToCollisionObjects = {}
+		numCollisionObjectIds = 0
+		collisionObjectsPresent = false
+	end)
+
+	local entityUpdateCallbacks = {
+		"MC_NPC_UPDATE",
+		"MC_POST_PICKUP_UPDATE",
+		"MC_POST_PLAYER_UPDATE",
+		"MC_POST_BOMB_UPDATE",
+		"MC_POST_TEAR_UPDATE",
+		"MC_POST_PROJECTILE_UPDATE",
+	}
+	for _,callback in ipairs(entityUpdateCallbacks) do
+		mod:AddCallback(ModCallbacks[callback], entityGridCollisionUpdate)
+	end
+end
+
+return exports
+ end,
 }
 return require("mod.src.bundleEntry", ...)

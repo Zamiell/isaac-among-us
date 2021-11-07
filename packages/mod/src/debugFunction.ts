@@ -13,16 +13,7 @@ const DEBUG_HOTKEY2 = Keyboard.KEY_F2;
 let hotkeyPressed1 = false;
 let hotkeyPressed2 = false;
 
-export function debugFunction(): void {
-  if (MinimapAPI === undefined) {
-    return;
-  }
-
-  const minimapAPILevel = MinimapAPI.GetLevel();
-  for (const room of minimapAPILevel) {
-    Isaac.DebugString(`ROOM ID: ${room.ID}`);
-  }
-}
+export function debugFunction(): void {}
 
 // ModCallbacks.MC_POST_UPDATE (1)
 export function postUpdate(): void {

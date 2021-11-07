@@ -1,9 +1,10 @@
 import { ensureAllCases, getScreenCenterPos } from "isaacscript-common";
 import g from "../globals";
+import { enableMinimapAPI } from "../minimapAPI";
 import { BlackSpriteState } from "../types/BlackSpriteState";
 import { EndMeetingState } from "../types/EndMeetingState";
 import { MeetingResolution } from "../types/MeetingResolution";
-import { drawFontText, enableMinimapAPI } from "../util";
+import { drawFontText } from "../util";
 import { FADE_TO_BLACK_FRAMES, setBlackSpriteState } from "./blackSprite";
 import { setupMeeting } from "./setupMeeting";
 

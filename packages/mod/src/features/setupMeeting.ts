@@ -3,11 +3,12 @@ import {
   getCircleDiscretizedPoints,
 } from "isaacscript-common";
 import g from "../globals";
+import { enableMinimapAPI } from "../minimapAPI";
 import { CENTER_TABLE_GRID_INDEX } from "../rooms/cafeteria";
 import { getSkeldRoom, goToStageAPIRoom } from "../stageAPI";
 import { SkeldRoom } from "../types/SkeldRoom";
-import { enableMinimapAPI } from "../util";
-import { removeEmergencyButton, spawnEmergencyButton } from "./button";
+import { spawnEmergencyButton } from "./buttonSpawn";
+import { removeEmergencyButton } from "./buttonSubroutines";
 
 // In order for the players to be properly centered, we must offset the players downwards slightly
 const MEETING_CENTER_OFFSET = Vector(0, 10);

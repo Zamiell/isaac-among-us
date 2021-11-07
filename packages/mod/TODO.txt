@@ -1,11 +1,12 @@
 - check validation of character as isaac, doesn't seem to work
   - also check when reconnecting
 
-- add timing based task like the circles?
-- add task like the vials where you have to wait 60 seconds (real task is 60 seconds)
-
-- draw remaining tasks on minimap
-
 - all tasks
 - imposter thing where you close the doors
 - imposter lights
+
+- rebuild walls manually on every room entrance
+  (but first find a way to repro the bug where walls are randomly in the center of a 2x1 room?)
+
+- add timing based task like the circles?
+- add task like the vials where you have to wait 60 seconds (real task is 60 seconds)

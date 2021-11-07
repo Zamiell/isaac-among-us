@@ -133,6 +133,19 @@ export function sendEndMeeting(
   });
 }
 
+export function sendEndGame(game: Game, winningRole: Role): void {
+  const roles: Role[] = [];
+  for (const player of game.players) {
+    roles.push(player.role);
+  }
+
+  sendAll(game, SocketCommandServerToMod.END_GAME, {
+    gameID: game.id,
+    winningRole,
+    roles,
+  });
+}
+
 export function sendTerminated(game: Game): void {
   sendAll(game, SocketCommandServerToMod.TERMINATED, {
     gameID: game.id,

@@ -6,11 +6,13 @@ export function init(mod: Mod): void {
     keepStationary,
     EntityTypeCustom.BOX,
   );
+
   mod.AddCallback(
     ModCallbacks.MC_POST_NPC_RENDER,
     keepStationary,
     EntityTypeCustom.TABLE,
   );
+
   mod.AddCallback(
     ModCallbacks.MC_POST_NPC_RENDER,
     keepStationary,

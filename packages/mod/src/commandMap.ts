@@ -1,4 +1,5 @@
 import { commandChat } from "./commands/chat";
+import { commandEndGame } from "./commands/endGame";
 import { commandEndMeeting } from "./commands/endMeeting";
 import { commandError } from "./commands/error";
 import { commandGameDescription } from "./commands/gameDescription";
@@ -41,5 +42,6 @@ export const commandMap: CommandMap = {
   [SocketCommandServerToMod.START_VOTING]: commandStartVoting,
   [SocketCommandServerToMod.VOTE]: commandVote,
   [SocketCommandServerToMod.END_MEETING]: commandEndMeeting,
+  [SocketCommandServerToMod.END_GAME]: commandEndGame,
   [SocketCommandServerToMod.TERMINATED]: commandTerminated,
 };

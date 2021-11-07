@@ -2,6 +2,7 @@ import {
   ensureAllCases,
   getScreenBottomRightPos,
   log,
+  setBlindfold,
 } from "isaacscript-common";
 import { EntityTypeCustom } from "./enums";
 import { fonts } from "./fonts";
@@ -27,6 +28,12 @@ export function consoleCommand(command: string): void {
   log(`Finished executing console command: ${command}`);
 }
 
+export function disableShooting(): void {
+  const player = Isaac.GetPlayer();
+  setBlindfold(player, true);
+  player.TryRemoveNullCostume(NullItemID.ID_BLINDFOLD);
+}
+
 export function drawFontText(
   text: string,
   position: Vector,
@@ -46,10 +53,9 @@ export function drawFontText(
   );
 }
 
-export function enableMinimapAPI(enabled: boolean): void {
-  if (MinimapAPI !== undefined) {
-    MinimapAPI.OverrideConfig.Disable = !enabled;
-  }
+export function enableShooting(): void {
+  const player = Isaac.GetPlayer();
+  setBlindfold(player, false);
 }
 
 export function getRoleText(role: Role): string {
@@ -77,20 +83,14 @@ export function getScreenPosition(x: float, y: float): Vector {
   return Vector(x * bottomRightPos.X, y * bottomRightPos.Y);
 }
 
-export function initSprite(anm2Path: string, pngPath?: string): Sprite {
-  const sprite = Sprite();
+export function movePlayerToGridIndex(gridIndex: int): void {
+  const game = Game();
+  const room = game.GetRoom();
+  const position = room.GetGridPosition(gridIndex);
+  const player = Isaac.GetPlayer();
 
-  if (pngPath === undefined) {
-    sprite.Load(anm2Path, true);
-  } else {
-    sprite.Load(anm2Path, false);
-    sprite.ReplaceSpritesheet(0, pngPath);
-    sprite.LoadGraphics();
-  }
-
-  sprite.SetFrame("Default", 0);
-
-  return sprite;
+  player.Position = position;
+  player.Velocity = Vector.Zero;
 }
 
 export function removeGridEntity(gridEntity: GridEntity): void {
@@ -106,21 +106,6 @@ export function removeGridEntity(gridEntity: GridEntity): void {
 
 export function restart(): void {
   consoleCommand("restart");
-}
-
-export function setSpriteOpacity(sprite: Sprite, opacity: float): void {
-  sprite.Color = Color(1, 1, 1, opacity, 0, 0, 0);
-}
-
-export function spawnGridEntity(
-  gridEntityType: GridEntityType,
-  gridIndex: int,
-): GridEntity {
-  const game = Game();
-  const room = game.GetRoom();
-  const position = room.GetGridPosition(gridIndex);
-
-  return Isaac.GridSpawn(gridEntityType, 0, position, true);
 }
 
 export function spawnEntity(
@@ -143,7 +128,6 @@ export function spawnEntity(
     undefined,
   );
   entity.ClearEntityFlags(EntityFlag.FLAG_APPEAR);
-
   entity.DepthOffset = depthOffset;
 
   return entity;

@@ -1,10 +1,11 @@
-import { IS_DEV, MAX_PLAYERS } from "../constants";
+import { IS_DEV, MAX_PLAYERS, taskDescriptions } from "../constants";
 import g from "../globals";
 import { getSkeldRoom, getStageAPIRoomName } from "../stageAPI";
 import { drawFontText } from "../util";
 import { isConsoleOpen } from "./console";
 import { inEndMeeting } from "./endMeeting";
 import { inLobby } from "./lobby";
+import { inTask } from "./task";
 
 const TEXT_GRID_INDEX = 7;
 const SECOND_LINE_OFFSET = Vector(0, 20);
@@ -24,6 +25,12 @@ export function postRender(): void {
   const room = game.GetRoom();
   const worldPosition = room.GetGridPosition(TEXT_GRID_INDEX);
   const position = Isaac.WorldToRenderPosition(worldPosition);
+
+  if (inTask() && g.game.currentTask !== null) {
+    const taskDescription = taskDescriptions[g.game.currentTask];
+    drawFontText(`Task: ${taskDescription.name}`, position);
+    return;
+  }
 
   if (inLobby()) {
     drawFontText("Lobby", position);

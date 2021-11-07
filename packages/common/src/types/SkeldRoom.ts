@@ -1,9 +1,11 @@
+const TASK_ROOM_VARIANT = 98;
+
 // Comments indicate the number of tasks
 export enum SkeldRoom {
   CAFETERIA, // 1
   ADMIN_HALL,
-  ADMIN, // 1
-  STORAGE, // 1
+  ADMIN, // 2
+  STORAGE, // 2
   MEDBAY_HALL,
   MEDBAY, // 1
   UPPER_ENGINE, // 1
@@ -12,13 +14,15 @@ export enum SkeldRoom {
   SECURITY, // 2
   LOWER_ENGINE, // 1
   ELECTRICAL_HALL,
-  ELECTRICAL, // 1
-  WEAPONS, // 1
+  ELECTRICAL, // 2
+  WEAPONS, // 2
   O2_HALL,
   O2, // 1
   NAVIGATION, // 1
   NAVIGATION_HALL,
   SHIELDS, // 1
   COMMUNICATION_HALL,
-  COMMUNICATION, // 1
+  COMMUNICATION, // 2
+
+  TASK = TASK_ROOM_VARIANT,
 }

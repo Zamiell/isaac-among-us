@@ -1,9 +1,7 @@
-import { DISTANCE_OF_GRID_TILE } from "isaacscript-common";
 import g from "./globals";
 import { skeldRoomMap } from "./skeldRoomMap";
 import { SkeldRoom } from "./types/SkeldRoom";
 
-const BUG_FIX_OFFSET = Vector(0, DISTANCE_OF_GRID_TILE * -1);
 const NULL_STAGE_API_ANIMATION = -1;
 
 const DEFAULT_BACKDROP_TYPE = "security";
@@ -13,15 +11,10 @@ const backdropMap = new Map<SkeldRoom, string>([
   [SkeldRoom.SECURITY, "security"],
 ]);
 
-const topOfRoomPositionMap = new Map<RoomShape, Vector>([
-  [RoomShape.ROOMSHAPE_1x1, Vector(320, 160)], // 1
-  [RoomShape.ROOMSHAPE_1x2, Vector(320, 160)], // 4
-]);
-
 export function fixRoomEntrancePosition(): void {
-  const level = g.g.GetLevel();
-  const room = g.g.GetRoom();
-  const roomShape = room.GetRoomShape();
+  const game = Game();
+  const level = game.GetLevel();
+  const room = game.GetRoom();
   const player = Isaac.GetPlayer();
 
   if (level.EnterDoor === -1) {
@@ -29,21 +22,7 @@ export function fixRoomEntrancePosition(): void {
   }
 
   const doorPos = room.GetDoorSlotPosition(level.EnterDoor);
-  let playerEnterPos = room.FindFreeTilePosition(doorPos, 0);
-
-  // StageAPI has a bug where sometimes the chosen position will be outside the bounds of the room,
-  // causing the player to immediately warp back to the previous room
-  // Fix this by detecting if the current room is offset and adjusting the starting position
-  // accordingly
-  // (but only if they are entering from the bottom door)
-  const topOfRoomPosition = topOfRoomPositionMap.get(roomShape);
-  if (topOfRoomPosition !== undefined) {
-    const roomIsBugged = !room.IsPositionInRoom(topOfRoomPosition, 0);
-    if (roomIsBugged && level.EnterDoor === DoorSlot.DOWN0) {
-      playerEnterPos = playerEnterPos.add(BUG_FIX_OFFSET);
-    }
-  }
-
+  const playerEnterPos = room.FindFreeTilePosition(doorPos, 0);
   player.Position = playerEnterPos;
 }
 
@@ -92,7 +71,7 @@ export function getStageAPIRoomName(): string {
   return stageAPIRoom.Layout.Name;
 }
 
-export function goToStageAPIRoom(roomName: string, enterDoor: int): void {
+export function goToStageAPIRoom(roomName: string, enterDoor?: int): void {
   if (StageAPI === undefined) {
     return;
   }
@@ -113,7 +92,9 @@ export function goToStageAPIRoom(roomName: string, enterDoor: int): void {
     levelMap,
   );
 
-  level.EnterDoor = enterDoor;
+  if (enterDoor !== undefined) {
+    level.EnterDoor = enterDoor;
+  }
   fixRoomEntrancePosition();
 }
 

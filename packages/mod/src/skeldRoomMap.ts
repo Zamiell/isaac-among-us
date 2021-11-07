@@ -22,28 +22,34 @@ export const skeldRoomMap = new Map<string, SkeldRoom>([
   ["Shields", SkeldRoom.SHIELDS],
   ["Communication Hall", SkeldRoom.COMMUNICATION_HALL],
   ["Communication", SkeldRoom.COMMUNICATION],
+  ["Task", SkeldRoom.TASK],
 ]);
 
-export const skeldRoomReverseMap = new Map<SkeldRoom, string>([
-  [SkeldRoom.CAFETERIA, "Cafeteria"],
-  [SkeldRoom.ADMIN_HALL, "Admin Hall"],
-  [SkeldRoom.ADMIN, "Admin"],
-  [SkeldRoom.STORAGE, "Storage"],
-  [SkeldRoom.MEDBAY_HALL, "Medbay Hall"],
-  [SkeldRoom.MEDBAY, "Medbay"],
-  [SkeldRoom.UPPER_ENGINE, "Upper Engine"],
-  [SkeldRoom.ENGINE_HALL, "Engine Hall"],
-  [SkeldRoom.REACTOR, "Reactor"],
-  [SkeldRoom.SECURITY, "Security"],
-  [SkeldRoom.LOWER_ENGINE, "Lower Engine"],
-  [SkeldRoom.ELECTRICAL_HALL, "Electrical Hall"],
-  [SkeldRoom.ELECTRICAL, "Electrical"],
-  [SkeldRoom.WEAPONS, "Weapons"],
-  [SkeldRoom.O2_HALL, "O2 Hall"],
-  [SkeldRoom.O2, "O2"],
-  [SkeldRoom.NAVIGATION, "Navigation"],
-  [SkeldRoom.NAVIGATION_HALL, "Navigation Hall"],
-  [SkeldRoom.SHIELDS, "Shields"],
-  [SkeldRoom.COMMUNICATION_HALL, "Communication Hall"],
-  [SkeldRoom.COMMUNICATION, "Communication"],
-]);
+type SkeldRoomReverseMap = {
+  [Value in SkeldRoom]: string;
+};
+
+export const skeldRoomReverseMap: SkeldRoomReverseMap = {
+  [SkeldRoom.CAFETERIA]: "Cafeteria",
+  [SkeldRoom.ADMIN_HALL]: "Admin Hall",
+  [SkeldRoom.ADMIN]: "Admin",
+  [SkeldRoom.STORAGE]: "Storage",
+  [SkeldRoom.MEDBAY_HALL]: "Medbay Hall",
+  [SkeldRoom.MEDBAY]: "Medbay",
+  [SkeldRoom.UPPER_ENGINE]: "Upper Engine",
+  [SkeldRoom.ENGINE_HALL]: "Engine Hall",
+  [SkeldRoom.REACTOR]: "Reactor",
+  [SkeldRoom.SECURITY]: "Security",
+  [SkeldRoom.LOWER_ENGINE]: "Lower Engine",
+  [SkeldRoom.ELECTRICAL_HALL]: "Electrical Hall",
+  [SkeldRoom.ELECTRICAL]: "Electrical",
+  [SkeldRoom.WEAPONS]: "Weapons",
+  [SkeldRoom.O2_HALL]: "O2 Hall",
+  [SkeldRoom.O2]: "O2",
+  [SkeldRoom.NAVIGATION]: "Navigation",
+  [SkeldRoom.NAVIGATION_HALL]: "Navigation Hall",
+  [SkeldRoom.SHIELDS]: "Shields",
+  [SkeldRoom.COMMUNICATION_HALL]: "Communication Hall",
+  [SkeldRoom.COMMUNICATION]: "Communication",
+  [SkeldRoom.TASK]: "Task",
+};

@@ -14,6 +14,11 @@ import * as startMeeting from "../features/startMeeting";
 import * as welcomeNotification from "../features/welcomeNotification";
 import * as socket from "../network/socket";
 import * as udp from "../network/udp";
+import * as fixWires from "../tasks/fixWires";
+import * as identifyItems from "../tasks/identifyItems";
+import * as identifyPickupsInOrder from "../tasks/identifyPickupsInOrder";
+import * as identifyTrinkets from "../tasks/identifyTrinkets";
+import * as makePentagram from "../tasks/makePentagram";
 
 export function main(): void {
   if (errors.postRender()) {
@@ -37,4 +42,11 @@ export function main(): void {
   startMeeting.postRender();
   drawMeeting.postRender();
   endMeeting.postRender();
+
+  // Tasks
+  identifyItems.postRender();
+  identifyTrinkets.postRender();
+  makePentagram.postRender();
+  fixWires.postRender();
+  identifyPickupsInOrder.postRender();
 }
