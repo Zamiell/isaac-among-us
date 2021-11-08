@@ -1,5 +1,7 @@
+import { sendRoom } from "./features/sendGameEvents";
 import g from "./globals";
 import { skeldRoomMap } from "./skeldRoomMap";
+import { getStageAPIRoomName } from "./stageAPISubroutines";
 import { SkeldRoom } from "./types/SkeldRoom";
 
 const NULL_STAGE_API_ANIMATION = -1;
@@ -56,33 +58,22 @@ export function getStageAPIDoors(): StageAPICustomGridEntity[] {
   return StageAPI.GetCustomGrids(undefined, "CustomDoor");
 }
 
-export function getStageAPIRoomName(): string {
-  const defaultReturn = "Unknown";
-
-  if (StageAPI === undefined) {
-    return defaultReturn;
-  }
-
-  const stageAPIRoom = StageAPI.GetCurrentRoom();
-  if (stageAPIRoom === undefined) {
-    return defaultReturn;
-  }
-
-  return stageAPIRoom.Layout.Name;
-}
-
-export function goToStageAPIRoom(roomName: string, enterDoor?: int): void {
+export function goToStageAPIRoom(
+  roomName: string,
+  customGridIndex?: int,
+): void {
   if (StageAPI === undefined) {
     return;
   }
 
   const game = Game();
-  const level = game.GetLevel();
+  const room = game.GetRoom();
+  const player = Isaac.GetPlayer();
   const levelMap = StageAPI.GetCurrentLevelMap();
 
   const roomID = getStageAPIRoomID(levelMap, roomName);
   if (roomID === null) {
-    return;
+    error(`Failed to get the room ID for: ${roomName}`);
   }
 
   StageAPI.ExtraRoomTransition(
@@ -92,10 +83,13 @@ export function goToStageAPIRoom(roomName: string, enterDoor?: int): void {
     levelMap,
   );
 
-  if (enterDoor !== undefined) {
-    level.EnterDoor = enterDoor;
-  }
   fixRoomEntrancePosition();
+
+  if (customGridIndex !== undefined) {
+    player.Position = room.GetGridPosition(customGridIndex);
+  }
+
+  sendRoom();
 }
 
 function getStageAPIRoomID(

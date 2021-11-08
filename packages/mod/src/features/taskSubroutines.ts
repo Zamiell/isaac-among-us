@@ -2,8 +2,10 @@ import {
   arrayRemoveInPlace,
   getNPCs,
   removeAllMatchingEntities,
+  runNextFrame,
 } from "isaacscript-common";
 import { taskDescriptions } from "../constants";
+import { EffectVariantCustom } from "../enums";
 import g from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
 import { sendTCP } from "../network/send";
@@ -11,7 +13,7 @@ import { setupPlayerAndUI } from "../setupPlayersAndUI";
 import { skeldRoomReverseMap } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
 import { SocketCommandModToServer } from "../types/SocketCommands";
-import { movePlayerToGridIndex, removeGridEntity } from "../util";
+import { removeGridEntity } from "../util";
 import { isWallGridIndex } from "../wall";
 
 const sfx = SFXManager();
@@ -23,7 +25,13 @@ export function taskComplete(): void {
 
   const task = g.game.currentTask;
 
-  sfx.Stop(SoundEffect.SOUND_THUMBSUP);
+  muteSoundEffects();
+  runNextFrame(() => {
+    // Some sound effects might not happen until the next frame,
+    // so mute everything again just in case
+    muteSoundEffects();
+  });
+
   sfx.Play(SoundEffect.SOUND_1UP);
 
   sendTCP(SocketCommandModToServer.TASK_COMPLETE, {
@@ -38,6 +46,17 @@ export function taskComplete(): void {
   taskLeave();
 }
 
+function muteSoundEffects() {
+  for (const soundEffect of [
+    SoundEffect.SOUND_THUMBSUP,
+    SoundEffect.SOUND_DEATH_BURST_SMALL,
+    SoundEffect.SOUND_BOSS1_EXPLOSIONS,
+    SoundEffect.SOUND_ROCK_CRUMBLE,
+  ]) {
+    sfx.Stop(soundEffect);
+  }
+}
+
 export function taskLeave(): void {
   if (g.game === null || g.game.currentTask === null) {
     return;
@@ -50,18 +69,24 @@ export function taskLeave(): void {
   }
 
   g.game.currentTask = null;
+  g.game.endTaskTime = Isaac.GetTime();
+  const elapsedTime = g.game.endTaskTime - g.game.startTaskTime;
+  Isaac.DebugString(`Task took: ${elapsedTime}`);
 
   setupPlayerAndUI();
   enableMinimapAPI(true);
 
   clearRoomEntities();
-  goToStageAPIRoom(roomName);
-  movePlayerToGridIndex(taskDescription.returnGridIndex);
+  goToStageAPIRoom(roomName, taskDescription.returnGridIndex);
 }
 
 export function clearRoomEntities(): void {
   removeAllMatchingEntities(EntityType.ENTITY_BOMBDROP); // 4
   removeAllMatchingEntities(EntityType.ENTITY_PICKUP); // 5
+  removeAllMatchingEntities(
+    EntityType.ENTITY_EFFECT,
+    EffectVariantCustom.BUTTON,
+  );
   removeAllNPCs();
   removeAllGridEntities();
 }

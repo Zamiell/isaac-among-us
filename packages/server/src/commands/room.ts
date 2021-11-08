@@ -7,7 +7,7 @@ export function commandRoom(
   data: RoomDataToServer,
   extraData: ExtraCommandData,
 ): void {
-  const { room, enterDoor } = data;
+  const { room, enterGridIndex } = data;
   const { player } = extraData;
 
   if (player === null) {
@@ -15,5 +15,5 @@ export function commandRoom(
   }
 
   player.room = room;
-  player.enterDoor = enterDoor;
+  player.enterGridIndex = enterGridIndex;
 }

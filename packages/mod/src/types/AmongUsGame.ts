@@ -30,6 +30,8 @@ export class AmongUsGame {
   };
 
   currentTask: Task | null = null;
+  startTaskTime = 0;
+  endTaskTime = 0;
 
   cutscene = {
     state: CutsceneState.DISABLED,

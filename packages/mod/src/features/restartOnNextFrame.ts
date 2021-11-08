@@ -1,18 +1,17 @@
-import g from "../globals";
 import { consoleCommand } from "../util";
 
 const AMONG_US_CHARACTER = PlayerType.PLAYER_ISAAC;
-const AMONG_US_SEED = "L8AK PRCH"; // H4C8 QKT3 // cspell:disable-line
+const AMONG_US_SEED = "P7W3 LEN1"; // "L8AK PRCH"; // H4C8 QKT3 // cspell:disable-line
 const AMONG_US_CHALLENGE = Challenge.CHALLENGE_NULL;
 
-let restartOnNextFrame = false;
+let restartOnNextRenderFrame = false;
 
 // ModCallbacks.MC_POST_RENDER (2)
 export function postRender(): void {
-  if (!restartOnNextFrame) {
+  if (!restartOnNextRenderFrame) {
     return;
   }
-  restartOnNextFrame = false;
+  restartOnNextRenderFrame = false;
 
   if (!validateChallenge()) {
     consoleCommand(`challenge ${AMONG_US_CHALLENGE}`);
@@ -29,12 +28,8 @@ export function postRender(): void {
 
 // ModCallbacks.MC_POST_GAME_STARTED (15)
 export function postGameStarted(): void {
-  if (g.game === null) {
-    return;
-  }
-
   if (!validateChallenge() || !validateCharacter() || !validateSeed()) {
-    restartOnNextFrame = true;
+    restartOnNextRenderFrame = true;
   }
 }
 

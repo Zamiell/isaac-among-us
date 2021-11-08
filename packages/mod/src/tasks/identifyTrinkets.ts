@@ -101,7 +101,7 @@ export function identifyTrinketButtonPressed(num: int): void {
 }
 
 function correctSelection() {
-  sfx.Play(SoundEffect.SOUND_THUMBSUP);
+  sfx.Play(SoundEffect.SOUND_THUMBSUP, 0.5);
 
   currentRound += 1;
   if (currentRound >= NUM_ROUNDS) {

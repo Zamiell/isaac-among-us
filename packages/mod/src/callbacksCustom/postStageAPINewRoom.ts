@@ -3,7 +3,8 @@ import * as sendGameEvents from "../features/sendGameEvents";
 import * as task from "../features/task";
 import g from "../globals";
 import { setTasksOnMap } from "../loadMap";
-import { getStageAPIRoomName, goToStageAPIRoom } from "../stageAPI";
+import { goToStageAPIRoom } from "../stageAPI";
+import { getStageAPIRoomName } from "../stageAPISubroutines";
 
 const NORMAL_TOP_LEFT_POS = Vector(60, 140);
 
@@ -53,6 +54,6 @@ function warpToCafeteriaAndBack() {
   const enterDoor = level.EnterDoor;
   goToStageAPIRoom("Cafeteria");
   level.EnterDoor = enterDoor;
-  goToStageAPIRoom(roomName, enterDoor);
+  goToStageAPIRoom(roomName);
   warping = false;
 }

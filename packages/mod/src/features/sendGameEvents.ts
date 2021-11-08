@@ -1,13 +1,17 @@
 import g from "../globals";
 import { sendTCP } from "../network/send";
 import { skeldRoomMap } from "../skeldRoomMap";
-import { getStageAPIRoomName } from "../stageAPI";
+import { getStageAPIRoomName } from "../stageAPISubroutines";
 import { SkeldRoom } from "../types/SkeldRoom";
 import { SocketCommandModToServer } from "../types/SocketCommands";
 
 let sendEvents = true;
 
 export function postRoomLoad(): void {
+  sendRoom();
+}
+
+export function sendRoom(): void {
   if (
     StageAPI === undefined ||
     g.game === null ||
@@ -18,20 +22,27 @@ export function postRoomLoad(): void {
   }
 
   const game = Game();
-  const level = game.GetLevel();
   const roomName = getStageAPIRoomName();
-  const room = skeldRoomMap.get(roomName);
-  if (room === undefined || room === SkeldRoom.TASK) {
+  const skeldRoom = skeldRoomMap.get(roomName);
+  if (skeldRoom === undefined || skeldRoom === SkeldRoom.TASK) {
     return;
   }
 
+  const room = game.GetRoom();
+  const player = Isaac.GetPlayer();
+  const gridIndex = room.GetClampedGridIndex(player.Position);
+
   sendTCP(SocketCommandModToServer.ROOM, {
     gameID: g.game.id,
-    room,
-    enterDoor: level.EnterDoor,
+    room: skeldRoom,
+    enterGridIndex: gridIndex,
   });
 }
 
-export function enableSendingEvents(enable: boolean): void {
-  sendEvents = enable;
+export function enableSendingEvents(): void {
+  sendEvents = true;
+}
+
+export function disableSendingEvents(): void {
+  sendEvents = false;
 }

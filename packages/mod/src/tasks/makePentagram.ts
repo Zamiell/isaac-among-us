@@ -2,9 +2,13 @@ import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
 import { Task } from "../types/Task";
-import { drawFontText, movePlayerToGridIndex } from "../util";
+import {
+  drawFontText,
+  movePlayerToGridIndex,
+  updatePlayerStats,
+} from "../util";
 
-const THIS_TASK = Task.SHORT_MAKE_PENTAGRAM;
+const THIS_TASK = Task.LONG_MAKE_PENTAGRAM;
 const REQUIRED_PENTAGRAM_SIZE = 250;
 const TEXT_GRID_INDEX = 93;
 
@@ -15,10 +19,7 @@ export function makePentagram(): void {
 
   const startGridIndex = 100;
   movePlayerToGridIndex(startGridIndex);
-
-  const player = Isaac.GetPlayer();
-  player.AddCacheFlags(CacheFlag.CACHE_SPEED);
-  player.EvaluateItems();
+  updatePlayerStats();
 
   const topRightGridIndex = 42;
   spawnTeleporter(topRightGridIndex);

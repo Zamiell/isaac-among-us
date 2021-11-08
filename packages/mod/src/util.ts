@@ -114,6 +114,7 @@ export function spawnEntity(
   subType: int,
   gridIndex: int,
   depthOffset = -100, // -100 is needed for Cafeteria tables
+  playAppearAnimation = false,
 ): Entity {
   const game = Game();
   const room = game.GetRoom();
@@ -127,12 +128,22 @@ export function spawnEntity(
     Vector.Zero,
     undefined,
   );
-  entity.ClearEntityFlags(EntityFlag.FLAG_APPEAR);
+
   entity.DepthOffset = depthOffset;
+
+  if (!playAppearAnimation) {
+    entity.ClearEntityFlags(EntityFlag.FLAG_APPEAR);
+  }
 
   return entity;
 }
 
 export function traceback(): void {
   print(debug.traceback());
+}
+
+export function updatePlayerStats(): void {
+  const player = Isaac.GetPlayer();
+  player.AddCacheFlags(CacheFlag.CACHE_ALL);
+  player.EvaluateItems();
 }

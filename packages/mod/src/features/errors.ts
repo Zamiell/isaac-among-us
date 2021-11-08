@@ -22,9 +22,8 @@ const LUA_DEBUG_ERROR_TEXT = `Error: You do not have the "--luadebug" launch opt
 
 const v = {
   run: {
-    corrupted: false,
-    incompleteSave: false,
     otherModsEnabled: false,
+    wrongDifficulty: false,
   },
 };
 
@@ -33,7 +32,7 @@ export function init(): void {
 }
 
 export function check(): boolean {
-  return areOtherModsEnabled();
+  return areOtherModsEnabled() || isWrongDifficulty();
 }
 
 // Check to see if there are any mods enabled that have added custom items
@@ -50,6 +49,20 @@ function areOtherModsEnabled() {
   }
 
   return v.run.otherModsEnabled;
+}
+
+function isWrongDifficulty() {
+  const game = Game();
+
+  const rightDifficulty = Difficulty.DIFFICULTY_NORMAL;
+  if (game.Difficulty !== rightDifficulty) {
+    log(
+      `Error: Wrong difficulty detected. (The current difficulty is ${game.Difficulty}, but it should be ${rightDifficulty}.)`,
+    );
+    v.run.wrongDifficulty = true;
+  }
+
+  return v.run.wrongDifficulty;
 }
 
 // ModCallbacks.MC_POST_RENDER (2)
@@ -83,6 +96,13 @@ export function postRender(): boolean {
   if (v.run.otherModsEnabled) {
     drawText(
       `Error: You have illegal mods enabled.\n\nMake sure that the ${MOD_NAME} mod, StageAPI, and MinimapAPI are the only mods enabled in your mod list and then completely close and re-open the game.`,
+    );
+    return true;
+  }
+
+  if (v.run.wrongDifficulty) {
+    drawText(
+      "Error: You are not on a normal run. Please restart a run on normal difficulty.",
     );
     return true;
   }

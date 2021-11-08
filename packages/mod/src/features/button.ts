@@ -6,9 +6,10 @@ import { goToStageAPIRoom } from "../stageAPI";
 import { buttonsBehindKeyBlocksButtonPressed } from "../tasks/buttonsBehindKeyBlocks";
 import { fixWiresButtonPressed } from "../tasks/fixWires";
 import { identifyItemButtonPressed } from "../tasks/identifyItems";
-import { identiyPickupsInOrderButtonPressed } from "../tasks/identifyPickupsInOrder";
+import { identifyPickupsInOrderButtonPressed } from "../tasks/identifyPickupsInOrder";
 import { identifyTrinketButtonPressed } from "../tasks/identifyTrinkets";
 import { pressButtonsWithGrudgeButtonPressed } from "../tasks/pressButtonsWithGrudge";
+import { pushButtonsInOrderButtonPressed } from "../tasks/pushButtonsInOrder";
 import { MeetingType } from "../types/MeetingType";
 import { SocketCommandModToServer } from "../types/SocketCommands";
 import { Task } from "../types/Task";
@@ -173,57 +174,63 @@ function buttonPressedTask(button: EntityEffect, num: int) {
   }
 
   switch (g.game.currentTask) {
-    // 2
     case Task.SHORT_IDENTIFY_ITEMS: {
       identifyItemButtonPressed(num);
       break;
     }
 
-    // 3
     case Task.SHORT_IDENTIFY_TRINKETS: {
       identifyTrinketButtonPressed(num);
       break;
     }
 
-    // 6
     case Task.SHORT_PRESS_BUTTONS_WITH_GRUDGE: {
       pressButtonsWithGrudgeButtonPressed();
       break;
     }
 
-    // 7
     case Task.SHORT_FIX_WIRES: {
       fixWiresButtonPressed(button, num);
       break;
     }
 
-    // 8
     case Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES: {
       taskComplete();
       break;
     }
 
-    // 9
     case Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS: {
       taskComplete();
       break;
     }
 
-    // 10
     case Task.SHORT_WALK_BETWEEN_SLIDES: {
       taskComplete();
       break;
     }
 
-    // 12
-    case Task.LONG_IDENTIFY_PICKUPS_IN_ORDER: {
-      identiyPickupsInOrderButtonPressed(button);
+    case Task.SHORT_DODGE_RETRACTING_SPIKES: {
+      taskComplete();
       break;
     }
 
-    // 15
-    case Task.LONG_BUTTONS_BEHIND_KEY_BLOCKS: {
+    case Task.SHORT_BUTTONS_BEHIND_KEY_BLOCKS: {
       buttonsBehindKeyBlocksButtonPressed();
+      break;
+    }
+
+    case Task.SHORT_PUSH_BUTTONS_IN_ORDER: {
+      pushButtonsInOrderButtonPressed(button);
+      break;
+    }
+
+    case Task.LONG_IDENTIFY_PICKUPS_IN_ORDER: {
+      identifyPickupsInOrderButtonPressed(button);
+      break;
+    }
+
+    case Task.LONG_DODGE_STONE_SHOOTERS: {
+      taskComplete();
       break;
     }
 

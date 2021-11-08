@@ -1,5 +1,5 @@
 import { getGridEntities, getRoomIndex, log } from "isaacscript-common";
-import { debugFunction } from "../debugFunction";
+import { debugFunction, debugFunction2 } from "../debugFunction";
 import { skeldRoomReverseMap } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
 import { SkeldRoom } from "../types/SkeldRoom";
@@ -36,6 +36,10 @@ functionMap.set("center", () => {
 
 functionMap.set("debug", () => {
   debugFunction();
+});
+
+functionMap.set("debug2", () => {
+  debugFunction2();
 });
 
 functionMap.set("list", (_params: string) => {

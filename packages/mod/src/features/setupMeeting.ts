@@ -22,7 +22,7 @@ export function setupMeeting(meetingEnded: boolean): void {
 
   const room = getSkeldRoom();
   if (room !== SkeldRoom.CAFETERIA) {
-    goToStageAPIRoom("Cafeteria", DoorSlot.DOWN0);
+    goToStageAPIRoom("Cafeteria");
   }
 
   enableMinimapAPI(meetingEnded);

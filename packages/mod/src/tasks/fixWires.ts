@@ -1,4 +1,4 @@
-import { arrayShuffle, getEnumValues } from "isaacscript-common";
+import { arrayEmpty, arrayShuffle, getEnumValues } from "isaacscript-common";
 import { ButtonSubType, EffectVariantCustom, EntityTypeCustom } from "../enums";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { resetButton } from "../features/buttonSubroutines";
@@ -42,6 +42,8 @@ type LineSprites = {
   };
 };
 
+const sfx = SFXManager();
+
 const lineSprites: LineSprites = {
   [WireColor.YELLOW]: {
     startPosition: null,
@@ -82,6 +84,7 @@ export function fixWires(): void {
 
   const centerGridIndex = 52;
   movePlayerToGridIndex(centerGridIndex);
+  updatePlayerStats();
 
   const bottomGridIndex = 97;
   spawnTeleporter(bottomGridIndex);
@@ -118,11 +121,17 @@ export function fixWires(): void {
     sprite.SetFrame(color);
   }
 
-  fixWiresResetButtonColorActive();
+  buttonColorActive = null;
+  arrayEmpty(colorsComplete);
+  resetLineSprites();
 }
 
-export function fixWiresResetButtonColorActive(): void {
-  buttonColorActive = null;
+function resetLineSprites() {
+  for (const spriteDescription of Object.values(lineSprites)) {
+    spriteDescription.startPosition = null;
+    spriteDescription.endPosition = null;
+    spriteDescription.finished = false;
+  }
 }
 
 export function fixWiresButtonPressed(button: EntityEffect, num: int): void {
@@ -149,6 +158,7 @@ function leftSideButtonPressed(color: WireColor, button: EntityEffect) {
 
 function rightSideButtonPressed(color: WireColor) {
   if (color !== buttonColorActive) {
+    sfx.Play(SoundEffect.SOUND_THUMBS_DOWN);
     taskLeave();
     return;
   }
@@ -215,4 +225,7 @@ export function postRender(): void {
     sprite.Color = WIRE_COLORS[color];
     sprite.Render(startPosition, Vector.Zero, Vector.Zero);
   }
+}
+function updatePlayerStats() {
+  throw new Error("Function not implemented.");
 }

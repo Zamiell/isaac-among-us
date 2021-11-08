@@ -215,7 +215,7 @@ validateFunctionMap.set(
 );
 
 validateFunctionMap.set("room", validateNumberAndInteger);
-validateFunctionMap.set("enterDoor", validateNumberAndInteger);
+validateFunctionMap.set("enterGridIndex", validateNumberAndInteger);
 validateFunctionMap.set("userID", validateNumberAndInteger);
 validateFunctionMap.set("x", validateNumber);
 validateFunctionMap.set("y", validateNumber);

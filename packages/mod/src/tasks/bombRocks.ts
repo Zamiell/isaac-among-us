@@ -1,4 +1,4 @@
-import { nextSeed, spawnGridEntity } from "isaacscript-common";
+import { spawnGridEntity } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
@@ -17,8 +17,6 @@ for (let i = 0; i < ONE_BY_ONE_ROOM_HEIGHT_WITHOUT_WALLS; i++) {
   LEFT_SIDE_GRID_INDEXES.push(gridIndex);
 }
 
-let seed: int | null = null;
-
 /** Keys are grid indexes. Values are whether or not the rock is broken. */
 const rockBrokenMap = new Map<int, boolean>();
 
@@ -36,13 +34,13 @@ export function bombRocks(): void {
 }
 
 function spawnBombs(gridIndex: int) {
-  const bombs = spawnEntity(
+  const entity = spawnEntity(
     EntityType.ENTITY_PICKUP,
     PickupVariant.PICKUP_BOMB,
     BombSubType.BOMB_DOUBLEPACK,
     gridIndex,
   );
-  const sprite = bombs.GetSprite();
+  const sprite = entity.GetSprite();
   sprite.SetLastFrame();
 }
 
@@ -57,15 +55,11 @@ function spawnRocks() {
 function spawnRock() {
   const game = Game();
   const room = game.GetRoom();
-  if (seed === null) {
-    seed = room.GetSpawnSeed();
-  }
 
   let gridIndex: int;
   let gridEntity: GridEntity | undefined;
   do {
-    seed = nextSeed(seed);
-    gridIndex = room.GetRandomTileIndex(seed);
+    gridIndex = room.GetRandomTileIndex(Random());
     gridEntity = room.GetGridEntity(gridIndex);
   } while (
     gridEntity !== undefined ||

@@ -15,7 +15,7 @@ export class Player {
   alive = true;
   body: PlayerBody | null = null;
   room = SkeldRoom.CAFETERIA;
-  enterDoor = 0;
+  enterGridIndex = 0;
   usedEmergencyMeeting = false;
   tasks = {
     [TaskType.SHORT]: [] as Task[],

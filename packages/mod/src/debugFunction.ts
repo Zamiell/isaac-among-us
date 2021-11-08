@@ -15,6 +15,8 @@ let hotkeyPressed2 = false;
 
 export function debugFunction(): void {}
 
+export function debugFunction2(): void {}
+
 // ModCallbacks.MC_POST_UPDATE (1)
 export function postUpdate(): void {
   postUpdateHotkey1();

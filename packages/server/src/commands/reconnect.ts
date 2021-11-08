@@ -33,7 +33,7 @@ export function commandReconnect(
     meeting: game.meeting,
     tasks: player.tasks,
     room: player.room,
-    enterDoor: player.enterDoor,
+    enterGridIndex: player.enterGridIndex,
   });
 
   reconnect(player, game, socket.socketID);

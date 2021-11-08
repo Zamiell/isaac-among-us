@@ -45,11 +45,14 @@ export function onGameList(): void {
 }
 
 export function onGameDescription(): void {
+  Isaac.DebugString("GETTING HERE 1");
   if (!autoLogin || g.game === null || g.game.started) {
     return;
   }
 
+  Isaac.DebugString("GETTING HERE 2");
   sendTCP(SocketCommandModToServer.START, {
     gameID: g.game.id,
   });
+  autoLogin = false;
 }

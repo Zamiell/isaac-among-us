@@ -1,6 +1,6 @@
 import g from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
-import { getStageAPIRoomName } from "../stageAPI";
+import { getStageAPIRoomName } from "../stageAPISubroutines";
 import { taskFunctions } from "../taskFunctions";
 import { clearRoomEntities } from "./taskSubroutines";
 
@@ -25,4 +25,6 @@ function setupTaskRoom() {
   if (taskFunction !== undefined) {
     taskFunction();
   }
+
+  g.game.startTaskTime = Isaac.GetTime();
 }

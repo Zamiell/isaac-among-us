@@ -1,6 +1,7 @@
 import { IS_DEV, MAX_PLAYERS, taskDescriptions } from "../constants";
 import g from "../globals";
-import { getSkeldRoom, getStageAPIRoomName } from "../stageAPI";
+import { getSkeldRoom } from "../stageAPI";
+import { getStageAPIRoomName } from "../stageAPISubroutines";
 import { drawFontText } from "../util";
 import { isConsoleOpen } from "./console";
 import { inEndMeeting } from "./endMeeting";

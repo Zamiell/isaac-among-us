@@ -55,13 +55,13 @@ export function buttonsBehindKeyBlocks(): void {
 }
 
 function spawnKeys(gridIndex: int) {
-  const bombs = spawnEntity(
+  const entity = spawnEntity(
     EntityType.ENTITY_PICKUP,
     PickupVariant.PICKUP_KEY,
     KeySubType.KEY_DOUBLEPACK,
     gridIndex,
   );
-  const sprite = bombs.GetSprite();
+  const sprite = entity.GetSprite();
   sprite.SetLastFrame();
 }
 

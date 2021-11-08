@@ -29,6 +29,12 @@ chatCommandFunctions.set("create", (args: string[]) => {
   });
 });
 
+chatCommandFunctions.set("credits", (_args: string[]) => {
+  chat.addLocal(
+    "The Among Us Mod was made by Zamiel. It makes use of DeadInfinity's StageAPI library, Sentinel's collision library, and Somdudewillson's stage backdrops; special thanks goes to them. Thanks also goes to JSG, imtem, Wofsauge, and AgentCucco for providing technical assistance.",
+  );
+});
+
 chatCommandFunctions.set("disconnect", (_args: string[]) => {
   socketClient.disconnect();
 });

@@ -1,7 +1,8 @@
 import { getScreenBottomRightPos } from "isaacscript-common";
 import * as socketClient from "../network/socketClient";
 
-const ICON_OFFSET = Vector(-33, -30);
+const CONNECTED_ICON_OFFSET = Vector(-33, -30);
+export const OTHER_UI_BUTTON_OFFSET = CONNECTED_ICON_OFFSET.add(Vector(0, -30));
 
 const connectedSprite = Sprite();
 connectedSprite.Load("gfx/wifi.anm2", true);
@@ -13,6 +14,6 @@ export function postRender(): void {
   }
 
   const bottomRightPos = getScreenBottomRightPos();
-  const position = bottomRightPos.add(ICON_OFFSET);
+  const position = bottomRightPos.add(CONNECTED_ICON_OFFSET);
   connectedSprite.RenderLayer(0, position);
 }

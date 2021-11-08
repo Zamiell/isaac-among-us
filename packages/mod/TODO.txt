@@ -1,9 +1,8 @@
-- check validation of character as isaac, doesn't seem to work
-  - also check when reconnecting
-
-- all tasks
+- killing
 - imposter thing where you close the doors
 - imposter lights
+
+Future:
 
 - rebuild walls manually on every room entrance
   (but first find a way to repro the bug where walls are randomly in the center of a 2x1 room?)

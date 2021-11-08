@@ -1,9 +1,12 @@
-import { enableSendingEvents } from "../features/sendGameEvents";
+import {
+  disableSendingEvents,
+  enableSendingEvents,
+} from "../features/sendGameEvents";
 import { setupMeeting } from "../features/setupMeeting";
 import g from "../globals";
 import { loadMap } from "../loadMap";
 import { skeldRoomReverseMap } from "../skeldRoomMap";
-import { fixRoomEntrancePosition, goToStageAPIRoom } from "../stageAPI";
+import { goToStageAPIRoom } from "../stageAPI";
 import { AmongUsGame } from "../types/AmongUsGame";
 import { Role } from "../types/Role";
 import { SkeldRoom } from "../types/SkeldRoom";
@@ -13,9 +16,6 @@ export function commandReconnect(data: ReconnectDataToMod): void {
   if (g.userID === null) {
     return;
   }
-
-  const game = Game();
-  const level = game.GetLevel();
 
   g.game = new AmongUsGame(data.gameID, data.name);
   g.game.players = data.players;
@@ -31,24 +31,31 @@ export function commandReconnect(data: ReconnectDataToMod): void {
   }
   g.game.usedEmergencyMeeting = player.usedEmergencyMeeting;
 
-  enableSendingEvents(false);
+  disableSendingEvents();
   loadMap();
 
   if (g.game.meeting !== null) {
     setupMeeting(false);
-    enableSendingEvents(true);
+    enableSendingEvents();
     return;
   }
 
-  if (data.room === SkeldRoom.CAFETERIA) {
-    level.EnterDoor = data.enterDoor;
-    fixRoomEntrancePosition();
-  } else {
+  if (data.room !== SkeldRoom.CAFETERIA) {
     const roomName = skeldRoomReverseMap[data.room];
     if (roomName === undefined) {
       error(`Failed to get the room name for room: ${data.room}`);
     }
-    goToStageAPIRoom(roomName, data.enterDoor);
+    goToStageAPIRoom(roomName);
   }
-  enableSendingEvents(true);
+
+  setPlayerPosition(data.enterGridIndex);
+  enableSendingEvents();
+}
+
+function setPlayerPosition(gridIndex: int) {
+  const game = Game();
+  const room = game.GetRoom();
+  const player = Isaac.GetPlayer();
+
+  player.Position = room.GetGridPosition(gridIndex);
 }

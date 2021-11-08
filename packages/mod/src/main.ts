@@ -14,11 +14,13 @@ import * as postEntityKill from "./callbacks/postEntityKill";
 import * as postGameStarted from "./callbacks/postGameStarted";
 import * as postNewRoom from "./callbacks/postNewRoom";
 import * as postNPCRender from "./callbacks/postNPCRender";
+import * as postPickupInit from "./callbacks/postPickupInit";
 import * as postPlayerInit from "./callbacks/postPlayerInit";
 import * as postRender from "./callbacks/postRender";
 import * as postUpdate from "./callbacks/postUpdate";
 import * as preGameExit from "./callbacks/preGameExit";
 import * as postGridEntityUpdate from "./callbacksCustom/postGridEntityUpdate";
+import * as postPickupCollect from "./callbacksCustom/postPickupCollect";
 import * as postPlayerInitLate from "./callbacksCustom/postPlayerInitLate";
 import * as postRoomLoad from "./callbacksCustom/postRoomLoad";
 import * as postStageAPINewRoom from "./callbacksCustom/postStageAPINewRoom";
@@ -102,6 +104,8 @@ function initExtra(mod: ModUpgraded) {
   entityTakeDmg.init(mod); // 1
   evaluateCache.init(mod); // 8
   postNPCRender.init(mod); // 28
+  postPickupInit.init(mod); // 34
   postEffectUpdate.init(mod); // 55
   postGridEntityUpdate.init(mod);
+  postPickupCollect.init(mod);
 }

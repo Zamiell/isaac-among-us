@@ -19,6 +19,7 @@ import * as identifyItems from "../tasks/identifyItems";
 import * as identifyPickupsInOrder from "../tasks/identifyPickupsInOrder";
 import * as identifyTrinkets from "../tasks/identifyTrinkets";
 import * as makePentagram from "../tasks/makePentagram";
+import * as pushButtonsInOrder from "../tasks/pushButtonsInOrder";
 
 export function main(): void {
   if (errors.postRender()) {
@@ -49,4 +50,5 @@ export function main(): void {
   makePentagram.postRender();
   fixWires.postRender();
   identifyPickupsInOrder.postRender();
+  pushButtonsInOrder.postRender();
 }

@@ -1,5 +1,5 @@
 import { getEnumValues } from "isaacscript-common";
-import { disableShooting } from "./util";
+import { disableShooting, updatePlayerStats } from "./util";
 
 export function setupPlayerAndUI(): void {
   const player = Isaac.GetPlayer();
@@ -7,8 +7,8 @@ export function setupPlayerAndUI(): void {
   disableHUD();
   disableShooting();
   removeAllItems(player);
-  setStats(player);
   fullHeal(player);
+  updatePlayerStats();
 }
 
 function disableHUD() {
@@ -26,8 +26,12 @@ function removeAllItems(player: EntityPlayer) {
   player.AddCoins(-99);
   player.AddBombs(-99);
   player.AddKeys(-99);
-  player.TryRemoveTrinket(TrinketType.TRINKET_PETRIFIED_POOP);
   player.RemoveCollectible(CollectibleType.COLLECTIBLE_BLACK_POWDER);
+
+  const trinket = player.GetTrinket(TrinketSlot.SLOT_1);
+  if (trinket !== TrinketType.TRINKET_NULL) {
+    player.TryRemoveTrinket(trinket);
+  }
 }
 
 function removeActiveItems(player: EntityPlayer) {
@@ -37,11 +41,6 @@ function removeActiveItems(player: EntityPlayer) {
       player.RemoveCollectible(activeItem);
     }
   }
-}
-
-function setStats(player: EntityPlayer) {
-  player.AddCacheFlags(CacheFlag.CACHE_ALL);
-  player.EvaluateItems();
 }
 
 function fullHeal(player: EntityPlayer) {

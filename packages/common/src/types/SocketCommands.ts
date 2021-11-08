@@ -69,7 +69,7 @@ export class ReconnectDataToServer {
 export class RoomDataToServer {
   gameID = 0;
   room = SkeldRoom.CAFETERIA;
-  enterDoor = 0;
+  enterGridIndex = 0;
 }
 
 export class KillDataToServer {
@@ -221,7 +221,7 @@ export class ReconnectDataToMod {
   meeting!: Meeting | null;
   tasks!: TaskList;
   room!: SkeldRoom;
-  enterDoor!: number;
+  enterGridIndex!: number;
 }
 
 export class KilledDataToMod {
