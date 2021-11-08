@@ -8,11 +8,13 @@ import { commandJoined } from "./commands/joined";
 import { commandKilled } from "./commands/killed";
 import { commandLeft } from "./commands/left";
 import { commandLoggedIn } from "./commands/loggedIn";
+import { commandNewGame } from "./commands/newGame";
 import { commandReconnect } from "./commands/reconnect";
 import { commandStarted } from "./commands/started";
 import { commandStartMeeting } from "./commands/startMeeting";
 import { commandStartVoting } from "./commands/startVoting";
 import { commandTerminated } from "./commands/terminated";
+import { commandUserConnected } from "./commands/userConnected";
 import { commandUsername } from "./commands/username";
 import { commandVote } from "./commands/vote";
 import {
@@ -30,7 +32,9 @@ export const commandMap: CommandMap = {
   [SocketCommandServerToMod.ERROR]: commandError,
   [SocketCommandServerToMod.USERNAME]: commandUsername,
   [SocketCommandServerToMod.LOGGED_IN]: commandLoggedIn,
+  [SocketCommandServerToMod.USER_CONNECTED]: commandUserConnected,
   [SocketCommandServerToMod.GAME_LIST]: commandGameList,
+  [SocketCommandServerToMod.NEW_GAME]: commandNewGame,
   [SocketCommandServerToMod.JOINED]: commandJoined,
   [SocketCommandServerToMod.LEFT]: commandLeft,
   [SocketCommandServerToMod.GAME_DESCRIPTION]: commandGameDescription,

@@ -2850,7 +2850,9 @@ ____exports.SocketCommandServerToMod = SocketCommandServerToMod or ({})
 ____exports.SocketCommandServerToMod.ERROR = "error"
 ____exports.SocketCommandServerToMod.USERNAME = "username"
 ____exports.SocketCommandServerToMod.LOGGED_IN = "loggedIn"
+____exports.SocketCommandServerToMod.USER_CONNECTED = "userConnected"
 ____exports.SocketCommandServerToMod.GAME_LIST = "gameList"
+____exports.SocketCommandServerToMod.NEW_GAME = "newGame"
 ____exports.SocketCommandServerToMod.JOINED = "joined"
 ____exports.SocketCommandServerToMod.LEFT = "left"
 ____exports.SocketCommandServerToMod.GAME_DESCRIPTION = "gameDescription"
@@ -2879,6 +2881,11 @@ local LoggedInDataToMod = ____exports.LoggedInDataToMod
 LoggedInDataToMod.name = "LoggedInDataToMod"
 function LoggedInDataToMod.prototype.____constructor(self)
 end
+____exports.UserConnectedDataToMod = __TS__Class()
+local UserConnectedDataToMod = ____exports.UserConnectedDataToMod
+UserConnectedDataToMod.name = "UserConnectedDataToMod"
+function UserConnectedDataToMod.prototype.____constructor(self)
+end
 ____exports.GameListDataToMod = __TS__Class()
 local GameListDataToMod = ____exports.GameListDataToMod
 GameListDataToMod.name = "GameListDataToMod"
@@ -2888,6 +2895,11 @@ ____exports.GameListDescription = __TS__Class()
 local GameListDescription = ____exports.GameListDescription
 GameListDescription.name = "GameListDescription"
 function GameListDescription.prototype.____constructor(self)
+end
+____exports.NewGameDataToMod = __TS__Class()
+local NewGameDataToMod = ____exports.NewGameDataToMod
+NewGameDataToMod.name = "NewGameDataToMod"
+function NewGameDataToMod.prototype.____constructor(self)
 end
 ____exports.JoinedDataToMod = __TS__Class()
 local JoinedDataToMod = ____exports.JoinedDataToMod
@@ -2964,7 +2976,7 @@ local TerminatedDataToMod = ____exports.TerminatedDataToMod
 TerminatedDataToMod.name = "TerminatedDataToMod"
 function TerminatedDataToMod.prototype.____constructor(self)
 end
-____exports.SocketCommandServerToModData = {[____exports.SocketCommandServerToMod.ERROR] = ____exports.ErrorDataToMod, [____exports.SocketCommandServerToMod.USERNAME] = ____exports.UsernameDataToMod, [____exports.SocketCommandServerToMod.LOGGED_IN] = ____exports.LoggedInDataToMod, [____exports.SocketCommandServerToMod.GAME_LIST] = ____exports.GameListDataToMod, [____exports.SocketCommandServerToMod.JOINED] = ____exports.JoinedDataToMod, [____exports.SocketCommandServerToMod.LEFT] = ____exports.LeftDataToMod, [____exports.SocketCommandServerToMod.GAME_DESCRIPTION] = ____exports.GameDescriptionDataToMod, [____exports.SocketCommandServerToMod.CHAT] = ____exports.ChatDataToMod, [____exports.SocketCommandServerToMod.STARTED] = ____exports.StartedDataToMod, [____exports.SocketCommandServerToMod.RECONNECT] = ____exports.ReconnectDataToMod, [____exports.SocketCommandServerToMod.KILLED] = ____exports.KilledDataToMod, [____exports.SocketCommandServerToMod.START_MEETING] = ____exports.StartMeetingDataToMod, [____exports.SocketCommandServerToMod.START_VOTING] = ____exports.StartVotingDataToMod, [____exports.SocketCommandServerToMod.VOTE] = ____exports.VoteDataToMod, [____exports.SocketCommandServerToMod.END_MEETING] = ____exports.EndMeetingDataToMod, [____exports.SocketCommandServerToMod.END_GAME] = ____exports.EndGameDataToMod, [____exports.SocketCommandServerToMod.TERMINATED] = ____exports.TerminatedDataToMod}
+____exports.SocketCommandServerToModData = {[____exports.SocketCommandServerToMod.ERROR] = ____exports.ErrorDataToMod, [____exports.SocketCommandServerToMod.USERNAME] = ____exports.UsernameDataToMod, [____exports.SocketCommandServerToMod.LOGGED_IN] = ____exports.LoggedInDataToMod, [____exports.SocketCommandServerToMod.USER_CONNECTED] = ____exports.UserConnectedDataToMod, [____exports.SocketCommandServerToMod.GAME_LIST] = ____exports.GameListDataToMod, [____exports.SocketCommandServerToMod.NEW_GAME] = ____exports.NewGameDataToMod, [____exports.SocketCommandServerToMod.JOINED] = ____exports.JoinedDataToMod, [____exports.SocketCommandServerToMod.LEFT] = ____exports.LeftDataToMod, [____exports.SocketCommandServerToMod.GAME_DESCRIPTION] = ____exports.GameDescriptionDataToMod, [____exports.SocketCommandServerToMod.CHAT] = ____exports.ChatDataToMod, [____exports.SocketCommandServerToMod.STARTED] = ____exports.StartedDataToMod, [____exports.SocketCommandServerToMod.RECONNECT] = ____exports.ReconnectDataToMod, [____exports.SocketCommandServerToMod.KILLED] = ____exports.KilledDataToMod, [____exports.SocketCommandServerToMod.START_MEETING] = ____exports.StartMeetingDataToMod, [____exports.SocketCommandServerToMod.START_VOTING] = ____exports.StartVotingDataToMod, [____exports.SocketCommandServerToMod.VOTE] = ____exports.VoteDataToMod, [____exports.SocketCommandServerToMod.END_MEETING] = ____exports.EndMeetingDataToMod, [____exports.SocketCommandServerToMod.END_GAME] = ____exports.EndGameDataToMod, [____exports.SocketCommandServerToMod.TERMINATED] = ____exports.TerminatedDataToMod}
 return ____exports
  end,
 ["mod.src.types.SocketCommands"] = function(...) 
@@ -3102,6 +3114,14 @@ function AmongUsGame.prototype.getPlayerFromUsername(self, username)
         end
     end
     return nil
+end
+function AmongUsGame.prototype.isPlayerJoined(self, userID)
+    for ____, player in ipairs(self.players) do
+        if player.userID == userID then
+            return true
+        end
+    end
+    return false
 end
 return ____exports
  end,
@@ -4222,11 +4242,9 @@ function ____exports.startAutoLogin(self)
     end
 end
 function ____exports.onGameDescription(self)
-    Isaac.DebugString("GETTING HERE 1")
     if ((not autoLogin) or (g.game == nil)) or g.game.started then
         return
     end
-    Isaac.DebugString("GETTING HERE 2")
     sendTCP(nil, SocketCommandModToServer.START, {gameID = g.game.id})
     autoLogin = false
 end
@@ -9750,6 +9768,20 @@ function ____exports.commandLoggedIn(self, data)
 end
 return ____exports
  end,
+["mod.src.commands.newGame"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local chat = require("mod.src.chat")
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+function ____exports.commandNewGame(self, data)
+    if g.game ~= nil then
+        return
+    end
+    chat:addLocal((data.creator .. " created a new game: ") .. data.name)
+end
+return ____exports
+ end,
 ["mod.src.commands.reconnect"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 require("lualib_bundle");
@@ -9895,6 +9927,24 @@ function ____exports.commandTerminated(self, _data)
 end
 return ____exports
  end,
+["mod.src.commands.userConnected"] = function(...) 
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local ____exports = {}
+local chat = require("mod.src.chat")
+local ____globals = require("mod.src.globals")
+local g = ____globals.default
+function ____exports.commandUserConnected(self, data)
+    if data.userID == g.userID then
+        return
+    end
+    if (g.game ~= nil) and (not g.game:isPlayerJoined(data.userID)) then
+        return
+    end
+    local verb = (data.connected and "connected") or "disconnected"
+    chat:addLocal((("User " .. verb) .. ": ") .. data.username)
+end
+return ____exports
+ end,
 ["mod.src.commands.username"] = function(...) 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____exports = {}
@@ -9949,6 +9999,8 @@ local ____left = require("mod.src.commands.left")
 local commandLeft = ____left.commandLeft
 local ____loggedIn = require("mod.src.commands.loggedIn")
 local commandLoggedIn = ____loggedIn.commandLoggedIn
+local ____newGame = require("mod.src.commands.newGame")
+local commandNewGame = ____newGame.commandNewGame
 local ____reconnect = require("mod.src.commands.reconnect")
 local commandReconnect = ____reconnect.commandReconnect
 local ____started = require("mod.src.commands.started")
@@ -9959,13 +10011,15 @@ local ____startVoting = require("mod.src.commands.startVoting")
 local commandStartVoting = ____startVoting.commandStartVoting
 local ____terminated = require("mod.src.commands.terminated")
 local commandTerminated = ____terminated.commandTerminated
+local ____userConnected = require("mod.src.commands.userConnected")
+local commandUserConnected = ____userConnected.commandUserConnected
 local ____username = require("mod.src.commands.username")
 local commandUsername = ____username.commandUsername
 local ____vote = require("mod.src.commands.vote")
 local commandVote = ____vote.commandVote
 local ____SocketCommands = require("mod.src.types.SocketCommands")
 local SocketCommandServerToMod = ____SocketCommands.SocketCommandServerToMod
-____exports.commandMap = {[SocketCommandServerToMod.ERROR] = commandError, [SocketCommandServerToMod.USERNAME] = commandUsername, [SocketCommandServerToMod.LOGGED_IN] = commandLoggedIn, [SocketCommandServerToMod.GAME_LIST] = commandGameList, [SocketCommandServerToMod.JOINED] = commandJoined, [SocketCommandServerToMod.LEFT] = commandLeft, [SocketCommandServerToMod.GAME_DESCRIPTION] = commandGameDescription, [SocketCommandServerToMod.CHAT] = commandChat, [SocketCommandServerToMod.STARTED] = commandStarted, [SocketCommandServerToMod.RECONNECT] = commandReconnect, [SocketCommandServerToMod.KILLED] = commandKilled, [SocketCommandServerToMod.START_MEETING] = commandStartMeeting, [SocketCommandServerToMod.START_VOTING] = commandStartVoting, [SocketCommandServerToMod.VOTE] = commandVote, [SocketCommandServerToMod.END_MEETING] = commandEndMeeting, [SocketCommandServerToMod.END_GAME] = commandEndGame, [SocketCommandServerToMod.TERMINATED] = commandTerminated}
+____exports.commandMap = {[SocketCommandServerToMod.ERROR] = commandError, [SocketCommandServerToMod.USERNAME] = commandUsername, [SocketCommandServerToMod.LOGGED_IN] = commandLoggedIn, [SocketCommandServerToMod.USER_CONNECTED] = commandUserConnected, [SocketCommandServerToMod.GAME_LIST] = commandGameList, [SocketCommandServerToMod.NEW_GAME] = commandNewGame, [SocketCommandServerToMod.JOINED] = commandJoined, [SocketCommandServerToMod.LEFT] = commandLeft, [SocketCommandServerToMod.GAME_DESCRIPTION] = commandGameDescription, [SocketCommandServerToMod.CHAT] = commandChat, [SocketCommandServerToMod.STARTED] = commandStarted, [SocketCommandServerToMod.RECONNECT] = commandReconnect, [SocketCommandServerToMod.KILLED] = commandKilled, [SocketCommandServerToMod.START_MEETING] = commandStartMeeting, [SocketCommandServerToMod.START_VOTING] = commandStartVoting, [SocketCommandServerToMod.VOTE] = commandVote, [SocketCommandServerToMod.END_MEETING] = commandEndMeeting, [SocketCommandServerToMod.END_GAME] = commandEndGame, [SocketCommandServerToMod.TERMINATED] = commandTerminated}
 return ____exports
  end,
 ["mod.src.network.socket"] = function(...) 

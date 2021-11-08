@@ -1,4 +1,5 @@
 /* eslint-disable max-classes-per-file */
+
 import { Meeting } from "./Meeting";
 import { MeetingResolution } from "./MeetingResolution";
 import { MeetingType } from "./MeetingType";
@@ -131,7 +132,9 @@ export enum SocketCommandServerToMod {
   ERROR = "error",
   USERNAME = "username",
   LOGGED_IN = "loggedIn",
+  USER_CONNECTED = "userConnected",
   GAME_LIST = "gameList",
+  NEW_GAME = "newGame",
   JOINED = "joined",
   LEFT = "left",
   GAME_DESCRIPTION = "gameDescription",
@@ -161,6 +164,12 @@ export class LoggedInDataToMod {
   username!: string;
 }
 
+export class UserConnectedDataToMod {
+  userID!: number;
+  username!: string;
+  connected!: boolean;
+}
+
 export class GameListDataToMod {
   gameList!: GameListDescription[];
 }
@@ -171,6 +180,12 @@ export class GameListDescription {
   numPlayers!: number;
   started!: boolean;
   joined!: boolean;
+}
+
+export class NewGameDataToMod {
+  id!: number;
+  name!: string;
+  creator!: string;
 }
 
 export class JoinedDataToMod {
@@ -279,7 +294,9 @@ export const SocketCommandServerToModData = {
   [SocketCommandServerToMod.ERROR]: ErrorDataToMod,
   [SocketCommandServerToMod.USERNAME]: UsernameDataToMod,
   [SocketCommandServerToMod.LOGGED_IN]: LoggedInDataToMod,
+  [SocketCommandServerToMod.USER_CONNECTED]: UserConnectedDataToMod,
   [SocketCommandServerToMod.GAME_LIST]: GameListDataToMod,
+  [SocketCommandServerToMod.NEW_GAME]: NewGameDataToMod,
   [SocketCommandServerToMod.JOINED]: JoinedDataToMod,
   [SocketCommandServerToMod.LEFT]: LeftDataToMod,
   [SocketCommandServerToMod.GAME_DESCRIPTION]: GameDescriptionDataToMod,

@@ -1,6 +1,7 @@
 import { error } from "../error";
 import { games, getNewGameID } from "../games";
 import { logGameEvent } from "../log";
+import { sendAllNewGame } from "../sendAll";
 import { ExtraCommandData } from "../types/ExtraCommandData";
 import { Game } from "../types/Game";
 import { Socket } from "../types/Socket";
@@ -14,6 +15,11 @@ export function commandCreate(
   extraData: ExtraCommandData,
 ): void {
   const { name } = data;
+  const { username } = socket;
+
+  if (username === null) {
+    return;
+  }
 
   if (!validate(socket, name, extraData)) {
     return;
@@ -36,6 +42,7 @@ export function commandCreate(
   );
 
   logGameEvent(game, "Created.");
+  sendAllNewGame(game, username);
 }
 
 function validate(socket: Socket, name: string, extraData: ExtraCommandData) {

@@ -1,5 +1,3 @@
-// A collection of helper functions to send changes in the game state to all of the clients
-
 import { sendTCP } from "./sendTCP";
 import { getTCPSocketByUserID } from "./tcpSockets";
 import { Game } from "./types/Game";
@@ -12,6 +10,8 @@ import {
   SocketCommandServerToMod,
   SocketCommandServerToModData,
 } from "./types/SocketCommands";
+
+// A collection of helper functions to send changes in the game state to all of the clients
 
 export function sendNewGameDescription(game: Game): void {
   const players = getGameDescriptionPlayers(game);

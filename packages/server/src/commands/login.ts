@@ -1,6 +1,7 @@
 import argon2 from "argon2";
 import { error } from "../error";
 import * as users from "../models/users";
+import { sendAllUserConnected } from "../sendAll";
 import { sendTCP } from "../sendTCP";
 import { disconnectExistingUserWithUsername } from "../tcpSockets";
 import { ExtraCommandData } from "../types/ExtraCommandData";
@@ -46,4 +47,6 @@ export async function commandLogin(
     userID: socket.userID,
     username: socket.username,
   });
+
+  sendAllUserConnected(socket.userID, socket.username, true);
 }

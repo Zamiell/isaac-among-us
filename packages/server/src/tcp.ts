@@ -10,6 +10,7 @@ import {
 } from "./disconnect";
 import { getRemoteAddressTCP } from "./error";
 import { unpackTCPMsg } from "./pack";
+import { sendAllUserConnected } from "./sendAll";
 import { getNewTCPSocketID, tcpSockets } from "./tcpSockets";
 import { Socket } from "./types/Socket";
 
@@ -33,6 +34,7 @@ function handleConnection(vanillaSocket: net.Socket) {
       socket,
     )}`,
   );
+
   tcpSockets.set(socket.socketID, socket);
 
   socket.on("data", onConnData(socket));
@@ -78,6 +80,9 @@ function onConnClose(socket: Socket) {
     console.log(`TCP client closed: ${getRemoteAddressTCP(socket)}`);
     setPlayerAsDisconnectedInOngoingGames(socket.userID);
     leaveNonStartedGames(socket);
+    if (socket.userID !== null && socket.username !== null) {
+      sendAllUserConnected(socket.userID, socket.username, false);
+    }
     tcpSockets.delete(socket.socketID);
   };
 }

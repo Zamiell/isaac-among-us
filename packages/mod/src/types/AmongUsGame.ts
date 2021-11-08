@@ -99,4 +99,14 @@ export class AmongUsGame {
 
     return null;
   }
+
+  isPlayerJoined(userID: int): boolean {
+    for (const player of this.players) {
+      if (player.userID === userID) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
