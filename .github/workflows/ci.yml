@@ -16,16 +16,38 @@ jobs:
           # The ESLint config requires Node 16 to work properly
           node-version: '16'
 
-      - name: Retrieve the cached "node_modules" directory (if present)
+      - name: Retrieve the cached "node_modules" directory (main)
         uses: actions/cache@v2
-        id: node-cache
+        id: node-cache-main
         with:
           path: node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-      - name: Install dependencies (if the cached directory was not found)
-        if: steps.node-cache.outputs.cache-hit != 'true'
+      - name: Install dependencies (main)
+        if: steps.node-cache-main.outputs.cache-hit != 'true'
         run: npm ci
+
+      - name: Retrieve the cached "node_modules" directory (mod)
+        uses: actions/cache@v2
+        id: node-cache-mod
+        with:
+          path: packages/mod/node_modules
+          key: node-modules-mod-${{ runner.os }}-${{ hashFiles('packages/mod/package-lock.json') }}
+
+      - name: Install dependencies (mod)
+        if: steps.node-cache-mod.outputs.cache-hit != 'true'
+        run: cd packages/mod && npm ci
+
+      - name: Retrieve the cached "node_modules" directory (server)
+        uses: actions/cache@v2
+        id: node-cache-server
+        with:
+          path: packages/server/node_modules
+          key: node-modules-server-${{ runner.os }}-${{ hashFiles('packages/server/package-lock.json') }}
+
+      - name: Install dependencies (server)
+        if: steps.node-cache-server.outputs.cache-hit != 'true'
+        run: cd packages/mod && npm ci
 
       - name: Test to see if the project compiles
         run: bash build.sh
