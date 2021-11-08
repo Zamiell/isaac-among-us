@@ -1,20 +1,14 @@
 import g from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
-import { getStageAPIRoomName } from "../stageAPISubroutines";
 import { taskFunctions } from "../taskFunctions";
 import { clearRoomEntities } from "./taskSubroutines";
-
-export function inTask(): boolean {
-  const roomName = getStageAPIRoomName();
-  return roomName === "Task";
-}
 
 export function postStageAPINewRoom(): void {
   setupTaskRoom();
 }
 
 function setupTaskRoom() {
-  if (!inTask() || g.game === null || g.game.currentTask === null) {
+  if (g.game === null || g.game.currentTask === null) {
     return;
   }
 

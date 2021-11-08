@@ -11,7 +11,7 @@ import {
 import * as struct from "./struct";
 
 const DATA_SEPARATOR = " ";
-const DEBUG = true;
+const DEBUG = false;
 
 export function packTCPMsg<T extends SocketCommandModToServer>(
   command: T,

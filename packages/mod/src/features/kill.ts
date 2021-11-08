@@ -6,9 +6,9 @@ import g from "../globals";
 import { initSprite } from "../sprite";
 import { Role } from "../types/Role";
 import { getRoomIndexModified } from "../util";
-import { OTHER_UI_BUTTON_OFFSET } from "./connectedIcon";
 
-const KILL_DISTANCE = 100;
+const KILL_DISTANCE = 60;
+const CONNECTED_ICON_OFFSET = Vector(-33, -30);
 
 const sprite = initSprite("gfx/ui/kill.anm2");
 
@@ -17,9 +17,11 @@ export function postRender(): void {
   if (!ableToKillAPlayer()) {
     return;
   }
+  Isaac.DebugString("GETTING HERE 2");
 
   const bottomRightPos = getScreenBottomRightPos();
-  const position = bottomRightPos.add(OTHER_UI_BUTTON_OFFSET);
+  // const position = bottomRightPos.add(OTHER_UI_BUTTON_OFFSET);
+  const position = bottomRightPos.add(CONNECTED_ICON_OFFSET);
   sprite.RenderLayer(0, position);
 }
 

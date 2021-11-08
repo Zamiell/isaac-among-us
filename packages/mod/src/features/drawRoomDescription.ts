@@ -4,9 +4,9 @@ import { getSkeldRoom } from "../stageAPI";
 import { getStageAPIRoomName } from "../stageAPISubroutines";
 import { drawFontText } from "../util";
 import { isConsoleOpen } from "./console";
+import { inCutscene } from "./cutscene";
 import { inEndMeeting } from "./endMeeting";
 import { inLobby } from "./lobby";
-import { inTask } from "./task";
 
 const TEXT_GRID_INDEX = 7;
 const SECOND_LINE_OFFSET = Vector(0, 20);
@@ -16,6 +16,7 @@ export function postRender(): void {
     StageAPI === undefined ||
     g.game === null ||
     g.game.meeting !== null ||
+    inCutscene() ||
     inEndMeeting() ||
     isConsoleOpen()
   ) {
@@ -27,7 +28,7 @@ export function postRender(): void {
   const worldPosition = room.GetGridPosition(TEXT_GRID_INDEX);
   const position = Isaac.WorldToRenderPosition(worldPosition);
 
-  if (inTask() && g.game.currentTask !== null) {
+  if (g.game.currentTask !== null) {
     const taskDescription = taskDescriptions[g.game.currentTask];
     drawFontText(`Task: ${taskDescription.name}`, position);
     return;
