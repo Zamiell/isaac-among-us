@@ -138,6 +138,7 @@ export function spawnEntity(
   return entity;
 }
 
+// ts-prune-ignore-next
 export function traceback(): void {
   print(debug.traceback());
 }

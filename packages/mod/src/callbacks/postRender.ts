@@ -9,6 +9,7 @@ import * as drawOurUsername from "../features/drawOurUsername";
 import * as drawRoomDescription from "../features/drawRoomDescription";
 import * as endMeeting from "../features/endMeeting";
 import * as errors from "../features/errors";
+import * as kill from "../features/kill";
 import * as restartOnNextFrame from "../features/restartOnNextFrame";
 import * as startMeeting from "../features/startMeeting";
 import * as welcomeNotification from "../features/welcomeNotification";
@@ -42,6 +43,7 @@ export function main(): void {
   startMeeting.postRender();
   drawMeeting.postRender();
   endMeeting.postRender();
+  kill.postRender();
 
   // Tasks
   identifyItems.postRender();

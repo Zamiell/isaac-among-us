@@ -12,7 +12,7 @@ const THIS_TASK = Task.SHORT_FIX_WIRES;
 const NUM_BUTTONS = 4;
 const WIRE_SIGN_OFFSET = Vector(-28, 0);
 
-export enum WireColor {
+enum WireColor {
   YELLOW,
   BLUE,
   RED,

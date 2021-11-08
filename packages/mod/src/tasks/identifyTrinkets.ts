@@ -16,15 +16,14 @@ import { initGlowingItemSprite } from "../sprite";
 import { Task } from "../types/Task";
 import { drawFontText, movePlayerToGridIndex } from "../util";
 
-export const IDENTIFY_TRINKETS_NUM_RANDOM_TRINKETS = 5;
-export const IDENTIFY_TRINKETS_BUTTON_SPACING = 2;
-export const IDENTIFY_TRINKETS_BUTTON_1_GRID_INDEX = 48;
-
 const THIS_TASK = Task.SHORT_IDENTIFY_TRINKETS;
 const NUM_ROUNDS = 5;
+const STARTING_ROUND = 1;
+const NUM_RANDOM_TRINKETS = 5;
+const BUTTON_SPACING = 2;
+const BUTTON_1_GRID_INDEX = 48;
 const ROW_LENGTH = 15;
 const TEXT_GRID_INDEX = 86;
-const STARTING_ROUND = 1;
 
 const trinketSprites: Sprite[] = [];
 let currentTrinket = "";
@@ -44,10 +43,10 @@ export function identifyTrinkets(): void {
 }
 
 function spawnButtons() {
-  let gridIndex = IDENTIFY_TRINKETS_BUTTON_1_GRID_INDEX;
-  for (let i = 0; i < IDENTIFY_TRINKETS_NUM_RANDOM_TRINKETS; i++) {
+  let gridIndex = BUTTON_1_GRID_INDEX;
+  for (let i = 0; i < NUM_RANDOM_TRINKETS; i++) {
     spawnTaskButton(gridIndex, i + 1);
-    gridIndex += IDENTIFY_TRINKETS_BUTTON_SPACING;
+    gridIndex += BUTTON_SPACING;
   }
 }
 
@@ -59,7 +58,7 @@ function setupRound() {
 
   // Initialize the sprites
   arrayEmpty(trinketSprites);
-  for (let i = 0; i < IDENTIFY_TRINKETS_NUM_RANDOM_TRINKETS; i++) {
+  for (let i = 0; i < NUM_RANDOM_TRINKETS; i++) {
     const randomTrinket = randomTrinkets[i];
     const sprite = initGlowingItemSprite(randomTrinket, true);
     trinketSprites.push(sprite);
@@ -82,7 +81,7 @@ function getRandomTrinkets() {
   }
 
   const randomTrinkets: TrinketType[] = [];
-  while (randomTrinkets.length < IDENTIFY_TRINKETS_NUM_RANDOM_TRINKETS) {
+  while (randomTrinkets.length < NUM_RANDOM_TRINKETS) {
     const randomTrinket = getRandomArrayElement(trinketArray);
     if (!randomTrinkets.includes(randomTrinket)) {
       randomTrinkets.push(randomTrinket);
@@ -130,8 +129,8 @@ function drawTrinketSprites() {
   const game = Game();
   const room = game.GetRoom();
 
-  let buttonGridIndex = IDENTIFY_TRINKETS_BUTTON_1_GRID_INDEX;
-  for (let i = 0; i < IDENTIFY_TRINKETS_NUM_RANDOM_TRINKETS; i++) {
+  let buttonGridIndex = BUTTON_1_GRID_INDEX;
+  for (let i = 0; i < NUM_RANDOM_TRINKETS; i++) {
     const spriteGridIndex = buttonGridIndex - ROW_LENGTH;
     const gamePosition = room.GetGridPosition(spriteGridIndex);
     const position = Isaac.WorldToRenderPosition(gamePosition);
@@ -140,7 +139,7 @@ function drawTrinketSprites() {
       sprite.RenderLayer(0, position);
     }
 
-    buttonGridIndex += IDENTIFY_TRINKETS_BUTTON_SPACING;
+    buttonGridIndex += BUTTON_SPACING;
   }
 }
 

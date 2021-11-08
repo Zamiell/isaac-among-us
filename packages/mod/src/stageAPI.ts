@@ -13,21 +13,6 @@ const backdropMap = new Map<SkeldRoom, string>([
   [SkeldRoom.SECURITY, "security"],
 ]);
 
-export function fixRoomEntrancePosition(): void {
-  const game = Game();
-  const level = game.GetLevel();
-  const room = game.GetRoom();
-  const player = Isaac.GetPlayer();
-
-  if (level.EnterDoor === -1) {
-    return;
-  }
-
-  const doorPos = room.GetDoorSlotPosition(level.EnterDoor);
-  const playerEnterPos = room.FindFreeTilePosition(doorPos, 0);
-  player.Position = playerEnterPos;
-}
-
 export function getStageAPIRoomMapID(skeldRoom: SkeldRoom): int | null {
   if (StageAPI === undefined) {
     return null;
@@ -90,6 +75,21 @@ export function goToStageAPIRoom(
   }
 
   sendRoom();
+}
+
+function fixRoomEntrancePosition() {
+  const game = Game();
+  const level = game.GetLevel();
+  const room = game.GetRoom();
+  const player = Isaac.GetPlayer();
+
+  if (level.EnterDoor === -1) {
+    return;
+  }
+
+  const doorPos = room.GetDoorSlotPosition(level.EnterDoor);
+  const playerEnterPos = room.FindFreeTilePosition(doorPos, 0);
+  player.Position = playerEnterPos;
 }
 
 function getStageAPIRoomID(

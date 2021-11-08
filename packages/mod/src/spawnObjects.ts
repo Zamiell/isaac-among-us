@@ -7,7 +7,7 @@ import {
 } from "./enums";
 import { spawnEntity } from "./util";
 
-export function spawnBlock(gridIndex: int, visible = true): GridEntity {
+function spawnBlock(gridIndex: int, visible = true): GridEntity {
   const gridEntityType = visible
     ? GridEntityType.GRID_ROCKB
     : GridEntityType.GRID_WALL;

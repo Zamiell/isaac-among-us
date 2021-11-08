@@ -6,7 +6,7 @@ export function init(mod: Mod): void {
   mod.AddCallback(ModCallbacks.MC_EVALUATE_CACHE, speed, CacheFlag.CACHE_SPEED);
 }
 
-export function speed(player: EntityPlayer): void {
+function speed(player: EntityPlayer) {
   if (g.game === null) {
     return;
   }

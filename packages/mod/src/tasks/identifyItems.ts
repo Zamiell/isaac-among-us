@@ -14,15 +14,14 @@ import { initGlowingItemSprite } from "../sprite";
 import { Task } from "../types/Task";
 import { drawFontText, movePlayerToGridIndex } from "../util";
 
-export const IDENTIFY_ITEMS_NUM_RANDOM_ITEMS = 5;
-export const IDENTIFY_ITEMS_BUTTON_SPACING = 2;
-export const IDENTIFY_ITEMS_BUTTON_1_GRID_INDEX = 48;
-
 const THIS_TASK = Task.SHORT_IDENTIFY_ITEMS;
 const NUM_ROUNDS = 5;
+const STARTING_ROUND = 1;
+const NUM_RANDOM_ITEMS = 5;
+const BUTTON_SPACING = 2;
+const BUTTON_1_GRID_INDEX = 48;
 const ROW_LENGTH = 15;
 const TEXT_GRID_INDEX = 86;
-const STARTING_ROUND = 1;
 
 const sfx = SFXManager();
 const itemSprites: Sprite[] = [];
@@ -41,10 +40,10 @@ export function identifyItems(): void {
 }
 
 function spawnButtons() {
-  let gridIndex = IDENTIFY_ITEMS_BUTTON_1_GRID_INDEX;
-  for (let i = 0; i < IDENTIFY_ITEMS_NUM_RANDOM_ITEMS; i++) {
+  let gridIndex = BUTTON_1_GRID_INDEX;
+  for (let i = 0; i < NUM_RANDOM_ITEMS; i++) {
     spawnTaskButton(gridIndex, i + 1);
-    gridIndex += IDENTIFY_ITEMS_BUTTON_SPACING;
+    gridIndex += BUTTON_SPACING;
   }
 }
 
@@ -56,7 +55,7 @@ function setupRound() {
 
   // Initialize the sprites
   arrayEmpty(itemSprites);
-  for (let i = 0; i < IDENTIFY_ITEMS_NUM_RANDOM_ITEMS; i++) {
+  for (let i = 0; i < NUM_RANDOM_ITEMS; i++) {
     const randomItem = randomItems[i];
     const sprite = initGlowingItemSprite(randomItem);
     itemSprites.push(sprite);
@@ -79,7 +78,7 @@ function getRandomItems() {
   }
 
   const randomItems: CollectibleType[] = [];
-  while (randomItems.length < IDENTIFY_ITEMS_NUM_RANDOM_ITEMS) {
+  while (randomItems.length < NUM_RANDOM_ITEMS) {
     const randomItem = getRandomArrayElement(collectibleArray);
     if (!randomItems.includes(randomItem)) {
       randomItems.push(randomItem);
@@ -128,8 +127,8 @@ function drawItemSprites() {
   const game = Game();
   const room = game.GetRoom();
 
-  let buttonGridIndex = IDENTIFY_ITEMS_BUTTON_1_GRID_INDEX;
-  for (let i = 0; i < IDENTIFY_ITEMS_NUM_RANDOM_ITEMS; i++) {
+  let buttonGridIndex = BUTTON_1_GRID_INDEX;
+  for (let i = 0; i < NUM_RANDOM_ITEMS; i++) {
     const spriteGridIndex = buttonGridIndex - ROW_LENGTH;
     const gamePosition = room.GetGridPosition(spriteGridIndex);
     const position = Isaac.WorldToRenderPosition(gamePosition);
@@ -138,7 +137,7 @@ function drawItemSprites() {
       sprite.RenderLayer(0, position);
     }
 
-    buttonGridIndex += IDENTIFY_ITEMS_BUTTON_SPACING;
+    buttonGridIndex += BUTTON_SPACING;
   }
 }
 

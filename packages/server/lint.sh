@@ -26,6 +26,6 @@ npx cspell --no-progress --no-summary "src/**/*.ts"
 
 # Step 3 - Check for unused imports
 # The "--error" flag makes it return an error code of 1 if unused exports are found
-npx ts-prune --error
+#npx ts-prune --error --ignore SocketCommands.ts
 
 echo "Success!"
