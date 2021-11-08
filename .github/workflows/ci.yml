@@ -47,7 +47,7 @@ jobs:
 
       - name: Install dependencies (server)
         if: steps.node-cache-server.outputs.cache-hit != 'true'
-        run: cd packages/mod && npm ci
+        run: cd packages/server && npm ci
 
       - name: Test to see if the project compiles
         run: bash build.sh
