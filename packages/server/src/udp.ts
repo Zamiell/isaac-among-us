@@ -62,7 +62,7 @@ function parseHeader(msg: Buffer): [number, number] | null {
   if (msg.length < UDPMessageHeaderLength) {
     return null;
   }
-  UDPMessageHeader._setBuff(msg); // eslint-disable-line no-underscore-dangle
+  (UDPMessageHeader as any)._setBuff(msg); // eslint-disable-line
 
   const gameID = UDPMessageHeader.get("gameID") as number;
   if (typeof gameID !== "number" || gameID < 1) {
