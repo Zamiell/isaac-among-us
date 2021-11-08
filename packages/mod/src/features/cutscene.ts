@@ -187,7 +187,7 @@ function setSprite() {
 
   const collectibleType =
     g.game.role === Role.CREW
-      ? CollectibleType.COLLECTIBLE_YUM_HEART
+      ? CollectibleType.COLLECTIBLE_NOTCHED_AXE
       : CollectibleType.COLLECTIBLE_MOMS_KNIFE;
 
   const itemConfig = Isaac.GetItemConfig();

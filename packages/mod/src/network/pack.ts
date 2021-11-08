@@ -1,6 +1,9 @@
 import { jsonDecode, jsonEncode, log } from "isaacscript-common";
-import { UDP_POSITION_DATA_FORMAT, UDP_POSITION_FIELDS } from "../constants";
-import { PlayerMessage } from "../types/PlayerMessage";
+import {
+  UDPPositionInterface,
+  UDP_POSITION_DATA_FORMAT,
+  UDP_POSITION_FIELDS,
+} from "../constants";
 import {
   SocketCommandModToServer,
   SocketCommandModToServerData,
@@ -34,7 +37,7 @@ export function unpackTCPMsg(msg: string): [string, unknown] {
   return [command, data];
 }
 
-export function unpackUDPPlayerMessage(rawData: string): PlayerMessage {
+export function unpackUDPPlayerMessage(rawData: string): UDPPositionInterface {
   if (DEBUG) {
     log("Unpacking UDP message:");
   }
@@ -42,17 +45,17 @@ export function unpackUDPPlayerMessage(rawData: string): PlayerMessage {
   const dataArray = [...struct.unpack(UDP_POSITION_DATA_FORMAT, rawData)];
   const playerMessage: Record<string, unknown> = {};
   for (let i = 0; i < UDP_POSITION_FIELDS.length; i++) {
-    const field = UDP_POSITION_FIELDS[i];
+    const [fieldName] = UDP_POSITION_FIELDS[i];
     let fieldData = dataArray[i];
     if (type(fieldData) === "string") {
       fieldData = (fieldData as string).trim();
     }
-    playerMessage[field] = fieldData;
+    playerMessage[fieldName] = fieldData;
 
     if (DEBUG) {
-      log(`- ${field} - ${fieldData}`);
+      log(`- ${fieldName} - ${fieldData}`);
     }
   }
 
-  return playerMessage as unknown as PlayerMessage;
+  return playerMessage as unknown as UDPPositionInterface;
 }

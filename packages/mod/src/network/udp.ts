@@ -1,9 +1,9 @@
 // Position data for players is sent using UDP due to the heavy bandwidth usage
 // All other traffic is sent using TCP
 
-import { getRoomIndex } from "isaacscript-common";
 import {
-  LOBBY_ROOM_INDEX,
+  UDPBeaconInterface,
+  UDPPositionInterface,
   UDP_BEACON_DATA_FORMAT,
   UDP_BEACON_FIELDS,
   UDP_BEACON_INTERVAL,
@@ -12,7 +12,7 @@ import {
   UDP_POSITION_FIELDS,
 } from "../constants";
 import g from "../globals";
-import { PlayerMessage } from "../types/PlayerMessage";
+import { getRoomIndexModified } from "../util";
 import { sendUDP } from "./send";
 import * as struct from "./struct";
 
@@ -29,7 +29,7 @@ export function postRender(): void {
 }
 
 function sendBeacon() {
-  if (g.game === null) {
+  if (g.game === null || g.userID === null) {
     return;
   }
 
@@ -43,16 +43,15 @@ function sendBeacon() {
   }
   lastBeaconFrame = isaacFrameCount;
 
-  const structObject = {
+  const structObject: UDPBeaconInterface = {
     gameID: g.game.id,
     userID: g.userID,
     message: UDP_BEACON_MESSAGE,
   };
 
   const structData: unknown[] = [];
-  for (const field of UDP_BEACON_FIELDS) {
-    const key = field as keyof typeof structObject;
-    const fieldData = structObject[key];
+  for (const [fieldName] of UDP_BEACON_FIELDS) {
+    const fieldData = structObject[fieldName];
     structData.push(fieldData);
   }
 
@@ -74,12 +73,9 @@ function sendPosition() {
     overlayAnimation = "";
   }
   const overlayAnimationFrame = sprite.GetOverlayFrame();
-  let roomIndex = getRoomIndex();
-  if (roomIndex === GridRooms.ROOM_DEBUG_IDX) {
-    roomIndex = LOBBY_ROOM_INDEX;
-  }
+  const roomIndex = getRoomIndexModified();
 
-  const structObject: PlayerMessage = {
+  const structObject: UDPPositionInterface = {
     gameID: g.game.id,
     userID: g.userID,
     x: player.Position.X,
@@ -92,9 +88,8 @@ function sendPosition() {
   };
 
   const structData: unknown[] = [];
-  for (const field of UDP_POSITION_FIELDS) {
-    const key = field as keyof typeof structObject;
-    const fieldData = structObject[key];
+  for (const [fieldName] of UDP_POSITION_FIELDS) {
+    const fieldData = structObject[fieldName];
     structData.push(fieldData);
   }
 

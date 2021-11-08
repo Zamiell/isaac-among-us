@@ -1,4 +1,4 @@
-import { getRoomIndex, ISAAC_FRAMES_PER_SECOND } from "isaacscript-common";
+import { ISAAC_FRAMES_PER_SECOND } from "isaacscript-common";
 import {
   CHARACTER_COSTUME_PNG_MAP,
   CHARACTER_COSTUME_PREFIX,
@@ -7,10 +7,10 @@ import {
   DEFAULT_CHARACTER_COSTUME,
   DEFAULT_CHARACTER_PNG,
 } from "../characters";
-import { LOBBY_ROOM_INDEX } from "../constants";
 import { injectTestPlayers } from "../debugFunction";
 import { fonts } from "../fonts";
 import g from "../globals";
+import { getRoomIndexModified } from "../util";
 import { isConsoleOpen } from "./console";
 import { inEndMeeting } from "./endMeeting";
 import { getMeetingCirclePoints } from "./setupMeeting";
@@ -45,10 +45,7 @@ function drawOtherPlayersFromUDP() {
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
-  let roomIndex = getRoomIndex();
-  if (roomIndex === GridRooms.ROOM_DEBUG_IDX) {
-    roomIndex = LOBBY_ROOM_INDEX;
-  }
+  const roomIndex = getRoomIndexModified();
 
   for (const playerData of g.game.playerMap.values()) {
     const framesSinceLastUpdate = isaacFrameCount - playerData.frameUpdated;

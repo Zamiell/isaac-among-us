@@ -1,5 +1,6 @@
 import {
   ensureAllCases,
+  getRoomIndex,
   getScreenBottomRightPos,
   log,
   setBlindfold,
@@ -56,6 +57,13 @@ export function drawFontText(
 export function enableShooting(): void {
   const player = Isaac.GetPlayer();
   setBlindfold(player, false);
+}
+
+export function getRoomIndexModified(): int {
+  const roomIndex = getRoomIndex();
+  const roomIndexModified = math.abs(roomIndex); // The UDP struct does not support negative values
+
+  return roomIndexModified;
 }
 
 export function getRoleText(role: Role): string {

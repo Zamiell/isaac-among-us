@@ -1,17 +1,3 @@
-/*
-
-pack/unpack reference:
-
-- "b" a signed char, "B" an unsigned char
-- "h" a signed short (2 bytes), "H" an unsigned short (2 bytes)
-- "i" a signed int (4 bytes), "I" an unsigned int (4 bytes)
-- "l" a signed long (8 bytes), "L" an unsigned long (8 bytes)
-- "f" a float (4 bytes), "d" a double (8 bytes)
-- "s" a zero-terminated string
-- "cn" a sequence of exactly n chars corresponding to a single Lua string
-
-*/
-
 import { ISAAC_FRAMES_PER_SECOND } from "isaacscript-common";
 import { IS_DEV } from "../../common/src/constants";
 
@@ -26,32 +12,73 @@ export { taskDescriptions } from "../../common/src/taskDescriptions";
 
 export const MOD_NAME = "Among Us";
 
-// The lobby has a room index of GridRooms.ROOM_DEBUG_IDX, but we cannot use negative numbers in the
-// struct, so we substitute it for an arbitrary room index
-// This has to be high enough to not conflict with a vanilla room
-export const LOBBY_ROOM_INDEX = 1000;
-
 export const REMOTE_HOSTNAME = IS_DEV ? "192.168.1.10" : "isaacracing.net";
 export const SOCKET_CONNECT_TIMEOUT_SECONDS = 1;
 export const SOCKET_CLIENT_RETURN_SUCCESS = 1;
 
-export const UDP_BEACON_INTERVAL = 10 * ISAAC_FRAMES_PER_SECOND;
-export const UDP_BEACON_FIELDS = ["gameID", "userID", "message"];
-export const UDP_BEACON_DATA_FORMAT = "IIc5";
-export const UDP_BEACON_MESSAGE = "HELLO";
-// This matches the UDPMessageBodyPosition struct
-export const UDP_POSITION_FIELDS = [
-  "gameID",
-  "userID",
-  "x",
-  "y",
-  "roomIndex",
-  "animation",
-  "animationFrame",
-  "overlayAnimation",
-  "overlayAnimationFrame",
+/*
+const FIELD_TYPES: string[] = [
+  "b", // signed char
+  "B", // unsigned char
+  "h", // signed short (2 bytes)
+  "H", // unsigned short (2 bytes)
+  "i", // signed int (4 bytes)
+  "I", // unsigned int (4 bytes)
+  "l", // signed long (8 bytes)
+  "L", // unsigned long (8 bytes)
+  "f", // float (4 bytes)
+  "d", // double (8 bytes)
+  "s", // zero-terminated string
+  "cn", // sequence of exactly n chars corresponding to a single Lua string
 ];
-export const UDP_POSITION_DATA_FORMAT = "IIffIc20Ic20I";
+*/
+
+export interface UDPBeaconInterface {
+  gameID: int;
+  userID: int;
+  message: string;
+}
+export const UDP_BEACON_MESSAGE = "HELLO";
+export const UDP_BEACON_FIELDS: Array<
+  [name: keyof UDPBeaconInterface, format: string]
+> = [
+  ["gameID", "I"],
+  ["userID", "I"],
+  ["message", `c${UDP_BEACON_MESSAGE.length}`],
+];
+export const UDP_BEACON_DATA_FORMAT = UDP_BEACON_FIELDS.map(
+  (tuple) => tuple[1],
+).join();
+export const UDP_BEACON_INTERVAL = 10 * ISAAC_FRAMES_PER_SECOND;
+
+// This matches the UDPMessageBodyPosition struct
+export interface UDPPositionInterface {
+  gameID: int;
+  userID: int;
+  x: float;
+  y: float;
+  roomIndex: int;
+  animation: string;
+  animationFrame: int;
+  overlayAnimation: string;
+  overlayAnimationFrame: int;
+}
+export const UDP_POSITION_FIELDS: Array<
+  [name: keyof UDPPositionInterface, format: string]
+> = [
+  ["gameID", "I"],
+  ["userID", "I"],
+  ["x", "f"],
+  ["y", "f"],
+  ["roomIndex", "I"],
+  ["animation", "c20"],
+  ["animationFrame", "I"],
+  ["overlayAnimation", "c20"],
+  ["overlayAnimationFrame", "I"],
+];
+export const UDP_POSITION_DATA_FORMAT = UDP_POSITION_FIELDS.map(
+  (tuple) => tuple[1],
+).join();
 
 /** The version is updated automatically by a pre-publish script. */
 export const VERSION = "0.0.1";

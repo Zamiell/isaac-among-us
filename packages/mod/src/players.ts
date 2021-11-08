@@ -1,6 +1,6 @@
+import { UDPPositionInterface } from "./constants";
 import g from "./globals";
 import { PlayerData } from "./types/PlayerData";
-import { PlayerMessage } from "./types/PlayerMessage";
 import { GameDescriptionPlayer } from "./types/SocketCommands";
 
 export function getOurPlayer(): GameDescriptionPlayer {
@@ -37,26 +37,28 @@ export function getOurPlayerIndex(): int {
   return playerIndex;
 }
 
-export function updatePlayerMap(playerMessage: PlayerMessage): void {
+export function updatePlayerMap(
+  playerPositionMessage: UDPPositionInterface,
+): void {
   if (g.game === null) {
     return;
   }
 
-  if (playerMessage.gameID !== g.game.id) {
+  if (playerPositionMessage.gameID !== g.game.id) {
     return;
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
 
   const playerData: PlayerData = {
-    userID: playerMessage.userID,
-    x: playerMessage.x,
-    y: playerMessage.y,
-    roomIndex: playerMessage.roomIndex,
-    animation: playerMessage.animation,
-    animationFrame: playerMessage.animationFrame,
-    overlayAnimation: playerMessage.overlayAnimation,
-    overlayAnimationFrame: playerMessage.overlayAnimationFrame,
+    userID: playerPositionMessage.userID,
+    x: playerPositionMessage.x,
+    y: playerPositionMessage.y,
+    roomIndex: playerPositionMessage.roomIndex,
+    animation: playerPositionMessage.animation,
+    animationFrame: playerPositionMessage.animationFrame,
+    overlayAnimation: playerPositionMessage.overlayAnimation,
+    overlayAnimationFrame: playerPositionMessage.overlayAnimationFrame,
     frameUpdated: isaacFrameCount,
   };
   g.game.playerMap.set(playerData.userID, playerData);

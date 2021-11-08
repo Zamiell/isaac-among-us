@@ -1,11 +1,11 @@
 import {
   anyPlayerCloserThan,
-  getRoomIndex,
   getScreenBottomRightPos,
 } from "isaacscript-common";
 import g from "../globals";
 import { initSprite } from "../sprite";
 import { Role } from "../types/Role";
+import { getRoomIndexModified } from "../util";
 import { OTHER_UI_BUTTON_OFFSET } from "./connectedIcon";
 
 const KILL_DISTANCE = 100;
@@ -33,7 +33,7 @@ function ableToKillAPlayer() {
     return false;
   }
 
-  const roomIndex = getRoomIndex();
+  const roomIndex = getRoomIndexModified();
 
   for (const playerData of g.game.playerMap.values()) {
     if (playerData.roomIndex !== roomIndex) {
