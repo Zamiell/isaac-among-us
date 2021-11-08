@@ -11,7 +11,6 @@ import { LOBBY_ROOM_INDEX } from "../constants";
 import { injectTestPlayers } from "../debugFunction";
 import { fonts } from "../fonts";
 import g from "../globals";
-import { getPlayerCharacter, getPlayerUsername } from "../players";
 import { isConsoleOpen } from "./console";
 import { inEndMeeting } from "./endMeeting";
 import { getMeetingCirclePoints } from "./setupMeeting";
@@ -75,8 +74,11 @@ function drawOtherPlayersFromUDP() {
     );
     const position = Vector(playerData.x, playerData.y);
     drawSprites(mainSprite, undefined, position);
-    const username = getPlayerUsername(playerData.userID, g.game.players);
-    drawUsername(position, username);
+
+    const username = g.game.getPlayerUsername(playerData.userID);
+    if (username !== null) {
+      drawUsername(position, username);
+    }
   }
 }
 
@@ -170,8 +172,8 @@ function setSpriteCharacter(
     spriteCharacter = -1;
   }
 
-  const character = getPlayerCharacter(userID, g.game.players);
-  if (spriteCharacter === character) {
+  const character = g.game.getPlayerCharacter(userID);
+  if (character === null || spriteCharacter === character) {
     return;
   }
 

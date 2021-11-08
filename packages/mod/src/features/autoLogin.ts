@@ -49,8 +49,10 @@ export function onGameDescription(): void {
     return;
   }
 
+  /*
   sendTCP(SocketCommandModToServer.START, {
     gameID: g.game.id,
   });
+  */
   autoLogin = false;
 }

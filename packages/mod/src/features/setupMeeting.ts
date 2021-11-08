@@ -4,6 +4,7 @@ import {
 } from "isaacscript-common";
 import g from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
+import { getOurPlayerIndex } from "../players";
 import { CENTER_TABLE_GRID_INDEX } from "../rooms/cafeteria";
 import { getSkeldRoom, goToStageAPIRoom } from "../stageAPI";
 import { SkeldRoom } from "../types/SkeldRoom";
@@ -38,7 +39,7 @@ function enablePlayer(enable: boolean) {
   const game = Game();
   const room = game.GetRoom();
   const centerPos = room.GetGridPosition(CENTER_TABLE_GRID_INDEX);
-  const ourPlayerIndex = g.game.getPlayerIndexFromUserID(g.userID);
+  const ourPlayerIndex = getOurPlayerIndex();
   const circlePoints = getMeetingCirclePoints();
   const endMeetingPos = circlePoints[ourPlayerIndex];
   const player = Isaac.GetPlayer();

@@ -6,6 +6,7 @@ import { NOT_VOTED_YET } from "./constants";
 import g from "./globals";
 import { sendTCP } from "./network/send";
 import * as socketClient from "./network/socketClient";
+import { getOurPlayerIndex } from "./players";
 import { SocketCommandModToServer } from "./types/SocketCommands";
 import { amOwner, restart } from "./util";
 
@@ -146,7 +147,7 @@ chatCommandFunctions.set("vote", (args: string[]) => {
     return;
   }
 
-  const ourPlayerIndex = g.game.getPlayerIndexFromUserID(g.userID);
+  const ourPlayerIndex = getOurPlayerIndex();
   const ourPreviousVote = g.game.meeting.votes[ourPlayerIndex];
   if (ourPreviousVote !== NOT_VOTED_YET) {
     chat.addLocal("You have already voted.");
@@ -182,7 +183,7 @@ chatCommandFunctions.set("voteskip", (_args: string[]) => {
     return;
   }
 
-  const ourPlayerIndex = g.game.getPlayerIndexFromUserID(g.userID);
+  const ourPlayerIndex = getOurPlayerIndex();
   const ourPreviousVote = g.game.meeting.votes[ourPlayerIndex];
   if (ourPreviousVote !== NOT_VOTED_YET) {
     chat.addLocal("You have already voted.");

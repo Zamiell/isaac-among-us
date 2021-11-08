@@ -66,20 +66,6 @@ export class AmongUsGame {
     return numAlivePlayers;
   }
 
-  getPlayerIndexFromUserID(userID: int): int {
-    for (let i = 0; i < this.players.length; i++) {
-      const player = this.players[i];
-      if (player.userID === userID) {
-        return i;
-      }
-    }
-
-    error(
-      `Failed to find the index of the player with a user ID of: ${userID}`,
-    );
-    return -1;
-  }
-
   getPlayerFromUserID(userID: int): GameDescriptionPlayer | null {
     for (const player of this.players) {
       if (player.userID === userID) {
@@ -98,6 +84,27 @@ export class AmongUsGame {
     }
 
     return null;
+  }
+
+  getPlayerIndexFromUserID(userID: int): int | null {
+    for (let i = 0; i < this.players.length; i++) {
+      const player = this.players[i];
+      if (player.userID === userID) {
+        return i;
+      }
+    }
+
+    return null;
+  }
+
+  getPlayerCharacter(userID: int): PlayerType | null {
+    const player = this.getPlayerFromUserID(userID);
+    return player === null ? null : player.character;
+  }
+
+  getPlayerUsername(userID: int): string | null {
+    const player = this.getPlayerFromUserID(userID);
+    return player === null ? null : player.username;
   }
 
   isPlayerJoined(userID: int): boolean {

@@ -3,45 +3,38 @@ import { PlayerData } from "./types/PlayerData";
 import { PlayerMessage } from "./types/PlayerMessage";
 import { GameDescriptionPlayer } from "./types/SocketCommands";
 
-export function getOurPlayer(
-  players: GameDescriptionPlayer[],
-): GameDescriptionPlayer {
+export function getOurPlayer(): GameDescriptionPlayer {
+  if (g.game === null) {
+    error("Failed to get our player since we are not in a game.");
+  }
+
   if (g.userID === null) {
     error("Failed to get our player since our user ID is null.");
   }
 
-  return getPlayer(g.userID, players);
-}
-
-export function getPlayer(
-  userID: int,
-  players: GameDescriptionPlayer[],
-): GameDescriptionPlayer {
-  for (let i = 0; i < players.length; i++) {
-    const player = players[i];
-    if (player.userID === userID) {
-      return player;
-    }
+  const player = g.game.getPlayerFromUserID(g.userID);
+  if (player === null) {
+    error(`Failed to find a player with our user ID: ${g.userID}`);
   }
 
-  error(`Failed to get the player for user ID: ${userID}`);
-  return players[0];
+  return player;
 }
 
-export function getPlayerCharacter(
-  userID: int,
-  players: GameDescriptionPlayer[],
-): PlayerType {
-  const player = getPlayer(userID, players);
-  return player.character;
-}
+export function getOurPlayerIndex(): int {
+  if (g.game === null) {
+    error("Failed to get our player since we are not in a game.");
+  }
 
-export function getPlayerUsername(
-  userID: int,
-  players: GameDescriptionPlayer[],
-): string {
-  const player = getPlayer(userID, players);
-  return player.username;
+  if (g.userID === null) {
+    error("Failed to get our player since our user ID is null.");
+  }
+
+  const playerIndex = g.game.getPlayerIndexFromUserID(g.userID);
+  if (playerIndex === null) {
+    error(`Failed to find a player index with our user ID: ${g.userID}`);
+  }
+
+  return playerIndex;
 }
 
 export function updatePlayerMap(playerMessage: PlayerMessage): void {

@@ -1,7 +1,6 @@
 import { ensureAllCases, getScreenBottomRightPos } from "isaacscript-common";
 import g from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
-import { getPlayer } from "../players";
 import { initSprite } from "../sprite";
 import { BlackSpriteState } from "../types/BlackSpriteState";
 import { MeetingType } from "../types/MeetingType";
@@ -92,13 +91,20 @@ function getAlertText() {
     return defaultValue;
   }
 
-  const playerInitiated = getPlayer(
+  const playerInitiated = g.game.getPlayerFromUserID(
     g.game.meeting.userIDInitiated,
-    g.game.players,
   );
+  if (playerInitiated === null) {
+    return defaultValue;
+  }
 
   if (g.game.meeting.meetingType === MeetingType.REPORT_BODY) {
-    const playerKilled = getPlayer(g.game.meeting.userIDKilled, g.game.players);
+    const playerKilled = g.game.getPlayerFromUserID(
+      g.game.meeting.userIDKilled,
+    );
+    if (playerKilled === null) {
+      return defaultValue;
+    }
     return `${playerInitiated.username} reported a dead body: ${playerKilled.username}`;
   }
 

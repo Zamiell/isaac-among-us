@@ -12,7 +12,7 @@ export function commandGameDescription(data: GameDescriptionDataToMod): void {
   g.game.started = data.started;
   g.game.meeting = data.meeting;
 
-  const player = getOurPlayer(data.players);
+  const player = getOurPlayer();
   g.game.usedEmergencyMeeting = player.usedEmergencyMeeting;
 
   autoLogin.onGameDescription();

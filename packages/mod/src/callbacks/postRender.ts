@@ -30,7 +30,6 @@ export function main(): void {
   socket.postRender();
   welcomeNotification.postRender();
   udp.postRender();
-  drawRoomDescription.postRender();
   drawOtherPlayers.postRender();
   drawOurUsername.postRender();
 
@@ -51,4 +50,7 @@ export function main(): void {
   fixWires.postRender();
   identifyPickupsInOrder.postRender();
   pushButtonsInOrder.postRender();
+
+  // We want the room description to have precedence over all other types of graphics
+  drawRoomDescription.postRender();
 }
