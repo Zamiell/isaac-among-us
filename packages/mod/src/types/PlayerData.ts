@@ -5,6 +5,7 @@ export interface PlayerData {
   x: float;
   /** In world position. */
   y: float;
+  /** The absolute value of the room index. */
   roomIndex: int;
   animation: string;
   animationFrame: int;

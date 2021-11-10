@@ -1,4 +1,5 @@
 import * as debugFunction from "../debugFunction";
+import * as action from "../features/action";
 import * as disconnectHotkey from "../features/disconnectHotkey";
 import * as doors from "../features/doors";
 import * as defeatMonstro from "../tasks/defeatMonstro";
@@ -12,4 +13,5 @@ export function main(): void {
   pushTNTBarrel.postUpdate();
   loadSlotMachines.postUpdate();
   defeatMonstro.postUpdate();
+  action.postUpdate();
 }

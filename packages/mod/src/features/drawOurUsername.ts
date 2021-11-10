@@ -3,7 +3,7 @@ import { isConsoleOpen } from "./console";
 import { drawUsername } from "./drawOtherPlayers";
 
 export function postRender(): void {
-  if (g.game === null || g.username === null || isConsoleOpen()) {
+  if (g.game === null || g.userID === null || isConsoleOpen()) {
     return;
   }
 
@@ -12,6 +12,5 @@ export function postRender(): void {
     return;
   }
 
-  const amImposter = g.game.imposters !== null;
-  drawUsername(player.Position, g.username, undefined, amImposter);
+  drawUsername(g.userID, player.Position);
 }

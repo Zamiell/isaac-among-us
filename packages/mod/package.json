@@ -6,7 +6,7 @@
   "author": "Zamiell",
   "dependencies": {
     "isaac-typescript-definitions": "^1.0.250",
-    "isaacscript": "^1.1.33",
-    "isaacscript-common": "^1.0.375"
+    "isaacscript": "^1.1.36",
+    "isaacscript-common": "^1.0.379"
   }
 }

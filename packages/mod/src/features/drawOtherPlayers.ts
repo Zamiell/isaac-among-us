@@ -1,13 +1,6 @@
 import { ISAAC_FRAMES_PER_SECOND } from "isaacscript-common";
-import {
-  CHARACTER_COSTUME_PNG_MAP,
-  CHARACTER_COSTUME_PREFIX,
-  CHARACTER_PNG_MAP,
-  CHARACTER_PNG_PREFIX,
-  DEFAULT_CHARACTER_COSTUME,
-  DEFAULT_CHARACTER_PNG,
-} from "../characters";
 import { injectTestPlayers } from "../debugFunction";
+import { EffectVariantCustom } from "../enums";
 import { fonts } from "../fonts";
 import g from "../globals";
 import { getRoomIndexModified } from "../util";
@@ -16,18 +9,17 @@ import { inEndMeeting } from "./endMeeting";
 import { getMeetingCirclePoints } from "./setupMeeting";
 import { inStartMeeting } from "./startMeeting";
 
+const MULTIPLAYER_ANM2_PREFIX = "gfx/multiplayer/";
+const MULTIPLAYER_ANM2_SUFFIX = ".anm2";
 const USERNAME_TEXT_OFFSET = Vector(0, -50);
 const USERNAME_FADE = 0.75;
 const USERNAME_FADE_DEATH = 0.25;
-const CHARACTER_LAYER_ID = 0;
 const DEATH_SPRITE_OFFSET = Vector(-20, -10);
-const DEATH_COSTUME_OFFSET = Vector(-14, -15);
 const DEATH_ANIMATION_FINAL_FRAME = 55;
 
 /** Indexed by user ID. */
-const spriteMap = new Map<int, Sprite>();
-const spriteCostumeMap = new Map<int, Sprite>();
-const spriteCharacterMap = new Map<int, PlayerType>();
+const playerEntityMap = new Map<int, EntityRef>();
+const addingCustomPlayer = false;
 
 // ModCallbacks.MC_POST_RENDER (2)
 export function postRender(): void {
@@ -48,34 +40,34 @@ function drawOtherPlayersFromUDP() {
   const roomIndex = getRoomIndexModified();
 
   for (const playerData of g.game.playerMap.values()) {
+    const entity = getMultiplayerEntity(playerData.userID);
+    entity.Visible = false;
+
     const framesSinceLastUpdate = isaacFrameCount - playerData.frameUpdated;
-    if (framesSinceLastUpdate > 1 * ISAAC_FRAMES_PER_SECOND) {
+    if (
       // Don't draw stale players, since they might have disconnected
+      framesSinceLastUpdate > ISAAC_FRAMES_PER_SECOND ||
+      // Don't draw players who are not in this room
+      playerData.roomIndex !== roomIndex
+    ) {
       continue;
     }
 
-    if (playerData.roomIndex !== roomIndex) {
-      continue;
-    }
+    entity.Visible = true;
 
-    const [mainSprite, costumeSprite] = getPlayerSprites(playerData.userID);
-    setSpriteCharacter(mainSprite, costumeSprite, playerData.userID);
-
-    setSpriteAnimation(
-      mainSprite,
-      costumeSprite,
+    setPlayerCharacter(entity, playerData.userID);
+    setMultiplayerAnimation(
+      entity,
       playerData.animation,
       playerData.animationFrame,
       playerData.overlayAnimation,
       playerData.overlayAnimationFrame,
     );
-    const position = Vector(playerData.x, playerData.y);
-    drawSprites(mainSprite, undefined, position);
 
-    const username = g.game.getPlayerUsername(playerData.userID);
-    if (username !== null) {
-      drawUsername(position, username);
-    }
+    const position = Vector(playerData.x, playerData.y);
+    entity.Position = position;
+
+    drawUsername(playerData.userID, position);
   }
 }
 
@@ -94,21 +86,16 @@ function drawOtherPlayersMeeting() {
   injectTestPlayers();
   for (let i = 0; i < g.game.players.length; i++) {
     const player = g.game.players[i];
-    const [mainSprite, costumeSprite] = getPlayerSprites(player.userID);
-    setSpriteCharacter(mainSprite, costumeSprite, player.userID);
+
+    const entity = getMultiplayerEntity(player.userID);
+    entity.Visible = true;
+
+    setPlayerCharacter(entity, player.userID);
     if (player.alive) {
-      setSpriteAnimation(
-        mainSprite,
-        costumeSprite,
-        "WalkDown",
-        0,
-        "HeadDown",
-        0,
-      );
+      setMultiplayerAnimation(entity, "WalkDown", 0, "HeadDown", 0);
     } else {
-      setSpriteAnimation(
-        mainSprite,
-        costumeSprite,
+      setMultiplayerAnimation(
+        entity,
         "Death",
         DEATH_ANIMATION_FINAL_FRAME,
         "",
@@ -118,7 +105,7 @@ function drawOtherPlayersMeeting() {
 
     const position = circlePoints[i];
     if (position !== undefined) {
-      drawSprites(mainSprite, costumeSprite, position);
+      entity.Position = position;
     }
   }
 
@@ -128,123 +115,125 @@ function drawOtherPlayersMeeting() {
     const position = circlePoints[i];
     if (position !== undefined) {
       const opacity = player.alive ? undefined : USERNAME_FADE_DEATH;
-      const isImpostor =
-        g.game.imposters !== null && g.game.imposters.includes(player.userID);
-      drawUsername(position, player.username, opacity, isImpostor);
+      drawUsername(player.userID, position, opacity);
     }
   }
 }
 
-function getPlayerSprites(userID: int) {
-  let mainSprite = spriteMap.get(userID);
-  if (mainSprite === undefined) {
-    mainSprite = Sprite();
-    mainSprite.Load("gfx/001.000_Player.anm2", true);
-    spriteMap.set(userID, mainSprite);
+function getMultiplayerEntity(userID: int) {
+  let entityRef = playerEntityMap.get(userID);
+  if (entityRef !== undefined) {
+    const entity = entityRef.Entity;
+    if (entity === undefined || !entity.Exists()) {
+      entityRef = undefined;
+    }
   }
 
-  let costumeSprite = spriteCostumeMap.get(userID);
-  if (costumeSprite === undefined) {
-    costumeSprite = Sprite();
-    const defaultCharacterCostume =
-      CHARACTER_COSTUME_PREFIX + DEFAULT_CHARACTER_COSTUME;
-    costumeSprite.Load(defaultCharacterCostume, true);
-    spriteCostumeMap.set(userID, costumeSprite);
+  if (entityRef === undefined) {
+    // The player entity does not exist in the map or the existing entity reference is no longer
+    // valid
+    const entity = spawnPlayerEntity();
+    entityRef = EntityRef(entity);
+    playerEntityMap.set(userID, entityRef);
   }
 
-  return [mainSprite, costumeSprite];
+  return entityRef.Entity;
 }
 
-function setSpriteCharacter(
-  mainSprite: Sprite,
-  costumeSprite: Sprite,
-  userID: int,
-) {
+function spawnPlayerEntity() {
+  // We don't use a real player (entity 1.0) since the sprite is not mutable
+  // (it resets on every render frame)
+  const player = Isaac.Spawn(
+    EntityType.ENTITY_EFFECT,
+    EffectVariantCustom.MULTIPLAYER_PLAYER,
+    0,
+    Vector.Zero,
+    Vector.Zero,
+    undefined,
+  );
+
+  return player;
+}
+
+// ModCallbacks.MC_POST_PLAYER_INIT (9)
+export function postPlayerInit(player: EntityPlayer): void {
+  if (!addingCustomPlayer) {
+    return;
+  }
+
+  player.ControlsEnabled = false;
+  player.Visible = false;
+}
+
+function setPlayerCharacter(entity: Entity, userID: int) {
   if (g.game === null) {
     return;
   }
 
-  let spriteCharacter = spriteCharacterMap.get(userID);
-  if (spriteCharacter === undefined) {
-    spriteCharacter = -1;
+  const sprite = entity.GetSprite();
+  const gfx = sprite.GetFilename();
+  const anm2 = gfx.substr(MULTIPLAYER_ANM2_PREFIX.length);
+  const characterString = anm2.slice(0, MULTIPLAYER_ANM2_SUFFIX.length * -1);
+  const character = tonumber(characterString);
+  if (character === undefined) {
+    error(
+      "Failed to parse the name of the anm2 file to derive the character number.",
+    );
   }
 
-  const character = g.game.getPlayerCharacter(userID);
-  if (character === null || spriteCharacter === character) {
+  const correctCharacter = g.game.getPlayerCharacter(userID);
+  if (correctCharacter === null) {
+    error(`Failed to get the character for player: ${userID}`);
+  }
+
+  if (character === correctCharacter) {
     return;
   }
 
-  spriteCharacterMap.set(userID, character);
-
-  let characterPNG = CHARACTER_PNG_MAP.get(character);
-  if (characterPNG === undefined) {
-    characterPNG = DEFAULT_CHARACTER_PNG;
-  }
-
-  const characterSpritePath = CHARACTER_PNG_PREFIX + characterPNG;
-  mainSprite.ReplaceSpritesheet(CHARACTER_LAYER_ID, characterSpritePath);
-  mainSprite.LoadGraphics();
-
-  let characterCostume = CHARACTER_COSTUME_PNG_MAP.get(character);
-  if (characterCostume === undefined) {
-    characterCostume = DEFAULT_CHARACTER_COSTUME;
-  }
-
-  const characterCostumePath = CHARACTER_COSTUME_PREFIX + characterCostume;
-  costumeSprite.Load(characterCostumePath, true);
+  const newAnm2 = `${MULTIPLAYER_ANM2_PREFIX}${character}${MULTIPLAYER_ANM2_SUFFIX}`;
+  sprite.Load(newAnm2, true);
 }
 
-function setSpriteAnimation(
-  mainSprite: Sprite,
-  costumeSprite: Sprite,
+function setMultiplayerAnimation(
+  entity: Entity,
   animation: string,
   animationFrame: int,
   overlayAnimation: string,
   overlayAnimationFrame: int,
 ) {
-  mainSprite.SetFrame(animation, animationFrame);
+  const sprite = entity.GetSprite();
+  sprite.SetFrame(animation, animationFrame);
 
   // overlayAnimation cannot be null since a blank string is sent over the wire
   if (overlayAnimation === "") {
-    mainSprite.RemoveOverlay();
+    sprite.RemoveOverlay();
   } else {
-    mainSprite.SetOverlayFrame(overlayAnimation, overlayAnimationFrame);
+    sprite.SetOverlayFrame(overlayAnimation, overlayAnimationFrame);
   }
 
   if (animation === "Death") {
-    mainSprite.Offset = DEATH_SPRITE_OFFSET;
-    costumeSprite.Offset = DEATH_COSTUME_OFFSET;
-    costumeSprite.SetFrame("HeadDown", 0);
-    costumeSprite.Rotation = 90;
+    sprite.Offset = DEATH_SPRITE_OFFSET;
   } else {
-    mainSprite.Offset = Vector.Zero;
-    costumeSprite.Offset = Vector.Zero;
-    costumeSprite.SetFrame(overlayAnimation, overlayAnimationFrame);
-    costumeSprite.Rotation = 0;
-  }
-}
-
-function drawSprites(
-  mainSprite: Sprite,
-  costumeSprite: Sprite | undefined,
-  positionGame: Vector,
-) {
-  const position = Isaac.WorldToScreen(positionGame);
-  mainSprite.Render(position, Vector.Zero, Vector.Zero);
-  if (costumeSprite !== undefined) {
-    costumeSprite.Render(position, Vector.Zero, Vector.Zero);
+    sprite.Offset = Vector.Zero;
   }
 }
 
 export function drawUsername(
+  userID: int,
   positionGame: Vector,
-  username: string,
   opacity = USERNAME_FADE,
-  red = false,
 ): void {
-  if (isConsoleOpen()) {
+  if (g.game === null || isConsoleOpen()) {
     return;
   }
+
+  const player = g.game.getPlayerFromUserID(userID);
+  if (player === null) {
+    return;
+  }
+
+  const red = g.game.imposters !== null && g.game.imposters.includes(userID);
+  const { username } = player;
 
   const positionSprite = Isaac.WorldToScreen(positionGame);
   // Show the username of the player above the sprite

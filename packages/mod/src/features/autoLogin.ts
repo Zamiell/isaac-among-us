@@ -2,7 +2,10 @@ import { connectChatCommand } from "../chatCommands/connect";
 import g from "../globals";
 import { sendTCP } from "../network/send";
 import * as socketClient from "../network/socketClient";
-import { SocketCommandModToServer } from "../types/SocketCommands";
+import {
+  GameListDescription,
+  SocketCommandModToServer,
+} from "../types/SocketCommands";
 
 const DEBUG_FIRST_MOD = true;
 const DEBUG_USERNAME = DEBUG_FIRST_MOD ? "Test1" : "Test2";
@@ -18,7 +21,7 @@ export function startAutoLogin(): void {
   }
 
   if (g.loggedIn) {
-    onGameList();
+    sendTCP(SocketCommandModToServer.GAME_LIST, {});
   } else {
     sendTCP(SocketCommandModToServer.LOGIN, {
       username: DEBUG_USERNAME,
@@ -27,19 +30,24 @@ export function startAutoLogin(): void {
   }
 }
 
-export function onGameList(): void {
+export function onGameList(gameList: GameListDescription[]): void {
   if (!autoLogin || g.game !== null) {
     return;
   }
 
-  if (DEBUG_FIRST_MOD) {
-    sendTCP(SocketCommandModToServer.CREATE, {
-      name: DEBUG_GAME_NAME,
-    });
-  } else {
+  const testGameExists = gameList.some(
+    (gameListDescription: GameListDescription) => {
+      return gameListDescription.name === DEBUG_GAME_NAME;
+    },
+  );
+  if (testGameExists) {
     sendTCP(SocketCommandModToServer.JOIN, {
       name: DEBUG_GAME_NAME,
       created: false,
+    });
+  } else {
+    sendTCP(SocketCommandModToServer.CREATE, {
+      name: DEBUG_GAME_NAME,
     });
   }
 }

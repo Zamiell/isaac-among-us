@@ -1,0 +1,1 @@
+The numbers of the anm2 files correspond to the player type (i.e. the character).

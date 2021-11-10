@@ -2,6 +2,40 @@ import { UDPPositionInterface } from "./constants";
 import g from "./globals";
 import { PlayerData } from "./types/PlayerData";
 import { GameDescriptionPlayer } from "./types/SocketCommands";
+import { getRoomIndexModified } from "./util";
+
+export function getClosestAmongUsPlayer(): PlayerData | null {
+  if (g.game === null) {
+    error("Failed to get the closest player since the game was null.");
+  }
+
+  const player = Isaac.GetPlayer();
+  const roomIndex = getRoomIndexModified();
+
+  let closestPlayer: PlayerData | null = null;
+  let closestDistance = math.huge;
+  for (const otherPlayerData of g.game.playerMap.values()) {
+    if (otherPlayerData.roomIndex !== roomIndex) {
+      continue;
+    }
+
+    const otherPlayerDescription = g.game.getPlayerFromUserID(
+      otherPlayerData.userID,
+    );
+    if (otherPlayerDescription === null || !otherPlayerDescription.alive) {
+      continue;
+    }
+
+    const otherPlayerPosition = Vector(otherPlayerData.x, otherPlayerData.y);
+    const distance = otherPlayerPosition.Distance(player.Position);
+    if (distance < closestDistance) {
+      closestPlayer = otherPlayerData;
+      closestDistance = distance;
+    }
+  }
+
+  return closestPlayer;
+}
 
 export function getOurPlayer(): GameDescriptionPlayer {
   if (g.game === null) {

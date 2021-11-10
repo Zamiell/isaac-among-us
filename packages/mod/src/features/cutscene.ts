@@ -4,12 +4,14 @@ import { ensureAllCases, getScreenCenterPos } from "isaacscript-common";
 import g from "../globals";
 import { loadMap } from "../loadMap";
 import { enableMinimapAPI } from "../minimapAPI";
+import { getOurPlayerIndex } from "../players";
 import { setSpriteOpacity } from "../sprite";
 import { BlackSpriteState } from "../types/BlackSpriteState";
 import { CutsceneState } from "../types/CutsceneState";
 import { Role } from "../types/Role";
 import { drawFontText, getRoleText } from "../util";
 import { FADE_TO_BLACK_FRAMES, setBlackSpriteState } from "./blackSprite";
+import { getMeetingCirclePoints } from "./setupMeeting";
 
 const ITEM_SPRITE_OFFSET = Vector(0, -30);
 
@@ -64,7 +66,16 @@ function postRenderFadingToBlack() {
     setState(CutsceneState.TEXT_FADING_IN);
     setBlackSpriteState(BlackSpriteState.SOLID);
     loadMap();
+    setStartingPosition();
   }
+}
+
+function setStartingPosition() {
+  const circlePoints = getMeetingCirclePoints();
+  const ourPlayerIndex = getOurPlayerIndex();
+  const ourPosition = circlePoints[ourPlayerIndex];
+  const player = Isaac.GetPlayer();
+  player.Position = ourPosition;
 }
 
 function postRenderTextFadingIn() {

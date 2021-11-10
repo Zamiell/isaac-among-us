@@ -1,3 +1,6 @@
+- change characters
+- player doesn't have shadow / weird overlap
+
 - killing
 - imposter thing where you close the doors
 - imposter lights

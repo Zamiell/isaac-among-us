@@ -35,6 +35,7 @@ const COMMANDS_WITH_NO_ASSOCIATED_GAME = new Set([
 // Note that JOIN explicitly handles the game not being started,
 // since an associated game is not a requirement for this command
 const COMMANDS_ALLOWED_WHILE_GAME_NOT_STARTED = new Set([
+  SocketCommandModToServer.CREATE,
   SocketCommandModToServer.JOIN,
   SocketCommandModToServer.LEAVE,
   SocketCommandModToServer.START,

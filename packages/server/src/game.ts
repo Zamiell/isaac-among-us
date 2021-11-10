@@ -1,26 +1,25 @@
 import { Game } from "./types/Game";
 import { Player } from "./types/Player";
 import { PlayerType } from "./types/PlayerType";
+import { getEnumValues } from "./util";
 
 export function getLowestUnusedCharacter(game: Game): PlayerType {
-  const characters = new Set<PlayerType>();
+  const existingCharacters = new Set<PlayerType>();
   for (const player of game.players) {
-    characters.add(player.character);
+    existingCharacters.add(player.character);
   }
 
-  const validCharacters = new Set<PlayerType>();
-  for (const character of Object.values(PlayerType)) {
-    if (typeof character !== "string") {
-      validCharacters.add(character);
-    }
+  const allCharacters = new Set<PlayerType>();
+  for (const character of getEnumValues(PlayerType)) {
+    allCharacters.add(character);
   }
 
   for (let i = 0; i < 50; i++) {
-    if (!validCharacters.has(i)) {
+    if (!allCharacters.has(i)) {
       continue;
     }
 
-    if (!characters.has(i)) {
+    if (!existingCharacters.has(i)) {
       return i;
     }
   }

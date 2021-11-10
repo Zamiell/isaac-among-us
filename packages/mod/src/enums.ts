@@ -1,6 +1,8 @@
 export enum EntityTypeCustom {
   // Lobby
   BOX = Isaac.GetEntityTypeByName("Large Box"),
+
+  // Cafeteria (0)
   TABLE = Isaac.GetEntityTypeByName("Table"),
 
   // Admin (2)
@@ -53,7 +55,7 @@ export enum EffectVariantCustom {
   STAGE_API_DOOR = Isaac.GetEntityVariantByName("StageAPIDoor"),
   VENT = Isaac.GetEntityVariantByName("Vent"),
   BUTTON = Isaac.GetEntityVariantByName("Button"),
-  BLOCK = Isaac.GetEntityVariantByName("Block"),
+  MULTIPLAYER_PLAYER = Isaac.GetEntityVariantByName("Multiplayer Player"),
 }
 
 export enum CarpetSubTypeCustom {

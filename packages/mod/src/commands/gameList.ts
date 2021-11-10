@@ -10,7 +10,7 @@ import {
 export function commandGameList(data: GameListDataToMod): void {
   if (data.gameList.length === 0) {
     chat.addLocal('No current games. (Create one with the "/create" command.)');
-    autoLogin.onGameList();
+    autoLogin.onGameList(data.gameList);
     return;
   }
 
@@ -42,5 +42,5 @@ export function commandGameList(data: GameListDataToMod): void {
     return;
   }
 
-  autoLogin.onGameList();
+  autoLogin.onGameList(data.gameList);
 }

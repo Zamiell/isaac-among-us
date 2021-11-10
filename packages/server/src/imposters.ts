@@ -1,8 +1,14 @@
+import { IS_DEV } from "./constants";
 import { Game } from "./types/Game";
 import { Role } from "./types/Role";
 import { getRandomArrayIndex } from "./util";
 
 export function assignImpostors(game: Game): void {
+  if (IS_DEV) {
+    game.players[0].role = Role.IMPOSTER;
+    return;
+  }
+
   const numImposters = getNumImposters(game);
   const imposterIndexes: number[] = [];
   for (let i = 0; i < numImposters; i++) {
