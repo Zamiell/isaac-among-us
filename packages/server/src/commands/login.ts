@@ -24,18 +24,22 @@ export async function commandLogin(
 
   let user = await users.get(username);
   if (user === null) {
+    // Create an entry in the database for this user
     const passwordHash = await argon2.hash(password);
     user = await users.create(username, passwordHash, ip);
   } else {
+    // This user already exists in the database
     const passwordMatches = await argon2.verify(user.passwordHash, password);
     if (!passwordMatches) {
       error(socket, `That password is incorrect for username: ${username}`);
       return;
     }
+
+    // Update the last IP address in the database
     await users.setIP(username, ip);
   }
 
-  disconnectExistingUserWithUsername(socket.username);
+  disconnectExistingUserWithUsername(username);
 
   socket.loggedIn = true;
   socket.userID = user.id;
