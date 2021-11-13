@@ -2,9 +2,9 @@
 
 import {
   arrayEmpty,
-  getItemName,
   getRandomArrayElement,
   getRandomArrayIndex,
+  getTrinketName,
   getTrinketSet,
 } from "isaacscript-common";
 import { spawnTaskButton } from "../features/buttonSpawn";
@@ -68,7 +68,7 @@ function setupRound() {
   const randomIndex = getRandomArrayIndex(randomTrinkets);
   const randomTrinket = randomTrinkets[randomIndex];
   correctTrinketIndex = randomIndex;
-  currentTrinket = getItemName(randomTrinket, true);
+  currentTrinket = getTrinketName(randomTrinket);
 
   resetAllButtons();
 }

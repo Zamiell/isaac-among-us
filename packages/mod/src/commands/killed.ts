@@ -1,6 +1,6 @@
 import {
   removeAllMatchingEntities,
-  removeItemFromItemTracker,
+  removeCollectibleFromItemTracker,
 } from "isaacscript-common";
 import g from "../globals";
 import { KilledDataToMod } from "../types/SocketCommands";
@@ -25,7 +25,7 @@ export function commandKilled(data: KilledDataToMod): void {
       EntityType.ENTITY_FAMILIAR,
       FamiliarVariant.ONE_UP,
     );
-    removeItemFromItemTracker(CollectibleType.COLLECTIBLE_1UP);
+    removeCollectibleFromItemTracker(CollectibleType.COLLECTIBLE_1UP);
     player.Kill();
   }
 }

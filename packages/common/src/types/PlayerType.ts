@@ -2,7 +2,7 @@
 // Only certain characters are allowed (for costume reasons)
 export enum PlayerType {
   PLAYER_ISAAC = 0,
-  PLAYER_MAGDALENA = 1,
+  PLAYER_MAGDALENE = 1,
   PLAYER_CAIN = 2,
   PLAYER_JUDAS = 3,
   PLAYER_EVE = 5,
@@ -13,7 +13,7 @@ export enum PlayerType {
   PLAYER_BETHANY = 18,
   PLAYER_JACOB = 19,
   PLAYER_ISAAC_B = 21,
-  PLAYER_MAGDALENA_B = 22,
+  PLAYER_MAGDALENE_B = 22,
   PLAYER_CAIN_B = 23,
   PLAYER_JUDAS_B = 24,
 }

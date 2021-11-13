@@ -1,7 +1,7 @@
 import {
   arrayEmpty,
+  getCollectibleName,
   getCollectibleSet,
-  getItemName,
   getRandomArrayElement,
   getRandomArrayIndex,
 } from "isaacscript-common";
@@ -65,7 +65,7 @@ function setupRound() {
   const randomIndex = getRandomArrayIndex(randomItems);
   const randomItem = randomItems[randomIndex];
   correctItemIndex = randomIndex;
-  currentItem = getItemName(randomItem);
+  currentItem = getCollectibleName(randomItem);
 
   resetAllButtons();
 }

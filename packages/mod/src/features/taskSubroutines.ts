@@ -81,7 +81,7 @@ export function taskLeave(): void {
 }
 
 export function clearRoomEntities(): void {
-  removeAllMatchingEntities(EntityType.ENTITY_BOMBDROP); // 4
+  removeAllMatchingEntities(EntityType.ENTITY_BOMB); // 4
   removeAllMatchingEntities(EntityType.ENTITY_PICKUP); // 5
   removeAllMatchingEntities(
     EntityType.ENTITY_EFFECT,
