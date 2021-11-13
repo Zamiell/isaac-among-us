@@ -50,11 +50,12 @@ export function postRender(): void {
 }
 
 function getText() {
-  const pentagrams = Isaac.FindByType(
+  const numPentagrams = Isaac.CountEntities(
+    undefined,
     EntityType.ENTITY_EFFECT,
     EffectVariant.PENTAGRAM_BLACKPOWDER,
   );
-  if (pentagrams.length === 0) {
+  if (numPentagrams === 0) {
     return "Make a pentagram.";
   }
 

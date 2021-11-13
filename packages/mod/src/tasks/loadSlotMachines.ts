@@ -58,13 +58,14 @@ export function postUpdate(): void {
   );
 
   const player = Isaac.GetPlayer();
-  const numCoins = player.GetNumCoins();
-  const coins = Isaac.FindByType(
+  const numCoinsInInventory = player.GetNumCoins();
+  const numCoinsInRoom = Isaac.CountEntities(
+    undefined,
     EntityType.ENTITY_PICKUP,
     PickupVariant.PICKUP_COIN,
   );
 
-  if (numCoins === 0 && coins.length === 0 && !isAnySlotActive()) {
+  if (numCoinsInInventory === 0 && numCoinsInRoom === 0 && !isAnySlotActive()) {
     taskComplete();
   }
 }

@@ -30,5 +30,6 @@ function actionPressed() {
   }
 
   // TODO other actions
+  // eslint-disable-next-line
   const poop = "lol";
 }

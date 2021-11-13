@@ -43,8 +43,8 @@ export function postUpdate(): void {
     return;
   }
 
-  const monstros = Isaac.FindByType(EntityType.ENTITY_MONSTRO);
-  if (monstros.length === 0) {
+  const numMonstros = Isaac.CountEntities(undefined, EntityType.ENTITY_MONSTRO);
+  if (numMonstros === 0) {
     taskComplete();
   }
 }

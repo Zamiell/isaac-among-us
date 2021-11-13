@@ -5,8 +5,8 @@
   "license": "GPL-3.0",
   "author": "Zamiell",
   "dependencies": {
-    "isaac-typescript-definitions": "^1.0.250",
-    "isaacscript": "^1.1.36",
-    "isaacscript-common": "^1.0.379"
+    "isaac-typescript-definitions": "^1.0.259",
+    "isaacscript": "^1.1.38",
+    "isaacscript-common": "^1.0.387"
   }
 }
