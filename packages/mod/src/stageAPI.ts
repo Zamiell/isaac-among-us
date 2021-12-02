@@ -4,14 +4,13 @@ import { skeldRoomMap } from "./skeldRoomMap";
 import { getStageAPIRoomName } from "./stageAPISubroutines";
 import { SkeldRoom } from "./types/SkeldRoom";
 
-const NULL_STAGE_API_ANIMATION = -1;
-
-const DEFAULT_BACKDROP_TYPE = "security";
-const backdropMap = new Map<SkeldRoom, string>([
+const BACKDROP_MAP = new Map<SkeldRoom, string>([
   [SkeldRoom.CAFETERIA, "cafeteria"],
   [SkeldRoom.ELECTRICAL, "electrical"],
   [SkeldRoom.SECURITY, "security"],
 ]);
+const DEFAULT_BACKDROP_TYPE = "security";
+const NULL_STAGE_API_ANIMATION = -1;
 
 export function getStageAPIRoomMapID(skeldRoom: SkeldRoom): int | null {
   if (StageAPI === undefined) {
@@ -117,7 +116,7 @@ export function loadBackdrops(): void {
     return;
   }
 
-  let backdropType = backdropMap.get(room);
+  let backdropType = BACKDROP_MAP.get(room);
   if (backdropType === undefined) {
     backdropType = DEFAULT_BACKDROP_TYPE;
   }
