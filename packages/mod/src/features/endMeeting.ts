@@ -79,7 +79,7 @@ function postRenderTextFadingOut() {
   if (g.game !== null && hasFadeFinished()) {
     setState(EndMeetingState.FADING_TO_GAME);
     setBlackSpriteState(BlackSpriteState.FADING_TO_GAME);
-    enableMinimapAPI(true);
+    enableMinimapAPI();
     setupMeeting(true);
   }
 }

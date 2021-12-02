@@ -1,6 +1,6 @@
 import { ensureAllCases, getScreenBottomRightPos } from "isaacscript-common";
 import g from "../globals";
-import { enableMinimapAPI } from "../minimapAPI";
+import { disableMinimapAPI } from "../minimapAPI";
 import { initSprite } from "../sprite";
 import { BlackSpriteState } from "../types/BlackSpriteState";
 import { MeetingType } from "../types/MeetingType";
@@ -134,7 +134,7 @@ export function startMeeting(): void {
   blackSprite.Scale = Vector(bottomRightPos.X, bottomRightPos.Y / 3);
 
   setState(StartMeetingState.ALERT_STRIP);
-  enableMinimapAPI(false);
+  disableMinimapAPI();
 }
 
 function setState(state: StartMeetingState) {

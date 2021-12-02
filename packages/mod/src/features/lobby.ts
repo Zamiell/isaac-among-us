@@ -4,13 +4,13 @@ import {
   getEffectiveStage,
   getNPCs,
   getPlayers,
-  getRoomIndex,
+  getRoomSafeGridIndex,
   getRoomStageID,
   getRoomVariant,
   removeEntities,
 } from "isaacscript-common";
 import g from "../globals";
-import { enableMinimapAPI } from "../minimapAPI";
+import { disableMinimapAPI } from "../minimapAPI";
 import { setupPlayerAndUI } from "../setupPlayersAndUI";
 import { spawnBox } from "../spawnObjects";
 import { consoleCommand } from "../util";
@@ -63,12 +63,12 @@ function gotoLobby() {
 }
 
 export function inLobby(): boolean {
-  const roomIndex = getRoomIndex();
+  const roomSafeGridIndex = getRoomSafeGridIndex();
   const roomStageID = getRoomStageID();
   const roomVariant = getRoomVariant();
 
   return (
-    roomIndex === GridRooms.ROOM_DEBUG_IDX &&
+    roomSafeGridIndex === GridRooms.ROOM_DEBUG_IDX &&
     roomStageID === STAGE_ID_FOR_LOBBY &&
     roomVariant === ROOM_VARIANT_FOR_LOBBY
   );
@@ -84,7 +84,7 @@ function setupLobby() {
   }
 
   setupPlayerAndUI();
-  enableMinimapAPI(false);
+  disableMinimapAPI();
 
   const game = Game();
   const room = game.GetRoom();

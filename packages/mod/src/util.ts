@@ -1,6 +1,6 @@
 import {
   ensureAllCases,
-  getRoomIndex,
+  getRoomSafeGridIndex,
   getScreenBottomRightPos,
   log,
   setBlindfold,
@@ -60,8 +60,10 @@ export function enableShooting(): void {
 }
 
 export function getRoomIndexModified(): int {
-  const roomIndex = getRoomIndex();
-  const roomIndexModified = math.abs(roomIndex); // The UDP struct does not support negative values
+  const roomSafeGridIndex = getRoomSafeGridIndex();
+
+  // The UDP struct does not support negative values
+  const roomIndexModified = math.abs(roomSafeGridIndex);
 
   return roomIndexModified;
 }

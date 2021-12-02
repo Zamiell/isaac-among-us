@@ -3,7 +3,7 @@ import {
   getCircleDiscretizedPoints,
 } from "isaacscript-common";
 import g from "../globals";
-import { enableMinimapAPI } from "../minimapAPI";
+import { setMinimapAPIEnabled } from "../minimapAPI";
 import { getOurPlayerIndex } from "../players";
 import { CENTER_TABLE_GRID_INDEX } from "../rooms/cafeteria";
 import { getSkeldRoom, goToStageAPIRoom } from "../stageAPI";
@@ -26,7 +26,7 @@ export function setupMeeting(meetingEnded: boolean): void {
     goToStageAPIRoom("Cafeteria");
   }
 
-  enableMinimapAPI(meetingEnded);
+  setMinimapAPIEnabled(meetingEnded);
   enablePlayer(meetingEnded);
   enableButton(meetingEnded);
 }

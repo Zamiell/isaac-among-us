@@ -1,7 +1,15 @@
 // The task room is the final room added
 const TASK_ROOM_MINIMAP_ID = 22;
 
-export function enableMinimapAPI(enabled: boolean): void {
+export function enableMinimapAPI(): void {
+  setMinimapAPIEnabled(true);
+}
+
+export function disableMinimapAPI(): void {
+  setMinimapAPIEnabled(false);
+}
+
+export function setMinimapAPIEnabled(enabled: boolean): void {
   if (MinimapAPI === undefined) {
     return;
   }
@@ -14,7 +22,7 @@ export function setMapToFullVisibility(): void {
     return;
   }
 
-  enableMinimapAPI(true);
+  enableMinimapAPI();
 
   const minimapAPILevel = MinimapAPI.GetLevel();
   for (const room of minimapAPILevel) {

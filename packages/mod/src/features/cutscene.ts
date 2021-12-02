@@ -3,7 +3,7 @@
 import { ensureAllCases, getScreenCenterPos } from "isaacscript-common";
 import g from "../globals";
 import { loadMap } from "../loadMap";
-import { enableMinimapAPI } from "../minimapAPI";
+import { disableMinimapAPI, enableMinimapAPI } from "../minimapAPI";
 import { getOurPlayerIndex } from "../players";
 import { setSpriteOpacity } from "../sprite";
 import { BlackSpriteState } from "../types/BlackSpriteState";
@@ -100,7 +100,7 @@ function postRenderTextFadingOut() {
   if (g.game !== null && hasFadeFinished()) {
     setState(CutsceneState.FADING_TO_GAME);
     setBlackSpriteState(BlackSpriteState.FADING_TO_GAME);
-    enableMinimapAPI(true);
+    enableMinimapAPI();
   }
 }
 
@@ -169,7 +169,7 @@ export function startCutscene(): void {
   setSprite();
   setState(CutsceneState.FADING_TO_BLACK);
   setBlackSpriteState(BlackSpriteState.FADING_TO_BLACK);
-  enableMinimapAPI(false);
+  disableMinimapAPI();
 }
 
 function setState(state: CutsceneState) {

@@ -1,5 +1,3 @@
-// Several rounds of identifying trinkets
-
 import {
   arrayEmpty,
   getRandomArrayElement,

@@ -1,5 +1,5 @@
 import g from "../globals";
-import { enableMinimapAPI } from "../minimapAPI";
+import { disableMinimapAPI } from "../minimapAPI";
 import { taskFunctions } from "../taskFunctions";
 import { clearRoomEntities } from "./taskSubroutines";
 
@@ -12,7 +12,7 @@ function setupTaskRoom() {
     return;
   }
 
-  enableMinimapAPI(false);
+  disableMinimapAPI();
   clearRoomEntities();
 
   const taskFunction = taskFunctions.get(g.game.currentTask);

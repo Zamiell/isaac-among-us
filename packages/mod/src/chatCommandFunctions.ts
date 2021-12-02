@@ -52,6 +52,7 @@ chatCommandFunctions.set("gamelist", (_args: string[]) => {
 chatCommandFunctions.set("help", (_args: string[]) => {
   chat.addLocal('To connect to the server, use the "/connect" command.');
   chat.addLocal("Hint: You can use tab to auto-complete commands.");
+  g.welcomeNotificationEnabled = false;
 });
 
 chatCommandFunctions.set("join", (args: string[]) => {

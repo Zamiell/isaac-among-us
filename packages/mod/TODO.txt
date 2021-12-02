@@ -5,6 +5,10 @@
 - imposter thing where you close the doors
 - imposter lights
 
+- imposter should not get real tasks
+
+- test to see ghosts in task mode, should not show
+
 Future:
 
 - rebuild walls manually on every room entrance

@@ -74,7 +74,7 @@ export function taskLeave(): void {
   Isaac.DebugString(`Task took: ${elapsedTime}`);
 
   setupPlayerAndUI();
-  enableMinimapAPI(true);
+  enableMinimapAPI();
 
   clearRoomEntities();
   goToStageAPIRoom(roomName, taskDescription.returnGridIndex);

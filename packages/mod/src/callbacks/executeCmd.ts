@@ -1,4 +1,4 @@
-import { getGridEntities, getRoomIndex, log } from "isaacscript-common";
+import { getGridEntities, getRoomSafeGridIndex, log } from "isaacscript-common";
 import { debugFunction, debugFunction2 } from "../debugFunction";
 import { skeldRoomReverseMap } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
@@ -80,6 +80,6 @@ functionMap.set("removeallgrid", () => {
 });
 
 functionMap.set("roomindex", () => {
-  const roomIndex = getRoomIndex();
-  print(roomIndex);
+  const roomSafeGridIndex = getRoomSafeGridIndex();
+  print(roomSafeGridIndex);
 });

@@ -5,4 +5,5 @@ export class Globals {
   userID: int | null = null;
   username: string | null = null;
   game: AmongUsGame | null = null;
+  welcomeNotificationEnabled = true;
 }
