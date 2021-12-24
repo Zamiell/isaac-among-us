@@ -7,6 +7,6 @@
   "dependencies": {
     "isaac-typescript-definitions": "^1.0.323",
     "isaacscript": "^1.1.70",
-    "isaacscript-common": "^1.0.580"
+    "isaacscript-common": "^1.0.581"
   }
 }

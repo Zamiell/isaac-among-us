@@ -43,10 +43,17 @@ function drawOtherPlayersFromUDP() {
 
   const isaacFrameCount = Isaac.GetFrameCount();
   const roomIndex = getRoomIndexModified();
+  const userIDsInOurGame = g.game.players.map((player) => player.userID);
+  const userIDsInOurGameSet = new Set(userIDsInOurGame);
 
   for (const playerData of g.game.playerMap.values()) {
     const entity = getMultiplayerEntity(playerData.userID);
     entity.Visible = false;
+
+    if (!userIDsInOurGameSet.has(playerData.userID)) {
+      g.game.playerMap.delete(playerData.userID);
+      continue;
+    }
 
     const framesSinceLastUpdate = isaacFrameCount - playerData.frameUpdated;
     if (
