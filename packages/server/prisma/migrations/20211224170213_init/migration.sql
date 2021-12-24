@@ -41,6 +41,12 @@ CREATE TABLE "GameParticipant" (
     CONSTRAINT "GameParticipant_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_normalizedUsername_key" ON "User"("normalizedUsername");
+
 -- AddForeignKey
 ALTER TABLE "UserStats" ADD CONSTRAINT "UserStats_userID_fkey" FOREIGN KEY ("userID") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 

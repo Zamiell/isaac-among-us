@@ -54,11 +54,11 @@ function getClient(port: int, useTCP = true) {
     return null;
   }
 
-  const protocol = useTCP ? "tcp" : "udp";
+  const protocol = useTCP ? "TCP" : "UDP";
   const url = `${protocol}://${REMOTE_HOSTNAME}:${port}`;
 
   let socketClient: SocketClient;
-  if (protocol === "tcp") {
+  if (protocol === "TCP") {
     socketClient = socket.tcp();
     socketClient.settimeout(SOCKET_CONNECT_TIMEOUT_SECONDS);
     const [err, errMsg] = socketClient.connect(REMOTE_HOSTNAME, port);
@@ -66,7 +66,7 @@ function getClient(port: int, useTCP = true) {
       log(`Error: Failed to connect on "${url}": ${errMsg}`);
       return null;
     }
-  } else if (protocol === "udp") {
+  } else if (protocol === "UDP") {
     socketClient = socket.udp();
     socketClient.setpeername(REMOTE_HOSTNAME, port);
   } else {

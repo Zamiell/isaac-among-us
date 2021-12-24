@@ -22,7 +22,7 @@
     "luaBundleEntry": "./src/bundleEntry.ts", // This invokes the "main.ts" file
 
     "luaPlugins": [
-      // Uncomment the follow line to enable crash debugging
+      // Uncomment the following line to enable crash debugging
       // { "name": "./node_modules/isaacscript/dist/src/plugins/addCrashDebugStatements.js" },
     ],
   },
