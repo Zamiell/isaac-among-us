@@ -6,6 +6,6 @@
   "author": "Zamiell",
   "devDependencies": {
     "isaac-typescript-definitions": "file:./packages/mod/node_modules/isaac-typescript-definitions",
-    "isaacscript-lint": "^1.0.63"
+    "isaacscript-lint": "^1.0.74"
   }
 }

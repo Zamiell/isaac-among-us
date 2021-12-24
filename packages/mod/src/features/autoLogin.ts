@@ -36,9 +36,8 @@ export function onGameList(gameList: GameListDescription[]): void {
   }
 
   const testGameExists = gameList.some(
-    (gameListDescription: GameListDescription) => {
-      return gameListDescription.name === DEBUG_GAME_NAME;
-    },
+    (gameListDescription: GameListDescription) =>
+      gameListDescription.name === DEBUG_GAME_NAME,
   );
   if (testGameExists) {
     sendTCP(SocketCommandModToServer.JOIN, {

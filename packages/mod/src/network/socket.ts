@@ -60,7 +60,7 @@ function readTCP() {
 
   const commandFunction = commandMap[command as SocketCommandServerToMod];
   if (commandFunction !== undefined) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line
     commandFunction(dataObject as any);
   } else {
     log(`Error: Received an unknown socket command: ${command}`);

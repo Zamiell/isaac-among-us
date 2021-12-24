@@ -1,4 +1,5 @@
 import { log } from "isaacscript-common";
+import { getFormattedTime } from "./network/sandbox";
 import { ChatMessage } from "./types/ChatMessage";
 import { ChatDataToMod } from "./types/SocketCommands";
 
@@ -7,7 +8,7 @@ const chatMessages: ChatMessage[] = [];
 export function add(data: ChatDataToMod, local = false): void {
   const isaacFrameCount = Isaac.GetFrameCount();
   const chatMessage: ChatMessage = {
-    time: os.date("%X"),
+    time: getFormattedTime(),
     username: data.from,
     msg: data.msg,
     frameReceived: isaacFrameCount,

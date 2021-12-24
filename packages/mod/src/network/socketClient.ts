@@ -11,15 +11,23 @@ import { setBlackSpriteState } from "../features/blackSprite";
 import g from "../globals";
 import { BlackSpriteState } from "../types/BlackSpriteState";
 import { restart } from "../util";
+import {
+  getClientFromSandbox,
+  isSandboxEnabled,
+  tryInitRacingPlusSandbox,
+} from "./sandbox";
 
 let socket: Socket | null = null;
 let clientTCP = null as SocketClient | null;
 let clientUDP = null as SocketClient | null;
 
 export function init(): void {
+  // This will only work if the "--luadebug" flag is enabled
   const [ok, requiredSocket] = pcall(require, "socket");
   if (ok) {
     socket = requiredSocket as Socket;
+  } else {
+    tryInitRacingPlusSandbox();
   }
 }
 
@@ -38,6 +46,10 @@ export function connect(): boolean {
 }
 
 function getClient(port: int, useTCP = true) {
+  if (isSandboxEnabled()) {
+    return getClientFromSandbox(port, useTCP);
+  }
+
   if (socket === null) {
     return null;
   }
@@ -120,9 +132,13 @@ export function isConnected(): boolean {
 }
 
 export function isLuaDebugEnabled(): boolean {
-  return socket !== null;
+  return socket !== null || isSandboxEnabled();
 }
 
+/**
+ * Returns the epoch timestamp in seconds, with four decimal places of precision (e.g.
+ * `1640320492.5779`).
+ */
 export function getTime(): float {
   if (socket === null) {
     return 0;

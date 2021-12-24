@@ -17,5 +17,7 @@ module.exports = {
 
   // We modify the linting rules from the base for some specific things
   // (listed in alphabetical order)
-  rules: {},
+  rules: {
+    "import/no-relative-packages": "off",
+  },
 };
