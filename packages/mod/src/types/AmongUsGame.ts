@@ -20,6 +20,7 @@ export class AmongUsGame {
   /** Indexed by user ID. Contains only UDP data. */
   playerMap = new Map<int, PlayerData>();
 
+  character = PlayerType.PLAYER_ISAAC;
   role = Role.CREW;
   usedEmergencyMeeting = false;
 
@@ -50,9 +51,10 @@ export class AmongUsGame {
     userIDEjected: null as int | null,
   };
 
-  constructor(id: int, name: string) {
+  constructor(id: int, name: string, character: PlayerType) {
     this.id = id;
     this.name = name;
+    this.character = character;
   }
 
   getNumAlivePlayers(): int {

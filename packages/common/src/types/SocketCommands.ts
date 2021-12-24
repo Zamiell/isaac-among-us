@@ -192,6 +192,7 @@ export class JoinedDataToMod {
   gameID!: number;
   name!: string;
   created!: boolean;
+  character!: PlayerType;
   reconnected!: boolean;
 }
 
@@ -235,6 +236,7 @@ export class ReconnectDataToMod {
   imposters!: number[] | null;
   meeting!: Meeting | null;
   tasks!: TaskList;
+  character!: PlayerType;
   room!: SkeldRoom;
   enterGridIndex!: number;
 }

@@ -1,3 +1,4 @@
+import { checkChangeOurCharacter } from "../callbacks/postGameStarted";
 import * as autoLogin from "../features/autoLogin";
 import g from "../globals";
 import { getOurPlayer } from "../players";
@@ -13,7 +14,10 @@ export function commandGameDescription(data: GameDescriptionDataToMod): void {
   g.game.meeting = data.meeting;
 
   const playerDescription = getOurPlayer();
+  g.game.character = playerDescription.character;
   g.game.usedEmergencyMeeting = playerDescription.usedEmergencyMeeting;
+
+  checkChangeOurCharacter();
 
   autoLogin.onGameDescription();
 }

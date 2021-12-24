@@ -32,6 +32,7 @@ export function commandReconnect(
     imposters: game.impostors,
     meeting: game.meeting,
     tasks: player.tasks,
+    character: player.character,
     room: player.room,
     enterGridIndex: player.enterGridIndex,
   });

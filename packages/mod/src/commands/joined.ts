@@ -5,7 +5,7 @@ import { JoinedDataToMod } from "../types/SocketCommands";
 import { restart } from "../util";
 
 export function commandJoined(data: JoinedDataToMod): void {
-  g.game = new AmongUsGame(data.gameID, data.name);
+  g.game = new AmongUsGame(data.gameID, data.name, data.character);
 
   const msg = getChatMessage(data);
   chat.addLocal(msg);

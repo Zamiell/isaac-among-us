@@ -39,6 +39,7 @@ export function commandJoin(
     gameID: game.id,
     name: game.name,
     created,
+    character,
     reconnected: false,
   });
   sendNewGameDescription(game);

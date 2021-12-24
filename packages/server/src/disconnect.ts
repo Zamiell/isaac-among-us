@@ -24,7 +24,7 @@ export function setPlayerAsDisconnectedInOngoingGames(
         continue;
       }
 
-      disconnect(player, game);
+      setPlayerAsDisconnected(player, game);
       foundPlayer = true;
     }
 
@@ -34,12 +34,12 @@ export function setPlayerAsDisconnectedInOngoingGames(
   }
 }
 
-function disconnect(player: Player, game: Game) {
+function setPlayerAsDisconnected(player: Player, game: Game) {
   player.connected = false;
   player.socketID = -1;
 
   sendNewGameDescription(game);
-  sendChat(game, "", `${player.username} reconnected to the game.`);
+  sendChat(game, "", `${player.username} disconnected.`);
   logGameEvent(game, `Player "${player.username}" disconnected.`);
 }
 
