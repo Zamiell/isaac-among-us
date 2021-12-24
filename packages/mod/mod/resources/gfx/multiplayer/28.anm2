@@ -2,8 +2,8 @@
 	<Info CreatedBy="robot" CreatedOn="09.28.2020 18:50:13" Fps="30" Version="153" />
 	<Content>
 		<Spritesheets>
-			<Spritesheet Id="0" Path="characters/costumes/character_008b_azazel.png" />
-			<Spritesheet Id="1" Path="Characters/costumes/ghost.png" />
+			<Spritesheet Id="0" Path="../characters/costumes/character_008b_azazel.png" />
+			<Spritesheet Id="1" Path="../characters/costumes/ghost.png" />
 		</Spritesheets>
 		<Layers>
 			<Layer Id="0" Name="glow" SpritesheetId="0" />

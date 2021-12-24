@@ -26,7 +26,7 @@ export function drawText(
       hexColor = Colors.WHITE.slice(COLOR_BYTE.length);
       textWithoutColor = textSegment;
     } else {
-      hexColor = textSegment.substr(0, SIZE_OF_HEX_STRING);
+      hexColor = textSegment.slice(0, SIZE_OF_HEX_STRING);
       textWithoutColor = textSegment.slice(SIZE_OF_HEX_STRING);
     }
 

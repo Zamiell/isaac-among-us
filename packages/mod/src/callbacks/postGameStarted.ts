@@ -3,6 +3,8 @@ import * as disableMultiplayer from "../features/disableMultiplayer";
 import * as errors from "../features/errors";
 import * as goToEmptyRoom from "../features/goToEmptyRoom";
 import * as restartOnNextFrame from "../features/restartOnNextFrame";
+import g from "../globals";
+import { getOurPlayer } from "../players";
 
 export function main(isContinued: boolean): void {
   const game = Game();
@@ -25,4 +27,19 @@ export function main(isContinued: boolean): void {
 
   disableMultiplayer.postGameStarted();
   goToEmptyRoom.postGameStarted();
+  changeToOurCharacter();
+}
+
+function changeToOurCharacter() {
+  if (g.game === null) {
+    return;
+  }
+
+  const player = Isaac.GetPlayer();
+  const playerDescription = getOurPlayer();
+  const character = player.GetPlayerType();
+  const correctCharacter = playerDescription.character;
+  if (character !== correctCharacter) {
+    player.ChangePlayerType(correctCharacter);
+  }
 }

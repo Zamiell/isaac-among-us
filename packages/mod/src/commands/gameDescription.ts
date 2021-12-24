@@ -15,12 +15,5 @@ export function commandGameDescription(data: GameDescriptionDataToMod): void {
   const playerDescription = getOurPlayer();
   g.game.usedEmergencyMeeting = playerDescription.usedEmergencyMeeting;
 
-  const player = Isaac.GetPlayer();
-  const character = player.GetPlayerType();
-  const correctCharacter = playerDescription.character;
-  if (character !== correctCharacter) {
-    player.ChangePlayerType(correctCharacter);
-  }
-
   autoLogin.onGameDescription();
 }

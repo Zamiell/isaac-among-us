@@ -144,8 +144,8 @@ function isShiftPressed() {
 function insertNewCharacter(keyStringArray: [string, string]) {
   const [lowercaseCharacter, uppercaseCharacter] = keyStringArray;
   const character = isShiftPressed() ? uppercaseCharacter : lowercaseCharacter;
-  const front = inputText.substring(0, inputTextIndex);
-  const back = inputText.substring(inputTextIndex);
+  const front = inputText.slice(0, inputTextIndex);
+  const back = inputText.slice(inputTextIndex);
   inputText = `${front}${character}${back}`;
   inputTextIndex += 1;
 }
@@ -235,8 +235,8 @@ function drawConsole() {
     return;
   }
 
-  const front = inputText.substring(0, inputTextIndex);
-  const back = inputText.substring(inputTextIndex);
+  const front = inputText.slice(0, inputTextIndex);
+  const back = inputText.slice(inputTextIndex);
   const text = `>${front}${Colors.YELLOW}|${Colors.WHITE}${back}`;
   const position =
     g.game?.meeting !== null ? CONSOLE_POSITION_LEFT : CONSOLE_POSITION;
@@ -282,8 +282,8 @@ keyFunctionMap.set(Keyboard.KEY_BACKSPACE, () => {
     return;
   }
 
-  const front = inputText.substring(0, inputTextIndex);
-  const back = inputText.substring(inputTextIndex);
+  const front = inputText.slice(0, inputTextIndex);
+  const back = inputText.slice(inputTextIndex);
   const frontWithLastCharRemoved = front.slice(0, -1);
   inputText = frontWithLastCharRemoved + back;
   inputTextIndex -= 1;

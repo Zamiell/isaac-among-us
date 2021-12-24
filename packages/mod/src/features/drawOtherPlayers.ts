@@ -1,3 +1,8 @@
+// Multiplayer players are represented by custom effects with a variant of
+// EffectVariantCustom.MULTIPLAYER_PLAYER
+// We don't use a real player (entity 1.0) since the sprite is not mutable
+// (it resets on every render frame)
+
 import { ISAAC_FRAMES_PER_SECOND } from "isaacscript-common";
 import { injectTestPlayers } from "../debugFunction";
 import { EffectVariantCustom } from "../enums";
@@ -120,6 +125,7 @@ function drawOtherPlayersMeeting() {
   }
 }
 
+/** This function will spawn a new entity if one does not already exist for the provided user ID. */
 function getMultiplayerEntity(userID: int) {
   let entityRef = playerEntityMap.get(userID);
   if (entityRef !== undefined) {
@@ -141,8 +147,6 @@ function getMultiplayerEntity(userID: int) {
 }
 
 function spawnPlayerEntity() {
-  // We don't use a real player (entity 1.0) since the sprite is not mutable
-  // (it resets on every render frame)
   const player = Isaac.Spawn(
     EntityType.ENTITY_EFFECT,
     EffectVariantCustom.MULTIPLAYER_PLAYER,
@@ -172,7 +176,7 @@ function setPlayerCharacter(entity: Entity, userID: int) {
 
   const sprite = entity.GetSprite();
   const gfx = sprite.GetFilename();
-  const anm2 = gfx.substr(MULTIPLAYER_ANM2_PREFIX.length);
+  const anm2 = gfx.slice(MULTIPLAYER_ANM2_PREFIX.length);
   const characterString = anm2.slice(0, MULTIPLAYER_ANM2_SUFFIX.length * -1);
   const character = tonumber(characterString);
   if (character === undefined) {
@@ -190,7 +194,7 @@ function setPlayerCharacter(entity: Entity, userID: int) {
     return;
   }
 
-  const newAnm2 = `${MULTIPLAYER_ANM2_PREFIX}${character}${MULTIPLAYER_ANM2_SUFFIX}`;
+  const newAnm2 = `${MULTIPLAYER_ANM2_PREFIX}${correctCharacter}${MULTIPLAYER_ANM2_SUFFIX}`;
   sprite.Load(newAnm2, true);
 }
 
