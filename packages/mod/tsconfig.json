@@ -20,5 +20,10 @@
     "luaTarget": "5.3",
     "luaBundle": "./mod/main.lua", // Will bundle all output Lua files into a single file
     "luaBundleEntry": "./src/bundleEntry.ts", // This invokes the "main.ts" file
+
+    "luaPlugins": [
+      // Uncomment the follow line to enable crash debugging
+      // { "name": "./node_modules/isaacscript/dist/src/plugins/addCrashDebugStatements.js" },
+    ],
   },
 }

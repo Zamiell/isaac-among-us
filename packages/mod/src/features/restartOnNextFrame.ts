@@ -27,10 +27,12 @@ export function postRender(): void {
 }
 
 // ModCallbacks.MC_POST_GAME_STARTED (15)
-export function postGameStarted(): void {
+export function postGameStarted(): boolean {
   if (!validateChallenge() || !validateCharacter() || !validateSeed()) {
     restartOnNextRenderFrame = true;
   }
+
+  return restartOnNextRenderFrame;
 }
 
 function validateChallenge() {

@@ -19,7 +19,10 @@ export function main(isContinued: boolean): void {
     return;
   }
 
-  restartOnNextFrame.postGameStarted();
+  if (restartOnNextFrame.postGameStarted()) {
+    return;
+  }
+
   disableMultiplayer.postGameStarted();
   goToEmptyRoom.postGameStarted();
 }
