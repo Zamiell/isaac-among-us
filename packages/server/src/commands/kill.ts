@@ -1,4 +1,5 @@
 import { error } from "../error";
+import { getPlayer } from "../game";
 import { sendKilled } from "../sendGame";
 import { ExtraCommandData } from "../types/ExtraCommandData";
 import { Role } from "../types/Role";
@@ -10,25 +11,34 @@ export function commandKill(
   data: KillDataToServer,
   extraData: ExtraCommandData,
 ): void {
-  const { game, player } = extraData;
+  const { game } = extraData;
   const { userIDKilled, room, x, y } = data;
 
-  if (!validate(socket, extraData) || game === null || player === null) {
+  if (!validate(socket, data, extraData) || game === null) {
     return;
   }
 
-  player.alive = false;
-  player.body = {
+  const playerKilled = getPlayer(userIDKilled, game);
+  if (playerKilled === null) {
+    return;
+  }
+
+  playerKilled.alive = false;
+  playerKilled.body = {
     room,
     x,
     y,
   };
-  game.playersKilledSinceLastMeeting.push(player.userID);
+  game.playersKilledSinceLastMeeting.push(userIDKilled);
 
   sendKilled(game, userIDKilled, room, x, y);
 }
 
-function validate(socket: Socket, extraData: ExtraCommandData) {
+function validate(
+  socket: Socket,
+  data: KillDataToServer,
+  extraData: ExtraCommandData,
+) {
   const { game, player } = extraData;
 
   if (game === null || player === null) {
@@ -42,6 +52,13 @@ function validate(socket: Socket, extraData: ExtraCommandData) {
 
   if (player.role !== Role.IMPOSTER) {
     error(socket, "You can only send that command as an impostor.");
+    return false;
+  }
+
+  const { userIDKilled } = data;
+  const playerKilled = getPlayer(userIDKilled, game);
+  if (playerKilled === null) {
+    error(socket, "That is an invalid player to kill.");
     return false;
   }
 

@@ -17,15 +17,15 @@ export function commandKilled(data: KilledDataToMod): void {
   killedPlayer.alive = false;
 
   if (killedPlayer.userID === g.userID) {
-    const player = Isaac.GetPlayer();
-    player.Velocity = Vector.Zero;
-    player.ControlsEnabled = false;
-    player.AddCollectible(CollectibleType.COLLECTIBLE_1UP);
-    removeAllMatchingEntities(
-      EntityType.ENTITY_FAMILIAR,
-      FamiliarVariant.ONE_UP,
-    );
-    removeCollectibleFromItemTracker(CollectibleType.COLLECTIBLE_1UP);
-    player.Kill();
+    weGotKilled();
   }
+}
+
+function weGotKilled() {
+  const player = Isaac.GetPlayer();
+  player.Velocity = Vector.Zero;
+  player.AddCollectible(CollectibleType.COLLECTIBLE_1UP);
+  removeAllMatchingEntities(EntityType.ENTITY_FAMILIAR, FamiliarVariant.ONE_UP);
+  removeCollectibleFromItemTracker(CollectibleType.COLLECTIBLE_1UP);
+  player.Kill();
 }
