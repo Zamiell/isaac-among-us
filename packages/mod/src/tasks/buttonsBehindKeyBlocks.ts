@@ -1,4 +1,4 @@
-import { runNextFrame, spawnGridEntity } from "isaacscript-common";
+import { runNextGameFrame, spawnGridEntity } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { allButtonsPressed } from "../features/buttonSubroutines";
@@ -25,19 +25,19 @@ export function buttonsBehindKeyBlocks(): void {
   spawnTaskButton(114, 1);
 
   spawnFakeBlockLine(64, 4, Direction.DOWN);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(64, 109);
   });
   spawnFakeBlockLine(66, 4, Direction.DOWN);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(66, 111);
   });
   spawnFakeBlockLine(68, 4, Direction.DOWN);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(68, 113);
   });
   spawnFakeBlockLine(70, 4, Direction.DOWN);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(70, 115);
   });
 

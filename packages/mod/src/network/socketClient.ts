@@ -13,6 +13,7 @@ import { BlackSpriteState } from "../types/BlackSpriteState";
 import { restart } from "../util";
 import {
   getClientFromSandbox,
+  getSocketTime,
   isSandboxEnabled,
   tryInitRacingPlusSandbox,
 } from "./sandbox";
@@ -140,8 +141,12 @@ export function isLuaDebugEnabled(): boolean {
  * `1640320492.5779`).
  */
 export function getTime(): float {
+  if (isSandboxEnabled()) {
+    return getSocketTime();
+  }
+
   if (socket === null) {
-    return 0;
+    error("The socket library was not initialized.");
   }
 
   return socket.gettime();

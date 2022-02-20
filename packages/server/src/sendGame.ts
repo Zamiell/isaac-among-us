@@ -1,3 +1,6 @@
+// A collection of helper functions to send changes in the game state to all of the clients in the
+// particular game
+
 import { sendTCP } from "./sendTCP";
 import { getTCPSocketByUserID } from "./tcpSockets";
 import { Game } from "./types/Game";
@@ -11,12 +14,10 @@ import {
   SocketCommandServerToModData,
 } from "./types/SocketCommands";
 
-// A collection of helper functions to send changes in the game state to all of the clients
-
 export function sendNewGameDescription(game: Game): void {
   const players = getGameDescriptionPlayers(game);
 
-  sendAll(game, SocketCommandServerToMod.GAME_DESCRIPTION, {
+  sendAllInGame(game, SocketCommandServerToMod.GAME_DESCRIPTION, {
     gameID: game.id,
     players,
     started: game.started,
@@ -43,7 +44,7 @@ export function getGameDescriptionPlayers(game: Game): GameDescriptionPlayer[] {
 }
 
 export function sendChat(game: Game, from: string, msg: string): void {
-  sendAll(game, SocketCommandServerToMod.CHAT, {
+  sendAllInGame(game, SocketCommandServerToMod.CHAT, {
     gameID: game.id,
     from,
     msg,
@@ -65,6 +66,13 @@ export function sendStarted(game: Game): void {
   }
 }
 
+export function sendEmergencyButtonCooldown(game: Game): void {
+  sendAllInGame(game, SocketCommandServerToMod.EMERGENCY_BUTTON_COOLDOWN, {
+    gameID: game.id,
+    cooldown: game.emergencyButtonCooldown,
+  });
+}
+
 export function sendKilled(
   game: Game,
   userIDKilled: number,
@@ -72,7 +80,7 @@ export function sendKilled(
   x: number,
   y: number,
 ): void {
-  sendAll(game, SocketCommandServerToMod.KILLED, {
+  sendAllInGame(game, SocketCommandServerToMod.KILLED, {
     gameID: game.id,
     userIDKilled,
     room,
@@ -86,7 +94,7 @@ export function sendStartMeeting(game: Game): void {
     return;
   }
 
-  sendAll(game, SocketCommandServerToMod.START_MEETING, {
+  sendAllInGame(game, SocketCommandServerToMod.START_MEETING, {
     gameID: game.id,
     meetingType: game.meeting.meetingType,
     userIDInitiated: game.meeting.userIDInitiated,
@@ -103,7 +111,7 @@ export function sendStartVoting(game: Game): void {
     return;
   }
 
-  sendAll(game, SocketCommandServerToMod.START_VOTING, {
+  sendAllInGame(game, SocketCommandServerToMod.START_VOTING, {
     gameID: game.id,
     timePhaseStarted: game.meeting.timePhaseStarted,
     phaseLengthSeconds: game.meeting.phaseLengthSeconds,
@@ -115,7 +123,7 @@ export function sendVote(game: Game): void {
     return;
   }
 
-  sendAll(game, SocketCommandServerToMod.VOTE, {
+  sendAllInGame(game, SocketCommandServerToMod.VOTE, {
     gameID: game.id,
     votes: game.meeting.votes,
   });
@@ -126,7 +134,7 @@ export function sendEndMeeting(
   meetingResolution: MeetingResolution,
   userIDEjected: number,
 ): void {
-  sendAll(game, SocketCommandServerToMod.END_MEETING, {
+  sendAllInGame(game, SocketCommandServerToMod.END_MEETING, {
     gameID: game.id,
     meetingResolution,
     userIDEjected,
@@ -139,7 +147,7 @@ export function sendEndGame(game: Game, winningRole: Role): void {
     roles.push(player.role);
   }
 
-  sendAll(game, SocketCommandServerToMod.END_GAME, {
+  sendAllInGame(game, SocketCommandServerToMod.END_GAME, {
     gameID: game.id,
     winningRole,
     roles,
@@ -147,12 +155,12 @@ export function sendEndGame(game: Game, winningRole: Role): void {
 }
 
 export function sendTerminated(game: Game): void {
-  sendAll(game, SocketCommandServerToMod.TERMINATED, {
+  sendAllInGame(game, SocketCommandServerToMod.TERMINATED, {
     gameID: game.id,
   });
 }
 
-function sendAll<T extends SocketCommandServerToMod>(
+function sendAllInGame<T extends SocketCommandServerToMod>(
   game: Game,
   command: T,
   data: InstanceType<typeof SocketCommandServerToModData[T]>,

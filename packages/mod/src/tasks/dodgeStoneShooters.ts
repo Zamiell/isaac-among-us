@@ -1,4 +1,4 @@
-import { runNextFrame, spawnGridEntity } from "isaacscript-common";
+import { runNextGameFrame, spawnGridEntity } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { spawnTeleporter } from "../features/teleporter";
@@ -17,24 +17,24 @@ export function dodgeStoneShooters(): void {
   spawnTaskButton(topRightGridIndex, 1);
 
   spawnFakeBlockLine(16, 10, Direction.RIGHT);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(16, 25);
   });
   spawnFakeBlockLine(27, 4, Direction.DOWN);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(27, 72);
   });
   spawnOneBlock(106);
   spawnFakeBlockLine(62, 4, Direction.DOWN);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(62, 107);
   });
   spawnFakeBlockLine(48, 2, Direction.RIGHT);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(48, 49);
   });
   spawnFakeBlockLine(51, 3, Direction.RIGHT);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(51, 53);
   });
   spawnOneBlock(55);
@@ -43,7 +43,7 @@ export function dodgeStoneShooters(): void {
   spawnOneBlock(94);
   spawnOneBlock(97);
   spawnFakeBlockLine(100, 3, Direction.RIGHT);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(100, 102);
   });
 
@@ -71,7 +71,7 @@ export function dodgeStoneShooters(): void {
 
 function spawnOneBlock(gridIndex: int) {
   spawnFakeBlock(gridIndex);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(gridIndex, gridIndex);
   });
 }

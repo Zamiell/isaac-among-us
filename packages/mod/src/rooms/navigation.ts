@@ -1,4 +1,4 @@
-import { runNextFrame } from "isaacscript-common";
+import { runNextGameFrame } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { EntityTypeCustom } from "../enums";
 import { spawnVent } from "../spawnObjects";
@@ -13,7 +13,7 @@ export function spawnNavigationObjects(): void {
   const gridIndexBottomLeft = 106;
   spawnVent(gridIndexBottomLeft);
 
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(27, 118);
   });
 }

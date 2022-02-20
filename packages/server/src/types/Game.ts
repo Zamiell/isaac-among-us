@@ -10,6 +10,11 @@ export class Game {
   meeting: Meeting | null = null;
   playersKilledSinceLastMeeting: number[] = [];
 
+  /** How many rounds of play there have been. */
+  night = 1;
+
+  emergencyButtonCooldown = true;
+
   constructor(id: number, name: string) {
     this.id = id;
     this.name = name;

@@ -141,6 +141,7 @@ export enum SocketCommandServerToMod {
   CHAT = "chat",
   STARTED = "started",
   RECONNECT = "reconnect",
+  EMERGENCY_BUTTON_COOLDOWN = "emergencyButtonCooldown",
   KILLED = "killed",
   START_MEETING = "startMeeting",
   START_VOTING = "startVoting",
@@ -241,6 +242,11 @@ export class ReconnectDataToMod {
   enterGridIndex!: number;
 }
 
+export class EmergencyButtonCooldownDataToMod {
+  gameID!: number;
+  cooldown!: boolean;
+}
+
 export class KilledDataToMod {
   gameID!: number;
   userIDKilled!: number;
@@ -305,6 +311,8 @@ export const SocketCommandServerToModData = {
   [SocketCommandServerToMod.CHAT]: ChatDataToMod,
   [SocketCommandServerToMod.STARTED]: StartedDataToMod,
   [SocketCommandServerToMod.RECONNECT]: ReconnectDataToMod,
+  [SocketCommandServerToMod.EMERGENCY_BUTTON_COOLDOWN]:
+    EmergencyButtonCooldownDataToMod,
   [SocketCommandServerToMod.KILLED]: KilledDataToMod,
   [SocketCommandServerToMod.START_MEETING]: StartMeetingDataToMod,
   [SocketCommandServerToMod.START_VOTING]: StartVotingDataToMod,

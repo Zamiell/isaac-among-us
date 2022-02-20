@@ -25,6 +25,15 @@ export function getFormattedTime(): string {
   return os.date(format);
 }
 
+/** Helper function to call `socket.gettime()`. */
+export function getSocketTime(): float {
+  if (sandbox === null) {
+    error("The sandbox is not initialized.");
+  }
+
+  return sandbox.getSocketTime();
+}
+
 export function isSandboxEnabled(): boolean {
   return sandbox !== null;
 }

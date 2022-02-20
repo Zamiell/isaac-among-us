@@ -1,4 +1,4 @@
-import { runNextFrame } from "isaacscript-common";
+import { runNextGameFrame } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { EntityTypeCustom } from "../enums";
 import { spawnFakeBlockLine } from "../spawnObjects";
@@ -8,7 +8,7 @@ export function spawnShieldsObjects(): void {
   // Bottom
   spawnFakeBlockLine(196, 13, Direction.RIGHT);
   spawnFakeBlockLine(211, 13, Direction.RIGHT);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(196, 223);
   });
 
@@ -17,7 +17,7 @@ export function spawnShieldsObjects(): void {
   spawnFakeBlockLine(136, 5, Direction.RIGHT);
   spawnFakeBlockLine(121, 3, Direction.RIGHT);
   spawnFakeBlockLine(106, 2, Direction.RIGHT);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(121, 153);
     addCollision(139, 154);
     addCollision(155, 155, -20);
@@ -35,7 +35,7 @@ export function spawnShieldsObjects(): void {
   spawnFakeBlockLine(84, 4, Direction.RIGHT);
   spawnFakeBlockLine(69, 4, Direction.RIGHT);
   spawnFakeBlockLine(54, 4, Direction.RIGHT);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(188, 193);
     addCollision(174, 178);
     addCollision(129, 163);
@@ -48,7 +48,7 @@ export function spawnShieldsObjects(): void {
   spawnFakeBlockLine(46, 5, Direction.RIGHT);
   spawnFakeBlockLine(31, 5, Direction.RIGHT);
   spawnFakeBlockLine(16, 13, Direction.RIGHT);
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(16, 63);
     addCollision(19, 49);
     addCollision(20, 28);

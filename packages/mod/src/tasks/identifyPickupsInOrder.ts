@@ -4,7 +4,7 @@ import {
   getEnumValues,
   getRandomArrayElement,
   removeAllMatchingEntities,
-  runInNFrames,
+  runInNGameFrames,
 } from "isaacscript-common";
 import { EffectVariantCustom } from "../enums";
 import { spawnTaskButton } from "../features/buttonSpawn";
@@ -128,7 +128,7 @@ function setupRound() {
 
   // Delay a second so that the player gets a chance to react before seeing the text
   showingPickupIndex = 0;
-  runInNFrames(() => {
+  runInNGameFrames(() => {
     showingPickupFrame = Isaac.GetFrameCount();
   }, GAME_FRAMES_PER_SECOND / 2);
 }

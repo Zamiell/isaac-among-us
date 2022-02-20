@@ -2,7 +2,7 @@ import {
   arrayRemoveInPlace,
   getNPCs,
   removeAllMatchingEntities,
-  runNextFrame,
+  runNextGameFrame,
 } from "isaacscript-common";
 import { taskDescriptions } from "../constants";
 import { EffectVariantCustom } from "../enums";
@@ -26,7 +26,7 @@ export function taskComplete(): void {
   const task = g.game.currentTask;
 
   muteSoundEffects();
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     // Some sound effects might not happen until the next frame,
     // so mute everything again just in case
     muteSoundEffects();

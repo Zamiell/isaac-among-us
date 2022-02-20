@@ -8,3 +8,5 @@ export const MAX_PLAYERS = 15;
 
 export const NOT_VOTED_YET = -1;
 export const VOTE_SKIP = -2;
+
+export const EMERGENCY_BUTTON_COOLDOWN_SECONDS = 20;

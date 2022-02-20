@@ -1,3 +1,5 @@
+// A collection of helper functions to send changes in the server state to every connected client
+
 import { sendTCP } from "./sendTCP";
 import { tcpSockets } from "./tcpSockets";
 import { Game } from "./types/Game";

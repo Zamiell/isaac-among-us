@@ -1,4 +1,5 @@
 import { commandChat } from "./commands/chat";
+import { commandEmergencyButtonCooldown } from "./commands/emergencyButtonCooldown";
 import { commandEndGame } from "./commands/endGame";
 import { commandEndMeeting } from "./commands/endMeeting";
 import { commandError } from "./commands/error";
@@ -41,6 +42,8 @@ export const commandMap: CommandMap = {
   [SocketCommandServerToMod.CHAT]: commandChat,
   [SocketCommandServerToMod.STARTED]: commandStarted,
   [SocketCommandServerToMod.RECONNECT]: commandReconnect,
+  [SocketCommandServerToMod.EMERGENCY_BUTTON_COOLDOWN]:
+    commandEmergencyButtonCooldown,
   [SocketCommandServerToMod.KILLED]: commandKilled,
   [SocketCommandServerToMod.START_MEETING]: commandStartMeeting,
   [SocketCommandServerToMod.START_VOTING]: commandStartVoting,

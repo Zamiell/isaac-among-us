@@ -1,11 +1,9 @@
 import { isKeyboardPressed } from "isaacscript-common";
 import { IS_DEV } from "./constants";
 import { startAutoLogin } from "./features/autoLogin";
+import { startMeeting } from "./features/startMeeting";
 import g from "./globals";
-import { sendTCP } from "./network/send";
-import { MeetingType } from "./types/MeetingType";
 import { SkeldRoom } from "./types/SkeldRoom";
-import { SocketCommandModToServer } from "./types/SocketCommands";
 
 const DEBUG_HOTKEY1 = Keyboard.KEY_F1;
 const DEBUG_HOTKEY2 = Keyboard.KEY_F2;
@@ -16,6 +14,14 @@ let hotkeyPressed2 = false;
 export function debugFunction(): void {}
 
 export function debugFunction2(): void {}
+
+function hotkeyFunction1() {
+  startAutoLogin();
+}
+
+function hotkeyFunction2() {
+  startMeeting();
+}
 
 // ModCallbacks.MC_POST_UPDATE (1)
 export function postUpdate(): void {
@@ -34,10 +40,6 @@ function postUpdateHotkey1() {
   }
 }
 
-function hotkeyFunction1() {
-  startAutoLogin();
-}
-
 function postUpdateHotkey2() {
   if (isKeyboardPressed(DEBUG_HOTKEY2)) {
     if (!hotkeyPressed2) {
@@ -47,18 +49,6 @@ function postUpdateHotkey2() {
   } else {
     hotkeyPressed2 = false;
   }
-}
-
-function hotkeyFunction2() {
-  if (g.game === null) {
-    return;
-  }
-
-  sendTCP(SocketCommandModToServer.MEETING, {
-    meetingType: MeetingType.EMERGENCY,
-    gameID: g.game.id,
-    userIDKilled: 0,
-  });
 }
 
 export function injectTestPlayers(): void {

@@ -1,4 +1,4 @@
-import { removeAllMatchingEntities } from "isaacscript-common";
+import { getSlots, removeAllMatchingEntities } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
@@ -71,8 +71,7 @@ export function postUpdate(): void {
 }
 
 function isAnySlotActive() {
-  const slots = Isaac.FindByType(EntityType.ENTITY_SLOT);
-  for (const slot of slots) {
+  for (const slot of getSlots()) {
     const sprite = slot.GetSprite();
     const animation = sprite.GetAnimation();
 

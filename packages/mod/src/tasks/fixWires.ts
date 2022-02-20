@@ -1,4 +1,9 @@
-import { arrayEmpty, arrayShuffle, getEnumValues } from "isaacscript-common";
+import {
+  arrayEmpty,
+  arrayShuffle,
+  getEffects,
+  getEnumValues,
+} from "isaacscript-common";
 import { ButtonSubType, EffectVariantCustom, EntityTypeCustom } from "../enums";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { resetButton } from "../features/buttonSubroutines";
@@ -176,12 +181,11 @@ function rightSideButtonPressed(color: WireColor) {
 }
 
 function resetLeftButtons(exceptColor: int) {
-  const buttons = Isaac.FindByType(
-    EntityType.ENTITY_EFFECT,
+  const leftButtons = getEffects(
     EffectVariantCustom.BUTTON,
     ButtonSubType.TASK_1,
   );
-  for (const button of buttons) {
+  for (const button of leftButtons) {
     const data = button.GetData();
     const color = data.color as WireColor;
 

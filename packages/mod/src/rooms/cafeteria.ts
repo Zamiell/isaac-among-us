@@ -1,5 +1,5 @@
 import { EntityTypeCustom } from "../enums";
-import { spawnEmergencyButton } from "../features/buttonSpawn";
+import { spawnEmergencyButton } from "../features/emergencyButton";
 import { spawnEntity } from "../util";
 
 export const CENTER_TABLE_GRID_INDEX = 209;

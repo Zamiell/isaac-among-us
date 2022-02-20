@@ -5,9 +5,7 @@ import { getSkeldRoom } from "../stageAPI";
 import { spawnEntity } from "../util";
 import { getButtonAnimationSuffix, TaskButtonData } from "./buttonSubroutines";
 
-const EMERGENCY_BUTTON_GRID_INDEX = 265;
-
-function spawnButton(
+export function spawnButton(
   buttonSubType: ButtonSubType,
   gridIndex: int,
   enabled: boolean,
@@ -22,17 +20,21 @@ function spawnButton(
     error("Failed to convert the button to an effect.");
   }
 
+  setButtonState(button, enabled);
+
+  return button;
+}
+
+export function setButtonState(button: EntityEffect, enabled: boolean): void {
   button.State = enabled
     ? PressurePlateState.UNPRESSED
     : PressurePlateState.PRESSURE_PLATE_PRESSED;
 
   const sprite = button.GetSprite();
-  const animationSuffix = getButtonAnimationSuffix(buttonSubType);
+  const animationSuffix = getButtonAnimationSuffix(button.SubType);
   const verb = enabled ? "Off" : "On";
   const animation = verb + animationSuffix;
   sprite.Play(animation, true);
-
-  return button;
 }
 
 export function spawnGoToTaskButtons(): void {
@@ -65,18 +67,6 @@ export function spawnGoToTaskButtons(): void {
     const data = button.GetData() as unknown as TaskButtonData;
     data.task = task;
   }
-}
-
-export function spawnEmergencyButton(): void {
-  if (g.game === null) {
-    return;
-  }
-
-  spawnButton(
-    ButtonSubType.EMERGENCY,
-    EMERGENCY_BUTTON_GRID_INDEX,
-    !g.game.usedEmergencyMeeting,
-  );
 }
 
 export function spawnTaskButton(gridIndex: int, num: int): EntityEffect {

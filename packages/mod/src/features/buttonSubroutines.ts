@@ -1,4 +1,4 @@
-import { ensureAllCases } from "isaacscript-common";
+import { ensureAllCases, getEffects } from "isaacscript-common";
 import { ButtonSubType, EffectVariantCustom } from "../enums";
 import { Task } from "../types/Task";
 
@@ -10,17 +10,9 @@ export interface TaskButtonData {
 }
 
 export function allButtonsPressed(): boolean {
-  const buttons = Isaac.FindByType(
-    EntityType.ENTITY_EFFECT,
-    EffectVariantCustom.BUTTON,
-  );
+  const buttons = getEffects(EffectVariantCustom.BUTTON);
   for (const button of buttons) {
-    const effect = button.ToEffect();
-    if (effect === undefined) {
-      continue;
-    }
-
-    const pressed = effect.State === PressurePlateState.PRESSURE_PLATE_PRESSED;
+    const pressed = button.State === PressurePlateState.PRESSURE_PLATE_PRESSED;
     if (!pressed) {
       return false;
     }
@@ -30,38 +22,19 @@ export function allButtonsPressed(): boolean {
 }
 
 export function resetAllButtons(): void {
-  const buttons = Isaac.FindByType(
-    EntityType.ENTITY_EFFECT,
-    EffectVariantCustom.BUTTON,
-  );
+  const buttons = getEffects(EffectVariantCustom.BUTTON);
   for (const button of buttons) {
     resetButton(button);
   }
 }
 
-export function resetButton(button: Entity): void {
-  const effect = button.ToEffect();
-  if (effect === undefined) {
-    return;
-  }
+export function resetButton(button: EntityEffect): void {
+  button.State = PressurePlateState.UNPRESSED;
 
-  effect.State = PressurePlateState.UNPRESSED;
-
-  const sprite = effect.GetSprite();
-  const animationSuffix = getButtonAnimationSuffix(effect.SubType);
+  const sprite = button.GetSprite();
+  const animationSuffix = getButtonAnimationSuffix(button.SubType);
   const animation = `Off${animationSuffix}`;
   sprite.Play(animation, true);
-}
-
-export function removeEmergencyButton(): void {
-  const buttons = Isaac.FindByType(
-    EntityType.ENTITY_EFFECT,
-    EffectVariantCustom.BUTTON,
-    ButtonSubType.EMERGENCY,
-  );
-  for (const button of buttons) {
-    button.Remove();
-  }
 }
 
 export function getButtonAnimationSuffix(buttonSubType: ButtonSubType): string {

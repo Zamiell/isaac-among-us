@@ -1,4 +1,4 @@
-import { runNextFrame } from "isaacscript-common";
+import { runNextGameFrame } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { EntityTypeCustom } from "../enums";
 import { spawnEntity } from "../util";
@@ -14,7 +14,7 @@ export function spawnMedbayObjects(): void {
     sprite.FlipX = true;
   }
 
-  runNextFrame(() => {
+  runNextGameFrame(() => {
     addCollision(16, 108);
     addCollision(26, 118);
   });

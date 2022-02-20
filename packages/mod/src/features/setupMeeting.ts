@@ -8,8 +8,7 @@ import { getOurPlayerIndex } from "../players";
 import { CENTER_TABLE_GRID_INDEX } from "../rooms/cafeteria";
 import { getSkeldRoom, goToStageAPIRoom } from "../stageAPI";
 import { SkeldRoom } from "../types/SkeldRoom";
-import { spawnEmergencyButton } from "./buttonSpawn";
-import { removeEmergencyButton } from "./buttonSubroutines";
+import { removeEmergencyButton, spawnEmergencyButton } from "./emergencyButton";
 
 // In order for the players to be properly centered, we must offset the players downwards slightly
 const MEETING_CENTER_OFFSET = Vector(0, 10);

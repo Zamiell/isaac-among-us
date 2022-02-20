@@ -17,6 +17,7 @@ export class AmongUsGame {
   imposters: number[] | null = null;
   meeting: Meeting | null = null;
   players: GameDescriptionPlayer[] = [];
+  emergencyButtonCooldown = true;
 
   /** Indexed by user ID. Contains only UDP data. */
   playerMap = new Map<int, PlayerData>();
