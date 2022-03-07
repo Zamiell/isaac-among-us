@@ -30,7 +30,7 @@ function getPrintMsg(args: unknown[]) {
       msg += " ";
     }
 
-    let valueToPrint;
+    let valueToPrint: string;
     const metatable = getmetatable(arg);
     const isVector =
       metatable !== undefined &&
