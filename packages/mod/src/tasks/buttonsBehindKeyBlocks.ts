@@ -5,7 +5,7 @@ import { allButtonsPressed } from "../features/buttonSubroutines";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import { spawnFakeBlockLine } from "../spawnObjects";
-import { movePlayerToGridIndex, spawnEntity } from "../util";
+import { movePlayerToGridIndex, spawnEntity } from "../utils";
 
 export function buttonsBehindKeyBlocks(): void {
   const leftGridIndex = 62;

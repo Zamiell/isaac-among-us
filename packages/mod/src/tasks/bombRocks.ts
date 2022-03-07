@@ -3,7 +3,7 @@ import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
 import { Task } from "../types/Task";
-import { movePlayerToGridIndex, spawnEntity } from "../util";
+import { movePlayerToGridIndex, spawnEntity } from "../utils";
 
 const THIS_TASK = Task.SHORT_BOMB_ROCKS;
 

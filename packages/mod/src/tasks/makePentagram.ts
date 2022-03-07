@@ -6,7 +6,7 @@ import {
   drawFontText,
   movePlayerToGridIndex,
   updatePlayerStats,
-} from "../util";
+} from "../utils";
 
 const THIS_TASK = Task.LONG_MAKE_PENTAGRAM;
 const REQUIRED_PENTAGRAM_SIZE = 250;

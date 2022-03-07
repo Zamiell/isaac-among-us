@@ -1,7 +1,4 @@
-import {
-  getRoomSafeGridIndex,
-  getScreenBottomRightPos,
-} from "isaacscript-common";
+import { getRoomGridIndex, getScreenBottomRightPos } from "isaacscript-common";
 import { MOD_NAME } from "../constants";
 import { fonts } from "../fonts";
 import g from "../globals";
@@ -29,8 +26,8 @@ function shouldDrawWelcomeNotification() {
     return false;
   }
 
-  const roomSafeGridIndex = getRoomSafeGridIndex();
-  if (roomSafeGridIndex !== START_ROOM_INDEX) {
+  const roomGridIndex = getRoomGridIndex();
+  if (roomGridIndex !== START_ROOM_INDEX) {
     return false;
   }
 

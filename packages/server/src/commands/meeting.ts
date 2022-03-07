@@ -14,7 +14,7 @@ import { MeetingResolution } from "../types/MeetingResolution";
 import { MeetingType } from "../types/MeetingType";
 import { Socket } from "../types/Socket";
 import { MeetingDataToServer } from "../types/SocketCommands";
-import { ensureAllCases, getTimestamp, initArray } from "../util";
+import { ensureAllCases, getTimestamp, initArray } from "../utils";
 
 export function commandMeeting(
   socket: Socket,

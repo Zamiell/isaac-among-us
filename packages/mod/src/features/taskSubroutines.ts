@@ -13,7 +13,7 @@ import { setupPlayerAndUI } from "../setupPlayersAndUI";
 import { skeldRoomReverseMap } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
 import { SocketCommandModToServer } from "../types/SocketCommands";
-import { removeGridEntity } from "../util";
+import { removeGridEntity } from "../utils";
 import { isWallGridIndex } from "../wall";
 
 const sfx = SFXManager();

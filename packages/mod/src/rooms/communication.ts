@@ -1,7 +1,7 @@
 import { runNextGameFrame, spawnGridEntity } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { EntityTypeCustom } from "../enums";
-import { spawnEntity } from "../util";
+import { spawnEntity } from "../utils";
 
 export function spawnCommunicationObjects(): void {
   const topLeftGridIndex = 16;

@@ -10,7 +10,7 @@ import {
 import { setBlackSpriteState } from "../features/blackSprite";
 import g from "../globals";
 import { BlackSpriteState } from "../types/BlackSpriteState";
-import { restart } from "../util";
+import { restart } from "../utils";
 import {
   getClientFromSandbox,
   getSocketTime,

@@ -1,7 +1,7 @@
 import { IS_DEV } from "./constants";
 import { Game } from "./types/Game";
 import { Role } from "./types/Role";
-import { getRandomArrayIndex } from "./util";
+import { getRandomArrayIndex } from "./utils";
 
 export function assignImpostors(game: Game): void {
   if (IS_DEV) {

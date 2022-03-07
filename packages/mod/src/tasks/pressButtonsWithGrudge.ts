@@ -2,7 +2,7 @@ import { spawnTaskButton } from "../features/buttonSpawn";
 import { allButtonsPressed } from "../features/buttonSubroutines";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
-import { movePlayerToGridIndex, spawnEntity } from "../util";
+import { movePlayerToGridIndex, spawnEntity } from "../utils";
 
 export function pressButtonsWithGrudge(): void {
   const centerGridIndex = 67;

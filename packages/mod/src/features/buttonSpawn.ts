@@ -2,7 +2,7 @@ import { taskDescriptions } from "../constants";
 import { ButtonSubType, EffectVariantCustom } from "../enums";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
-import { spawnEntity } from "../util";
+import { spawnEntity } from "../utils";
 import { getButtonAnimationSuffix, TaskButtonData } from "./buttonSubroutines";
 
 export function spawnButton(

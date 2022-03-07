@@ -1,10 +1,10 @@
-import { arrayEmpty, arrayShuffleInPlace } from "isaacscript-common";
+import { emptyArray, shuffleArrayInPlace } from "isaacscript-common";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
 import { Task } from "../types/Task";
-import { drawFontText, movePlayerToGridIndex } from "../util";
+import { drawFontText, movePlayerToGridIndex } from "../utils";
 
 const THIS_TASK = Task.SHORT_PUSH_BUTTONS_IN_ORDER;
 const BUTTON_GRID_INDEXES: int[] = [32, 35, 39, 42, 62, 65, 69, 72, 92, 102];
@@ -25,11 +25,11 @@ export function pushButtonsInOrder(): void {
 }
 
 function setNewButtonOrder() {
-  arrayEmpty(buttonOrder);
+  emptyArray(buttonOrder);
   for (let i = 0; i < BUTTON_GRID_INDEXES.length; i++) {
     buttonOrder.push(i);
   }
-  arrayShuffleInPlace(buttonOrder);
+  shuffleArrayInPlace(buttonOrder);
 
   nextButtonToPress = 0;
 }

@@ -1,5 +1,5 @@
 import {
-  arrayEmpty,
+  emptyArray,
   GAME_FRAMES_PER_SECOND,
   getEnumValues,
   getRandomArrayElement,
@@ -12,7 +12,7 @@ import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
 import { Task } from "../types/Task";
-import { drawFontText, movePlayerToGridIndex } from "../util";
+import { drawFontText, movePlayerToGridIndex } from "../utils";
 
 const THIS_TASK = Task.LONG_IDENTIFY_PICKUPS_IN_ORDER;
 const STARTING_ROUND = 1;
@@ -20,7 +20,9 @@ const NUM_ROUNDS = 6;
 const PLAYER_START_GRID_INDEX = 82;
 const TEXT_GRID_INDEX = 37; // Below the room description
 const TEXT_SHOW_FRAMES = 30;
-const BUTTON_GRID_INDEXES: int[] = [32, 62, 92, 42, 72, 102, 35, 37, 39];
+const BUTTON_GRID_INDEXES: readonly int[] = [
+  32, 62, 92, 42, 72, 102, 35, 37, 39,
+];
 const ROW_LENGTH = 15;
 const SPRITE_OFFSET = Vector(0, 10);
 
@@ -116,7 +118,7 @@ function setupRound() {
     EffectVariantCustom.BUTTON,
   );
 
-  arrayEmpty(currentPickupOrder);
+  emptyArray(currentPickupOrder);
   for (let i = 0; i < currentRound; i++) {
     const pickupTypes = getEnumValues(PickupType);
     let randomPickupType: int;

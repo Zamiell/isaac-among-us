@@ -5,7 +5,7 @@ import {
   EffectVariantCustom,
   EntityTypeCustom,
 } from "./enums";
-import { spawnEntity } from "./util";
+import { spawnEntity } from "./utils";
 
 function spawnBlock(gridIndex: int, visible = true): GridEntity {
   const gridEntityType = visible
@@ -13,6 +13,9 @@ function spawnBlock(gridIndex: int, visible = true): GridEntity {
     : GridEntityType.GRID_WALL;
 
   const gridEntity = spawnGridEntity(gridEntityType, gridIndex);
+  if (gridEntity === undefined) {
+    error(`Failed to spawn a block at grid index: ${gridIndex}`);
+  }
 
   return gridEntity;
 }

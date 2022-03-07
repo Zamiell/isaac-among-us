@@ -1,5 +1,5 @@
 import {
-  getMaxCollectibleID,
+  getMaxCollectibleType,
   log,
   MAX_VANILLA_COLLECTIBLE_TYPE,
   saveDataManager,
@@ -38,7 +38,7 @@ export function check(): boolean {
 // Check to see if there are any mods enabled that have added custom items
 // (it is difficult to detect other mods in other ways)
 function areOtherModsEnabled() {
-  const maxCollectibleID = getMaxCollectibleID();
+  const maxCollectibleID = getMaxCollectibleType();
   const correctMaxCollectibleID = MAX_VANILLA_COLLECTIBLE_TYPE;
 
   if (maxCollectibleID !== correctMaxCollectibleID) {

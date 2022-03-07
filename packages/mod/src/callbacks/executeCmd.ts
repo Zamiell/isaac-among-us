@@ -1,9 +1,9 @@
-import { getGridEntities, getRoomSafeGridIndex, log } from "isaacscript-common";
+import { getGridEntities, getRoomGridIndex, log } from "isaacscript-common";
 import { debugFunction, debugFunction2 } from "../debugFunction";
 import { skeldRoomReverseMap } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
 import { SkeldRoom } from "../types/SkeldRoom";
-import { removeGridEntity } from "../util";
+import { removeGridEntity } from "../utils";
 import { list } from "./executeCmdSubroutines";
 
 export function main(command: string, parameters: string): void {
@@ -80,6 +80,6 @@ functionMap.set("removeallgrid", () => {
 });
 
 functionMap.set("roomindex", () => {
-  const roomSafeGridIndex = getRoomSafeGridIndex();
-  print(roomSafeGridIndex);
+  const roomGridIndex = getRoomGridIndex();
+  print(roomGridIndex);
 });

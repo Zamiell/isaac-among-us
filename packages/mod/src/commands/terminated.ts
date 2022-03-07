@@ -1,6 +1,6 @@
 import g from "../globals";
 import { TerminatedDataToMod } from "../types/SocketCommands";
-import { restart } from "../util";
+import { restart } from "../utils";
 
 export function commandTerminated(_data: TerminatedDataToMod): void {
   if (g.game === null) {

@@ -2,7 +2,7 @@ import g from "../globals";
 import { getTime } from "../network/socketClient";
 import { Meeting } from "../types/Meeting";
 import { MeetingPhase } from "../types/MeetingPhase";
-import { drawFontText, getScreenPosition } from "../util";
+import { drawFontText, getScreenPosition } from "../utils";
 import { isConsoleOpen } from "./console";
 import { inEndMeeting } from "./endMeeting";
 import { inStartMeeting } from "./startMeeting";

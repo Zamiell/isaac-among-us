@@ -1,7 +1,7 @@
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { spawnTeleporter } from "../features/teleporter";
 import { spawnBlockLine, spawnSpikesLine } from "../spawnObjects";
-import { movePlayerToGridIndex, spawnEntity } from "../util";
+import { movePlayerToGridIndex, spawnEntity } from "../utils";
 
 export function walkBetweenSuctionPitfalls(): void {
   const bottomLeftGridIndex = 106;

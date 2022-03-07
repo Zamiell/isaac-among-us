@@ -15,7 +15,7 @@ import { sendTCP } from "../network/send";
 import * as socketClient from "../network/socketClient";
 import { Colors } from "../types/Colors";
 import { SocketCommandModToServer } from "../types/SocketCommands";
-import { getScreenPosition } from "../util";
+import { getScreenPosition } from "../utils";
 import { drawText } from "./drawText";
 
 export const SPACING_FROM_LEFT_EDGE = 0.167;
@@ -152,13 +152,13 @@ function insertNewCharacter(keyStringArray: [string, string]) {
 
 function open() {
   consoleOpen = true;
-  disableAllInputs();
+  disableAllInputs(MOD_NAME);
   AwaitingTextInput = true;
 }
 
 function close(execute = true) {
   consoleOpen = false;
-  enableAllInputs();
+  enableAllInputs(MOD_NAME);
   AwaitingTextInput = false;
 
   if (!execute || inputText === "") {

@@ -1,5 +1,5 @@
 import { getEnumValues } from "isaacscript-common";
-import { disableShooting, updatePlayerStats } from "./util";
+import { disableShooting, updatePlayerStats } from "./utils";
 
 export function setupPlayerAndUI(): void {
   const player = Isaac.GetPlayer();

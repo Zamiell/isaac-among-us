@@ -2,7 +2,7 @@ import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
 import { Task } from "../types/Task";
-import { enableShooting, movePlayerToGridIndex } from "../util";
+import { enableShooting, movePlayerToGridIndex } from "../utils";
 
 const THIS_TASK = Task.LONG_KILL_WORMS;
 const TYPE_OF_ENEMY = EntityType.ENTITY_ROUND_WORM;

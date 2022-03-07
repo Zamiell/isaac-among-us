@@ -8,7 +8,7 @@ import { injectTestPlayers } from "../debugFunction";
 import { EffectVariantCustom } from "../enums";
 import { fonts } from "../fonts";
 import g from "../globals";
-import { getRoomIndexModified } from "../util";
+import { getRoomIndexModified } from "../utils";
 import { isConsoleOpen } from "./console";
 import { inEndMeeting } from "./endMeeting";
 import { getMeetingCirclePoints } from "./setupMeeting";

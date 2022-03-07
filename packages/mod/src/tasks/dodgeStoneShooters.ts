@@ -3,7 +3,11 @@ import { addCollision } from "../collisionObjects";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { spawnTeleporter } from "../features/teleporter";
 import { spawnFakeBlock, spawnFakeBlockLine } from "../spawnObjects";
-import { movePlayerToGridIndex, spawnEntity, updatePlayerStats } from "../util";
+import {
+  movePlayerToGridIndex,
+  spawnEntity,
+  updatePlayerStats,
+} from "../utils";
 
 export function dodgeStoneShooters(): void {
   const leftGridIndex = 61;

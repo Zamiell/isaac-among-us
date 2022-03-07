@@ -21,7 +21,7 @@ import { spawnUpperEngineObjects } from "../rooms/upperEngine";
 import { spawnWeaponsObjects } from "../rooms/weapons";
 import { getSkeldRoom } from "../stageAPI";
 import { SkeldRoom } from "../types/SkeldRoom";
-import { removeGridEntity } from "../util";
+import { removeGridEntity } from "../utils";
 import { spawnGoToTaskButtons } from "./buttonSpawn";
 
 export function postRoomLoad(): void {

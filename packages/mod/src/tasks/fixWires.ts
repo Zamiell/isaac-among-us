@@ -1,8 +1,8 @@
 import {
-  arrayEmpty,
-  arrayShuffle,
+  emptyArray,
   getEffects,
   getEnumValues,
+  shuffleArray,
 } from "isaacscript-common";
 import { ButtonSubType, EffectVariantCustom, EntityTypeCustom } from "../enums";
 import { spawnTaskButton } from "../features/buttonSpawn";
@@ -11,7 +11,7 @@ import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
 import { Task } from "../types/Task";
-import { movePlayerToGridIndex, spawnEntity } from "../util";
+import { movePlayerToGridIndex, spawnEntity } from "../utils";
 
 const THIS_TASK = Task.SHORT_FIX_WIRES;
 const NUM_BUTTONS = 4;
@@ -111,7 +111,7 @@ export function fixWires(): void {
   // The right side is randomized, with the color being stored as entity data
   const topRightGridIndex = 28;
   const wireColors = getEnumValues(WireColor);
-  const randomWireColors = arrayShuffle(wireColors);
+  const randomWireColors = shuffleArray(wireColors);
   for (let i = 0; i < NUM_BUTTONS; i++) {
     const color = randomWireColors[i];
 
@@ -127,7 +127,7 @@ export function fixWires(): void {
   }
 
   buttonColorActive = null;
-  arrayEmpty(colorsComplete);
+  emptyArray(colorsComplete);
   resetLineSprites();
 }
 

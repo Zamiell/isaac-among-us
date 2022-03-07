@@ -1,7 +1,7 @@
 import { spawnGridEntity } from "isaacscript-common";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { spawnTeleporter } from "../features/teleporter";
-import { movePlayerToGridIndex } from "../util";
+import { movePlayerToGridIndex } from "../utils";
 
 export function walkDiagonallyThroughSpikes(): void {
   const topLeftGridIndex = 32;

@@ -12,7 +12,7 @@ import {
   UDP_POSITION_FIELDS,
 } from "../constants";
 import g from "../globals";
-import { getRoomIndexModified } from "../util";
+import { getRoomIndexModified } from "../utils";
 import { sendUDP } from "./send";
 import * as struct from "./struct";
 

@@ -9,7 +9,7 @@ import { setSpriteOpacity } from "../sprite";
 import { BlackSpriteState } from "../types/BlackSpriteState";
 import { CutsceneState } from "../types/CutsceneState";
 import { Role } from "../types/Role";
-import { drawFontText, getRoleText } from "../util";
+import { drawFontText, getRoleText } from "../utils";
 import { FADE_TO_BLACK_FRAMES, setBlackSpriteState } from "./blackSprite";
 import { getMeetingCirclePoints } from "./setupMeeting";
 

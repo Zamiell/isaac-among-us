@@ -8,7 +8,7 @@ import { sendTCP } from "./network/send";
 import * as socketClient from "./network/socketClient";
 import { getOurPlayerIndex } from "./players";
 import { SocketCommandModToServer } from "./types/SocketCommands";
-import { amOwner, restart } from "./util";
+import { amOwner, restart } from "./utils";
 
 export const chatCommandFunctions = new Map<string, (args: string[]) => void>();
 

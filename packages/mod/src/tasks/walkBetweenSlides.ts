@@ -3,7 +3,7 @@ import { addCollision } from "../collisionObjects";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { spawnTeleporter } from "../features/teleporter";
 import { spawnFakeBlockLine } from "../spawnObjects";
-import { movePlayerToGridIndex, spawnEntity } from "../util";
+import { movePlayerToGridIndex, spawnEntity } from "../utils";
 
 export function walkBetweenSlides(): void {
   const topLeftGridIndex = 32;

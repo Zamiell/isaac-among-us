@@ -9,7 +9,7 @@ import { Game } from "./types/Game";
 import { Player } from "./types/Player";
 import { Task } from "./types/Task";
 import { TaskType } from "./types/TaskType";
-import { ensureAllCases, getEnumValues, getRandomArrayElement } from "./util";
+import { ensureAllCases, getEnumValues, getRandomArrayElement } from "./utils";
 
 const DEV_TASK: Task | null = null;
 

@@ -1,7 +1,7 @@
 import { spawnGiantPoop } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
-import { enableShooting, movePlayerToGridIndex } from "../util";
+import { enableShooting, movePlayerToGridIndex } from "../utils";
 
 export function destroyGiantPoop(): void {
   const centerLeftGridIndex = 62;
@@ -16,7 +16,7 @@ export function destroyGiantPoop(): void {
 }
 
 export function postGridEntityUpdatePoop(gridEntity: GridEntity): void {
-  if (gridEntity.State === GigaPoopState.COMPLETELY_BROKEN) {
+  if (gridEntity.State === PoopState.COMPLETELY_DESTROYED) {
     taskComplete();
   }
 }

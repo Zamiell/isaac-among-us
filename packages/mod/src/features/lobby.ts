@@ -4,7 +4,7 @@ import {
   getEffectiveStage,
   getNPCs,
   getPlayers,
-  getRoomSafeGridIndex,
+  getRoomGridIndex,
   getRoomStageID,
   getRoomVariant,
   removeEntities,
@@ -13,7 +13,7 @@ import g from "../globals";
 import { disableMinimapAPI } from "../minimapAPI";
 import { setupPlayerAndUI } from "../setupPlayersAndUI";
 import { spawnBox } from "../spawnObjects";
-import { consoleCommand } from "../util";
+import { consoleCommand } from "../utils";
 
 // We use the Cellar because it is the cleanest floor
 const STAGE_ARGUMENT_FOR_LOBBY = "1a";
@@ -63,12 +63,12 @@ function gotoLobby() {
 }
 
 export function inLobby(): boolean {
-  const roomSafeGridIndex = getRoomSafeGridIndex();
+  const roomGridIndex = getRoomGridIndex();
   const roomStageID = getRoomStageID();
   const roomVariant = getRoomVariant();
 
   return (
-    roomSafeGridIndex === GridRooms.ROOM_DEBUG_IDX &&
+    roomGridIndex === GridRooms.ROOM_DEBUG_IDX &&
     roomStageID === STAGE_ID_FOR_LOBBY &&
     roomVariant === ROOM_VARIANT_FOR_LOBBY
   );

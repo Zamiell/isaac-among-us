@@ -2,7 +2,7 @@ import { IS_DEV, MAX_PLAYERS, taskDescriptions } from "../constants";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
 import { getStageAPIRoomName } from "../stageAPISubroutines";
-import { drawFontText } from "../util";
+import { drawFontText } from "../utils";
 import { isConsoleOpen } from "./console";
 import { inCutscene } from "./cutscene";
 import { inEndMeeting } from "./endMeeting";

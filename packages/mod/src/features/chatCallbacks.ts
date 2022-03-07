@@ -2,7 +2,7 @@ import * as chat from "../chat";
 import { fonts } from "../fonts";
 import g from "../globals";
 import { Colors } from "../types/Colors";
-import { getScreenPosition } from "../util";
+import { getScreenPosition } from "../utils";
 import {
   CONSOLE_POSITION,
   CONSOLE_POSITION_LEFT,

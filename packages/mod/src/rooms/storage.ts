@@ -1,6 +1,6 @@
 import { EntityTypeCustom } from "../enums";
 import { spawnBlockLine } from "../spawnObjects";
-import { spawnEntity } from "../util";
+import { spawnEntity } from "../utils";
 
 export function spawnStorageObjects(): void {
   const centerGridIndex = 127;

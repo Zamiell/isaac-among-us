@@ -2,7 +2,7 @@ import { runNextGameFrame } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { EntityTypeCustom } from "../enums";
 import { spawnFakeBlockLine } from "../spawnObjects";
-import { spawnEntity } from "../util";
+import { spawnEntity } from "../utils";
 
 export function spawnShieldsObjects(): void {
   // Bottom

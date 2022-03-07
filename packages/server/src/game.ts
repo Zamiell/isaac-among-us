@@ -1,7 +1,7 @@
 import { Game } from "./types/Game";
 import { Player } from "./types/Player";
 import { PlayerType } from "./types/PlayerType";
-import { getEnumValues } from "./util";
+import { getEnumValues } from "./utils";
 
 export function getLowestUnusedCharacter(game: Game): PlayerType {
   const existingCharacters = new Set<PlayerType>();

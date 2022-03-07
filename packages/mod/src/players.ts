@@ -2,7 +2,7 @@ import { UDPPositionInterface } from "./constants";
 import g from "./globals";
 import { PlayerData } from "./types/PlayerData";
 import { GameDescriptionPlayer } from "./types/SocketCommands";
-import { getRoomIndexModified } from "./util";
+import { getRoomIndexModified } from "./utils";
 
 export function getClosestAmongUsPlayer(): PlayerData | null {
   if (g.game === null) {

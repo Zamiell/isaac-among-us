@@ -1,5 +1,5 @@
 import {
-  arrayEmpty,
+  emptyArray,
   getRandomArrayElement,
   getRandomArrayIndex,
   getTrinketName,
@@ -12,7 +12,7 @@ import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
 import { initGlowingItemSprite } from "../sprite";
 import { Task } from "../types/Task";
-import { drawFontText, movePlayerToGridIndex } from "../util";
+import { drawFontText, movePlayerToGridIndex } from "../utils";
 
 const THIS_TASK = Task.SHORT_IDENTIFY_TRINKETS;
 const NUM_ROUNDS = 5;
@@ -55,7 +55,7 @@ function setupRound() {
   const randomTrinkets = getRandomTrinkets();
 
   // Initialize the sprites
-  arrayEmpty(trinketSprites);
+  emptyArray(trinketSprites);
   for (let i = 0; i < NUM_RANDOM_TRINKETS; i++) {
     const randomTrinket = randomTrinkets[i];
     const sprite = initGlowingItemSprite(randomTrinket, true);
