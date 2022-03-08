@@ -17,7 +17,7 @@ export const SOCKET_CONNECT_TIMEOUT_SECONDS = 1;
 export const SOCKET_CLIENT_RETURN_SUCCESS = 1;
 
 /*
-const FIELD_TYPES: string[] = [
+const FIELD_TYPES: readonly string[] = [
   "b", // signed char
   "B", // unsigned char
   "h", // signed short (2 bytes)
@@ -39,7 +39,7 @@ export interface UDPBeaconInterface {
   message: string;
 }
 export const UDP_BEACON_MESSAGE = "HELLO";
-export const UDP_BEACON_FIELDS: Array<
+export const UDP_BEACON_FIELDS: ReadonlyArray<
   [name: keyof UDPBeaconInterface, format: string]
 > = [
   ["gameID", "I"],
@@ -63,7 +63,7 @@ export interface UDPPositionInterface {
   overlayAnimation: string;
   overlayAnimationFrame: int;
 }
-export const UDP_POSITION_FIELDS: Array<
+export const UDP_POSITION_FIELDS: ReadonlyArray<
   [name: keyof UDPPositionInterface, format: string]
 > = [
   ["gameID", "I"],

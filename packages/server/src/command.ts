@@ -19,27 +19,30 @@ import {
   validateString,
 } from "./validate";
 
-const COMMANDS_ALLOWED_WHILE_NOT_LOGGED_IN = new Set([
-  SocketCommandModToServer.PING,
-  SocketCommandModToServer.CHECK_USERNAME,
-  SocketCommandModToServer.LOGIN,
-]);
+const COMMANDS_ALLOWED_WHILE_NOT_LOGGED_IN: ReadonlySet<SocketCommandModToServer> =
+  new Set([
+    SocketCommandModToServer.PING,
+    SocketCommandModToServer.CHECK_USERNAME,
+    SocketCommandModToServer.LOGIN,
+  ]);
 
-const COMMANDS_WITH_NO_ASSOCIATED_GAME = new Set([
-  ...COMMANDS_ALLOWED_WHILE_NOT_LOGGED_IN,
-  SocketCommandModToServer.GAME_LIST,
-  SocketCommandModToServer.CREATE,
-  SocketCommandModToServer.JOIN,
-]);
+const COMMANDS_WITH_NO_ASSOCIATED_GAME: ReadonlySet<SocketCommandModToServer> =
+  new Set([
+    ...COMMANDS_ALLOWED_WHILE_NOT_LOGGED_IN,
+    SocketCommandModToServer.GAME_LIST,
+    SocketCommandModToServer.CREATE,
+    SocketCommandModToServer.JOIN,
+  ]);
 
 // Note that JOIN explicitly handles the game not being started,
 // since an associated game is not a requirement for this command
-const COMMANDS_ALLOWED_WHILE_GAME_NOT_STARTED = new Set([
-  SocketCommandModToServer.CREATE,
-  SocketCommandModToServer.JOIN,
-  SocketCommandModToServer.LEAVE,
-  SocketCommandModToServer.START,
-]);
+const COMMANDS_ALLOWED_WHILE_GAME_NOT_STARTED: ReadonlySet<SocketCommandModToServer> =
+  new Set([
+    SocketCommandModToServer.CREATE,
+    SocketCommandModToServer.JOIN,
+    SocketCommandModToServer.LEAVE,
+    SocketCommandModToServer.START,
+  ]);
 
 const MIN_USERNAME_LENGTH = 3;
 const MAX_USERNAME_LENGTH = 15;

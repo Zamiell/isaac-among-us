@@ -5,6 +5,7 @@ import { sendChat, sendVote } from "../sendGame";
 import { ExtraCommandData } from "../types/ExtraCommandData";
 import { Game } from "../types/Game";
 import { MeetingPhase } from "../types/MeetingPhase";
+import { Player } from "../types/Player";
 import { Socket } from "../types/Socket";
 import { VoteDataToServer } from "../types/SocketCommands";
 import { meetingPhaseOverVoting } from "./meeting";
@@ -34,7 +35,7 @@ export function commandVote(
     return;
   }
 
-  let playerVotedFor = null;
+  let playerVotedFor: Player | null = null;
   if (!skip) {
     playerVotedFor = getPlayer(userIDVotedFor, game);
     if (playerVotedFor === null) {

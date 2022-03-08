@@ -32,7 +32,11 @@ export const CONSOLE_POSITION_LEFT = getScreenPosition(
 const MAX_HISTORY_LENGTH = 100;
 const REPEAT_KEY_DELAY_IN_RENDER_FRAMES = ISAAC_FRAMES_PER_SECOND * 0.5;
 const COMMAND_PREFIX = "/";
-const OFFLINE_COMMANDS = new Set<string>(["help", "connect", "echo"]);
+const OFFLINE_COMMANDS: ReadonlySet<string> = new Set([
+  "help",
+  "connect",
+  "echo",
+]);
 
 let consoleOpen = false;
 let inputText = "";

@@ -4,7 +4,7 @@ import { skeldRoomMap } from "./skeldRoomMap";
 import { getStageAPIRoomName } from "./stageAPISubroutines";
 import { SkeldRoom } from "./types/SkeldRoom";
 
-const BACKDROP_MAP = new Map<SkeldRoom, string>([
+const BACKDROP_MAP: ReadonlyMap<SkeldRoom, string> = new Map([
   [SkeldRoom.CAFETERIA, "cafeteria"],
   [SkeldRoom.ELECTRICAL, "electrical"],
   [SkeldRoom.SECURITY, "security"],
