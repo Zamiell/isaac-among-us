@@ -3,5 +3,8 @@
   "version": "0.0.0",
   "license": "GPL-3.0",
   "author": "Zamiell",
-  "main": "./src/index.ts"
+  "main": "./src/index.ts",
+  "dependencies": {
+    "isaacscript-tsconfig": "^1.1.8"
+  }
 }
