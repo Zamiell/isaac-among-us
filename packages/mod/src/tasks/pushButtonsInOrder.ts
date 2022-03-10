@@ -1,4 +1,8 @@
-import { emptyArray, shuffleArrayInPlace } from "isaacscript-common";
+import {
+  emptyArray,
+  sfxManager,
+  shuffleArrayInPlace,
+} from "isaacscript-common";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
@@ -9,7 +13,6 @@ import { drawFontText, movePlayerToGridIndex } from "../utils";
 const THIS_TASK = Task.SHORT_PUSH_BUTTONS_IN_ORDER;
 const BUTTON_GRID_INDEXES: int[] = [32, 35, 39, 42, 62, 65, 69, 72, 92, 102];
 
-const sfx = SFXManager();
 const buttonOrder: int[] = [];
 let nextButtonToPress = 0;
 
@@ -51,7 +54,7 @@ export function pushButtonsInOrderButtonPressed(button: EntityEffect): void {
   }
 
   if (num !== nextButtonToPress) {
-    sfx.Play(SoundEffect.SOUND_THUMBS_DOWN);
+    sfxManager.Play(SoundEffect.SOUND_THUMBS_DOWN);
     taskLeave();
     return;
   }

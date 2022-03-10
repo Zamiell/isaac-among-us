@@ -1,10 +1,10 @@
+import { arrayRemoveInPlace } from "../array";
 import { endGame } from "../endGame";
 import { ExtraCommandData } from "../types/ExtraCommandData";
 import { Game } from "../types/Game";
 import { Role } from "../types/Role";
 import { Socket } from "../types/Socket";
 import { TaskCompleteDataToServer } from "../types/SocketCommands";
-import { arrayRemoveInPlace } from "../utils";
 
 export function commandTaskComplete(
   _socket: Socket,

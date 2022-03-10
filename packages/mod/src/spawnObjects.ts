@@ -1,4 +1,4 @@
-import { spawnGridEntity } from "isaacscript-common";
+import { game, spawnGridEntity } from "isaacscript-common";
 import {
   BoxVariant,
   CarpetSubTypeCustom,
@@ -57,7 +57,6 @@ export function spawnBlockLine(
 }
 
 function getGridIncrement(direction: Direction) {
-  const game = Game();
   const room = game.GetRoom();
   const gridWidth = room.GetGridWidth();
 

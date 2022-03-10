@@ -1,4 +1,4 @@
-import { getEnumValues } from "isaacscript-common";
+import { game, getEnumValues } from "isaacscript-common";
 import { disableShooting, updatePlayerStats } from "./utils";
 
 export function setupPlayerAndUI(): void {
@@ -12,7 +12,6 @@ export function setupPlayerAndUI(): void {
 }
 
 function disableHUD() {
-  const game = Game();
   const hud = game.GetHUD();
   hud.SetVisible(false);
 

@@ -42,6 +42,10 @@ export function postRender(): void {
   }
 
   const roomName = getStageAPIRoomName();
+  if (roomName === "Unknown") {
+    return;
+  }
+
   let skeldRoom = getSkeldRoom();
   if (room === null) {
     skeldRoom = -1;

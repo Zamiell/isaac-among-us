@@ -30,7 +30,7 @@ function spawnMonstro() {
     Vector.Zero,
     undefined,
     0,
-    1,
+    1 as Seed, // A seed of 1 is guaranteed to not be a champion
   );
 
   // With the vanilla amount of HP, it takes 67 seconds to kill

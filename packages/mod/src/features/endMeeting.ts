@@ -117,10 +117,9 @@ function getEndOfMeetingText() {
     g.game.endMeeting.userIDEjected !== null
   ) {
     const player = g.game.getPlayerFromUserID(g.game.endMeeting.userIDEjected);
+    const numAlivePlayers = g.game.getNumAlivePlayers();
     if (player !== null) {
-      return `${
-        player.username
-      } was ejected. (${g.game.getNumAlivePlayers()} players remain.)`;
+      return `${player.username} was ejected. (${numAlivePlayers} players remain.)`;
     }
   }
 

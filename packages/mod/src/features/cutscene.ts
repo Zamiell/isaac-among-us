@@ -1,6 +1,11 @@
 // The cutscene that plays at the beginning of a game
 
-import { ensureAllCases, getScreenCenterPos } from "isaacscript-common";
+import {
+  ensureAllCases,
+  getScreenCenterPos,
+  itemConfig,
+  sfxManager,
+} from "isaacscript-common";
 import g from "../globals";
 import { loadMap } from "../loadMap";
 import { disableMinimapAPI, enableMinimapAPI } from "../minimapAPI";
@@ -9,6 +14,7 @@ import { setSpriteOpacity } from "../sprite";
 import { BlackSpriteState } from "../types/BlackSpriteState";
 import { CutsceneState } from "../types/CutsceneState";
 import { Role } from "../types/Role";
+import { SoundEffectCustom } from "../types/SoundEffectCustom";
 import { drawFontText, getRoleText } from "../utils";
 import { FADE_TO_BLACK_FRAMES, setBlackSpriteState } from "./blackSprite";
 import { getMeetingCirclePoints } from "./setupMeeting";
@@ -67,6 +73,7 @@ function postRenderFadingToBlack() {
     setBlackSpriteState(BlackSpriteState.SOLID);
     loadMap();
     setStartingPosition();
+    sfxManager.Play(SoundEffectCustom.ROLE_REVEAL);
   }
 }
 
@@ -201,7 +208,6 @@ function setSprite() {
       ? CollectibleType.COLLECTIBLE_NOTCHED_AXE
       : CollectibleType.COLLECTIBLE_MOMS_KNIFE;
 
-  const itemConfig = Isaac.GetItemConfig();
   const itemConfigItem = itemConfig.GetCollectible(collectibleType);
   if (itemConfigItem === undefined) {
     return;

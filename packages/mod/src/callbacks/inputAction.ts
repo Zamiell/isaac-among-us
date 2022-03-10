@@ -1,3 +1,4 @@
+import { game } from "isaacscript-common";
 import { IS_DEV } from "../constants";
 import { inCutscene } from "../features/cutscene";
 import { inEndMeeting } from "../features/endMeeting";
@@ -48,7 +49,6 @@ function disablePreRunMovement(
   inputHook: InputHook,
   buttonAction: ButtonAction,
 ) {
-  const game = Game();
   const gameFrameCount = game.GetFrameCount();
 
   if (gameFrameCount > 0) {

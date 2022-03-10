@@ -1,4 +1,8 @@
-import { ensureAllCases, getPlayerCloserThan } from "isaacscript-common";
+import {
+  ensureAllCases,
+  getPlayerCloserThan,
+  sfxManager,
+} from "isaacscript-common";
 import { ButtonSubType } from "../enums";
 import g from "../globals";
 import { sendTCP } from "../network/send";
@@ -42,8 +46,7 @@ function checkIfButtonIsPressed(effect: EntityEffect) {
   const animation = `Switched${animationSuffix}`;
   sprite.Play(animation, true);
 
-  const sfx = SFXManager();
-  sfx.Play(SoundEffect.SOUND_BUTTON_PRESS);
+  sfxManager.Play(SoundEffect.SOUND_BUTTON_PRESS);
 
   buttonPressed(effect);
 }

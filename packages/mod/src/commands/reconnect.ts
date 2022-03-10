@@ -1,3 +1,4 @@
+import { game } from "isaacscript-common";
 import {
   disableSendingEvents,
   enableSendingEvents,
@@ -53,7 +54,6 @@ export function commandReconnect(data: ReconnectDataToMod): void {
 }
 
 function setPlayerPosition(gridIndex: int) {
-  const game = Game();
   const room = game.GetRoom();
   const player = Isaac.GetPlayer();
 

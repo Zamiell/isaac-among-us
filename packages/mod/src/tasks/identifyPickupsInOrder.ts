@@ -5,6 +5,7 @@ import {
   getRandomArrayElement,
   removeAllMatchingEntities,
   runInNGameFrames,
+  sfxManager,
 } from "isaacscript-common";
 import { EffectVariantCustom } from "../enums";
 import { spawnTaskButton } from "../features/buttonSpawn";
@@ -84,7 +85,6 @@ const pickupDescriptions: PickupDescriptions = {
   },
 };
 
-const sfx = SFXManager();
 let currentRound = STARTING_ROUND;
 let showingPickupIndex: int | null = null;
 let showingPickupFrame: int | null = null;
@@ -223,7 +223,7 @@ export function identifyPickupsInOrderButtonPressed(
 }
 
 function correctSelection() {
-  sfx.Play(SoundEffect.SOUND_THUMBSUP, 0.5);
+  sfxManager.Play(SoundEffect.SOUND_THUMBSUP, 0.5);
 
   currentChoosingIndex += 1;
   if (currentChoosingIndex >= currentPickupOrder.length) {
@@ -243,6 +243,6 @@ function nextRound() {
 }
 
 function incorrectSelection() {
-  sfx.Play(SoundEffect.SOUND_THUMBS_DOWN);
+  sfxManager.Play(SoundEffect.SOUND_THUMBS_DOWN);
   taskLeave();
 }

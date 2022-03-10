@@ -3,7 +3,6 @@ export function postUpdate(): void {
   /*
   const game = Game();
   const room = game.GetRoom();
-  const sfxManager = SFXManager();
 
   room.SetClear(true);
 

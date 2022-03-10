@@ -2,6 +2,7 @@ import {
   emptyArray,
   getEffects,
   getEnumValues,
+  sfxManager,
   shuffleArray,
 } from "isaacscript-common";
 import { ButtonSubType, EffectVariantCustom, EntityTypeCustom } from "../enums";
@@ -46,8 +47,6 @@ type LineSprites = {
     finished: boolean;
   };
 };
-
-const sfx = SFXManager();
 
 const lineSprites: LineSprites = {
   [WireColor.YELLOW]: {
@@ -163,7 +162,7 @@ function leftSideButtonPressed(color: WireColor, button: EntityEffect) {
 
 function rightSideButtonPressed(color: WireColor) {
   if (color !== buttonColorActive) {
-    sfx.Play(SoundEffect.SOUND_THUMBS_DOWN);
+    sfxManager.Play(SoundEffect.SOUND_THUMBS_DOWN);
     taskLeave();
     return;
   }

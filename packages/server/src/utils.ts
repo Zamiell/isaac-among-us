@@ -1,13 +1,7 @@
-export function arrayRemoveInPlace<T>(array: T[], element: T): boolean {
-  const index = array.indexOf(element);
-  if (index === -1) {
-    return false;
-  }
-
-  array.splice(index, 1);
-  return true;
-}
-
+/**
+ * Helper function to get type safety on a switch statement.
+ * Very useful to be future-safe against people adding values to a type or an enum.
+ */
 export const ensureAllCases = (obj: never): never => obj;
 
 /**
@@ -35,35 +29,6 @@ export function getEnumValues<T>(
   return enumValues;
 }
 
-export function getRandomArrayElement<T>(array: T[]): T {
-  if (array.length === 0) {
-    throw new Error(
-      "Failed to get a random array element since the provided array is empty.",
-    );
-  }
-  const randomIndex = getRandomInt(0, array.length - 1);
-  return array[randomIndex];
-}
-
-export function getRandomArrayIndex<T>(array: T[]): number {
-  if (array.length === 0) {
-    throw new Error(
-      "Failed to get a random array index since the provided array is empty.",
-    );
-  }
-
-  const randomIndex = getRandomInt(0, array.length - 1);
-  return randomIndex;
-}
-
-// From: https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
-function getRandomInt(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 // From: https://stackoverflow.com/questions/221294/how-do-you-get-a-timestamp-in-javascript
 export function getTimestamp(): number {
   const epochTimestampMilliseconds = +new Date();
@@ -72,8 +37,4 @@ export function getTimestamp(): number {
   const epochTimestampSeconds = epochTimestampMilliseconds / 1000;
 
   return epochTimestampSeconds;
-}
-
-export function initArray<T>(length: number, value: T): T[] {
-  return Array.from({ length }, () => value);
 }

@@ -1,6 +1,7 @@
 import {
   disableAllInputs,
   enableAllInputs,
+  game,
   getEnumValues,
   ISAAC_FRAMES_PER_SECOND,
   isKeyboardPressed,
@@ -59,7 +60,6 @@ export function init(): void {
 
 // ModCallbacks.MC_POST_RENDER (2)
 export function postRender(): void {
-  const game = Game();
   const isPaused = game.IsPaused();
   const isaacFrameCount = Isaac.GetFrameCount();
 
@@ -190,6 +190,7 @@ function executeChatCommand(msg: string) {
       gameID: g.game.id,
       msg,
     });
+
     return;
   }
 

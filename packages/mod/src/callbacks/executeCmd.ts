@@ -1,5 +1,10 @@
-import { getGridEntities, getRoomGridIndex, log } from "isaacscript-common";
-import { debugFunction, debugFunction2 } from "../debugFunction";
+import {
+  game,
+  getGridEntities,
+  getRoomGridIndex,
+  log,
+} from "isaacscript-common";
+import { debugFunction1, debugFunction2 } from "../debugFunction";
 import { skeldRoomReverseMap } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
 import { SkeldRoom } from "../types/SkeldRoom";
@@ -26,7 +31,6 @@ export function main(command: string, parameters: string): void {
 const functionMap = new Map<string, (params: string) => void>();
 
 functionMap.set("center", () => {
-  const game = Game();
   const room = game.GetRoom();
   const centerPos = room.GetCenterPos();
   const player = Isaac.GetPlayer();
@@ -35,7 +39,7 @@ functionMap.set("center", () => {
 });
 
 functionMap.set("debug", () => {
-  debugFunction();
+  debugFunction1();
 });
 
 functionMap.set("debug2", () => {

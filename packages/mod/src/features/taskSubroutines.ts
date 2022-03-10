@@ -3,6 +3,7 @@ import {
   getNPCs,
   removeAllMatchingEntities,
   runNextGameFrame,
+  sfxManager,
 } from "isaacscript-common";
 import { taskDescriptions } from "../constants";
 import { EffectVariantCustom } from "../enums";
@@ -15,8 +16,6 @@ import { goToStageAPIRoom } from "../stageAPI";
 import { SocketCommandModToServer } from "../types/SocketCommands";
 import { removeGridEntity } from "../utils";
 import { isWallGridIndex } from "../wall";
-
-const sfx = SFXManager();
 
 export function taskComplete(): void {
   if (g.game === null || g.game.currentTask === null) {
@@ -32,7 +31,7 @@ export function taskComplete(): void {
     muteSoundEffects();
   });
 
-  sfx.Play(SoundEffect.SOUND_1UP);
+  sfxManager.Play(SoundEffect.SOUND_1UP);
 
   sendTCP(SocketCommandModToServer.TASK_COMPLETE, {
     gameID: g.game.id,
@@ -53,7 +52,7 @@ function muteSoundEffects() {
     SoundEffect.SOUND_BOSS1_EXPLOSIONS,
     SoundEffect.SOUND_ROCK_CRUMBLE,
   ]) {
-    sfx.Stop(soundEffect);
+    sfxManager.Stop(soundEffect);
   }
 }
 

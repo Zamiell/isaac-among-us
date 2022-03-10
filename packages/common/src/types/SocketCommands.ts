@@ -102,6 +102,10 @@ export class TerminateDataToServer {
   gameID = 0;
 }
 
+export class DebugDataToServer {
+  gameID = 0;
+}
+
 export class NoData {}
 
 export const SocketCommandModToServerData = {
@@ -121,7 +125,7 @@ export const SocketCommandModToServerData = {
   [SocketCommandModToServer.VOTE]: VoteDataToServer,
   [SocketCommandModToServer.TASK_COMPLETE]: TaskCompleteDataToServer,
   [SocketCommandModToServer.TERMINATE]: TerminateDataToServer,
-  [SocketCommandModToServer.DEBUG]: NoData,
+  [SocketCommandModToServer.DEBUG]: DebugDataToServer,
 };
 
 // --------------

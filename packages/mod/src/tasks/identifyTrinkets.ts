@@ -4,6 +4,7 @@ import {
   getRandomArrayIndex,
   getTrinketName,
   getTrinketSet,
+  sfxManager,
 } from "isaacscript-common";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { resetAllButtons } from "../features/buttonSubroutines";
@@ -25,7 +26,6 @@ const TEXT_GRID_INDEX = 86;
 
 const trinketSprites: Sprite[] = [];
 let currentTrinket = "";
-const sfx = SFXManager();
 
 let currentRound = STARTING_ROUND;
 let correctTrinketIndex = 0;
@@ -98,7 +98,7 @@ export function identifyTrinketButtonPressed(num: int): void {
 }
 
 function correctSelection() {
-  sfx.Play(SoundEffect.SOUND_THUMBSUP, 0.5);
+  sfxManager.Play(SoundEffect.SOUND_THUMBSUP, 0.5);
 
   currentRound += 1;
   if (currentRound >= NUM_ROUNDS) {
@@ -109,7 +109,7 @@ function correctSelection() {
 }
 
 function incorrectSelection() {
-  sfx.Play(SoundEffect.SOUND_THUMBS_DOWN);
+  sfxManager.Play(SoundEffect.SOUND_THUMBS_DOWN);
   taskLeave();
 }
 

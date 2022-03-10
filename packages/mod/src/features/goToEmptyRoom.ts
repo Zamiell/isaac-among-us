@@ -5,6 +5,7 @@ import {
   removeAllGridEntitiesExceptFor,
   removeAllNPCs,
   removeGridEntity,
+  sfxManager,
   spawnGridEntity,
 } from "isaacscript-common";
 import { disableMinimapAPI } from "../minimapAPI";
@@ -18,7 +19,6 @@ export function postGameStarted(): void {
   const room = game.GetRoom();
   const centerPos = room.GetCenterPos();
   const player = Isaac.GetPlayer();
-  const sfx = SFXManager();
 
   changeRoom(START_ROOM_INDEX);
   room.SetClear(true);
@@ -35,8 +35,8 @@ export function postGameStarted(): void {
     removeGridEntity(door);
     spawnGridEntity(GridEntityType.GRID_WALL, gridIndex);
   }
-  sfx.Stop(SoundEffect.SOUND_DOOR_HEAVY_CLOSE); // 35
-  sfx.Stop(SoundEffect.SOUND_SUMMON_POOF); // 286
+  sfxManager.Stop(SoundEffect.SOUND_DOOR_HEAVY_CLOSE); // 35
+  sfxManager.Stop(SoundEffect.SOUND_SUMMON_POOF); // 286
 
   player.Position = centerPos;
 

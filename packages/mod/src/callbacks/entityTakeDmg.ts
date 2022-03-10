@@ -1,7 +1,6 @@
+import { game, sfxManager } from "isaacscript-common";
 import { taskLeave } from "../features/taskSubroutines";
 import g from "../globals";
-
-const sfx = SFXManager();
 
 let frameReturningFromTask: int | null = null;
 
@@ -20,7 +19,6 @@ function entityTakeDmgPlayer(
   _damageSource: EntityRef,
   _damageCountdownFrames: int,
 ) {
-  const game = Game();
   const gameFrameCount = game.GetFrameCount();
 
   if (gameFrameCount === frameReturningFromTask) {
@@ -36,7 +34,7 @@ function entityTakeDmgPlayer(
     return undefined;
   }
 
-  sfx.Play(SoundEffect.SOUND_THUMBS_DOWN);
+  sfxManager.Play(SoundEffect.SOUND_THUMBS_DOWN);
   frameReturningFromTask = gameFrameCount;
   taskLeave();
 

@@ -11,7 +11,10 @@ const DEBUG_HOTKEY2 = Keyboard.KEY_F2;
 let hotkeyPressed1 = false;
 let hotkeyPressed2 = false;
 
-export function debugFunction(): void {}
+// From the "debug" console command
+export function debugFunction1(): void {
+  // Add code here
+}
 
 export function debugFunction2(): void {}
 

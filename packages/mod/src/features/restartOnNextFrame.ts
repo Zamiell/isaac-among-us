@@ -1,7 +1,7 @@
 import { consoleCommand } from "../utils";
 
 const AMONG_US_CHARACTER = PlayerType.PLAYER_ISAAC;
-const AMONG_US_SEED = "P7W3 LEN1"; // "L8AK PRCH"; // H4C8 QKT3 // cspell:disable-line
+const AMONG_US_SEED = "P7W3 LEN1"; // cspell:disable-line
 const AMONG_US_CHALLENGE = Challenge.CHALLENGE_NULL;
 
 let restartOnNextRenderFrame = false;

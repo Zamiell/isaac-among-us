@@ -1,3 +1,4 @@
+import { getRandomArrayElement } from "./array";
 import {
   DEFAULT_NUM_COMMON_TASKS,
   DEFAULT_NUM_LONG_TASKS,
@@ -9,7 +10,7 @@ import { Game } from "./types/Game";
 import { Player } from "./types/Player";
 import { Task } from "./types/Task";
 import { TaskType } from "./types/TaskType";
-import { ensureAllCases, getEnumValues, getRandomArrayElement } from "./utils";
+import { ensureAllCases, getEnumValues } from "./utils";
 
 const DEV_TASK: Task | null = null;
 

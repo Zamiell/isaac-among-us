@@ -1,5 +1,6 @@
 import {
   ensureAllCases,
+  game,
   getRoomGridIndex,
   getScreenBottomRightPos,
   log,
@@ -94,7 +95,6 @@ export function getScreenPosition(x: float, y: float): Vector {
 }
 
 export function movePlayerToGridIndex(gridIndex: int): void {
-  const game = Game();
   const room = game.GetRoom();
   const position = room.GetGridPosition(gridIndex);
   const player = Isaac.GetPlayer();
@@ -104,7 +104,6 @@ export function movePlayerToGridIndex(gridIndex: int): void {
 }
 
 export function removeGridEntity(gridEntity: GridEntity): void {
-  const game = Game();
   const room = game.GetRoom();
   const gridIndex = gridEntity.GetGridIndex();
   room.RemoveGridEntity(gridIndex, 0, false); // gridEntity.Destroy() does not work
@@ -126,7 +125,6 @@ export function spawnEntity(
   depthOffset = -100, // -100 is needed for Cafeteria tables
   playAppearAnimation = false,
 ): Entity {
-  const game = Game();
   const room = game.GetRoom();
   const position = room.GetGridPosition(gridIndex);
 

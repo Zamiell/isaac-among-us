@@ -1,11 +1,11 @@
+import { getRandomArrayIndex } from "./array";
 import { IS_DEV } from "./constants";
 import { Game } from "./types/Game";
 import { Role } from "./types/Role";
-import { getRandomArrayIndex } from "./utils";
 
 export function assignImpostors(game: Game): void {
   if (IS_DEV) {
-    game.players[0].role = Role.IMPOSTER;
+    game.players[1].role = Role.IMPOSTER;
     return;
   }
 

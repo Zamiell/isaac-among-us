@@ -1,3 +1,4 @@
+import { game } from "isaacscript-common";
 import { sendRoom } from "./features/sendGameEvents";
 import g from "./globals";
 import { skeldRoomMap } from "./skeldRoomMap";
@@ -50,7 +51,6 @@ export function goToStageAPIRoom(
     return;
   }
 
-  const game = Game();
   const room = game.GetRoom();
   const player = Isaac.GetPlayer();
   const levelMap = StageAPI.GetCurrentLevelMap();
@@ -77,7 +77,6 @@ export function goToStageAPIRoom(
 }
 
 function fixRoomEntrancePosition() {
-  const game = Game();
   const level = game.GetLevel();
   const room = game.GetRoom();
   const player = Isaac.GetPlayer();

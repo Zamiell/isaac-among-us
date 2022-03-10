@@ -1,3 +1,4 @@
+import { initArray } from "../array";
 import {
   DEFAULT_MEETING_PRE_VOTE_SECONDS,
   DEFAULT_MEETING_VOTE_SECONDS,
@@ -14,7 +15,7 @@ import { MeetingResolution } from "../types/MeetingResolution";
 import { MeetingType } from "../types/MeetingType";
 import { Socket } from "../types/Socket";
 import { MeetingDataToServer } from "../types/SocketCommands";
-import { ensureAllCases, getTimestamp, initArray } from "../utils";
+import { ensureAllCases, getTimestamp } from "../utils";
 
 export function commandMeeting(
   socket: Socket,

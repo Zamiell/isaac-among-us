@@ -32,8 +32,19 @@ chatCommandFunctions.set("create", (args: string[]) => {
 
 chatCommandFunctions.set("credits", (_args: string[]) => {
   chat.addLocal(
-    "The Among Us Mod was made by Zamiel. It makes use of DeadInfinity's StageAPI library, Sentinel's collision library, and Somdudewillson's stage backdrops; special thanks goes to them. Thanks also goes to JSG, imtem, Wofsauge, and AgentCucco for providing technical assistance.",
+    "The Among Us Mod was made by Zamiel. It makes use of DeadInfinity's StageAPI library, Sentinel's collision library, and Somdudewillson's stage backdrops; special thanks goes to them. Thanks also goes to JSG, im_tem, Wofsauge, and AgentCucco for providing technical assistance.",
   );
+});
+
+chatCommandFunctions.set("debug", (_args: string[]) => {
+  if (g.game === null) {
+    chat.addLocal("You must be in a game to do that.");
+    return;
+  }
+
+  sendTCP(SocketCommandModToServer.DEBUG, {
+    gameID: g.game.id,
+  });
 });
 
 chatCommandFunctions.set("disconnect", (_args: string[]) => {

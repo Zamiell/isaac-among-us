@@ -4,6 +4,7 @@ import {
   getCollectibleSet,
   getRandomArrayElement,
   getRandomArrayIndex,
+  sfxManager,
 } from "isaacscript-common";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { resetAllButtons } from "../features/buttonSubroutines";
@@ -23,7 +24,6 @@ const BUTTON_1_GRID_INDEX = 48;
 const ROW_LENGTH = 15;
 const TEXT_GRID_INDEX = 86;
 
-const sfx = SFXManager();
 const itemSprites: Sprite[] = [];
 let currentRound = STARTING_ROUND;
 let currentItem = "";
@@ -98,7 +98,7 @@ export function identifyItemButtonPressed(num: int): void {
 }
 
 function correctSelection() {
-  sfx.Play(SoundEffect.SOUND_THUMBSUP, 0.5);
+  sfxManager.Play(SoundEffect.SOUND_THUMBSUP, 0.5);
 
   currentRound += 1;
   if (currentRound >= NUM_ROUNDS) {
@@ -109,7 +109,7 @@ function correctSelection() {
 }
 
 function incorrectSelection() {
-  sfx.Play(SoundEffect.SOUND_THUMBS_DOWN);
+  sfxManager.Play(SoundEffect.SOUND_THUMBS_DOWN);
   taskLeave();
 }
 

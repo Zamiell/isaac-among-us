@@ -1,4 +1,4 @@
-import { DISTANCE_OF_GRID_TILE } from "isaacscript-common";
+import { DISTANCE_OF_GRID_TILE, game } from "isaacscript-common";
 import * as collisionObjects from "./lib/collisionObjects";
 
 /**
@@ -17,7 +17,6 @@ export function addCollision(
   bottomRightXModifier = 0,
   bottomRightYModifier = 0,
 ): void {
-  const game = Game();
   const room = game.GetRoom();
   const halfTileDistance = DISTANCE_OF_GRID_TILE / 2;
   const halfTileVectorPlus = Vector(halfTileDistance, halfTileDistance);
