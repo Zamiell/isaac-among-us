@@ -7,7 +7,7 @@ import { getRandomInt } from "./random";
  *
  * This function is variadic, meaning that you can specify N arguments to remove N elements.
  */
-export function arrayRemove<T>(
+function arrayRemove<T>(
   originalArray: T[] | readonly T[],
   ...elementsToRemove: T[]
 ): T[] {
@@ -43,30 +43,6 @@ export function arrayRemoveInPlace<T>(
   }
 
   return removedOneOrMoreElements;
-}
-
-/**
- * Helper function to perform a shallow copy.
- *
- * @param oldArray The array to copy.
- * @param numElements Optional. If specified, will only copy the first N elements. By default, the
- * entire array will be copied.
- */
-export function copyArray<T>(
-  oldArray: T[] | readonly T[],
-  numElements?: number,
-): T[] {
-  if (numElements === undefined) {
-    numElements = oldArray.length;
-  }
-
-  const newArray: T[] = [];
-  for (let i = 0; i < numElements; i++) {
-    const oldElement = oldArray[i];
-    newArray.push(oldElement);
-  }
-
-  return newArray;
 }
 
 export function emptyArray<T>(array: T[]): void {
