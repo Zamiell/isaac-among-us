@@ -2,6 +2,7 @@ import { error } from "../error";
 import { getPlayer } from "../game";
 import { sendKilled } from "../sendGame";
 import { ExtraCommandData } from "../types/ExtraCommandData";
+import { PlayerBody } from "../types/PlayerBody";
 import { Role } from "../types/Role";
 import { Socket } from "../types/Socket";
 import { KillDataToServer } from "../types/SocketCommands";
@@ -24,12 +25,13 @@ export function commandKill(
   }
 
   playerKilled.alive = false;
-  playerKilled.body = {
+  const body: PlayerBody = {
+    userID: userIDKilled,
     room,
     x,
     y,
   };
-  game.playersKilledSinceLastMeeting.push(userIDKilled);
+  game.bodies.push(body);
 
   sendKilled(game, userIDKilled, room, x, y);
 }

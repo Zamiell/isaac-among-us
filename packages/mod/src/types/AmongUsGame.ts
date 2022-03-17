@@ -2,6 +2,7 @@ import { CutsceneState } from "./CutsceneState";
 import { EndMeetingState } from "./EndMeetingState";
 import { Meeting } from "./Meeting";
 import { MeetingResolution } from "./MeetingResolution";
+import { PlayerBody } from "./PlayerBody";
 import { PlayerData } from "./PlayerData";
 import { Role } from "./Role";
 import { GameDescriptionPlayer } from "./SocketCommands";
@@ -17,6 +18,7 @@ export class AmongUsGame {
   imposters: number[] | null = null;
   meeting: Meeting | null = null;
   players: GameDescriptionPlayer[] = [];
+  bodies: PlayerBody[] = [];
   emergencyButtonCooldown = true;
 
   /** Indexed by user ID. Contains only UDP data. */
@@ -38,17 +40,17 @@ export class AmongUsGame {
 
   cutscene = {
     state: CutsceneState.DISABLED,
-    startFrame: null as int | null,
+    startRenderFrame: null as int | null,
   };
 
   startMeeting = {
     state: StartMeetingState.DISABLED,
-    startFrame: null as int | null,
+    startRenderFrame: null as int | null,
   };
 
   endMeeting = {
     state: EndMeetingState.DISABLED,
-    startFrame: null as int | null,
+    startRenderFrame: null as int | null,
     meetingResolution: MeetingResolution.EJECT,
     userIDEjected: null as int | null,
   };
@@ -60,64 +62,35 @@ export class AmongUsGame {
   }
 
   getNumAlivePlayers(): int {
-    let numAlivePlayers = 0;
-    for (const player of this.players) {
-      if (player.alive) {
-        numAlivePlayers += 1;
-      }
-    }
-
-    return numAlivePlayers;
+    const alivePlayers = this.players.filter((player) => player.alive);
+    return alivePlayers.length;
   }
 
-  getPlayerFromUserID(userID: int): GameDescriptionPlayer | null {
-    for (const player of this.players) {
-      if (player.userID === userID) {
-        return player;
-      }
-    }
-
-    return null;
+  getPlayerFromUserID(userID: int): GameDescriptionPlayer | undefined {
+    return this.players.find((player) => player.userID === userID);
   }
 
-  getPlayerFromUsername(username: string): GameDescriptionPlayer | null {
-    for (const player of this.players) {
-      if (player.username === username) {
-        return player;
-      }
-    }
-
-    return null;
+  getPlayerFromUsername(username: string): GameDescriptionPlayer | undefined {
+    return this.players.find((player) => player.username === username);
   }
 
-  getPlayerIndexFromUserID(userID: int): int | null {
-    for (let i = 0; i < this.players.length; i++) {
-      const player = this.players[i];
-      if (player.userID === userID) {
-        return i;
-      }
-    }
-
-    return null;
-  }
-
-  getPlayerCharacter(userID: int): PlayerType | null {
+  getPlayerIndexFromUserID(userID: int): int | undefined {
     const player = this.getPlayerFromUserID(userID);
-    return player === null ? null : player.character;
+    return player === undefined ? undefined : player.index;
   }
 
-  getPlayerUsername(userID: int): string | null {
+  getPlayerCharacter(userID: int): PlayerType | undefined {
     const player = this.getPlayerFromUserID(userID);
-    return player === null ? null : player.username;
+    return player === undefined ? undefined : player.character;
+  }
+
+  getPlayerUsername(userID: int): string | undefined {
+    const player = this.getPlayerFromUserID(userID);
+    return player === undefined ? undefined : player.username;
   }
 
   isPlayerJoined(userID: int): boolean {
-    for (const player of this.players) {
-      if (player.userID === userID) {
-        return true;
-      }
-    }
-
-    return false;
+    const player = this.getPlayerFromUserID(userID);
+    return player !== undefined;
   }
 }

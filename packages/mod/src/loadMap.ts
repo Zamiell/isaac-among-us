@@ -35,7 +35,7 @@ export function setTasksOnMap(): void {
       const taskDescription = taskDescriptions[task];
       const taskRoom = taskDescription.room;
       const mapID = getStageAPIRoomMapID(taskRoom);
-      if (mapID !== null) {
+      if (mapID !== undefined) {
         setMinimapAPIRoomIcon(mapID, "Item");
       }
     }

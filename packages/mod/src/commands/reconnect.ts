@@ -27,10 +27,11 @@ export function commandReconnect(data: ReconnectDataToMod): void {
   g.game.meeting = data.meeting;
 
   const player = g.game.getPlayerFromUserID(g.userID);
-  if (player === null) {
+  if (player === undefined) {
     return;
   }
   g.game.usedEmergencyMeeting = player.usedEmergencyMeeting;
+  g.game.bodies = data.bodies;
 
   disableSendingEvents();
   loadMap();

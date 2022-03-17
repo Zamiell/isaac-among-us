@@ -1,4 +1,4 @@
-import { initArray } from "../array";
+import { emptyArray, initArray } from "../array";
 import {
   DEFAULT_MEETING_PRE_VOTE_SECONDS,
   DEFAULT_MEETING_VOTE_SECONDS,
@@ -33,8 +33,8 @@ export function commandMeeting(
     player.usedEmergencyMeeting = true;
   }
 
-  const playersKilledSinceLastMeeting = game.playersKilledSinceLastMeeting;
-  game.playersKilledSinceLastMeeting = [];
+  const playersKilledSinceLastMeeting = game.bodies.map((body) => body.userID);
+  emptyArray(game.bodies);
 
   game.meeting = {
     meetingType,

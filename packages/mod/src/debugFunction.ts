@@ -84,6 +84,7 @@ export function injectTestPlayers(): void {
       alive = false;
     }
     g.game.players.push({
+      index: g.game.players.length,
       userID: 100 + i,
       username: testPlayerNames[i],
       connected: true,

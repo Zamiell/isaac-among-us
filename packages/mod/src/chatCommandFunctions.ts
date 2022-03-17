@@ -168,7 +168,7 @@ chatCommandFunctions.set("vote", (args: string[]) => {
 
   const nameVotedFor = args[0];
   const playerVotedFor = g.game.getPlayerFromUsername(nameVotedFor);
-  if (playerVotedFor === null) {
+  if (playerVotedFor === undefined) {
     chat.addLocal(`The player of "${nameVotedFor}" is not in this game.`);
     return;
   }

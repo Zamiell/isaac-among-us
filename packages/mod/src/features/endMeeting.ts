@@ -118,7 +118,7 @@ function getEndOfMeetingText() {
   ) {
     const player = g.game.getPlayerFromUserID(g.game.endMeeting.userIDEjected);
     const numAlivePlayers = g.game.getNumAlivePlayers();
-    if (player !== null) {
+    if (player !== undefined) {
       return `${player.username} was ejected. (${numAlivePlayers} players remain.)`;
     }
   }
@@ -130,14 +130,15 @@ function getTextOpacity() {
   if (
     g.game === null ||
     g.game.endMeeting.state === EndMeetingState.TEXT ||
-    g.game.endMeeting.startFrame === null
+    g.game.endMeeting.startRenderFrame === null
   ) {
     return 1;
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
-  const framesPassed = isaacFrameCount - g.game.endMeeting.startFrame;
-  const opacity = framesPassed / FADE_TO_BLACK_FRAMES;
+  const renderFramesPassed =
+    isaacFrameCount - g.game.endMeeting.startRenderFrame;
+  const opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES;
 
   if (g.game.endMeeting.state === EndMeetingState.TEXT_FADING_IN) {
     return opacity;
@@ -151,13 +152,14 @@ function getTextOpacity() {
 }
 
 function hasFadeFinished(): boolean {
-  if (g.game === null || g.game.endMeeting.startFrame === null) {
+  if (g.game === null || g.game.endMeeting.startRenderFrame === null) {
     return false;
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
-  const framesPassed = isaacFrameCount - g.game.endMeeting.startFrame;
-  return framesPassed >= FADE_TO_BLACK_FRAMES;
+  const renderFramesPassed =
+    isaacFrameCount - g.game.endMeeting.startRenderFrame;
+  return renderFramesPassed >= FADE_TO_BLACK_FRAMES;
 }
 
 export function endMeeting(): void {
@@ -173,7 +175,7 @@ function setState(state: EndMeetingState) {
   const isaacFrameCount = Isaac.GetFrameCount();
 
   g.game.endMeeting.state = state;
-  g.game.endMeeting.startFrame = isaacFrameCount;
+  g.game.endMeeting.startRenderFrame = isaacFrameCount;
 
   if (state === EndMeetingState.DISABLED) {
     g.game.endMeeting.userIDEjected = null;

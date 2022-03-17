@@ -35,6 +35,7 @@ export function commandReconnect(
     character: player.character,
     room: player.room,
     enterGridIndex: player.enterGridIndex,
+    bodies: game.bodies,
   });
 
   reconnect(player, game, socket.socketID);

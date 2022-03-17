@@ -23,8 +23,7 @@ const DEATH_SPRITE_OFFSET = Vector(-20, -10);
 const DEATH_ANIMATION_FINAL_FRAME = 55;
 
 /** Indexed by user ID. */
-const playerEntityMap = new Map<int, EntityRef>();
-const addingCustomPlayer = false;
+const playerEffectMap = new Map<int, EntityRef>();
 
 // ModCallbacks.MC_POST_RENDER (2)
 export function postRender(): void {
@@ -33,6 +32,7 @@ export function postRender(): void {
   }
 
   drawOtherPlayersFromUDP();
+  drawOtherPlayersBodies();
   drawOtherPlayersMeeting();
 }
 
@@ -55,12 +55,17 @@ function drawOtherPlayersFromUDP() {
       continue;
     }
 
-    const framesSinceLastUpdate = isaacFrameCount - playerData.frameUpdated;
+    const renderFramesSinceLastUpdate =
+      isaacFrameCount - playerData.renderFrameUpdated;
+    const player = g.game.getPlayerFromUserID(playerData.userID);
     if (
       // Don't draw stale players, since they might have disconnected
-      framesSinceLastUpdate > ISAAC_FRAMES_PER_SECOND ||
+      renderFramesSinceLastUpdate > ISAAC_FRAMES_PER_SECOND ||
       // Don't draw players who are not in this room
-      playerData.roomIndex !== roomIndex
+      playerData.roomIndex !== roomIndex ||
+      // Don't draw dead players
+      player === undefined ||
+      !player.alive
     ) {
       continue;
     }
@@ -80,6 +85,37 @@ function drawOtherPlayersFromUDP() {
     entity.Position = position;
 
     drawUsername(playerData.userID, position);
+  }
+}
+
+function drawOtherPlayersBodies() {
+  if (g.game === null || g.game.meeting !== null) {
+    return;
+  }
+
+  const isaacFrameCount = Isaac.GetFrameCount();
+
+  for (const body of g.game.bodies) {
+    const entity = getMultiplayerEntity(body.userID);
+    entity.Visible = true;
+
+    setPlayerCharacter(entity, body.userID);
+
+    let deathFrame = DEATH_ANIMATION_FINAL_FRAME;
+    if (body.renderFrameKilled !== null) {
+      deathFrame = isaacFrameCount - body.renderFrameKilled;
+    }
+
+    if (deathFrame < 0 || deathFrame > DEATH_ANIMATION_FINAL_FRAME) {
+      deathFrame = DEATH_ANIMATION_FINAL_FRAME;
+    }
+
+    setMultiplayerAnimation(entity, "Death", deathFrame, "", 0);
+
+    const position = Vector(body.x, body.y);
+    entity.Position = position;
+
+    drawUsername(body.userID, position);
   }
 }
 
@@ -133,8 +169,8 @@ function drawOtherPlayersMeeting() {
 }
 
 /** This function will spawn a new entity if one does not already exist for the provided user ID. */
-function getMultiplayerEntity(userID: int) {
-  let entityRef = playerEntityMap.get(userID);
+function getMultiplayerEntity(userID: int): Entity {
+  let entityRef = playerEffectMap.get(userID);
   if (entityRef !== undefined) {
     const entity = entityRef.Entity;
     if (entity === undefined || !entity.Exists()) {
@@ -145,35 +181,29 @@ function getMultiplayerEntity(userID: int) {
   if (entityRef === undefined) {
     // The player entity does not exist in the map or the existing entity reference is no longer
     // valid
-    const entity = spawnPlayerEntity();
-    entityRef = EntityRef(entity);
-    playerEntityMap.set(userID, entityRef);
+    const playerEffect = spawnPlayerEffect();
+    entityRef = EntityRef(playerEffect);
+    playerEffectMap.set(userID, entityRef);
   }
 
   return entityRef.Entity;
 }
 
-function spawnPlayerEntity() {
-  const player = Isaac.Spawn(
+export function spawnPlayerEffect(): EntityEffect {
+  const playerEffect = Isaac.Spawn(
     EntityType.ENTITY_EFFECT,
     EffectVariantCustom.MULTIPLAYER_PLAYER,
     0,
     Vector.Zero,
     Vector.Zero,
     undefined,
-  );
+  ).ToEffect();
 
-  return player;
-}
-
-// ModCallbacks.MC_POST_PLAYER_INIT (9)
-export function postPlayerInit(player: EntityPlayer): void {
-  if (!addingCustomPlayer) {
-    return;
+  if (playerEffect === undefined) {
+    error("Failed to spawn a player effect entity.");
   }
 
-  player.ControlsEnabled = false;
-  player.Visible = false;
+  return playerEffect;
 }
 
 function setPlayerCharacter(entity: Entity, userID: int) {
@@ -239,7 +269,7 @@ export function drawUsername(
   }
 
   const player = g.game.getPlayerFromUserID(userID);
-  if (player === null) {
+  if (player === undefined) {
     return;
   }
 

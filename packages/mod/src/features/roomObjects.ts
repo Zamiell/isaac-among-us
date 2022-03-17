@@ -30,7 +30,7 @@ export function postRoomLoad(): void {
   }
 
   const skeldRoom = getSkeldRoom();
-  if (skeldRoom === null) {
+  if (skeldRoom === undefined) {
     return;
   }
 

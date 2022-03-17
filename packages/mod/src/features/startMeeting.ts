@@ -94,7 +94,7 @@ function getAlertText() {
   const playerInitiated = g.game.getPlayerFromUserID(
     g.game.meeting.userIDInitiated,
   );
-  if (playerInitiated === null) {
+  if (playerInitiated === undefined) {
     return defaultValue;
   }
 
@@ -102,7 +102,7 @@ function getAlertText() {
     const playerKilled = g.game.getPlayerFromUserID(
       g.game.meeting.userIDKilled,
     );
-    if (playerKilled === null) {
+    if (playerKilled === undefined) {
       return defaultValue;
     }
     return `${playerInitiated.username} reported a dead body: ${playerKilled.username}`;
@@ -116,13 +116,14 @@ function getAlertText() {
 }
 
 function hasFadeFinished(): boolean {
-  if (g.game === null || g.game.startMeeting.startFrame === null) {
+  if (g.game === null || g.game.startMeeting.startRenderFrame === null) {
     return false;
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
-  const framesPassed = isaacFrameCount - g.game.startMeeting.startFrame;
-  return framesPassed >= FADE_TO_BLACK_FRAMES;
+  const renderFramesPassed =
+    isaacFrameCount - g.game.startMeeting.startRenderFrame;
+  return renderFramesPassed >= FADE_TO_BLACK_FRAMES;
 }
 
 export function startMeeting(): void {
@@ -145,7 +146,7 @@ function setState(state: StartMeetingState) {
   const isaacFrameCount = Isaac.GetFrameCount();
 
   g.game.startMeeting.state = state;
-  g.game.startMeeting.startFrame = isaacFrameCount;
+  g.game.startMeeting.startRenderFrame = isaacFrameCount;
 }
 
 export function inStartMeeting(): boolean {

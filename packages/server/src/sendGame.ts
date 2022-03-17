@@ -29,6 +29,7 @@ export function getGameDescriptionPlayers(game: Game): GameDescriptionPlayer[] {
   const players: GameDescriptionPlayer[] = [];
   for (const player of game.players) {
     const playerDescription: GameDescriptionPlayer = {
+      index: player.index,
       userID: player.userID,
       username: player.username,
       connected: player.connected,

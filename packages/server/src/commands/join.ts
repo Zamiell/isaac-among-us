@@ -31,8 +31,9 @@ export function commandJoin(
     return;
   }
 
+  const index = game.players.length;
   const character = getLowestUnusedCharacter(game);
-  const player = new Player(socketID, userID, username, character);
+  const player = new Player(index, socketID, userID, username, character);
   game.players.push(player);
 
   sendTCP(socket, SocketCommandServerToMod.JOINED, {

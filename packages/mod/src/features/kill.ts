@@ -30,7 +30,7 @@ export function kill(): void {
   }
 
   const closestPlayer = getClosestAmongUsPlayer();
-  if (closestPlayer === null) {
+  if (closestPlayer === undefined) {
     return;
   }
 

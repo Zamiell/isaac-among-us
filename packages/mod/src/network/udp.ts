@@ -16,7 +16,7 @@ import { getRoomIndexModified } from "../utils";
 import { sendUDP } from "./send";
 import * as struct from "./struct";
 
-let lastBeaconFrame: int | null = null;
+let lastBeaconRenderFrame: int | null = null;
 
 // ModCallbacks.MC_POST_RENDER (2)
 export function postRender(): void {
@@ -36,12 +36,12 @@ function sendBeacon() {
   const isaacFrameCount = Isaac.GetFrameCount();
 
   if (
-    lastBeaconFrame !== null &&
-    isaacFrameCount < lastBeaconFrame + UDP_BEACON_INTERVAL
+    lastBeaconRenderFrame !== null &&
+    isaacFrameCount < lastBeaconRenderFrame + UDP_BEACON_INTERVAL
   ) {
     return;
   }
-  lastBeaconFrame = isaacFrameCount;
+  lastBeaconRenderFrame = isaacFrameCount;
 
   const structObject: UDPBeaconInterface = {
     gameID: g.game.id,

@@ -1,5 +1,6 @@
 import { Meeting } from "./Meeting";
 import { Player } from "./Player";
+import { PlayerBody } from "./PlayerBody";
 
 export class Game {
   id: number;
@@ -8,7 +9,7 @@ export class Game {
   started = false;
   impostors: number[] = [];
   meeting: Meeting | null = null;
-  playersKilledSinceLastMeeting: number[] = [];
+  bodies: PlayerBody[] = [];
 
   /** How many rounds of play there have been. */
   night = 1;

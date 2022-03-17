@@ -19,10 +19,7 @@ export function commandDebug(
   console.log("- impostors:", game.impostors);
   console.log(`- numImpostors: ${game.impostors.length}`);
   console.log("- meeting:", game.meeting);
-  console.log(
-    "- playersKilledSinceLastMeeting:",
-    game.playersKilledSinceLastMeeting,
-  );
+  console.log("- bodies:", game.bodies);
   console.log(`- night: ${game.night}`);
   console.log(`- emergencyButtonCooldown: ${game.emergencyButtonCooldown}`);
 

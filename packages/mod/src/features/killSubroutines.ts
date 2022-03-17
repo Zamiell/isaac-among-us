@@ -15,7 +15,7 @@ export function ableToKillAPlayer(): boolean {
   }
 
   const closestPlayer = getClosestAmongUsPlayer();
-  if (closestPlayer === null) {
+  if (closestPlayer === undefined) {
     return false;
   }
 

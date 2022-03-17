@@ -3,6 +3,7 @@
 import { Meeting } from "./Meeting";
 import { MeetingResolution } from "./MeetingResolution";
 import { MeetingType } from "./MeetingType";
+import { PlayerBody } from "./PlayerBody";
 import { PlayerType } from "./PlayerType";
 import { Role } from "./Role";
 import { SkeldRoom } from "./SkeldRoom";
@@ -213,6 +214,7 @@ export class GameDescriptionDataToMod {
 }
 
 export class GameDescriptionPlayer {
+  index!: number;
   userID!: number;
   username!: string;
   connected!: boolean;
@@ -244,6 +246,7 @@ export class ReconnectDataToMod {
   character!: PlayerType;
   room!: SkeldRoom;
   enterGridIndex!: number;
+  bodies!: PlayerBody[];
 }
 
 export class EmergencyButtonCooldownDataToMod {

@@ -14,6 +14,7 @@ function resetPlayers(game: Game) {
   const newPlayers: Player[] = [];
   for (const player of game.players) {
     const newPlayer = new Player(
+      player.index,
       player.socketID,
       player.userID,
       player.username,

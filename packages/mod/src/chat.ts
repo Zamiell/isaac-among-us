@@ -11,7 +11,7 @@ export function add(data: ChatDataToMod, local = false): void {
     time: getFormattedTime(),
     username: data.from,
     msg: data.msg,
-    frameReceived: isaacFrameCount,
+    renderFrameReceived: isaacFrameCount,
     local,
   };
   chatMessages.unshift(chatMessage);

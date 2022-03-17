@@ -5,7 +5,7 @@ import { Role } from "./types/Role";
 
 export function assignImpostors(game: Game): void {
   if (IS_DEV) {
-    game.players[1].role = Role.IMPOSTER;
+    game.players[0].role = Role.IMPOSTER;
     return;
   }
 

@@ -7,7 +7,7 @@ export const FADE_TO_BLACK_FRAMES = 90;
 const sprite = initSprite("gfx/black.anm2");
 sprite.Scale = Vector(5000, 5000); // Big enough so that it would cover a 4K monitor
 let state = BlackSpriteState.DISABLED;
-let startFrame: int | null = null;
+let startRenderFrame: int | null = null;
 
 // ModCallbacks.MC_POST_RENDER (2)
 export function postRender(): void {
@@ -25,13 +25,13 @@ function drawBlackSprite() {
 }
 
 function getBlackSpriteOpacity() {
-  if (state === BlackSpriteState.SOLID || startFrame === null) {
+  if (state === BlackSpriteState.SOLID || startRenderFrame === null) {
     return 1;
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
-  const framesPassed = isaacFrameCount - startFrame;
-  const opacity = framesPassed / FADE_TO_BLACK_FRAMES;
+  const renderFramesPassed = isaacFrameCount - startRenderFrame;
+  const opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES;
 
   if (state === BlackSpriteState.FADING_TO_BLACK) {
     return opacity;
@@ -48,5 +48,5 @@ export function setBlackSpriteState(newState: BlackSpriteState): void {
   const isaacFrameCount = Isaac.GetFrameCount();
 
   state = newState;
-  startFrame = isaacFrameCount;
+  startRenderFrame = isaacFrameCount;
 }

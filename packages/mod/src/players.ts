@@ -4,7 +4,7 @@ import { PlayerData } from "./types/PlayerData";
 import { GameDescriptionPlayer } from "./types/SocketCommands";
 import { getRoomIndexModified } from "./utils";
 
-export function getClosestAmongUsPlayer(): PlayerData | null {
+export function getClosestAmongUsPlayer(): PlayerData | undefined {
   if (g.game === null) {
     error("Failed to get the closest player since the game was null.");
   }
@@ -12,7 +12,7 @@ export function getClosestAmongUsPlayer(): PlayerData | null {
   const player = Isaac.GetPlayer();
   const roomIndex = getRoomIndexModified();
 
-  let closestPlayer: PlayerData | null = null;
+  let closestPlayer: PlayerData | undefined;
   let closestDistance = math.huge;
   for (const otherPlayerData of g.game.playerMap.values()) {
     if (otherPlayerData.roomIndex !== roomIndex) {
@@ -22,7 +22,7 @@ export function getClosestAmongUsPlayer(): PlayerData | null {
     const otherPlayerDescription = g.game.getPlayerFromUserID(
       otherPlayerData.userID,
     );
-    if (otherPlayerDescription === null || !otherPlayerDescription.alive) {
+    if (otherPlayerDescription === undefined || !otherPlayerDescription.alive) {
       continue;
     }
 
@@ -47,7 +47,7 @@ export function getOurPlayer(): GameDescriptionPlayer {
   }
 
   const player = g.game.getPlayerFromUserID(g.userID);
-  if (player === null) {
+  if (player === undefined) {
     error(`Failed to find a player with our user ID: ${g.userID}`);
   }
 
@@ -64,7 +64,7 @@ export function getOurPlayerIndex(): int {
   }
 
   const playerIndex = g.game.getPlayerIndexFromUserID(g.userID);
-  if (playerIndex === null) {
+  if (playerIndex === undefined) {
     error(`Failed to find a player index with our user ID: ${g.userID}`);
   }
 
@@ -93,7 +93,7 @@ export function updatePlayerMap(
     animationFrame: playerPositionMessage.animationFrame,
     overlayAnimation: playerPositionMessage.overlayAnimation,
     overlayAnimationFrame: playerPositionMessage.overlayAnimationFrame,
-    frameUpdated: isaacFrameCount,
+    renderFrameUpdated: isaacFrameCount,
   };
   g.game.playerMap.set(playerData.userID, playerData);
 }

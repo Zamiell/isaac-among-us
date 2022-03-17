@@ -1,5 +1,8 @@
 Bugs:
 - killing
+  - first, test from we are killed perspective
+  - second, test from killing perspective
+
 - imposter thing where you close the doors
 - imposter lights
 

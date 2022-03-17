@@ -46,6 +46,34 @@ export function arrayRemoveInPlace<T>(
 }
 
 /**
+ * Helper function to perform a shallow copy.
+ *
+ * @param oldArray The array to copy.
+ * @param numElements Optional. If specified, will only copy the first N elements. By default, the
+ * entire array will be copied.
+ */
+export function copyArray<T>(
+  oldArray: T[] | readonly T[],
+  numElements?: number,
+): T[] {
+  if (numElements === undefined) {
+    numElements = oldArray.length;
+  }
+
+  const newArray: T[] = [];
+  for (let i = 0; i < numElements; i++) {
+    const oldElement = oldArray[i];
+    newArray.push(oldElement);
+  }
+
+  return newArray;
+}
+
+export function emptyArray<T>(array: T[]): void {
+  array.splice(0, array.length);
+}
+
+/**
  * Helper function to get a random element from the provided array.
  *
  * @param array The array to get an element from.

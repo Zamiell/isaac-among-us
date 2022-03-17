@@ -36,4 +36,9 @@ export function commandLeave(
     games.delete(game.id);
     logGameEvent(game, "Deleted.");
   }
+
+  // Update the indexes of the remaining players
+  game.players.forEach((player, i) => {
+    player.index = i;
+  });
 }

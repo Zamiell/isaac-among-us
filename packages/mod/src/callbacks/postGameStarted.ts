@@ -12,7 +12,7 @@ export function main(isContinued: boolean): void {
   const isaacFrameCount = Isaac.GetFrameCount();
 
   log(
-    `MC_POST_GAME_STARTED - Seed: ${startSeedString} - IsaacFrame: ${isaacFrameCount} - Continued: ${isContinued}`,
+    `MC_POST_GAME_STARTED - startSeedString: ${startSeedString} - isaacFrameCount: ${isaacFrameCount} - isContinued: ${isContinued}`,
   );
 
   // Check for errors that should prevent the mod from doing anything

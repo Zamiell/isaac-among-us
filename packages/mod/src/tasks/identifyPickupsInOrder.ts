@@ -87,7 +87,7 @@ const pickupDescriptions: PickupDescriptions = {
 
 let currentRound = STARTING_ROUND;
 let showingPickupIndex: int | null = null;
-let showingPickupFrame: int | null = null;
+let showingPickupRenderFrame: int | null = null;
 const pickupSprites: Sprite[] = [];
 const currentPickupOrder: PickupType[] = [];
 let currentChoosingIndex = 0;
@@ -131,7 +131,7 @@ function setupRound() {
   // Delay a second so that the player gets a chance to react before seeing the text
   showingPickupIndex = 0;
   runInNGameFrames(() => {
-    showingPickupFrame = Isaac.GetFrameCount();
+    showingPickupRenderFrame = Isaac.GetFrameCount();
   }, GAME_FRAMES_PER_SECOND / 2);
 }
 
@@ -146,18 +146,18 @@ export function postRender(): void {
 }
 
 function drawPickupText() {
-  if (showingPickupIndex === null || showingPickupFrame === null) {
+  if (showingPickupIndex === null || showingPickupRenderFrame === null) {
     return;
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
-  if (isaacFrameCount >= showingPickupFrame + TEXT_SHOW_FRAMES) {
+  if (isaacFrameCount >= showingPickupRenderFrame + TEXT_SHOW_FRAMES) {
     showingPickupIndex += 1;
-    showingPickupFrame = isaacFrameCount;
+    showingPickupRenderFrame = isaacFrameCount;
 
     if (showingPickupIndex >= currentPickupOrder.length) {
       showingPickupIndex = null;
-      showingPickupFrame = null;
+      showingPickupRenderFrame = null;
       currentChoosingIndex = 0;
       spawnButtons();
       return;
@@ -175,7 +175,7 @@ function drawPickupText() {
 }
 
 function drawPickupSprites() {
-  if (showingPickupIndex !== null || showingPickupFrame !== null) {
+  if (showingPickupIndex !== null || showingPickupRenderFrame !== null) {
     return;
   }
 

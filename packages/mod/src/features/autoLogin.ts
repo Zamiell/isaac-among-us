@@ -58,7 +58,9 @@ export function onGameDescription(): void {
 
   autoLogin = false;
 
-  sendTCP(SocketCommandModToServer.START, {
-    gameID: g.game.id,
-  });
+  if (g.game.players.length >= 2) {
+    sendTCP(SocketCommandModToServer.START, {
+      gameID: g.game.id,
+    });
+  }
 }

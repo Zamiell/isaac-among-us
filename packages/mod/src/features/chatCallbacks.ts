@@ -22,7 +22,7 @@ const WIDTH_OF_SPACE = fonts.pf.GetStringWidth(" ");
 const LINE_LENGTH = 13;
 const MAX_CHAT_MESSAGES = 10;
 // const FADED_CHAT_OPACITY = 0.15;
-const FRAMES_FOR_CHAT_TO_SHOW = 120;
+const RENDER_FRAMES_FOR_CHAT_TO_SHOW = 120;
 
 // ModCallbacks.MC_POST_RENDER (2)
 export function postRender(): void {
@@ -49,10 +49,13 @@ function drawChat() {
     let modifiedAlpha = chatMessage.local ? DEFAULT_OPACITY : alpha;
 
     // Make chat messages slowly fade away (if the console is closed)
-    const framesElapsed = isaacFrameCount - chatMessage.frameReceived;
-    if (!consoleOpen && framesElapsed > FRAMES_FOR_CHAT_TO_SHOW) {
-      const framesOverThreshold = framesElapsed - FRAMES_FOR_CHAT_TO_SHOW;
-      modifiedAlpha -= framesOverThreshold / (FRAMES_FOR_CHAT_TO_SHOW * 2);
+    const renderFramesElapsed =
+      isaacFrameCount - chatMessage.renderFrameReceived;
+    if (!consoleOpen && renderFramesElapsed > RENDER_FRAMES_FOR_CHAT_TO_SHOW) {
+      const renderFramesOverThreshold =
+        renderFramesElapsed - RENDER_FRAMES_FOR_CHAT_TO_SHOW;
+      modifiedAlpha -=
+        renderFramesOverThreshold / (RENDER_FRAMES_FOR_CHAT_TO_SHOW * 2);
     }
     if (modifiedAlpha <= 0) {
       break;

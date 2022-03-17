@@ -1,4 +1,3 @@
-import { PlayerBody } from "./PlayerBody";
 import { PlayerType } from "./PlayerType";
 import { Role } from "./Role";
 import { SkeldRoom } from "./SkeldRoom";
@@ -6,6 +5,7 @@ import { Task } from "./Task";
 import { TaskType } from "./TaskType";
 
 export class Player {
+  index: number;
   socketID: number;
   userID: number;
   username: string;
@@ -13,7 +13,6 @@ export class Player {
   role = Role.CREW;
   character: PlayerType;
   alive = true;
-  body: PlayerBody | null = null;
   room = SkeldRoom.CAFETERIA;
   enterGridIndex = 0;
   usedEmergencyMeeting = false;
@@ -24,11 +23,13 @@ export class Player {
   };
 
   constructor(
+    index: number,
     socketID: number,
     userID: number,
     username: string,
     character: PlayerType,
   ) {
+    this.index = index;
     this.socketID = socketID;
     this.userID = userID;
     this.username = username;

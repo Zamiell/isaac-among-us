@@ -13,26 +13,24 @@ const BACKDROP_MAP: ReadonlyMap<SkeldRoom, string> = new Map([
 const DEFAULT_BACKDROP_TYPE = "security";
 const NULL_STAGE_API_ANIMATION = -1;
 
-export function getStageAPIRoomMapID(skeldRoom: SkeldRoom): int | null {
+export function getStageAPIRoomMapID(skeldRoom: SkeldRoom): int | undefined {
   if (StageAPI === undefined) {
-    return null;
+    return undefined;
   }
 
   const levelMap = StageAPI.GetCurrentLevelMap();
-  for (const roomData of levelMap.Map) {
+  const matchingRoomData = levelMap.Map.find((roomData) => {
     const levelRoom = levelMap.GetRoom(roomData);
-    if (levelRoom.Layout.Variant === skeldRoom) {
-      return roomData.MapID;
-    }
-  }
+    return levelRoom.Layout.Variant === skeldRoom;
+  });
 
-  return null;
+  return matchingRoomData === undefined ? undefined : matchingRoomData.MapID;
 }
 
-export function getSkeldRoom(): SkeldRoom | null {
+export function getSkeldRoom(): SkeldRoom | undefined {
   const roomName = getStageAPIRoomName();
   const skeldRoom = skeldRoomMap.get(roomName);
-  return skeldRoom === undefined ? null : skeldRoom;
+  return skeldRoom === undefined ? undefined : skeldRoom;
 }
 
 export function getStageAPIDoors(): StageAPICustomGridEntity[] {
@@ -56,7 +54,7 @@ export function goToStageAPIRoom(
   const levelMap = StageAPI.GetCurrentLevelMap();
 
   const roomID = getStageAPIRoomID(levelMap, roomName);
-  if (roomID === null) {
+  if (roomID === undefined) {
     error(`Failed to get the room ID for: ${roomName}`);
   }
 
@@ -93,15 +91,13 @@ function fixRoomEntrancePosition() {
 function getStageAPIRoomID(
   levelMap: StageAPILevelMap,
   roomName: string,
-): int | null {
-  for (const roomData of levelMap.Map) {
+): int | undefined {
+  const matchingRoomData = levelMap.Map.find((roomData) => {
     const levelRoom = levelMap.GetRoom(roomData);
-    if (levelRoom.Layout.Name === roomName) {
-      return roomData.MapID;
-    }
-  }
+    return levelRoom.Layout.Name === roomName;
+  });
 
-  return null;
+  return matchingRoomData === undefined ? undefined : matchingRoomData.MapID;
 }
 
 export function loadBackdrops(): void {

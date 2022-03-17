@@ -1,4 +1,5 @@
 import {
+  DEV_MIN_PLAYERS,
   EMERGENCY_BUTTON_COOLDOWN_SECONDS,
   IS_DEV,
   MIN_PLAYERS,
@@ -38,8 +39,9 @@ function validate(socket: Socket, extraData: ExtraCommandData) {
     return false;
   }
 
-  if (game.players.length < MIN_PLAYERS && !IS_DEV) {
-    error(socket, `You need at least ${MIN_PLAYERS} to start a game.`);
+  const minPlayers = IS_DEV ? DEV_MIN_PLAYERS : MIN_PLAYERS;
+  if (game.players.length < minPlayers) {
+    error(socket, `You need at least ${minPlayers} players to start a game.`);
     return false;
   }
 

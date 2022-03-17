@@ -2,7 +2,7 @@ import { game, sfxManager } from "isaacscript-common";
 import { taskLeave } from "../features/taskSubroutines";
 import g from "../globals";
 
-let frameReturningFromTask: int | null = null;
+let gameFrameReturningFromTask: int | null = null;
 
 export function init(mod: Mod): void {
   mod.AddCallback(
@@ -21,7 +21,7 @@ function entityTakeDmgPlayer(
 ) {
   const gameFrameCount = game.GetFrameCount();
 
-  if (gameFrameCount === frameReturningFromTask) {
+  if (gameFrameCount === gameFrameReturningFromTask) {
     return false;
   }
 
@@ -35,7 +35,7 @@ function entityTakeDmgPlayer(
   }
 
   sfxManager.Play(SoundEffect.SOUND_THUMBS_DOWN);
-  frameReturningFromTask = gameFrameCount;
+  gameFrameReturningFromTask = gameFrameCount;
   taskLeave();
 
   return false;
