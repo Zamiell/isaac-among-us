@@ -102,7 +102,7 @@ function drawOtherPlayersBodies() {
     setPlayerCharacter(entity, body.userID);
 
     let deathFrame = DEATH_ANIMATION_FINAL_FRAME;
-    if (body.renderFrameKilled !== null) {
+    if (body.renderFrameKilled !== undefined) {
       deathFrame = isaacFrameCount - body.renderFrameKilled;
     }
 
