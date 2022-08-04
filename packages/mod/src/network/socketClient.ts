@@ -23,7 +23,7 @@ let clientTCP = null as SocketClient | null;
 let clientUDP = null as SocketClient | null;
 
 export function init(): void {
-  // This will only work if the "--luadebug" flag is enabled
+  // This will only work if the "--luadebug" flag is enabled.
   const [ok, requiredSocket] = pcall(require, "socket");
   if (ok) {
     socket = requiredSocket as Socket;
@@ -74,9 +74,8 @@ function getClient(port: int, useTCP = true) {
     error(`Unknown protocol: ${protocol}`);
   }
 
-  // We check for new socket data on every PostRender frame
-  // However, the remote socket might not necessarily have any new data for us
-  // Thus, we set the timeout to 0 in order to prevent lag
+  // We check for new socket data on every PostRender frame. However, the remote socket might not
+  // necessarily have any new data for us. Thus, we set the timeout to 0 in order to prevent lag.
   socketClient.settimeout(0);
 
   log(`Connected to: ${url}`);
