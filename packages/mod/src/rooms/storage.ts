@@ -1,4 +1,5 @@
-import { EntityTypeCustom } from "../enums";
+import { Direction } from "isaac-typescript-definitions";
+import { EntityTypeCustom } from "../enums/EntityTypeCustom";
 import { spawnBlockLine } from "../spawnObjects";
 import { spawnEntity } from "../utils";
 

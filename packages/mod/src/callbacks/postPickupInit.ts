@@ -1,11 +1,8 @@
+import { ModCallback, PickupVariant } from "isaac-typescript-definitions";
 import * as loadSlotMachines from "../tasks/loadSlotMachines";
 
 export function init(mod: Mod): void {
-  mod.AddCallback(
-    ModCallbacks.MC_POST_PICKUP_INIT,
-    pill,
-    PickupVariant.PICKUP_PILL,
-  );
+  mod.AddCallback(ModCallback.POST_PICKUP_INIT, pill, PickupVariant.PILL);
 }
 
 function pill(pickup: EntityPickup) {

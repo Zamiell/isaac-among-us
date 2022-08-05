@@ -1,3 +1,8 @@
+import {
+  Direction,
+  EntityType,
+  PokyVariant,
+} from "isaac-typescript-definitions";
 import { runNextGameFrame } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { spawnTaskButton } from "../features/buttonSpawn";
@@ -53,6 +58,6 @@ export function walkBetweenSlides(): void {
 
   const slideGridIndexes = [20, 110, 22, 112, 24, 114];
   for (const gridIndex of slideGridIndexes) {
-    spawnEntity(EntityType.ENTITY_POKY, PokyVariant.SLIDE, 0, gridIndex);
+    spawnEntity(EntityType.POKY, PokyVariant.SLIDE, 0, gridIndex);
   }
 }

@@ -12,7 +12,7 @@ const TIME_LEFT_POS = getScreenPosition(TEXT_X, 0.45);
 const VOTE_HELP_POS = getScreenPosition(TEXT_X, 0.15);
 const LINE_SPACING = Vector(0, 15);
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (
     g.game === null ||

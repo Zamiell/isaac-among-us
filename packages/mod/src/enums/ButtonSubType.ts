@@ -1,0 +1,16 @@
+export enum ButtonSubType {
+  GO_TO_TASK,
+  EMERGENCY,
+  CAMERA,
+  LIGHTS,
+  COMMS,
+  O2,
+  TASK_1,
+  TASK_2,
+  TASK_3,
+  TASK_4,
+  TASK_5,
+  TASK_6,
+  TASK_7,
+  TASK_8,
+}

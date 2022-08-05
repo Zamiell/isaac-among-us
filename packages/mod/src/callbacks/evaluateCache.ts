@@ -1,9 +1,10 @@
+import { CacheFlag, ModCallback } from "isaac-typescript-definitions";
 import { IS_DEV } from "../constants";
 import g from "../globals";
 import { Task } from "../types/Task";
 
 export function init(mod: Mod): void {
-  mod.AddCallback(ModCallbacks.MC_EVALUATE_CACHE, speed, CacheFlag.CACHE_SPEED);
+  mod.AddCallback(ModCallback.EVALUATE_CACHE, speed, CacheFlag.SPEED);
 }
 
 function speed(player: EntityPlayer) {
@@ -11,10 +12,10 @@ function speed(player: EntityPlayer) {
     return;
   }
 
-  // Make the player move a bit slower to emulate the feel of the original Among Us
+  // Make the player move a bit slower to emulate the feel of the original Among Us.
   player.MoveSpeed = 0.75;
 
-  // Make the player move faster for some specific tasks
+  // Make the player move faster for some specific tasks.
   if (
     g.game.currentTask === Task.SHORT_FIX_WIRES ||
     g.game.currentTask === Task.LONG_MAKE_PENTAGRAM
@@ -26,6 +27,7 @@ function speed(player: EntityPlayer) {
     player.MoveSpeed = 1;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (IS_DEV) {
     // player.MoveSpeed = 2;
   }

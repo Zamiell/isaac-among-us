@@ -1,16 +1,16 @@
 import { Game } from "./types/Game";
 import { Player } from "./types/Player";
-import { PlayerType } from "./types/PlayerType";
+import { PlayerTypeAllowed } from "./types/PlayerTypeAllowed";
 import { getEnumValues } from "./utils";
 
-export function getLowestUnusedCharacter(game: Game): PlayerType {
-  const existingCharacters = new Set<PlayerType>();
+export function getLowestUnusedCharacter(game: Game): PlayerTypeAllowed {
+  const existingCharacters = new Set<PlayerTypeAllowed>();
   for (const player of game.players) {
     existingCharacters.add(player.character);
   }
 
-  const allCharacters = new Set<PlayerType>();
-  for (const character of getEnumValues(PlayerType)) {
+  const allCharacters = new Set<PlayerTypeAllowed>();
+  for (const character of getEnumValues(PlayerTypeAllowed)) {
     allCharacters.add(character);
   }
 

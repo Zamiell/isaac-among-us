@@ -7,6 +7,6 @@ export function postRoomLoad(firstLoad: boolean): void {
 
   const doors = getStageAPIDoors();
   for (const door of doors) {
-    door.PersistentData.TransitionAnim = -1;
+    door.PersistentData["TransitionAnim"] = -1;
   }
 }

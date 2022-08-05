@@ -1,5 +1,6 @@
 import { getEffects, removeAllEffects } from "isaacscript-common";
-import { ButtonSubType, EffectVariantCustom } from "../enums";
+import { ButtonSubType } from "../enums/ButtonSubType";
+import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
 import { SkeldRoom } from "../types/SkeldRoom";
@@ -37,10 +38,10 @@ export function setEmergencyButtonState(): void {
     EffectVariantCustom.BUTTON,
     ButtonSubType.EMERGENCY,
   );
-  if (emergencyButtons.length === 0) {
+  const emergencyButton = emergencyButtons[0];
+  if (emergencyButton === undefined) {
     return;
   }
-  const emergencyButton = emergencyButtons[0];
   const enabled = shouldEmergencyButtonBeEnabled();
   setButtonState(emergencyButton, enabled);
 }

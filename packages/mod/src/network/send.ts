@@ -15,7 +15,7 @@ export function sendTCP<T extends SocketCommandModToServer>(
   }
 
   const packedMsg = packTCPMsg(command, data);
-  const [sentBytes, errMsg] = socketClient.send(packedMsg, true);
+  const { sentBytes, errMsg } = socketClient.send(packedMsg, true);
   if (sentBytes === undefined) {
     log(`Failed to send data over the TCP socket: ${errMsg}`);
     socketClient.disconnect();
@@ -31,7 +31,7 @@ export function sendUDP(data: string): void {
     return;
   }
 
-  const [sentBytes, errMsg] = socketClient.send(data, false);
+  const { sentBytes, errMsg } = socketClient.send(data, false);
   if (sentBytes === undefined) {
     log(`Failed to send data over the UDP socket: ${errMsg}`);
     socketClient.disconnect();

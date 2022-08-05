@@ -1,4 +1,11 @@
-import { spawnGridEntity } from "isaacscript-common";
+import {
+  BombSubType,
+  EntityType,
+  GridEntityType,
+  PickupVariant,
+  RockState,
+} from "isaac-typescript-definitions";
+import { asNumber, getRandomSeed, spawnGridEntity } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
@@ -35,9 +42,9 @@ export function bombRocks(): void {
 
 function spawnBombs(gridIndex: int) {
   const entity = spawnEntity(
-    EntityType.ENTITY_PICKUP,
-    PickupVariant.PICKUP_BOMB,
-    BombSubType.BOMB_DOUBLEPACK,
+    EntityType.PICKUP,
+    PickupVariant.BOMB,
+    BombSubType.DOUBLE_PACK,
     gridIndex,
   );
   const sprite = entity.GetSprite();
@@ -59,19 +66,19 @@ function spawnRock() {
   let gridIndex: int;
   let gridEntity: GridEntity | undefined;
   do {
-    gridIndex = room.GetRandomTileIndex(Random());
+    gridIndex = room.GetRandomTileIndex(getRandomSeed());
     gridEntity = room.GetGridEntity(gridIndex);
   } while (
     gridEntity !== undefined ||
     LEFT_SIDE_GRID_INDEXES.includes(gridIndex)
   );
 
-  spawnGridEntity(GridEntityType.GRID_ROCK, gridIndex);
+  spawnGridEntity(GridEntityType.ROCK, gridIndex);
   rockBrokenMap.set(gridIndex, false);
 }
 
-// ModCallbacksCustom.MC_POST_GRID_ENTITY_UPDATE
-// GridEntityType.GRID_ROCK (2)
+// ModCallbackCustom.POST_GRID_ENTITY_UPDATE
+// GridEntityType.ROCK (2)
 export function postGridEntityUpdateRock(gridEntity: GridEntity): void {
   if (g.game === null || g.game.currentTask !== THIS_TASK) {
     return;
@@ -80,7 +87,7 @@ export function postGridEntityUpdateRock(gridEntity: GridEntity): void {
   const game = Game();
   const room = game.GetRoom();
   const gridIndex = room.GetGridIndex(gridEntity.Position);
-  const broken = gridEntity.State === RockState.BROKEN;
+  const broken = gridEntity.State === asNumber(RockState.BROKEN);
   rockBrokenMap.set(gridIndex, broken);
 
   if (everyRockBroken()) {

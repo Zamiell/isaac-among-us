@@ -1,6 +1,6 @@
 import { runNextGameFrame } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
-import { EntityTypeCustom } from "../enums";
+import { EntityTypeCustom } from "../enums/EntityTypeCustom";
 import { spawnEntity } from "../utils";
 
 export function spawnSecurityObjects(): void {

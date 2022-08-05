@@ -1,4 +1,4 @@
-import { log } from "isaacscript-common";
+import { asString, log } from "isaacscript-common";
 import { commandMap } from "../commandMap";
 import g from "../globals";
 import * as players from "../players";
@@ -12,7 +12,7 @@ import * as socketClient from "./socketClient";
 
 const DEBUG = true;
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (!socketClient.isConnected()) {
     return;
@@ -39,8 +39,8 @@ function readTCP() {
     return false;
   }
 
-  const [rawData, errMsg] = socketClient.receive(true);
-  if (rawData === undefined) {
+  const { data, errMsg } = socketClient.receive(true);
+  if (data === undefined) {
     if (errMsg !== "timeout") {
       log(`Failed to read data: ${errMsg}`);
       socketClient.disconnect();
@@ -49,18 +49,20 @@ function readTCP() {
     return false;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (DEBUG) {
-    log(`Got socket data: ${rawData}`);
+    log(`Got socket data: ${data}`);
   }
 
-  const [command, dataObject] = unpackTCPMsg(rawData);
+  const [command, dataObject] = unpackTCPMsg(data);
   if (!validateTCPData(command, dataObject)) {
     return true;
   }
 
   const commandFunction = commandMap[command as SocketCommandServerToMod];
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (commandFunction !== undefined) {
-    // eslint-disable-next-line
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
     commandFunction(dataObject as any);
   } else {
     log(`Error: Received an unknown socket command: ${command}`);
@@ -76,7 +78,7 @@ function validateTCPData(command: string, dataObject: unknown) {
 
   const data = dataObject as Record<string, unknown>;
 
-  const gameID = data.gameID;
+  const { gameID } = data;
   if (gameID === undefined) {
     return true;
   }
@@ -84,8 +86,8 @@ function validateTCPData(command: string, dataObject: unknown) {
   // The "joined" and "reconnect" commands are the only command that sends the game ID before the
   // game object is instantiated locally.
   if (
-    command === SocketCommandServerToMod.JOINED ||
-    command === SocketCommandServerToMod.RECONNECT
+    command === asString(SocketCommandServerToMod.JOINED) ||
+    command === asString(SocketCommandServerToMod.RECONNECT)
   ) {
     return true;
   }
@@ -102,8 +104,8 @@ function readUDP() {
     return false;
   }
 
-  const [rawData, errMsg] = socketClient.receive(false);
-  if (rawData === undefined) {
+  const { data, errMsg } = socketClient.receive(false);
+  if (data === undefined) {
     if (errMsg !== "timeout") {
       log(`Failed to read data: ${errMsg}`);
       socketClient.disconnect();
@@ -113,7 +115,7 @@ function readUDP() {
   }
 
   // Only player positions are sent over the UDP socket.
-  const playerMessage = unpackUDPPlayerMessage(rawData);
+  const playerMessage = unpackUDPPlayerMessage(data);
   players.updatePlayerMap(playerMessage);
 
   return true;

@@ -1,3 +1,4 @@
+import { EntityType, SoundEffect } from "isaac-typescript-definitions";
 import {
   arrayRemoveInPlace,
   getNPCs,
@@ -6,7 +7,7 @@ import {
   sfxManager,
 } from "isaacscript-common";
 import { taskDescriptions } from "../constants";
-import { EffectVariantCustom } from "../enums";
+import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import g from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
 import { sendTCP } from "../network/send";
@@ -26,12 +27,12 @@ export function taskComplete(): void {
 
   muteSoundEffects();
   runNextGameFrame(() => {
-    // Some sound effects might not happen until the next frame,
-    // so mute everything again just in case
+    // Some sound effects might not happen until the next frame, so mute everything again just in
+    // case.
     muteSoundEffects();
   });
 
-  sfxManager.Play(SoundEffect.SOUND_1UP);
+  sfxManager.Play(SoundEffect.ONE_UP);
 
   sendTCP(SocketCommandModToServer.TASK_COMPLETE, {
     gameID: g.game.id,
@@ -47,10 +48,10 @@ export function taskComplete(): void {
 
 function muteSoundEffects() {
   for (const soundEffect of [
-    SoundEffect.SOUND_THUMBSUP,
-    SoundEffect.SOUND_DEATH_BURST_SMALL,
-    SoundEffect.SOUND_BOSS1_EXPLOSIONS,
-    SoundEffect.SOUND_ROCK_CRUMBLE,
+    SoundEffect.THUMBS_UP,
+    SoundEffect.DEATH_BURST_SMALL,
+    SoundEffect.BOSS_1_EXPLOSIONS,
+    SoundEffect.ROCK_CRUMBLE,
   ]) {
     sfxManager.Stop(soundEffect);
   }
@@ -80,12 +81,9 @@ export function taskLeave(): void {
 }
 
 export function clearRoomEntities(): void {
-  removeAllMatchingEntities(EntityType.ENTITY_BOMB); // 4
-  removeAllMatchingEntities(EntityType.ENTITY_PICKUP); // 5
-  removeAllMatchingEntities(
-    EntityType.ENTITY_EFFECT,
-    EffectVariantCustom.BUTTON,
-  );
+  removeAllMatchingEntities(EntityType.BOMB); // 4
+  removeAllMatchingEntities(EntityType.PICKUP); // 5
+  removeAllMatchingEntities(EntityType.EFFECT, EffectVariantCustom.BUTTON);
   removeAllNPCs();
   removeAllGridEntities();
 }
@@ -101,8 +99,8 @@ function removeAllGridEntities() {
   const game = Game();
   const room = game.GetRoom();
 
-  // Sometimes, walls can appear in the center of the room due to StageAPI bugs
-  // Remove every grid entity that is not positioned where a wall is supposed to be
+  // Sometimes, walls can appear in the center of the room due to StageAPI bugs Remove every grid
+  // entity that is not positioned where a wall is supposed to be.
   for (let gridIndex = 0; gridIndex < room.GetGridSize(); gridIndex++) {
     if (isWallGridIndex(gridIndex)) {
       continue;

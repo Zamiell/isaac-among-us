@@ -1,3 +1,4 @@
+import { ModCallback } from "isaac-typescript-definitions";
 import * as blackSprite from "../features/blackSprite";
 import * as chatCallbacks from "../features/chatCallbacks";
 import * as connectedIcon from "../features/connectedIcon";
@@ -16,13 +17,17 @@ import * as welcomeNotification from "../features/welcomeNotification";
 import * as socket from "../network/socket";
 import * as udp from "../network/udp";
 import * as fixWires from "../tasks/fixWires";
-import * as identifyItems from "../tasks/identifyItems";
+import * as identifyCollectibles from "../tasks/identifyCollectibles";
 import * as identifyPickupsInOrder from "../tasks/identifyPickupsInOrder";
 import * as identifyTrinkets from "../tasks/identifyTrinkets";
 import * as makePentagram from "../tasks/makePentagram";
 import * as pushButtonsInOrder from "../tasks/pushButtonsInOrder";
 
-export function main(): void {
+export function init(mod: Mod): void {
+  mod.AddCallback(ModCallback.POST_RENDER, main);
+}
+
+function main() {
   if (errors.postRender()) {
     return;
   }
@@ -38,7 +43,7 @@ export function main(): void {
   connectedIcon.postRender();
   chatCallbacks.postRender();
 
-  blackSprite.postRender(); // The black sprite has to be drawn before the text
+  blackSprite.postRender(); // The black sprite has to be drawn before the text.
   cutscene.postRender();
   startMeeting.postRender();
   drawMeeting.postRender();
@@ -46,13 +51,13 @@ export function main(): void {
   kill.postRender();
 
   // Tasks
-  identifyItems.postRender();
+  identifyCollectibles.postRender();
   identifyTrinkets.postRender();
   makePentagram.postRender();
   fixWires.postRender();
   identifyPickupsInOrder.postRender();
   pushButtonsInOrder.postRender();
 
-  // We want the room description to have precedence over all other types of graphics
+  // We want the room description to have precedence over all other types of graphics.
   drawRoomDescription.postRender();
 }

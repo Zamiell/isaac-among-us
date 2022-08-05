@@ -1,13 +1,15 @@
+import { EntityType, SoundEffect } from "isaac-typescript-definitions";
 import {
   emptyArray,
   GAME_FRAMES_PER_SECOND,
   getEnumValues,
-  getRandomArrayElement,
+  getRandomEnumValue,
   removeAllMatchingEntities,
+  repeat,
   runInNGameFrames,
   sfxManager,
 } from "isaacscript-common";
-import { EffectVariantCustom } from "../enums";
+import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
@@ -77,11 +79,11 @@ const pickupDescriptions: PickupDescriptions = {
   },
   [PickupType.SACK]: {
     name: "Sack",
-    gfx: "gfx/005.069_grabbag.anm2",
+    gfx: "gfx/005.069_grabbag.anm2", // cspell:disable-line
   },
   [PickupType.BATTERY]: {
     name: "Battery",
-    gfx: "gfx/005.090_littlebattery.anm2",
+    gfx: "gfx/005.090_littlebattery.anm2", // cspell:disable-line
   },
 };
 
@@ -113,29 +115,26 @@ export function identifyPickupsInOrder(): void {
 function setupRound() {
   movePlayerToGridIndex(PLAYER_START_GRID_INDEX);
 
-  removeAllMatchingEntities(
-    EntityType.ENTITY_EFFECT,
-    EffectVariantCustom.BUTTON,
-  );
+  removeAllMatchingEntities(EntityType.EFFECT, EffectVariantCustom.BUTTON);
 
   emptyArray(currentPickupOrder);
-  for (let i = 0; i < currentRound; i++) {
-    const pickupTypes = getEnumValues(PickupType);
-    let randomPickupType: int;
-    do {
-      randomPickupType = getRandomArrayElement(pickupTypes);
-    } while (currentPickupOrder.includes(randomPickupType));
+  repeat(currentRound, () => {
+    const randomPickupType = getRandomEnumValue(
+      PickupType,
+      undefined,
+      currentPickupOrder,
+    );
     currentPickupOrder.push(randomPickupType);
-  }
+  });
 
-  // Delay a second so that the player gets a chance to react before seeing the text
+  // Delay a second so that the player gets a chance to react before seeing the text.
   showingPickupIndex = 0;
   runInNGameFrames(() => {
     showingPickupRenderFrame = Isaac.GetFrameCount();
   }, GAME_FRAMES_PER_SECOND / 2);
 }
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (g.game === null || g.game.currentTask !== THIS_TASK) {
     return;
@@ -152,7 +151,7 @@ function drawPickupText() {
 
   const isaacFrameCount = Isaac.GetFrameCount();
   if (isaacFrameCount >= showingPickupRenderFrame + TEXT_SHOW_FRAMES) {
-    showingPickupIndex += 1;
+    showingPickupIndex++;
     showingPickupRenderFrame = isaacFrameCount;
 
     if (showingPickupIndex >= currentPickupOrder.length) {
@@ -168,7 +167,8 @@ function drawPickupText() {
   const room = game.GetRoom();
   const worldPosition = room.GetGridPosition(TEXT_GRID_INDEX);
   const position = Isaac.WorldToRenderPosition(worldPosition);
-  const pickupType = currentPickupOrder[showingPickupIndex];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const pickupType = currentPickupOrder[showingPickupIndex]!;
   const pickupDescription = pickupDescriptions[pickupType];
   const text = pickupDescription.name;
   drawFontText(text, position);
@@ -183,7 +183,8 @@ function drawPickupSprites() {
   const room = game.GetRoom();
 
   for (let i = 0; i < BUTTON_GRID_INDEXES.length; i++) {
-    const buttonGridIndex = BUTTON_GRID_INDEXES[i];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const buttonGridIndex = BUTTON_GRID_INDEXES[i]!;
     const spriteGridIndex = buttonGridIndex - ROW_LENGTH;
     const gamePosition = room.GetGridPosition(spriteGridIndex);
     const renderPosition = Isaac.WorldToRenderPosition(gamePosition);
@@ -198,10 +199,11 @@ function drawPickupSprites() {
 function spawnButtons() {
   const pickupTypes = getEnumValues(PickupType);
   for (let i = 0; i < pickupTypes.length; i++) {
-    const gridIndex = BUTTON_GRID_INDEXES[i];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const gridIndex = BUTTON_GRID_INDEXES[i]!;
     const button = spawnTaskButton(gridIndex, 1);
     const data = button.GetData();
-    data.pickupType = pickupTypes[i];
+    data["pickupType"] = pickupTypes[i];
   }
 }
 
@@ -223,9 +225,9 @@ export function identifyPickupsInOrderButtonPressed(
 }
 
 function correctSelection() {
-  sfxManager.Play(SoundEffect.SOUND_THUMBSUP, 0.5);
+  sfxManager.Play(SoundEffect.THUMBS_UP, 0.5);
 
-  currentChoosingIndex += 1;
+  currentChoosingIndex++;
   if (currentChoosingIndex >= currentPickupOrder.length) {
     nextRound();
   } else {
@@ -234,7 +236,7 @@ function correctSelection() {
 }
 
 function nextRound() {
-  currentRound += 1;
+  currentRound++;
   if (currentRound >= NUM_ROUNDS) {
     taskComplete();
   } else {
@@ -243,6 +245,6 @@ function nextRound() {
 }
 
 function incorrectSelection() {
-  sfxManager.Play(SoundEffect.SOUND_THUMBS_DOWN);
+  sfxManager.Play(SoundEffect.THUMBS_DOWN);
   taskLeave();
 }

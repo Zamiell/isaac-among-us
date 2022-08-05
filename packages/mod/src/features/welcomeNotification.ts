@@ -8,7 +8,7 @@ import { START_ROOM_INDEX } from "./goToEmptyRoom";
 const NOTIFICATION_TEXT = `Welcome to the ${MOD_NAME} mod!\n\nPress enter, type /help, and then press enter again for
 instructions on how to connect to the server.`;
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (shouldDrawWelcomeNotification()) {
     drawWelcomeNotification();

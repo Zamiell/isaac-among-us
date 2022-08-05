@@ -1,16 +1,18 @@
-import { game, spawnGridEntity } from "isaacscript-common";
 import {
-  BoxVariant,
-  CarpetSubTypeCustom,
-  EffectVariantCustom,
-  EntityTypeCustom,
-} from "./enums";
+  Direction,
+  EffectVariant,
+  EntityType,
+  GridEntityType,
+} from "isaac-typescript-definitions";
+import { game, spawnGridEntity } from "isaacscript-common";
+import { BoxVariant } from "./enums/BoxVariant";
+import { CarpetSubTypeCustom } from "./enums/CarpetSubTypeCustom";
+import { EffectVariantCustom } from "./enums/EffectVariantCustom";
+import { EntityTypeCustom } from "./enums/EntityTypeCustom";
 import { spawnEntity } from "./utils";
 
 function spawnBlock(gridIndex: int, visible = true): GridEntity {
-  const gridEntityType = visible
-    ? GridEntityType.GRID_ROCKB
-    : GridEntityType.GRID_WALL;
+  const gridEntityType = visible ? GridEntityType.BLOCK : GridEntityType.WALL;
 
   const gridEntity = spawnGridEntity(gridEntityType, gridIndex);
   if (gridEntity === undefined) {
@@ -22,7 +24,7 @@ function spawnBlock(gridIndex: int, visible = true): GridEntity {
 
 export function spawnFakeBlock(gridIndex: int): void {
   spawnEntity(
-    EntityType.ENTITY_EFFECT,
+    EntityType.EFFECT,
     EffectVariant.ISAACS_CARPET,
     CarpetSubTypeCustom.BLOCK,
     gridIndex,
@@ -61,6 +63,11 @@ function getGridIncrement(direction: Direction) {
   const gridWidth = room.GetGridWidth();
 
   switch (direction) {
+    // -1
+    case Direction.NO_DIRECTION: {
+      return error(`Unknown direction: ${direction}`);
+    }
+
     // 0
     case Direction.LEFT: {
       return -1;
@@ -79,11 +86,6 @@ function getGridIncrement(direction: Direction) {
     // 3
     case Direction.DOWN: {
       return gridWidth;
-    }
-
-    default: {
-      error(`Unknown direction: ${direction}`);
-      return 0;
     }
   }
 }
@@ -110,7 +112,7 @@ export function spawnEngine(gridIndex: int): void {
 }
 
 function spawnSpikes(gridIndex: int) {
-  spawnGridEntity(GridEntityType.GRID_SPIKES, gridIndex);
+  spawnGridEntity(GridEntityType.SPIKES, gridIndex);
 }
 
 export function spawnSpikesLine(
@@ -127,5 +129,5 @@ export function spawnSpikesLine(
 }
 
 export function spawnVent(gridIndex: int): void {
-  spawnEntity(EntityType.ENTITY_EFFECT, EffectVariantCustom.VENT, 0, gridIndex);
+  spawnEntity(EntityType.EFFECT, EffectVariantCustom.VENT, 0, gridIndex);
 }

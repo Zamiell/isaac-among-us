@@ -1,11 +1,7 @@
-// The cutscene that plays at the beginning of a game
+// The cutscene that plays at the beginning of a game.
 
-import {
-  ensureAllCases,
-  getScreenCenterPos,
-  itemConfig,
-  sfxManager,
-} from "isaacscript-common";
+import { CollectibleType } from "isaac-typescript-definitions";
+import { getScreenCenterPos, itemConfig, sfxManager } from "isaacscript-common";
 import g from "../globals";
 import { loadMap } from "../loadMap";
 import { disableMinimapAPI, enableMinimapAPI } from "../minimapAPI";
@@ -25,7 +21,7 @@ const itemSprite = Sprite();
 itemSprite.Load("gfx/item.anm2", false);
 itemSprite.SetFrame("Default", 0);
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (g.game === null || !g.game.started) {
     return;
@@ -48,21 +44,17 @@ export function postRender(): void {
 
     case CutsceneState.TEXT: {
       postRenderText();
-      return;
+      break;
     }
 
     case CutsceneState.TEXT_FADING_OUT: {
       postRenderTextFadingOut();
-      return;
+      break;
     }
 
     case CutsceneState.FADING_TO_GAME: {
       postRenderFadingToGame();
-      return;
-    }
-
-    default: {
-      ensureAllCases(g.game.cutscene.state);
+      break;
     }
   }
 }
@@ -80,7 +72,8 @@ function postRenderFadingToBlack() {
 function setStartingPosition() {
   const circlePoints = getMeetingCirclePoints();
   const ourPlayerIndex = getOurPlayerIndex();
-  const ourPosition = circlePoints[ourPlayerIndex];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const ourPosition = circlePoints[ourPlayerIndex]!;
   const player = Isaac.GetPlayer();
   player.Position = ourPosition;
 }
@@ -205,8 +198,8 @@ function setSprite() {
 
   const collectibleType =
     g.game.role === Role.CREW
-      ? CollectibleType.COLLECTIBLE_NOTCHED_AXE
-      : CollectibleType.COLLECTIBLE_MOMS_KNIFE;
+      ? CollectibleType.NOTCHED_AXE
+      : CollectibleType.MOMS_KNIFE;
 
   const itemConfigItem = itemConfig.GetCollectible(collectibleType);
   if (itemConfigItem === undefined) {

@@ -1,12 +1,13 @@
+import { Challenge, PlayerType } from "isaac-typescript-definitions";
 import { consoleCommand } from "../utils";
 
-const AMONG_US_CHARACTER = PlayerType.PLAYER_ISAAC;
+const AMONG_US_CHARACTER = PlayerType.ISAAC;
 const AMONG_US_SEED = "P7W3 LEN1"; // cspell:disable-line
-const AMONG_US_CHALLENGE = Challenge.CHALLENGE_NULL;
+const AMONG_US_CHALLENGE = Challenge.NULL;
 
 let restartOnNextRenderFrame = false;
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (!restartOnNextRenderFrame) {
     return;
@@ -26,7 +27,7 @@ export function postRender(): void {
   }
 }
 
-// ModCallbacks.MC_POST_GAME_STARTED (15)
+// ModCallback.POST_GAME_STARTED (15)
 export function postGameStarted(): boolean {
   if (!validateChallenge() || !validateCharacter() || !validateSeed()) {
     restartOnNextRenderFrame = true;
@@ -38,7 +39,7 @@ export function postGameStarted(): boolean {
 function validateChallenge() {
   const challenge = Isaac.GetChallenge();
 
-  return challenge === Challenge.CHALLENGE_NULL;
+  return challenge === Challenge.NULL;
 }
 
 function validateCharacter() {

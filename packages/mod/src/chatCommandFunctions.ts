@@ -140,7 +140,8 @@ chatCommandFunctions.set("terminate", (_args: string[]) => {
 chatCommandFunctions.set("username", usernameChatCommand);
 
 chatCommandFunctions.set("vote", (args: string[]) => {
-  if (args.length === 0) {
+  const nameVotedFor = args[0];
+  if (nameVotedFor === undefined) {
     chat.addLocal('You must provide a player name. (e.g. "/vote Alice")');
     return;
   }
@@ -166,7 +167,6 @@ chatCommandFunctions.set("vote", (args: string[]) => {
     return;
   }
 
-  const nameVotedFor = args[0];
   const playerVotedFor = g.game.getPlayerFromUsername(nameVotedFor);
   if (playerVotedFor === undefined) {
     chat.addLocal(`The player of "${nameVotedFor}" is not in this game.`);

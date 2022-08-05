@@ -1,7 +1,17 @@
-import { getRoomStageID, getRoomVariant, log } from "isaacscript-common";
+import {
+  getRoomStageID,
+  getRoomVariant,
+  log,
+  ModCallbackCustom,
+  ModUpgraded,
+} from "isaacscript-common";
 import * as lobby from "../features/lobby";
 
-export function main(): void {
+export function init(mod: ModUpgraded): void {
+  mod.AddCallbackCustom(ModCallbackCustom.POST_NEW_ROOM_REORDERED, main);
+}
+
+function main() {
   const game = Game();
   const gameFrameCount = game.GetFrameCount();
   const level = game.GetLevel();

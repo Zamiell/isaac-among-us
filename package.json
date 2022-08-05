@@ -5,7 +5,7 @@
   "license": "GPL-3.0",
   "author": "Zamiell",
   "devDependencies": {
-    "isaacscript-lint": "^4.1.1"
+    "isaacscript-lint": "^4.1.2"
   },
   "dependencies": {
     "isaacscript-spell": "^1.2.7",

@@ -1,12 +1,17 @@
 import {
-  ensureAllCases,
+  CacheFlag,
+  EntityFlag,
+  EntityType,
+  NullItemID,
+} from "isaac-typescript-definitions";
+import {
   game,
   getRoomGridIndex,
   getScreenBottomRightPos,
   log,
   setBlindfold,
+  VectorZero,
 } from "isaacscript-common";
-import { EntityTypeCustom } from "./enums";
 import { fonts } from "./fonts";
 import g from "./globals";
 import { Role } from "./types/Role";
@@ -33,7 +38,7 @@ export function consoleCommand(command: string): void {
 export function disableShooting(): void {
   const player = Isaac.GetPlayer();
   setBlindfold(player, true);
-  player.TryRemoveNullCostume(NullItemID.ID_BLINDFOLD);
+  player.TryRemoveNullCostume(NullItemID.BLINDFOLD);
 }
 
 export function drawFontText(
@@ -63,7 +68,7 @@ export function enableShooting(): void {
 export function getRoomIndexModified(): int {
   const roomGridIndex = getRoomGridIndex();
 
-  // The UDP struct does not support negative values
+  // The UDP struct does not support negative values.
   const roomIndexModified = math.abs(roomGridIndex);
 
   return roomIndexModified;
@@ -78,16 +83,14 @@ export function getRoleText(role: Role): string {
     case Role.IMPOSTER: {
       return "Imposter";
     }
-
-    default: {
-      ensureAllCases(role);
-      return "Unknown";
-    }
   }
 }
 
 /**
- * x and y from 0 to 1. For example, (0.4, 0.4) returns the position slightly top-left of center.
+ * For example, (0.4, 0.4) returns the position slightly top-left of center.
+ *
+ * @param x From 0 to 1.
+ * @param y From 0 to 1.
  */
 export function getScreenPosition(x: float, y: float): Vector {
   const bottomRightPos = getScreenBottomRightPos();
@@ -100,7 +103,7 @@ export function movePlayerToGridIndex(gridIndex: int): void {
   const player = Isaac.GetPlayer();
 
   player.Position = position;
-  player.Velocity = Vector.Zero;
+  player.Velocity = VectorZero;
 }
 
 export function removeGridEntity(gridEntity: GridEntity): void {
@@ -108,8 +111,8 @@ export function removeGridEntity(gridEntity: GridEntity): void {
   const gridIndex = gridEntity.GetGridIndex();
   room.RemoveGridEntity(gridIndex, 0, false); // gridEntity.Destroy() does not work
 
-  // It is best practice to call the "Update()" method after removing a grid entity;
-  // otherwise, spawning grid entities on the same tile can fail
+  // It is best practice to call the "Update()" method after removing a grid entity; otherwise,
+  // spawning grid entities on the same tile can fail.
   room.Update();
 }
 
@@ -118,7 +121,7 @@ export function restart(): void {
 }
 
 export function spawnEntity(
-  entityType: EntityType | EntityTypeCustom,
+  entityType: EntityType,
   variant: int,
   subType: int,
   gridIndex: int,
@@ -133,14 +136,14 @@ export function spawnEntity(
     variant,
     subType,
     position,
-    Vector.Zero,
+    VectorZero,
     undefined,
   );
 
   entity.DepthOffset = depthOffset;
 
   if (!playAppearAnimation) {
-    entity.ClearEntityFlags(EntityFlag.FLAG_APPEAR);
+    entity.ClearEntityFlags(EntityFlag.APPEAR);
   }
 
   return entity;
@@ -153,6 +156,6 @@ export function traceback(): void {
 
 export function updatePlayerStats(): void {
   const player = Isaac.GetPlayer();
-  player.AddCacheFlags(CacheFlag.CACHE_ALL);
+  player.AddCacheFlags(CacheFlag.ALL);
   player.EvaluateItems();
 }

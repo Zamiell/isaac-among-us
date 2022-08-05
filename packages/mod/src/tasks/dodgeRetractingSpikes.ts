@@ -1,3 +1,10 @@
+import {
+  Direction,
+  EntityType,
+  GridEntityType,
+  KeySubType,
+  PickupVariant,
+} from "isaac-typescript-definitions";
 import { runNextGameFrame, spawnGridEntity } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { spawnTaskButton } from "../features/buttonSpawn";
@@ -49,14 +56,14 @@ export function dodgeRetractingSpikes(): void {
     addCollision(87, 117);
   });
 
-  spawnGridEntity(GridEntityType.GRID_LOCK, 72);
+  spawnGridEntity(GridEntityType.LOCK, 72);
   spawnTaskButton(73, 1);
 
   const retractingSpikesGridIndexes: int[] = [
     49, 50, 65, 80, 95, 96, 97, 98, 99, 54, 69, 84, 55, 67, 82,
   ];
   for (const gridIndex of retractingSpikesGridIndexes) {
-    spawnGridEntity(GridEntityType.GRID_SPIKES_ONOFF, gridIndex);
+    spawnGridEntity(GridEntityType.SPIKES_ON_OFF, gridIndex);
   }
 
   spawnKey(52);
@@ -64,9 +71,9 @@ export function dodgeRetractingSpikes(): void {
 
 function spawnKey(gridIndex: int) {
   const entity = spawnEntity(
-    EntityType.ENTITY_PICKUP,
-    PickupVariant.PICKUP_KEY,
-    KeySubType.KEY_NORMAL,
+    EntityType.PICKUP,
+    PickupVariant.KEY,
+    KeySubType.NORMAL,
     gridIndex,
   );
   const sprite = entity.GetSprite();

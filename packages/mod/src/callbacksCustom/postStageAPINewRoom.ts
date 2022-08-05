@@ -25,10 +25,9 @@ export function main(this: void): void {
 }
 
 function fixOffsetBug() {
-  // Under certain conditions (like walking to a room in a certain way),
-  // StageAPI will offset the room by one row, causing all kinds of other bugs,
-  // such as objects being moved
-  // Try to detect this condition
+  // Under certain conditions (like walking to a room in a certain way), StageAPI will offset the
+  // room by one row, causing all kinds of other bugs, such as objects being moved. Try to detect
+  // this condition.
   const game = Game();
   const room = game.GetRoom();
   const topLeftPos = room.GetTopLeftPos();

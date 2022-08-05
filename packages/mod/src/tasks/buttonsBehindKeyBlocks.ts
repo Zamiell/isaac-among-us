@@ -1,3 +1,10 @@
+import {
+  Direction,
+  EntityType,
+  GridEntityType,
+  KeySubType,
+  PickupVariant,
+} from "isaac-typescript-definitions";
 import { runNextGameFrame, spawnGridEntity } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { spawnTaskButton } from "../features/buttonSpawn";
@@ -41,24 +48,24 @@ export function buttonsBehindKeyBlocks(): void {
     addCollision(70, 115);
   });
 
-  spawnGridEntity(GridEntityType.GRID_LOCK, 65);
-  spawnGridEntity(GridEntityType.GRID_LOCK, 80);
-  spawnGridEntity(GridEntityType.GRID_LOCK, 95);
+  spawnGridEntity(GridEntityType.LOCK, 65);
+  spawnGridEntity(GridEntityType.LOCK, 80);
+  spawnGridEntity(GridEntityType.LOCK, 95);
 
-  spawnGridEntity(GridEntityType.GRID_LOCK, 67);
-  spawnGridEntity(GridEntityType.GRID_LOCK, 82);
-  spawnGridEntity(GridEntityType.GRID_LOCK, 97);
+  spawnGridEntity(GridEntityType.LOCK, 67);
+  spawnGridEntity(GridEntityType.LOCK, 82);
+  spawnGridEntity(GridEntityType.LOCK, 97);
 
-  spawnGridEntity(GridEntityType.GRID_LOCK, 69);
-  spawnGridEntity(GridEntityType.GRID_LOCK, 84);
-  spawnGridEntity(GridEntityType.GRID_LOCK, 99);
+  spawnGridEntity(GridEntityType.LOCK, 69);
+  spawnGridEntity(GridEntityType.LOCK, 84);
+  spawnGridEntity(GridEntityType.LOCK, 99);
 }
 
 function spawnKeys(gridIndex: int) {
   const entity = spawnEntity(
-    EntityType.ENTITY_PICKUP,
-    PickupVariant.PICKUP_KEY,
-    KeySubType.KEY_DOUBLEPACK,
+    EntityType.PICKUP,
+    PickupVariant.KEY,
+    KeySubType.DOUBLE_PACK,
     gridIndex,
   );
   const sprite = entity.GetSprite();

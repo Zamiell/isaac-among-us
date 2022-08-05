@@ -1,3 +1,4 @@
+import { EntityType } from "isaac-typescript-definitions";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { allButtonsPressed } from "../features/buttonSubroutines";
 import { taskComplete } from "../features/taskSubroutines";
@@ -13,7 +14,7 @@ export function pressButtonsWithGrudge(): void {
 
   const cornerGridIndexes = [16, 28, 106, 118];
   for (const gridIndex of cornerGridIndexes) {
-    spawnEntity(EntityType.ENTITY_GRUDGE, 0, 0, gridIndex);
+    spawnEntity(EntityType.GRUDGE, 0, 0, gridIndex);
   }
 
   const buttonGridIndexes: int[] = [19, 25, 109, 115, 61, 43, 103];

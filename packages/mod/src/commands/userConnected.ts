@@ -3,12 +3,12 @@ import g from "../globals";
 import { UserConnectedDataToMod } from "../types/SocketCommands";
 
 export function commandUserConnected(data: UserConnectedDataToMod): void {
-  // Don't display notifications for ourselves
+  // Don't display notifications for ourselves.
   if (data.userID === g.userID) {
     return;
   }
 
-  // Don't display notifications for players who are not in our current game
+  // Don't display notifications for players who are not in our current game.
   if (g.game !== null && !g.game.isPlayerJoined(data.userID)) {
     return;
   }

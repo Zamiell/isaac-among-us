@@ -1,4 +1,4 @@
-import { ensureAllCases, getScreenBottomRightPos } from "isaacscript-common";
+import { getScreenBottomRightPos, VectorZero } from "isaacscript-common";
 import g from "../globals";
 import { disableMinimapAPI } from "../minimapAPI";
 import { initSprite } from "../sprite";
@@ -13,7 +13,7 @@ const TEXT_OFFSET = Vector(0, -10);
 
 const blackSprite = initSprite("gfx/black.anm2");
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (g.game === null || !g.game.started) {
     return;
@@ -36,11 +36,7 @@ export function postRender(): void {
 
     case StartMeetingState.FADING_TO_GAME: {
       postRenderFadingToGame();
-      return;
-    }
-
-    default: {
-      ensureAllCases(g.game.startMeeting.state);
+      break;
     }
   }
 }
@@ -68,7 +64,7 @@ function postRenderFadingToGame() {
   if (g.game !== null && hasFadeFinished()) {
     setState(StartMeetingState.DISABLED);
     setBlackSpriteState(BlackSpriteState.DISABLED);
-    // TODO start meeting countdown?
+    // TODO: start meeting countdown?
   }
 }
 
@@ -128,9 +124,9 @@ function hasFadeFinished(): boolean {
 
 export function startMeeting(): void {
   const player = Isaac.GetPlayer();
-  player.Velocity = Vector.Zero;
+  player.Velocity = VectorZero;
 
-  // Set the dimensions for the alert strip
+  // Set the dimensions for the alert strip.
   const bottomRightPos = getScreenBottomRightPos();
   blackSprite.Scale = Vector(bottomRightPos.X, bottomRightPos.Y / 3);
 

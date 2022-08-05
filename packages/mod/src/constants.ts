@@ -1,4 +1,4 @@
-import { ISAAC_FRAMES_PER_SECOND } from "isaacscript-common";
+import { RENDER_FRAMES_PER_SECOND } from "isaacscript-common";
 import { IS_DEV } from "../../common/src/constants";
 
 export {
@@ -12,6 +12,7 @@ export { taskDescriptions } from "../../common/src/taskDescriptions";
 
 export const MOD_NAME = "Among Us";
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 export const REMOTE_HOSTNAME = IS_DEV ? "192.168.1.10" : "isaacracing.net";
 export const SOCKET_CONNECT_TIMEOUT_SECONDS = 1;
 export const SOCKET_CLIENT_RETURN_SUCCESS = 1;
@@ -49,9 +50,9 @@ export const UDP_BEACON_FIELDS: ReadonlyArray<
 export const UDP_BEACON_DATA_FORMAT = UDP_BEACON_FIELDS.map(
   (tuple) => tuple[1],
 ).join();
-export const UDP_BEACON_INTERVAL = 10 * ISAAC_FRAMES_PER_SECOND;
+export const UDP_BEACON_INTERVAL = 10 * RENDER_FRAMES_PER_SECOND;
 
-// This matches the UDPMessageBodyPosition struct
+// This matches the `UDPMessageBodyPosition` struct.
 export interface UDPPositionInterface {
   gameID: int;
   userID: int;

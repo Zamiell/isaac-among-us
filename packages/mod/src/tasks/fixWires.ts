@@ -1,3 +1,4 @@
+import { SoundEffect } from "isaac-typescript-definitions";
 import {
   emptyArray,
   getEffects,
@@ -5,7 +6,9 @@ import {
   sfxManager,
   shuffleArray,
 } from "isaacscript-common";
-import { ButtonSubType, EffectVariantCustom, EntityTypeCustom } from "../enums";
+import { ButtonSubType } from "../enums/ButtonSubType";
+import { EffectVariantCustom } from "../enums/EffectVariantCustom";
+import { EntityTypeCustom } from "../enums/EntityTypeCustom";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { resetButton } from "../features/buttonSubroutines";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
@@ -34,7 +37,7 @@ const WIRE_COLORS: WireColors = {
   [WireColor.BLUE]: Color(0, 0, 1),
   [WireColor.RED]: Color(1, 0, 0),
   [WireColor.MAGENTA]: Color(1, 0, 1),
-};
+} as const;
 
 let buttonColorActive: WireColor | null = null;
 const colorsComplete: WireColor[] = [];
@@ -93,13 +96,13 @@ export function fixWires(): void {
   const bottomGridIndex = 97;
   spawnTeleporter(bottomGridIndex);
 
-  // The left side is always in the same order
+  // The left side is always in the same order.
   const topLeftGridIndex = 16;
   for (let i = 0; i < NUM_BUTTONS; i++) {
     const gridIndex = topLeftGridIndex + i * gridWidth * 2;
     const button = spawnTaskButton(gridIndex, 1);
     const data = button.GetData();
-    data.color = i;
+    data["color"] = i;
 
     const sign = spawnEntity(EntityTypeCustom.WIRE_SIGN, 0, 0, gridIndex);
     const sprite = sign.GetSprite();
@@ -107,17 +110,20 @@ export function fixWires(): void {
     sprite.SetFrame(i);
   }
 
-  // The right side is randomized, with the color being stored as entity data
+  // The right side is randomized, with the color being stored as entity data.
   const topRightGridIndex = 28;
   const wireColors = getEnumValues(WireColor);
   const randomWireColors = shuffleArray(wireColors);
   for (let i = 0; i < NUM_BUTTONS; i++) {
     const color = randomWireColors[i];
+    if (color === undefined) {
+      error(`Failed to get the random wire color for index: ${i}`);
+    }
 
     const gridIndex = topRightGridIndex + i * gridWidth * 2;
     const button = spawnTaskButton(gridIndex, 2);
     const data = button.GetData();
-    data.color = color;
+    data["color"] = color;
 
     const sign = spawnEntity(EntityTypeCustom.WIRE_SIGN, 0, 0, gridIndex);
     const sprite = sign.GetSprite();
@@ -140,7 +146,7 @@ function resetLineSprites() {
 
 export function fixWiresButtonPressed(button: EntityEffect, num: int): void {
   const data = button.GetData();
-  const color = data.color as WireColor;
+  const color = data["color"] as WireColor;
 
   if (num === 1) {
     leftSideButtonPressed(color, button);
@@ -162,7 +168,7 @@ function leftSideButtonPressed(color: WireColor, button: EntityEffect) {
 
 function rightSideButtonPressed(color: WireColor) {
   if (color !== buttonColorActive) {
-    sfxManager.Play(SoundEffect.SOUND_THUMBS_DOWN);
+    sfxManager.Play(SoundEffect.THUMBS_DOWN);
     taskLeave();
     return;
   }
@@ -179,17 +185,17 @@ function rightSideButtonPressed(color: WireColor) {
   }
 }
 
-function resetLeftButtons(exceptColor: int) {
+function resetLeftButtons(exceptColor: WireColor) {
   const leftButtons = getEffects(
     EffectVariantCustom.BUTTON,
     ButtonSubType.TASK_1,
   );
   for (const button of leftButtons) {
     const data = button.GetData();
-    const color = data.color as WireColor;
+    const color = data["color"] as WireColor;
 
-    // Don't reset the button that we just pushed
-    // and don't reset the buttons that have already been completed
+    // Don't reset the button that we just pushed and don't reset the buttons that have already been
+    // completed.
     if (color !== exceptColor && !colorsComplete.includes(color)) {
       resetButton(button);
     }
@@ -226,9 +232,10 @@ export function postRender(): void {
     sprite.Rotation = combinedVector.GetAngleDegrees();
     sprite.Scale = Vector(combinedVector.Length(), 1);
     sprite.Color = WIRE_COLORS[color];
-    sprite.Render(startPosition, Vector.Zero, Vector.Zero);
+    sprite.Render(startPosition);
   }
 }
+
 function updatePlayerStats() {
   throw new Error("Function not implemented.");
 }

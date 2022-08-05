@@ -9,7 +9,7 @@ import { ableToKillAPlayer } from "./killSubroutines";
 
 const sprite = initSprite("gfx/ui/kill.anm2");
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (!ableToKillAPlayer()) {
     return;

@@ -1,9 +1,11 @@
+import { SoundEffect, TrinketType } from "isaac-typescript-definitions";
 import {
   emptyArray,
   getRandomArrayElement,
   getRandomArrayIndex,
+  getTrinketArray,
   getTrinketName,
-  getTrinketSet,
+  repeat,
   sfxManager,
 } from "isaacscript-common";
 import { spawnTaskButton } from "../features/buttonSpawn";
@@ -54,37 +56,35 @@ function setupRound() {
 
   const randomTrinkets = getRandomTrinkets();
 
-  // Initialize the sprites
+  // Initialize the sprites.
   emptyArray(trinketSprites);
-  for (let i = 0; i < NUM_RANDOM_TRINKETS; i++) {
-    const randomTrinket = randomTrinkets[i];
+  for (const randomTrinket of randomTrinkets) {
     const sprite = initGlowingItemSprite(randomTrinket, true);
     trinketSprites.push(sprite);
   }
 
-  // Randomly select one of the three trinkets
+  // Randomly select one of the three trinkets.
   const randomIndex = getRandomArrayIndex(randomTrinkets);
-  const randomTrinket = randomTrinkets[randomIndex];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const randomTrinket = randomTrinkets[randomIndex]!;
   correctTrinketIndex = randomIndex;
   currentTrinket = getTrinketName(randomTrinket);
 
   resetAllButtons();
 }
 
-function getRandomTrinkets() {
-  const trinketSet = getTrinketSet();
-  const trinketArray: TrinketType[] = [];
-  for (const trinketType of trinketSet.values()) {
-    trinketArray.push(trinketType);
-  }
+function getRandomTrinkets(): TrinketType[] {
+  const trinketArray = getTrinketArray();
 
   const randomTrinkets: TrinketType[] = [];
-  while (randomTrinkets.length < NUM_RANDOM_TRINKETS) {
-    const randomTrinket = getRandomArrayElement(trinketArray);
-    if (!randomTrinkets.includes(randomTrinket)) {
-      randomTrinkets.push(randomTrinket);
-    }
-  }
+  repeat(NUM_RANDOM_TRINKETS, () => {
+    const randomTrinket = getRandomArrayElement(
+      trinketArray,
+      undefined,
+      randomTrinkets,
+    );
+    randomTrinkets.push(randomTrinket);
+  });
 
   return randomTrinkets;
 }
@@ -98,9 +98,9 @@ export function identifyTrinketButtonPressed(num: int): void {
 }
 
 function correctSelection() {
-  sfxManager.Play(SoundEffect.SOUND_THUMBSUP, 0.5);
+  sfxManager.Play(SoundEffect.THUMBS_UP, 0.5);
 
-  currentRound += 1;
+  currentRound++;
   if (currentRound >= NUM_ROUNDS) {
     taskComplete();
   } else {
@@ -109,11 +109,11 @@ function correctSelection() {
 }
 
 function incorrectSelection() {
-  sfxManager.Play(SoundEffect.SOUND_THUMBS_DOWN);
+  sfxManager.Play(SoundEffect.THUMBS_DOWN);
   taskLeave();
 }
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (g.game === null || g.game.currentTask !== THIS_TASK) {
     return;

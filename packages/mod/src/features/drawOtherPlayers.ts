@@ -1,11 +1,15 @@
 // Multiplayer players are represented by custom effects with a variant of
-// EffectVariantCustom.MULTIPLAYER_PLAYER
-// We don't use a real player (entity 1.0) since the sprite is not mutable
-// (it resets on every render frame)
+// EffectVariantCustom.MULTIPLAYER_PLAYER. We don't use a real player (entity 1.0) since the sprite
+// is not mutable (it resets on every render frame).
 
-import { ISAAC_FRAMES_PER_SECOND } from "isaacscript-common";
-import { injectTestPlayers } from "../debugFunction";
-import { EffectVariantCustom } from "../enums";
+import { EntityType } from "isaac-typescript-definitions";
+import {
+  asNumber,
+  RENDER_FRAMES_PER_SECOND,
+  VectorZero,
+} from "isaacscript-common";
+import { injectTestPlayers } from "../debug";
+import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import { fonts } from "../fonts";
 import g from "../globals";
 import { getRoomIndexModified } from "../utils";
@@ -25,7 +29,7 @@ const DEATH_ANIMATION_FINAL_FRAME = 55;
 /** Indexed by user ID. */
 const playerEffectMap = new Map<int, EntityRef>();
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (g.game === null) {
     return;
@@ -59,11 +63,11 @@ function drawOtherPlayersFromUDP() {
       isaacFrameCount - playerData.renderFrameUpdated;
     const player = g.game.getPlayerFromUserID(playerData.userID);
     if (
-      // Don't draw stale players, since they might have disconnected
-      renderFramesSinceLastUpdate > ISAAC_FRAMES_PER_SECOND ||
-      // Don't draw players who are not in this room
+      // Don't draw stale players, since they might have disconnected.
+      renderFramesSinceLastUpdate > RENDER_FRAMES_PER_SECOND ||
+      // Don't draw players who are not in this room.
       playerData.roomIndex !== roomIndex ||
-      // Don't draw dead players
+      // Don't draw dead players.
       player === undefined ||
       !player.alive
     ) {
@@ -133,7 +137,8 @@ function drawOtherPlayersMeeting() {
 
   injectTestPlayers();
   for (let i = 0; i < g.game.players.length; i++) {
-    const player = g.game.players[i];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const player = g.game.players[i]!;
 
     const entity = getMultiplayerEntity(player.userID);
     entity.Visible = true;
@@ -157,9 +162,10 @@ function drawOtherPlayersMeeting() {
     }
   }
 
-  // We want to draw the usernames last so that they take precedence over the player sprites
+  // We want to draw the usernames last so that they take precedence over the player sprites.
   for (let i = 0; i < g.game.players.length; i++) {
-    const player = g.game.players[i];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const player = g.game.players[i]!;
     const position = circlePoints[i];
     if (position !== undefined) {
       const opacity = player.alive ? undefined : USERNAME_FADE_DEATH;
@@ -178,12 +184,16 @@ function getMultiplayerEntity(userID: int): Entity {
     }
   }
 
-  if (entityRef === undefined) {
+  if (entityRef === undefined || entityRef.Entity === undefined) {
     // The player entity does not exist in the map or the existing entity reference is no longer
-    // valid
+    // valid.
     const playerEffect = spawnPlayerEffect();
     entityRef = EntityRef(playerEffect);
     playerEffectMap.set(userID, entityRef);
+  }
+
+  if (entityRef.Entity === undefined) {
+    error("Failed to get a multiplayer entity.");
   }
 
   return entityRef.Entity;
@@ -191,11 +201,11 @@ function getMultiplayerEntity(userID: int): Entity {
 
 export function spawnPlayerEffect(): EntityEffect {
   const playerEffect = Isaac.Spawn(
-    EntityType.ENTITY_EFFECT,
+    EntityType.EFFECT,
     EffectVariantCustom.MULTIPLAYER_PLAYER,
     0,
-    Vector.Zero,
-    Vector.Zero,
+    VectorZero,
+    VectorZero,
     undefined,
   ).ToEffect();
 
@@ -223,11 +233,11 @@ function setPlayerCharacter(entity: Entity, userID: int) {
   }
 
   const correctCharacter = g.game.getPlayerCharacter(userID);
-  if (correctCharacter === null) {
+  if (correctCharacter === undefined) {
     error(`Failed to get the character for player: ${userID}`);
   }
 
-  if (character === correctCharacter) {
+  if (character === asNumber(correctCharacter)) {
     return;
   }
 
@@ -245,7 +255,7 @@ function setMultiplayerAnimation(
   const sprite = entity.GetSprite();
   sprite.SetFrame(animation, animationFrame);
 
-  // overlayAnimation cannot be null since a blank string is sent over the wire
+  // `overlayAnimation` cannot be null since a blank string is sent over the wire.
   if (overlayAnimation === "") {
     sprite.RemoveOverlay();
   } else {
@@ -255,7 +265,7 @@ function setMultiplayerAnimation(
   if (animation === "Death") {
     sprite.Offset = DEATH_SPRITE_OFFSET;
   } else {
-    sprite.Offset = Vector.Zero;
+    sprite.Offset = VectorZero;
   }
 }
 
@@ -277,7 +287,7 @@ export function drawUsername(
   const { username } = player;
 
   const positionSprite = Isaac.WorldToScreen(positionGame);
-  // Show the username of the player above the sprite
+  // Show the username of the player above the sprite.
   const position = positionSprite.add(USERNAME_TEXT_OFFSET);
   const color = red ? KColor(1, 0, 0, opacity) : KColor(1, 1, 1, opacity);
   const scale = 1;

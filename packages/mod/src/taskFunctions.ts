@@ -6,7 +6,7 @@ import { destroyGiantPoop } from "./tasks/destroyGiantPoop";
 import { dodgeRetractingSpikes } from "./tasks/dodgeRetractingSpikes";
 import { dodgeStoneShooters } from "./tasks/dodgeStoneShooters";
 import { fixWires } from "./tasks/fixWires";
-import { identifyItems } from "./tasks/identifyItems";
+import { identifyCollectibles } from "./tasks/identifyCollectibles";
 import { identifyPickupsInOrder } from "./tasks/identifyPickupsInOrder";
 import { identifyTrinkets } from "./tasks/identifyTrinkets";
 import { killWorms } from "./tasks/killWorms";
@@ -24,7 +24,7 @@ export const taskFunctions = new Map<Task, () => void>();
 
 taskFunctions.set(Task.SHORT_DESTROY_GIANT_POOP, destroyGiantPoop);
 taskFunctions.set(Task.SHORT_BOMB_ROCKS, bombRocks);
-taskFunctions.set(Task.SHORT_IDENTIFY_ITEMS, identifyItems);
+taskFunctions.set(Task.SHORT_IDENTIFY_COLLECTIBLES, identifyCollectibles);
 taskFunctions.set(Task.SHORT_IDENTIFY_TRINKETS, identifyTrinkets);
 taskFunctions.set(Task.SHORT_PRESS_BUTTONS_WITH_GRUDGE, pressButtonsWithGrudge);
 taskFunctions.set(Task.SHORT_FIX_WIRES, fixWires);

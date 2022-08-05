@@ -1,5 +1,5 @@
-// Position data for players is sent using UDP due to the heavy bandwidth usage
-// All other traffic is sent using TCP
+// Position data for players is sent using UDP due to the heavy bandwidth usage. All other traffic
+// is sent using TCP.
 
 import {
   UDPBeaconInterface,
@@ -18,7 +18,7 @@ import * as struct from "./struct";
 
 let lastBeaconRenderFrame: int | null = null;
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (g.game === null) {
     return;

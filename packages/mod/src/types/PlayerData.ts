@@ -1,4 +1,4 @@
-// Must roughly match PlayerMessage
+// Must roughly match `PlayerMessage`.
 export interface PlayerData {
   userID: int;
 

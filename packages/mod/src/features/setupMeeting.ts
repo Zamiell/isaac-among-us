@@ -1,3 +1,4 @@
+import { EntityCollisionClass } from "isaac-typescript-definitions";
 import {
   DISTANCE_OF_GRID_TILE,
   getCircleDiscretizedPoints,
@@ -10,7 +11,7 @@ import { getSkeldRoom, goToStageAPIRoom } from "../stageAPI";
 import { SkeldRoom } from "../types/SkeldRoom";
 import { removeEmergencyButton, spawnEmergencyButton } from "./emergencyButton";
 
-// In order for the players to be properly centered, we must offset the players downwards slightly
+// In order for the players to be properly centered, we must offset the players downwards slightly.
 const MEETING_CENTER_OFFSET = Vector(0, 10);
 const MEETING_CIRCLE_RADIUS = DISTANCE_OF_GRID_TILE * 4;
 const MEETING_CIRCLE_Y_MULTIPLIER = 0.75;
@@ -40,15 +41,16 @@ function enablePlayer(enable: boolean) {
   const centerPos = room.GetGridPosition(CENTER_TABLE_GRID_INDEX);
   const ourPlayerIndex = getOurPlayerIndex();
   const circlePoints = getMeetingCirclePoints();
-  const endMeetingPos = circlePoints[ourPlayerIndex];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const endMeetingPos = circlePoints[ourPlayerIndex]!;
   const player = Isaac.GetPlayer();
 
-  // Make the player invisible so that the camera is centered;
-  // we will draw a sprite representing the player
+  // Make the player invisible so that the camera is centered; we will draw a sprite representing
+  // the player.
   player.Visible = enable;
   player.EntityCollisionClass = enable
-    ? EntityCollisionClass.ENTCOLL_ALL
-    : EntityCollisionClass.ENTCOLL_NONE;
+    ? EntityCollisionClass.ALL
+    : EntityCollisionClass.NONE;
   player.Position = enable ? endMeetingPos : centerPos;
 }
 

@@ -1,3 +1,4 @@
+import { GridEntityType } from "isaac-typescript-definitions";
 import { spawnGridEntity } from "isaacscript-common";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { spawnTeleporter } from "../features/teleporter";
@@ -20,6 +21,6 @@ export function walkDiagonallyThroughSpikes(): void {
     115, 118,
   ];
   for (const gridIndex of spikeGridIndexes) {
-    spawnGridEntity(GridEntityType.GRID_SPIKES, gridIndex);
+    spawnGridEntity(GridEntityType.SPIKES, gridIndex);
   }
 }

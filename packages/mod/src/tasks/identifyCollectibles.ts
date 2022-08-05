@@ -1,9 +1,11 @@
+import { CollectibleType, SoundEffect } from "isaac-typescript-definitions";
 import {
   emptyArray,
+  getCollectibleArray,
   getCollectibleName,
-  getCollectibleSet,
   getRandomArrayElement,
   getRandomArrayIndex,
+  repeat,
   sfxManager,
 } from "isaacscript-common";
 import { spawnTaskButton } from "../features/buttonSpawn";
@@ -15,21 +17,21 @@ import { initGlowingItemSprite } from "../sprite";
 import { Task } from "../types/Task";
 import { drawFontText, movePlayerToGridIndex } from "../utils";
 
-const THIS_TASK = Task.SHORT_IDENTIFY_ITEMS;
+const THIS_TASK = Task.SHORT_IDENTIFY_COLLECTIBLES;
 const NUM_ROUNDS = 5;
 const STARTING_ROUND = 1;
-const NUM_RANDOM_ITEMS = 5;
+const NUM_RANDOM_COLLECTIBLES = 5;
 const BUTTON_SPACING = 2;
 const BUTTON_1_GRID_INDEX = 48;
 const ROW_LENGTH = 15;
 const TEXT_GRID_INDEX = 86;
 
-const itemSprites: Sprite[] = [];
+const collectibleSprites: Sprite[] = [];
 let currentRound = STARTING_ROUND;
-let currentItem = "";
-let correctItemIndex = 0;
+let currentCollectible = "";
+let correctCollectibleIndex = 0;
 
-export function identifyItems(): void {
+export function identifyCollectibles(): void {
   const bottomLeftGridIndex = 92;
   spawnTeleporter(bottomLeftGridIndex);
 
@@ -41,7 +43,7 @@ export function identifyItems(): void {
 
 function spawnButtons() {
   let gridIndex = BUTTON_1_GRID_INDEX;
-  for (let i = 0; i < NUM_RANDOM_ITEMS; i++) {
+  for (let i = 0; i < NUM_RANDOM_COLLECTIBLES; i++) {
     spawnTaskButton(gridIndex, i + 1);
     gridIndex += BUTTON_SPACING;
   }
@@ -51,46 +53,44 @@ function setupRound() {
   const startGridIndex = 97;
   movePlayerToGridIndex(startGridIndex);
 
-  const randomItems = getRandomItems();
+  const randomCollectibles = getRandomCollectibles();
 
-  // Initialize the sprites
-  emptyArray(itemSprites);
-  for (let i = 0; i < NUM_RANDOM_ITEMS; i++) {
-    const randomItem = randomItems[i];
-    const sprite = initGlowingItemSprite(randomItem);
-    itemSprites.push(sprite);
+  // Initialize the sprites.
+  emptyArray(collectibleSprites);
+  for (const randomCollectible of randomCollectibles) {
+    const sprite = initGlowingItemSprite(randomCollectible);
+    collectibleSprites.push(sprite);
   }
 
-  // Randomly select one of the three items
-  const randomIndex = getRandomArrayIndex(randomItems);
-  const randomItem = randomItems[randomIndex];
-  correctItemIndex = randomIndex;
-  currentItem = getCollectibleName(randomItem);
+  // Randomly select one of the three items.
+  const randomIndex = getRandomArrayIndex(randomCollectibles);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const randomCollectible = randomCollectibles[randomIndex]!;
+  correctCollectibleIndex = randomIndex;
+  currentCollectible = getCollectibleName(randomCollectible);
 
   resetAllButtons();
 }
 
-function getRandomItems() {
-  const collectibleSet = getCollectibleSet();
-  const collectibleArray: CollectibleType[] = [];
-  for (const collectibleType of collectibleSet.values()) {
-    collectibleArray.push(collectibleType);
-  }
+function getRandomCollectibles(): CollectibleType[] {
+  const collectibleArray = getCollectibleArray();
 
-  const randomItems: CollectibleType[] = [];
-  while (randomItems.length < NUM_RANDOM_ITEMS) {
-    const randomItem = getRandomArrayElement(collectibleArray);
-    if (!randomItems.includes(randomItem)) {
-      randomItems.push(randomItem);
-    }
-  }
+  const randomCollectibles: CollectibleType[] = [];
+  repeat(NUM_RANDOM_COLLECTIBLES, () => {
+    const randomCollectible = getRandomArrayElement(
+      collectibleArray,
+      undefined,
+      randomCollectibles,
+    );
+    randomCollectibles.push(randomCollectible);
+  });
 
-  return randomItems;
+  return randomCollectibles;
 }
 
-export function identifyItemButtonPressed(num: int): void {
-  Isaac.DebugString(`correctItemIndex: ${correctItemIndex}`);
-  if (num === correctItemIndex + 1) {
+export function identifyCollectibleButtonPressed(num: int): void {
+  Isaac.DebugString(`correctItemIndex: ${correctCollectibleIndex}`);
+  if (num === correctCollectibleIndex + 1) {
     correctSelection();
   } else {
     incorrectSelection();
@@ -98,9 +98,9 @@ export function identifyItemButtonPressed(num: int): void {
 }
 
 function correctSelection() {
-  sfxManager.Play(SoundEffect.SOUND_THUMBSUP, 0.5);
+  sfxManager.Play(SoundEffect.THUMBS_UP, 0.5);
 
-  currentRound += 1;
+  currentRound++;
   if (currentRound >= NUM_ROUNDS) {
     taskComplete();
   } else {
@@ -109,11 +109,11 @@ function correctSelection() {
 }
 
 function incorrectSelection() {
-  sfxManager.Play(SoundEffect.SOUND_THUMBS_DOWN);
+  sfxManager.Play(SoundEffect.THUMBS_DOWN);
   taskLeave();
 }
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (g.game === null || g.game.currentTask !== THIS_TASK) {
     return;
@@ -128,11 +128,11 @@ function drawItemSprites() {
   const room = game.GetRoom();
 
   let buttonGridIndex = BUTTON_1_GRID_INDEX;
-  for (let i = 0; i < NUM_RANDOM_ITEMS; i++) {
+  for (let i = 0; i < NUM_RANDOM_COLLECTIBLES; i++) {
     const spriteGridIndex = buttonGridIndex - ROW_LENGTH;
     const gamePosition = room.GetGridPosition(spriteGridIndex);
     const position = Isaac.WorldToRenderPosition(gamePosition);
-    const sprite = itemSprites[i];
+    const sprite = collectibleSprites[i];
     if (sprite !== undefined) {
       sprite.RenderLayer(0, position);
     }
@@ -146,6 +146,6 @@ function drawItemText() {
   const room = game.GetRoom();
   const worldPosition = room.GetGridPosition(TEXT_GRID_INDEX);
   const position = Isaac.WorldToRenderPosition(worldPosition);
-  const text = `Find: ${currentItem}`;
+  const text = `Find: ${currentCollectible}`;
   drawFontText(text, position);
 }

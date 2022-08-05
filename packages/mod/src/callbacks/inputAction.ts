@@ -1,3 +1,8 @@
+import {
+  ButtonAction,
+  InputHook,
+  ModCallback,
+} from "isaac-typescript-definitions";
 import { game } from "isaacscript-common";
 import { IS_DEV } from "../constants";
 import { inCutscene } from "../features/cutscene";
@@ -5,17 +10,21 @@ import { inEndMeeting } from "../features/endMeeting";
 import g from "../globals";
 
 const MOVEMENT_BUTTONS = new Set<ButtonAction>([
-  ButtonAction.ACTION_LEFT, // 0
-  ButtonAction.ACTION_RIGHT, // 1
-  ButtonAction.ACTION_UP, // 2
-  ButtonAction.ACTION_DOWN, // 3
+  ButtonAction.LEFT, // 0
+  ButtonAction.RIGHT, // 1
+  ButtonAction.UP, // 2
+  ButtonAction.DOWN, // 3
 ]);
 
-export function main(
+export function init(mod: Mod): void {
+  mod.AddCallback(ModCallback.INPUT_ACTION, main);
+}
+
+function main(
   _entity: Entity | undefined,
   inputHook: InputHook,
   buttonAction: ButtonAction,
-): boolean | float | void {
+): boolean | float | undefined {
   if (g.game === null) {
     return undefined;
   }
@@ -66,7 +75,7 @@ function disableCutsceneInputs(
   inputHook: InputHook,
   buttonAction: ButtonAction,
 ) {
-  if (buttonAction === ButtonAction.ACTION_CONSOLE) {
+  if (buttonAction === ButtonAction.CONSOLE) {
     return undefined;
   }
 
@@ -89,11 +98,12 @@ function disableVanillaConsole(
   inputHook: InputHook,
   buttonAction: ButtonAction,
 ) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (IS_DEV) {
     return undefined;
   }
 
-  if (buttonAction === ButtonAction.ACTION_CONSOLE) {
+  if (buttonAction === ButtonAction.CONSOLE) {
     return inputHook === InputHook.GET_ACTION_VALUE ? 0 : false;
   }
 
@@ -101,11 +111,12 @@ function disableVanillaConsole(
 }
 
 function disableReset(inputHook: InputHook, buttonAction: ButtonAction) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (IS_DEV) {
     return undefined;
   }
 
-  if (buttonAction === ButtonAction.ACTION_RESTART) {
+  if (buttonAction === ButtonAction.RESTART) {
     return inputHook === InputHook.GET_ACTION_VALUE ? 0 : false;
   }
 

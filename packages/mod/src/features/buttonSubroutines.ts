@@ -1,18 +1,21 @@
-import { ensureAllCases, getEffects } from "isaacscript-common";
-import { ButtonSubType, EffectVariantCustom } from "../enums";
+import { PressurePlateState } from "isaac-typescript-definitions";
+import { asNumber, getEffects } from "isaacscript-common";
+import { ButtonSubType } from "../enums/ButtonSubType";
+import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import { Task } from "../types/Task";
 
 const EMERGENCY_BUTTON_ANIMATION_SUFFIX = "Pentagram";
 const SPECIAL_BUTTON_ANIMATION_SUFFIX = "Red";
 
 export interface TaskButtonData {
-  task: Task;
+  task?: Task;
 }
 
 export function allButtonsPressed(): boolean {
   const buttons = getEffects(EffectVariantCustom.BUTTON);
   for (const button of buttons) {
-    const pressed = button.State === PressurePlateState.PRESSURE_PLATE_PRESSED;
+    const pressed =
+      button.State === asNumber(PressurePlateState.PRESSURE_PLATE_PRESSED);
     if (!pressed) {
       return false;
     }
@@ -32,7 +35,9 @@ export function resetButton(button: EntityEffect): void {
   button.State = PressurePlateState.UNPRESSED;
 
   const sprite = button.GetSprite();
-  const animationSuffix = getButtonAnimationSuffix(button.SubType);
+  const animationSuffix = getButtonAnimationSuffix(
+    button.SubType as ButtonSubType,
+  );
   const animation = `Off${animationSuffix}`;
   sprite.Play(animation, true);
 }
@@ -60,11 +65,6 @@ export function getButtonAnimationSuffix(buttonSubType: ButtonSubType): string {
     case ButtonSubType.COMMS:
     case ButtonSubType.O2: {
       return SPECIAL_BUTTON_ANIMATION_SUFFIX;
-    }
-
-    default: {
-      ensureAllCases(buttonSubType);
-      return "";
     }
   }
 }

@@ -1,4 +1,4 @@
-import { EntityTypeCustom } from "../enums";
+import { EntityTypeCustom } from "../enums/EntityTypeCustom";
 import { spawnEmergencyButton } from "../features/emergencyButton";
 import { spawnEntity } from "../utils";
 

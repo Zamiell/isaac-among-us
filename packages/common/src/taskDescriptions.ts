@@ -30,7 +30,7 @@ export const taskDescriptions: TaskDescriptions = {
     returnGridIndex: 230,
   },
 
-  [Task.SHORT_IDENTIFY_ITEMS]: {
+  [Task.SHORT_IDENTIFY_COLLECTIBLES]: {
     name: "Item Calibration",
     taskType: TaskType.SHORT, // 9 seconds
     room: SkeldRoom.SECURITY,

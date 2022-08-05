@@ -1,3 +1,9 @@
+import {
+  ActiveSlot,
+  CollectibleType,
+  TrinketSlot,
+  TrinketType,
+} from "isaac-typescript-definitions";
 import { game, getEnumValues } from "isaacscript-common";
 import { disableShooting, updatePlayerStats } from "./utils";
 
@@ -25,10 +31,10 @@ function removeAllItems(player: EntityPlayer) {
   player.AddCoins(-99);
   player.AddBombs(-99);
   player.AddKeys(-99);
-  player.RemoveCollectible(CollectibleType.COLLECTIBLE_BLACK_POWDER);
+  player.RemoveCollectible(CollectibleType.BLACK_POWDER);
 
   const trinket = player.GetTrinket(TrinketSlot.SLOT_1);
-  if (trinket !== TrinketType.TRINKET_NULL) {
+  if (trinket !== TrinketType.NULL) {
     player.TryRemoveTrinket(trinket);
   }
 }
@@ -36,7 +42,7 @@ function removeAllItems(player: EntityPlayer) {
 function removeActiveItems(player: EntityPlayer) {
   for (const activeSlot of getEnumValues(ActiveSlot)) {
     const activeItem = player.GetActiveItem(activeSlot);
-    if (activeItem !== 0) {
+    if (activeItem !== CollectibleType.NULL) {
       player.RemoveCollectible(activeItem);
     }
   }

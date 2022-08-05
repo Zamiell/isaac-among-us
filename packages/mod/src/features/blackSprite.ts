@@ -1,3 +1,4 @@
+import { VectorZero } from "isaacscript-common";
 import g from "../globals";
 import { initSprite, setSpriteOpacity } from "../sprite";
 import { BlackSpriteState } from "../types/BlackSpriteState";
@@ -9,7 +10,7 @@ sprite.Scale = Vector(5000, 5000); // Big enough so that it would cover a 4K mon
 let state = BlackSpriteState.DISABLED;
 let startRenderFrame: int | null = null;
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   drawBlackSprite();
 }
@@ -21,7 +22,7 @@ function drawBlackSprite() {
 
   const opacity = getBlackSpriteOpacity();
   setSpriteOpacity(sprite, opacity);
-  sprite.RenderLayer(0, Vector.Zero);
+  sprite.RenderLayer(0, VectorZero);
 }
 
 function getBlackSpriteOpacity() {

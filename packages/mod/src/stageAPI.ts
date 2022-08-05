@@ -1,3 +1,8 @@
+import {
+  Direction,
+  DoorSlot,
+  RoomTransitionAnim,
+} from "isaac-typescript-definitions";
 import { game } from "isaacscript-common";
 import { sendRoom } from "./features/sendGameEvents";
 import g from "./globals";
@@ -11,7 +16,7 @@ const BACKDROP_MAP: ReadonlyMap<SkeldRoom, string> = new Map([
   [SkeldRoom.SECURITY, "security"],
 ]);
 const DEFAULT_BACKDROP_TYPE = "security";
-const NULL_STAGE_API_ANIMATION = -1;
+const NULL_STAGE_API_ANIMATION = -1 as RoomTransitionAnim;
 
 export function getStageAPIRoomMapID(skeldRoom: SkeldRoom): int | undefined {
   if (StageAPI === undefined) {
@@ -79,7 +84,7 @@ function fixRoomEntrancePosition() {
   const room = game.GetRoom();
   const player = Isaac.GetPlayer();
 
-  if (level.EnterDoor === -1) {
+  if (level.EnterDoor === DoorSlot.NO_DOOR_SLOT) {
     return;
   }
 
@@ -118,8 +123,8 @@ export function loadBackdrops(): void {
   const backdrops = StageAPI.BackdropHelper(
     {
       Walls: ["wall"],
-      NFloors: ["nfloor"],
-      LFloors: ["lfloor"],
+      NFloors: ["nfloor"], // cspell:disable-line
+      LFloors: ["lfloor"], // cspell:disable-line
       Corners: ["corner"],
     },
     `gfx/backdrop/${backdropType}/`,

@@ -1,17 +1,18 @@
+import { Keyboard } from "isaac-typescript-definitions";
 import {
   disableAllInputs,
   enableAllInputs,
   game,
   getEnumValues,
-  ISAAC_FRAMES_PER_SECOND,
   isKeyboardPressed,
+  keyboardToString,
+  RENDER_FRAMES_PER_SECOND,
   saveDataManager,
 } from "isaacscript-common";
 import * as chat from "../chat";
 import { chatCommandFunctions } from "../chatCommandFunctions";
 import { MOD_NAME } from "../constants";
 import g from "../globals";
-import { KEYBOARD_MAP } from "../keyboardMap";
 import { sendTCP } from "../network/send";
 import * as socketClient from "../network/socketClient";
 import { Colors } from "../types/Colors";
@@ -31,7 +32,7 @@ export const CONSOLE_POSITION_LEFT = getScreenPosition(
   SPACING_FROM_TOP_EDGE,
 );
 const MAX_HISTORY_LENGTH = 100;
-const REPEAT_KEY_DELAY_IN_RENDER_FRAMES = ISAAC_FRAMES_PER_SECOND * 0.5;
+const REPEAT_KEY_DELAY_IN_RENDER_FRAMES = RENDER_FRAMES_PER_SECOND * 0.5;
 const COMMAND_PREFIX = "/";
 const OFFLINE_COMMANDS: ReadonlySet<string> = new Set([
   "help",
@@ -58,7 +59,7 @@ export function init(): void {
   saveDataManager("console", v);
 }
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   const isPaused = game.IsPaused();
   const isaacFrameCount = Isaac.GetFrameCount();
@@ -72,8 +73,8 @@ export function postRender(): void {
   }
 
   if (!consoleOpen) {
-    checkKeyboardInput(Keyboard.KEY_ENTER, isaacFrameCount);
-    checkKeyboardInput(Keyboard.KEY_SLASH, isaacFrameCount);
+    checkKeyboardInput(Keyboard.ENTER, isaacFrameCount);
+    checkKeyboardInput(Keyboard.SLASH, isaacFrameCount);
     return;
   }
 
@@ -100,7 +101,7 @@ function checkKeyboardInput(keyboardValue: Keyboard, isaacFrameCount: int) {
     keysPressed.set(keyboardValue, renderFramePressed);
   }
 
-  // We want the key to be repeated if they are holding down the key (after a short delay)
+  // We want the key to be repeated if they are holding down the key (after a short delay).
   const pressedOnThisFrame = renderFramePressed === isaacFrameCount;
   const renderFramesSinceKeyPressed = isaacFrameCount - renderFramePressed;
   const shouldTriggerRepeatPress =
@@ -114,14 +115,14 @@ function checkKeyboardInput(keyboardValue: Keyboard, isaacFrameCount: int) {
 }
 
 function keyPressed(keyboardValue: Keyboard) {
-  // Do nothing if modifiers other than shift are pressed
+  // Do nothing if modifiers other than shift are pressed.
   if (
-    keysPressed.has(Keyboard.KEY_LEFT_CONTROL) ||
-    keysPressed.has(Keyboard.KEY_RIGHT_CONTROL) ||
-    keysPressed.has(Keyboard.KEY_LEFT_ALT) ||
-    keysPressed.has(Keyboard.KEY_RIGHT_ALT) ||
-    keysPressed.has(Keyboard.KEY_LEFT_SUPER) ||
-    keysPressed.has(Keyboard.KEY_RIGHT_SUPER)
+    keysPressed.has(Keyboard.LEFT_CONTROL) ||
+    keysPressed.has(Keyboard.RIGHT_CONTROL) ||
+    keysPressed.has(Keyboard.LEFT_ALT) ||
+    keysPressed.has(Keyboard.RIGHT_ALT) ||
+    keysPressed.has(Keyboard.LEFT_SUPER) ||
+    keysPressed.has(Keyboard.RIGHT_SUPER)
   ) {
     return;
   }
@@ -132,26 +133,25 @@ function keyPressed(keyboardValue: Keyboard) {
     return;
   }
 
-  const keyStringArray = KEYBOARD_MAP.get(keyboardValue);
-  if (keyStringArray !== undefined) {
-    insertNewCharacter(keyStringArray);
+  const uppercase = isShiftPressed();
+  const string = keyboardToString(keyboardValue, uppercase);
+  if (string !== undefined) {
+    insertNewCharacter(string);
   }
 }
 
 function isShiftPressed() {
   return (
-    keysPressed.has(Keyboard.KEY_LEFT_SHIFT) ||
-    keysPressed.has(Keyboard.KEY_RIGHT_SHIFT)
+    keysPressed.has(Keyboard.LEFT_SHIFT) ||
+    keysPressed.has(Keyboard.RIGHT_SHIFT)
   );
 }
 
-function insertNewCharacter(keyStringArray: [string, string]) {
-  const [lowercaseCharacter, uppercaseCharacter] = keyStringArray;
-  const character = isShiftPressed() ? uppercaseCharacter : lowercaseCharacter;
+function insertNewCharacter(character: string) {
   const front = inputText.slice(0, inputTextIndex);
   const back = inputText.slice(inputTextIndex);
   inputText = `${front}${character}${back}`;
-  inputTextIndex += 1;
+  inputTextIndex++;
 }
 
 function open() {
@@ -235,7 +235,7 @@ function appendHistory() {
 }
 
 function drawConsole() {
-  // We check to see if the console is open again in case it was opened on this frame
+  // We check to see if the console is open again in case it was opened on this frame.
   if (!consoleOpen) {
     return;
   }
@@ -251,12 +251,12 @@ function drawConsole() {
 const keyFunctionMap = new Map<Keyboard, () => void>();
 
 // 256
-keyFunctionMap.set(Keyboard.KEY_ESCAPE, () => {
+keyFunctionMap.set(Keyboard.ESCAPE, () => {
   close(false);
 });
 
 // 257
-keyFunctionMap.set(Keyboard.KEY_ENTER, () => {
+keyFunctionMap.set(Keyboard.ENTER, () => {
   if (consoleOpen) {
     close();
   } else {
@@ -265,7 +265,7 @@ keyFunctionMap.set(Keyboard.KEY_ENTER, () => {
 });
 
 // 258
-keyFunctionMap.set(Keyboard.KEY_TAB, () => {
+keyFunctionMap.set(Keyboard.TAB, () => {
   if (!inputText.startsWith(COMMAND_PREFIX)) {
     return;
   }
@@ -282,7 +282,7 @@ keyFunctionMap.set(Keyboard.KEY_TAB, () => {
 });
 
 // 259
-keyFunctionMap.set(Keyboard.KEY_BACKSPACE, () => {
+keyFunctionMap.set(Keyboard.BACKSPACE, () => {
   if (inputTextIndex === 0) {
     return;
   }
@@ -291,34 +291,34 @@ keyFunctionMap.set(Keyboard.KEY_BACKSPACE, () => {
   const back = inputText.slice(inputTextIndex);
   const frontWithLastCharRemoved = front.slice(0, -1);
   inputText = frontWithLastCharRemoved + back;
-  inputTextIndex -= 1;
+  inputTextIndex--;
 });
 
 // 262
-keyFunctionMap.set(Keyboard.KEY_RIGHT, () => {
+keyFunctionMap.set(Keyboard.RIGHT, () => {
   if (inputTextIndex === inputText.length) {
     return;
   }
 
-  inputTextIndex += 1;
+  inputTextIndex++;
 });
 
 // 263
-keyFunctionMap.set(Keyboard.KEY_LEFT, () => {
+keyFunctionMap.set(Keyboard.LEFT, () => {
   if (inputTextIndex === 0) {
     return;
   }
 
-  inputTextIndex -= 1;
+  inputTextIndex--;
 });
 
 // 264
-keyFunctionMap.set(Keyboard.KEY_DOWN, () => {
+keyFunctionMap.set(Keyboard.DOWN, () => {
   if (historyIndex === -1) {
     return;
   }
 
-  historyIndex -= 1;
+  historyIndex--;
 
   if (historyIndex === -1) {
     inputText = savedText;
@@ -336,7 +336,7 @@ keyFunctionMap.set(Keyboard.KEY_DOWN, () => {
 });
 
 // 265
-keyFunctionMap.set(Keyboard.KEY_UP, () => {
+keyFunctionMap.set(Keyboard.UP, () => {
   if (historyIndex === -1) {
     savedText = inputText;
   }
@@ -361,19 +361,19 @@ keyFunctionMap.set(Keyboard.KEY_UP, () => {
 });
 
 // 268
-keyFunctionMap.set(Keyboard.KEY_HOME, () => {
+keyFunctionMap.set(Keyboard.HOME, () => {
   inputTextIndex = 0;
 });
 
 // 269
-keyFunctionMap.set(Keyboard.KEY_END, () => {
+keyFunctionMap.set(Keyboard.END, () => {
   inputTextIndex = inputText.length;
 });
 
 // 47
-keyFunctionMap.set(Keyboard.KEY_SLASH, () => {
+keyFunctionMap.set(Keyboard.SLASH, () => {
   if (consoleOpen) {
-    insertNewCharacter(["/", "/"]);
+    insertNewCharacter("/");
   } else {
     open();
     inputText = "/";

@@ -3,7 +3,7 @@ import g from "../globals";
 import { NewGameDataToMod } from "../types/SocketCommands";
 
 export function commandNewGame(data: NewGameDataToMod): void {
-  // Don't display new game notifications if we are already in a game
+  // Don't display new game notifications if we are already in a game.
   if (g.game !== null) {
     return;
   }

@@ -1,3 +1,8 @@
+import {
+  Direction,
+  EntityType,
+  PitfallVariant,
+} from "isaac-typescript-definitions";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { spawnTeleporter } from "../features/teleporter";
 import { spawnBlockLine, spawnSpikesLine } from "../spawnObjects";
@@ -37,7 +42,7 @@ export function walkBetweenSuctionPitfalls(): void {
 
   for (const gridIndex of [94, 100, 37]) {
     spawnEntity(
-      EntityType.ENTITY_PITFALL,
+      EntityType.PITFALL,
       PitfallVariant.SUCTION_PITFALL,
       0,
       gridIndex,

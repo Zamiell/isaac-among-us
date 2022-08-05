@@ -1,6 +1,7 @@
+import { GridEntityType } from "isaac-typescript-definitions";
 import { runNextGameFrame, spawnGridEntity } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
-import { EntityTypeCustom } from "../enums";
+import { EntityTypeCustom } from "../enums/EntityTypeCustom";
 import { spawnEntity } from "../utils";
 
 export function spawnCommunicationObjects(): void {
@@ -11,7 +12,7 @@ export function spawnCommunicationObjects(): void {
   spawnEntity(EntityTypeCustom.RADIO, 0, 0, topRightGridIndex);
 
   const bottomLeftGridIndex = 106;
-  spawnGridEntity(GridEntityType.GRID_STATUE, bottomLeftGridIndex);
+  spawnGridEntity(GridEntityType.STATUE, bottomLeftGridIndex);
 
   runNextGameFrame(() => {
     addCollision(16, 35, -20); // Top-left

@@ -1,4 +1,5 @@
-import { MAX_VANILLA_COLLECTIBLE_TYPE } from "isaacscript-common";
+import { CollectibleType } from "isaac-typescript-definitions";
+import { asNumber, LAST_VANILLA_COLLECTIBLE_TYPE } from "isaacscript-common";
 
 const GLOWING_IMAGE_TRINKET_OFFSET = 2000;
 
@@ -18,6 +19,7 @@ export function initSprite(anm2Path: string, pngPath?: string): Sprite {
   return sprite;
 }
 
+/** Can be a collectible or a trinket. */
 export function initGlowingItemSprite(
   collectibleOrTrinketType: int,
   trinket = false,
@@ -34,42 +36,42 @@ export function initGlowingItemSprite(
 }
 
 function getFileNum(itemID: int) {
-  // "NEW" is a "Curse of the Blind" item sprite
+  // "NEW" is a "Curse of the Blind" item sprite.
   const defaultReturn = "NEW";
 
   if (itemID < 1) {
     return defaultReturn;
   }
 
-  // Between Sad Onion and the highest vanilla item
+  // Between Sad Onion and the highest vanilla item.
   if (
-    itemID >= CollectibleType.COLLECTIBLE_SAD_ONION &&
-    itemID <= MAX_VANILLA_COLLECTIBLE_TYPE
+    itemID >= asNumber(CollectibleType.SAD_ONION) &&
+    itemID <= asNumber(LAST_VANILLA_COLLECTIBLE_TYPE)
   ) {
     return itemID.toString().padStart(3, "0");
   }
 
-  // Between the highest vanilla item and Swallowed Penny
-  if (itemID > MAX_VANILLA_COLLECTIBLE_TYPE && itemID < 2001) {
+  // Between the highest vanilla item and Swallowed Penny.
+  if (itemID > asNumber(LAST_VANILLA_COLLECTIBLE_TYPE) && itemID < 2001) {
     return defaultReturn;
   }
 
-  // Between Swallowed Penny and Sigil of Baphomet
+  // Between Swallowed Penny and Sigil of Baphomet.
   if (itemID >= 2001 && itemID <= 2189) {
     return itemID.toString();
   }
 
-  // Between Sigil of Baphomet and Golden Swallowed Penny
+  // Between Sigil of Baphomet and Golden Swallowed Penny.
   if (itemID > 2189 && itemID < 32769) {
     return defaultReturn;
   }
 
-  // Between Golden Swallowed Penny and Golden Sigil of Baphomet
+  // Between Golden Swallowed Penny and Golden Sigil of Baphomet.
   if (itemID >= 32769 && itemID <= 32957) {
     return itemID.toString();
   }
 
-  // Past Golden Sigil of Baphomet
+  // Past Golden Sigil of Baphomet.
   return defaultReturn;
 }
 

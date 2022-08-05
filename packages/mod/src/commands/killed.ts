@@ -1,4 +1,5 @@
-import { sfxManager } from "isaacscript-common";
+import { SoundEffect } from "isaac-typescript-definitions";
+import { sfxManager, VectorZero } from "isaacscript-common";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
 import { KilledDataToMod } from "../types/SocketCommands";
@@ -28,7 +29,7 @@ export function commandKilled(data: KilledDataToMod): void {
   const room = getSkeldRoom();
   if (room !== killedPlayer.room) {
     if (weDied) {
-      // TODO go immediately to ghost form
+      // TODO: go immediately to ghost form
     }
 
     return;
@@ -37,15 +38,16 @@ export function commandKilled(data: KilledDataToMod): void {
   if (weDied) {
     const player = Isaac.GetPlayer();
     player.Position = Vector(data.x, data.y);
-    player.Velocity = Vector.Zero;
+    player.Velocity = VectorZero;
     player.ControlsEnabled = false;
     player.Visible = false;
   } else {
-    // TODO make other player sprite invisible
+    // TODO: make other player sprite invisible
   }
 
-  // TODO CREATE PLAYER SPRITE AND RENDER IT
-  // const playerEffect = spawnPlayerEffect();
+  // TODO: CREATE PLAYER SPRITE AND RENDER IT
 
-  sfxManager.Play(SoundEffect.SOUND_ISAACDIES);
+  /// const playerEffect = spawnPlayerEffect();
+
+  sfxManager.Play(SoundEffect.ISAAC_DIES);
 }

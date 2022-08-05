@@ -1,4 +1,4 @@
-import { ensureAllCases, getScreenCenterPos } from "isaacscript-common";
+import { getScreenCenterPos } from "isaacscript-common";
 import g from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
 import { BlackSpriteState } from "../types/BlackSpriteState";
@@ -8,7 +8,7 @@ import { drawFontText } from "../utils";
 import { FADE_TO_BLACK_FRAMES, setBlackSpriteState } from "./blackSprite";
 import { setupMeeting } from "./setupMeeting";
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (g.game === null || !g.game.started) {
     return;
@@ -26,26 +26,22 @@ export function postRender(): void {
 
     case EndMeetingState.TEXT_FADING_IN: {
       postRenderTextFadingIn();
-      return;
+      break;
     }
 
     case EndMeetingState.TEXT: {
       postRenderText();
-      return;
+      break;
     }
 
     case EndMeetingState.TEXT_FADING_OUT: {
       postRenderTextFadingOut();
-      return;
+      break;
     }
 
     case EndMeetingState.FADING_TO_GAME: {
       postRenderFadingToGame();
-      return;
-    }
-
-    default: {
-      ensureAllCases(g.game.endMeeting.state);
+      break;
     }
   }
 }
@@ -108,22 +104,27 @@ function getEndOfMeetingText() {
     return defaultValue;
   }
 
-  if (g.game.endMeeting.meetingResolution === MeetingResolution.NO_EJECT) {
-    return "No one was ejected.";
-  }
+  switch (g.game.endMeeting.meetingResolution) {
+    case MeetingResolution.NO_EJECT: {
+      return "No one was ejected.";
+    }
 
-  if (
-    g.game.endMeeting.meetingResolution === MeetingResolution.EJECT &&
-    g.game.endMeeting.userIDEjected !== null
-  ) {
-    const player = g.game.getPlayerFromUserID(g.game.endMeeting.userIDEjected);
-    const numAlivePlayers = g.game.getNumAlivePlayers();
-    if (player !== undefined) {
+    case MeetingResolution.EJECT: {
+      if (g.game.endMeeting.userIDEjected === null) {
+        return defaultValue;
+      }
+
+      const player = g.game.getPlayerFromUserID(
+        g.game.endMeeting.userIDEjected,
+      );
+      const numAlivePlayers = g.game.getNumAlivePlayers();
+      if (player === undefined) {
+        return defaultValue;
+      }
+
       return `${player.username} was ejected. (${numAlivePlayers} players remain.)`;
     }
   }
-
-  return defaultValue;
 }
 
 function getTextOpacity() {
@@ -187,6 +188,6 @@ export function inEndMeeting(): boolean {
     return false;
   }
 
-  // We want inputs to be completely disabled until the game has fully faded in
+  // We want inputs to be completely disabled until the game has fully faded in.
   return g.game.endMeeting.state !== EndMeetingState.DISABLED;
 }

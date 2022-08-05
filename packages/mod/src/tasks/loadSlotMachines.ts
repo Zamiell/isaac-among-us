@@ -1,3 +1,9 @@
+import {
+  CoinSubType,
+  EntityType,
+  PickupVariant,
+  SlotVariant,
+} from "isaac-typescript-definitions";
 import { getSlots, removeAllMatchingEntities } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
@@ -25,7 +31,7 @@ export function loadSlotMachines(): void {
   const startingGridIndex = 49;
   for (let i = 0; i < NUM_SLOT_MACHINES; i++) {
     const gridIndex = startingGridIndex + i * SLOT_MACHINE_SPACING;
-    spawnEntity(EntityType.ENTITY_SLOT, SlotVariant.SLOT_MACHINE, 0, gridIndex);
+    spawnEntity(EntityType.SLOT, SlotVariant.SLOT_MACHINE, 0, gridIndex);
   }
 
   const coinGridIndexes: int[] = [79, 80, 81, 82, 83, 84, 85];
@@ -36,33 +42,30 @@ export function loadSlotMachines(): void {
 
 function spawnDoubleCoin(gridIndex: int) {
   const entity = spawnEntity(
-    EntityType.ENTITY_PICKUP,
-    PickupVariant.PICKUP_COIN,
-    CoinSubType.COIN_DOUBLEPACK,
+    EntityType.PICKUP,
+    PickupVariant.COIN,
+    CoinSubType.DOUBLE_PACK,
     gridIndex,
   );
   const sprite = entity.GetSprite();
   sprite.SetLastFrame();
 }
 
-// ModCallbacks.MC_POST_UPDATE (1)
+// ModCallback.POST_UPDATE (1)
 export function postUpdate(): void {
   if (g.game === null || g.game.currentTask !== THIS_TASK) {
     return;
   }
 
-  // In case a Dollar spawns
-  removeAllMatchingEntities(
-    EntityType.ENTITY_PICKUP,
-    PickupVariant.PICKUP_COLLECTIBLE,
-  );
+  // In case a Dollar spawns.
+  removeAllMatchingEntities(EntityType.PICKUP, PickupVariant.COLLECTIBLE);
 
   const player = Isaac.GetPlayer();
   const numCoinsInInventory = player.GetNumCoins();
   const numCoinsInRoom = Isaac.CountEntities(
     undefined,
-    EntityType.ENTITY_PICKUP,
-    PickupVariant.PICKUP_COIN,
+    EntityType.PICKUP,
+    PickupVariant.COIN,
   );
 
   if (numCoinsInInventory === 0 && numCoinsInRoom === 0 && !isAnySlotActive()) {
@@ -83,8 +86,8 @@ function isAnySlotActive() {
   return false;
 }
 
-// ModCallbacks.MC_POST_PICKUP_INIT (34)
-// PickupVariant.PICKUP_PILL (70)
+// ModCallback.POST_PICKUP_INIT (34)
+// PickupVariant.PILL (70)
 export function postPickupInitPill(pickup: EntityPickup): void {
   if (g.game === null || g.game.currentTask !== THIS_TASK) {
     return;

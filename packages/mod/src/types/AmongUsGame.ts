@@ -4,6 +4,7 @@ import { Meeting } from "./Meeting";
 import { MeetingResolution } from "./MeetingResolution";
 import { PlayerBody } from "./PlayerBody";
 import { PlayerData } from "./PlayerData";
+import { PlayerTypeAllowed } from "./PlayerTypeAllowed";
 import { Role } from "./Role";
 import { GameDescriptionPlayer } from "./SocketCommands";
 import { StartMeetingState } from "./StartMeetingState";
@@ -24,7 +25,7 @@ export class AmongUsGame {
   /** Indexed by user ID. Contains only UDP data. */
   playerMap = new Map<int, PlayerData>();
 
-  character = PlayerType.PLAYER_ISAAC;
+  character = PlayerTypeAllowed.ISAAC;
   role = Role.CREW;
   usedEmergencyMeeting = false;
 
@@ -55,7 +56,7 @@ export class AmongUsGame {
     userIDEjected: null as int | null,
   };
 
-  constructor(id: int, name: string, character: PlayerType) {
+  constructor(id: int, name: string, character: PlayerTypeAllowed) {
     this.id = id;
     this.name = name;
     this.character = character;
@@ -79,7 +80,7 @@ export class AmongUsGame {
     return player === undefined ? undefined : player.index;
   }
 
-  getPlayerCharacter(userID: int): PlayerType | undefined {
+  getPlayerCharacter(userID: int): PlayerTypeAllowed | undefined {
     const player = this.getPlayerFromUserID(userID);
     return player === undefined ? undefined : player.character;
   }

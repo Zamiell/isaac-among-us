@@ -1,4 +1,4 @@
-import { PlayerType } from "./PlayerType";
+import { PlayerTypeAllowed } from "./PlayerTypeAllowed";
 import { Role } from "./Role";
 import { SkeldRoom } from "./SkeldRoom";
 import { Task } from "./Task";
@@ -11,7 +11,7 @@ export class Player {
   username: string;
   connected = true;
   role = Role.CREW;
-  character: PlayerType;
+  character: PlayerTypeAllowed;
   alive = true;
   room = SkeldRoom.CAFETERIA;
   enterGridIndex = 0;
@@ -27,7 +27,7 @@ export class Player {
     socketID: number,
     userID: number,
     username: string,
-    character: PlayerType,
+    character: PlayerTypeAllowed,
   ) {
     this.index = index;
     this.socketID = socketID;

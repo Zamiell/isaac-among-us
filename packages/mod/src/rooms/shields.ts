@@ -1,6 +1,7 @@
+import { Direction } from "isaac-typescript-definitions";
 import { runNextGameFrame } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
-import { EntityTypeCustom } from "../enums";
+import { EntityTypeCustom } from "../enums/EntityTypeCustom";
 import { spawnFakeBlockLine } from "../spawnObjects";
 import { spawnEntity } from "../utils";
 
@@ -23,7 +24,7 @@ export function spawnShieldsObjects(): void {
     addCollision(155, 155, -20);
   });
 
-  // Right side of room, starting at the bottom
+  // Right side of room, starting at the bottom.
   spawnFakeBlockLine(187, 7, Direction.RIGHT);
   spawnFakeBlockLine(173, 6, Direction.RIGHT);
   spawnFakeBlockLine(159, 5, Direction.RIGHT);
@@ -43,7 +44,7 @@ export function spawnShieldsObjects(): void {
     addCollision(54, 87);
   });
 
-  // Top left of room
+  // Top left of room.
   spawnFakeBlockLine(61, 4, Direction.RIGHT);
   spawnFakeBlockLine(46, 5, Direction.RIGHT);
   spawnFakeBlockLine(31, 5, Direction.RIGHT);

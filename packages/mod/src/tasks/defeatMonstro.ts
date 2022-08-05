@@ -1,3 +1,5 @@
+import { EntityType } from "isaac-typescript-definitions";
+import { VectorZero } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
@@ -24,17 +26,17 @@ function spawnMonstro() {
   const position = room.GetGridPosition(MONSTRO_GRID_INDEX);
 
   const monstro = game.Spawn(
-    EntityType.ENTITY_MONSTRO,
+    EntityType.MONSTRO,
     0,
     position,
-    Vector.Zero,
+    VectorZero,
     undefined,
     0,
     1 as Seed, // A seed of 1 is guaranteed to not be a champion
   );
 
-  // With the vanilla amount of HP, it takes 67 seconds to kill
-  // Thus, we need to reduce the HP to make the length of this task in line with other tasks
+  // With the vanilla amount of HP, it takes 67 seconds to kill. Thus, we need to reduce the HP to
+  // make the length of this task in line with other tasks.
   monstro.HitPoints *= 0.45;
 }
 
@@ -43,7 +45,7 @@ export function postUpdate(): void {
     return;
   }
 
-  const numMonstros = Isaac.CountEntities(undefined, EntityType.ENTITY_MONSTRO);
+  const numMonstros = Isaac.CountEntities(undefined, EntityType.MONSTRO);
   if (numMonstros === 0) {
     taskComplete();
   }

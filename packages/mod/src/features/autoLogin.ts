@@ -8,6 +8,7 @@ import {
 } from "../types/SocketCommands";
 
 const DEBUG_FIRST_MOD = true;
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 const DEBUG_USERNAME = DEBUG_FIRST_MOD ? "Test1" : "Test2";
 const DEBUG_PASSWORD = "test";
 const DEBUG_GAME_NAME = "testGame";

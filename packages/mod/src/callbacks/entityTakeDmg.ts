@@ -1,3 +1,9 @@
+import {
+  DamageFlag,
+  EntityType,
+  ModCallback,
+  SoundEffect,
+} from "isaac-typescript-definitions";
 import { game, sfxManager } from "isaacscript-common";
 import { taskLeave } from "../features/taskSubroutines";
 import g from "../globals";
@@ -6,16 +12,16 @@ let gameFrameReturningFromTask: int | null = null;
 
 export function init(mod: Mod): void {
   mod.AddCallback(
-    ModCallbacks.MC_ENTITY_TAKE_DMG,
+    ModCallback.ENTITY_TAKE_DMG,
     entityTakeDmgPlayer,
-    EntityType.ENTITY_PLAYER,
+    EntityType.PLAYER,
   );
 }
 
 function entityTakeDmgPlayer(
   tookDamage: Entity,
   _damageAmount: float,
-  _damageFlags: DamageFlag,
+  _damageFlags: BitFlags<DamageFlag>,
   _damageSource: EntityRef,
   _damageCountdownFrames: int,
 ) {
@@ -34,7 +40,7 @@ function entityTakeDmgPlayer(
     return undefined;
   }
 
-  sfxManager.Play(SoundEffect.SOUND_THUMBS_DOWN);
+  sfxManager.Play(SoundEffect.THUMBS_DOWN);
   gameFrameReturningFromTask = gameFrameCount;
   taskLeave();
 

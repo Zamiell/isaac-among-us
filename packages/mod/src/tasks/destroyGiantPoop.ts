@@ -1,4 +1,5 @@
-import { spawnGiantPoop } from "isaacscript-common";
+import { PoopState } from "isaac-typescript-definitions";
+import { asNumber, spawnGiantPoop } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import { enableShooting, movePlayerToGridIndex } from "../utils";
@@ -16,7 +17,7 @@ export function destroyGiantPoop(): void {
 }
 
 export function postGridEntityUpdatePoop(gridEntity: GridEntity): void {
-  if (gridEntity.State === PoopState.COMPLETELY_DESTROYED) {
+  if (gridEntity.State === asNumber(PoopState.COMPLETELY_DESTROYED)) {
     taskComplete();
   }
 }

@@ -17,6 +17,7 @@ export function packTCPMsg<T extends SocketCommandModToServer>(
   command: T,
   data: InstanceType<typeof SocketCommandModToServerData[T]>,
 ): string {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (data === undefined) {
     return `${command}\n`;
   }
@@ -34,10 +35,11 @@ export function unpackTCPMsg(msg: string): [string, unknown] {
   // Client-specific implementation
   const data = jsonDecode(dataString) as unknown;
 
-  return [command, data];
+  return [command!, data]; // eslint-disable-line @typescript-eslint/no-non-null-assertion
 }
 
 export function unpackUDPPlayerMessage(rawData: string): UDPPositionInterface {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (DEBUG) {
     log("Unpacking UDP message:");
   }
@@ -45,15 +47,17 @@ export function unpackUDPPlayerMessage(rawData: string): UDPPositionInterface {
   const dataArray = [...struct.unpack(UDP_POSITION_DATA_FORMAT, rawData)];
   const playerMessage: Record<string, unknown> = {};
   for (let i = 0; i < UDP_POSITION_FIELDS.length; i++) {
-    const [fieldName] = UDP_POSITION_FIELDS[i];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const [name] = UDP_POSITION_FIELDS[i]!;
     let fieldData = dataArray[i];
     if (type(fieldData) === "string") {
       fieldData = (fieldData as string).trim();
     }
-    playerMessage[fieldName] = fieldData;
+    playerMessage[name] = fieldData;
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (DEBUG) {
-      log(`- ${fieldName} - ${fieldData}`);
+      log(`- ${name} - ${fieldData}`);
     }
   }
 

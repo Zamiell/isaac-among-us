@@ -4,7 +4,7 @@ export * from "./types/Meeting";
 export * from "./types/MeetingPhase";
 export * from "./types/MeetingResolution";
 export * from "./types/MeetingType";
-export * from "./types/PlayerType";
+export * from "./types/PlayerTypeAllowed";
 export * from "./types/Role";
 export * from "./types/SkeldRoom";
 export * from "./types/SocketCommands";

@@ -1,7 +1,8 @@
+import { Difficulty } from "isaac-typescript-definitions";
 import {
-  getMaxCollectibleType,
+  LAST_COLLECTIBLE_TYPE,
+  LAST_VANILLA_COLLECTIBLE_TYPE,
   log,
-  MAX_VANILLA_COLLECTIBLE_TYPE,
   saveDataManager,
 } from "isaacscript-common";
 import { MOD_NAME } from "../constants";
@@ -35,15 +36,12 @@ export function check(): boolean {
   return areOtherModsEnabled() || isWrongDifficulty();
 }
 
-// Check to see if there are any mods enabled that have added custom items
-// (it is difficult to detect other mods in other ways)
+// Check to see if there are any mods enabled that have added custom items. (It is difficult to
+// detect other mods in other ways.)
 function areOtherModsEnabled() {
-  const maxCollectibleID = getMaxCollectibleType();
-  const correctMaxCollectibleID = MAX_VANILLA_COLLECTIBLE_TYPE;
-
-  if (maxCollectibleID !== correctMaxCollectibleID) {
+  if (LAST_COLLECTIBLE_TYPE !== LAST_VANILLA_COLLECTIBLE_TYPE) {
     log(
-      `Error: Other mods detected. (The highest collectible ID is ${maxCollectibleID}, but it should be ${correctMaxCollectibleID}.)`,
+      `Error: Other mods detected. (The highest collectible type is ${LAST_COLLECTIBLE_TYPE}, but it should be ${LAST_VANILLA_COLLECTIBLE_TYPE}.)`,
     );
     v.run.otherModsEnabled = true;
   }
@@ -54,7 +52,7 @@ function areOtherModsEnabled() {
 function isWrongDifficulty() {
   const game = Game();
 
-  const rightDifficulty = Difficulty.DIFFICULTY_NORMAL;
+  const rightDifficulty = Difficulty.NORMAL;
   if (game.Difficulty !== rightDifficulty) {
     log(
       `Error: Wrong difficulty detected. (The current difficulty is ${game.Difficulty}, but it should be ${rightDifficulty}.)`,
@@ -65,7 +63,7 @@ function isWrongDifficulty() {
   return v.run.wrongDifficulty;
 }
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): boolean {
   if (REPENTANCE === undefined) {
     drawText(
@@ -127,7 +125,8 @@ function wordWrap(line: string): string[] {
   let spaceLeft = MAX_CHARACTERS;
   const words = line.split(" ");
   for (let i = 0; i < words.length; i++) {
-    const word = words[i];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const word = words[i]!;
     if (word.length + 1 > spaceLeft) {
       words[i] = `\n${word}`;
       spaceLeft = MAX_CHARACTERS - word.length;

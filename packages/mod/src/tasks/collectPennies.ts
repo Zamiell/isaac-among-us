@@ -1,3 +1,9 @@
+import {
+  CoinSubType,
+  EntityType,
+  PickupVariant,
+} from "isaac-typescript-definitions";
+import { getRandomSeed } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
@@ -24,21 +30,21 @@ export function collectPennies(): void {
 
 function spawnPenny(gridIndex: int) {
   spawnEntity(
-    EntityType.ENTITY_PICKUP,
-    PickupVariant.PICKUP_COIN,
-    CoinSubType.COIN_PENNY,
+    EntityType.PICKUP,
+    PickupVariant.COIN,
+    CoinSubType.PENNY,
     gridIndex,
   );
 }
 
-// ModCallbacksCustom.MC_POST_PICKUP_COLLECT
-// PickupVariant.PICKUP_COIN (20)
+// ModCallbackCustom.POST_PICKUP_COLLECT
+// PickupVariant.COIN (20)
 export function postPickupCollectCoin(): void {
   if (g.game === null || g.game.currentTask !== THIS_TASK) {
     return;
   }
 
-  penniesCollected += 1;
+  penniesCollected++;
   if (penniesCollected >= NUM_PENNIES_TO_COLLECT) {
     taskComplete();
     return;
@@ -54,7 +60,7 @@ function spawnNextPenny() {
   let gridIndex: int;
   let gridEntity: GridEntity | undefined;
   do {
-    gridIndex = room.GetRandomTileIndex(Random());
+    gridIndex = room.GetRandomTileIndex(getRandomSeed());
     gridEntity = room.GetGridEntity(gridIndex);
   } while (gridEntity !== undefined);
 

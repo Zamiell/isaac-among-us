@@ -6,9 +6,9 @@ let sandbox: Sandbox | null = null;
 export function getClientFromSandbox(
   port: int,
   useTCP: boolean,
-): SocketClient | null {
+): SocketClient | undefined {
   if (sandbox === null) {
-    return null;
+    return undefined;
   }
 
   return sandbox.connect(REMOTE_HOSTNAME, port, useTCP);

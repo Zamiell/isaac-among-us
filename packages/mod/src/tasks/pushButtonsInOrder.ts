@@ -1,3 +1,4 @@
+import { SoundEffect } from "isaac-typescript-definitions";
 import {
   emptyArray,
   sfxManager,
@@ -39,10 +40,11 @@ function setNewButtonOrder() {
 
 function spawnButtons() {
   for (let i = 0; i < BUTTON_GRID_INDEXES.length; i++) {
-    const gridIndex = BUTTON_GRID_INDEXES[i];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const gridIndex = BUTTON_GRID_INDEXES[i]!;
     const button = spawnTaskButton(gridIndex, 1);
     const data = button.GetData();
-    data.num = buttonOrder[i];
+    data["num"] = buttonOrder[i];
   }
 }
 
@@ -54,18 +56,18 @@ export function pushButtonsInOrderButtonPressed(button: EntityEffect): void {
   }
 
   if (num !== nextButtonToPress) {
-    sfxManager.Play(SoundEffect.SOUND_THUMBS_DOWN);
+    sfxManager.Play(SoundEffect.THUMBS_DOWN);
     taskLeave();
     return;
   }
 
-  nextButtonToPress += 1;
+  nextButtonToPress++;
   if (nextButtonToPress >= buttonOrder.length) {
     taskComplete();
   }
 }
 
-// ModCallbacks.MC_POST_RENDER (2)
+// ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (g.game === null || g.game.currentTask !== THIS_TASK) {
     return;
@@ -76,11 +78,13 @@ export function postRender(): void {
   const gridWidth = room.GetGridWidth();
 
   for (let i = 0; i < BUTTON_GRID_INDEXES.length; i++) {
-    const gridIndex = BUTTON_GRID_INDEXES[i];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const gridIndex = BUTTON_GRID_INDEXES[i]!;
     const textGridIndex = gridIndex - gridWidth;
     const worldPosition = room.GetGridPosition(textGridIndex);
     const position = Isaac.WorldToRenderPosition(worldPosition);
-    const num = buttonOrder[i];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const num = buttonOrder[i]!;
     const text = (num + 1).toString();
     drawFontText(text, position);
   }

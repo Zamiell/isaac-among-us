@@ -9,7 +9,7 @@ export function passwordChatCommand(args: string[]): void {
     return;
   }
 
-  const username = g.username;
+  const { username } = g;
   if (username === null) {
     chat.addLocal(
       'You must specify a username first with the "/username" command. (e.g. "/username Alice")',

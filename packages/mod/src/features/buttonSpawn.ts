@@ -1,7 +1,10 @@
+import { EntityType, PressurePlateState } from "isaac-typescript-definitions";
 import { taskDescriptions } from "../constants";
-import { ButtonSubType, EffectVariantCustom } from "../enums";
+import { ButtonSubType } from "../enums/ButtonSubType";
+import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
+import { Task } from "../types/Task";
 import { spawnEntity } from "../utils";
 import { getButtonAnimationSuffix, TaskButtonData } from "./buttonSubroutines";
 
@@ -11,7 +14,7 @@ export function spawnButton(
   enabled: boolean,
 ): EntityEffect {
   const button = spawnEntity(
-    EntityType.ENTITY_EFFECT,
+    EntityType.EFFECT,
     EffectVariantCustom.BUTTON,
     buttonSubType,
     gridIndex,
@@ -31,7 +34,9 @@ export function setButtonState(button: EntityEffect, enabled: boolean): void {
     : PressurePlateState.PRESSURE_PLATE_PRESSED;
 
   const sprite = button.GetSprite();
-  const animationSuffix = getButtonAnimationSuffix(button.SubType);
+  const animationSuffix = getButtonAnimationSuffix(
+    button.SubType as ButtonSubType,
+  );
   const verb = enabled ? "Off" : "On";
   const animation = verb + animationSuffix;
   sprite.Play(animation, true);
@@ -43,7 +48,7 @@ export function spawnGoToTaskButtons(): void {
   }
 
   const room = getSkeldRoom();
-  if (room === null) {
+  if (room === undefined) {
     return;
   }
 
@@ -52,7 +57,7 @@ export function spawnGoToTaskButtons(): void {
       continue;
     }
 
-    const task = tonumber(key);
+    const task = tonumber(key) as Task | undefined;
     if (task === undefined) {
       continue;
     }

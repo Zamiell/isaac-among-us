@@ -47,9 +47,11 @@ export function postRender(): void {
   }
 
   let skeldRoom = getSkeldRoom();
-  if (room === null) {
+  if (skeldRoom === undefined) {
     skeldRoom = -1;
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const roomDescription = IS_DEV ? `${roomName} (${skeldRoom})` : roomName;
   drawFontText(roomDescription, position);
 }

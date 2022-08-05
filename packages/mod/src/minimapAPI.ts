@@ -1,4 +1,7 @@
-// The task room is the final room added
+import { DisplayFlag } from "isaac-typescript-definitions";
+import { addFlag } from "isaacscript-common";
+
+// The task room is the final room added.
 const TASK_ROOM_MINIMAP_ID = 22;
 
 export function enableMinimapAPI(): void {
@@ -29,7 +32,7 @@ export function setMapToFullVisibility(): void {
     if (room.ID !== TASK_ROOM_MINIMAP_ID) {
       room.Visited = true;
       room.Clear = true;
-      room.DisplayFlags = DisplayFlag.VISIBLE | DisplayFlag.SHOW_ICON;
+      room.DisplayFlags = addFlag(DisplayFlag.VISIBLE, DisplayFlag.SHOW_ICON);
     }
   }
 }
@@ -47,6 +50,6 @@ export function setMinimapAPIRoomIcon(mapID: int, icon: string): void {
     }
   }
 
-  // Don't throw an error if the room was not found;
-  // we want to gracefully handle the case where the map is not loaded yet
+  // Don't throw an error if the room was not found; we want to gracefully handle the case where the
+  // map is not loaded yet.
 }

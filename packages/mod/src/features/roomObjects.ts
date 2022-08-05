@@ -1,9 +1,10 @@
+import { GridEntityType } from "isaac-typescript-definitions";
 import {
   getEnumValues,
   getGridEntities,
   removeEntities,
 } from "isaacscript-common";
-import { EntityTypeCustom } from "../enums";
+import { EntityTypeCustom } from "../enums/EntityTypeCustom";
 import g from "../globals";
 import { spawnAdminObjects } from "../rooms/admin";
 import { spawnCafeteriaObjects } from "../rooms/cafeteria";
@@ -49,14 +50,14 @@ function emptyRoom() {
   }
 
   for (const gridEntity of getGridEntities(
-    GridEntityType.GRID_DECORATION,
-    GridEntityType.GRID_ROCKB,
+    GridEntityType.DECORATION,
+    GridEntityType.BLOCK,
   )) {
     removeGridEntity(gridEntity);
   }
 }
 
-// We use a map since some rooms have no objects
+// We use a map since some rooms have no objects.
 const functionMap = new Map<SkeldRoom, () => void>();
 
 functionMap.set(SkeldRoom.CAFETERIA, spawnCafeteriaObjects); // 0

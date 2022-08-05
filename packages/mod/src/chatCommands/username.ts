@@ -16,7 +16,8 @@ export function usernameChatCommand(args: string[]): void {
     return;
   }
 
-  const username = args[0];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const username = args[0]!;
 
   // From: https://stackoverflow.com/questions/12117965
   const match = string.match(username, "%W");

@@ -29,7 +29,8 @@ export function setTasksOnMap(): void {
     return;
   }
 
-  // The icons go away if the player enters the room, so we must re-apply it on every new room entry
+  // The icons go away if the player enters the room, so we must re-apply it on every new room
+  // entry.
   for (const taskList of Object.values(g.game.ourTasks)) {
     for (const task of taskList) {
       const taskDescription = taskDescriptions[task];

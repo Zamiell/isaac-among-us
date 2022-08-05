@@ -33,12 +33,12 @@ export function init(): void {
 }
 
 export function connect(): boolean {
-  clientTCP = getClient(TCP_PORT, true);
+  clientTCP = getClient(TCP_PORT, true) ?? null;
   if (clientTCP === null) {
     return false;
   }
 
-  clientUDP = getClient(UDP_PORT, false);
+  clientUDP = getClient(UDP_PORT, false) ?? null;
   if (clientUDP === null) {
     return false;
   }
@@ -46,32 +46,39 @@ export function connect(): boolean {
   return true;
 }
 
-function getClient(port: int, useTCP = true) {
+function getClient(port: int, useTCP = true): SocketClient | undefined {
   if (isSandboxEnabled()) {
     return getClientFromSandbox(port, useTCP);
   }
 
   if (socket === null) {
-    return null;
+    return undefined;
   }
 
   const protocol = useTCP ? "TCP" : "UDP";
   const url = `${protocol}://${REMOTE_HOSTNAME}:${port}`;
 
   let socketClient: SocketClient;
-  if (protocol === "TCP") {
-    socketClient = socket.tcp();
-    socketClient.settimeout(SOCKET_CONNECT_TIMEOUT_SECONDS);
-    const [err, errMsg] = socketClient.connect(REMOTE_HOSTNAME, port);
-    if (err !== SOCKET_CLIENT_RETURN_SUCCESS) {
-      log(`Error: Failed to connect on "${url}": ${errMsg}`);
-      return null;
+
+  switch (protocol) {
+    case "TCP": {
+      socketClient = socket.tcp();
+      socketClient.settimeout(SOCKET_CONNECT_TIMEOUT_SECONDS);
+      const [err, errMsg] = socketClient.connect(REMOTE_HOSTNAME, port);
+      if (err !== SOCKET_CLIENT_RETURN_SUCCESS) {
+        log(`Error: Failed to connect on "${url}": ${errMsg}`);
+        return undefined;
+      }
+
+      break;
     }
-  } else if (protocol === "UDP") {
-    socketClient = socket.udp();
-    socketClient.setpeername(REMOTE_HOSTNAME, port);
-  } else {
-    error(`Unknown protocol: ${protocol}`);
+
+    case "UDP": {
+      socketClient = socket.udp();
+      socketClient.setpeername(REMOTE_HOSTNAME, port);
+
+      break;
+    }
   }
 
   // We check for new socket data on every PostRender frame. However, the remote socket might not
@@ -106,25 +113,27 @@ export function disconnect(): void {
 export function send(
   packedMsg: string,
   useTCP: boolean,
-): [number | undefined, string] {
+): { sentBytes?: number; errMsg?: string } {
   const client = useTCP ? clientTCP : clientUDP;
   const protocol = useTCP ? "TCP" : "UDP";
   if (client === null) {
-    return [undefined, `${protocol} client is not initialized`];
+    return { errMsg: `${protocol} client is not initialized` };
   }
 
-  return client.send(packedMsg);
+  const [sentBytes, errMsg] = client.send(packedMsg);
+  return { sentBytes, errMsg };
 }
 
-export function receive(useTCP: boolean): [string | undefined, string] {
+export function receive(useTCP: boolean): { data?: string; errMsg?: string } {
   const client = useTCP ? clientTCP : clientUDP;
   const protocol = useTCP ? "TCP" : "UDP";
 
   if (client === null) {
-    return [undefined, `${protocol} client is not initialized`];
+    return { errMsg: `${protocol} client is not initialized` };
   }
 
-  return client.receive();
+  const [data, errMsg] = client.receive();
+  return { data, errMsg };
 }
 
 export function isConnected(): boolean {

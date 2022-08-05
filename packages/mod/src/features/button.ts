@@ -1,15 +1,12 @@
-import {
-  ensureAllCases,
-  getPlayerCloserThan,
-  sfxManager,
-} from "isaacscript-common";
-import { ButtonSubType } from "../enums";
+import { PressurePlateState, SoundEffect } from "isaac-typescript-definitions";
+import { asNumber, getPlayerCloserThan, sfxManager } from "isaacscript-common";
+import { ButtonSubType } from "../enums/ButtonSubType";
 import g from "../globals";
 import { sendTCP } from "../network/send";
 import { goToStageAPIRoom } from "../stageAPI";
 import { buttonsBehindKeyBlocksButtonPressed } from "../tasks/buttonsBehindKeyBlocks";
 import { fixWiresButtonPressed } from "../tasks/fixWires";
-import { identifyItemButtonPressed } from "../tasks/identifyItems";
+import { identifyCollectibleButtonPressed } from "../tasks/identifyCollectibles";
 import { identifyPickupsInOrderButtonPressed } from "../tasks/identifyPickupsInOrder";
 import { identifyTrinketButtonPressed } from "../tasks/identifyTrinkets";
 import { pressButtonsWithGrudgeButtonPressed } from "../tasks/pressButtonsWithGrudge";
@@ -27,7 +24,7 @@ export function postEffectUpdateButton(effect: EntityEffect): void {
 }
 
 function checkIfButtonIsPressed(effect: EntityEffect) {
-  if (effect.State === PressurePlateState.PRESSURE_PLATE_PRESSED) {
+  if (effect.State === asNumber(PressurePlateState.PRESSURE_PLATE_PRESSED)) {
     return;
   }
 
@@ -42,17 +39,20 @@ function checkIfButtonIsPressed(effect: EntityEffect) {
   effect.State = PressurePlateState.PRESSURE_PLATE_PRESSED;
 
   const sprite = effect.GetSprite();
-  const animationSuffix = getButtonAnimationSuffix(effect.SubType);
+  const animationSuffix = getButtonAnimationSuffix(
+    effect.SubType as ButtonSubType,
+  );
   const animation = `Switched${animationSuffix}`;
   sprite.Play(animation, true);
 
-  sfxManager.Play(SoundEffect.SOUND_BUTTON_PRESS);
+  sfxManager.Play(SoundEffect.BUTTON_PRESS);
 
   buttonPressed(effect);
 }
 
 function buttonPressed(button: EntityEffect) {
   const buttonSubType = button.SubType as ButtonSubType;
+
   switch (buttonSubType) {
     // 0
     case ButtonSubType.GO_TO_TASK: {
@@ -137,10 +137,6 @@ function buttonPressed(button: EntityEffect) {
       buttonPressedTask(button, 8);
       break;
     }
-
-    default: {
-      ensureAllCases(buttonSubType);
-    }
   }
 }
 
@@ -177,8 +173,8 @@ function buttonPressedTask(button: EntityEffect, num: int) {
   }
 
   switch (g.game.currentTask) {
-    case Task.SHORT_IDENTIFY_ITEMS: {
-      identifyItemButtonPressed(num);
+    case Task.SHORT_IDENTIFY_COLLECTIBLES: {
+      identifyCollectibleButtonPressed(num);
       break;
     }
 

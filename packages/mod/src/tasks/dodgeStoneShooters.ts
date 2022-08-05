@@ -1,3 +1,9 @@
+import {
+  ConstantStoneShooterVariant,
+  Direction,
+  EntityType,
+  GridEntityType,
+} from "isaac-typescript-definitions";
 import { runNextGameFrame, spawnGridEntity } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { spawnTaskButton } from "../features/buttonSpawn";
@@ -62,14 +68,14 @@ export function dodgeStoneShooters(): void {
 
   const pitGridIndexes: int[] = [65, 69, 95, 99];
   for (const gridIndex of pitGridIndexes) {
-    spawnGridEntity(GridEntityType.GRID_PIT, gridIndex);
+    spawnGridEntity(GridEntityType.PIT, gridIndex);
   }
 
   const cobwebGridIndexes: int[] = [
     34, 35, 37, 38, 78, 82, 83, 84, 108, 109, 110, 111, 112, 113, 114, 115,
   ];
   for (const gridIndex of cobwebGridIndexes) {
-    spawnGridEntity(GridEntityType.GRID_SPIDERWEB, gridIndex);
+    spawnGridEntity(GridEntityType.SPIDER_WEB, gridIndex);
   }
 }
 
@@ -82,7 +88,7 @@ function spawnOneBlock(gridIndex: int) {
 
 function spawnShooter(direction: Direction, gridIndex: int) {
   spawnEntity(
-    EntityType.ENTITY_CONSTANT_STONE_SHOOTER,
+    EntityType.CONSTANT_STONE_SHOOTER,
     ConstantStoneShooterVariant.CONSTANT_STONE_SHOOTER,
     direction,
     gridIndex,

@@ -1,4 +1,4 @@
-import { checkChangeOurCharacter } from "../callbacks/postGameStarted";
+import { checkChangeOurCharacter } from "../callbacksCustom/postGameStartedReordered";
 import * as autoLogin from "../features/autoLogin";
 import g from "../globals";
 import { getOurPlayer } from "../players";

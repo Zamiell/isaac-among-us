@@ -1,16 +1,17 @@
-import { isActionPressedOnAnyInput } from "isaacscript-common";
+import { ButtonAction } from "isaac-typescript-definitions";
+import { isActionPressedOnAnyInput, todo } from "isaacscript-common";
 import { kill } from "./kill";
 import { ableToKillAPlayer } from "./killSubroutines";
 
 let isPressed = false;
 
-// ModCallbacks.MC_POST_UPDATE (1)
+// ModCallback.POST_UPDATE (1)
 export function postUpdate(): void {
   checkInput();
 }
 
 function checkInput() {
-  if (!isActionPressedOnAnyInput(ButtonAction.ACTION_BOMB)) {
+  if (!isActionPressedOnAnyInput(ButtonAction.BOMB)) {
     isPressed = false;
     return;
   }
@@ -29,7 +30,6 @@ function actionPressed() {
     return;
   }
 
-  // TODO other actions
-  // eslint-disable-next-line
-  const poop = "lol";
+  // TODO: other actions
+  todo();
 }

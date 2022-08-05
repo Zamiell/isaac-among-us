@@ -1,4 +1,4 @@
-// TODO imposter thing to close doors manually
+// TODO: imposter thing to close doors manually
 export function postUpdate(): void {
   /*
   const game = Game();
@@ -13,6 +13,5 @@ export function postUpdate(): void {
     sprite.Play("Opened", true);
   }
   */
-  // sfxManager.Stop(SoundEffect.SOUND_DOOR_HEAVY_OPEN);
-  // sfxManager.Stop(SoundEffect.SOUND_DOOR_HEAVY_CLOSE);
+  // sfxManager.Stop(SoundEffect.DOOR_HEAVY_OPEN); sfxManager.Stop(SoundEffect.DOOR_HEAVY_CLOSE);
 }

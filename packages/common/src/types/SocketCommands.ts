@@ -4,7 +4,7 @@ import { Meeting } from "./Meeting";
 import { MeetingResolution } from "./MeetingResolution";
 import { MeetingType } from "./MeetingType";
 import { PlayerBody } from "./PlayerBody";
-import { PlayerType } from "./PlayerType";
+import { PlayerTypeAllowed } from "./PlayerTypeAllowed";
 import { Role } from "./Role";
 import { SkeldRoom } from "./SkeldRoom";
 import { TaskList } from "./TaskList";
@@ -198,7 +198,7 @@ export class JoinedDataToMod {
   gameID!: number;
   name!: string;
   created!: boolean;
-  character!: PlayerType;
+  character!: PlayerTypeAllowed;
   reconnected!: boolean;
 }
 
@@ -218,7 +218,7 @@ export class GameDescriptionPlayer {
   userID!: number;
   username!: string;
   connected!: boolean;
-  character!: PlayerType;
+  character!: PlayerTypeAllowed;
   alive!: boolean;
   room!: SkeldRoom;
   usedEmergencyMeeting!: boolean;
@@ -243,7 +243,7 @@ export class ReconnectDataToMod {
   imposters!: number[] | null;
   meeting!: Meeting | null;
   tasks!: TaskList;
-  character!: PlayerType;
+  character!: PlayerTypeAllowed;
   room!: SkeldRoom;
   enterGridIndex!: number;
   bodies!: PlayerBody[];
