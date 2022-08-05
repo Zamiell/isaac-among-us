@@ -8,10 +8,10 @@ type TaskDescriptions = {
 };
 
 // Return grid indexes need to be at least 2 tiles away so that if the player is holding down a
-// movement key, they do not automatically return to the task
+// movement key, they do not automatically return to the task.
 
-// Short tasks should take between 5-15 seconds
-// Long tasks should take between 16-30 seconds
+// - Short tasks should take between 5-15 seconds.
+// - Long tasks should take between 16-30 seconds.
 
 export const taskDescriptions: TaskDescriptions = {
   [Task.SHORT_DESTROY_GIANT_POOP]: {
