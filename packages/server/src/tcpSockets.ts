@@ -1,5 +1,5 @@
-// This file houses the data structure that stores all of the TCP sessions
-// Only one user per user ID should be logged in at the same time
+// This file houses the data structure that stores all of the TCP sessions. Only one user per user
+// ID should be logged in at the same time.
 
 import { Socket } from "./types/Socket";
 
@@ -9,47 +9,39 @@ let currentSocketID = 0; // Iterates upwards
 export const tcpSockets = new Map<number, Socket>();
 
 export function getNewTCPSocketID(): number {
-  currentSocketID += 1;
+  currentSocketID++;
   return currentSocketID;
 }
 
-export function getTCPSocketByUserID(userID: number): Socket | null {
+export function getTCPSocketByUserID(userID: number): Socket | undefined {
   for (const socket of tcpSockets.values()) {
-    if (!socket.loggedIn) {
-      continue;
-    }
-
-    if (socket.userID === userID) {
+    if (socket.userID === userID && socket.loggedIn) {
       return socket;
     }
   }
 
-  return null;
+  return undefined;
 }
 
-function getTCPSocketByUsername(username: string): Socket | null {
+function getTCPSocketByUsername(username: string): Socket | undefined {
   for (const socket of tcpSockets.values()) {
-    if (!socket.loggedIn) {
-      continue;
-    }
-
-    if (socket.username === username) {
+    if (socket.username === username && socket.loggedIn) {
       return socket;
     }
   }
 
-  return null;
+  return undefined;
 }
 
 export function disconnectExistingUserWithUsername(
-  username: string | null,
+  username: string | undefined,
 ): void {
-  if (username === null) {
+  if (username === undefined) {
     return;
   }
 
   const socket = getTCPSocketByUsername(username);
-  if (socket === null) {
+  if (socket === undefined) {
     return;
   }
 

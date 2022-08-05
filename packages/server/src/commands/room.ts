@@ -10,7 +10,7 @@ export function commandRoom(
   const { room, enterGridIndex } = data;
   const { player } = extraData;
 
-  if (player === null) {
+  if (player === undefined) {
     return;
   }
 

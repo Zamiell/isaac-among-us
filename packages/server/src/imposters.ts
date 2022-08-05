@@ -4,8 +4,12 @@ import { Game } from "./types/Game";
 import { Role } from "./types/Role";
 
 export function assignImpostors(game: Game): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (IS_DEV) {
-    game.players[0].role = Role.IMPOSTER;
+    const firstPlayer = game.players[0];
+    if (firstPlayer !== undefined) {
+      firstPlayer.role = Role.IMPOSTER;
+    }
     return;
   }
 

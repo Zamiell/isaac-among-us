@@ -41,7 +41,7 @@ function handleMessage(msg: Buffer, rinfo: dgram.RemoteInfo) {
 
 function handleDataUDP(msg: Buffer, rinfo: dgram.RemoteInfo) {
   const header = parseHeader(msg);
-  if (header === null) {
+  if (header === undefined) {
     return;
   }
   const [gameID, userID] = header;
@@ -58,20 +58,20 @@ function handleDataUDP(msg: Buffer, rinfo: dgram.RemoteInfo) {
   }
 }
 
-function parseHeader(msg: Buffer): [number, number] | null {
+function parseHeader(msg: Buffer): [number, number] | undefined {
   if (msg.length < UDPMessageHeaderLength) {
-    return null;
+    return undefined;
   }
   (UDPMessageHeader as any)._setBuff(msg); // eslint-disable-line
 
   const gameID = UDPMessageHeader.get("gameID") as number;
   if (typeof gameID !== "number" || gameID < 1) {
-    return null;
+    return undefined;
   }
 
   const userID = UDPMessageHeader.get("userID") as number;
   if (typeof userID !== "number" || userID < 1) {
-    return null;
+    return undefined;
   }
 
   return [gameID, userID];
@@ -79,7 +79,7 @@ function parseHeader(msg: Buffer): [number, number] | null {
 
 function isValidSender(userID: number, rinfo: dgram.RemoteInfo) {
   const tcpSocket = getTCPSocketByUserID(userID);
-  if (tcpSocket === null) {
+  if (tcpSocket === undefined) {
     return false;
   }
 
@@ -113,13 +113,13 @@ function handleListening() {
 }
 
 function handleError(err: Error) {
-  console.error(`UDP server error: ${err}`);
+  console.error("UDP server error:", err);
 }
 
 function purgeOldUDPSessions() {
   for (const [gameID, gameMap] of udpSockets.entries()) {
     for (const [userID, udpSocket] of gameMap.entries()) {
-      udpSocket.TTL -= 1;
+      udpSocket.TTL--;
 
       if (udpSocket.TTL > 0) {
         continue;

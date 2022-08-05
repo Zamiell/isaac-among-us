@@ -21,24 +21,24 @@ export function commandVote(
 
   if (
     !validate(socket, data, extraData) ||
-    userID === null ||
-    username === null ||
-    game === null ||
-    player === null ||
+    userID === undefined ||
+    username === undefined ||
+    game === undefined ||
+    player === undefined ||
     game.meeting === null
   ) {
     return;
   }
 
   const playerIndex = getPlayerIndex(userID, game);
-  if (playerIndex === null) {
+  if (playerIndex === undefined) {
     return;
   }
 
-  let playerVotedFor: Player | null = null;
+  let playerVotedFor: Player | undefined;
   if (!skip) {
     playerVotedFor = getPlayer(userIDVotedFor, game);
-    if (playerVotedFor === null) {
+    if (playerVotedFor === undefined) {
       return;
     }
   }
@@ -48,9 +48,11 @@ export function commandVote(
   sendVote(game);
 
   // We send the chat on the server to avoid making the client have to go through the vote array and
-  // scan for changes
+  // scan for changes.
   const text =
-    playerVotedFor === null ? "to skip." : `for: ${playerVotedFor.username}`;
+    playerVotedFor === undefined
+      ? "to skip."
+      : `for: ${playerVotedFor.username}`;
   sendChat(game, "", `${username} voted ${text}`);
 
   if (allPlayersHaveVoted(game)) {
@@ -66,7 +68,7 @@ function validate(
   const { userIDVotedFor, skip } = data;
   const { game, player } = extraData;
 
-  if (game === null || player === null) {
+  if (game === undefined || player === undefined) {
     return false;
   }
 
@@ -84,7 +86,7 @@ function validate(
   }
 
   const playerIndex = getPlayerIndex(player.userID, game);
-  if (playerIndex === null) {
+  if (playerIndex === undefined) {
     return false;
   }
 
@@ -101,7 +103,7 @@ function validate(
 
   if (!skip) {
     const playerVotedFor = getPlayer(userIDVotedFor, game);
-    if (playerVotedFor === null) {
+    if (playerVotedFor === undefined) {
       error(socket, `Player ${userIDVotedFor} is not in game ${game.id}.`);
       return false;
     }

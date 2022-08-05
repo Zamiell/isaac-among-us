@@ -10,7 +10,7 @@ import { Game } from "./types/Game";
 import { Player } from "./types/Player";
 import { Task } from "./types/Task";
 import { TaskType } from "./types/TaskType";
-import { ensureAllCases, getEnumValues } from "./utils";
+import { getEnumValues } from "./utils";
 
 const DEV_TASK: Task | null = null;
 
@@ -41,6 +41,7 @@ export function assignTasks(game: Game): void {
 }
 
 function addDevTask(player: Player) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!IS_DEV || DEV_TASK === null) {
     return;
   }
@@ -77,18 +78,13 @@ function getNumTasks(taskType: TaskType) {
     case TaskType.COMMON: {
       return DEFAULT_NUM_COMMON_TASKS;
     }
-
-    default: {
-      ensureAllCases(taskType);
-      return 0;
-    }
   }
 }
 
 function checkRefillTasks(tasks: Set<Task>, taskType: TaskType) {
   if (tasks.size === 0) {
-    // There are so many players in this game that we have already assigned every task of this
-    // type; re-insert all tasks back into the pool
+    // There are so many players in this game that we have already assigned every task of this type;
+    // re-insert all tasks back into the pool.
     const allTasksOfType = getAllTasksOfType(taskType);
     for (const task of allTasksOfType) {
       tasks.add(task);

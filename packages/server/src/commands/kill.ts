@@ -15,12 +15,12 @@ export function commandKill(
   const { game } = extraData;
   const { userIDKilled, room, x, y } = data;
 
-  if (!validate(socket, data, extraData) || game === null) {
+  if (!validate(socket, data, extraData) || game === undefined) {
     return;
   }
 
   const playerKilled = getPlayer(userIDKilled, game);
-  if (playerKilled === null) {
+  if (playerKilled === undefined) {
     return;
   }
 
@@ -43,7 +43,7 @@ function validate(
 ) {
   const { game, player } = extraData;
 
-  if (game === null || player === null) {
+  if (game === undefined || player === undefined) {
     return false;
   }
 
@@ -59,7 +59,7 @@ function validate(
 
   const { userIDKilled } = data;
   const playerKilled = getPlayer(userIDKilled, game);
-  if (playerKilled === null) {
+  if (playerKilled === undefined) {
     error(socket, "That is an invalid player to kill.");
     return false;
   }

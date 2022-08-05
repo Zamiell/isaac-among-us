@@ -6,10 +6,8 @@ import { Game } from "./types/Game";
 import { Player } from "./types/Player";
 import { Socket } from "./types/Socket";
 
-export function setPlayerAsDisconnectedInOngoingGames(
-  userID: number | null,
-): void {
-  if (userID === null) {
+export function setPlayerAsDisconnectedInOngoingGames(userID?: number): void {
+  if (userID === undefined) {
     return;
   }
 
@@ -45,7 +43,7 @@ function setPlayerAsDisconnected(player: Player, game: Game) {
 
 export function leaveNonStartedGames(socket: Socket): void {
   const { userID } = socket;
-  if (userID === null) {
+  if (userID === undefined) {
     return;
   }
 

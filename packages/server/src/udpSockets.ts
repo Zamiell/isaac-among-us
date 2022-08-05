@@ -1,6 +1,6 @@
-// This file houses the data structure that stores all of the UDP sessions
-// These are not sessions in the traditional sense; rather, they are unauthenticated data streams
-// that time out after a certain period of time
+// This file houses the data structure that stores all of the UDP sessions. These are not sessions
+// in the traditional sense; rather, they are unauthenticated data streams that time out after a
+// certain period of time.
 
 interface UDPSocket {
   userID: number;
@@ -13,7 +13,7 @@ interface UDPSocket {
 export const udpSockets = new Map<number, Map<number, UDPSocket>>();
 
 export function getGameMap(gameID: number): Map<number, UDPSocket> {
-  // Lazy-init the connection map for every game
+  // Lazy-init the connection map for every game.
   let gameMap = udpSockets.get(gameID);
   if (gameMap === undefined) {
     gameMap = new Map();

@@ -1,5 +1,5 @@
-// This is a subset of the vanilla PlayerType
-// Only certain characters are allowed (for costume reasons)
+// This is a subset of the vanilla `PlayerType`.
+// Only certain characters are allowed (for costume reasons).
 export enum PlayerType {
   PLAYER_ISAAC = 0,
   PLAYER_MAGDALENE = 1,

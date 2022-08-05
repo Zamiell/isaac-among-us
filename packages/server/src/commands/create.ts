@@ -17,7 +17,7 @@ export function commandCreate(
   const { name } = data;
   const { username } = socket;
 
-  if (username === null) {
+  if (username === undefined) {
     return;
   }
 
@@ -37,7 +37,6 @@ export function commandCreate(
     },
     {
       game,
-      player: null,
     },
   );
 
@@ -48,7 +47,7 @@ export function commandCreate(
 function validate(socket: Socket, name: string, extraData: ExtraCommandData) {
   const { game } = extraData;
 
-  if (game !== null) {
+  if (game !== undefined) {
     error(
       socket,
       `There is already a game with the name of "${name}". Please choose a different name.`,

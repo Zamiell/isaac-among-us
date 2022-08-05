@@ -24,18 +24,18 @@ export async function commandLogin(
 
   let user = await users.get(username);
   if (user === null) {
-    // Create an entry in the database for this user
+    // Create an entry in the database for this user.
     const passwordHash = await argon2.hash(password);
     user = await users.create(username, passwordHash, ip);
   } else {
-    // This user already exists in the database
+    // This user already exists in the database.
     const passwordMatches = await argon2.verify(user.passwordHash, password);
     if (!passwordMatches) {
       error(socket, `That password is incorrect for username: ${username}`);
       return;
     }
 
-    // Update the last IP address in the database
+    // Update the last IP address in the database.
     await users.setIP(username, ip);
   }
 
@@ -43,8 +43,8 @@ export async function commandLogin(
 
   socket.loggedIn = true;
   socket.userID = user.id;
-  // Re-apply the user's username in case they logged in with a stylization that does not match
-  // the one in the database
+  // Re-apply the user's username in case they logged in with a stylization that does not match the
+  // one in the database.
   socket.username = user.username;
 
   sendTCP(socket, SocketCommandServerToMod.LOGGED_IN, {

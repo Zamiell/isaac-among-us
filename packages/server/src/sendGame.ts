@@ -1,5 +1,5 @@
 // A collection of helper functions to send changes in the game state to all of the clients in the
-// particular game
+// particular game.
 
 import { sendTCP } from "./sendTCP";
 import { getTCPSocketByUserID } from "./tcpSockets";
@@ -53,10 +53,10 @@ export function sendChat(game: Game, from: string, msg: string): void {
 }
 
 export function sendStarted(game: Game): void {
-  // We can't use sendAll because each player gets a customized message
+  // We can't use sendAll because each player gets a customized message.
   for (const player of game.players) {
     const socket = getTCPSocketByUserID(player.userID);
-    if (socket !== null) {
+    if (socket !== undefined) {
       const imposters = player.role === Role.CREW ? null : game.impostors;
       sendTCP(socket, SocketCommandServerToMod.STARTED, {
         gameID: game.id,
@@ -175,7 +175,7 @@ function getActiveSockets(game: Game) {
   const sockets: Socket[] = [];
   for (const player of game.players) {
     const socket = getTCPSocketByUserID(player.userID);
-    if (socket !== null) {
+    if (socket !== undefined) {
       sockets.push(socket);
     }
   }

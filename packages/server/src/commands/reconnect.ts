@@ -21,7 +21,7 @@ export function commandReconnect(
 ): void {
   const { game, player } = extraData;
 
-  if (game === null || player === null) {
+  if (game === undefined || player === undefined) {
     return;
   }
 

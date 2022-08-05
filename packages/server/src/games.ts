@@ -6,11 +6,11 @@ let currentGameID = 0; // Iterates upwards
 export const games = new Map<number, Game>();
 
 export function getNewGameID(): number {
-  currentGameID += 1;
+  currentGameID++;
   return currentGameID;
 }
 
-export function getGameByName(name: string): Game | null {
+export function getGameByName(name: string): Game | undefined {
   const lowercaseTargetName = name.toLowerCase();
   for (const game of games.values()) {
     const lowercaseName = game.name.toLowerCase();
@@ -19,7 +19,7 @@ export function getGameByName(name: string): Game | null {
     }
   }
 
-  return null;
+  return undefined;
 }
 
 export function isUserInAnyGames(userID: number): boolean {

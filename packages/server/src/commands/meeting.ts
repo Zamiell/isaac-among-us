@@ -15,7 +15,7 @@ import { MeetingResolution } from "../types/MeetingResolution";
 import { MeetingType } from "../types/MeetingType";
 import { Socket } from "../types/Socket";
 import { MeetingDataToServer } from "../types/SocketCommands";
-import { ensureAllCases, getTimestamp } from "../utils";
+import { getTimestamp } from "../utils";
 
 export function commandMeeting(
   socket: Socket,
@@ -25,7 +25,11 @@ export function commandMeeting(
   const { meetingType, userIDKilled } = data;
   const { game, player } = extraData;
 
-  if (!validate(socket, data, extraData) || game === null || player === null) {
+  if (
+    !validate(socket, data, extraData) ||
+    game === undefined ||
+    player === undefined
+  ) {
     return;
   }
 
@@ -61,7 +65,7 @@ function validate(
   const { meetingType } = data;
   const { game, player } = extraData;
 
-  if (game === null || player === null) {
+  if (game === undefined || player === undefined) {
     return false;
   }
 
@@ -95,7 +99,7 @@ function validate(
 }
 
 function meetingPhaseOver(game: Game) {
-  // If the game was deleted in the meantime, do nothing
+  // If the game was deleted in the meantime, do nothing.
   const gameInMap = games.get(game.id) !== undefined;
   if (!gameInMap) {
     return;
@@ -113,11 +117,6 @@ function meetingPhaseOver(game: Game) {
 
     case MeetingPhase.VOTING: {
       meetingPhaseOverVoting(game);
-      break;
-    }
-
-    default: {
-      ensureAllCases(game.meeting.meetingPhase);
       break;
     }
   }
@@ -185,17 +184,17 @@ function getMeetingResolution(game: Game): [MeetingResolution, number] {
   ) {
     const userIDs = getUserIDsThatHaveNumVotes(numVotesToLookFor, voteMap);
     if (userIDs.length === 0) {
-      // No-one got this many votes
+      // No-one got this many votes.
       continue;
     } else if (userIDs.length === 1) {
-      const userID = userIDs[0];
+      const userID = userIDs[0]!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
       if (userID === VOTE_SKIP) {
         return defaultReturn;
       }
 
       return [MeetingResolution.EJECT, userID];
     } else {
-      // The vote is tied between two or more people
+      // The vote is tied between two or more people.
       return defaultReturn;
     }
   }
@@ -217,7 +216,7 @@ function getVoteMap(votes: number[]) {
       numVotesForThisPlayer = 0;
     }
 
-    numVotesForThisPlayer += 1;
+    numVotesForThisPlayer++;
     voteMap.set(vote, numVotesForThisPlayer);
   }
 

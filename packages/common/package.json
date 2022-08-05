@@ -5,6 +5,6 @@
   "author": "Zamiell",
   "main": "./src/index.ts",
   "dependencies": {
-    "isaacscript-tsconfig": "^1.1.8"
+    "isaacscript-tsconfig": "^2.0.0"
   }
 }

@@ -12,7 +12,7 @@ export function commandChat(
   const { msg } = data;
   const { game } = extraData;
 
-  if (username === null || game === null) {
+  if (username === undefined || game === undefined) {
     return;
   }
 

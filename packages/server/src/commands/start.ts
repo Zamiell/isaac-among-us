@@ -21,7 +21,7 @@ export function commandStart(
 ): void {
   const { game } = extraData;
 
-  if (!validate(socket, extraData) || game === null) {
+  if (!validate(socket, extraData) || game === undefined) {
     return;
   }
 
@@ -35,10 +35,11 @@ export function commandStart(
 function validate(socket: Socket, extraData: ExtraCommandData) {
   const { game } = extraData;
 
-  if (game === null) {
+  if (game === undefined) {
     return false;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const minPlayers = IS_DEV ? DEV_MIN_PLAYERS : MIN_PLAYERS;
   if (game.players.length < minPlayers) {
     error(socket, `You need at least ${minPlayers} players to start a game.`);

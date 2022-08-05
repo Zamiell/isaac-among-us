@@ -12,7 +12,7 @@ export function commandTerminate(
 ): void {
   const { game } = extraData;
 
-  if (!validate(socket, extraData) || game === null) {
+  if (!validate(socket, extraData) || game === undefined) {
     return;
   }
 
@@ -23,7 +23,7 @@ export function commandTerminate(
 function validate(socket: Socket, extraData: ExtraCommandData) {
   const { game } = extraData;
 
-  if (game === null) {
+  if (game === undefined) {
     return false;
   }
 

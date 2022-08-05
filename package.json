@@ -5,6 +5,10 @@
   "license": "GPL-3.0",
   "author": "Zamiell",
   "devDependencies": {
-    "isaacscript-lint": "^1.0.74"
+    "isaacscript-lint": "^4.1.1"
+  },
+  "dependencies": {
+    "isaacscript-spell": "^1.2.7",
+    "npm-check-updates": "^16.0.5"
   }
 }

@@ -106,7 +106,7 @@ export function validateBoolean(
 export function validateInNoGames(socket: Socket, verb: string): boolean {
   const { userID } = socket;
 
-  if (userID === null) {
+  if (userID === undefined) {
     return false;
   }
 
@@ -125,7 +125,7 @@ export function validateGameOwner(
 ): boolean {
   const { userID } = socket;
 
-  if (userID === null) {
+  if (userID === undefined) {
     return false;
   }
 

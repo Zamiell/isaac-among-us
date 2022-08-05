@@ -15,10 +15,12 @@ export function getLowestUnusedCharacter(game: Game): PlayerType {
   }
 
   for (let i = 0; i < 50; i++) {
+    // eslint-disable-next-line isaacscript/strict-enums
     if (!allCharacters.has(i)) {
       continue;
     }
 
+    // eslint-disable-next-line isaacscript/strict-enums
     if (!existingCharacters.has(i)) {
       return i;
     }
@@ -27,36 +29,17 @@ export function getLowestUnusedCharacter(game: Game): PlayerType {
   throw new Error("Failed to find an available character.");
 }
 
-export function getPlayer(userID: number, game: Game): Player | null {
-  for (let i = 0; i < game.players.length; i++) {
-    const player = game.players[i];
-    if (player.userID === userID) {
-      return player;
-    }
-  }
-
-  return null;
+export function getPlayer(userID: number, game: Game): Player | undefined {
+  return game.players.find((player) => player.userID === userID);
 }
 
-export function getPlayerIndex(userID: number, game: Game): number | null {
-  for (let i = 0; i < game.players.length; i++) {
-    const player = game.players[i];
-    if (player.userID === userID) {
-      return i;
-    }
-  }
-
-  return null;
+export function getPlayerIndex(userID: number, game: Game): number | undefined {
+  const player = getPlayer(userID, game);
+  return player?.index;
 }
 
 export function isPlayerInGame(userID: number, game: Game): boolean {
-  for (const player of game.players) {
-    if (player.userID === userID) {
-      return true;
-    }
-  }
-
-  return false;
+  return game.players.some((player) => player.userID === userID);
 }
 
 export function isPlayerOwner(userID: number, game: Game): boolean {
@@ -66,7 +49,7 @@ export function isPlayerOwner(userID: number, game: Game): boolean {
 
 export function removePlayerFromGame(userID: number, game: Game): void {
   const playerIndex = getPlayerIndex(userID, game);
-  if (playerIndex !== null) {
+  if (playerIndex !== undefined) {
     game.players.splice(playerIndex, 1);
   }
 }

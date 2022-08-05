@@ -18,7 +18,7 @@ export function commandLeave(
   const { game } = extraData;
   const { userID, username } = socket;
 
-  if (game === null || userID === null || username === null) {
+  if (game === undefined || userID === undefined || username === undefined) {
     return;
   }
 
@@ -37,7 +37,7 @@ export function commandLeave(
     logGameEvent(game, "Deleted.");
   }
 
-  // Update the indexes of the remaining players
+  // Update the indexes of the remaining players.
   game.players.forEach((player, i) => {
     player.index = i;
   });

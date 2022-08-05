@@ -26,8 +26,6 @@ function handleConnection(vanillaSocket: net.Socket) {
   const socket = vanillaSocket as Socket;
   socket.socketID = getNewTCPSocketID();
   socket.loggedIn = false;
-  socket.userID = null;
-  socket.username = null;
 
   console.log(
     `New TCP client with socket ID ${socket.socketID}: ${getRemoteAddressTCP(
@@ -48,7 +46,7 @@ function onConnData(socket: Socket) {
       handleDataTCP(data, socket);
     } catch (err) {
       const userDescription =
-        socket.username === null
+        socket.username === undefined
           ? getRemoteAddressTCP(socket)
           : socket.username;
       console.error(`Client error for "${userDescription}": ${err}`);
@@ -80,7 +78,7 @@ function onConnClose(socket: Socket) {
     console.log(`TCP client closed: ${getRemoteAddressTCP(socket)}`);
     setPlayerAsDisconnectedInOngoingGames(socket.userID);
     leaveNonStartedGames(socket);
-    if (socket.userID !== null && socket.username !== null) {
+    if (socket.userID !== undefined && socket.username !== undefined) {
       sendAllUserConnected(socket.userID, socket.username, false);
     }
     tcpSockets.delete(socket.socketID);
@@ -89,7 +87,9 @@ function onConnClose(socket: Socket) {
 
 function onConnError(socket: Socket) {
   return (err: Error) => {
-    console.log(`TCP client error: ${getRemoteAddressTCP(socket)} ${err}`);
+    console.log(
+      `TCP client error: ${getRemoteAddressTCP(socket)} ${err.message}`,
+    );
   };
 }
 
@@ -99,7 +99,7 @@ function handleListening() {
 }
 
 function handleError(err: Error) {
-  console.error(`TCP server error: ${err}`);
+  console.error(`TCP server error: ${err.message}`);
 }
 
 export function start(): void {

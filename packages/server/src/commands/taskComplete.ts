@@ -14,7 +14,7 @@ export function commandTaskComplete(
   const { game, player } = extraData;
   const { task } = data;
 
-  if (game === null || player === null) {
+  if (game === undefined || player === undefined) {
     return;
   }
 

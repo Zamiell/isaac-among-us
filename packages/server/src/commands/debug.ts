@@ -4,13 +4,13 @@ import { Socket } from "../types/Socket";
 import { NoData } from "../types/SocketCommands";
 
 export function commandDebug(
-  socket: Socket,
+  _socket: Socket,
   _data: NoData,
   extraData: ExtraCommandData,
 ): void {
   const { game } = extraData;
 
-  if (game === null) {
+  if (game === undefined) {
     return;
   }
 

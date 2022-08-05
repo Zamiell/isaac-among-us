@@ -10,7 +10,7 @@ export function packTCPMsg<T extends SocketCommandServerToMod>(
   data: InstanceType<typeof SocketCommandServerToModData[T]>,
 ): string {
   const dataString = JSON.stringify(data);
-  return `${command + DATA_SEPARATOR + dataString}\n`;
+  return `${command}${DATA_SEPARATOR}${dataString}\n`;
 }
 
 export function unpackTCPMsg(msg: string): [string, unknown] {
@@ -25,5 +25,5 @@ export function unpackTCPMsg(msg: string): [string, unknown] {
     data = JSON.parse(dataString) as unknown;
   }
 
-  return [command, data];
+  return [command!, data]; // eslint-disable-line @typescript-eslint/no-non-null-assertion
 }

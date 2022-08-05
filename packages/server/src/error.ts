@@ -7,7 +7,9 @@ export function error(socket: Socket, msg: string): void {
     msg,
   });
   const userDescription =
-    socket.username === null ? getRemoteAddressTCP(socket) : socket.username;
+    socket.username === undefined
+      ? getRemoteAddressTCP(socket)
+      : socket.username;
   console.log(`Client error for "${userDescription}": ${msg}`);
 }
 

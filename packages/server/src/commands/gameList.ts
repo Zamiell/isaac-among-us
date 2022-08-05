@@ -15,7 +15,7 @@ export function commandGameList(
   _extraData: ExtraCommandData,
 ): void {
   const { userID } = socket;
-  if (userID === null) {
+  if (userID === undefined) {
     return;
   }
 

@@ -67,7 +67,14 @@ export function getRandomArrayElement<T>(
 
   const arrayWithoutExceptions = arrayRemove(array, ...exceptions);
   const randomIndex = getRandomArrayIndex(arrayWithoutExceptions);
-  return arrayWithoutExceptions[randomIndex];
+  const randomElement = arrayWithoutExceptions[randomIndex];
+  if (randomElement === undefined) {
+    throw new Error(
+      `Failed to get a random array element since the random index of ${randomIndex} was not valid.`,
+    );
+  }
+
+  return randomElement;
 }
 
 export function getRandomArrayIndex<T>(array: T[]): number {

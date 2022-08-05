@@ -24,9 +24,9 @@ export function commandJoin(
 
   if (
     !validate(socket, name, extraData) ||
-    game === null ||
-    userID === null ||
-    username === null
+    game === undefined ||
+    userID === undefined ||
+    username === undefined
   ) {
     return;
   }
@@ -58,7 +58,7 @@ function validate(
 ): boolean {
   const { game, player } = extraData;
 
-  if (game === null) {
+  if (game === undefined) {
     error(socket, `There is no game with the name of: ${name}`);
     return false;
   }
@@ -79,7 +79,7 @@ function validate(
     return false;
   }
 
-  if (player !== null) {
+  if (player !== undefined) {
     error(socket, `You have already joined game: ${name}`);
     return false;
   }

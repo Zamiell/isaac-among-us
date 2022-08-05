@@ -34,8 +34,8 @@ const COMMANDS_WITH_NO_ASSOCIATED_GAME: ReadonlySet<SocketCommandModToServer> =
     SocketCommandModToServer.JOIN,
   ]);
 
-// Note that JOIN explicitly handles the game not being started,
-// since an associated game is not a requirement for this command
+// Note that JOIN explicitly handles the game not being started, since an associated game is not a
+// requirement for this command.
 const COMMANDS_ALLOWED_WHILE_GAME_NOT_STARTED: ReadonlySet<SocketCommandModToServer> =
   new Set([
     SocketCommandModToServer.CREATE,
@@ -57,6 +57,7 @@ export function handleCommand(
 ): void {
   const command = possibleCommand as unknown as SocketCommandModToServer;
   const commandFunction = commandMap[command];
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (commandFunction === undefined) {
     error(socket, `Invalid command: ${command}`);
     return;
@@ -67,11 +68,11 @@ export function handleCommand(
   }
 
   const data = validate(socket, command, rawData);
-  if (data === null) {
+  if (data === undefined) {
     return;
   }
 
-  // Extra data is metadata about the request that the user did not explicitly send over the wire
+  // Extra data is metadata about the request that the user did not explicitly send over the wire.
   const extraData = getExtraData(socket, data);
   if (!commandMatchesExtraData(socket, command, extraData)) {
     return;
@@ -85,50 +86,51 @@ function validate(
   socket: Socket,
   command: SocketCommandModToServer,
   rawData: unknown,
-): Record<string, unknown> | null {
+): Record<string, unknown> | undefined {
   if (rawData === null || rawData === undefined) {
     error(socket, `You must specify data for the command: ${command}`);
-    return null;
+    return undefined;
   }
 
   const ClassConstructor = SocketCommandModToServerData[command];
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (ClassConstructor === undefined) {
     error(
       socket,
       `Failed to find an internal data schema for the command: ${command}`,
     );
-    return null;
+    return undefined;
   }
 
   const data = rawData as Record<string, unknown>;
 
-  // Iterate over the reference class to see all of the fields that we are expecting
+  // Iterate over the reference class to see all of the fields that we are expecting.
   const instantiatedReferenceClass = new ClassConstructor();
   for (const key of Object.keys(instantiatedReferenceClass)) {
-    // For all commands, uninitialized values are not allowed
+    // For all commands, uninitialized values are not allowed.
     const value = data[key];
     if (value === undefined || value === null) {
       error(socket, `You must specify a value for the field: ${key}`);
-      return null;
+      return undefined;
     }
 
-    // For all commands, empty strings are not allowed
-    // (and we also trim leading and trailing whitespace to prevent confusion)
+    // For all commands, empty strings are not allowed (and we also trim leading and trailing
+    // whitespace to prevent confusion).
     let modifiedValue = value;
     if (typeof value === "string") {
       modifiedValue = value.trim();
       if (modifiedValue === "") {
         error(socket, `You must specify a value for the field: ${key}`);
-        return null;
+        return undefined;
       }
     }
     data[key] = modifiedValue;
 
-    // A specific field may have additional validation requirements
+    // A specific field may have additional validation requirements.
     const validateFunction = validateFunctionMap.get(key);
     if (validateFunction !== undefined) {
       if (!validateFunction(socket, key, modifiedValue)) {
-        return null;
+        return undefined;
       }
     }
   }
@@ -140,7 +142,7 @@ function validate(
       socket,
       `You must login first before sending a "${command}" command.`,
     );
-    return null;
+    return undefined;
   }
 
   return data;
@@ -246,30 +248,27 @@ function validateNumberAndInteger(socket: Socket, key: string, value: unknown) {
 }
 
 function getExtraData(socket: Socket, data: Record<string, unknown>) {
-  const extraData: ExtraCommandData = {
-    game: null,
-    player: null,
-  };
+  const extraData: ExtraCommandData = {};
 
   const { userID } = socket;
-  if (userID === null) {
+  if (userID === undefined) {
     return extraData;
   }
 
-  // Find the associated game, if any
-  if (data.name !== undefined) {
-    const name = data.name as string;
+  // Find the associated game, if any.
+  if (data["name"] !== undefined) {
+    const name = data["name"] as string;
     extraData.game = getGameByName(name);
-  } else if (data.gameID !== undefined) {
-    const gameID = data.gameID as number;
+  } else if (data["gameID"] !== undefined) {
+    const gameID = data["gameID"] as number;
     const game = games.get(gameID);
     if (game !== undefined) {
       extraData.game = game;
     }
   }
 
-  // Find the associated player, if any
-  if (extraData.game !== null) {
+  // Find the associated player, if any.
+  if (extraData.game !== undefined) {
     extraData.player = getPlayer(userID, extraData.game);
   }
 
@@ -284,17 +283,17 @@ function commandMatchesExtraData(
   const { game, player } = extraData;
 
   const commandRequiresAGame = !COMMANDS_WITH_NO_ASSOCIATED_GAME.has(command);
-  if (commandRequiresAGame && game === null) {
+  if (commandRequiresAGame && game === undefined) {
     error(socket, "There is not a game with the provided game ID or name.");
     return false;
   }
 
-  if (game === null) {
+  if (game === undefined) {
     return true;
   }
 
   if (
-    player === null &&
+    player === undefined &&
     command !== SocketCommandModToServer.CREATE &&
     command !== SocketCommandModToServer.JOIN
   ) {
@@ -313,7 +312,7 @@ function commandMatchesGameStartedState(
   command: SocketCommandModToServer,
   game: Game,
 ) {
-  // Chat can be sent regardless of whether the game is started or not
+  // Chat can be sent regardless of whether the game is started or not.
   if (command === SocketCommandModToServer.CHAT) {
     return true;
   }
