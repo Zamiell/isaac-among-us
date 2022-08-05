@@ -107,6 +107,7 @@ export class DebugDataToServer {
   gameID = 0;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class NoData {}
 
 export const SocketCommandModToServerData = {
@@ -127,7 +128,7 @@ export const SocketCommandModToServerData = {
   [SocketCommandModToServer.TASK_COMPLETE]: TaskCompleteDataToServer,
   [SocketCommandModToServer.TERMINATE]: TerminateDataToServer,
   [SocketCommandModToServer.DEBUG]: DebugDataToServer,
-};
+} as const;
 
 // --------------
 // Server --> Mod
@@ -327,4 +328,4 @@ export const SocketCommandServerToModData = {
   [SocketCommandServerToMod.END_MEETING]: EndMeetingDataToMod,
   [SocketCommandServerToMod.END_GAME]: EndGameDataToMod,
   [SocketCommandServerToMod.TERMINATED]: TerminatedDataToMod,
-};
+} as const;

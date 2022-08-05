@@ -1,6 +1,6 @@
 const TASK_ROOM_VARIANT = 98;
 
-// Comments indicate the number of tasks
+// Comments indicate the number of tasks in the room.
 export enum SkeldRoom {
   CAFETERIA, // 1
   ADMIN_HALL,
