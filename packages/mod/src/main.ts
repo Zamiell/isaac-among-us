@@ -55,8 +55,8 @@ function main() {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (IS_DEV) {
     enableExtraConsoleCommands(mod);
-    addConsoleCommand("debug", debugFunction1);
-    addConsoleCommand("debug2", debugFunction2);
+    addConsoleCommand("d", debugFunction1);
+    addConsoleCommand("d2", debugFunction2);
     addConsoleCommand("w", warp);
 
     registerHotkey(Keyboard.F1, hotkeyFunction1);
