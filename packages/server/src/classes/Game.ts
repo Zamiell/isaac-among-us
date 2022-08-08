@@ -1,6 +1,5 @@
-import { Meeting } from "./Meeting";
+import { Meeting, PlayerBody } from "common";
 import { Player } from "./Player";
-import { PlayerBody } from "./PlayerBody";
 
 export class Game {
   id: number;

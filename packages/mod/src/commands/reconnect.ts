@@ -1,7 +1,6 @@
+import { ReconnectDataToMod, Role, SkeldRoom } from "common";
 import { game } from "isaacscript-common";
 import { AmongUsGame } from "../classes/AmongUsGame";
-import { Role } from "../enums/Role";
-import { SkeldRoom } from "../enums/SkeldRoom";
 import {
   disableSendingEvents,
   enableSendingEvents,
@@ -11,7 +10,7 @@ import g from "../globals";
 import { loadMap } from "../loadMap";
 import { skeldRoomReverseMap } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
-import { ReconnectDataToMod } from "../types/SocketCommands";
+import { convertPlayerToGhostForm } from "./killed";
 
 export function commandReconnect(data: ReconnectDataToMod): void {
   if (g.userID === null) {
@@ -23,7 +22,7 @@ export function commandReconnect(data: ReconnectDataToMod): void {
   g.game.started = true;
   g.game.imposters = data.imposters;
   g.game.ourTasks = data.tasks;
-  g.game.role = data.imposters === null ? Role.CREW : Role.IMPOSTER;
+  g.game.role = data.imposters.length === 0 ? Role.CREW : Role.IMPOSTER;
   g.game.meeting = data.meeting;
 
   const player = g.game.getPlayerFromUserID(g.userID);
@@ -51,6 +50,9 @@ export function commandReconnect(data: ReconnectDataToMod): void {
   }
 
   setPlayerPosition(data.enterGridIndex);
+  if (!player.alive) {
+    convertPlayerToGhostForm();
+  }
   enableSendingEvents();
 }
 

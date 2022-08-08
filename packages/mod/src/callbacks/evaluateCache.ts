@@ -1,6 +1,5 @@
+import { IS_DEV, Task } from "common";
 import { CacheFlag, ModCallback } from "isaac-typescript-definitions";
-import { IS_DEV } from "../constants";
-import { Task } from "../enums/Task";
 import g from "../globals";
 
 export function init(mod: Mod): void {

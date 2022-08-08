@@ -1,10 +1,10 @@
+import { IS_DEV } from "common";
 import {
   ButtonAction,
   InputHook,
   ModCallback,
 } from "isaac-typescript-definitions";
 import { game } from "isaacscript-common";
-import { IS_DEV } from "../constants";
 import { inCutscene } from "../features/cutscene";
 import { inEndMeeting } from "../features/endMeeting";
 import g from "../globals";

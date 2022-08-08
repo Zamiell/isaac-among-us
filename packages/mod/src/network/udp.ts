@@ -12,7 +12,7 @@ import {
   UDP_POSITION_FIELDS,
 } from "../constants";
 import g from "../globals";
-import { getRoomIndexModified } from "../utils";
+import { getSkeldRoom } from "../stageAPI";
 import { sendUDP } from "./send";
 import * as struct from "./struct";
 
@@ -73,14 +73,17 @@ function sendPosition() {
     overlayAnimation = "";
   }
   const overlayAnimationFrame = sprite.GetOverlayFrame();
-  const roomIndex = getRoomIndexModified();
+  const room = getSkeldRoom();
+  if (room === undefined) {
+    return;
+  }
 
   const structObject: UDPPositionInterface = {
     gameID: g.game.id,
     userID: g.userID,
     x: player.Position.X,
     y: player.Position.Y,
-    roomIndex,
+    room,
     animation,
     animationFrame,
     overlayAnimation,

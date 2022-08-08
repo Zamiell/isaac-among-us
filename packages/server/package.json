@@ -10,6 +10,7 @@
   "dependencies": {
     "@prisma/client": "^4.1.1",
     "argon2": "^0.28.7",
+    "common": "file:../common",
     "isaacscript-tsconfig": "^2.0.0",
     "reflect-metadata": "^0.1.13",
     "struct": "^0.0.12",

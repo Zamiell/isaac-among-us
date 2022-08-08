@@ -1,18 +1,19 @@
+import { TCP_PORT } from "common";
 import * as net from "net";
 import {
   ensureAllCommandDataFieldsHaveValidatorFunctions,
   handleCommand,
 } from "./command";
-import { IP, TCP_PORT } from "./constants";
+import { IP } from "./constants";
 import {
   leaveNonStartedGames,
   setPlayerAsDisconnectedInOngoingGames,
 } from "./disconnect";
 import { getRemoteAddressTCP } from "./error";
+import { Socket } from "./interfaces/Socket";
 import { unpackTCPMsg } from "./pack";
 import { sendAllUserConnected } from "./sendAll";
 import { getNewTCPSocketID, tcpSockets } from "./tcpSockets";
-import { Socket } from "./types/Socket";
 
 ensureAllCommandDataFieldsHaveValidatorFunctions();
 

@@ -1,8 +1,5 @@
+import { SocketCommandModToServer, SocketCommandModToServerData } from "common";
 import { log } from "isaacscript-common";
-import {
-  SocketCommandModToServer,
-  SocketCommandModToServerData,
-} from "../types/SocketCommands";
 import { packTCPMsg } from "./pack";
 import * as socketClient from "./socketClient";
 

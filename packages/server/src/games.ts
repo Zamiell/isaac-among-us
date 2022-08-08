@@ -1,4 +1,4 @@
-import { Game } from "./types/Game";
+import { Game } from "./classes/Game";
 
 let currentGameID = 0; // Iterates upwards
 

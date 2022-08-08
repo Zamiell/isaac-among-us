@@ -1,11 +1,8 @@
+import { SocketCommandModToServer, SocketCommandServerToMod } from "common";
 import { asString, log } from "isaacscript-common";
 import { commandMap } from "../commandMap";
 import g from "../globals";
 import * as players from "../players";
-import {
-  SocketCommandModToServer,
-  SocketCommandServerToMod,
-} from "../types/SocketCommands";
 import { unpackTCPMsg, unpackUDPPlayerMessage } from "./pack";
 import { sendTCP } from "./send";
 import * as socketClient from "./socketClient";

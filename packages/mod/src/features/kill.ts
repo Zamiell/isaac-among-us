@@ -1,9 +1,9 @@
+import { SocketCommandModToServer } from "common";
 import { getScreenBottomRightPos } from "isaacscript-common";
 import g from "../globals";
 import { sendTCP } from "../network/send";
 import { getClosestAmongUsPlayer } from "../players";
 import { initSprite } from "../sprite";
-import { SocketCommandModToServer } from "../types/SocketCommands";
 import { OTHER_UI_BUTTON_OFFSET } from "./connectedIcon";
 import { ableToKillAPlayer } from "./killSubroutines";
 
@@ -37,7 +37,7 @@ export function kill(): void {
   sendTCP(SocketCommandModToServer.KILL, {
     gameID: g.game.id,
     userIDKilled: closestPlayer.userID,
-    room: closestPlayer.roomIndex,
+    room: closestPlayer.room,
     x: closestPlayer.x,
     y: closestPlayer.y,
   });

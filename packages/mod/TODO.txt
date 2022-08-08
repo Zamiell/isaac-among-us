@@ -1,7 +1,5 @@
 Bugs:
-- killing
-  - first, test from we are killed perspective
-  - second, test from killing perspective
+- test 2 players in same task
 
 - imposter thing where you close the doors
 - imposter lights

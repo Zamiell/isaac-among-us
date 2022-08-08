@@ -1,16 +1,16 @@
-import { MAX_PLAYERS } from "../constants";
+import {
+  JoinDataToServer,
+  MAX_PLAYERS,
+  SocketCommandServerToMod,
+} from "common";
+import { Player } from "../classes/Player";
 import { error } from "../error";
 import { getLowestUnusedCharacter } from "../game";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData";
+import { Socket } from "../interfaces/Socket";
 import { logGameEvent } from "../log";
 import { sendChat, sendNewGameDescription } from "../sendGame";
 import { sendTCP } from "../sendTCP";
-import { ExtraCommandData } from "../types/ExtraCommandData";
-import { Player } from "../types/Player";
-import { Socket } from "../types/Socket";
-import {
-  JoinDataToServer,
-  SocketCommandServerToMod,
-} from "../types/SocketCommands";
 import { validateInNoGames } from "../validate";
 
 export function commandJoin(

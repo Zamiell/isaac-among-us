@@ -3,15 +3,15 @@ import {
   EMERGENCY_BUTTON_COOLDOWN_SECONDS,
   IS_DEV,
   MIN_PLAYERS,
-} from "../constants";
+  StartDataToServer,
+} from "common";
+import { Game } from "../classes/Game";
 import { error } from "../error";
 import { assignImpostors } from "../imposters";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData";
+import { Socket } from "../interfaces/Socket";
 import { sendEmergencyButtonCooldown, sendStarted } from "../sendGame";
 import { assignTasks } from "../tasks";
-import { ExtraCommandData } from "../types/ExtraCommandData";
-import { Game } from "../types/Game";
-import { Socket } from "../types/Socket";
-import { StartDataToServer } from "../types/SocketCommands";
 import { validateGameOwner } from "../validate";
 
 export function commandStart(

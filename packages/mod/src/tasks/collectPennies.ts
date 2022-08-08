@@ -1,10 +1,10 @@
+import { Task } from "common";
 import {
   CoinSubType,
   EntityType,
   PickupVariant,
 } from "isaac-typescript-definitions";
 import { getRandomSeed } from "isaacscript-common";
-import { Task } from "../enums/Task";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";

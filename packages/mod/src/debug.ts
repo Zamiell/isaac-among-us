@@ -1,15 +1,21 @@
-import { IS_DEV } from "./constants";
-import { SkeldRoom } from "./enums/SkeldRoom";
+import { IS_DEV, SkeldRoom } from "common";
 import { startAutoLogin } from "./features/autoLogin";
 import { startMeeting } from "./features/startMeeting";
 import g from "./globals";
+import { skeldRoomReverseMap } from "./skeldRoomMap";
+import { goToStageAPIRoom } from "./stageAPI";
 
-/** From the "debug" console command. */
+/** From the "d" console command. */
 export function debugFunction1(): void {
   // Add code here
+  if (g.game === null) {
+    return;
+  }
+
+  g.game.logBodies();
 }
 
-/** From the "debug2" console command. */
+/** From the "d2" console command. */
 export function debugFunction2(): void {
   // Add code here
 }
@@ -67,4 +73,22 @@ export function injectTestPlayers(): void {
       usedEmergencyMeeting: false,
     });
   }
+}
+
+export function warp(params: string): void {
+  let roomName: string | undefined;
+  const num = tonumber(params);
+  if (num === undefined) {
+    roomName = params;
+  } else {
+    const skeldRoom = num as SkeldRoom;
+    roomName = skeldRoomReverseMap[skeldRoom];
+    if (roomName === undefined) {
+      print(`Failed to find the room name for room ID: ${skeldRoom}`);
+      return;
+    }
+  }
+
+  goToStageAPIRoom(roomName);
+  print(`Warped to room: ${roomName}`);
 }

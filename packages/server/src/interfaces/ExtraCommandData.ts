@@ -1,5 +1,5 @@
-import { Game } from "./Game";
-import { Player } from "./Player";
+import { Game } from "../classes/Game";
+import { Player } from "../classes/Player";
 
 export interface ExtraCommandData {
   /**

@@ -1,3 +1,4 @@
+import { Task } from "common";
 import { EntityType, SoundEffect } from "isaac-typescript-definitions";
 import {
   emptyArray,
@@ -10,7 +11,6 @@ import {
   sfxManager,
 } from "isaacscript-common";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
-import { Task } from "../enums/Task";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";

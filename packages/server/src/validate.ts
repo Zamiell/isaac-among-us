@@ -1,8 +1,8 @@
+import { Game } from "./classes/Game";
 import { error } from "./error";
 import { isPlayerOwner } from "./game";
 import { isUserInAnyGames } from "./games";
-import { Game } from "./types/Game";
-import { Socket } from "./types/Socket";
+import { Socket } from "./interfaces/Socket";
 
 export function validateString(
   socket: Socket,

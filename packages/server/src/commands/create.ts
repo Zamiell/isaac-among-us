@@ -1,11 +1,11 @@
+import { CreateDataToServer } from "common";
+import { Game } from "../classes/Game";
 import { error } from "../error";
 import { games, getNewGameID } from "../games";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData";
+import { Socket } from "../interfaces/Socket";
 import { logGameEvent } from "../log";
 import { sendAllNewGame } from "../sendAll";
-import { ExtraCommandData } from "../types/ExtraCommandData";
-import { Game } from "../types/Game";
-import { Socket } from "../types/Socket";
-import { CreateDataToServer } from "../types/SocketCommands";
 import { validateInNoGames } from "../validate";
 import { commandJoin } from "./join";
 

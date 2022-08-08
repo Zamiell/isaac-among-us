@@ -1,6 +1,6 @@
+import { SocketCommandModToServer } from "common";
 import * as chat from "../chat";
 import { sendTCP } from "../network/send";
-import { SocketCommandModToServer } from "../types/SocketCommands";
 
 export function usernameChatCommand(args: string[]): void {
   if (args.length === 0) {

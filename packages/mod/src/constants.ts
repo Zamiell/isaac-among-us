@@ -1,38 +1,30 @@
+import { IS_DEV, SkeldRoom } from "common";
 import { RENDER_FRAMES_PER_SECOND } from "isaacscript-common";
-import { IS_DEV } from "../../common/src/constants";
-
-export {
-  IS_DEV,
-  MAX_PLAYERS,
-  NOT_VOTED_YET,
-  TCP_PORT,
-  UDP_PORT,
-} from "../../common/src/constants";
-export { taskDescriptions } from "../../common/src/taskDescriptions";
 
 export const MOD_NAME = "Among Us";
+
+/** The version is updated automatically by a pre-publish script. */
+export const VERSION = "0.0.1";
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 export const REMOTE_HOSTNAME = IS_DEV ? "192.168.1.10" : "isaacracing.net";
 export const SOCKET_CONNECT_TIMEOUT_SECONDS = 1;
 export const SOCKET_CLIENT_RETURN_SUCCESS = 1;
 
-/*
-const FIELD_TYPES: readonly string[] = [
-  "b", // signed char
-  "B", // unsigned char
-  "h", // signed short (2 bytes)
-  "H", // unsigned short (2 bytes)
-  "i", // signed int (4 bytes)
-  "I", // unsigned int (4 bytes)
-  "l", // signed long (8 bytes)
-  "L", // unsigned long (8 bytes)
-  "f", // float (4 bytes)
-  "d", // double (8 bytes)
-  "s", // zero-terminated string
-  "cn", // sequence of exactly n chars corresponding to a single Lua string
-];
-*/
+enum FieldType {
+  SIGNED_CHAR = "b", // 1 byte
+  UNSIGNED_CHAR = "B", // 1 byte
+  SIGNED_SHORT = "h", // 2 bytes
+  UNSIGNED_SHORT = "H", // 2 bytes
+  SIGNED_INT = "i", // 4 bytes
+  UNSIGNED_INT = "I", // 4 bytes
+  SIGNED_LONG = "l", // 8 bytes
+  UNSIGNED_LONG = "L", // 8 bytes
+  FLOAT = "f", // 4 bytes
+  DOUBLE = "d", // 8 bytes
+  STRING = "s", // Zero-terminated
+  CHAR_SEQUENCE = "cn", // Sequence of exactly n chars corresponding to a single Lua string
+}
 
 export interface UDPBeaconInterface {
   gameID: int;
@@ -52,34 +44,30 @@ export const UDP_BEACON_DATA_FORMAT = UDP_BEACON_FIELDS.map(
 ).join();
 export const UDP_BEACON_INTERVAL = 10 * RENDER_FRAMES_PER_SECOND;
 
-// This matches the `UDPMessageBodyPosition` struct.
 export interface UDPPositionInterface {
   gameID: int;
   userID: int;
   x: float;
   y: float;
-  roomIndex: int;
+  room: SkeldRoom;
   animation: string;
   animationFrame: int;
   overlayAnimation: string;
   overlayAnimationFrame: int;
 }
 export const UDP_POSITION_FIELDS: ReadonlyArray<
-  [name: keyof UDPPositionInterface, format: string]
+  [name: keyof UDPPositionInterface, format: FieldType | string]
 > = [
-  ["gameID", "I"],
-  ["userID", "I"],
-  ["x", "f"],
-  ["y", "f"],
-  ["roomIndex", "I"],
+  ["gameID", FieldType.UNSIGNED_INT],
+  ["userID", FieldType.UNSIGNED_INT],
+  ["x", FieldType.FLOAT],
+  ["y", FieldType.FLOAT],
+  ["room", FieldType.UNSIGNED_INT],
   ["animation", "c20"],
-  ["animationFrame", "I"],
+  ["animationFrame", FieldType.UNSIGNED_INT],
   ["overlayAnimation", "c20"],
-  ["overlayAnimationFrame", "I"],
+  ["overlayAnimationFrame", FieldType.UNSIGNED_INT],
 ];
 export const UDP_POSITION_DATA_FORMAT = UDP_POSITION_FIELDS.map(
   (tuple) => tuple[1],
 ).join();
-
-/** The version is updated automatically by a pre-publish script. */
-export const VERSION = "0.0.1";

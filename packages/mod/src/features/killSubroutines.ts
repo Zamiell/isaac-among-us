@@ -1,4 +1,4 @@
-import { Role } from "../enums/Role";
+import { Role } from "common";
 import g from "../globals";
 import { getClosestAmongUsPlayer } from "../players";
 import { shouldShowUIButton } from "../ui";

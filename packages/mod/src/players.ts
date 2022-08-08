@@ -1,8 +1,8 @@
+import { GameDescriptionPlayer } from "common";
 import { UDPPositionInterface } from "./constants";
 import g from "./globals";
 import { PlayerData } from "./interfaces/PlayerData";
-import { GameDescriptionPlayer } from "./types/SocketCommands";
-import { getRoomIndexModified } from "./utils";
+import { getSkeldRoom } from "./stageAPI";
 
 export function getClosestAmongUsPlayer(): PlayerData | undefined {
   if (g.game === null) {
@@ -10,12 +10,12 @@ export function getClosestAmongUsPlayer(): PlayerData | undefined {
   }
 
   const player = Isaac.GetPlayer();
-  const roomIndex = getRoomIndexModified();
+  const room = getSkeldRoom();
 
   let closestPlayer: PlayerData | undefined;
   let closestDistance = math.huge;
   for (const otherPlayerData of g.game.playerMap.values()) {
-    if (otherPlayerData.roomIndex !== roomIndex) {
+    if (otherPlayerData.room !== room) {
       continue;
     }
 
@@ -88,7 +88,7 @@ export function updatePlayerMap(
     userID: playerPositionMessage.userID,
     x: playerPositionMessage.x,
     y: playerPositionMessage.y,
-    roomIndex: playerPositionMessage.roomIndex,
+    room: playerPositionMessage.room,
     animation: playerPositionMessage.animation,
     animationFrame: playerPositionMessage.animationFrame,
     overlayAnimation: playerPositionMessage.overlayAnimation,

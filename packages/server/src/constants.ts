@@ -1,7 +1,4 @@
-import { IS_DEV } from "../../common/src/constants";
-
-export * from "../../common/src/constants";
-export * from "../../common/src/taskDescriptions";
+import { IS_DEV } from "common";
 
 export const IP = "0.0.0.0";
 

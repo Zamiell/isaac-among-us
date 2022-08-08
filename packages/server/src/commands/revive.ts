@@ -1,8 +1,7 @@
+import { IS_DEV, NoData } from "common";
 import { emptyArray } from "../array";
-import { IS_DEV } from "../constants";
-import { ExtraCommandData } from "../types/ExtraCommandData";
-import { Socket } from "../types/Socket";
-import { NoData } from "../types/SocketCommands";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData";
+import { Socket } from "../interfaces/Socket";
 
 export function commandRevive(
   _socket: Socket,

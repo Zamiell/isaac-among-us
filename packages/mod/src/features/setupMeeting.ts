@@ -1,9 +1,9 @@
+import { SkeldRoom } from "common";
 import { EntityCollisionClass } from "isaac-typescript-definitions";
 import {
   DISTANCE_OF_GRID_TILE,
   getCircleDiscretizedPoints,
 } from "isaacscript-common";
-import { SkeldRoom } from "../enums/SkeldRoom";
 import g from "../globals";
 import { setMinimapAPIEnabled } from "../minimapAPI";
 import { getOurPlayerIndex } from "../players";

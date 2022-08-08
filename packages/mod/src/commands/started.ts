@@ -1,8 +1,7 @@
+import { Role, StartedDataToMod } from "common";
 import * as chat from "../chat";
-import { Role } from "../enums/Role";
 import * as cutscene from "../features/cutscene";
 import g from "../globals";
-import { StartedDataToMod } from "../types/SocketCommands";
 
 export function commandStarted(data: StartedDataToMod): void {
   if (g.game === null) {

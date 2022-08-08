@@ -1,11 +1,8 @@
+import { GameListDataToMod, SocketCommandModToServer } from "common";
 import * as chat from "../chat";
 import * as autoLogin from "../features/autoLogin";
 import g from "../globals";
 import { sendTCP } from "../network/send";
-import {
-  GameListDataToMod,
-  SocketCommandModToServer,
-} from "../types/SocketCommands";
 
 export function commandGameList(data: GameListDataToMod): void {
   if (data.gameList.length === 0) {

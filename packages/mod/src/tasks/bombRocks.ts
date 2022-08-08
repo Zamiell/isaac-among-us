@@ -1,3 +1,4 @@
+import { Task } from "common";
 import {
   BombSubType,
   EntityType,
@@ -6,7 +7,6 @@ import {
   RockState,
 } from "isaac-typescript-definitions";
 import { asNumber, getRandomSeed, spawnGridEntity } from "isaacscript-common";
-import { Task } from "../enums/Task";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";

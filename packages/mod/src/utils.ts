@@ -1,3 +1,4 @@
+import { Role } from "common";
 import {
   CacheFlag,
   EntityFlag,
@@ -6,13 +7,11 @@ import {
 } from "isaac-typescript-definitions";
 import {
   game,
-  getRoomGridIndex,
   getScreenBottomRightPos,
   log,
   setBlindfold,
   VectorZero,
 } from "isaacscript-common";
-import { Role } from "./enums/Role";
 import { fonts } from "./fonts";
 import g from "./globals";
 
@@ -63,15 +62,6 @@ export function drawFontText(
 export function enableShooting(): void {
   const player = Isaac.GetPlayer();
   setBlindfold(player, false);
-}
-
-export function getRoomIndexModified(): int {
-  const roomGridIndex = getRoomGridIndex();
-
-  // The UDP struct does not support negative values.
-  const roomIndexModified = math.abs(roomGridIndex);
-
-  return roomIndexModified;
 }
 
 export function getRoleText(role: Role): string {

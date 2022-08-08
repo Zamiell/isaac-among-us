@@ -1,10 +1,10 @@
+import { SkeldRoom } from "common";
 import {
   Direction,
   DoorSlot,
   RoomTransitionAnim,
 } from "isaac-typescript-definitions";
 import { game } from "isaacscript-common";
-import { SkeldRoom } from "./enums/SkeldRoom";
 import { sendRoom } from "./features/sendGameEvents";
 import g from "./globals";
 import { skeldRoomMap } from "./skeldRoomMap";

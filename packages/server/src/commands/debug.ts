@@ -1,7 +1,6 @@
-import { ExtraCommandData } from "../types/ExtraCommandData";
-import { Role } from "../types/Role";
-import { Socket } from "../types/Socket";
-import { NoData } from "../types/SocketCommands";
+import { NoData, Role } from "common";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData";
+import { Socket } from "../interfaces/Socket";
 
 export function commandDebug(
   _socket: Socket,

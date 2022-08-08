@@ -1,12 +1,9 @@
 // A collection of helper functions to send changes in the server state to every connected client.
 
+import { SocketCommandServerToMod, SocketCommandServerToModData } from "common";
+import { Game } from "./classes/Game";
 import { sendTCP } from "./sendTCP";
 import { tcpSockets } from "./tcpSockets";
-import { Game } from "./types/Game";
-import {
-  SocketCommandServerToMod,
-  SocketCommandServerToModData,
-} from "./types/SocketCommands";
 
 export function sendAllUserConnected(
   userID: number,

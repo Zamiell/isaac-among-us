@@ -5,6 +5,7 @@
 import { EntityType } from "isaac-typescript-definitions";
 import {
   asNumber,
+  getRoomGridIndex,
   RENDER_FRAMES_PER_SECOND,
   VectorZero,
 } from "isaacscript-common";
@@ -12,7 +13,7 @@ import { injectTestPlayers } from "../debug";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import { fonts } from "../fonts";
 import g from "../globals";
-import { getRoomIndexModified } from "../utils";
+import { getSkeldRoom } from "../stageAPI";
 import { isConsoleOpen } from "./console";
 import { inEndMeeting } from "./endMeeting";
 import { getMeetingCirclePoints } from "./setupMeeting";
@@ -46,7 +47,7 @@ function drawOtherPlayersFromUDP() {
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
-  const roomIndex = getRoomIndexModified();
+  const room = getSkeldRoom();
   const userIDsInOurGame = g.game.players.map((player) => player.userID);
   const userIDsInOurGameSet = new Set(userIDsInOurGame);
 
@@ -66,7 +67,7 @@ function drawOtherPlayersFromUDP() {
       // Don't draw stale players, since they might have disconnected.
       renderFramesSinceLastUpdate > RENDER_FRAMES_PER_SECOND ||
       // Don't draw players who are not in this room.
-      playerData.roomIndex !== roomIndex ||
+      playerData.room !== room ||
       // Don't draw dead players.
       player === undefined ||
       !player.alive
@@ -98,8 +99,13 @@ function drawOtherPlayersBodies() {
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
+  const roomGridIndex = getRoomGridIndex();
 
   for (const body of g.game.bodies) {
+    if (body.room !== Math.abs(roomGridIndex)) {
+      continue;
+    }
+
     const entity = getMultiplayerEntity(body.userID);
     entity.Visible = true;
 

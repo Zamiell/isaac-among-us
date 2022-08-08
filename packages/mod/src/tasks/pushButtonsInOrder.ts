@@ -1,10 +1,10 @@
+import { Task } from "common";
 import { SoundEffect } from "isaac-typescript-definitions";
 import {
   emptyArray,
   sfxManager,
   shuffleArrayInPlace,
 } from "isaacscript-common";
-import { Task } from "../enums/Task";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";

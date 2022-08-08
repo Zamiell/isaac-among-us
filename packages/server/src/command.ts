@@ -1,14 +1,11 @@
+import { SocketCommandModToServer, SocketCommandModToServerData } from "common";
+import { Game } from "./classes/Game";
 import { commandMap } from "./commandMap";
 import { error } from "./error";
 import { getPlayer } from "./game";
 import { games, getGameByName } from "./games";
-import { ExtraCommandData } from "./types/ExtraCommandData";
-import { Game } from "./types/Game";
-import { Socket } from "./types/Socket";
-import {
-  SocketCommandModToServer,
-  SocketCommandModToServerData,
-} from "./types/SocketCommands";
+import { ExtraCommandData } from "./interfaces/ExtraCommandData";
+import { Socket } from "./interfaces/Socket";
 import {
   validateAlphanumeric,
   validateBoolean,

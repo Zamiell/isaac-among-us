@@ -1,3 +1,5 @@
+import { SkeldRoom } from "common";
+
 // Must roughly match `PlayerMessage`.
 export interface PlayerData {
   userID: int;
@@ -9,7 +11,7 @@ export interface PlayerData {
   y: float;
 
   /** The absolute value of the room grid index. */
-  roomIndex: int;
+  room: SkeldRoom;
 
   animation: string;
   animationFrame: int;

@@ -1,7 +1,7 @@
+import { SkeldRoom } from "common";
 import { getEffects, removeAllEffects } from "isaacscript-common";
 import { ButtonSubType } from "../enums/ButtonSubType";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
-import { SkeldRoom } from "../enums/SkeldRoom";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
 import { setButtonState, spawnButton } from "./buttonSpawn";

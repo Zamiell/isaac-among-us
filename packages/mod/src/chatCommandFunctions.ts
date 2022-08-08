@@ -1,14 +1,13 @@
+import { NOT_VOTED_YET, SocketCommandModToServer } from "common";
 import * as chat from "./chat";
 import { connectChatCommand } from "./chatCommands/connect";
 import { passwordChatCommand } from "./chatCommands/password";
 import { usernameChatCommand } from "./chatCommands/username";
-import { NOT_VOTED_YET } from "./constants";
 import g from "./globals";
 import { sendTCP } from "./network/send";
 import * as socketClient from "./network/socketClient";
 import { getOurPlayerIndex } from "./players";
 import { getSkeldRoom } from "./stageAPI";
-import { SocketCommandModToServer } from "./types/SocketCommands";
 import { amOwner, restart } from "./utils";
 
 export const chatCommandFunctions = new Map<string, (args: string[]) => void>();

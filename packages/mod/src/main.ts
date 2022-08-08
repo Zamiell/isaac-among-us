@@ -1,7 +1,8 @@
+import { IS_DEV } from "common";
 import { Keyboard } from "isaac-typescript-definitions";
 import {
   addConsoleCommand,
-  enableExtraConsoleCommands,
+  enableDevFeatures,
   log,
   ModUpgraded,
   registerHotkey,
@@ -26,19 +27,17 @@ import * as postPickupCollect from "./callbacksCustom/postPickupCollect";
 import * as postPlayerInitLate from "./callbacksCustom/postPlayerInitLate";
 import * as postRoomLoad from "./callbacksCustom/postRoomLoad";
 import * as postStageAPINewRoom from "./callbacksCustom/postStageAPINewRoom";
-import { IS_DEV, MOD_NAME, VERSION } from "./constants";
+import { MOD_NAME, VERSION } from "./constants";
 import {
   debugFunction1,
   debugFunction2,
   hotkeyFunction1,
   hotkeyFunction2,
+  warp,
 } from "./debug";
-import { SkeldRoom } from "./enums/SkeldRoom";
 import { initFeatures } from "./initFeatures";
 import * as collisionObjects from "./lib/collisionObjects";
 import { disconnect } from "./network/socketClient";
-import { skeldRoomReverseMap } from "./skeldRoomMap";
-import { goToStageAPIRoom } from "./stageAPI";
 
 main();
 
@@ -54,7 +53,7 @@ function main() {
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (IS_DEV) {
-    enableExtraConsoleCommands(mod);
+    enableDevFeatures(mod);
     addConsoleCommand("d", debugFunction1);
     addConsoleCommand("d2", debugFunction2);
     addConsoleCommand("w", warp);
@@ -117,22 +116,4 @@ function initCallbacksStageAPI() {
     callbackPriority,
     postRoomLoad.main,
   );
-}
-
-function warp(params: string) {
-  let roomName: string | undefined;
-  const num = tonumber(params);
-  if (num === undefined) {
-    roomName = params;
-  } else {
-    const skeldRoom = num as SkeldRoom;
-    roomName = skeldRoomReverseMap[skeldRoom];
-    if (roomName === undefined) {
-      print(`Failed to find the room name for room ID: ${skeldRoom}`);
-      return;
-    }
-  }
-
-  goToStageAPIRoom(roomName);
-  print(`Warped to room: ${roomName}`);
 }

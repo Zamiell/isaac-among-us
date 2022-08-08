@@ -1,7 +1,7 @@
+import { JoinedDataToMod } from "common";
 import * as chat from "../chat";
 import { AmongUsGame } from "../classes/AmongUsGame";
 import g from "../globals";
-import { JoinedDataToMod } from "../types/SocketCommands";
 import { restart } from "../utils";
 
 export function commandJoined(data: JoinedDataToMod): void {

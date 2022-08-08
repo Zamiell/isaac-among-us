@@ -1,20 +1,22 @@
+import {
+  MeetingDataToServer,
+  MeetingPhase,
+  MeetingResolution,
+  MeetingType,
+  NOT_VOTED_YET,
+  VOTE_SKIP,
+} from "common";
 import { emptyArray, initArray } from "../array";
+import { Game } from "../classes/Game";
 import {
   DEFAULT_MEETING_PRE_VOTE_SECONDS,
   DEFAULT_MEETING_VOTE_SECONDS,
-  NOT_VOTED_YET,
-  VOTE_SKIP,
 } from "../constants";
 import { error } from "../error";
 import { games } from "../games";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData";
+import { Socket } from "../interfaces/Socket";
 import { sendEndMeeting, sendStartMeeting, sendStartVoting } from "../sendGame";
-import { ExtraCommandData } from "../types/ExtraCommandData";
-import { Game } from "../types/Game";
-import { MeetingPhase } from "../types/MeetingPhase";
-import { MeetingResolution } from "../types/MeetingResolution";
-import { MeetingType } from "../types/MeetingType";
-import { Socket } from "../types/Socket";
-import { MeetingDataToServer } from "../types/SocketCommands";
 import { getTimestamp } from "../utils";
 
 export function commandMeeting(

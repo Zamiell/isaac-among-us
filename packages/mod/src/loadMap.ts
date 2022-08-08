@@ -1,4 +1,5 @@
-import { MOD_NAME, taskDescriptions } from "./constants";
+import { TASK_DESCRIPTIONS } from "common";
+import { MOD_NAME } from "./constants";
 import * as mapData from "./data/map";
 import g from "./globals";
 import { setMapToFullVisibility, setMinimapAPIRoomIcon } from "./minimapAPI";
@@ -33,7 +34,7 @@ export function setTasksOnMap(): void {
   // entry.
   for (const taskList of Object.values(g.game.ourTasks)) {
     for (const task of taskList) {
-      const taskDescription = taskDescriptions[task];
+      const taskDescription = TASK_DESCRIPTIONS[task];
       const taskRoom = taskDescription.room;
       const mapID = getStageAPIRoomMapID(taskRoom);
       if (mapID !== undefined) {

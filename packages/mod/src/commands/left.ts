@@ -1,5 +1,5 @@
+import { LeftDataToMod } from "common";
 import g from "../globals";
-import { LeftDataToMod } from "../types/SocketCommands";
 import { restart } from "../utils";
 
 export function commandLeft(data: LeftDataToMod): void {

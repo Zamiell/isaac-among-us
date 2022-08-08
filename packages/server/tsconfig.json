@@ -10,10 +10,12 @@
     // By default, it will put the compiled ".js" next to the respective ".ts" file,
     // which will clutter the "src" directory
     "outDir": "./dist",
+
+    "paths": {
+      "common": ["../common/src/index.ts"],
+    },
   },
 
   // A list of the TypeScript files to compile
-  "include": [
-    "./src/**/*.ts",
-  ],
+  "include": ["./src/**/*.ts"],
 }

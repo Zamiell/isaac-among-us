@@ -30,6 +30,5 @@ function actionPressed() {
     return;
   }
 
-  // TODO: other actions
-  todo();
+  todo("other actions");
 }

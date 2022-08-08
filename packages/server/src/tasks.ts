@@ -1,15 +1,12 @@
+import { IS_DEV, Task, TaskType, TASK_DESCRIPTIONS } from "common";
 import { getRandomArrayElement } from "./array";
+import { Game } from "./classes/Game";
+import { Player } from "./classes/Player";
 import {
   DEFAULT_NUM_COMMON_TASKS,
   DEFAULT_NUM_LONG_TASKS,
   DEFAULT_NUM_SHORT_TASKS,
-  IS_DEV,
-  taskDescriptions,
 } from "./constants";
-import { Game } from "./types/Game";
-import { Player } from "./types/Player";
-import { Task } from "./types/Task";
-import { TaskType } from "./types/TaskType";
 import { getEnumValues } from "./utils";
 
 const DEV_TASK: Task | null = null;
@@ -46,7 +43,7 @@ function addDevTask(player: Player) {
     return;
   }
 
-  const taskDescription = taskDescriptions[DEV_TASK];
+  const taskDescription = TASK_DESCRIPTIONS[DEV_TASK];
   const tasks = player.tasks[taskDescription.taskType];
   if (!tasks.includes(DEV_TASK)) {
     tasks.push(DEV_TASK);
@@ -56,7 +53,7 @@ function addDevTask(player: Player) {
 function getTasksOfType(tasks: Set<Task>, taskType: TaskType): Set<Task> {
   const tasksOfType = new Set<Task>();
   for (const task of tasks.values()) {
-    const taskDescription = taskDescriptions[task];
+    const taskDescription = TASK_DESCRIPTIONS[task];
     if (taskDescription.taskType === taskType) {
       tasksOfType.add(task);
     }
@@ -95,7 +92,7 @@ function checkRefillTasks(tasks: Set<Task>, taskType: TaskType) {
 function getAllTasksOfType(taskType: TaskType): Task[] {
   const allTasksOfType: Task[] = [];
   for (const task of getEnumValues(Task)) {
-    const taskDescription = taskDescriptions[task];
+    const taskDescription = TASK_DESCRIPTIONS[task];
     if (taskDescription.taskType === taskType) {
       allTasksOfType.push(task);
     }

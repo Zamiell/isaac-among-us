@@ -1,4 +1,4 @@
-import { IS_DEV, MAX_PLAYERS, taskDescriptions } from "../constants";
+import { IS_DEV, MAX_PLAYERS, TASK_DESCRIPTIONS } from "common";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
 import { getStageAPIRoomName } from "../stageAPISubroutines";
@@ -29,7 +29,7 @@ export function postRender(): void {
   const position = Isaac.WorldToRenderPosition(worldPosition);
 
   if (g.game.currentTask !== null) {
-    const taskDescription = taskDescriptions[g.game.currentTask];
+    const taskDescription = TASK_DESCRIPTIONS[g.game.currentTask];
     drawFontText(`Task: ${taskDescription.name}`, position);
     return;
   }

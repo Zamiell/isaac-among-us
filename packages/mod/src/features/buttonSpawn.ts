@@ -1,8 +1,7 @@
+import { Task, TASK_DESCRIPTIONS } from "common";
 import { EntityType, PressurePlateState } from "isaac-typescript-definitions";
-import { taskDescriptions } from "../constants";
 import { ButtonSubType } from "../enums/ButtonSubType";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
-import { Task } from "../enums/Task";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
 import { spawnEntity } from "../utils";
@@ -52,7 +51,7 @@ export function spawnGoToTaskButtons(): void {
     return;
   }
 
-  for (const [key, taskDescription] of Object.entries(taskDescriptions)) {
+  for (const [key, taskDescription] of Object.entries(TASK_DESCRIPTIONS)) {
     if (taskDescription.room !== room) {
       continue;
     }

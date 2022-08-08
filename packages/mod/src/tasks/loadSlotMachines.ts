@@ -1,3 +1,4 @@
+import { Task } from "common";
 import {
   CoinSubType,
   EntityType,
@@ -5,7 +6,6 @@ import {
   SlotVariant,
 } from "isaac-typescript-definitions";
 import { getSlots, removeAllMatchingEntities } from "isaacscript-common";
-import { Task } from "../enums/Task";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";

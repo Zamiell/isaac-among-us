@@ -1,11 +1,10 @@
+import { TCP_PORT, UDP_PORT } from "common";
 import { log } from "isaacscript-common";
 import * as chat from "../chat";
 import {
   REMOTE_HOSTNAME,
   SOCKET_CLIENT_RETURN_SUCCESS,
   SOCKET_CONNECT_TIMEOUT_SECONDS,
-  TCP_PORT,
-  UDP_PORT,
 } from "../constants";
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { setBlackSpriteState } from "../features/blackSprite";

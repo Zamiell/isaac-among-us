@@ -1,3 +1,4 @@
+import { SkeldRoom } from "common";
 import { GridEntityType } from "isaac-typescript-definitions";
 import {
   getEnumValues,
@@ -5,7 +6,6 @@ import {
   removeEntities,
 } from "isaacscript-common";
 import { EntityTypeCustom } from "../enums/EntityTypeCustom";
-import { SkeldRoom } from "../enums/SkeldRoom";
 import g from "../globals";
 import { spawnAdminObjects } from "../rooms/admin";
 import { spawnCafeteriaObjects } from "../rooms/cafeteria";

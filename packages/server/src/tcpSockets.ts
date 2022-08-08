@@ -1,7 +1,7 @@
 // This file houses the data structure that stores all of the TCP sessions. Only one user per user
 // ID should be logged in at the same time.
 
-import { Socket } from "./types/Socket";
+import { Socket } from "./interfaces/Socket";
 
 let currentSocketID = 0; // Iterates upwards
 

@@ -1,6 +1,6 @@
+import { MeetingType } from "common";
 import { getScreenBottomRightPos, VectorZero } from "isaacscript-common";
 import { BlackSpriteState } from "../enums/BlackSpriteState";
-import { MeetingType } from "../enums/MeetingType";
 import { StartMeetingState } from "../enums/StartMeetingState";
 import g from "../globals";
 import { disableMinimapAPI } from "../minimapAPI";

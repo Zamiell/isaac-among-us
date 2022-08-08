@@ -1,15 +1,12 @@
 import argon2 from "argon2";
+import { LoginDataToServer, SocketCommandServerToMod } from "common";
 import { error } from "../error";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData";
+import { Socket } from "../interfaces/Socket";
 import * as users from "../models/users";
 import { sendAllUserConnected } from "../sendAll";
 import { sendTCP } from "../sendTCP";
 import { disconnectExistingUserWithUsername } from "../tcpSockets";
-import { ExtraCommandData } from "../types/ExtraCommandData";
-import { Socket } from "../types/Socket";
-import {
-  LoginDataToServer,
-  SocketCommandServerToMod,
-} from "../types/SocketCommands";
 
 export async function commandLogin(
   socket: Socket,

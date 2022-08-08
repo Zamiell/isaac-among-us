@@ -1,13 +1,16 @@
-import { NOT_VOTED_YET, VOTE_SKIP } from "../constants";
+import {
+  MeetingPhase,
+  NOT_VOTED_YET,
+  VoteDataToServer,
+  VOTE_SKIP,
+} from "common";
+import { Game } from "../classes/Game";
+import { Player } from "../classes/Player";
 import { error } from "../error";
 import { getPlayer, getPlayerIndex } from "../game";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData";
+import { Socket } from "../interfaces/Socket";
 import { sendChat, sendVote } from "../sendGame";
-import { ExtraCommandData } from "../types/ExtraCommandData";
-import { Game } from "../types/Game";
-import { MeetingPhase } from "../types/MeetingPhase";
-import { Player } from "../types/Player";
-import { Socket } from "../types/Socket";
-import { VoteDataToServer } from "../types/SocketCommands";
 import { meetingPhaseOverVoting } from "./meeting";
 
 export function commandVote(

@@ -1,9 +1,8 @@
-import { SkeldRoom } from "../enums/SkeldRoom";
+import { SkeldRoom, SocketCommandModToServer } from "common";
 import g from "../globals";
 import { sendTCP } from "../network/send";
 import { skeldRoomMap } from "../skeldRoomMap";
 import { getStageAPIRoomName } from "../stageAPISubroutines";
-import { SocketCommandModToServer } from "../types/SocketCommands";
 
 let sendEvents = true;
 

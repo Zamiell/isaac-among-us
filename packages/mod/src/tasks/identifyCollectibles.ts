@@ -1,3 +1,4 @@
+import { Task } from "common";
 import { CollectibleType, SoundEffect } from "isaac-typescript-definitions";
 import {
   emptyArray,
@@ -8,7 +9,6 @@ import {
   repeat,
   sfxManager,
 } from "isaacscript-common";
-import { Task } from "../enums/Task";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { resetAllButtons } from "../features/buttonSubroutines";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";

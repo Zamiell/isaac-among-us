@@ -1,11 +1,8 @@
+import { GameListDescription, SocketCommandModToServer } from "common";
 import { connectChatCommand } from "../chatCommands/connect";
 import g from "../globals";
 import { sendTCP } from "../network/send";
 import * as socketClient from "../network/socketClient";
-import {
-  GameListDescription,
-  SocketCommandModToServer,
-} from "../types/SocketCommands";
 
 const DEBUG_FIRST_MOD = true;
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

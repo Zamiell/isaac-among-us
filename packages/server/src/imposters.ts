@@ -1,7 +1,6 @@
+import { IS_DEV, Role } from "common";
 import { getRandomArrayIndex } from "./array";
-import { IS_DEV } from "./constants";
-import { Game } from "./types/Game";
-import { Role } from "./types/Role";
+import { Game } from "./classes/Game";
 
 export function assignImpostors(game: Game): void {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

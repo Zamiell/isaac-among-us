@@ -1,10 +1,9 @@
+import { Role, TaskCompleteDataToServer } from "common";
 import { arrayRemoveInPlace } from "../array";
+import { Game } from "../classes/Game";
 import { endGame } from "../endGame";
-import { ExtraCommandData } from "../types/ExtraCommandData";
-import { Game } from "../types/Game";
-import { Role } from "../types/Role";
-import { Socket } from "../types/Socket";
-import { TaskCompleteDataToServer } from "../types/SocketCommands";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData";
+import { Socket } from "../interfaces/Socket";
 
 export function commandTaskComplete(
   _socket: Socket,

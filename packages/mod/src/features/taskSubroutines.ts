@@ -1,3 +1,4 @@
+import { SocketCommandModToServer, TASK_DESCRIPTIONS } from "common";
 import { EntityType, SoundEffect } from "isaac-typescript-definitions";
 import {
   arrayRemoveInPlace,
@@ -6,7 +7,6 @@ import {
   runNextGameFrame,
   sfxManager,
 } from "isaacscript-common";
-import { taskDescriptions } from "../constants";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import g from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
@@ -14,7 +14,6 @@ import { sendTCP } from "../network/send";
 import { setupPlayerAndUI } from "../setupPlayersAndUI";
 import { skeldRoomReverseMap } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
-import { SocketCommandModToServer } from "../types/SocketCommands";
 import { removeGridEntity } from "../utils";
 import { isWallGridIndex } from "../wall";
 
@@ -62,7 +61,7 @@ export function taskLeave(): void {
     return;
   }
 
-  const taskDescription = taskDescriptions[g.game.currentTask];
+  const taskDescription = TASK_DESCRIPTIONS[g.game.currentTask];
   const roomName = skeldRoomReverseMap[taskDescription.room];
   if (roomName === undefined) {
     error(`Failed to get the room name for room: ${taskDescription.room}`);

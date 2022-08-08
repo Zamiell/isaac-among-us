@@ -1,6 +1,5 @@
-import { MeetingPhase } from "../enums/MeetingPhase";
+import { Meeting, MeetingPhase } from "common";
 import g from "../globals";
-import { Meeting } from "../interfaces/Meeting";
 import { getTime } from "../network/socketClient";
 import { drawFontText, getScreenPosition } from "../utils";
 import { isConsoleOpen } from "./console";

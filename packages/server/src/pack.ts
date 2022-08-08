@@ -1,7 +1,4 @@
-import {
-  SocketCommandServerToMod,
-  SocketCommandServerToModData,
-} from "./types/SocketCommands";
+import { SocketCommandServerToMod, SocketCommandServerToModData } from "common";
 
 const DATA_SEPARATOR = " ";
 

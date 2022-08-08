@@ -1,6 +1,6 @@
+import { EmergencyButtonCooldownDataToMod } from "common";
 import { setEmergencyButtonState } from "../features/emergencyButton";
 import g from "../globals";
-import { EmergencyButtonCooldownDataToMod } from "../types/SocketCommands";
 
 export function commandEmergencyButtonCooldown(
   data: EmergencyButtonCooldownDataToMod,

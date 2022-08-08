@@ -1,18 +1,18 @@
 // A collection of helper functions to send changes in the game state to all of the clients in the
 // particular game.
 
-import { sendTCP } from "./sendTCP";
-import { getTCPSocketByUserID } from "./tcpSockets";
-import { Game } from "./types/Game";
-import { MeetingResolution } from "./types/MeetingResolution";
-import { Role } from "./types/Role";
-import { SkeldRoom } from "./types/SkeldRoom";
-import { Socket } from "./types/Socket";
 import {
   GameDescriptionPlayer,
+  MeetingResolution,
+  Role,
+  SkeldRoom,
   SocketCommandServerToMod,
   SocketCommandServerToModData,
-} from "./types/SocketCommands";
+} from "common";
+import { Game } from "./classes/Game";
+import { Socket } from "./interfaces/Socket";
+import { sendTCP } from "./sendTCP";
+import { getTCPSocketByUserID } from "./tcpSockets";
 
 export function sendNewGameDescription(game: Game): void {
   const players = getGameDescriptionPlayers(game);

@@ -1,3 +1,4 @@
+import { SkeldRoom } from "common";
 import {
   getRoomStageID,
   getRoomVariant,
@@ -5,7 +6,11 @@ import {
   ModCallbackCustom,
   ModUpgraded,
 } from "isaacscript-common";
+import { convertPlayerToGhostForm } from "../commands/killed";
 import * as lobby from "../features/lobby";
+import g from "../globals";
+import { getOurPlayer } from "../players";
+import { getSkeldRoom } from "../stageAPI";
 
 export function init(mod: ModUpgraded): void {
   mod.AddCallbackCustom(ModCallbackCustom.POST_NEW_ROOM_REORDERED, main);
@@ -17,12 +22,33 @@ function main() {
   const level = game.GetLevel();
   const stage = level.GetStage();
   const stageType = level.GetStageType();
+  const renderFrameCount = Isaac.GetFrameCount();
   const roomStageID = getRoomStageID();
   const roomVariant = getRoomVariant();
 
   log(
-    `MC_POST_NEW_ROOM - ${roomStageID}.${roomVariant} (on stage ${stage}.${stageType}) (game frame ${gameFrameCount})`,
+    `MC_POST_NEW_ROOM - ${roomStageID}.${roomVariant} (on stage ${stage}.${stageType}) (game frame ${gameFrameCount}) (render frame ${renderFrameCount})`,
   );
 
   lobby.postNewRoom();
+
+  checkSetPlayerToGhostForm();
+}
+
+function checkSetPlayerToGhostForm() {
+  if (g.game === null) {
+    return;
+  }
+
+  const room = getSkeldRoom();
+  if (room === SkeldRoom.TASK) {
+    return;
+  }
+
+  const playerDescription = getOurPlayer();
+  if (playerDescription.alive) {
+    return;
+  }
+
+  convertPlayerToGhostForm();
 }

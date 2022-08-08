@@ -1,3 +1,4 @@
+import { SocketCommandModToServer } from "common";
 import { Keyboard } from "isaac-typescript-definitions";
 import {
   disableAllInputs,
@@ -16,7 +17,6 @@ import { HexColors } from "../enums/HexColors";
 import g from "../globals";
 import { sendTCP } from "../network/send";
 import * as socketClient from "../network/socketClient";
-import { SocketCommandModToServer } from "../types/SocketCommands";
 import { getScreenPosition } from "../utils";
 import { drawText } from "./drawText";
 

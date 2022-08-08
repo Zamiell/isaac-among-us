@@ -1,10 +1,10 @@
 // The cutscene that plays at the beginning of a game.
 
+import { Role } from "common";
 import { CollectibleType } from "isaac-typescript-definitions";
 import { getScreenCenterPos, itemConfig, sfxManager } from "isaacscript-common";
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { CutsceneState } from "../enums/CutsceneState";
-import { Role } from "../enums/Role";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
 import g from "../globals";
 import { loadMap } from "../loadMap";

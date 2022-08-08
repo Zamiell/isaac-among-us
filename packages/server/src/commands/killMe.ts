@@ -1,7 +1,6 @@
-import { IS_DEV } from "../constants";
-import { ExtraCommandData } from "../types/ExtraCommandData";
-import { Socket } from "../types/Socket";
-import { KillMeDataToServer } from "../types/SocketCommands";
+import { IS_DEV, KillMeDataToServer } from "common";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData";
+import { Socket } from "../interfaces/Socket";
 import { kill } from "./kill";
 
 export function commandKillMe(

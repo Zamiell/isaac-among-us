@@ -1,3 +1,4 @@
+import { SocketCommandModToServer, SocketCommandModToServerData } from "common";
 import { commandChat } from "./commands/chat";
 import { commandCheckUsername } from "./commands/checkUsername";
 import { commandCreate } from "./commands/create";
@@ -17,12 +18,8 @@ import { commandStart } from "./commands/start";
 import { commandTaskComplete } from "./commands/taskComplete";
 import { commandTerminate } from "./commands/terminate";
 import { commandVote } from "./commands/vote";
-import { ExtraCommandData } from "./types/ExtraCommandData";
-import { Socket } from "./types/Socket";
-import {
-  SocketCommandModToServer,
-  SocketCommandModToServerData,
-} from "./types/SocketCommands";
+import { ExtraCommandData } from "./interfaces/ExtraCommandData";
+import { Socket } from "./interfaces/Socket";
 
 type CommandMap = {
   [Value in SocketCommandModToServer]: (

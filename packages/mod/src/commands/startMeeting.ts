@@ -1,8 +1,6 @@
-import { MeetingPhase } from "../enums/MeetingPhase";
-import { MeetingType } from "../enums/MeetingType";
+import { MeetingPhase, MeetingType, StartMeetingDataToMod } from "common";
 import { startMeeting } from "../features/startMeeting";
 import g from "../globals";
-import { StartMeetingDataToMod } from "../types/SocketCommands";
 
 export function commandStartMeeting(data: StartMeetingDataToMod): void {
   if (g.game === null) {

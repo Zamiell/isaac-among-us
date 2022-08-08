@@ -1,9 +1,6 @@
+import { SocketCommandServerToMod, SocketCommandServerToModData } from "common";
+import { Socket } from "./interfaces/Socket";
 import { packTCPMsg } from "./pack";
-import { Socket } from "./types/Socket";
-import {
-  SocketCommandServerToMod,
-  SocketCommandServerToModData,
-} from "./types/SocketCommands";
 
 export function sendTCP<T extends SocketCommandServerToMod>(
   socket: Socket,

@@ -1,6 +1,6 @@
+import { SocketCommandServerToMod } from "common";
+import { Socket } from "./interfaces/Socket";
 import { sendTCP } from "./sendTCP";
-import { Socket } from "./types/Socket";
-import { SocketCommandServerToMod } from "./types/SocketCommands";
 
 export function error(socket: Socket, msg: string): void {
   sendTCP(socket, SocketCommandServerToMod.ERROR, {

@@ -1,6 +1,6 @@
+import { UsernameDataToMod } from "common";
 import * as chat from "../chat";
 import g from "../globals";
-import { UsernameDataToMod } from "../types/SocketCommands";
 
 export function commandUsername(data: UsernameDataToMod): void {
   g.username = data.username;

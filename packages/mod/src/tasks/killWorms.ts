@@ -1,6 +1,6 @@
+import { Task } from "common";
 import { EntityType } from "isaac-typescript-definitions";
-import { VectorZero } from "isaacscript-common";
-import { Task } from "../enums/Task";
+import { countEntities, VectorZero } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
@@ -32,7 +32,8 @@ export function postEntityKill(): void {
     return;
   }
 
-  const numAliveEnemies = Isaac.CountEntities(undefined, TYPE_OF_ENEMY);
+  // We subtract one because the entity that is dying is not removed from the room yet.
+  const numAliveEnemies = countEntities(TYPE_OF_ENEMY) - 1;
   if (numAliveEnemies === 0) {
     taskComplete();
   }

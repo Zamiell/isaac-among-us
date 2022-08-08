@@ -9,9 +9,9 @@
 
   // https://www.typescriptlang.org/docs/handbook/compiler-options.html
   "compilerOptions": {
-    // Specifies the root folder within your source files.
-    // Commented out because this will causes errors with the current monorepo setup.
-    // "rootDir": "./src",
+    "paths": {
+      "common": ["../common/src/index.ts"],
+    },
   },
 
   // A list of the TypeScript files to compile.

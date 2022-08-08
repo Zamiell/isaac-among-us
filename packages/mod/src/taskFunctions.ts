@@ -1,4 +1,4 @@
-import { Task } from "./enums/Task";
+import { Task } from "common";
 import { bombRocks } from "./tasks/bombRocks";
 import { buttonsBehindKeyBlocks } from "./tasks/buttonsBehindKeyBlocks";
 import { collectPennies } from "./tasks/collectPennies";

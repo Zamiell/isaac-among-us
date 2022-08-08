@@ -1,3 +1,4 @@
+import { SocketCommandServerToMod, SocketCommandServerToModData } from "common";
 import { commandChat } from "./commands/chat";
 import { commandEmergencyButtonCooldown } from "./commands/emergencyButtonCooldown";
 import { commandEndGame } from "./commands/endGame";
@@ -18,10 +19,6 @@ import { commandTerminated } from "./commands/terminated";
 import { commandUserConnected } from "./commands/userConnected";
 import { commandUsername } from "./commands/username";
 import { commandVote } from "./commands/vote";
-import {
-  SocketCommandServerToMod,
-  SocketCommandServerToModData,
-} from "./types/SocketCommands";
 
 type CommandMap = {
   [Value in SocketCommandServerToMod]: (

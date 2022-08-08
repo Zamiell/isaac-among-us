@@ -1,6 +1,6 @@
+import { UserConnectedDataToMod } from "common";
 import * as chat from "../chat";
 import g from "../globals";
-import { UserConnectedDataToMod } from "../types/SocketCommands";
 
 export function commandUserConnected(data: UserConnectedDataToMod): void {
   // Don't display notifications for ourselves.

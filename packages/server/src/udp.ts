@@ -1,6 +1,7 @@
+import { UDP_PORT } from "common";
 import * as dgram from "dgram";
 import struct from "struct";
-import { IP, UDP_PORT } from "./constants";
+import { IP } from "./constants";
 import { getTCPSocketByUserID } from "./tcpSockets";
 import { getGameMap, udpSockets } from "./udpSockets";
 
