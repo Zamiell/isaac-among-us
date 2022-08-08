@@ -2,7 +2,7 @@ import { PressurePlateState } from "isaac-typescript-definitions";
 import { asNumber, getEffects } from "isaacscript-common";
 import { ButtonSubType } from "../enums/ButtonSubType";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
-import { Task } from "../types/Task";
+import { Task } from "../enums/Task";
 
 const EMERGENCY_BUTTON_ANIMATION_SUFFIX = "Pentagram";
 const SPECIAL_BUTTON_ANIMATION_SUFFIX = "Red";

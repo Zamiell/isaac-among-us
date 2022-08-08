@@ -1,7 +1,7 @@
 import * as chat from "../chat";
+import { HexColors } from "../enums/HexColors";
 import { fonts } from "../fonts";
 import g from "../globals";
-import { Colors } from "../types/Colors";
 import { getScreenPosition } from "../utils";
 import {
   CONSOLE_POSITION,
@@ -65,7 +65,7 @@ function drawChat() {
       text += `[${chatMessage.time}] `;
     }
     if (chatMessage.username !== "") {
-      text += `${Colors.GREEN}<${chatMessage.username}>${Colors.WHITE} `;
+      text += `${HexColors.GREEN}<${chatMessage.username}>${HexColors.WHITE} `;
     }
     text += chatMessage.msg;
 

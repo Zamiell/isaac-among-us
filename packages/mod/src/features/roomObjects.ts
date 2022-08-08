@@ -5,6 +5,7 @@ import {
   removeEntities,
 } from "isaacscript-common";
 import { EntityTypeCustom } from "../enums/EntityTypeCustom";
+import { SkeldRoom } from "../enums/SkeldRoom";
 import g from "../globals";
 import { spawnAdminObjects } from "../rooms/admin";
 import { spawnCafeteriaObjects } from "../rooms/cafeteria";
@@ -21,7 +22,6 @@ import { spawnStorageObjects } from "../rooms/storage";
 import { spawnUpperEngineObjects } from "../rooms/upperEngine";
 import { spawnWeaponsObjects } from "../rooms/weapons";
 import { getSkeldRoom } from "../stageAPI";
-import { SkeldRoom } from "../types/SkeldRoom";
 import { removeGridEntity } from "../utils";
 import { spawnGoToTaskButtons } from "./buttonSpawn";
 

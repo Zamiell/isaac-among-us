@@ -1,7 +1,7 @@
+import { MeetingPhase } from "../enums/MeetingPhase";
 import g from "../globals";
+import { Meeting } from "../interfaces/Meeting";
 import { getTime } from "../network/socketClient";
-import { Meeting } from "../types/Meeting";
-import { MeetingPhase } from "../types/MeetingPhase";
 import { drawFontText, getScreenPosition } from "../utils";
 import { isConsoleOpen } from "./console";
 import { inEndMeeting } from "./endMeeting";

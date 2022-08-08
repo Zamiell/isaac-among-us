@@ -1,6 +1,6 @@
 import { log } from "isaacscript-common";
+import { ChatMessage } from "./interfaces/ChatMessage";
 import { getFormattedTime } from "./network/sandbox";
-import { ChatMessage } from "./types/ChatMessage";
 import { ChatDataToMod } from "./types/SocketCommands";
 
 const chatMessages: ChatMessage[] = [];

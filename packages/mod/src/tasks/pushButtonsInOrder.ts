@@ -4,11 +4,11 @@ import {
   sfxManager,
   shuffleArrayInPlace,
 } from "isaacscript-common";
+import { Task } from "../enums/Task";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
-import { Task } from "../types/Task";
 import { drawFontText, movePlayerToGridIndex } from "../utils";
 
 const THIS_TASK = Task.SHORT_PUSH_BUTTONS_IN_ORDER;

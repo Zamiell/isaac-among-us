@@ -1,7 +1,7 @@
+import { MeetingPhase } from "../enums/MeetingPhase";
+import { MeetingType } from "../enums/MeetingType";
 import { startMeeting } from "../features/startMeeting";
 import g from "../globals";
-import { MeetingPhase } from "../types/MeetingPhase";
-import { MeetingType } from "../types/MeetingType";
 import { StartMeetingDataToMod } from "../types/SocketCommands";
 
 export function commandStartMeeting(data: StartMeetingDataToMod): void {

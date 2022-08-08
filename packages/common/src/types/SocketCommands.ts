@@ -30,6 +30,8 @@ export enum SocketCommandModToServer {
   VOTE = "vote",
   TASK_COMPLETE = "taskComplete",
   TERMINATE = "terminate",
+  REVIVE = "revive",
+  KILL_ME = "killMe",
   DEBUG = "debug",
 }
 
@@ -103,6 +105,18 @@ export class TerminateDataToServer {
   gameID = 0;
 }
 
+export class ReviveDataToServer {
+  gameID = 0;
+}
+
+export class KillMeDataToServer {
+  gameID = 0;
+  userIDKilled = 0;
+  room = SkeldRoom.CAFETERIA;
+  x = 0;
+  y = 0;
+}
+
 export class DebugDataToServer {
   gameID = 0;
 }
@@ -127,6 +141,8 @@ export const SocketCommandModToServerData = {
   [SocketCommandModToServer.VOTE]: VoteDataToServer,
   [SocketCommandModToServer.TASK_COMPLETE]: TaskCompleteDataToServer,
   [SocketCommandModToServer.TERMINATE]: TerminateDataToServer,
+  [SocketCommandModToServer.REVIVE]: ReviveDataToServer,
+  [SocketCommandModToServer.KILL_ME]: KillMeDataToServer,
   [SocketCommandModToServer.DEBUG]: DebugDataToServer,
 } as const;
 

@@ -9,12 +9,12 @@ import {
 import { ButtonSubType } from "../enums/ButtonSubType";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import { EntityTypeCustom } from "../enums/EntityTypeCustom";
+import { Task } from "../enums/Task";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { resetButton } from "../features/buttonSubroutines";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
-import { Task } from "../types/Task";
 import { movePlayerToGridIndex, spawnEntity } from "../utils";
 
 const THIS_TASK = Task.SHORT_FIX_WIRES;

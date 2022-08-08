@@ -1,7 +1,7 @@
 import { VectorZero } from "isaacscript-common";
+import { BlackSpriteState } from "../enums/BlackSpriteState";
 import g from "../globals";
 import { initSprite, setSpriteOpacity } from "../sprite";
-import { BlackSpriteState } from "../types/BlackSpriteState";
 
 export const FADE_TO_BLACK_FRAMES = 90;
 

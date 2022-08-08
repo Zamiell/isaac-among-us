@@ -2,6 +2,7 @@ import { error } from "../error";
 import { getPlayer } from "../game";
 import { sendKilled } from "../sendGame";
 import { ExtraCommandData } from "../types/ExtraCommandData";
+import { Game } from "../types/Game";
 import { PlayerBody } from "../types/PlayerBody";
 import { Role } from "../types/Role";
 import { Socket } from "../types/Socket";
@@ -13,27 +14,12 @@ export function commandKill(
   extraData: ExtraCommandData,
 ): void {
   const { game } = extraData;
-  const { userIDKilled, room, x, y } = data;
 
   if (!validate(socket, data, extraData) || game === undefined) {
     return;
   }
 
-  const playerKilled = getPlayer(userIDKilled, game);
-  if (playerKilled === undefined) {
-    return;
-  }
-
-  playerKilled.alive = false;
-  const body: PlayerBody = {
-    userID: userIDKilled,
-    room,
-    x,
-    y,
-  };
-  game.bodies.push(body);
-
-  sendKilled(game, userIDKilled, room, x, y);
+  kill(game, data);
 }
 
 function validate(
@@ -65,4 +51,24 @@ function validate(
   }
 
   return true;
+}
+
+export function kill(game: Game, data: KillDataToServer): void {
+  const { userIDKilled, room, x, y } = data;
+
+  const playerKilled = getPlayer(userIDKilled, game);
+  if (playerKilled === undefined) {
+    return;
+  }
+
+  playerKilled.alive = false;
+  const body: PlayerBody = {
+    userID: userIDKilled,
+    room,
+    x,
+    y,
+  };
+  game.bodies.push(body);
+
+  sendKilled(game, userIDKilled, room, x, y);
 }

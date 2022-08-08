@@ -33,12 +33,12 @@ import {
   hotkeyFunction1,
   hotkeyFunction2,
 } from "./debug";
+import { SkeldRoom } from "./enums/SkeldRoom";
 import { initFeatures } from "./initFeatures";
 import * as collisionObjects from "./lib/collisionObjects";
 import { disconnect } from "./network/socketClient";
 import { skeldRoomReverseMap } from "./skeldRoomMap";
 import { goToStageAPIRoom } from "./stageAPI";
-import { SkeldRoom } from "./types/SkeldRoom";
 
 main();
 

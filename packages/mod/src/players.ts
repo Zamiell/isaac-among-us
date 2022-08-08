@@ -1,6 +1,6 @@
 import { UDPPositionInterface } from "./constants";
 import g from "./globals";
-import { PlayerData } from "./types/PlayerData";
+import { PlayerData } from "./interfaces/PlayerData";
 import { GameDescriptionPlayer } from "./types/SocketCommands";
 import { getRoomIndexModified } from "./utils";
 

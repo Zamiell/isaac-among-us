@@ -1,3 +1,4 @@
+import { Task } from "./enums/Task";
 import { bombRocks } from "./tasks/bombRocks";
 import { buttonsBehindKeyBlocks } from "./tasks/buttonsBehindKeyBlocks";
 import { collectPennies } from "./tasks/collectPennies";
@@ -18,7 +19,6 @@ import { pushTNTBarrel } from "./tasks/pushTNTBarrel";
 import { walkBetweenSlides } from "./tasks/walkBetweenSlides";
 import { walkBetweenSuctionPitfalls } from "./tasks/walkBetweenSuctionPitfalls";
 import { walkDiagonallyThroughSpikes } from "./tasks/walkDiagonallyThroughSpikes";
-import { Task } from "./types/Task";
 
 export const taskFunctions = new Map<Task, () => void>();
 

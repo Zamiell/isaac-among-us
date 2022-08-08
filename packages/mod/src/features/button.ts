@@ -1,6 +1,8 @@
 import { PressurePlateState, SoundEffect } from "isaac-typescript-definitions";
 import { asNumber, getPlayerCloserThan, sfxManager } from "isaacscript-common";
 import { ButtonSubType } from "../enums/ButtonSubType";
+import { MeetingType } from "../enums/MeetingType";
+import { Task } from "../enums/Task";
 import g from "../globals";
 import { sendTCP } from "../network/send";
 import { goToStageAPIRoom } from "../stageAPI";
@@ -11,9 +13,7 @@ import { identifyPickupsInOrderButtonPressed } from "../tasks/identifyPickupsInO
 import { identifyTrinketButtonPressed } from "../tasks/identifyTrinkets";
 import { pressButtonsWithGrudgeButtonPressed } from "../tasks/pressButtonsWithGrudge";
 import { pushButtonsInOrderButtonPressed } from "../tasks/pushButtonsInOrder";
-import { MeetingType } from "../types/MeetingType";
 import { SocketCommandModToServer } from "../types/SocketCommands";
-import { Task } from "../types/Task";
 import { getButtonAnimationSuffix, TaskButtonData } from "./buttonSubroutines";
 import { taskComplete } from "./taskSubroutines";
 

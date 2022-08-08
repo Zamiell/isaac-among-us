@@ -2,15 +2,15 @@
 
 import { CollectibleType } from "isaac-typescript-definitions";
 import { getScreenCenterPos, itemConfig, sfxManager } from "isaacscript-common";
+import { BlackSpriteState } from "../enums/BlackSpriteState";
+import { CutsceneState } from "../enums/CutsceneState";
+import { Role } from "../enums/Role";
+import { SoundEffectCustom } from "../enums/SoundEffectCustom";
 import g from "../globals";
 import { loadMap } from "../loadMap";
 import { disableMinimapAPI, enableMinimapAPI } from "../minimapAPI";
 import { getOurPlayerIndex } from "../players";
 import { setSpriteOpacity } from "../sprite";
-import { BlackSpriteState } from "../types/BlackSpriteState";
-import { CutsceneState } from "../types/CutsceneState";
-import { Role } from "../types/Role";
-import { SoundEffectCustom } from "../types/SoundEffectCustom";
 import { drawFontText, getRoleText } from "../utils";
 import { FADE_TO_BLACK_FRAMES, setBlackSpriteState } from "./blackSprite";
 import { getMeetingCirclePoints } from "./setupMeeting";

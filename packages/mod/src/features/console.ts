@@ -12,10 +12,10 @@ import {
 import * as chat from "../chat";
 import { chatCommandFunctions } from "../chatCommandFunctions";
 import { MOD_NAME } from "../constants";
+import { HexColors } from "../enums/HexColors";
 import g from "../globals";
 import { sendTCP } from "../network/send";
 import * as socketClient from "../network/socketClient";
-import { Colors } from "../types/Colors";
 import { SocketCommandModToServer } from "../types/SocketCommands";
 import { getScreenPosition } from "../utils";
 import { drawText } from "./drawText";
@@ -242,7 +242,7 @@ function drawConsole() {
 
   const front = inputText.slice(0, inputTextIndex);
   const back = inputText.slice(inputTextIndex);
-  const text = `>${front}${Colors.YELLOW}|${Colors.WHITE}${back}`;
+  const text = `>${front}${HexColors.YELLOW}|${HexColors.WHITE}${back}`;
   const position =
     g.game?.meeting !== null ? CONSOLE_POSITION_LEFT : CONSOLE_POSITION;
   drawText(text, position);

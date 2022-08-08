@@ -1,6 +1,6 @@
 import { hexToKColor } from "isaacscript-common";
+import { COLOR_BYTE, HexColors } from "../enums/HexColors";
 import { fonts } from "../fonts";
-import { Colors, COLOR_BYTE } from "../types/Colors";
 
 export const DEFAULT_OPACITY = 0.75;
 const SIZE_OF_HEX_STRING = 6;
@@ -24,7 +24,7 @@ export function drawText(
     let hexColor: string;
     let textWithoutColor: string;
     if (i === 0) {
-      hexColor = Colors.WHITE.slice(COLOR_BYTE.length);
+      hexColor = HexColors.WHITE.slice(COLOR_BYTE.length);
       textWithoutColor = textSegment;
     } else {
       hexColor = textSegment.slice(0, SIZE_OF_HEX_STRING);

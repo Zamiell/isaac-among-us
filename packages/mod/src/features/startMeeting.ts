@@ -1,10 +1,10 @@
 import { getScreenBottomRightPos, VectorZero } from "isaacscript-common";
+import { BlackSpriteState } from "../enums/BlackSpriteState";
+import { MeetingType } from "../enums/MeetingType";
+import { StartMeetingState } from "../enums/StartMeetingState";
 import g from "../globals";
 import { disableMinimapAPI } from "../minimapAPI";
 import { initSprite } from "../sprite";
-import { BlackSpriteState } from "../types/BlackSpriteState";
-import { MeetingType } from "../types/MeetingType";
-import { StartMeetingState } from "../types/StartMeetingState";
 import { drawFontText } from "../utils";
 import { FADE_TO_BLACK_FRAMES, setBlackSpriteState } from "./blackSprite";
 import { setupMeeting } from "./setupMeeting";

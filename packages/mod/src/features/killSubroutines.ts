@@ -1,6 +1,6 @@
+import { Role } from "../enums/Role";
 import g from "../globals";
 import { getClosestAmongUsPlayer } from "../players";
-import { Role } from "../types/Role";
 import { shouldShowUIButton } from "../ui";
 
 const KILL_DISTANCE = 60;

@@ -1,8 +1,11 @@
-import { SoundEffect } from "isaac-typescript-definitions";
-import { sfxManager, VectorZero } from "isaacscript-common";
+import { PlayerType, SoundEffect } from "isaac-typescript-definitions";
+import { runInNRenderFrames, sfxManager, VectorZero } from "isaacscript-common";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
 import { KilledDataToMod } from "../types/SocketCommands";
+
+/** The death animation is 55 frames long, but we render it in 110 frames. */
+const POST_DEATH_DELAY_RENDER_FRAMES = 110 + 30;
 
 export function commandKilled(data: KilledDataToMod): void {
   if (g.game === null) {
@@ -41,8 +44,15 @@ export function commandKilled(data: KilledDataToMod): void {
     player.Velocity = VectorZero;
     player.ControlsEnabled = false;
     player.Visible = false;
-  } else {
-    // TODO: make other player sprite invisible
+
+    runInNRenderFrames(() => {
+      player.ChangePlayerType(PlayerType.THE_LOST);
+      const sprite = player.GetSprite();
+      sprite.Color = Color(1, 1, 1, 0.5);
+
+      player.ControlsEnabled = true;
+      player.Visible = true;
+    }, POST_DEATH_DELAY_RENDER_FRAMES);
   }
 
   // TODO: CREATE PLAYER SPRITE AND RENDER IT

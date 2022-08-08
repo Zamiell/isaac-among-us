@@ -5,11 +5,13 @@ import { commandDebug } from "./commands/debug";
 import { commandGameList } from "./commands/gameList";
 import { commandJoin } from "./commands/join";
 import { commandKill } from "./commands/kill";
+import { commandKillMe } from "./commands/killMe";
 import { commandLeave } from "./commands/leave";
 import { commandLogin } from "./commands/login";
 import { commandMeeting } from "./commands/meeting";
 import { commandPing } from "./commands/ping";
 import { commandReconnect } from "./commands/reconnect";
+import { commandRevive } from "./commands/revive";
 import { commandRoom } from "./commands/room";
 import { commandStart } from "./commands/start";
 import { commandTaskComplete } from "./commands/taskComplete";
@@ -47,5 +49,7 @@ export const commandMap: CommandMap = {
   [SocketCommandModToServer.VOTE]: commandVote,
   [SocketCommandModToServer.TASK_COMPLETE]: commandTaskComplete,
   [SocketCommandModToServer.TERMINATE]: commandTerminate,
+  [SocketCommandModToServer.REVIVE]: commandRevive,
+  [SocketCommandModToServer.KILL_ME]: commandKillMe,
   [SocketCommandModToServer.DEBUG]: commandDebug,
 };

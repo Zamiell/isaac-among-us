@@ -8,13 +8,13 @@ import {
   repeat,
   sfxManager,
 } from "isaacscript-common";
+import { Task } from "../enums/Task";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { resetAllButtons } from "../features/buttonSubroutines";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
 import { initGlowingItemSprite } from "../sprite";
-import { Task } from "../types/Task";
 import { drawFontText, movePlayerToGridIndex } from "../utils";
 
 const THIS_TASK = Task.SHORT_IDENTIFY_COLLECTIBLES;

@@ -5,10 +5,10 @@ import {
   SlotVariant,
 } from "isaac-typescript-definitions";
 import { getSlots, removeAllMatchingEntities } from "isaacscript-common";
+import { Task } from "../enums/Task";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
-import { Task } from "../types/Task";
 import { movePlayerToGridIndex, spawnEntity } from "../utils";
 
 const THIS_TASK = Task.LONG_LOAD_SLOT_MACHINES;

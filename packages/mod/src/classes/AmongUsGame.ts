@@ -1,16 +1,16 @@
-import { CutsceneState } from "./CutsceneState";
-import { EndMeetingState } from "./EndMeetingState";
-import { Meeting } from "./Meeting";
-import { MeetingResolution } from "./MeetingResolution";
-import { PlayerBody } from "./PlayerBody";
-import { PlayerData } from "./PlayerData";
-import { PlayerTypeAllowed } from "./PlayerTypeAllowed";
-import { Role } from "./Role";
-import { GameDescriptionPlayer } from "./SocketCommands";
-import { StartMeetingState } from "./StartMeetingState";
-import { Task } from "./Task";
-import { TaskList } from "./TaskList";
-import { TaskType } from "./TaskType";
+import { CutsceneState } from "../enums/CutsceneState";
+import { EndMeetingState } from "../enums/EndMeetingState";
+import { MeetingResolution } from "../enums/MeetingResolution";
+import { PlayerTypeAllowed } from "../enums/PlayerTypeAllowed";
+import { Role } from "../enums/Role";
+import { StartMeetingState } from "../enums/StartMeetingState";
+import { Task } from "../enums/Task";
+import { TaskType } from "../enums/TaskType";
+import { Meeting } from "../interfaces/Meeting";
+import { PlayerBody } from "../interfaces/PlayerBody";
+import { PlayerData } from "../interfaces/PlayerData";
+import { GameDescriptionPlayer } from "../types/SocketCommands";
+import { TaskList } from "../types/TaskList";
 
 export class AmongUsGame {
   id: number;

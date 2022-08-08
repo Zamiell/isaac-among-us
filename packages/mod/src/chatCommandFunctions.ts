@@ -7,6 +7,7 @@ import g from "./globals";
 import { sendTCP } from "./network/send";
 import * as socketClient from "./network/socketClient";
 import { getOurPlayerIndex } from "./players";
+import { getSkeldRoom } from "./stageAPI";
 import { SocketCommandModToServer } from "./types/SocketCommands";
 import { amOwner, restart } from "./utils";
 
@@ -84,6 +85,27 @@ chatCommandFunctions.set("join", (args: string[]) => {
   });
 });
 
+chatCommandFunctions.set("killme", (_args: string[]) => {
+  if (g.game === null || g.userID === null) {
+    return;
+  }
+
+  const room = getSkeldRoom();
+  if (room === undefined) {
+    return;
+  }
+
+  const player = Isaac.GetPlayer();
+
+  sendTCP(SocketCommandModToServer.KILL_ME, {
+    gameID: g.game.id,
+    userIDKilled: g.userID,
+    room,
+    x: player.Position.X,
+    y: player.Position.Y,
+  });
+});
+
 chatCommandFunctions.set("leave", (_args: string[]) => {
   if (g.game === null) {
     chat.addLocal("You are not in a game, so you cannot leave.");
@@ -99,6 +121,16 @@ chatCommandFunctions.set("password", passwordChatCommand);
 
 chatCommandFunctions.set("restart", (_args: string[]) => {
   restart();
+});
+
+chatCommandFunctions.set("revive", (_args: string[]) => {
+  if (g.game === null) {
+    return;
+  }
+
+  sendTCP(SocketCommandModToServer.REVIVE, {
+    gameID: g.game.id,
+  });
 });
 
 chatCommandFunctions.set("start", (_args: string[]) => {

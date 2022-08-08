@@ -3,12 +3,12 @@ import {
   DISTANCE_OF_GRID_TILE,
   getCircleDiscretizedPoints,
 } from "isaacscript-common";
+import { SkeldRoom } from "../enums/SkeldRoom";
 import g from "../globals";
 import { setMinimapAPIEnabled } from "../minimapAPI";
 import { getOurPlayerIndex } from "../players";
 import { CENTER_TABLE_GRID_INDEX } from "../rooms/cafeteria";
 import { getSkeldRoom, goToStageAPIRoom } from "../stageAPI";
-import { SkeldRoom } from "../types/SkeldRoom";
 import { removeEmergencyButton, spawnEmergencyButton } from "./emergencyButton";
 
 // In order for the players to be properly centered, we must offset the players downwards slightly.

@@ -1,5 +1,5 @@
+import { MeetingPhase } from "../enums/MeetingPhase";
 import g from "../globals";
-import { MeetingPhase } from "../types/MeetingPhase";
 import { StartVotingDataToMod } from "../types/SocketCommands";
 
 export function commandStartVoting(data: StartVotingDataToMod): void {

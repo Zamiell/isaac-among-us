@@ -2,9 +2,9 @@ import { EntityType, PressurePlateState } from "isaac-typescript-definitions";
 import { taskDescriptions } from "../constants";
 import { ButtonSubType } from "../enums/ButtonSubType";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
+import { Task } from "../enums/Task";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
-import { Task } from "../types/Task";
 import { spawnEntity } from "../utils";
 import { getButtonAnimationSuffix, TaskButtonData } from "./buttonSubroutines";
 

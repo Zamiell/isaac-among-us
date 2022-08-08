@@ -12,10 +12,10 @@ Bugs:
 
 - emergency button should not be push-able for X seconds after the game start
 - change characters
+- animation for when someone talks in meeting
 - ctrl+shift+f TODO
 
 Future:
 - rebuild walls manually on every room entrance
   (but first find a way to repro the bug where walls are randomly in the center of a 2x1 room?)
-- add timing based task like the circles?
 - add task like the vials where you have to wait 60 seconds (real task is 60 seconds)

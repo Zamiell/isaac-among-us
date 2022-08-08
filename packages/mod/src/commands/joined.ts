@@ -1,6 +1,6 @@
 import * as chat from "../chat";
+import { AmongUsGame } from "../classes/AmongUsGame";
 import g from "../globals";
-import { AmongUsGame } from "../types/AmongUsGame";
 import { JoinedDataToMod } from "../types/SocketCommands";
 import { restart } from "../utils";
 

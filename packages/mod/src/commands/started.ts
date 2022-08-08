@@ -1,7 +1,7 @@
 import * as chat from "../chat";
+import { Role } from "../enums/Role";
 import * as cutscene from "../features/cutscene";
 import g from "../globals";
-import { Role } from "../types/Role";
 import { StartedDataToMod } from "../types/SocketCommands";
 
 export function commandStarted(data: StartedDataToMod): void {

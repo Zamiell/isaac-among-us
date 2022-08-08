@@ -1,9 +1,9 @@
 import { getEffects, removeAllEffects } from "isaacscript-common";
 import { ButtonSubType } from "../enums/ButtonSubType";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
+import { SkeldRoom } from "../enums/SkeldRoom";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
-import { SkeldRoom } from "../types/SkeldRoom";
 import { setButtonState, spawnButton } from "./buttonSpawn";
 
 const EMERGENCY_BUTTON_GRID_INDEX = 265;

@@ -1,4 +1,4 @@
-import { SkeldRoom } from "./types/SkeldRoom";
+import { SkeldRoom } from "./enums/SkeldRoom";
 
 export const skeldRoomMap = new Map<string, SkeldRoom>([
   ["Cafeteria", SkeldRoom.CAFETERIA],

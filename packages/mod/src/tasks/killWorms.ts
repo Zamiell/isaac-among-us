@@ -1,9 +1,9 @@
 import { EntityType } from "isaac-typescript-definitions";
 import { VectorZero } from "isaacscript-common";
+import { Task } from "../enums/Task";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
-import { Task } from "../types/Task";
 import { enableShooting, movePlayerToGridIndex } from "../utils";
 
 const THIS_TASK = Task.LONG_KILL_WORMS;

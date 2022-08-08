@@ -4,11 +4,11 @@ import {
   RoomTransitionAnim,
 } from "isaac-typescript-definitions";
 import { game } from "isaacscript-common";
+import { SkeldRoom } from "./enums/SkeldRoom";
 import { sendRoom } from "./features/sendGameEvents";
 import g from "./globals";
 import { skeldRoomMap } from "./skeldRoomMap";
 import { getStageAPIRoomName } from "./stageAPISubroutines";
-import { SkeldRoom } from "./types/SkeldRoom";
 
 const BACKDROP_MAP: ReadonlyMap<SkeldRoom, string> = new Map([
   [SkeldRoom.CAFETERIA, "cafeteria"],

@@ -1,8 +1,8 @@
 import { IS_DEV } from "./constants";
+import { SkeldRoom } from "./enums/SkeldRoom";
 import { startAutoLogin } from "./features/autoLogin";
 import { startMeeting } from "./features/startMeeting";
 import g from "./globals";
-import { SkeldRoom } from "./types/SkeldRoom";
 
 /** From the "debug" console command. */
 export function debugFunction1(): void {

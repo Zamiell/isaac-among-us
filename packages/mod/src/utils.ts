@@ -12,9 +12,9 @@ import {
   setBlindfold,
   VectorZero,
 } from "isaacscript-common";
+import { Role } from "./enums/Role";
 import { fonts } from "./fonts";
 import g from "./globals";
-import { Role } from "./types/Role";
 
 export function amOwner(): boolean {
   if (g.game === null) {

@@ -10,11 +10,11 @@ import {
   sfxManager,
 } from "isaacscript-common";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
+import { Task } from "../enums/Task";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
-import { Task } from "../types/Task";
 import { drawFontText, movePlayerToGridIndex } from "../utils";
 
 const THIS_TASK = Task.LONG_IDENTIFY_PICKUPS_IN_ORDER;

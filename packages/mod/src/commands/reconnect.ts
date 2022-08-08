@@ -1,4 +1,7 @@
 import { game } from "isaacscript-common";
+import { AmongUsGame } from "../classes/AmongUsGame";
+import { Role } from "../enums/Role";
+import { SkeldRoom } from "../enums/SkeldRoom";
 import {
   disableSendingEvents,
   enableSendingEvents,
@@ -8,9 +11,6 @@ import g from "../globals";
 import { loadMap } from "../loadMap";
 import { skeldRoomReverseMap } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
-import { AmongUsGame } from "../types/AmongUsGame";
-import { Role } from "../types/Role";
-import { SkeldRoom } from "../types/SkeldRoom";
 import { ReconnectDataToMod } from "../types/SocketCommands";
 
 export function commandReconnect(data: ReconnectDataToMod): void {

@@ -107,7 +107,8 @@ function drawOtherPlayersBodies() {
 
     let deathFrame = DEATH_ANIMATION_FINAL_FRAME;
     if (body.renderFrameKilled !== undefined) {
-      deathFrame = isaacFrameCount - body.renderFrameKilled;
+      // We divide it by two to slow it down.
+      deathFrame = Math.floor((isaacFrameCount - body.renderFrameKilled) / 2);
     }
 
     if (deathFrame < 0 || deathFrame > DEATH_ANIMATION_FINAL_FRAME) {
@@ -262,7 +263,9 @@ function setMultiplayerAnimation(
     sprite.SetOverlayFrame(overlayAnimation, overlayAnimationFrame);
   }
 
-  if (animation === "Death") {
+  if (animation === "Death" && g.game !== null && g.game.meeting !== null) {
+    // Having a sprite offset looks stupid when the death animation first occurs, so we only want it
+    // to happen in the meeting.
     sprite.Offset = DEATH_SPRITE_OFFSET;
   } else {
     sprite.Offset = VectorZero;
