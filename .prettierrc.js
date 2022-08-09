@@ -20,16 +20,23 @@ module.exports = {
   // https://github.com/prettier/prettier/issues/5708
   overrides: [
     {
-      files: [
-        "**/.vscode/*.json",
-        "**/tsconfig.json",
-        "**/tsconfig.*.json",
-        "**/typedoc.json",
-      ],
+      files: ["**/.vscode/*.json", "**/tsconfig.json", "**/tsconfig.*.json"],
       options: {
         parser: "json5",
         quoteProps: "preserve",
       },
     },
+    {
+      files: ["**/*.xml"],
+      options: {
+        printWidth: 1000000,
+      },
+    },
   ],
+
+  // Allow proper formatting of XML files:
+  // https://github.com/prettier/plugin-xml#configuration
+  // The default is "struct". However, whitespace cannot be reformatted unless this is set to
+  // "ignore".
+  xmlWhitespaceSensitivity: "ignore",
 };

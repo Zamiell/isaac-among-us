@@ -1,8 +1,8 @@
 <sounds root="sfx/">
-	<sound name="Emergency Meeting">
-		<sample weight="1" path="emergency-meeting.wav" />
-	</sound>
-	<sound name="Role Reveal">
-		<sample weight="1" path="role-reveal.wav" />
-	</sound>
+  <sound name="Emergency Meeting">
+    <sample weight="1" path="emergency-meeting.wav" />
+  </sound>
+  <sound name="Role Reveal">
+    <sample weight="1" path="role-reveal.wav" />
+  </sound>
 </sounds>

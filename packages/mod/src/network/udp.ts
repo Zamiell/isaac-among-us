@@ -12,9 +12,9 @@ import {
   UDP_POSITION_FIELDS,
 } from "../constants";
 import g from "../globals";
+import * as struct from "../lib/struct";
 import { getSkeldRoom } from "../stageAPI";
 import { sendUDP } from "./send";
-import * as struct from "./struct";
 
 let lastBeaconRenderFrame: int | null = null;
 

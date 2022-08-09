@@ -5,7 +5,7 @@ import {
   UDP_POSITION_DATA_FORMAT,
   UDP_POSITION_FIELDS,
 } from "../constants";
-import * as struct from "./struct";
+import * as struct from "../lib/struct";
 
 const DATA_SEPARATOR = " ";
 const DEBUG = false;

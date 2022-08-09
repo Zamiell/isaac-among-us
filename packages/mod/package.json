@@ -6,6 +6,7 @@
   "author": "Zamiell",
   "dependencies": {
     "@types/node": "^18.6.5",
+    "common": "file:../common",
     "isaac-typescript-definitions": "^3.5.0",
     "isaacscript": "^2.14.0",
     "isaacscript-common": "^7.16.3",
