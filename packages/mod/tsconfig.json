@@ -9,8 +9,10 @@
 
   // https://www.typescriptlang.org/docs/handbook/compiler-options.html
   "compilerOptions": {
+    "rootDir": "../..",
+    "baseUrl": "../..",
     "paths": {
-      "common": ["../common/src/index.ts"],
+      "common": ["./packages/common/src/index.ts"],
     },
   },
 
