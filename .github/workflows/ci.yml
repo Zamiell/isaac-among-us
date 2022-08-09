@@ -14,65 +14,19 @@ jobs:
         with:
           # The default version is 14. The ESLint config requires Node 16 to work properly.
           node-version: "16"
-          #cache: "yarn"
+          cache: "yarn"
 
-      # Root (linting)
       - name: Retrieve the cached "node_modules" directory (main)
         uses: actions/cache@v3
         id: node-cache-main
         with:
           path: node_modules
-          #key: node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
-          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
       - name: Install dependencies (main)
         if: steps.node-cache-main.outputs.cache-hit != 'true'
-        #run: yarn install --frozen-lockfile
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
-      # Mod
-      - name: Retrieve the cached "node_modules" directory (mod)
-        uses: actions/cache@v3
-        id: node-cache-mod
-        with:
-          path: packages/mod/node_modules
-          #key: node-modules-mod-${{ runner.os }}-${{ hashFiles('packages/mod/yarn.lock') }}
-          key: node-modules-mod-${{ runner.os }}-${{ hashFiles('packages/mod/package-lock.json') }}
-
-      - name: Install dependencies (mod)
-        if: steps.node-cache-mod.outputs.cache-hit != 'true'
-        #run: cd packages/mod && yarn install --frozen-lockfile
-        run: cd packages/mod && npm ci
-
-      # Server
-      - name: Retrieve the cached "node_modules" directory (server)
-        uses: actions/cache@v3
-        id: node-cache-server
-        with:
-          path: packages/server/node_modules
-          #key: node-modules-server-${{ runner.os }}-${{ hashFiles('packages/server/yarn.lock') }}
-          key: node-modules-server-${{ runner.os }}-${{ hashFiles('packages/server/package-lock.json') }}
-
-      - name: Install dependencies (server)
-        if: steps.node-cache-server.outputs.cache-hit != 'true'
-        #run: cd packages/server && yarn install --frozen-lockfile
-        run: cd packages/server && npm ci
-
-      # Common
-      - name: Retrieve the cached "node_modules" directory (common)
-        uses: actions/cache@v3
-        id: node-cache-common
-        with:
-          path: packages/common/node_modules
-          #key: node-modules-common-${{ runner.os }}-${{ hashFiles('packages/common/yarn.lock') }}
-          key: node-modules-common-${{ runner.os }}-${{ hashFiles('packages/common/package-lock.json') }}
-
-      - name: Install dependencies (common)
-        if: steps.node-cache-common.outputs.cache-hit != 'true'
-        #run: cd packages/common && yarn install --frozen-lockfile
-        run: cd packages/common && npm ci
-
-      # Done install deps
       - name: Test to see if the project compiles
         run: bash build.sh
 
