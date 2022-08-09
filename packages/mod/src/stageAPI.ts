@@ -5,6 +5,7 @@ import {
   RoomTransitionAnim,
 } from "isaac-typescript-definitions";
 import { game } from "isaacscript-common";
+import { inLobby } from "./features/lobby";
 import { sendRoom } from "./features/sendGameEvents";
 import g from "./globals";
 import { skeldRoomMap } from "./skeldRoomMap";
@@ -33,6 +34,10 @@ export function getStageAPIRoomMapID(skeldRoom: SkeldRoom): int | undefined {
 }
 
 export function getSkeldRoom(): SkeldRoom | undefined {
+  if (inLobby()) {
+    return SkeldRoom.LOBBY;
+  }
+
   const roomName = getStageAPIRoomName();
   const skeldRoom = skeldRoomMap.get(roomName);
   return skeldRoom === undefined ? undefined : skeldRoom;
