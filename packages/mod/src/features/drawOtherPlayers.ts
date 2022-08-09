@@ -206,7 +206,7 @@ function getMultiplayerEntity(userID: int): Entity {
   return entityRef.Entity;
 }
 
-export function spawnPlayerEffect(): EntityEffect {
+function spawnPlayerEffect(): EntityEffect {
   const playerEffect = Isaac.Spawn(
     EntityType.EFFECT,
     EffectVariantCustom.MULTIPLAYER_PLAYER,

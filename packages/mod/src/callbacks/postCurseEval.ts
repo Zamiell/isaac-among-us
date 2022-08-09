@@ -5,6 +5,6 @@ export function init(mod: Mod): void {
   mod.AddCallback(ModCallback.POST_CURSE_EVAL, main);
 }
 
-export function main(): BitFlags<LevelCurse> {
+function main(): BitFlags<LevelCurse> | undefined {
   return bitFlags(LevelCurse.NONE);
 }

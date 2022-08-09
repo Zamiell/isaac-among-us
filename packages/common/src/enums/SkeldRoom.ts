@@ -16,7 +16,7 @@ export enum SkeldRoom {
   ELECTRICAL_HALL,
   ELECTRICAL, // 2
   WEAPONS, // 2
-  O2_HALL, // eslint-disable-line isaacscript/enum-member-number-separation
+  O2_HALL,
   O2, // 1
   NAVIGATION, // 1
   NAVIGATION_HALL,
@@ -24,5 +24,5 @@ export enum SkeldRoom {
   COMMUNICATION_HALL,
   COMMUNICATION, // 2
 
-  TASK = TASK_ROOM_VARIANT,
+  TASK = TASK_ROOM_VARIANT, // eslint-disable-line @typescript-eslint/prefer-literal-enum-member
 }

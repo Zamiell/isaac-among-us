@@ -169,4 +169,4 @@ export const TASK_DESCRIPTIONS: { [Value in Task]: TaskDescription } = {
     gridIndex: 61,
     returnGridIndex: 63,
   },
-};
+} as const;

@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file */
+
 import { MeetingResolution } from "../enums/MeetingResolution";
 import { MeetingType } from "../enums/MeetingType";
 import { PlayerTypeAllowed } from "../enums/PlayerTypeAllowed";

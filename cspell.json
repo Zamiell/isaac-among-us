@@ -7,20 +7,27 @@
     "files": [
         "**"
     ],
+    "enableFiletypes": [
+        "*"
+    ],
     "ignorePaths": [
         "*.anm2",
+        "*.lua",
         "*.pyc",
         "*.wav",
         ".git/**",
         "dist/**",
         "node_modules/**",
-        "mod/**/*.anm2",
-        "mod/main.lua",
-        "mod/resources/rooms/**"
+        "migration.sql",
+        "mod/main.lua"
     ],
     "words": [
+        "autoincrement",
+        "basementrenovator",
         "COMMS",
         "Cucco",
+        "datasource",
+        "datetime",
         "floatle",
         "gamelist",
         "isaacracing",
