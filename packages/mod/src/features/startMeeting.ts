@@ -64,7 +64,6 @@ function postRenderFadingToGame() {
   if (g.game !== null && hasFadeFinished()) {
     setState(StartMeetingState.DISABLED);
     setBlackSpriteState(BlackSpriteState.DISABLED);
-    // TODO: start meeting countdown?
   }
 }
 

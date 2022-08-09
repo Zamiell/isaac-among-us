@@ -1,6 +1,6 @@
 // Multiplayer players are represented by custom effects with a variant of
-// EffectVariantCustom.MULTIPLAYER_PLAYER. We don't use a real player (entity 1.0) since the sprite
-// is not mutable (it resets on every render frame).
+// `EffectVariantCustom.MULTIPLAYER_PLAYER`. We don't use a real player (entity 1.0) since the
+// sprite is not mutable (it resets on every render frame).
 
 import { EntityType } from "isaac-typescript-definitions";
 import {

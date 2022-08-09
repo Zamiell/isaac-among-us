@@ -9,7 +9,9 @@ export function connectChatCommand(autoLogin: boolean): void {
   }
 
   if (!socketClient.connect()) {
-    chat.addLocal(`Failed to connect to the ${MOD_NAME} server.`);
+    chat.addLocal(
+      `Failed to connect to the ${MOD_NAME} server. (Either your internet is down or the server is down.)`,
+    );
     return;
   }
 
