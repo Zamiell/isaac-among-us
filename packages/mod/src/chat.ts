@@ -1,5 +1,5 @@
 import { ChatDataToMod } from "common";
-import { log } from "isaacscript-common";
+import { log, logTable } from "isaacscript-common";
 import { ChatMessage } from "./interfaces/ChatMessage";
 import { getFormattedTime } from "./network/sandbox";
 
@@ -29,4 +29,11 @@ export function addLocal(msg: string): void {
 
 export function getAll(): ChatMessage[] {
   return [...chatMessages];
+}
+
+export function logAllChatMessages(): void {
+  chatMessages.forEach((chatMessage, i) => {
+    log(`Chat message ${i}:`);
+    logTable(chatMessage);
+  });
 }
