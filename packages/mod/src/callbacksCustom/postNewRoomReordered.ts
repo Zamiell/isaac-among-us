@@ -41,7 +41,7 @@ function checkSetPlayerToGhostForm() {
   }
 
   const room = getSkeldRoom();
-  if (room === SkeldRoom.TASK) {
+  if (room === SkeldRoom.LOBBY || room === SkeldRoom.TASK) {
     return;
   }
 
