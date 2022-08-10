@@ -31,6 +31,7 @@ export function getAllChat(): ChatMessage[] {
   return [...chatMessages];
 }
 
+// ts-prune-ignore-next
 export function logAllChatMessages(): void {
   chatMessages.forEach((chatMessage, i) => {
     log(`Chat message ${i}:`);

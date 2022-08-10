@@ -139,11 +139,6 @@ export function spawnEntity(
   return entity;
 }
 
-// ts-prune-ignore-next
-export function traceback(): void {
-  print(debug.traceback());
-}
-
 export function updatePlayerStats(): void {
   const player = Isaac.GetPlayer();
   player.AddCacheFlags(CacheFlag.ALL);

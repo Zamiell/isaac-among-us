@@ -1,4 +1,5 @@
 import { IS_DEV, SkeldRoom } from "common";
+import { logAllChatMessages } from "./chat";
 import { startAutoLogin } from "./features/autoLogin";
 import { startMeeting } from "./features/startMeeting";
 import g from "./globals";
@@ -11,6 +12,8 @@ export function debugFunction1(): void {
   if (g.game === null) {
     return;
   }
+
+  logAllChatMessages();
 }
 
 /** From the "d2" console command. */
