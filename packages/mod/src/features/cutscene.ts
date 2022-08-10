@@ -72,6 +72,12 @@ function postRenderFadingToBlack() {
 function setStartingPosition() {
   const circlePoints = getMeetingCirclePoints();
   const ourPlayerIndex = getOurPlayerIndex();
+  if (ourPlayerIndex === undefined) {
+    error(
+      "Failed to get our player index for the setting the starting cutscene position.",
+    );
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const ourPosition = circlePoints[ourPlayerIndex]!;
   const player = Isaac.GetPlayer();

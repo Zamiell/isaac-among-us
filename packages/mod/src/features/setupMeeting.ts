@@ -40,6 +40,12 @@ function enablePlayer(enable: boolean) {
   const room = game.GetRoom();
   const centerPos = room.GetGridPosition(CENTER_TABLE_GRID_INDEX);
   const ourPlayerIndex = getOurPlayerIndex();
+  if (ourPlayerIndex === undefined) {
+    error(
+      "Failed to get our player index when enabling the player after the meeting.",
+    );
+  }
+
   const circlePoints = getMeetingCirclePoints();
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const endMeetingPos = circlePoints[ourPlayerIndex]!;

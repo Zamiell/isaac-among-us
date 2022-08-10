@@ -6,7 +6,7 @@ import { getSkeldRoom } from "./stageAPI";
 
 export function getClosestAmongUsPlayer(): PlayerData | undefined {
   if (g.game === null) {
-    error("Failed to get the closest player since the game was null.");
+    return undefined;
   }
 
   const player = Isaac.GetPlayer();
@@ -37,35 +37,35 @@ export function getClosestAmongUsPlayer(): PlayerData | undefined {
   return closestPlayer;
 }
 
-export function getOurPlayer(): GameDescriptionPlayer {
+export function getOurPlayer(): GameDescriptionPlayer | undefined {
   if (g.game === null) {
-    error("Failed to get our player since we are not in a game.");
+    return undefined;
   }
 
   if (g.userID === null) {
-    error("Failed to get our player since our user ID is null.");
+    return undefined;
   }
 
   const player = g.game.getPlayerFromUserID(g.userID);
   if (player === undefined) {
-    error(`Failed to find a player with our user ID: ${g.userID}`);
+    return undefined;
   }
 
   return player;
 }
 
-export function getOurPlayerIndex(): int {
+export function getOurPlayerIndex(): int | undefined {
   if (g.game === null) {
-    error("Failed to get our player since we are not in a game.");
+    return undefined;
   }
 
   if (g.userID === null) {
-    error("Failed to get our player since our user ID is null.");
+    return undefined;
   }
 
   const playerIndex = g.game.getPlayerIndexFromUserID(g.userID);
   if (playerIndex === undefined) {
-    error(`Failed to find a player index with our user ID: ${g.userID}`);
+    return undefined;
   }
 
   return playerIndex;

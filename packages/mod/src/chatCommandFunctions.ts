@@ -192,6 +192,10 @@ chatCommandFunctions.set("vote", (args: string[]) => {
   }
 
   const ourPlayerIndex = getOurPlayerIndex();
+  if (ourPlayerIndex === undefined) {
+    error('Failed to get our player index for the "vote" command.');
+  }
+
   const ourPreviousVote = g.game.meeting.votes[ourPlayerIndex];
   if (ourPreviousVote !== NOT_VOTED_YET) {
     chat.addLocal("You have already voted.");
@@ -227,6 +231,10 @@ chatCommandFunctions.set("voteskip", (_args: string[]) => {
   }
 
   const ourPlayerIndex = getOurPlayerIndex();
+  if (ourPlayerIndex === undefined) {
+    error('Failed to get our player index for the "voteskip" command.');
+  }
+
   const ourPreviousVote = g.game.meeting.votes[ourPlayerIndex];
   if (ourPreviousVote !== NOT_VOTED_YET) {
     chat.addLocal("You have already voted.");
