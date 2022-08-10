@@ -5,7 +5,6 @@
 import { EntityType } from "isaac-typescript-definitions";
 import {
   asNumber,
-  getRoomGridIndex,
   RENDER_FRAMES_PER_SECOND,
   VectorZero,
 } from "isaacscript-common";
@@ -99,10 +98,10 @@ function drawOtherPlayersBodies() {
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
-  const roomGridIndex = getRoomGridIndex();
+  const room = getSkeldRoom();
 
   for (const body of g.game.bodies) {
-    if (body.room !== Math.abs(roomGridIndex)) {
+    if (body.room !== room) {
       continue;
     }
 
