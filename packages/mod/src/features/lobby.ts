@@ -1,4 +1,9 @@
-import { GridRoom, StageID, StageType } from "isaac-typescript-definitions";
+import {
+  BackdropType,
+  GridRoom,
+  StageID,
+  StageType,
+} from "isaac-typescript-definitions";
 import {
   asNumber,
   forceNewLevelCallback,
@@ -11,6 +16,7 @@ import {
   getRoomVariant,
   removeAllDoors,
   removeEntities,
+  setBackdrop,
 } from "isaacscript-common";
 import g from "../globals";
 import { disableMinimapAPI } from "../minimapAPI";
@@ -104,6 +110,8 @@ function setupLobby() {
   }
 
   spawnEntities();
+
+  setBackdrop(BackdropType.DARK_ROOM);
 }
 
 function spawnEntities() {
