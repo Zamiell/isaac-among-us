@@ -11,8 +11,6 @@ export function debugFunction1(): void {
   if (g.game === null) {
     return;
   }
-
-  g.game.logBodies();
 }
 
 /** From the "d2" console command. */

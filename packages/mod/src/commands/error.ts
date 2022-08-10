@@ -1,6 +1,6 @@
 import { ErrorDataToMod } from "common";
-import * as chat from "../chat";
+import { addLocalChat } from "../chat";
 
 export function commandError(data: ErrorDataToMod): void {
-  chat.addLocal(`Error: ${data.msg}`);
+  addLocalChat(`Error: ${data.msg}`);
 }

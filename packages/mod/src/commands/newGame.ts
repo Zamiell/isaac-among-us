@@ -1,5 +1,5 @@
 import { NewGameDataToMod } from "common";
-import * as chat from "../chat";
+import { addLocalChat } from "../chat";
 import g from "../globals";
 
 export function commandNewGame(data: NewGameDataToMod): void {
@@ -8,5 +8,5 @@ export function commandNewGame(data: NewGameDataToMod): void {
     return;
   }
 
-  chat.addLocal(`${data.creator} created a new game: ${data.name}`);
+  addLocalChat(`${data.creator} created a new game: ${data.name}`);
 }

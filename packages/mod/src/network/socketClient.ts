@@ -1,6 +1,6 @@
 import { TCP_PORT, UDP_PORT } from "common";
 import { log } from "isaacscript-common";
-import * as chat from "../chat";
+import { addLocalChat } from "../chat";
 import {
   REMOTE_HOSTNAME,
   SOCKET_CLIENT_RETURN_SUCCESS,
@@ -104,7 +104,7 @@ export function disconnect(): void {
   g.userID = null;
   g.username = null;
 
-  chat.addLocal("Disconnected!");
+  addLocalChat("Disconnected!");
   restart();
   setBlackSpriteState(BlackSpriteState.DISABLED);
 }

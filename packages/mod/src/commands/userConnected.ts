@@ -1,5 +1,5 @@
 import { UserConnectedDataToMod } from "common";
-import * as chat from "../chat";
+import { addLocalChat } from "../chat";
 import g from "../globals";
 
 export function commandUserConnected(data: UserConnectedDataToMod): void {
@@ -14,5 +14,5 @@ export function commandUserConnected(data: UserConnectedDataToMod): void {
   }
 
   const verb = data.connected ? "connected" : "disconnected";
-  chat.addLocal(`User ${verb}: ${data.username}`);
+  addLocalChat(`User ${verb}: ${data.username}`);
 }

@@ -10,7 +10,7 @@ import {
   RENDER_FRAMES_PER_SECOND,
   saveDataManager,
 } from "isaacscript-common";
-import * as chat from "../chat";
+import { addLocalChat } from "../chat";
 import { chatCommandFunctions } from "../chatCommandFunctions";
 import { MOD_NAME } from "../constants";
 import { HexColors } from "../enums/HexColors";
@@ -182,7 +182,7 @@ function close(execute = true) {
 function executeChatCommand(msg: string) {
   if (!msg.startsWith(COMMAND_PREFIX)) {
     if (g.game === null) {
-      chat.addLocal("You must be in a game to chat with other players.");
+      addLocalChat("You must be in a game to chat with other players.");
       return;
     }
 
@@ -205,13 +205,13 @@ function executeChatCommand(msg: string) {
 
   const chatCommandFunction = chatCommandFunctions.get(lowercaseCommand);
   if (chatCommandFunction === undefined) {
-    chat.addLocal(`Unknown command: ${command}`);
+    addLocalChat(`Unknown command: ${command}`);
     return;
   }
 
   const onlineCommand = !OFFLINE_COMMANDS.has(lowercaseCommand);
   if (onlineCommand && !socketClient.isConnected()) {
-    chat.addLocal(
+    addLocalChat(
       `You can only perform this command when connected to the ${MOD_NAME} server.`,
     );
     return;

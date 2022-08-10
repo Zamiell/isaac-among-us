@@ -1,5 +1,5 @@
 import { NOT_VOTED_YET, SocketCommandModToServer } from "common";
-import * as chat from "./chat";
+import { addLocalChat } from "./chat";
 import { connectChatCommand } from "./chatCommands/connect";
 import { passwordChatCommand } from "./chatCommands/password";
 import { usernameChatCommand } from "./chatCommands/username";
@@ -18,7 +18,7 @@ chatCommandFunctions.set("connect", () => {
 
 chatCommandFunctions.set("create", (args: string[]) => {
   if (args.length === 0) {
-    chat.addLocal(
+    addLocalChat(
       'You must provide a game name. (e.g. "/create Alice\'s game")',
     );
     return;
@@ -31,14 +31,14 @@ chatCommandFunctions.set("create", (args: string[]) => {
 });
 
 chatCommandFunctions.set("credits", (_args: string[]) => {
-  chat.addLocal(
+  addLocalChat(
     "The Among Us Mod was made by Zamiel. It makes use of DeadInfinity's StageAPI library, Sentinel's collision library, and Somdudewillson's stage backdrops; special thanks goes to them. Thanks also goes to JSG, im_tem, Wofsauge, and AgentCucco for providing technical assistance.",
   );
 });
 
 chatCommandFunctions.set("debug", (_args: string[]) => {
   if (g.game === null) {
-    chat.addLocal("You must be in a game to do that.");
+    addLocalChat("You must be in a game to do that.");
     return;
   }
 
@@ -53,7 +53,7 @@ chatCommandFunctions.set("disconnect", (_args: string[]) => {
 
 chatCommandFunctions.set("echo", (args: string[]) => {
   const text = args.join(" ");
-  chat.addLocal(text);
+  addLocalChat(text);
 });
 
 chatCommandFunctions.set("gamelist", (_args: string[]) => {
@@ -61,19 +61,19 @@ chatCommandFunctions.set("gamelist", (_args: string[]) => {
 });
 
 chatCommandFunctions.set("help", (_args: string[]) => {
-  chat.addLocal('To connect to the server, use the "/connect" command.');
-  chat.addLocal("Hint: You can use tab to auto-complete commands.");
+  addLocalChat('To connect to the server, use the "/connect" command.');
+  addLocalChat("Hint: You can use tab to auto-complete commands.");
   g.welcomeNotificationEnabled = false;
 });
 
 chatCommandFunctions.set("join", (args: string[]) => {
   if (args.length === 0) {
-    chat.addLocal('You must provide a game name. (e.g. "/join Alice\'s game")');
+    addLocalChat('You must provide a game name. (e.g. "/join Alice\'s game")');
     return;
   }
 
   if (g.game !== null) {
-    chat.addLocal("You are already in a game, so you cannot join a new one.");
+    addLocalChat("You are already in a game, so you cannot join a new one.");
     return;
   }
 
@@ -107,7 +107,7 @@ chatCommandFunctions.set("killme", (_args: string[]) => {
 
 chatCommandFunctions.set("leave", (_args: string[]) => {
   if (g.game === null) {
-    chat.addLocal("You are not in a game, so you cannot leave.");
+    addLocalChat("You are not in a game, so you cannot leave.");
     return;
   }
 
@@ -134,14 +134,12 @@ chatCommandFunctions.set("revive", (_args: string[]) => {
 
 chatCommandFunctions.set("start", (_args: string[]) => {
   if (g.game === null) {
-    chat.addLocal("You are not in a game, so you cannot start it.");
+    addLocalChat("You are not in a game, so you cannot start it.");
     return;
   }
 
   if (!amOwner()) {
-    chat.addLocal(
-      "You are not the owner of this game, so you cannot start it.",
-    );
+    addLocalChat("You are not the owner of this game, so you cannot start it.");
     return;
   }
 
@@ -152,12 +150,12 @@ chatCommandFunctions.set("start", (_args: string[]) => {
 
 chatCommandFunctions.set("terminate", (_args: string[]) => {
   if (g.game === null) {
-    chat.addLocal("You are not in a game, so you cannot terminate it.");
+    addLocalChat("You are not in a game, so you cannot terminate it.");
     return;
   }
 
   if (!amOwner()) {
-    chat.addLocal(
+    addLocalChat(
       "You are not the owner of this game, so you cannot terminate it.",
     );
     return;
@@ -173,17 +171,17 @@ chatCommandFunctions.set("username", usernameChatCommand);
 chatCommandFunctions.set("vote", (args: string[]) => {
   const nameVotedFor = args[0];
   if (nameVotedFor === undefined) {
-    chat.addLocal('You must provide a player name. (e.g. "/vote Alice")');
+    addLocalChat('You must provide a player name. (e.g. "/vote Alice")');
     return;
   }
 
   if (g.game === null) {
-    chat.addLocal("You can only perform that command in a game.");
+    addLocalChat("You can only perform that command in a game.");
     return;
   }
 
   if (g.game.meeting === null) {
-    chat.addLocal("You can only perform that command in a meeting.");
+    addLocalChat("You can only perform that command in a meeting.");
     return;
   }
 
@@ -198,13 +196,13 @@ chatCommandFunctions.set("vote", (args: string[]) => {
 
   const ourPreviousVote = g.game.meeting.votes[ourPlayerIndex];
   if (ourPreviousVote !== NOT_VOTED_YET) {
-    chat.addLocal("You have already voted.");
+    addLocalChat("You have already voted.");
     return;
   }
 
   const playerVotedFor = g.game.getPlayerFromUsername(nameVotedFor);
   if (playerVotedFor === undefined) {
-    chat.addLocal(`The player of "${nameVotedFor}" is not in this game.`);
+    addLocalChat(`The player of "${nameVotedFor}" is not in this game.`);
     return;
   }
 
@@ -217,12 +215,12 @@ chatCommandFunctions.set("vote", (args: string[]) => {
 
 chatCommandFunctions.set("voteskip", (_args: string[]) => {
   if (g.game === null) {
-    chat.addLocal("You can only perform that command in a game.");
+    addLocalChat("You can only perform that command in a game.");
     return;
   }
 
   if (g.game.meeting === null) {
-    chat.addLocal("You can only perform that command in a meeting.");
+    addLocalChat("You can only perform that command in a meeting.");
     return;
   }
 
@@ -237,7 +235,7 @@ chatCommandFunctions.set("voteskip", (_args: string[]) => {
 
   const ourPreviousVote = g.game.meeting.votes[ourPlayerIndex];
   if (ourPreviousVote !== NOT_VOTED_YET) {
-    chat.addLocal("You have already voted.");
+    addLocalChat("You have already voted.");
     return;
   }
 

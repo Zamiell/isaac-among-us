@@ -1,17 +1,17 @@
 import { SocketCommandModToServer } from "common";
-import * as chat from "../chat";
+import { addLocalChat } from "../chat";
 import g from "../globals";
 import { sendTCP } from "../network/send";
 
 export function passwordChatCommand(args: string[]): void {
   if (args.length === 0) {
-    chat.addLocal('You must provide a password. (e.g. "/password hunter2")');
+    addLocalChat('You must provide a password. (e.g. "/password hunter2")');
     return;
   }
 
   const { username } = g;
   if (username === null) {
-    chat.addLocal(
+    addLocalChat(
       'You must specify a username first with the "/username" command. (e.g. "/username Alice")',
     );
     return;

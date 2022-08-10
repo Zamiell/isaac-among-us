@@ -1,5 +1,5 @@
 import { JoinedDataToMod } from "common";
-import * as chat from "../chat";
+import { addLocalChat } from "../chat";
 import { AmongUsGame } from "../classes/AmongUsGame";
 import g from "../globals";
 import { restart } from "../utils";
@@ -8,7 +8,7 @@ export function commandJoined(data: JoinedDataToMod): void {
   g.game = new AmongUsGame(data.gameID, data.name, data.character);
 
   const msg = getChatMessage(data);
-  chat.addLocal(msg);
+  addLocalChat(msg);
 
   restart();
 }

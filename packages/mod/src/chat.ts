@@ -5,7 +5,7 @@ import { getFormattedTime } from "./network/sandbox";
 
 const chatMessages: ChatMessage[] = [];
 
-export function add(data: ChatDataToMod, local = false): void {
+export function addChat(data: ChatDataToMod, local = false): void {
   const isaacFrameCount = Isaac.GetFrameCount();
   const chatMessage: ChatMessage = {
     time: getFormattedTime(),
@@ -17,17 +17,17 @@ export function add(data: ChatDataToMod, local = false): void {
   chatMessages.unshift(chatMessage);
 }
 
-export function addLocal(msg: string): void {
+export function addLocalChat(msg: string): void {
   const data: ChatDataToMod = {
     gameID: -1,
     from: "",
     msg,
   };
-  add(data, true);
+  addChat(data, true);
   log(msg);
 }
 
-export function getAll(): ChatMessage[] {
+export function getAllChat(): ChatMessage[] {
   return [...chatMessages];
 }
 

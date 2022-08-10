@@ -1,16 +1,16 @@
 import { SocketCommandModToServer } from "common";
-import * as chat from "../chat";
+import { addLocalChat } from "../chat";
 import { sendTCP } from "../network/send";
 
 export function usernameChatCommand(args: string[]): void {
   if (args.length === 0) {
-    chat.addLocal('You must provide a username. (e.g. "/username Alice")');
+    addLocalChat('You must provide a username. (e.g. "/username Alice")');
     return;
   }
 
   if (args.length !== 1) {
     const username = args.join(" ");
-    chat.addLocal(
+    addLocalChat(
       `The username of "${username}" is invalid; usernames cannot contain spaces.`,
     );
     return;
@@ -22,7 +22,7 @@ export function usernameChatCommand(args: string[]): void {
   // From: https://stackoverflow.com/questions/12117965
   const match = string.match(username, "%W");
   if (match.length > 0) {
-    chat.addLocal(
+    addLocalChat(
       `The username of "${username}" is invalid; username must only contain English letters and numbers.`,
     );
     return;

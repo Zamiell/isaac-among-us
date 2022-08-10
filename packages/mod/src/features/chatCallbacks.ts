@@ -1,4 +1,4 @@
-import * as chat from "../chat";
+import { getAllChat } from "../chat";
 import { HexColors } from "../enums/HexColors";
 import { fonts } from "../fonts";
 import g from "../globals";
@@ -43,7 +43,7 @@ function drawChat() {
   let y = CHAT_POSITION.Y;
 
   let numMessagesDrawn = 0;
-  for (const chatMessage of chat.getAll()) {
+  for (const chatMessage of getAllChat()) {
     // Local messages should always be displayed at full opacity to begin with.
     let modifiedAlpha = chatMessage.local ? DEFAULT_OPACITY : alpha;
 
