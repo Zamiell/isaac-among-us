@@ -1,5 +1,7 @@
 import { PlayerJoinedDataToMod } from "common";
+import { sfxManager } from "isaacscript-common";
 import { addLocalChat } from "../chat";
+import { SoundEffectCustom } from "../enums/SoundEffectCustom";
 import g from "../globals";
 
 export function commandPlayerJoined(data: PlayerJoinedDataToMod): void {
@@ -8,7 +10,10 @@ export function commandPlayerJoined(data: PlayerJoinedDataToMod): void {
   }
 
   const player = g.game.getPlayerFromUserID(data.userID);
-  if (player !== undefined) {
-    addLocalChat(`${player.username} joined the game.`);
+  if (player === undefined) {
+    return;
   }
+
+  addLocalChat(`${player.username} joined the game.`);
+  sfxManager.Play(SoundEffectCustom.PLAYER_JOINED);
 }

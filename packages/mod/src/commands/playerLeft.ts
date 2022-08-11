@@ -1,5 +1,7 @@
 import { PlayerLeftDataToMod } from "common";
+import { sfxManager } from "isaacscript-common";
 import { addLocalChat } from "../chat";
+import { SoundEffectCustom } from "../enums/SoundEffectCustom";
 import g from "../globals";
 
 export function commandPlayerLeft(data: PlayerLeftDataToMod): void {
@@ -8,7 +10,10 @@ export function commandPlayerLeft(data: PlayerLeftDataToMod): void {
   }
 
   const player = g.game.getPlayerFromUserID(data.userID);
-  if (player !== undefined) {
-    addLocalChat(`${player.username} left the game.`);
+  if (player === undefined) {
+    return;
   }
+
+  addLocalChat(`${player.username} left the game.`);
+  sfxManager.Play(SoundEffectCustom.PLAYER_LEFT);
 }
