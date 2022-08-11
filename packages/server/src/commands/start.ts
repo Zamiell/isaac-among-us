@@ -7,6 +7,7 @@ import {
 } from "common";
 import { Game } from "../classes/Game";
 import { error } from "../error";
+import { doesGameIDExist } from "../games";
 import { assignImpostors } from "../imposters";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
 import { Socket } from "../interfaces/Socket";
@@ -53,11 +54,14 @@ function setEmergencyButtonCooldown(game: Game) {
   game.emergencyButtonCooldown = true;
   const currentNight = game.night;
   setTimeout(() => {
-    if (game.meeting !== null || game.night !== currentNight) {
-      return;
+    if (
+      doesGameIDExist(game.id) &&
+      game.started &&
+      game.meeting === null &&
+      game.night === currentNight
+    ) {
+      game.emergencyButtonCooldown = false;
+      sendEmergencyButtonCooldown(game);
     }
-
-    game.emergencyButtonCooldown = false;
-    sendEmergencyButtonCooldown(game);
   }, EMERGENCY_BUTTON_COOLDOWN_SECONDS * 1000);
 }

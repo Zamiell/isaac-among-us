@@ -3,6 +3,7 @@ Bugs:
 - imposter should not get real tasks
 
 TODO:
+- password protected games
 - vents
 - imposter thing where you close the doors
 - imposter lights

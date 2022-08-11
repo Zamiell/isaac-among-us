@@ -46,6 +46,7 @@ export function onGameList(gameList: GameListDescription[]): void {
   } else {
     sendTCP(SocketCommandModToServer.CREATE, {
       name: DEBUG_GAME_NAME,
+      password: "",
     });
   }
 }

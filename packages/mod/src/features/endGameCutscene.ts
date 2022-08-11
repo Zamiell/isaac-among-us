@@ -26,7 +26,7 @@ itemSprite.SetFrame("Default", 0);
 
 // ModCallback.POST_RENDER (2)
 export function postRender(): void {
-  if (g.game === null || !g.game.started) {
+  if (g.game === null) {
     return;
   }
 

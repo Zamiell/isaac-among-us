@@ -3,6 +3,7 @@ import {
   MAX_PLAYERS,
   SocketCommandServerToMod,
 } from "common";
+import { Game } from "../classes/Game";
 import { Player } from "../classes/Player";
 import { error } from "../error";
 import { getLowestUnusedCharacter } from "../game";
@@ -18,37 +19,14 @@ export function commandJoin(
   data: JoinDataToServer,
   extraData: ExtraCommandData,
 ): void {
-  const { socketID, userID, username } = socket;
   const { name, created } = data;
   const { game } = extraData;
 
-  if (
-    !validate(socket, name, extraData) ||
-    game === undefined ||
-    userID === undefined ||
-    username === undefined
-  ) {
+  if (!validate(socket, name, extraData) || game === undefined) {
     return;
   }
 
-  const index = game.players.length;
-  const character = getLowestUnusedCharacter(game);
-  const player = new Player(index, socketID, userID, username, character);
-  game.players.push(player);
-
-  sendTCP(socket, SocketCommandServerToMod.JOINED, {
-    gameID: game.id,
-    name: game.name,
-    created,
-    character,
-    reconnected: false,
-  });
-  sendNewGameDescription(game);
-  sendChat(game, "", `${username} joined the game.`);
-  logGameEvent(
-    game,
-    `Player "${username}" joined; ${game.players.length} total players remaining.`,
-  );
+  join(socket, game, created);
 }
 
 function validate(
@@ -85,4 +63,31 @@ function validate(
   }
 
   return validateInNoGames(socket, "join");
+}
+
+export function join(socket: Socket, game: Game, created: boolean): void {
+  const { socketID, userID, username } = socket;
+
+  if (userID === undefined || username === undefined) {
+    return;
+  }
+
+  const index = game.players.length;
+  const character = getLowestUnusedCharacter(game);
+  const player = new Player(index, socketID, userID, username, character);
+  game.players.push(player);
+
+  sendTCP(socket, SocketCommandServerToMod.JOINED, {
+    gameID: game.id,
+    name: game.name,
+    created,
+    character,
+    reconnected: false,
+  });
+  sendNewGameDescription(game);
+  sendChat(game, "", `${username} joined the game.`);
+  logGameEvent(
+    game,
+    `Player "${username}" joined; ${game.players.length} total players remaining.`,
+  );
 }

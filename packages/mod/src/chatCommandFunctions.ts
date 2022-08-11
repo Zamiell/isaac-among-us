@@ -18,8 +18,13 @@ chatCommandFunctions.set("connect", () => {
 
 chatCommandFunctions.set("create", (args: string[]) => {
   if (args.length === 0) {
+    addLocalChat('You must provide a game name. (e.g. "/create Alice-game")');
+    return;
+  }
+
+  if (args.length > 2) {
     addLocalChat(
-      'You must provide a game name. (e.g. "/create Alice\'s game")',
+      'The format of the "create" command is: /create [name] [password]',
     );
     return;
   }
@@ -27,6 +32,7 @@ chatCommandFunctions.set("create", (args: string[]) => {
   const name = args.join(" ");
   sendTCP(SocketCommandModToServer.CREATE, {
     name,
+    password: "",
   });
 });
 
@@ -61,8 +67,17 @@ chatCommandFunctions.set("gamelist", (_args: string[]) => {
 });
 
 chatCommandFunctions.set("help", (_args: string[]) => {
-  addLocalChat('To connect to the server, use the "/connect" command.');
+  if (g.loggedIn) {
+    addLocalChat('To create a game, use the "/create" command.');
+    addLocalChat('To join a game, use the "/join" command.');
+    addLocalChat(
+      'To see a list of existing games, use the "/gameList" command.',
+    );
+  } else {
+    addLocalChat('To connect to the server, use the "/connect" command.');
+  }
   addLocalChat("Hint: You can use tab to auto-complete commands.");
+
   g.welcomeNotificationEnabled = false;
 });
 

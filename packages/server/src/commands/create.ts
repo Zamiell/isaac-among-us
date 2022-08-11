@@ -14,7 +14,7 @@ export function commandCreate(
   data: CreateDataToServer,
   extraData: ExtraCommandData,
 ): void {
-  const { name } = data;
+  const { name, password } = data;
   const { username } = socket;
 
   if (username === undefined) {
@@ -25,23 +25,7 @@ export function commandCreate(
     return;
   }
 
-  const gameID = getNewGameID();
-  const game = new Game(gameID, name);
-  games.set(gameID, game);
-
-  commandJoin(
-    socket,
-    {
-      name: data.name,
-      created: true,
-    },
-    {
-      game,
-    },
-  );
-
-  logGameEvent(game, "Created.");
-  sendAllNewGame(game, username);
+  create(socket, name, password);
 }
 
 function validate(socket: Socket, name: string, extraData: ExtraCommandData) {
@@ -56,4 +40,38 @@ function validate(socket: Socket, name: string, extraData: ExtraCommandData) {
   }
 
   return validateInNoGames(socket, "create");
+}
+
+export function create(
+  socket: Socket,
+  name: string,
+  password: string | null,
+): void {
+  const { username } = socket;
+
+  if (username === undefined) {
+    return;
+  }
+
+  const gameID = getNewGameID();
+  const passwordToUse = password === "" ? null : password;
+  const game = new Game(gameID, name, passwordToUse);
+  games.set(gameID, game);
+
+  commandJoin(
+    socket,
+    {
+      name,
+      created: true,
+    },
+    {
+      game,
+    },
+  );
+
+  logGameEvent(game, "Created.");
+
+  if (game.password === null) {
+    sendAllNewGame(game, username);
+  }
 }

@@ -13,7 +13,7 @@ import {
   DEFAULT_MEETING_VOTE_SECONDS,
 } from "../constants";
 import { error } from "../error";
-import { games } from "../games";
+import { doesGameIDExist } from "../games";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
 import { Socket } from "../interfaces/Socket";
 import { sendEndMeeting, sendStartMeeting, sendStartVoting } from "../sendGame";
@@ -102,8 +102,7 @@ function validate(
 
 function meetingPhaseOver(game: Game) {
   // If the game was deleted in the meantime, do nothing.
-  const gameInMap = games.get(game.id) !== undefined;
-  if (!gameInMap) {
+  if (!doesGameIDExist(game.id)) {
     return;
   }
 

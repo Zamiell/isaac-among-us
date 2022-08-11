@@ -22,6 +22,10 @@ export function getGameByName(name: string): Game | undefined {
   return undefined;
 }
 
+export function doesGameIDExist(gameID: number): boolean {
+  return games.has(gameID);
+}
+
 export function isUserInAnyGames(userID: number): boolean {
   for (const game of games.values()) {
     for (const player of game.players) {

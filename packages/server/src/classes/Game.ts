@@ -4,6 +4,7 @@ import { Player } from "./Player";
 export class Game {
   id: number;
   name: string;
+  password: string | null;
   players: Player[] = [];
   started = false;
   impostorUserIDs: number[] = [];
@@ -15,8 +16,9 @@ export class Game {
 
   emergencyButtonCooldown = true;
 
-  constructor(id: number, name: string) {
+  constructor(id: number, name: string, password: string | null) {
     this.id = id;
     this.name = name;
+    this.password = password;
   }
 }

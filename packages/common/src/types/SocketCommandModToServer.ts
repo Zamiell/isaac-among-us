@@ -36,6 +36,7 @@ export class LoginDataToServer {
 
 export class CreateDataToServer {
   name = "";
+  password = "";
 }
 
 export class JoinDataToServer {

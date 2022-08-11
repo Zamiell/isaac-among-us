@@ -22,8 +22,11 @@ export function commandGameList(data: GameListDataToMod): void {
       }
 
       const startedText = started ? "ongoing" : "unstarted";
-      const joinedText = game.joined ? " (current game)" : "";
-      addLocalChat(`${i}) ${game.name} (${startedText})${joinedText}`);
+      const totalText = ` (num players: ${game.numPlayers})`;
+      const joinedText = game.joined ? " (our current game)" : "";
+      addLocalChat(
+        `${i}) ${game.name} (${startedText})${totalText}${joinedText}`,
+      );
       i++;
 
       if (game.joined) {
