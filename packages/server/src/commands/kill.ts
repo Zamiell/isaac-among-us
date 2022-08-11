@@ -1,5 +1,6 @@
 import { KillDataToServer, PlayerBody, Role } from "common";
 import { Game } from "../classes/Game";
+import { endGame } from "../endGame";
 import { error } from "../error";
 import { getPlayer } from "../game";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
@@ -69,4 +70,16 @@ export function kill(game: Game, data: KillDataToServer): void {
   game.bodies.push(body);
 
   sendKilled(game, userIDKilled, room, x, y);
+  checkImpostersWin(game);
+}
+
+function checkImpostersWin(game: Game) {
+  const alivePlayers = game.players.filter((player) => player.alive);
+  const aliveCrew = alivePlayers.filter((player) => player.role === Role.CREW);
+  const aliveImposters = alivePlayers.filter(
+    (player) => player.role === Role.IMPOSTER,
+  );
+  if (aliveImposters.length >= aliveCrew.length) {
+    endGame(game, Role.IMPOSTER);
+  }
 }
