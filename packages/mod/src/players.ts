@@ -37,6 +37,14 @@ export function getClosestAmongUsPlayer(): PlayerData | undefined {
   return closestPlayer;
 }
 
+export function getOwner(): GameDescriptionPlayer | undefined {
+  if (g.game === null) {
+    return undefined;
+  }
+
+  return g.game.players[0];
+}
+
 export function getOurPlayer(): GameDescriptionPlayer | undefined {
   if (g.game === null) {
     return undefined;

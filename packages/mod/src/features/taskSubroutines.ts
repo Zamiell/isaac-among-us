@@ -8,6 +8,7 @@ import {
   sfxManager,
 } from "isaacscript-common";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
+import { SoundEffectCustom } from "../enums/SoundEffectCustom";
 import g from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
 import { sendTCP } from "../network/send";
@@ -31,7 +32,7 @@ export function taskComplete(): void {
     muteSoundEffects();
   });
 
-  sfxManager.Play(SoundEffect.ONE_UP);
+  sfxManager.Play(SoundEffectCustom.TASK_COMPLETE);
 
   sendTCP(SocketCommandModToServer.TASK_COMPLETE, {
     gameID: g.game.id,

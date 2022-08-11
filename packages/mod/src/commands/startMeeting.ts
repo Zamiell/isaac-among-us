@@ -25,5 +25,5 @@ export function commandStartMeeting(data: StartMeetingDataToMod): void {
     g.game.usedEmergencyMeeting = true;
   }
 
-  startMeeting();
+  startMeeting(data.meetingType);
 }

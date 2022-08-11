@@ -1,5 +1,6 @@
 import { IS_DEV, SkeldRoom } from "common";
 import { startAutoLogin } from "./features/autoLogin";
+import { startEndGameCutscene } from "./features/endGameCutscene";
 import g from "./globals";
 import { skeldRoomReverseMap } from "./skeldRoomMap";
 import { goToStageAPIRoom } from "./stageAPI";
@@ -7,6 +8,7 @@ import { goToStageAPIRoom } from "./stageAPI";
 /** From the "d" console command. */
 export function debugFunction1(): void {
   // Add code here
+  startEndGameCutscene();
 }
 
 /** From the "d2" console command. */

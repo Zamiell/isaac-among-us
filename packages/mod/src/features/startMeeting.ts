@@ -1,6 +1,11 @@
 import { MeetingType } from "common";
-import { getScreenBottomRightPos, VectorZero } from "isaacscript-common";
+import {
+  getScreenBottomRightPos,
+  sfxManager,
+  VectorZero,
+} from "isaacscript-common";
 import { BlackSpriteState } from "../enums/BlackSpriteState";
+import { SoundEffectCustom } from "../enums/SoundEffectCustom";
 import { StartMeetingState } from "../enums/StartMeetingState";
 import g from "../globals";
 import { disableMinimapAPI } from "../minimapAPI";
@@ -93,21 +98,22 @@ function getAlertText() {
     return defaultValue;
   }
 
-  if (g.game.meeting.meetingType === MeetingType.REPORT_BODY) {
-    const playerKilled = g.game.getPlayerFromUserID(
-      g.game.meeting.userIDKilled,
-    );
-    if (playerKilled === undefined) {
-      return defaultValue;
+  switch (g.game.meeting.meetingType) {
+    case MeetingType.REPORT_BODY: {
+      const playerKilled = g.game.getPlayerFromUserID(
+        g.game.meeting.userIDKilled,
+      );
+      if (playerKilled === undefined) {
+        return defaultValue;
+      }
+
+      return `${playerInitiated.username} reported a dead body: ${playerKilled.username}`;
     }
-    return `${playerInitiated.username} reported a dead body: ${playerKilled.username}`;
-  }
 
-  if (g.game.meeting.meetingType === MeetingType.EMERGENCY) {
-    return `${playerInitiated.username} called an emergency meeting!`;
+    case MeetingType.EMERGENCY: {
+      return `${playerInitiated.username} called an emergency meeting!`;
+    }
   }
-
-  return defaultValue;
 }
 
 function hasFadeFinished(): boolean {
@@ -121,7 +127,7 @@ function hasFadeFinished(): boolean {
   return renderFramesPassed >= FADE_TO_BLACK_FRAMES;
 }
 
-export function startMeeting(): void {
+export function startMeeting(meetingType: MeetingType): void {
   const player = Isaac.GetPlayer();
   player.Velocity = VectorZero;
 
@@ -131,6 +137,11 @@ export function startMeeting(): void {
 
   setState(StartMeetingState.ALERT_STRIP);
   disableMinimapAPI();
+  const soundEffect =
+    meetingType === MeetingType.REPORT_BODY
+      ? SoundEffectCustom.DEAD_BODY_REPORT
+      : SoundEffectCustom.EMERGENCY_MEETING;
+  sfxManager.Play(soundEffect);
 }
 
 function setState(state: StartMeetingState) {

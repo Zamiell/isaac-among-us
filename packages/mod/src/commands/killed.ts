@@ -5,6 +5,7 @@ import {
   SoundEffect,
 } from "isaac-typescript-definitions";
 import { runInNRenderFrames, sfxManager, VectorZero } from "isaacscript-common";
+import { SoundEffectCustom } from "../enums/SoundEffectCustom";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
 
@@ -58,6 +59,7 @@ export function commandKilled(data: KilledDataToMod): void {
   }
 
   sfxManager.Play(SoundEffect.ISAAC_DIES);
+  sfxManager.Play(SoundEffectCustom.KILL);
 }
 
 export function convertPlayerToGhostForm(): void {

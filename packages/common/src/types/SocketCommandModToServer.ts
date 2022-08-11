@@ -76,7 +76,7 @@ export class KillDataToServer {
 
 export class MeetingDataToServer {
   gameID = 0;
-  meetingType = MeetingType.NONE;
+  meetingType = MeetingType.REPORT_BODY;
   userIDKilled = 0;
 }
 

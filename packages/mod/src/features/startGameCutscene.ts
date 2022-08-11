@@ -1,8 +1,11 @@
-// The cutscene that plays at the beginning of a game.
-
 import { Role } from "common";
 import { CollectibleType } from "isaac-typescript-definitions";
-import { getScreenCenterPos, itemConfig, sfxManager } from "isaacscript-common";
+import {
+  getScreenCenterPos,
+  itemConfig,
+  log,
+  sfxManager,
+} from "isaacscript-common";
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { CutsceneState } from "../enums/CutsceneState";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
@@ -11,7 +14,7 @@ import { loadMap } from "../loadMap";
 import { disableMinimapAPI, enableMinimapAPI } from "../minimapAPI";
 import { getOurPlayerIndex } from "../players";
 import { setSpriteOpacity } from "../sprite";
-import { drawFontText, getRoleText } from "../utils";
+import { drawFontText, getRoleName } from "../utils";
 import { FADE_TO_BLACK_FRAMES, setBlackSpriteState } from "./blackSprite";
 import { getMeetingCirclePoints } from "./setupMeeting";
 
@@ -125,8 +128,8 @@ function drawText() {
   const centerPos = getScreenCenterPos();
   const offset = Vector(0, 10);
   drawFontText("Your role:", centerPos.sub(offset), opacity);
-  const roleText = getRoleText(g.game.role);
-  drawFontText(roleText, centerPos.add(offset), opacity);
+  const roleName = getRoleName(g.game.role);
+  drawFontText(roleName, centerPos.add(offset), opacity);
 
   drawItem(centerPos, opacity);
 }
@@ -171,7 +174,7 @@ function hasFadeFinished(): boolean {
   return renderFramesPassed >= FADE_TO_BLACK_FRAMES;
 }
 
-export function startCutscene(): void {
+export function startStartGameCutscene(): void {
   setSprite();
   setState(CutsceneState.FADING_TO_BLACK);
   setBlackSpriteState(BlackSpriteState.FADING_TO_BLACK);
@@ -187,6 +190,7 @@ function setState(state: CutsceneState) {
 
   g.game.cutscene.state = state;
   g.game.cutscene.startRenderFrame = isaacFrameCount;
+  log(`Changed start game cutscene state: ${CutsceneState[state]} (${state})`);
 }
 
 function setSprite() {

@@ -1,6 +1,6 @@
 import { Role, StartedDataToMod } from "common";
 import { addLocalChat } from "../chat";
-import * as cutscene from "../features/cutscene";
+import { startStartGameCutscene } from "../features/startGameCutscene";
 import g from "../globals";
 
 export function commandStarted(data: StartedDataToMod): void {
@@ -14,5 +14,5 @@ export function commandStarted(data: StartedDataToMod): void {
   g.game.ourTasks = data.tasks;
 
   addLocalChat("The game has started!");
-  cutscene.startCutscene();
+  startStartGameCutscene();
 }

@@ -59,6 +59,11 @@ export class AmongUsGame {
     userIDEjected: null as int | null,
   };
 
+  winner = {
+    winningRole: null as Role | null,
+    roles: [] as Role[],
+  };
+
   constructor(id: int, name: string, character: PlayerTypeAllowed) {
     this.id = id;
     this.name = name;

@@ -1,8 +1,20 @@
 <sounds root="sfx/">
+  <sound name="Dead Body Report">
+    <sample weight="1" path="dead-body-report.wav" />
+  </sound>
   <sound name="Emergency Meeting">
     <sample weight="1" path="emergency-meeting.wav" />
   </sound>
+  <sound name="Kill">
+    <sample weight="1" path="kill.wav" />
+  </sound>
   <sound name="Role Reveal">
     <sample weight="1" path="role-reveal.wav" />
+  </sound>
+  <sound name="Task Complete">
+    <sample weight="1" path="task-complete.wav" />
+  </sound>
+  <sound name="Victory">
+    <sample weight="1" path="victory.wav" />
   </sound>
 </sounds>

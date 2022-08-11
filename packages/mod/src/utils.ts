@@ -67,7 +67,7 @@ export function enableShooting(): void {
   setBlindfold(player, false);
 }
 
-export function getRoleText(role: Role): string {
+export function getRoleName(role: Role): string {
   switch (role) {
     case Role.CREW: {
       return "Crew";
