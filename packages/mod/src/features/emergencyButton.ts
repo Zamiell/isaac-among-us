@@ -3,6 +3,7 @@ import { getEffects, removeAllEffects } from "isaacscript-common";
 import { ButtonSubType } from "../enums/ButtonSubType";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import g from "../globals";
+import { getOurPlayer } from "../players";
 import { getSkeldRoom } from "../stageAPI";
 import { setButtonState, spawnButton } from "./buttonSpawn";
 
@@ -51,5 +52,14 @@ function shouldEmergencyButtonBeEnabled() {
     return false;
   }
 
-  return !g.game.usedEmergencyMeeting && !g.game.emergencyButtonCooldown;
+  const ourPlayer = getOurPlayer();
+  if (ourPlayer === undefined) {
+    return false;
+  }
+
+  return (
+    ourPlayer.alive &&
+    !g.game.usedEmergencyMeeting &&
+    !g.game.emergencyButtonCooldown
+  );
 }

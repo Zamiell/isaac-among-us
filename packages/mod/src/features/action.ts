@@ -2,6 +2,8 @@ import { ButtonAction } from "isaac-typescript-definitions";
 import { isActionPressedOnAnyInput, todo } from "isaacscript-common";
 import { kill } from "./kill";
 import { ableToKillAPlayer } from "./killSubroutines";
+import { reportDeadBody } from "./report";
+import { ableToReportDeadBody } from "./reportSubroutines";
 
 let isPressed = false;
 
@@ -27,6 +29,11 @@ function checkInput() {
 function actionPressed() {
   if (ableToKillAPlayer()) {
     kill();
+    return;
+  }
+
+  if (ableToReportDeadBody()) {
+    reportDeadBody();
     return;
   }
 

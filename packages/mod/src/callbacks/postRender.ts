@@ -11,6 +11,7 @@ import * as drawRoomDescription from "../features/drawRoomDescription";
 import * as endMeeting from "../features/endMeeting";
 import * as errors from "../features/errors";
 import * as kill from "../features/kill";
+import * as report from "../features/report";
 import * as restartOnNextFrame from "../features/restartOnNextFrame";
 import * as startMeeting from "../features/startMeeting";
 import * as welcomeNotification from "../features/welcomeNotification";
@@ -49,6 +50,7 @@ function main() {
   drawMeeting.postRender();
   endMeeting.postRender();
   kill.postRender();
+  report.postRender();
 
   // Tasks
   identifyCollectibles.postRender();
