@@ -43,11 +43,14 @@ function validate(socket: Socket, name: string, extraData: ExtraCommandData) {
   return validateInNoGames(socket, "create");
 }
 
+/**
+ * @returns The game ID of the new game.
+ */
 export function create(
   userID: number,
   name: string,
   password: string | null,
-): void {
+): number | undefined {
   const socket = getTCPSocketByUserID(userID);
   if (socket === undefined) {
     throw new Error(
@@ -58,7 +61,7 @@ export function create(
   const { username } = socket;
 
   if (username === undefined) {
-    return;
+    return undefined;
   }
 
   const gameID = getNewGameID();
@@ -66,11 +69,13 @@ export function create(
   const game = new Game(gameID, name, passwordToUse);
   games.set(gameID, game);
 
-  join(userID, game, true);
+  join(userID, game.id, true);
 
   logGameEvent(game, "Created.");
 
   if (game.password === null) {
     sendAllNewGame(game, username);
   }
+
+  return game.id;
 }

@@ -3,10 +3,10 @@ import {
   MAX_PLAYERS,
   SocketCommandServerToMod,
 } from "common";
-import { Game } from "../classes/Game";
 import { Player } from "../classes/Player";
 import { sendError } from "../error";
 import { getLowestUnusedCharacter } from "../game";
+import { games } from "../games";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
 import { Socket } from "../interfaces/Socket";
 import { logGameEvent } from "../log";
@@ -77,11 +77,18 @@ function validate(
   return validateInNoGames(socket, "join");
 }
 
-export function join(userID: number, game: Game, created: boolean): void {
+export function join(userID: number, gameID: number, created: boolean): void {
   const socket = getTCPSocketByUserID(userID);
   if (socket === undefined) {
     throw new Error(
       `Failed to join a game because there was no corresponding socket for user ID: ${userID}`,
+    );
+  }
+
+  const game = games.get(gameID);
+  if (game === undefined) {
+    throw new Error(
+      `Failed to join a game because there was no corresponding game for game ID: ${game}`,
     );
   }
 

@@ -1,36 +1,37 @@
 import { Role } from "common";
 import { Game } from "./classes/Game";
-import { Player } from "./classes/Player";
 import { create } from "./commands/create";
+import { join } from "./commands/join";
 import { games } from "./games";
 import { sendEndGame } from "./sendGame";
+import { getTCPSocketByUserID } from "./tcpSockets";
 
 export function endGame(game: Game, winningRole: Role): void {
   sendEndGame(game, winningRole);
 
   games.delete(game.id);
-
-  const firstPlayer = game.players[0];
-  if (firstPlayer === undefined) {
-    return;
-  }
-  create(firstPlayer.userID, game.name, game.password);
-
-  game.started = false;
-  resetPlayers(game);
+  recreateGame(game);
 }
 
-function resetPlayers(game: Game) {
-  const newPlayers: Player[] = [];
+function recreateGame(game: Game) {
+  let newGameID: number | undefined;
+
   for (const player of game.players) {
-    const newPlayer = new Player(
-      player.index,
-      player.socketID,
-      player.userID,
-      player.username,
-      player.character,
-    );
-    newPlayers.push(newPlayer);
+    // Check if this player is online.
+    const socket = getTCPSocketByUserID(player.userID);
+    if (socket === undefined) {
+      continue;
+    }
+
+    if (newGameID === undefined) {
+      newGameID = create(player.userID, game.name, game.password);
+      if (newGameID === undefined) {
+        throw new Error(
+          `Failed to create a new game after ending game ID: ${game.id}`,
+        );
+      }
+    } else {
+      join(player.userID, newGameID, false);
+    }
   }
-  game.players = newPlayers;
 }
