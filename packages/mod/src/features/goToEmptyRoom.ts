@@ -16,6 +16,7 @@ import {
   spawnGridEntity,
 } from "isaacscript-common";
 import { disableMinimapAPI } from "../minimapAPI";
+import { disableShooting } from "../utils";
 
 /** We don't use the real starting room since it has controls text. */
 export const START_ROOM_INDEX = 86;
@@ -46,6 +47,7 @@ export function postGameStarted(): void {
   sfxManager.Stop(SoundEffect.SUMMON_POOF); // 286
 
   player.Position = centerPos;
+  disableShooting();
 
   setBackdrop(BackdropType.DARK_ROOM);
 

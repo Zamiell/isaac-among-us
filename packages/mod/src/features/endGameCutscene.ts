@@ -16,7 +16,6 @@ import { disableMinimapAPI } from "../minimapAPI";
 import { setSpriteOpacity } from "../sprite";
 import { drawFontText, getRoleName } from "../utils";
 import { FADE_TO_BLACK_FRAMES, setBlackSpriteState } from "./blackSprite";
-import { gotoLobby } from "./lobby";
 
 const ITEM_SPRITE_OFFSET = Vector(0, -30);
 
@@ -83,8 +82,7 @@ function postRenderText() {
   if (g.game !== null && hasFadeFinished()) {
     setState(CutsceneState.TEXT_FADING_OUT);
 
-    g.game.started = false;
-    gotoLobby();
+    /// gotoLobby();
   }
 }
 

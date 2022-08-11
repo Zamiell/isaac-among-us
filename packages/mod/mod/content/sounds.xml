@@ -8,6 +8,9 @@
   <sound name="Kill">
     <sample weight="1" path="kill.wav" />
   </sound>
+  <sound name="Player Join">
+    <sample weight="1" path="player-join.wav" />
+  </sound>
   <sound name="Role Reveal">
     <sample weight="1" path="role-reveal.wav" />
   </sound>

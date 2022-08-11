@@ -4,7 +4,7 @@ import { games } from "../games";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
 import { Socket } from "../interfaces/Socket";
 import { logGameEvent } from "../log";
-import { sendChat, sendNewGameDescription } from "../sendGame";
+import { sendNewGameDescription, sendPlayerLeft } from "../sendGame";
 import { sendTCP } from "../sendTCP";
 
 export function commandLeave(
@@ -24,7 +24,7 @@ export function commandLeave(
     gameID: game.id,
   });
   sendNewGameDescription(game);
-  sendChat(game, "", `${username} left the game.`);
+  sendPlayerLeft(game, userID);
   logGameEvent(
     game,
     `Player "${username}" left; ${game.players.length} total players remaining.`,

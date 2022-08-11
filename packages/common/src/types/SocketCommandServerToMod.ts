@@ -19,6 +19,8 @@ export enum SocketCommandServerToMod {
   JOINED = "joined",
   LEFT = "left",
   GAME_DESCRIPTION = "gameDescription",
+  PLAYER_JOINED = "playerJoined",
+  PLAYER_LEFT = "playerLeft",
   CHAT = "chat",
   STARTED = "started",
   RECONNECT = "reconnect",
@@ -89,6 +91,16 @@ export class GameDescriptionDataToMod {
   players!: GameDescriptionPlayer[];
   started!: boolean;
   meeting!: Meeting | null;
+}
+
+export class PlayerJoinedDataToMod {
+  gameID!: number;
+  userID!: number;
+}
+
+export class PlayerLeftDataToMod {
+  gameID!: number;
+  userID!: number;
 }
 
 export class GameDescriptionPlayer {
@@ -193,6 +205,8 @@ export const SocketCommandServerToModData = {
   [SocketCommandServerToMod.JOINED]: JoinedDataToMod,
   [SocketCommandServerToMod.LEFT]: LeftDataToMod,
   [SocketCommandServerToMod.GAME_DESCRIPTION]: GameDescriptionDataToMod,
+  [SocketCommandServerToMod.PLAYER_JOINED]: PlayerJoinedDataToMod,
+  [SocketCommandServerToMod.PLAYER_LEFT]: PlayerLeftDataToMod,
   [SocketCommandServerToMod.CHAT]: ChatDataToMod,
   [SocketCommandServerToMod.STARTED]: StartedDataToMod,
   [SocketCommandServerToMod.RECONNECT]: ReconnectDataToMod,

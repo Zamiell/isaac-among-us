@@ -1,3 +1,5 @@
+// Many player methods are located on the `AmongUsGame` class.
+
 import { GameDescriptionPlayer } from "common";
 import { UDPPositionInterface } from "./constants";
 import g from "./globals";

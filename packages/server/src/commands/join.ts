@@ -10,7 +10,7 @@ import { games } from "../games";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
 import { Socket } from "../interfaces/Socket";
 import { logGameEvent } from "../log";
-import { sendChat, sendNewGameDescription } from "../sendGame";
+import { sendNewGameDescription, sendPlayerJoined } from "../sendGame";
 import { sendTCP } from "../sendTCP";
 import { getTCPSocketByUserID } from "../tcpSockets";
 import { validateInNoGames } from "../validate";
@@ -48,8 +48,11 @@ function validate(
     return false;
   }
 
-  if (game.password !== password) {
-    sendError(socket, `That is the incorrect password for game: ${name}`);
+  if (game.password !== null && game.password !== password) {
+    sendError(
+      socket,
+      `That is the incorrect password for game "${name}". Specify the connect password with: /join [name] [password]`,
+    );
     return false;
   }
 
@@ -113,7 +116,7 @@ export function join(userID: number, gameID: number, created: boolean): void {
     reconnected: false,
   });
   sendNewGameDescription(game);
-  sendChat(game, "", `${username} joined the game.`);
+  sendPlayerJoined(game, userID);
   logGameEvent(
     game,
     `Player "${username}" joined; ${game.players.length} total players remaining.`,

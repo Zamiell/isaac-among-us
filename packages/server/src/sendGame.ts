@@ -52,6 +52,20 @@ export function sendChat(game: Game, from: string, msg: string): void {
   });
 }
 
+export function sendPlayerJoined(game: Game, userID: number): void {
+  sendAllInGame(game, SocketCommandServerToMod.PLAYER_JOINED, {
+    gameID: game.id,
+    userID,
+  });
+}
+
+export function sendPlayerLeft(game: Game, userID: number): void {
+  sendAllInGame(game, SocketCommandServerToMod.PLAYER_LEFT, {
+    gameID: game.id,
+    userID,
+  });
+}
+
 export function sendStarted(game: Game): void {
   // We can't use sendAll because each player gets a customized message.
   for (const player of game.players) {
