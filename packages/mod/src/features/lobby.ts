@@ -111,7 +111,7 @@ function setupLobby() {
 
   spawnEntities();
 
-  setBackdrop(BackdropType.DARK_ROOM);
+  setBackdrop(BackdropType.CLEAN_BEDROOM);
 }
 
 function spawnEntities() {

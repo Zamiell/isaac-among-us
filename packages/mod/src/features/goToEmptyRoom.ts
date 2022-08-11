@@ -1,4 +1,5 @@
 import {
+  BackdropType,
   EffectVariant,
   GridEntityType,
   SoundEffect,
@@ -10,6 +11,7 @@ import {
   removeAllGridEntitiesExcept,
   removeAllNPCs,
   removeGridEntity,
+  setBackdrop,
   sfxManager,
   spawnGridEntity,
 } from "isaacscript-common";
@@ -44,6 +46,8 @@ export function postGameStarted(): void {
   sfxManager.Stop(SoundEffect.SUMMON_POOF); // 286
 
   player.Position = centerPos;
+
+  setBackdrop(BackdropType.DARK_ROOM);
 
   disableMinimapAPI();
 }
