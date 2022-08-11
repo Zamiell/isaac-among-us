@@ -1,4 +1,4 @@
-import { ReconnectDataToServer, SocketCommandServerToMod } from "common";
+import { ReconnectDataToServer, Role, SocketCommandServerToMod } from "common";
 import { Game } from "../classes/Game";
 import { Player } from "../classes/Player";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
@@ -22,11 +22,12 @@ export function commandReconnect(
     return;
   }
 
+  const imposterUserIDs = player.role === Role.CREW ? [] : game.impostorUserIDs;
   sendTCP(socket, SocketCommandServerToMod.RECONNECT, {
     gameID: game.id,
     name: game.name,
     players: getGameDescriptionPlayers(game),
-    imposterUserIDs: game.impostorUserIDs,
+    imposterUserIDs,
     meeting: game.meeting,
     tasks: player.tasks,
     character: player.character,
