@@ -74,6 +74,7 @@ export class JoinedDataToMod {
   gameID!: number;
   name!: string;
   created!: boolean;
+  hasPassword!: boolean;
   character!: PlayerTypeAllowed;
   reconnected!: boolean;
 }

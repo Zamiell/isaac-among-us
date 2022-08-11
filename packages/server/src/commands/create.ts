@@ -42,11 +42,7 @@ function validate(socket: Socket, name: string, extraData: ExtraCommandData) {
   return validateInNoGames(socket, "create");
 }
 
-export function create(
-  socket: Socket,
-  name: string,
-  password: string | null,
-): void {
+export function create(socket: Socket, name: string, password: string): void {
   const { username } = socket;
 
   if (username === undefined) {
@@ -62,6 +58,7 @@ export function create(
     socket,
     {
       name,
+      password,
       created: true,
     },
     {

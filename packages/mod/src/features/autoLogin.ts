@@ -41,6 +41,7 @@ export function onGameList(gameList: GameListDescription[]): void {
   if (testGameExists) {
     sendTCP(SocketCommandModToServer.JOIN, {
       name: DEBUG_GAME_NAME,
+      password: "",
       created: false,
     });
   } else {

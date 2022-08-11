@@ -6,7 +6,9 @@ import { sendTCP } from "../network/send";
 
 export function commandGameList(data: GameListDataToMod): void {
   if (data.gameList.length === 0) {
-    addLocalChat('No current games. (Create one with the "/create" command.)');
+    addLocalChat(
+      'No current games. (Create one with the "/create [name] [password]" command.)',
+    );
     autoLogin.onGameList(data.gameList);
     return;
   }

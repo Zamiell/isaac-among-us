@@ -19,7 +19,8 @@ function getChatMessage(data: JoinedDataToMod) {
   }
 
   if (data.created) {
-    return `Created game: ${data.name}`;
+    const passwordText = data.hasPassword ? "" : " (with a password)";
+    return `Created game: ${data.name}${passwordText}`;
   }
 
   return `Joined game: ${data.name}`;

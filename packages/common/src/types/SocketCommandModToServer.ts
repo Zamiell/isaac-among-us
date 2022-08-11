@@ -41,6 +41,7 @@ export class CreateDataToServer {
 
 export class JoinDataToServer {
   name = "";
+  password = "";
   created = false;
 }
 

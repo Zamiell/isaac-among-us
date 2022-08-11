@@ -19,10 +19,10 @@ export function commandJoin(
   data: JoinDataToServer,
   extraData: ExtraCommandData,
 ): void {
-  const { name, created } = data;
+  const { name, password, created } = data;
   const { game } = extraData;
 
-  if (!validate(socket, name, extraData) || game === undefined) {
+  if (!validate(socket, name, password, extraData) || game === undefined) {
     return;
   }
 
@@ -32,12 +32,18 @@ export function commandJoin(
 function validate(
   socket: Socket,
   name: string,
+  password: string,
   extraData: ExtraCommandData,
 ): boolean {
   const { game, player } = extraData;
 
   if (game === undefined) {
     error(socket, `There is no game with the name of: ${name}`);
+    return false;
+  }
+
+  if (game.password !== password) {
+    error(socket, `That is the incorrect password for game: ${name}`);
     return false;
   }
 
@@ -77,10 +83,12 @@ export function join(socket: Socket, game: Game, created: boolean): void {
   const player = new Player(index, socketID, userID, username, character);
   game.players.push(player);
 
+  const hasPassword = game.password !== null;
   sendTCP(socket, SocketCommandServerToMod.JOINED, {
     gameID: game.id,
     name: game.name,
     created,
+    hasPassword,
     character,
     reconnected: false,
   });

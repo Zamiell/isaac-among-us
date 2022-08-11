@@ -29,10 +29,13 @@ chatCommandFunctions.set("create", (args: string[]) => {
     return;
   }
 
-  const name = args.join(" ");
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const name = args[0]!;
+  const password = args[1] ?? "";
+
   sendTCP(SocketCommandModToServer.CREATE, {
     name,
-    password: "",
+    password,
   });
 });
 
@@ -68,8 +71,12 @@ chatCommandFunctions.set("gamelist", (_args: string[]) => {
 
 chatCommandFunctions.set("help", (_args: string[]) => {
   if (g.loggedIn) {
-    addLocalChat('To create a game, use the "/create" command.');
-    addLocalChat('To join a game, use the "/join" command.');
+    addLocalChat(
+      'To create a game, use the "/create [name] [password]" command. (Using a password is optional.)',
+    );
+    addLocalChat(
+      'To join a game, use the "/join [name] [password]" command. (Using a password is optional.)',
+    );
     addLocalChat(
       'To see a list of existing games, use the "/gameList" command.',
     );
@@ -87,14 +94,25 @@ chatCommandFunctions.set("join", (args: string[]) => {
     return;
   }
 
+  if (args.length > 2) {
+    addLocalChat(
+      'The format of the "join" command is: /join [name] [password]',
+    );
+    return;
+  }
+
   if (g.game !== null) {
     addLocalChat("You are already in a game, so you cannot join a new one.");
     return;
   }
 
-  const name = args.join(" ");
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const name = args[0]!;
+  const password = args[1] ?? "";
+
   sendTCP(SocketCommandModToServer.JOIN, {
     name,
+    password,
     created: false,
   });
 });
