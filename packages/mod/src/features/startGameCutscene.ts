@@ -30,7 +30,7 @@ export function postRender(): void {
     return;
   }
 
-  switch (g.game.cutscene.state) {
+  switch (g.game.startGameCutscene.state) {
     case CutsceneState.DISABLED: {
       break;
     }
@@ -137,21 +137,22 @@ function drawText() {
 function getTextOpacity() {
   if (
     g.game === null ||
-    g.game.cutscene.state === CutsceneState.TEXT ||
-    g.game.cutscene.startRenderFrame === null
+    g.game.startGameCutscene.state === CutsceneState.TEXT ||
+    g.game.startGameCutscene.startRenderFrame === null
   ) {
     return 1;
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
-  const renderFramesPassed = isaacFrameCount - g.game.cutscene.startRenderFrame;
+  const renderFramesPassed =
+    isaacFrameCount - g.game.startGameCutscene.startRenderFrame;
   const opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES;
 
-  if (g.game.cutscene.state === CutsceneState.TEXT_FADING_IN) {
+  if (g.game.startGameCutscene.state === CutsceneState.TEXT_FADING_IN) {
     return opacity;
   }
 
-  if (g.game.cutscene.state === CutsceneState.TEXT_FADING_OUT) {
+  if (g.game.startGameCutscene.state === CutsceneState.TEXT_FADING_OUT) {
     return 1 - opacity;
   }
 
@@ -165,12 +166,13 @@ function drawItem(centerPos: Vector, opacity: float) {
 }
 
 function hasFadeFinished(): boolean {
-  if (g.game === null || g.game.cutscene.startRenderFrame === null) {
+  if (g.game === null || g.game.startGameCutscene.startRenderFrame === null) {
     return false;
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
-  const renderFramesPassed = isaacFrameCount - g.game.cutscene.startRenderFrame;
+  const renderFramesPassed =
+    isaacFrameCount - g.game.startGameCutscene.startRenderFrame;
   return renderFramesPassed >= FADE_TO_BLACK_FRAMES;
 }
 
@@ -188,8 +190,8 @@ function setState(state: CutsceneState) {
 
   const isaacFrameCount = Isaac.GetFrameCount();
 
-  g.game.cutscene.state = state;
-  g.game.cutscene.startRenderFrame = isaacFrameCount;
+  g.game.startGameCutscene.state = state;
+  g.game.startGameCutscene.startRenderFrame = isaacFrameCount;
   log(`Changed start game cutscene state: ${CutsceneState[state]} (${state})`);
 }
 

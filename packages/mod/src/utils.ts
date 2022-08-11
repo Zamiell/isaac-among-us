@@ -95,7 +95,10 @@ export function inCutscene(): boolean {
     return false;
   }
 
-  return g.game.cutscene.state !== CutsceneState.DISABLED;
+  return (
+    g.game.startGameCutscene.state !== CutsceneState.DISABLED &&
+    g.game.endGameCutscene.state !== CutsceneState.DISABLED
+  );
 }
 
 export function inEndMeeting(): boolean {

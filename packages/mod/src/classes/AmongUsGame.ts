@@ -42,9 +42,16 @@ export class AmongUsGame {
   startTaskTime = 0;
   endTaskTime = 0;
 
-  cutscene = {
+  startGameCutscene = {
     state: CutsceneState.DISABLED,
     startRenderFrame: null as int | null,
+  };
+
+  endGameCutscene = {
+    state: CutsceneState.DISABLED,
+    startRenderFrame: null as int | null,
+    winningRole: Role.CREW,
+    roles: [] as Role[],
   };
 
   startMeeting = {
@@ -57,11 +64,6 @@ export class AmongUsGame {
     startRenderFrame: null as int | null,
     meetingResolution: MeetingResolution.EJECT,
     userIDEjected: null as int | null,
-  };
-
-  winner = {
-    winningRole: null as Role | null,
-    roles: [] as Role[],
   };
 
   constructor(id: int, name: string, character: PlayerTypeAllowed) {

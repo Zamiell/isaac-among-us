@@ -7,6 +7,8 @@ export function commandEndGame(data: EndGameDataToMod): void {
     return;
   }
 
-  g.game.winner = data;
+  g.game.endGameCutscene.winningRole = data.winningRole;
+  g.game.endGameCutscene.roles = data.roles;
+
   startEndGameCutscene();
 }
