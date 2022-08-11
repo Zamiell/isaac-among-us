@@ -1,5 +1,7 @@
+import { SkeldRoom } from "common";
 import g from "../globals";
 import { disableMinimapAPI } from "../minimapAPI";
+import { getSkeldRoom } from "../stageAPI";
 import { taskFunctions } from "../taskFunctions";
 import { clearRoomEntities } from "./taskSubroutines";
 
@@ -21,4 +23,9 @@ function setupTaskRoom() {
   }
 
   g.game.startTaskTime = Isaac.GetTime();
+}
+
+export function inTask(): boolean {
+  const skeldRoom = getSkeldRoom();
+  return skeldRoom === SkeldRoom.TASK;
 }

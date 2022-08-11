@@ -48,6 +48,11 @@ function warpToCafeteriaAndBack() {
   const game = Game();
   const level = game.GetLevel();
   const roomName = getStageAPIRoomName();
+  if (roomName === undefined) {
+    error(
+      "Failed to get the StageAPI room name when warping to the cafeteria and back.",
+    );
+  }
 
   warping = true;
   const enterDoor = level.EnterDoor;

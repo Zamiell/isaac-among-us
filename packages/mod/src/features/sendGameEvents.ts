@@ -20,13 +20,17 @@ export function sendRoom(): void {
     return;
   }
 
-  const game = Game();
   const roomName = getStageAPIRoomName();
+  if (roomName === undefined) {
+    return;
+  }
+
   const skeldRoom = skeldRoomMap.get(roomName);
   if (skeldRoom === undefined || skeldRoom === SkeldRoom.TASK) {
     return;
   }
 
+  const game = Game();
   const room = game.GetRoom();
   const player = Isaac.GetPlayer();
   const gridIndex = room.GetClampedGridIndex(player.Position);

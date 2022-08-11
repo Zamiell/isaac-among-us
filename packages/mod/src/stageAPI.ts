@@ -4,7 +4,7 @@ import {
   DoorSlot,
   RoomTransitionAnim,
 } from "isaac-typescript-definitions";
-import { game } from "isaacscript-common";
+import { asNumber, game } from "isaacscript-common";
 import { inLobby } from "./features/lobby";
 import { sendRoom } from "./features/sendGameEvents";
 import g from "./globals";
@@ -27,7 +27,7 @@ export function getStageAPIRoomMapID(skeldRoom: SkeldRoom): int | undefined {
   const levelMap = StageAPI.GetCurrentLevelMap();
   const matchingRoomData = levelMap.Map.find((roomData) => {
     const levelRoom = levelMap.GetRoom(roomData);
-    return levelRoom.Layout.Variant === skeldRoom;
+    return levelRoom.Layout.Variant === asNumber(skeldRoom);
   });
 
   return matchingRoomData === undefined ? undefined : matchingRoomData.MapID;
@@ -39,8 +39,11 @@ export function getSkeldRoom(): SkeldRoom | undefined {
   }
 
   const roomName = getStageAPIRoomName();
-  const skeldRoom = skeldRoomMap.get(roomName);
-  return skeldRoom === undefined ? undefined : skeldRoom;
+  if (roomName === undefined) {
+    return undefined;
+  }
+
+  return skeldRoomMap.get(roomName);
 }
 
 export function getStageAPIDoors(): StageAPICustomGridEntity[] {
@@ -116,6 +119,10 @@ export function loadBackdrops(): void {
   }
 
   const roomName = getStageAPIRoomName();
+  if (roomName === undefined) {
+    return undefined;
+  }
+
   const room = skeldRoomMap.get(roomName);
   if (room === undefined) {
     return;

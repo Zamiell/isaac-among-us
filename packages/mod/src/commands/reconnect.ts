@@ -43,9 +43,6 @@ export function commandReconnect(data: ReconnectDataToMod): void {
 
   if (data.room !== SkeldRoom.CAFETERIA) {
     const roomName = skeldRoomReverseMap[data.room];
-    if (roomName === undefined) {
-      error(`Failed to get the room name for room: ${data.room}`);
-    }
     goToStageAPIRoom(roomName);
   }
 

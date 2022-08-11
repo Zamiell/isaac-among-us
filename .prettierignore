@@ -13,4 +13,3 @@ packages/mod/**/map.xml
 
 # Ignore all of the XML files created by the animation editor.
 packages/mod/resources/**/*.anm2
-

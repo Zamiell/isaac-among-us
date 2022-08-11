@@ -1,13 +1,11 @@
-export function getStageAPIRoomName(): string {
-  const defaultReturn = "Unknown";
-
+export function getStageAPIRoomName(): string | undefined {
   if (StageAPI === undefined) {
-    return defaultReturn;
+    return undefined;
   }
 
   const stageAPIRoom = StageAPI.GetCurrentRoom();
   if (stageAPIRoom === undefined) {
-    return defaultReturn;
+    return undefined;
   }
 
   return stageAPIRoom.Layout.Name;

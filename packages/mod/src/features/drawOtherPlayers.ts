@@ -17,6 +17,7 @@ import { isConsoleOpen } from "./console";
 import { inEndMeeting } from "./endMeeting";
 import { getMeetingCirclePoints } from "./setupMeeting";
 import { inStartMeeting } from "./startMeeting";
+import { inTask } from "./task";
 
 const MULTIPLAYER_ANM2_PREFIX = "gfx/multiplayer/";
 const MULTIPLAYER_ANM2_SUFFIX = ".anm2";
@@ -32,6 +33,10 @@ const playerEffectMap = new Map<int, EntityRef>();
 // ModCallback.POST_RENDER (2)
 export function postRender(): void {
   if (g.game === null) {
+    return;
+  }
+
+  if (inTask()) {
     return;
   }
 

@@ -42,13 +42,13 @@ export function postRender(): void {
   }
 
   const roomName = getStageAPIRoomName();
-  if (roomName === "Unknown") {
+  if (roomName === undefined) {
     return;
   }
 
-  let skeldRoom = getSkeldRoom();
+  const skeldRoom = getSkeldRoom();
   if (skeldRoom === undefined) {
-    skeldRoom = -1;
+    return;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
