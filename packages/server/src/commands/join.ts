@@ -32,7 +32,7 @@ export function commandJoin(
     return;
   }
 
-  join(userID, game, created);
+  join(userID, game.id, created);
 }
 
 function validate(
