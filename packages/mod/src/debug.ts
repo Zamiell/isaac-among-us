@@ -1,5 +1,4 @@
 import { IS_DEV, SkeldRoom } from "common";
-import { log } from "isaacscript-common";
 import { startAutoLogin } from "./features/autoLogin";
 import { startMeeting } from "./features/startMeeting";
 import g from "./globals";
@@ -9,18 +8,6 @@ import { goToStageAPIRoom } from "./stageAPI";
 /** From the "d" console command. */
 export function debugFunction1(): void {
   // Add code here
-  if (StageAPI === undefined || g.game === null) {
-    return;
-  }
-
-  const levelMap = StageAPI.GetCurrentLevelMap();
-  for (const roomData of levelMap.Map) {
-    log(`MapID: ${roomData.MapID}`);
-    log(`RoomID: ${roomData.RoomID}`);
-    const levelRoom = levelMap.GetRoom(roomData);
-    log(`Name: ${levelRoom.Layout.Name}`);
-    log(`Variant: ${levelRoom.Layout.Variant}`);
-  }
 }
 
 /** From the "d2" console command. */
@@ -91,6 +78,7 @@ export function warp(params: string): void {
   } else {
     const skeldRoom = num as SkeldRoom;
     roomName = skeldRoomReverseMap[skeldRoom];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (roomName === undefined) {
       print(`Failed to find the room name for room ID: ${skeldRoom}`);
       return;
