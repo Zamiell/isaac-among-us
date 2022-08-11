@@ -9,7 +9,7 @@ import {
 } from "./constants";
 import { getEnumValues } from "./utils";
 
-const DEV_TASK: Task | null = Task.SHORT_BOMB_ROCKS;
+const DEV_TASK: Task | null = null;
 
 export function assignTasks(game: Game): void {
   const allTasks = getEnumValues(Task);

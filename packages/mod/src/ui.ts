@@ -1,7 +1,6 @@
 import { isConsoleOpen } from "./features/console";
-import { inCutscene } from "./features/cutscene";
-import { inEndMeeting } from "./features/endMeeting";
 import g from "./globals";
+import { inCutscene, inEndMeeting } from "./utils";
 
 export function shouldShowUIButton(): boolean {
   return (

@@ -5,9 +5,8 @@ import {
   ModCallback,
 } from "isaac-typescript-definitions";
 import { game } from "isaacscript-common";
-import { inCutscene } from "../features/cutscene";
-import { inEndMeeting } from "../features/endMeeting";
 import g from "../globals";
+import { inCutscene, inEndMeeting } from "../utils";
 
 const MOVEMENT_BUTTONS = new Set<ButtonAction>([
   ButtonAction.LEFT, // 0

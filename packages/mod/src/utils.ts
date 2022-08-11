@@ -12,6 +12,9 @@ import {
   setBlindfold,
   VectorZero,
 } from "isaacscript-common";
+import { CutsceneState } from "./enums/CutsceneState";
+import { EndMeetingState } from "./enums/EndMeetingState";
+import { StartMeetingState } from "./enums/StartMeetingState";
 import { fonts } from "./fonts";
 import g from "./globals";
 
@@ -85,6 +88,34 @@ export function getRoleText(role: Role): string {
 export function getScreenPosition(x: float, y: float): Vector {
   const bottomRightPos = getScreenBottomRightPos();
   return Vector(x * bottomRightPos.X, y * bottomRightPos.Y);
+}
+
+export function inCutscene(): boolean {
+  if (g.game === null) {
+    return false;
+  }
+
+  return g.game.cutscene.state !== CutsceneState.DISABLED;
+}
+
+export function inEndMeeting(): boolean {
+  if (g.game === null) {
+    return false;
+  }
+
+  // We want inputs to be completely disabled until the game has fully faded in.
+  return g.game.endMeeting.state !== EndMeetingState.DISABLED;
+}
+
+export function inStartMeeting(): boolean {
+  if (g.game === null || g.game.meeting === null) {
+    return false;
+  }
+
+  return (
+    g.game.startMeeting.state !== StartMeetingState.DISABLED &&
+    g.game.startMeeting.state !== StartMeetingState.FADING_TO_GAME
+  );
 }
 
 export function movePlayerToGridIndex(gridIndex: int): void {

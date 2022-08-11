@@ -39,9 +39,6 @@ function enablePlayer(enable: boolean) {
     return;
   }
 
-  const game = Game();
-  const room = game.GetRoom();
-  const centerPos = room.GetGridPosition(CENTER_TABLE_GRID_INDEX);
   const ourPlayerIndex = getOurPlayerIndex();
   if (ourPlayerIndex === undefined) {
     error(
@@ -51,7 +48,7 @@ function enablePlayer(enable: boolean) {
 
   const circlePoints = getMeetingCirclePoints();
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const endMeetingPos = circlePoints[ourPlayerIndex]!;
+  const position = circlePoints[ourPlayerIndex]!;
   const player = Isaac.GetPlayer();
 
   // Make the player invisible so that the camera is centered; we will draw a sprite representing
@@ -60,7 +57,7 @@ function enablePlayer(enable: boolean) {
   player.EntityCollisionClass = enable
     ? EntityCollisionClass.ALL
     : EntityCollisionClass.NONE;
-  player.Position = enable ? endMeetingPos : centerPos;
+  player.Position = position;
 }
 
 function enableButton(enable: boolean) {

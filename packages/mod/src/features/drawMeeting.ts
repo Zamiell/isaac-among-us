@@ -1,10 +1,13 @@
 import { Meeting, MeetingPhase } from "common";
 import g from "../globals";
 import { getTime } from "../network/socketClient";
-import { drawFontText, getScreenPosition } from "../utils";
+import {
+  drawFontText,
+  getScreenPosition,
+  inEndMeeting,
+  inStartMeeting,
+} from "../utils";
 import { isConsoleOpen } from "./console";
-import { inEndMeeting } from "./endMeeting";
-import { inStartMeeting } from "./startMeeting";
 
 const TEXT_X = 0.85;
 const TIME_LEFT_POS = getScreenPosition(TEXT_X, 0.45);

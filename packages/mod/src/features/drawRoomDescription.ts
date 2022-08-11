@@ -2,10 +2,8 @@ import { IS_DEV, MAX_PLAYERS, TASK_DESCRIPTIONS } from "common";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
 import { getStageAPIRoomName } from "../stageAPISubroutines";
-import { drawFontText } from "../utils";
+import { drawFontText, inCutscene, inEndMeeting } from "../utils";
 import { isConsoleOpen } from "./console";
-import { inCutscene } from "./cutscene";
-import { inEndMeeting } from "./endMeeting";
 import { inLobby } from "./lobby";
 
 const TEXT_GRID_INDEX = 7;

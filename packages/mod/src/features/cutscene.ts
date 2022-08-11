@@ -189,14 +189,6 @@ function setState(state: CutsceneState) {
   g.game.cutscene.startRenderFrame = isaacFrameCount;
 }
 
-export function inCutscene(): boolean {
-  if (g.game === null) {
-    return false;
-  }
-
-  return g.game.cutscene.state !== CutsceneState.DISABLED;
-}
-
 function setSprite() {
   if (g.game === null) {
     return;

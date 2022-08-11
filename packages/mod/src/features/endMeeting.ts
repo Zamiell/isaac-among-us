@@ -6,6 +6,7 @@ import g from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
 import { drawFontText } from "../utils";
 import { FADE_TO_BLACK_FRAMES, setBlackSpriteState } from "./blackSprite";
+import { setSelfMultiplayerEntityInvisible } from "./drawOtherPlayers";
 import { setupMeeting } from "./setupMeeting";
 
 // ModCallback.POST_RENDER (2)
@@ -58,6 +59,7 @@ function postRenderTextFadingIn() {
 
   if (g.game !== null && hasFadeFinished()) {
     setState(EndMeetingState.TEXT);
+    setSelfMultiplayerEntityInvisible();
   }
 }
 
@@ -181,13 +183,4 @@ function setState(state: EndMeetingState) {
   if (state === EndMeetingState.DISABLED) {
     g.game.endMeeting.userIDEjected = null;
   }
-}
-
-export function inEndMeeting(): boolean {
-  if (g.game === null) {
-    return false;
-  }
-
-  // We want inputs to be completely disabled until the game has fully faded in.
-  return g.game.endMeeting.state !== EndMeetingState.DISABLED;
 }

@@ -63,9 +63,6 @@ export function taskLeave(): void {
 
   const taskDescription = TASK_DESCRIPTIONS[g.game.currentTask];
   const roomName = skeldRoomReverseMap[taskDescription.room];
-  if (roomName === undefined) {
-    error(`Failed to get the room name for room: ${taskDescription.room}`);
-  }
 
   g.game.currentTask = null;
   g.game.endTaskTime = Isaac.GetTime();

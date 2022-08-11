@@ -13,10 +13,9 @@ import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import { fonts } from "../fonts";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
+import { inEndMeeting, inStartMeeting } from "../utils";
 import { isConsoleOpen } from "./console";
-import { inEndMeeting } from "./endMeeting";
 import { getMeetingCirclePoints } from "./setupMeeting";
-import { inStartMeeting } from "./startMeeting";
 import { inTask } from "./task";
 
 const MULTIPLAYER_ANM2_PREFIX = "gfx/multiplayer/";
@@ -315,4 +314,21 @@ export function drawUsername(
     0,
     true,
   );
+}
+
+/**
+ * At the end of a meeting, we need to make the multiplayer entity that corresponds to our player
+ * invisible.
+ */
+export function setSelfMultiplayerEntityInvisible(): void {
+  if (g.userID === null) {
+    return;
+  }
+
+  const entityRef = playerEffectMap.get(g.userID);
+  if (entityRef === undefined || entityRef.Entity === undefined) {
+    return;
+  }
+
+  entityRef.Entity.Visible = false;
 }

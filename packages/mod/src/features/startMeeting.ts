@@ -143,14 +143,3 @@ function setState(state: StartMeetingState) {
   g.game.startMeeting.state = state;
   g.game.startMeeting.startRenderFrame = isaacFrameCount;
 }
-
-export function inStartMeeting(): boolean {
-  if (g.game === null || g.game.meeting === null) {
-    return false;
-  }
-
-  return (
-    g.game.startMeeting.state !== StartMeetingState.DISABLED &&
-    g.game.startMeeting.state !== StartMeetingState.FADING_TO_GAME
-  );
-}

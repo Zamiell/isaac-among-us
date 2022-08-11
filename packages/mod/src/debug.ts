@@ -1,6 +1,5 @@
 import { IS_DEV, SkeldRoom } from "common";
 import { startAutoLogin } from "./features/autoLogin";
-import { startMeeting } from "./features/startMeeting";
 import g from "./globals";
 import { skeldRoomReverseMap } from "./skeldRoomMap";
 import { goToStageAPIRoom } from "./stageAPI";
@@ -21,9 +20,7 @@ export function hotkeyFunction1(): void {
 }
 
 /** Bound to F2. */
-export function hotkeyFunction2(): void {
-  startMeeting();
-}
+export function hotkeyFunction2(): void {}
 
 export function injectTestPlayers(): void {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -39,7 +36,7 @@ export function injectTestPlayers(): void {
     "leo_ze_tron",
     "AshD0wn",
     "Slash_SP",
-    "Marcus",
+    "StoneAgeMarcus",
     "thereisnofuture", // cspell:disable-line
     "Dea1h",
     "Fawkeyes", // cspell:disable-line
