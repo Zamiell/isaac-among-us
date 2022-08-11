@@ -9,6 +9,8 @@ packages/mod/content/rooms/**/*.xml
 packages/mod/content/luarooms/**/*.xml
 packages/mod/resources/rooms/**/*.xml
 packages/mod/resources/luarooms/**/*.xml
+packages/mod/**/map.xml
 
 # Ignore all of the XML files created by the animation editor.
 packages/mod/resources/**/*.anm2
+
