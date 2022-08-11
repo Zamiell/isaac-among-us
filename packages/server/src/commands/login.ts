@@ -1,6 +1,6 @@
 import argon2 from "argon2";
 import { LoginDataToServer, SocketCommandServerToMod } from "common";
-import { error } from "../error";
+import { sendError } from "../error";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
 import { Socket } from "../interfaces/Socket";
 import * as users from "../models/users";
@@ -28,7 +28,7 @@ export async function commandLogin(
     // This user already exists in the database.
     const passwordMatches = await argon2.verify(user.passwordHash, password);
     if (!passwordMatches) {
-      error(socket, `That password is incorrect for username: ${username}`);
+      sendError(socket, `That password is incorrect for username: ${username}`);
       return;
     }
 

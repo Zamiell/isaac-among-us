@@ -5,13 +5,14 @@ import {
 } from "common";
 import { Game } from "../classes/Game";
 import { Player } from "../classes/Player";
-import { error } from "../error";
+import { sendError } from "../error";
 import { getLowestUnusedCharacter } from "../game";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
 import { Socket } from "../interfaces/Socket";
 import { logGameEvent } from "../log";
 import { sendChat, sendNewGameDescription } from "../sendGame";
 import { sendTCP } from "../sendTCP";
+import { getTCPSocketByUserID } from "../tcpSockets";
 import { validateInNoGames } from "../validate";
 
 export function commandJoin(
@@ -19,14 +20,19 @@ export function commandJoin(
   data: JoinDataToServer,
   extraData: ExtraCommandData,
 ): void {
+  const { userID } = socket;
   const { name, password, created } = data;
   const { game } = extraData;
 
-  if (!validate(socket, name, password, extraData) || game === undefined) {
+  if (
+    !validate(socket, name, password, extraData) ||
+    userID === undefined ||
+    game === undefined
+  ) {
     return;
   }
 
-  join(socket, game, created);
+  join(userID, game, created);
 }
 
 function validate(
@@ -38,17 +44,17 @@ function validate(
   const { game, player } = extraData;
 
   if (game === undefined) {
-    error(socket, `There is no game with the name of: ${name}`);
+    sendError(socket, `There is no game with the name of: ${name}`);
     return false;
   }
 
   if (game.password !== password) {
-    error(socket, `That is the incorrect password for game: ${name}`);
+    sendError(socket, `That is the incorrect password for game: ${name}`);
     return false;
   }
 
   if (game.started) {
-    error(
+    sendError(
       socket,
       `Game "${game.name}" has already started, so you cannot join it.`,
     );
@@ -56,7 +62,7 @@ function validate(
   }
 
   if (game.players.length > MAX_PLAYERS) {
-    error(
+    sendError(
       socket,
       `You cannot join a game that already has ${MAX_PLAYERS} in it.`,
     );
@@ -64,17 +70,24 @@ function validate(
   }
 
   if (player !== undefined) {
-    error(socket, `You have already joined game: ${name}`);
+    sendError(socket, `You have already joined game: ${name}`);
     return false;
   }
 
   return validateInNoGames(socket, "join");
 }
 
-export function join(socket: Socket, game: Game, created: boolean): void {
-  const { socketID, userID, username } = socket;
+export function join(userID: number, game: Game, created: boolean): void {
+  const socket = getTCPSocketByUserID(userID);
+  if (socket === undefined) {
+    throw new Error(
+      `Failed to join a game because there was no corresponding socket for user ID: ${userID}`,
+    );
+  }
 
-  if (userID === undefined || username === undefined) {
+  const { socketID, username } = socket;
+
+  if (username === undefined) {
     return;
   }
 

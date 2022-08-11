@@ -60,6 +60,7 @@ export class GameListDescription {
   id!: number;
   name!: string;
   numPlayers!: number;
+  hasPassword!: boolean;
   started!: boolean;
   joined!: boolean;
 }

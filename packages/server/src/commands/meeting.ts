@@ -12,7 +12,7 @@ import {
   DEFAULT_MEETING_PRE_VOTE_SECONDS,
   DEFAULT_MEETING_VOTE_SECONDS,
 } from "../constants";
-import { error } from "../error";
+import { sendError } from "../error";
 import { doesGameIDExist } from "../games";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
 import { Socket } from "../interfaces/Socket";
@@ -72,7 +72,7 @@ function validate(
   }
 
   if (meetingType === MeetingType.EMERGENCY && player.usedEmergencyMeeting) {
-    error(
+    sendError(
       socket,
       "You have already used your emergency meeting for this game.",
     );
@@ -90,7 +90,7 @@ function validate(
   */
 
   if (game.meeting !== null) {
-    error(
+    sendError(
       socket,
       "There is already a meeting going, so you cannot call another one.",
     );

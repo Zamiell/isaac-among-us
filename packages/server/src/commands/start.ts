@@ -6,7 +6,7 @@ import {
   StartDataToServer,
 } from "common";
 import { Game } from "../classes/Game";
-import { error } from "../error";
+import { sendError } from "../error";
 import { doesGameIDExist } from "../games";
 import { assignImpostors } from "../imposters";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
@@ -43,7 +43,10 @@ function validate(socket: Socket, extraData: ExtraCommandData) {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const minPlayers = IS_DEV ? DEV_MIN_PLAYERS : MIN_PLAYERS;
   if (game.players.length < minPlayers) {
-    error(socket, `You need at least ${minPlayers} players to start a game.`);
+    sendError(
+      socket,
+      `You need at least ${minPlayers} players to start a game.`,
+    );
     return false;
   }
 

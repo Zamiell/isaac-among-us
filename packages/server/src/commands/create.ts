@@ -1,13 +1,14 @@
 import { CreateDataToServer } from "common";
 import { Game } from "../classes/Game";
-import { error } from "../error";
+import { sendError } from "../error";
 import { games, getNewGameID } from "../games";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
 import { Socket } from "../interfaces/Socket";
 import { logGameEvent } from "../log";
 import { sendAllNewGame } from "../sendAll";
+import { getTCPSocketByUserID } from "../tcpSockets";
 import { validateInNoGames } from "../validate";
-import { commandJoin } from "./join";
+import { join } from "./join";
 
 export function commandCreate(
   socket: Socket,
@@ -15,9 +16,9 @@ export function commandCreate(
   extraData: ExtraCommandData,
 ): void {
   const { name, password } = data;
-  const { username } = socket;
+  const { userID, username } = socket;
 
-  if (username === undefined) {
+  if (userID === undefined || username === undefined) {
     return;
   }
 
@@ -25,14 +26,14 @@ export function commandCreate(
     return;
   }
 
-  create(socket, name, password);
+  create(userID, name, password);
 }
 
 function validate(socket: Socket, name: string, extraData: ExtraCommandData) {
   const { game } = extraData;
 
   if (game !== undefined) {
-    error(
+    sendError(
       socket,
       `There is already a game with the name of "${name}". Please choose a different name.`,
     );
@@ -42,7 +43,18 @@ function validate(socket: Socket, name: string, extraData: ExtraCommandData) {
   return validateInNoGames(socket, "create");
 }
 
-export function create(socket: Socket, name: string, password: string): void {
+export function create(
+  userID: number,
+  name: string,
+  password: string | null,
+): void {
+  const socket = getTCPSocketByUserID(userID);
+  if (socket === undefined) {
+    throw new Error(
+      `Failed to create a game because there was no corresponding socket for user ID: ${userID}`,
+    );
+  }
+
   const { username } = socket;
 
   if (username === undefined) {
@@ -54,17 +66,7 @@ export function create(socket: Socket, name: string, password: string): void {
   const game = new Game(gameID, name, passwordToUse);
   games.set(gameID, game);
 
-  commandJoin(
-    socket,
-    {
-      name,
-      password,
-      created: true,
-    },
-    {
-      game,
-    },
-  );
+  join(userID, game, true);
 
   logGameEvent(game, "Created.");
 

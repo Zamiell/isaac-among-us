@@ -6,7 +6,7 @@ import {
 } from "common";
 import { Game } from "../classes/Game";
 import { Player } from "../classes/Player";
-import { error } from "../error";
+import { sendError } from "../error";
 import { getPlayer, getPlayerIndex } from "../game";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
 import { Socket } from "../interfaces/Socket";
@@ -76,12 +76,15 @@ function validate(
   }
 
   if (game.meeting === null) {
-    error(socket, "You cannot vote unless there is a meeting currently going.");
+    sendError(
+      socket,
+      "You cannot vote unless there is a meeting currently going.",
+    );
     return false;
   }
 
   if (game.meeting.meetingPhase !== MeetingPhase.VOTING) {
-    error(
+    sendError(
       socket,
       "You cannot vote until the voting phase of the meeting begins.",
     );
@@ -95,19 +98,19 @@ function validate(
 
   const currentVote = game.meeting.votes[playerIndex];
   if (currentVote !== NOT_VOTED_YET) {
-    error(socket, "You have already voted, so you cannot vote again.");
+    sendError(socket, "You have already voted, so you cannot vote again.");
     return false;
   }
 
   if (userIDVotedFor < 0 && userIDVotedFor !== VOTE_SKIP) {
-    error(socket, `The value of ${userIDVotedFor} is not a valid user ID.`);
+    sendError(socket, `The value of ${userIDVotedFor} is not a valid user ID.`);
     return false;
   }
 
   if (!skip) {
     const playerVotedFor = getPlayer(userIDVotedFor, game);
     if (playerVotedFor === undefined) {
-      error(socket, `Player ${userIDVotedFor} is not in game ${game.id}.`);
+      sendError(socket, `Player ${userIDVotedFor} is not in game ${game.id}.`);
       return false;
     }
   }

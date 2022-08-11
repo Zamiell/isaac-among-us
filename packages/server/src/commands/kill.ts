@@ -1,7 +1,7 @@
 import { KillDataToServer, PlayerBody, Role } from "common";
 import { Game } from "../classes/Game";
 import { endGame } from "../endGame";
-import { error } from "../error";
+import { sendError } from "../error";
 import { getPlayer } from "../game";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
 import { Socket } from "../interfaces/Socket";
@@ -33,19 +33,19 @@ function validate(
   }
 
   if (game.meeting !== null) {
-    error(socket, "You cannot send that command while a meeting is going.");
+    sendError(socket, "You cannot send that command while a meeting is going.");
     return false;
   }
 
   if (player.role !== Role.IMPOSTER) {
-    error(socket, "You can only send that command as an impostor.");
+    sendError(socket, "You can only send that command as an impostor.");
     return false;
   }
 
   const { userIDKilled } = data;
   const playerKilled = getPlayer(userIDKilled, game);
   if (playerKilled === undefined) {
-    error(socket, "That is an invalid player to kill.");
+    sendError(socket, "That is an invalid player to kill.");
     return false;
   }
 

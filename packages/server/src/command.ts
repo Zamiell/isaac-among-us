@@ -1,7 +1,7 @@
 import { SocketCommandModToServer, SocketCommandModToServerData } from "common";
 import { Game } from "./classes/Game";
 import { commandMap } from "./commandMap";
-import { error } from "./error";
+import { sendError } from "./error";
 import { getPlayer } from "./game";
 import { games, getGameByName } from "./games";
 import { ExtraCommandData } from "./interfaces/ExtraCommandData";
@@ -56,7 +56,7 @@ export function handleCommand(
   const commandFunction = commandMap[command];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (commandFunction === undefined) {
-    error(socket, `Invalid command: ${command}`);
+    sendError(socket, `Invalid command: ${command}`);
     return;
   }
 
@@ -85,14 +85,14 @@ function validate(
   rawData: unknown,
 ): Record<string, unknown> | undefined {
   if (rawData === null || rawData === undefined) {
-    error(socket, `You must specify data for the command: ${command}`);
+    sendError(socket, `You must specify data for the command: ${command}`);
     return undefined;
   }
 
   const ClassConstructor = SocketCommandModToServerData[command];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (ClassConstructor === undefined) {
-    error(
+    sendError(
       socket,
       `Failed to find an internal data schema for the command: ${command}`,
     );
@@ -107,17 +107,18 @@ function validate(
     // For all commands, uninitialized values are not allowed.
     const value = data[key];
     if (value === undefined || value === null) {
-      error(socket, `You must specify a value for the field: ${key}`);
+      sendError(socket, `You must specify a value for the field: ${key}`);
       return undefined;
     }
 
-    // For all commands, empty strings are not allowed (and we also trim leading and trailing
-    // whitespace to prevent confusion).
+    // For all commands, empty strings are not allowed. (We also trim leading and trailing
+    // whitespace to prevent confusion.)
     let modifiedValue = value;
     if (typeof value === "string") {
       modifiedValue = value.trim();
-      if (modifiedValue === "") {
-        error(socket, `You must specify a value for the field: ${key}`);
+      // Hard code some exceptions, like for the "password" field.
+      if (modifiedValue === "" && key !== "password") {
+        sendError(socket, `You must specify a value for the field: ${key}`);
         return undefined;
       }
     }
@@ -135,7 +136,7 @@ function validate(
   const commandRequiresToBeLoggedIn =
     !COMMANDS_ALLOWED_WHILE_NOT_LOGGED_IN.has(command);
   if (commandRequiresToBeLoggedIn && !socket.loggedIn) {
-    error(
+    sendError(
       socket,
       `You must login first before sending a "${command}" command.`,
     );
@@ -281,7 +282,7 @@ function commandMatchesExtraData(
 
   const commandRequiresAGame = !COMMANDS_WITH_NO_ASSOCIATED_GAME.has(command);
   if (commandRequiresAGame && game === undefined) {
-    error(socket, "There is not a game with the provided game ID or name.");
+    sendError(socket, "There is not a game with the provided game ID or name.");
     return false;
   }
 
@@ -294,7 +295,7 @@ function commandMatchesExtraData(
     command !== SocketCommandModToServer.CREATE &&
     command !== SocketCommandModToServer.JOIN
   ) {
-    error(
+    sendError(
       socket,
       `You are not in game ${game.id}, so you cannot perform a "${command}" command.`,
     );
@@ -318,7 +319,7 @@ function commandMatchesGameStartedState(
     !COMMANDS_ALLOWED_WHILE_GAME_NOT_STARTED.has(command);
 
   if (commandRequiredGameStarted && !game.started) {
-    error(
+    sendError(
       socket,
       `Game ${game.id} is not started, so you cannot send a "${command}" command.`,
     );
@@ -326,7 +327,7 @@ function commandMatchesGameStartedState(
   }
 
   if (!commandRequiredGameStarted && game.started) {
-    error(
+    sendError(
       socket,
       `Game ${game.id} is already started, so you cannot send a "${command}" command.`,
     );

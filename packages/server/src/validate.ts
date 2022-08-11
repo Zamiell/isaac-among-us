@@ -1,5 +1,5 @@
 import { Game } from "./classes/Game";
-import { error } from "./error";
+import { sendError } from "./error";
 import { isPlayerOwner } from "./game";
 import { isUserInAnyGames } from "./games";
 import { Socket } from "./interfaces/Socket";
@@ -10,7 +10,7 @@ export function validateString(
   value: unknown,
 ): boolean {
   if (typeof value !== "string") {
-    error(socket, `The "${key}" field must be a string.`);
+    sendError(socket, `The "${key}" field must be a string.`);
     return false;
   }
 
@@ -24,7 +24,7 @@ export function validateMinStringLength(
   minLength: number,
 ): boolean {
   if (value.length < minLength) {
-    error(
+    sendError(
       socket,
       `The "${key}" field must be at least ${minLength} characters long.`,
     );
@@ -41,7 +41,7 @@ export function validateMaxStringLength(
   maxLength: number,
 ): boolean {
   if (value.length > maxLength) {
-    error(
+    sendError(
       socket,
       `The "${key}" field cannot be longer than ${maxLength} characters.`,
     );
@@ -57,7 +57,7 @@ export function validateAlphanumeric(
   value: string,
 ): boolean {
   if (/^[a-z0-9]+$/i.exec(value) === null) {
-    error(socket, `The "${key}" field must be alphanumeric.`);
+    sendError(socket, `The "${key}" field must be alphanumeric.`);
     return false;
   }
 
@@ -70,7 +70,7 @@ export function validateNumber(
   value: unknown,
 ): boolean {
   if (typeof value !== "number") {
-    error(socket, `The "${key}" field must be a number.`);
+    sendError(socket, `The "${key}" field must be a number.`);
     return false;
   }
 
@@ -83,7 +83,7 @@ export function validateInteger(
   value: number,
 ): boolean {
   if (!Number.isInteger(value)) {
-    error(socket, `The "${key}" field must be an integer.`);
+    sendError(socket, `The "${key}" field must be an integer.`);
     return false;
   }
 
@@ -96,7 +96,7 @@ export function validateBoolean(
   value: unknown,
 ): boolean {
   if (typeof value !== "boolean") {
-    error(socket, `The "${key}" field must be a boolean.`);
+    sendError(socket, `The "${key}" field must be a boolean.`);
     return false;
   }
 
@@ -111,7 +111,7 @@ export function validateInNoGames(socket: Socket, verb: string): boolean {
   }
 
   if (isUserInAnyGames(userID)) {
-    error(socket, `You are already in a game, so you cannot ${verb} one.`);
+    sendError(socket, `You are already in a game, so you cannot ${verb} one.`);
     return false;
   }
 
@@ -133,7 +133,7 @@ export function validateGameOwner(
     const firstPlayer = game.players[0];
     const ownerName =
       firstPlayer === undefined ? "unknown" : firstPlayer.username;
-    error(
+    sendError(
       socket,
       `You are not the owner of game ${game.id}; only ${ownerName} can ${verb} it.`,
     );

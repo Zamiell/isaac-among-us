@@ -23,11 +23,12 @@ export function commandGameList(data: GameListDataToMod): void {
         continue;
       }
 
-      const startedText = started ? "ongoing" : "unstarted";
+      const startedText = started ? " (ongoing)" : " (unstarted)";
       const totalText = ` (num players: ${game.numPlayers})`;
+      const passwordText = game.hasPassword ? " (has password)" : "";
       const joinedText = game.joined ? " (our current game)" : "";
       addLocalChat(
-        `${i}) ${game.name} (${startedText})${totalText}${joinedText}`,
+        `${i}) ${game.name}${startedText}${totalText}${passwordText}${joinedText}`,
       );
       i++;
 
