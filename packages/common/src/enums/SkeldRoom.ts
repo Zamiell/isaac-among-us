@@ -1,9 +1,8 @@
-const TASK_ROOM_VARIANT = 98;
-
-// Comments indicate the number of tasks in the room.
+/**
+ * - The enum values must match the variant IDs defined in "map.xml" / "map.stb" files.
+ * - Comments indicate the number of tasks in the room.
+ */
 export enum SkeldRoom {
-  LOBBY,
-
   CAFETERIA, // 1
   ADMIN_HALL,
   ADMIN, // 2
@@ -26,5 +25,11 @@ export enum SkeldRoom {
   COMMUNICATION_HALL,
   COMMUNICATION, // 2
 
-  TASK = TASK_ROOM_VARIANT, // eslint-disable-line @typescript-eslint/prefer-literal-enum-member
+  /** The task room value is hard-coded in the XML/STB. */
+  TASK = 98,
+
+  // The "map" room takes variant 99.
+
+  /** The lobby is not actually variant 100; we arbitrarily assign this value. */
+  LOBBY = 100,
 }

@@ -62,6 +62,7 @@ export function spawnGoToTaskButtons(): void {
     }
 
     const ourTasksOfThisType = g.game.ourTasks[taskDescription.taskType];
+    g.game.logOurTasks();
     const enabled = ourTasksOfThisType.includes(task);
     const button = spawnButton(
       ButtonSubType.GO_TO_TASK,

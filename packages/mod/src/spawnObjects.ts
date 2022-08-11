@@ -11,19 +11,14 @@ import { EffectVariantCustom } from "./enums/EffectVariantCustom";
 import { EntityTypeCustom } from "./enums/EntityTypeCustom";
 import { spawnEntity } from "./utils";
 
-function spawnBlock(gridIndex: int, visible = true): GridEntity {
+function spawnBlock(gridIndex: int, visible = true): GridEntity | undefined {
   const gridEntityType = visible ? GridEntityType.BLOCK : GridEntityType.WALL;
 
-  const gridEntity = spawnGridEntity(gridEntityType, gridIndex);
-  if (gridEntity === undefined) {
-    error(`Failed to spawn a block at grid index: ${gridIndex}`);
-  }
-
-  return gridEntity;
+  return spawnGridEntity(gridEntityType, gridIndex);
 }
 
-export function spawnFakeBlock(gridIndex: int): void {
-  spawnEntity(
+export function spawnFakeBlock(gridIndex: int): Entity {
+  return spawnEntity(
     EntityType.EFFECT,
     EffectVariant.ISAACS_CARPET,
     CarpetSubTypeCustom.BLOCK,

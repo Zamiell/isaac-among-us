@@ -1,5 +1,5 @@
 import { IS_DEV, SkeldRoom } from "common";
-import { logAllChatMessages } from "./chat";
+import { log } from "isaacscript-common";
 import { startAutoLogin } from "./features/autoLogin";
 import { startMeeting } from "./features/startMeeting";
 import g from "./globals";
@@ -9,11 +9,18 @@ import { goToStageAPIRoom } from "./stageAPI";
 /** From the "d" console command. */
 export function debugFunction1(): void {
   // Add code here
-  if (g.game === null) {
+  if (StageAPI === undefined || g.game === null) {
     return;
   }
 
-  logAllChatMessages();
+  const levelMap = StageAPI.GetCurrentLevelMap();
+  for (const roomData of levelMap.Map) {
+    log(`MapID: ${roomData.MapID}`);
+    log(`RoomID: ${roomData.RoomID}`);
+    const levelRoom = levelMap.GetRoom(roomData);
+    log(`Name: ${levelRoom.Layout.Name}`);
+    log(`Variant: ${levelRoom.Layout.Variant}`);
+  }
 }
 
 /** From the "d2" console command. */

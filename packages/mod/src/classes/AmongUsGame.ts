@@ -104,4 +104,14 @@ export class AmongUsGame {
       logTable(body);
     });
   }
+
+  logOurTasks(): void {
+    log("Our tasks:");
+    for (const [taskType, tasks] of Object.entries(this.ourTasks)) {
+      log(`- ${taskType}`);
+      for (const task of tasks) {
+        log(`  - Task.${Task[task]} (${task})`);
+      }
+    }
+  }
 }

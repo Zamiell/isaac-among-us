@@ -51,5 +51,7 @@ export const skeldRoomReverseMap: SkeldRoomReverseMap = {
   [SkeldRoom.SHIELDS]: "Shields",
   [SkeldRoom.COMMUNICATION_HALL]: "Communication Hall",
   [SkeldRoom.COMMUNICATION]: "Communication",
+
   [SkeldRoom.TASK]: "Task",
+  [SkeldRoom.LOBBY]: "Lobby",
 };
