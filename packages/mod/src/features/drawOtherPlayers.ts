@@ -295,7 +295,7 @@ export function drawUsername(
     return;
   }
 
-  const red = g.game.imposters !== null && g.game.imposters.includes(userID);
+  const red = g.game.imposterUserIDs.includes(userID);
   const { username } = player;
 
   const positionSprite = Isaac.WorldToScreen(positionGame);

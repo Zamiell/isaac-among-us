@@ -9,8 +9,8 @@ export function commandStarted(data: StartedDataToMod): void {
   }
 
   g.game.started = true;
-  g.game.imposters = data.imposters;
-  g.game.role = data.imposters === null ? Role.CREW : Role.IMPOSTER;
+  g.game.imposterUserIDs = data.imposterUserIDs;
+  g.game.role = data.imposterUserIDs.length === 0 ? Role.CREW : Role.IMPOSTER;
   g.game.ourTasks = data.tasks;
 
   addLocalChat("The game has started!");

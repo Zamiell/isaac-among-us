@@ -60,7 +60,7 @@ export function sendStarted(game: Game): void {
       const imposters = player.role === Role.CREW ? null : game.impostorUserIDs;
       sendTCP(socket, SocketCommandServerToMod.STARTED, {
         gameID: game.id,
-        imposters,
+        imposterUserIDs: imposters,
         tasks: player.tasks,
       });
     }

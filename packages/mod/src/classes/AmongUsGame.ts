@@ -19,7 +19,7 @@ export class AmongUsGame {
   id: number;
   name: string;
   started = false;
-  imposterUserIDs: number[] | null = null;
+  imposterUserIDs: number[] = [];
   meeting: Meeting | null = null;
   players: GameDescriptionPlayer[] = [];
   bodies: PlayerBody[] = [];

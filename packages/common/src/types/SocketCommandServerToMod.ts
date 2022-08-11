@@ -108,7 +108,7 @@ export class ChatDataToMod {
 
 export class StartedDataToMod {
   gameID!: number;
-  imposters!: number[] | null;
+  imposterUserIDs!: number[];
   tasks!: TaskList;
 }
 
