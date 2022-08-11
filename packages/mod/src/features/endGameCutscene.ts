@@ -100,6 +100,9 @@ function postRenderTextFadingOut() {
 function postRenderFadingToGame() {
   if (g.game !== null && hasFadeFinished()) {
     setState(CutsceneState.DISABLED);
+
+    const player = Isaac.GetPlayer();
+    player.ControlsEnabled = true;
   }
 }
 

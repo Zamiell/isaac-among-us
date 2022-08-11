@@ -57,7 +57,7 @@ export function sendStarted(game: Game): void {
   for (const player of game.players) {
     const socket = getTCPSocketByUserID(player.userID);
     if (socket !== undefined) {
-      const imposters = player.role === Role.CREW ? null : game.impostors;
+      const imposters = player.role === Role.CREW ? null : game.impostorUserIDs;
       sendTCP(socket, SocketCommandServerToMod.STARTED, {
         gameID: game.id,
         imposters,

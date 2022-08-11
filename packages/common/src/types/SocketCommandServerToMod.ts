@@ -116,7 +116,7 @@ export class ReconnectDataToMod {
   gameID!: number;
   name!: string;
   players!: GameDescriptionPlayer[];
-  imposters!: number[];
+  imposterUserIDs!: number[];
   meeting!: Meeting | null;
   tasks!: TaskList;
   character!: PlayerTypeAllowed;

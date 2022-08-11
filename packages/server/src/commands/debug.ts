@@ -15,8 +15,8 @@ export function commandDebug(
 
   console.log(`Game: ${game.name} (${game.id})`);
   console.log(`- started: ${game.started}`);
-  console.log("- impostors:", game.impostors);
-  console.log(`- numImpostors: ${game.impostors.length}`);
+  console.log("- impostors:", game.impostorUserIDs);
+  console.log(`- numImpostors: ${game.impostorUserIDs.length}`);
   console.log("- meeting:", game.meeting);
   console.log("- bodies:", game.bodies);
   console.log(`- night: ${game.night}`);

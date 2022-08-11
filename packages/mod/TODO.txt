@@ -1,9 +1,11 @@
 Bugs:
+- reconnecting as imposter does not show kill UI
+- imposter should not get real tasks
+
+TODO:
 - vents
 - imposter thing where you close the doors
 - imposter lights
-
-- imposter should not get real tasks
 
 - change characters
 - animation for when someone talks in meeting

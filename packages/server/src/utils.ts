@@ -26,3 +26,12 @@ export function getTimestamp(): number {
 
   return epochTimestampSeconds;
 }
+
+/**
+ * Helper function to repeat code N times. This is faster to type and cleaner than using a for loop.
+ */
+export function repeat(n: number, func: (i: number) => void): void {
+  for (let i = 0; i < n; i++) {
+    func(i);
+  }
+}

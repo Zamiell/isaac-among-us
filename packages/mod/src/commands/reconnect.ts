@@ -20,9 +20,9 @@ export function commandReconnect(data: ReconnectDataToMod): void {
   g.game = new AmongUsGame(data.gameID, data.name, data.character);
   g.game.players = data.players;
   g.game.started = true;
-  g.game.imposters = data.imposters;
+  g.game.imposterUserIDs = data.imposterUserIDs;
   g.game.ourTasks = data.tasks;
-  g.game.role = data.imposters.length === 0 ? Role.CREW : Role.IMPOSTER;
+  g.game.role = data.imposterUserIDs.length === 0 ? Role.CREW : Role.IMPOSTER;
   g.game.meeting = data.meeting;
 
   const player = g.game.getPlayerFromUserID(g.userID);

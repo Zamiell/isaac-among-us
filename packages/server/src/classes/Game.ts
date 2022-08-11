@@ -6,7 +6,7 @@ export class Game {
   name: string;
   players: Player[] = [];
   started = false;
-  impostors: number[] = [];
+  impostorUserIDs: number[] = [];
   meeting: Meeting | null = null;
   bodies: PlayerBody[] = [];
 

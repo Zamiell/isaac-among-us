@@ -26,7 +26,7 @@ export function commandReconnect(
     gameID: game.id,
     name: game.name,
     players: getGameDescriptionPlayers(game),
-    imposters: game.impostors,
+    imposterUserIDs: game.impostorUserIDs,
     meeting: game.meeting,
     tasks: player.tasks,
     character: player.character,

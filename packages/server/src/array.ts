@@ -56,7 +56,7 @@ export function emptyArray<T>(array: T[]): void {
  * @param exceptions Optional. An array of elements to skip over if selected.
  */
 export function getRandomArrayElement<T>(
-  array: T[],
+  array: T[] | readonly T[],
   exceptions: T[] | readonly T[] = [],
 ): T {
   if (array.length === 0) {
@@ -77,16 +77,27 @@ export function getRandomArrayElement<T>(
   return randomElement;
 }
 
-export function getRandomArrayIndex<T>(array: T[]): number {
+/**
+ * Helper function to get a random index from the provided array.
+ *
+ * @param array The array to get the index from.
+ * @param exceptions Optional. An array of indexes that will be skipped over when getting the random
+ *                   index. Default is an empty array.
+ */
+export function getRandomArrayIndex<T>(
+  array: T[] | readonly T[],
+  exceptions: number[] | readonly number[] = [],
+): number {
   if (array.length === 0) {
     throw new Error(
       "Failed to get a random array index since the provided array is empty.",
     );
   }
 
-  return getRandomInt(0, array.length - 1);
+  return getRandomInt(0, array.length - 1, exceptions);
 }
 
+/** Initializes an array with all elements containing the specified default value. */
 export function initArray<T>(length: number, value: T): T[] {
   return Array.from({ length }, () => value);
 }
