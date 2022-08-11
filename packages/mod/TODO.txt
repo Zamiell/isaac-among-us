@@ -1,14 +1,10 @@
 Bugs:
-- test 2 players in same task
-
+- vents
 - imposter thing where you close the doors
 - imposter lights
 
 - imposter should not get real tasks
 
-- test to see ghosts in task mode, should not show
-
-- emergency button should not be push-able for X seconds after the game start
 - change characters
 - animation for when someone talks in meeting
 - ctrl+shift+f TODO

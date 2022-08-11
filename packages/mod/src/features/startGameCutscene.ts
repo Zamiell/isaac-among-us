@@ -1,10 +1,11 @@
 import { Role } from "common";
 import { CollectibleType } from "isaac-typescript-definitions";
 import {
+  getCollectibleGfxFilename,
   getScreenCenterPos,
-  itemConfig,
   log,
   sfxManager,
+  VectorZero,
 } from "isaacscript-common";
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { CutsceneState } from "../enums/CutsceneState";
@@ -124,13 +125,12 @@ function drawText() {
     return;
   }
 
-  const opacity = getTextOpacity();
   const centerPos = getScreenCenterPos();
   const offset = Vector(0, 10);
+  const opacity = getTextOpacity();
   drawFontText("Your role:", centerPos.sub(offset), opacity);
   const roleName = getRoleName(g.game.role);
   drawFontText(roleName, centerPos.add(offset), opacity);
-
   drawItem(centerPos, opacity);
 }
 
@@ -177,10 +177,18 @@ function hasFadeFinished(): boolean {
 }
 
 export function startStartGameCutscene(): void {
-  setSprite();
+  if (g.game === null) {
+    return;
+  }
+
   setState(CutsceneState.FADING_TO_BLACK);
   setBlackSpriteState(BlackSpriteState.FADING_TO_BLACK);
+  setSprite(g.game.role);
   disableMinimapAPI();
+
+  const player = Isaac.GetPlayer();
+  player.Velocity = VectorZero;
+  player.ControlsEnabled = false;
 }
 
 function setState(state: CutsceneState) {
@@ -195,22 +203,13 @@ function setState(state: CutsceneState) {
   log(`Changed start game cutscene state: ${CutsceneState[state]} (${state})`);
 }
 
-function setSprite() {
-  if (g.game === null) {
-    return;
-  }
-
+function setSprite(role: Role) {
   const collectibleType =
-    g.game.role === Role.CREW
+    role === Role.CREW
       ? CollectibleType.NOTCHED_AXE
       : CollectibleType.MOMS_KNIFE;
+  const gfxFileName = getCollectibleGfxFilename(collectibleType);
 
-  const itemConfigItem = itemConfig.GetCollectible(collectibleType);
-  if (itemConfigItem === undefined) {
-    return;
-  }
-
-  const gfxFileName = itemConfigItem.GfxFileName;
   itemSprite.ReplaceSpritesheet(0, gfxFileName);
   itemSprite.LoadGraphics();
 }

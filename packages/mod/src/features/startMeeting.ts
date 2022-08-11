@@ -130,6 +130,7 @@ function hasFadeFinished(): boolean {
 export function startMeeting(meetingType: MeetingType): void {
   const player = Isaac.GetPlayer();
   player.Velocity = VectorZero;
+  player.ControlsEnabled = false;
 
   // Set the dimensions for the alert strip.
   const bottomRightPos = getScreenBottomRightPos();

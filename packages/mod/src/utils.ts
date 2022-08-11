@@ -67,14 +67,14 @@ export function enableShooting(): void {
   setBlindfold(player, false);
 }
 
-export function getRoleName(role: Role): string {
+export function getRoleName(role: Role, plural = false): string {
   switch (role) {
     case Role.CREW: {
       return "Crew";
     }
 
     case Role.IMPOSTER: {
-      return "Imposter";
+      return plural ? "Imposters" : "Imposter";
     }
   }
 }
@@ -96,7 +96,7 @@ export function inCutscene(): boolean {
   }
 
   return (
-    g.game.startGameCutscene.state !== CutsceneState.DISABLED &&
+    g.game.startGameCutscene.state !== CutsceneState.DISABLED ||
     g.game.endGameCutscene.state !== CutsceneState.DISABLED
   );
 }
