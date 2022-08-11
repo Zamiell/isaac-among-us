@@ -2,6 +2,7 @@ import { SkeldRoom } from "common";
 import { EntityCollisionClass } from "isaac-typescript-definitions";
 import {
   DISTANCE_OF_GRID_TILE,
+  emptyArray,
   getCircleDiscretizedPoints,
 } from "isaacscript-common";
 import g from "../globals";
@@ -20,6 +21,8 @@ export function setupMeeting(meetingEnded: boolean): void {
   if (g.game === null) {
     return;
   }
+
+  emptyArray(g.game.bodies);
 
   const room = getSkeldRoom();
   if (room !== SkeldRoom.CAFETERIA) {

@@ -1,4 +1,5 @@
 import g from "../globals";
+import { getOurPlayer } from "../players";
 import { getSkeldRoom } from "../stageAPI";
 import { shouldShowUIButton } from "../ui";
 
@@ -6,6 +7,11 @@ const REPORT_DISTANCE = 60;
 
 export function ableToReportDeadBody(): boolean {
   if (!shouldShowUIButton() || g.game === null) {
+    return false;
+  }
+
+  const ourPlayer = getOurPlayer();
+  if (ourPlayer === undefined || !ourPlayer.alive) {
     return false;
   }
 

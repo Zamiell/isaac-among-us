@@ -6,7 +6,7 @@ import { usernameChatCommand } from "./chatCommands/username";
 import g from "./globals";
 import { sendTCP } from "./network/send";
 import * as socketClient from "./network/socketClient";
-import { getOurPlayerIndex } from "./players";
+import { getOurPlayer } from "./players";
 import { getSkeldRoom } from "./stageAPI";
 import { amOwner, restart } from "./utils";
 
@@ -189,12 +189,17 @@ chatCommandFunctions.set("vote", (args: string[]) => {
     return;
   }
 
-  const ourPlayerIndex = getOurPlayerIndex();
-  if (ourPlayerIndex === undefined) {
-    error('Failed to get our player index for the "vote" command.');
+  const ourPlayer = getOurPlayer();
+  if (ourPlayer === undefined) {
+    error('Failed to get our player description for the "vote" command.');
   }
 
-  const ourPreviousVote = g.game.meeting.votes[ourPlayerIndex];
+  if (!ourPlayer.alive) {
+    addLocalChat("You can only perform that command when you are alive.");
+    return;
+  }
+
+  const ourPreviousVote = g.game.meeting.votes[ourPlayer.index];
   if (ourPreviousVote !== NOT_VOTED_YET) {
     addLocalChat("You have already voted.");
     return;
@@ -228,12 +233,17 @@ chatCommandFunctions.set("voteskip", (_args: string[]) => {
     return;
   }
 
-  const ourPlayerIndex = getOurPlayerIndex();
-  if (ourPlayerIndex === undefined) {
-    error('Failed to get our player index for the "voteskip" command.');
+  const ourPlayer = getOurPlayer();
+  if (ourPlayer === undefined) {
+    error('Failed to get our player description for the "voteskip" command.');
   }
 
-  const ourPreviousVote = g.game.meeting.votes[ourPlayerIndex];
+  if (!ourPlayer.alive) {
+    addLocalChat("You can only perform that command when you are alive.");
+    return;
+  }
+
+  const ourPreviousVote = g.game.meeting.votes[ourPlayer.index];
   if (ourPreviousVote !== NOT_VOTED_YET) {
     addLocalChat("You have already voted.");
     return;

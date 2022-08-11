@@ -2,7 +2,57 @@
 <metadata>
   <name>Among Us</name>
   <directory>isaac-among-us-mod</directory>
-  <description>It's Among Us, but in Isaac.</description>
+  <description>
+    [h1][b]Among Us - In Isaac[/b][/h1]
+
+This is a multiplayer recreation of the popular game [url=https://store.steampowered.com/app/945360/Among_Us/]Among Us[/url], but using the Isaac engine.
+
+The mod is currently in [b]ALPHA[/b], which means that you will experience many game-breaking bugs and poor performance.
+
+[h2][b]Features[/b][/h2]
+
+[*] Free online play. (The server is hosted on isaacracing.net.)
+[*] 12 concurrent players in a game at a time.
+[*] Brand-new Isaac-themed tasks.
+
+[h2][b]How to Play?[/b][/h2]
+
+The mod is meant for experienced Among Us players. It does not have a tutorial. It does not have any explanation on how to play. If you have never played Among Us before, then go play the original for a while and then come back here.
+
+[h2][b]How to Find Other Players[/b][/h2]
+
+The best Among Us games consist of adult players that use voice chat. If you are 18+, you can join the [url=https://discord.gg/K7Rh66G2vM]Among Us in Isaac Discord server[/url] in order to try to organize a game. (Discord is a voice and text chat application that you can run in a browser.)
+
+If you are under 18, then sorry, this isn't the mod for you. Please enjoy the original Among Us and come back when you are older.
+
+[h2][b]How to Report a Bug[/b][/h2]
+
+The mod was written in a few short weeks and was barely tested, so you will experience many bugs. In return for permission to use the mod, you agree to report any bugs that you experience in the #bugs channel of the Discord server. [b]Please follow the bug reporting rules[/b] that are located in the pinned message of that channel.
+
+Any Steam workshop comments reporting bugs will be deleted.
+
+[h2][b]How to Ask Questions[/b][/h2]
+
+If you have a question about the mod, please post in the #help-and-questions channel in the [url=https://discord.gg/K7Rh66G2vM]Among Us in Isaac Discord server[/url]. You can also explicitly request that your question is added to this FAQ section.
+
+Any Steam workshop comments asking questions will be deleted.
+
+[h2][b]Community Guidelines[/b][/h2]
+
+Since the mod is free and provides a chat room for random strangers on the internet, there is the potential for abuse. We ask that citizens of the mod follow a few rules so that public discussion meets a certain minimum level of quality.
+
+[*] Use common sense.
+[*] Keep discussion safe for work. (No porn, gore, etc.)
+[*] Use English.
+[*] Treat others with respect. Flames, personal attacks, and so forth should be handled in either a private message or off platform.
+[*] Do not post another user's personal information without their prior consent.
+[*] No advertising.
+[*] Do not reveal anything to players about an ongoing game.
+
+The staff reserves the right to warn, mute, or ban users who violate these guidelines, depending on the nature of the offense, whether or not it is a repeat offense, and the administrator's individual discretion.
+
+Since user accounts are free and do not require email validation, the staff only has very limited ways to prevent abuse. Even if you disagree with the decision of a staff member, please respect their decisions and treat the server kindly.
+  </description>
   <version>1.0</version>
   <visibility />
 </metadata>

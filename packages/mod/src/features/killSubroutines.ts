@@ -1,6 +1,6 @@
 import { Role } from "common";
 import g from "../globals";
-import { getClosestAmongUsPlayer } from "../players";
+import { getClosestAmongUsPlayer, getOurPlayer } from "../players";
 import { shouldShowUIButton } from "../ui";
 
 const KILL_DISTANCE = 60;
@@ -11,6 +11,11 @@ export function ableToKillAPlayer(): boolean {
     g.game === null ||
     g.game.role !== Role.IMPOSTER
   ) {
+    return false;
+  }
+
+  const ourPlayer = getOurPlayer();
+  if (ourPlayer === undefined || !ourPlayer.alive) {
     return false;
   }
 

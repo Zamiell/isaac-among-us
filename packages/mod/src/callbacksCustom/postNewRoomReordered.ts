@@ -45,8 +45,8 @@ function checkSetPlayerToGhostForm() {
     return;
   }
 
-  const playerDescription = getOurPlayer();
-  if (playerDescription !== undefined && !playerDescription.alive) {
+  const ourPlayer = getOurPlayer();
+  if (ourPlayer !== undefined && !ourPlayer.alive) {
     convertPlayerToGhostForm();
   }
 }

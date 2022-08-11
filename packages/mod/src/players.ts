@@ -55,20 +55,8 @@ export function getOurPlayer(): GameDescriptionPlayer | undefined {
 }
 
 export function getOurPlayerIndex(): int | undefined {
-  if (g.game === null) {
-    return undefined;
-  }
-
-  if (g.userID === null) {
-    return undefined;
-  }
-
-  const playerIndex = g.game.getPlayerIndexFromUserID(g.userID);
-  if (playerIndex === undefined) {
-    return undefined;
-  }
-
-  return playerIndex;
+  const ourPlayer = getOurPlayer();
+  return ourPlayer === undefined ? undefined : ourPlayer.index;
 }
 
 export function updatePlayerMap(
