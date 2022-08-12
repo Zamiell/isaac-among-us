@@ -1,4 +1,4 @@
-import { log } from "isaacscript-common";
+import { game, log } from "isaacscript-common";
 import * as sendGameEvents from "../features/sendGameEvents";
 import * as task from "../features/task";
 import g from "../globals";
@@ -28,7 +28,6 @@ function fixOffsetBug() {
   // Under certain conditions (like walking to a room in a certain way), StageAPI will offset the
   // room by one row, causing all kinds of other bugs, such as objects being moved. Try to detect
   // this condition.
-  const game = Game();
   const room = game.GetRoom();
   const topLeftPos = room.GetTopLeftPos();
   if (
@@ -45,7 +44,6 @@ function warpToCafeteriaAndBack() {
     return;
   }
 
-  const game = Game();
   const level = game.GetLevel();
   const roomName = getStageAPIRoomName();
   if (roomName === undefined) {

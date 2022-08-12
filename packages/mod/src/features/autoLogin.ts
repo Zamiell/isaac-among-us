@@ -52,14 +52,23 @@ export function onGameList(gameList: GameListDescription[]): void {
   }
 }
 
-export function onGameDescription(): void {
-  if (!autoLogin || g.game === null || g.game.started) {
+export function onPlayerJoined(userID: int): void {
+  if (
+    // Don't do anything if we have already finished automatically logging in.
+    !autoLogin ||
+    // Don't do anything if this is the joined message from the game that we just created.
+    userID === g.userID
+  ) {
     return;
   }
 
   autoLogin = false;
 
-  if (g.game.ownerUserID === g.userID && g.game.players.length >= 2) {
+  if (
+    g.game !== null &&
+    g.game.ownerUserID === g.userID &&
+    g.game.players.length >= 2
+  ) {
     sendTCP(SocketCommandModToServer.START, {
       gameID: g.game.id,
     });

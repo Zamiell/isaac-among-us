@@ -5,7 +5,7 @@ import {
   EntityType,
   PickupVariant,
 } from "isaac-typescript-definitions";
-import { VectorZero } from "isaacscript-common";
+import { game, VectorZero } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
@@ -20,7 +20,6 @@ const REQUIRED_PENTAGRAM_SIZE = 250;
 const TEXT_GRID_INDEX = 93;
 
 export function makePentagram(): void {
-  const game = Game();
   const room = game.GetRoom();
   const centerPos = room.GetCenterPos();
 
@@ -47,7 +46,6 @@ export function postRender(): void {
     return;
   }
 
-  const game = Game();
   const room = game.GetRoom();
   const worldPosition = room.GetGridPosition(TEXT_GRID_INDEX);
   const position = Isaac.WorldToRenderPosition(worldPosition);

@@ -3,7 +3,6 @@ import { sfxManager } from "isaacscript-common";
 import { addLocalChat } from "../chat";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
 import g from "../globals";
-import { inCutscene } from "../utils";
 
 export function commandPlayerLeft(data: PlayerLeftDataToMod): void {
   if (g.game === null) {
@@ -16,8 +15,5 @@ export function commandPlayerLeft(data: PlayerLeftDataToMod): void {
   }
 
   addLocalChat(`${player.username} left the game.`);
-
-  if (!inCutscene()) {
-    sfxManager.Play(SoundEffectCustom.PLAYER_LEFT);
-  }
+  sfxManager.Play(SoundEffectCustom.PLAYER_LEFT);
 }

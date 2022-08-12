@@ -6,6 +6,7 @@ import {
 } from "isaac-typescript-definitions";
 import {
   asNumber,
+  game,
   getGridEntities,
   spawnGridEntity,
   VectorZero,
@@ -18,7 +19,6 @@ import { enableShooting, movePlayerToGridIndex } from "../utils";
 const THIS_TASK = Task.SHORT_PUSH_TNT_BARREL;
 
 export function pushTNTBarrel(): void {
-  const game = Game();
   const room = game.GetRoom();
 
   const bottomLeftGridIndex = 92;

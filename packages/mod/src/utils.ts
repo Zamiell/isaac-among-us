@@ -92,7 +92,7 @@ export function inCutscene(): boolean {
 
   return (
     g.game.startGameCutscene.state !== CutsceneState.DISABLED ||
-    g.game.endGameCutscene.state !== CutsceneState.DISABLED
+    g.endGame.state !== CutsceneState.DISABLED
   );
 }
 

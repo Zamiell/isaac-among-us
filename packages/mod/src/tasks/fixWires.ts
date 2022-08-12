@@ -2,6 +2,7 @@ import { Task } from "common";
 import { SoundEffect } from "isaac-typescript-definitions";
 import {
   emptyArray,
+  game,
   getEffects,
   getEnumValues,
   sfxManager,
@@ -85,7 +86,6 @@ for (const spriteDescription of Object.values(lineSprites)) {
 }
 
 export function fixWires(): void {
-  const game = Game();
   const room = game.GetRoom();
   const gridWidth = room.GetGridWidth();
 

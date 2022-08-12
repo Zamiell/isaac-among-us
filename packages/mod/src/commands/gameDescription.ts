@@ -1,6 +1,5 @@
 import { GameDescriptionDataToMod } from "common";
 import { checkChangeOurCharacter } from "../callbacksCustom/postGameStartedReordered";
-import * as autoLogin from "../features/autoLogin";
 import g from "../globals";
 import { getOurPlayer } from "../players";
 import { inCutscene } from "../utils";
@@ -26,6 +25,5 @@ export function commandGameDescription(data: GameDescriptionDataToMod): void {
 
   if (!inCutscene()) {
     checkChangeOurCharacter();
-    autoLogin.onGameDescription();
   }
 }

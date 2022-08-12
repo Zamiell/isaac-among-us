@@ -6,7 +6,12 @@ import {
   PickupVariant,
   RockState,
 } from "isaac-typescript-definitions";
-import { asNumber, getRandomSeed, spawnGridEntity } from "isaacscript-common";
+import {
+  asNumber,
+  game,
+  getRandomSeed,
+  spawnGridEntity,
+} from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
@@ -60,7 +65,6 @@ function spawnRocks() {
 }
 
 function spawnRock() {
-  const game = Game();
   const room = game.GetRoom();
 
   let gridIndex: int;
@@ -84,7 +88,6 @@ export function postGridEntityUpdateRock(gridEntity: GridEntity): void {
     return;
   }
 
-  const game = Game();
   const room = game.GetRoom();
   const gridIndex = room.GetGridIndex(gridEntity.Position);
   const broken = gridEntity.State === asNumber(RockState.BROKEN);

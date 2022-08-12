@@ -8,11 +8,11 @@
     "@prisma/client": "^4.2.1",
     "argon2": "^0.28.7",
     "isaac-typescript-definitions": "^3.5.0",
-    "isaacscript-common": "^8.0.1",
+    "isaacscript-common": "^8.1.0",
     "struct": "^0.0.12"
   },
   "devDependencies": {
-    "@types/node": "^18.7.1",
+    "@types/node": "^18.7.2",
     "@types/struct": "^0.0.3",
     "isaacscript": "^2.15.0",
     "isaacscript-lint": "^4.1.2",

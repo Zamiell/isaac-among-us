@@ -2,6 +2,7 @@ import { Task } from "common";
 import { EntityType, SoundEffect } from "isaac-typescript-definitions";
 import {
   emptyArray,
+  game,
   GAME_FRAMES_PER_SECOND,
   getEnumValues,
   getRandomEnumValue,
@@ -163,7 +164,6 @@ function drawPickupText() {
     }
   }
 
-  const game = Game();
   const room = game.GetRoom();
   const worldPosition = room.GetGridPosition(TEXT_GRID_INDEX);
   const position = Isaac.WorldToRenderPosition(worldPosition);
@@ -179,7 +179,6 @@ function drawPickupSprites() {
     return;
   }
 
-  const game = Game();
   const room = game.GetRoom();
 
   for (let i = 0; i < BUTTON_GRID_INDEXES.length; i++) {

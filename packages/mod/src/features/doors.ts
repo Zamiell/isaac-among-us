@@ -1,7 +1,6 @@
 // TODO: imposter thing to close doors manually
 export function postUpdate(): void {
   /*
-  const game = Game();
   const room = game.GetRoom();
 
   room.SetClear(true);

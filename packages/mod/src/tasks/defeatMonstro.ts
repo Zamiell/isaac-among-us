@@ -1,6 +1,6 @@
 import { Task } from "common";
 import { EntityType } from "isaac-typescript-definitions";
-import { VectorZero } from "isaacscript-common";
+import { game, VectorZero } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
@@ -21,7 +21,6 @@ export function defeatMonstro(): void {
 }
 
 function spawnMonstro() {
-  const game = Game();
   const room = game.GetRoom();
   const position = room.GetGridPosition(MONSTRO_GRID_INDEX);
 

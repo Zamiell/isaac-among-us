@@ -1,4 +1,8 @@
-import { getRoomGridIndex, getScreenBottomRightPos } from "isaacscript-common";
+import {
+  game,
+  getRoomGridIndex,
+  getScreenBottomRightPos,
+} from "isaacscript-common";
 import { MOD_NAME } from "../constants";
 import { fonts } from "../fonts";
 import g from "../globals";
@@ -20,7 +24,6 @@ function shouldDrawWelcomeNotification() {
     return false;
   }
 
-  const game = Game();
   const isPaused = game.IsPaused();
   if (isPaused) {
     return false;

@@ -2,6 +2,7 @@ import { SocketCommandModToServer, TASK_DESCRIPTIONS } from "common";
 import { EntityType, SoundEffect } from "isaac-typescript-definitions";
 import {
   arrayRemoveInPlace,
+  game,
   getNPCs,
   removeAllMatchingEntities,
   runNextGameFrame,
@@ -93,7 +94,6 @@ function removeAllNPCs() {
 }
 
 function removeAllGridEntities() {
-  const game = Game();
   const room = game.GetRoom();
 
   // Sometimes, walls can appear in the center of the room due to StageAPI bugs Remove every grid

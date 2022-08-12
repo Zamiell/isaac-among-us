@@ -1,12 +1,11 @@
 import { VectorZero } from "isaacscript-common";
 import { BlackSpriteState } from "../enums/BlackSpriteState";
-import g from "../globals";
 import { initSprite, setSpriteOpacity } from "../sprite";
 
 export const FADE_TO_BLACK_FRAMES = 90;
 
 const sprite = initSprite("gfx/black.anm2");
-sprite.Scale = Vector(5000, 5000); // Big enough so that it would cover a 4K monitor
+sprite.Scale = Vector(5000, 5000); // Big enough so that it would cover a 4K monitor.
 let state = BlackSpriteState.DISABLED;
 let startRenderFrame: int | null = null;
 
@@ -16,7 +15,7 @@ export function postRender(): void {
 }
 
 function drawBlackSprite() {
-  if (g.game === null || state === BlackSpriteState.DISABLED) {
+  if (state === BlackSpriteState.DISABLED) {
     return;
   }
 

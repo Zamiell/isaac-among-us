@@ -1,4 +1,5 @@
 import { IS_DEV, MAX_PLAYERS, TASK_DESCRIPTIONS } from "common";
+import { game } from "isaacscript-common";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
 import { getStageAPIRoomName } from "../stageAPISubroutines";
@@ -21,7 +22,6 @@ export function postRender(): void {
     return;
   }
 
-  const game = Game();
   const room = game.GetRoom();
   const worldPosition = room.GetGridPosition(TEXT_GRID_INDEX);
   const position = Isaac.WorldToRenderPosition(worldPosition);

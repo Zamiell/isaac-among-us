@@ -2,6 +2,7 @@ import { Task } from "common";
 import { SoundEffect, TrinketType } from "isaac-typescript-definitions";
 import {
   emptyArray,
+  game,
   getRandomArrayElement,
   getRandomArrayIndex,
   getTrinketArray,
@@ -124,7 +125,6 @@ export function postRender(): void {
 }
 
 function drawTrinketSprites() {
-  const game = Game();
   const room = game.GetRoom();
 
   let buttonGridIndex = BUTTON_1_GRID_INDEX;
@@ -142,7 +142,6 @@ function drawTrinketSprites() {
 }
 
 function drawTrinketText() {
-  const game = Game();
   const room = game.GetRoom();
   const worldPosition = room.GetGridPosition(TEXT_GRID_INDEX);
   const position = Isaac.WorldToRenderPosition(worldPosition);

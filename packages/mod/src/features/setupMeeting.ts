@@ -3,6 +3,7 @@ import { EntityCollisionClass } from "isaac-typescript-definitions";
 import {
   DISTANCE_OF_GRID_TILE,
   emptyArray,
+  game,
   getCircleDiscretizedPoints,
 } from "isaacscript-common";
 import g from "../globals";
@@ -73,7 +74,6 @@ export function getMeetingCirclePoints(): Vector[] {
     error("Failed to get the meeting circle points since the game is null.");
   }
 
-  const game = Game();
   const room = game.GetRoom();
   const centerTablePos = room.GetGridPosition(CENTER_TABLE_GRID_INDEX);
   const meetingCenterPos = centerTablePos.add(MEETING_CENTER_OFFSET);

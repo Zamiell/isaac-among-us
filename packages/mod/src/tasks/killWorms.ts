@@ -1,6 +1,6 @@
 import { Task } from "common";
 import { EntityType } from "isaac-typescript-definitions";
-import { countEntities, VectorZero } from "isaacscript-common";
+import { countEntities, game, VectorZero } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
@@ -10,7 +10,6 @@ const THIS_TASK = Task.LONG_KILL_WORMS;
 const TYPE_OF_ENEMY = EntityType.ROUND_WORM;
 
 export function killWorms(): void {
-  const game = Game();
   const room = game.GetRoom();
 
   const centerGridIndex = 67;

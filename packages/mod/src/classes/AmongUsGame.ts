@@ -48,13 +48,6 @@ export class AmongUsGame {
     startRenderFrame: null as int | null,
   };
 
-  endGameCutscene = {
-    state: CutsceneState.DISABLED,
-    startRenderFrame: null as int | null,
-    winningRole: Role.CREW,
-    imposterNames: "",
-  };
-
   startMeeting = {
     state: StartMeetingState.DISABLED,
     startRenderFrame: null as int | null,

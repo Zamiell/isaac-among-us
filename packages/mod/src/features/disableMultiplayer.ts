@@ -1,7 +1,12 @@
 // Multiplayer is illegal in this mod, so if multiplayer is detected, the run is forcefully ended.
 
 import { FadeoutTarget } from "isaac-typescript-definitions";
-import { getPlayers, isChildPlayer, saveDataManager } from "isaacscript-common";
+import {
+  game,
+  getPlayers,
+  isChildPlayer,
+  saveDataManager,
+} from "isaacscript-common";
 
 const v = {
   run: {
@@ -53,8 +58,6 @@ export function postPlayerInitLate(player: EntityPlayer): void {
 }
 
 function endRun() {
-  const game = Game();
-
   // A new player has arrived that is not the first player, so they must be trying to initiate a
   // multiplayer game.
   game.Fadeout(0.05, FadeoutTarget.TITLE_SCREEN);

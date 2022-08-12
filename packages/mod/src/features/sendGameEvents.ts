@@ -1,4 +1,5 @@
 import { SkeldRoom, SocketCommandModToServer } from "common";
+import { game } from "isaacscript-common";
 import g from "../globals";
 import { sendTCP } from "../network/send";
 import { skeldRoomMap } from "../skeldRoomMap";
@@ -30,7 +31,6 @@ export function sendRoom(): void {
     return;
   }
 
-  const game = Game();
   const room = game.GetRoom();
   const player = Isaac.GetPlayer();
   const gridIndex = room.GetClampedGridIndex(player.Position);

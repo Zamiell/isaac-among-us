@@ -1,5 +1,6 @@
 import { Difficulty } from "isaac-typescript-definitions";
 import {
+  game,
   getLastCollectibleType,
   LAST_VANILLA_COLLECTIBLE_TYPE,
   log,
@@ -52,8 +53,6 @@ function areOtherModsEnabled() {
 }
 
 function isWrongDifficulty() {
-  const game = Game();
-
   const rightDifficulty = Difficulty.NORMAL;
   if (game.Difficulty !== rightDifficulty) {
     log(

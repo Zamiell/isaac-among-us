@@ -4,7 +4,7 @@ import {
   EntityType,
   PickupVariant,
 } from "isaac-typescript-definitions";
-import { getRandomSeed } from "isaacscript-common";
+import { game, getRandomSeed } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
@@ -54,7 +54,6 @@ export function postPickupCollectCoin(): void {
 }
 
 function spawnNextPenny() {
-  const game = Game();
   const room = game.GetRoom();
 
   let gridIndex: int;

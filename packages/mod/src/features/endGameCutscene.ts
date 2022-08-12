@@ -4,6 +4,7 @@ import {
   getCollectibleGfxFilename,
   getScreenCenterPos,
   log,
+  restart,
   sfxManager,
   VectorZero,
 } from "isaacscript-common";
@@ -24,11 +25,10 @@ itemSprite.SetFrame("Default", 0);
 
 // ModCallback.POST_RENDER (2)
 export function postRender(): void {
-  if (g.game === null) {
-    return;
-  }
+  // We don't check for "g.game === null" here because the end-game cutscene data is stored outside
+  // of the game.
 
-  switch (g.game.endGameCutscene.state) {
+  switch (g.endGame.state) {
     case CutsceneState.DISABLED: {
       break;
     }
@@ -61,7 +61,7 @@ export function postRender(): void {
 }
 
 function postRenderFadingToBlack() {
-  if (g.game !== null && hasFadeFinished()) {
+  if (hasFadeFinished()) {
     setState(CutsceneState.TEXT_FADING_IN);
     setBlackSpriteState(BlackSpriteState.SOLID);
   }
@@ -70,7 +70,7 @@ function postRenderFadingToBlack() {
 function postRenderTextFadingIn() {
   drawText();
 
-  if (g.game !== null && hasFadeFinished()) {
+  if (hasFadeFinished()) {
     setState(CutsceneState.TEXT);
   }
 }
@@ -78,24 +78,25 @@ function postRenderTextFadingIn() {
 function postRenderText() {
   drawText();
 
-  if (g.game !== null && hasFadeFinished()) {
+  if (hasFadeFinished()) {
     setState(CutsceneState.TEXT_FADING_OUT);
 
-    /// gotoLobby();
+    g.game = null;
+    restart();
   }
 }
 
 function postRenderTextFadingOut() {
   drawText();
 
-  if (g.game !== null && hasFadeFinished()) {
+  if (hasFadeFinished()) {
     setState(CutsceneState.FADING_TO_GAME);
     setBlackSpriteState(BlackSpriteState.FADING_TO_GAME);
   }
 }
 
 function postRenderFadingToGame() {
-  if (g.game !== null && hasFadeFinished()) {
+  if (hasFadeFinished()) {
     setState(CutsceneState.DISABLED);
 
     const player = Isaac.GetPlayer();
@@ -104,10 +105,6 @@ function postRenderFadingToGame() {
 }
 
 function drawText() {
-  if (g.game === null) {
-    return;
-  }
-
   // Top half
   const centerPos = getScreenCenterPos();
   const offsetFromCenter = Vector(0, 50);
@@ -119,7 +116,7 @@ function drawText() {
     topCenterPos.sub(offsetFromBetweenLine),
     opacity,
   );
-  const roleName = getRoleName(g.game.endGameCutscene.winningRole, true);
+  const roleName = getRoleName(g.endGame.winningRole, true);
   drawFontText(roleName, topCenterPos.add(offsetFromBetweenLine), opacity);
   drawItem(topCenterPos, opacity);
 
@@ -131,7 +128,7 @@ function drawText() {
     opacity,
   );
   drawFontText(
-    g.game.endGameCutscene.imposterNames,
+    g.endGame.imposterNames,
     bottomCenterPos.add(offsetFromBetweenLine),
     opacity,
   );
@@ -139,23 +136,21 @@ function drawText() {
 
 function getTextOpacity() {
   if (
-    g.game === null ||
-    g.game.endGameCutscene.state === CutsceneState.TEXT ||
-    g.game.endGameCutscene.startRenderFrame === null
+    g.endGame.state === CutsceneState.TEXT ||
+    g.endGame.startRenderFrame === null
   ) {
     return 1;
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
-  const renderFramesPassed =
-    isaacFrameCount - g.game.endGameCutscene.startRenderFrame;
+  const renderFramesPassed = isaacFrameCount - g.endGame.startRenderFrame;
   const opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES;
 
-  if (g.game.endGameCutscene.state === CutsceneState.TEXT_FADING_IN) {
+  if (g.endGame.state === CutsceneState.TEXT_FADING_IN) {
     return opacity;
   }
 
-  if (g.game.endGameCutscene.state === CutsceneState.TEXT_FADING_OUT) {
+  if (g.endGame.state === CutsceneState.TEXT_FADING_OUT) {
     return 1 - opacity;
   }
 
@@ -169,24 +164,19 @@ function drawItem(textPosition: Vector, opacity: float) {
 }
 
 function hasFadeFinished(): boolean {
-  if (g.game === null || g.game.endGameCutscene.startRenderFrame === null) {
+  if (g.endGame.startRenderFrame === null) {
     return false;
   }
 
   const isaacFrameCount = Isaac.GetFrameCount();
-  const renderFramesPassed =
-    isaacFrameCount - g.game.endGameCutscene.startRenderFrame;
+  const renderFramesPassed = isaacFrameCount - g.endGame.startRenderFrame;
   return renderFramesPassed >= FADE_TO_BLACK_FRAMES;
 }
 
 export function startEndGameCutscene(): void {
-  if (g.game === null) {
-    return;
-  }
-
   setState(CutsceneState.FADING_TO_BLACK);
   setBlackSpriteState(BlackSpriteState.FADING_TO_BLACK);
-  setSprite(g.game.endGameCutscene.winningRole);
+  setSprite(g.endGame.winningRole);
   disableMinimapAPI();
 
   const player = Isaac.GetPlayer();
@@ -200,14 +190,10 @@ export function startEndGameCutscene(): void {
 }
 
 function setState(state: CutsceneState) {
-  if (g.game === null || !g.game.started) {
-    return;
-  }
-
   const isaacFrameCount = Isaac.GetFrameCount();
 
-  g.game.endGameCutscene.state = state;
-  g.game.endGameCutscene.startRenderFrame = isaacFrameCount;
+  g.endGame.state = state;
+  g.endGame.startRenderFrame = isaacFrameCount;
   log(`Changed end game cutscene state: ${CutsceneState[state]} (${state})`);
 }
 

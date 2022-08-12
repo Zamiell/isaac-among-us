@@ -8,11 +8,8 @@ export function commandEndGame(data: EndGameDataToMod): void {
     return;
   }
 
-  g.game.endGameCutscene.winningRole = data.winningRole;
-  g.game.endGameCutscene.imposterNames = getImposterNames(
-    g.game,
-    data.imposterUserIDs,
-  );
+  g.endGame.winningRole = data.winningRole;
+  g.endGame.imposterNames = getImposterNames(g.game, data.imposterUserIDs);
 
   startEndGameCutscene();
 }

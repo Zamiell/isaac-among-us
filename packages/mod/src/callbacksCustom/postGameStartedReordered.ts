@@ -1,17 +1,24 @@
-import { PlayerType } from "isaac-typescript-definitions";
-import { log, ModCallbackCustom, ModUpgraded } from "isaacscript-common";
+import { CollectibleType, PlayerType } from "isaac-typescript-definitions";
+import {
+  game,
+  log,
+  ModCallbackCustom,
+  ModUpgraded,
+  removeAllActiveItems,
+  removeAllPlayerTrinkets,
+} from "isaacscript-common";
 import * as disableMultiplayer from "../features/disableMultiplayer";
 import * as errors from "../features/errors";
 import * as goToEmptyRoom from "../features/goToEmptyRoom";
 import * as restartOnNextFrame from "../features/restartOnNextFrame";
 import g from "../globals";
+import { disableShooting } from "../utils";
 
 export function init(mod: ModUpgraded): void {
   mod.AddCallbackCustom(ModCallbackCustom.POST_GAME_STARTED_REORDERED, main);
 }
 
 function main(isContinued: boolean) {
-  const game = Game();
   const seeds = game.GetSeeds();
   const startSeedString = seeds.GetStartSeedString();
   const isaacFrameCount = Isaac.GetFrameCount();
@@ -29,9 +36,29 @@ function main(isContinued: boolean) {
     return;
   }
 
+  const player = Isaac.GetPlayer();
+
+  disableHUD();
+  disableShooting();
+  removeAllItems(player);
+
   disableMultiplayer.postGameStarted();
   goToEmptyRoom.postGameStarted();
   checkChangeOurCharacter();
+}
+
+function disableHUD() {
+  const hud = game.GetHUD();
+  hud.SetVisible(false);
+}
+
+export function removeAllItems(player: EntityPlayer): void {
+  removeAllActiveItems(player);
+  removeAllPlayerTrinkets(player);
+  player.AddCoins(-999);
+  player.AddBombs(-999);
+  player.AddKeys(-999);
+  player.RemoveCollectible(CollectibleType.BLACK_POWDER);
 }
 
 export function checkChangeOurCharacter(): void {

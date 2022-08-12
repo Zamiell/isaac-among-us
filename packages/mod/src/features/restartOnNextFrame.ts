@@ -1,4 +1,5 @@
 import { Challenge, PlayerType } from "isaac-typescript-definitions";
+import { game } from "isaacscript-common";
 import { consoleCommand } from "../utils";
 
 const AMONG_US_CHARACTER = PlayerType.ISAAC;
@@ -50,7 +51,6 @@ function validateCharacter() {
 }
 
 function validateSeed() {
-  const game = Game();
   const seeds = game.GetSeeds();
   const startSeedString = seeds.GetStartSeedString();
 

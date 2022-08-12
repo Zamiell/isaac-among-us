@@ -1,5 +1,6 @@
 import { SkeldRoom } from "common";
 import {
+  game,
   getRoomStageID,
   getRoomVariant,
   log,
@@ -17,7 +18,6 @@ export function init(mod: ModUpgraded): void {
 }
 
 function main() {
-  const game = Game();
   const gameFrameCount = game.GetFrameCount();
   const level = game.GetLevel();
   const stage = level.GetStage();

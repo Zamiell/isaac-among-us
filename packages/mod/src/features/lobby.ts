@@ -8,6 +8,7 @@ import {
   asNumber,
   forceNewLevelCallback,
   forceNewRoomCallback,
+  game,
   getEffectiveStage,
   getNPCs,
   getPlayers,
@@ -47,7 +48,6 @@ function gotoLobby() {
     return;
   }
 
-  const game = Game();
   const level = game.GetLevel();
   const stageType = level.GetStageType();
   const effectiveStage = getEffectiveStage();
@@ -95,7 +95,6 @@ function setupLobby() {
   setupPlayerAndUI();
   disableMinimapAPI();
 
-  const game = Game();
   const room = game.GetRoom();
   const centerPos = room.GetCenterPos();
 

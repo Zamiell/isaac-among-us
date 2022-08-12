@@ -2,6 +2,7 @@ import { Task } from "common";
 import { SoundEffect } from "isaac-typescript-definitions";
 import {
   emptyArray,
+  game,
   sfxManager,
   shuffleArrayInPlace,
 } from "isaacscript-common";
@@ -73,7 +74,6 @@ export function postRender(): void {
     return;
   }
 
-  const game = Game();
   const room = game.GetRoom();
   const gridWidth = room.GetGridWidth();
 
