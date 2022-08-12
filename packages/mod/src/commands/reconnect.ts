@@ -8,6 +8,7 @@ import {
 import { setupMeeting } from "../features/setupMeeting";
 import g from "../globals";
 import { loadMap } from "../loadMap";
+import { enableMinimapAPI } from "../minimapAPI";
 import { skeldRoomReverseMap } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
 import { convertPlayerToGhostForm } from "./killed";
@@ -34,6 +35,7 @@ export function commandReconnect(data: ReconnectDataToMod): void {
 
   disableSendingEvents();
   loadMap();
+  enableMinimapAPI();
 
   if (g.game.meeting !== null) {
     setupMeeting(false);

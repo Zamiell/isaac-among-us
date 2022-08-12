@@ -18,15 +18,12 @@ export function setMinimapAPIEnabled(enabled: boolean): void {
   }
 
   MinimapAPI.OverrideConfig.Disable = !enabled;
-  Isaac.DebugString(`GETTING HERE - ${enabled}`);
 }
 
 export function setMapToFullVisibility(): void {
   if (MinimapAPI === undefined) {
     return;
   }
-
-  enableMinimapAPI();
 
   const minimapAPILevel = MinimapAPI.GetLevel();
   for (const room of minimapAPILevel) {
