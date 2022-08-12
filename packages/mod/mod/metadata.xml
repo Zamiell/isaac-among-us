@@ -7,7 +7,7 @@
 
 This is a multiplayer recreation of the popular game [url=https://store.steampowered.com/app/945360/Among_Us/]Among Us[/url], but using the Isaac engine.
 
-The mod is currently in [b]ALPHA[/b], which means that you will experience many game-breaking bugs and poor performance.
+The mod is currently in [b]ALPHA[/b], which means that you will experience game-breaking bugs.
 
 [h2][b]Features[/b][/h2]
 
@@ -25,6 +25,10 @@ The best Among Us games consist of adult players that use voice chat. If you are
 
 If you are under 18, then sorry, this isn't the mod for you. Please enjoy the original Among Us and come back when you are older.
 
+[h2][b]What's Missing?[/b][/h2]
+
+Currently, many things from the original are not implemented, such as cameras. If you want to help, see below.
+
 [h2][b]How to Report a Bug[/b][/h2]
 
 The mod was written hastily and was barely tested, so you will experience many bugs. In return for permission to use the mod, you should report any bugs that you experience in the #bugs channel of the Discord server. [b]Please follow the bug reporting rules[/b] that are located in the pinned message of that channel.
@@ -40,12 +44,12 @@ Any Steam workshop comments asking questions will be deleted.
 [h2][b]How Can I Help?[/b][/h2]
 
 [*] The mod is [url=https://github.com/Zamiell/isaac-among-us]open source and located on GitHub[/url]. If you know how to code, you can help to fix bugs and add features by submitting a pull request.
-[*] Chat with the other developers by chatting in the #development channel of [url=https://discord.gg/K7Rh66G2vM]the Among Us in Isaac Discord server[/url].
+[*] Chat with the other developers by joining the #development channel of [url=https://discord.gg/K7Rh66G2vM]the Among Us in Isaac Discord server[/url].
 [*] If you want to submit an application to become a moderator, you can get in touch with an existing moderator.
 
 [h2][b]Cheating[/b][/h2]
 
-Please don't cheat. Just like in the original Among Us, it is possible to cheat by e.g. modifying the client, spoofing network traffic, and so on. Rather than ruin games for others, please put your skills towards the power of good by helping with development instead! (See the "How Can I Help?" section above.)
+Please don't cheat. Just like in the original Among Us, it is possible to cheat by e.g. modifying the client, spoofing network traffic, and so on. Rather than ruin games for others, consider putting your skills towards the power of good by helping with development instead! (See the "How Can I Help?" section above.)
 
 [h2][b]Community Guidelines[/b][/h2]
 
@@ -63,6 +67,10 @@ Since the mod is free and provides a chat room for random strangers on the inter
 The staff reserves the right to warn, mute, or ban users who violate these guidelines, depending on the nature of the offense, whether or not it is a repeat offense, and the administrator's individual discretion.
 
 Since user accounts are free and do not require email validation, the staff only has very limited ways to prevent abuse. Even if you disagree with the decision of a staff member, please respect their decisions and treat the server kindly.
+
+[h2][b]Credits[/b][/h2]
+
+The Among Us Mod was made by Zamiel. It makes use of DeadInfinity's StageAPI library, Sentinel's collision library, and Somdudewillson's stage backdrops; special thanks goes to them. Thanks also goes to JSG, im_tem, Wofsauge, and AgentCucco for providing technical assistance.
   </description>
   <version>1.0</version>
   <visibility />

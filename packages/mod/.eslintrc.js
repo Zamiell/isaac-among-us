@@ -20,5 +20,7 @@ module.exports = {
     project: path.join(__dirname, "tsconfig.eslint.json"),
   },
 
+  ignorePatterns: ["dist/", "plugins/"],
+
   rules: {},
 };

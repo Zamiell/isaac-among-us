@@ -46,7 +46,7 @@ function validate(socket: Socket, name: string, extraData: ExtraCommandData) {
 /**
  * @returns The game ID of the new game.
  */
-export function create(
+function create(
   userID: number,
   name: string,
   password: string | null,

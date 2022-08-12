@@ -42,10 +42,6 @@ export function isPlayerInGame(userID: number, game: Game): boolean {
   return game.players.some((player) => player.userID === userID);
 }
 
-export function isPlayerOwner(userID: number, game: Game): boolean {
-  return userID === game.ownerUserID;
-}
-
 export function getOwner(game: Game): Player {
   const player = getPlayer(game.ownerUserID, game);
   if (player === undefined) {

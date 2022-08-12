@@ -16,6 +16,8 @@ module.exports = {
     project: path.join(__dirname, "tsconfig.eslint.json"),
   },
 
+  ignorePatterns: ["dist/"],
+
   rules: {
     "no-param-reassign": "off",
   },

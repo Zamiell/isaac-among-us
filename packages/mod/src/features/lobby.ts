@@ -38,7 +38,7 @@ export function postNewRoom(): void {
   setupLobby();
 }
 
-export function gotoLobby(): void {
+function gotoLobby() {
   if (inLobby()) {
     return;
   }
