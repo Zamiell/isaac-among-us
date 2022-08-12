@@ -8,7 +8,7 @@
     "@prisma/client": "^4.2.1",
     "argon2": "^0.28.7",
     "isaac-typescript-definitions": "^3.5.0",
-    "isaacscript-common": "^7.17.5",
+    "isaacscript-common": "^8.0.1",
     "struct": "^0.0.12"
   },
   "devDependencies": {
@@ -24,6 +24,6 @@
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.1.0",
     "typescript": "^4.7.4",
-    "typescript-to-lua": "^1.8.1"
+    "typescript-to-lua": "^1.8.2"
   }
 }

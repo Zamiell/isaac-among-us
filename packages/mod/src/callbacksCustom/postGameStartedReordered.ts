@@ -21,7 +21,7 @@ function main(isContinued: boolean) {
   );
 
   // Check for errors that should prevent the mod from doing anything.
-  if (errors.check()) {
+  if (errors.postGameStarted()) {
     return;
   }
 

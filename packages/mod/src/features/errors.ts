@@ -1,6 +1,6 @@
 import { Difficulty } from "isaac-typescript-definitions";
 import {
-  LAST_COLLECTIBLE_TYPE,
+  getLastCollectibleType,
   LAST_VANILLA_COLLECTIBLE_TYPE,
   log,
   saveDataManager,
@@ -32,16 +32,18 @@ export function init(): void {
   saveDataManager("errors", v);
 }
 
-export function check(): boolean {
+export function postGameStarted(): boolean {
   return areOtherModsEnabled() || isWrongDifficulty();
 }
 
 // Check to see if there are any mods enabled that have added custom items. (It is difficult to
 // detect other mods in other ways.)
 function areOtherModsEnabled() {
-  if (LAST_COLLECTIBLE_TYPE !== LAST_VANILLA_COLLECTIBLE_TYPE) {
+  const lastCollectibleType = getLastCollectibleType();
+
+  if (lastCollectibleType !== LAST_VANILLA_COLLECTIBLE_TYPE) {
     log(
-      `Error: Other mods detected. (The highest collectible type is ${LAST_COLLECTIBLE_TYPE}, but it should be ${LAST_VANILLA_COLLECTIBLE_TYPE}.)`,
+      `Error: Other mods detected. (The highest collectible type is ${lastCollectibleType}, but it should be ${LAST_VANILLA_COLLECTIBLE_TYPE}.)`,
     );
     v.run.otherModsEnabled = true;
   }

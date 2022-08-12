@@ -116,7 +116,7 @@ export function join(userID: number, gameID: number, created: boolean): void {
     reconnected: false,
   });
   sendNewGameDescription(game);
-  sendPlayerJoined(game, userID);
+  sendPlayerJoined(game, userID); // This has to be after the game description is sent.
   logGameEvent(
     game,
     `Player "${username}" joined; ${game.players.length} total players remaining.`,

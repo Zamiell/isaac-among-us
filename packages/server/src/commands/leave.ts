@@ -23,8 +23,8 @@ export function commandLeave(
   sendTCP(socket, SocketCommandServerToMod.LEFT, {
     gameID: game.id,
   });
+  sendPlayerLeft(game, userID); // This has to be before the game description is sent.
   sendNewGameDescription(game);
-  sendPlayerLeft(game, userID);
   logGameEvent(
     game,
     `Player "${username}" left; ${game.players.length} total players remaining.`,
