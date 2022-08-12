@@ -3,6 +3,7 @@ import { checkChangeOurCharacter } from "../callbacksCustom/postGameStartedReord
 import * as autoLogin from "../features/autoLogin";
 import g from "../globals";
 import { getOurPlayer } from "../players";
+import { inCutscene } from "../utils";
 
 export function commandGameDescription(data: GameDescriptionDataToMod): void {
   if (g.game === null) {
@@ -23,7 +24,8 @@ export function commandGameDescription(data: GameDescriptionDataToMod): void {
   g.game.character = ourPlayer.character;
   g.game.usedEmergencyMeeting = ourPlayer.usedEmergencyMeeting;
 
-  checkChangeOurCharacter();
-
-  autoLogin.onGameDescription();
+  if (!inCutscene()) {
+    checkChangeOurCharacter();
+    autoLogin.onGameDescription();
+  }
 }

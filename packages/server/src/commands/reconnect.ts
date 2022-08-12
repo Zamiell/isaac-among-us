@@ -26,6 +26,7 @@ export function commandReconnect(
   sendTCP(socket, SocketCommandServerToMod.RECONNECT, {
     gameID: game.id,
     name: game.name,
+    ownerUserID: game.ownerUserID,
     players: getGameDescriptionPlayers(game),
     imposterUserIDs,
     meeting: game.meeting,

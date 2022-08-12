@@ -18,6 +18,7 @@ import { PlayerData } from "../interfaces/PlayerData";
 export class AmongUsGame {
   id: number;
   name: string;
+  ownerUserID: number;
   started = false;
   imposterUserIDs: number[] = [];
   meeting: Meeting | null = null;
@@ -51,7 +52,7 @@ export class AmongUsGame {
     state: CutsceneState.DISABLED,
     startRenderFrame: null as int | null,
     winningRole: Role.CREW,
-    roles: [] as Role[],
+    imposterNames: "",
   };
 
   startMeeting = {
@@ -66,9 +67,15 @@ export class AmongUsGame {
     userIDEjected: null as int | null,
   };
 
-  constructor(id: int, name: string, character: PlayerTypeAllowed) {
+  constructor(
+    id: int,
+    name: string,
+    ownerUserID: number,
+    character: PlayerTypeAllowed,
+  ) {
     this.id = id;
     this.name = name;
+    this.ownerUserID = ownerUserID;
     this.character = character;
   }
 

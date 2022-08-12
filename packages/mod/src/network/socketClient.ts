@@ -1,5 +1,5 @@
 import { TCP_PORT, UDP_PORT } from "common";
-import { log } from "isaacscript-common";
+import { log, restart } from "isaacscript-common";
 import { addLocalChat } from "../chat";
 import {
   REMOTE_HOSTNAME,
@@ -9,7 +9,6 @@ import {
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { setBlackSpriteState } from "../features/blackSprite";
 import g from "../globals";
-import { restart } from "../utils";
 import {
   getClientFromSandbox,
   getSocketTime,

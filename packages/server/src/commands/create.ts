@@ -66,7 +66,7 @@ export function create(
 
   const gameID = getNewGameID();
   const passwordToUse = password === "" ? null : password;
-  const game = new Game(gameID, name, passwordToUse);
+  const game = new Game(gameID, name, passwordToUse, userID);
   games.set(gameID, game);
 
   join(userID, game.id, true);

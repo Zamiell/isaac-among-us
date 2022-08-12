@@ -44,7 +44,7 @@ export function getOwner(): GameDescriptionPlayer | undefined {
     return undefined;
   }
 
-  return g.game.players[0];
+  return g.game.getPlayerFromUserID(g.game.ownerUserID);
 }
 
 export function getOurPlayer(): GameDescriptionPlayer | undefined {

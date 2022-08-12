@@ -1,18 +1,17 @@
 import { Role } from "common";
 import { Game } from "./classes/Game";
-import { create } from "./commands/create";
-import { join } from "./commands/join";
 import { games } from "./games";
 import { sendEndGame } from "./sendGame";
-import { getTCPSocketByUserID } from "./tcpSockets";
 
 export function endGame(game: Game, winningRole: Role): void {
   sendEndGame(game, winningRole);
 
   games.delete(game.id);
-  recreateGame(game);
 }
 
+// We don't want to immediately recreate the game because players might be AFK, which would prevent
+// the next game from starting.
+/*
 function recreateGame(game: Game) {
   let newGameID: number | undefined;
 
@@ -35,3 +34,4 @@ function recreateGame(game: Game) {
     }
   }
 }
+*/

@@ -1,6 +1,6 @@
 import { Game } from "./classes/Game";
 import { sendError } from "./error";
-import { isPlayerOwner } from "./game";
+import { getOwner } from "./game";
 import { isUserInAnyGames } from "./games";
 import { Socket } from "./interfaces/Socket";
 
@@ -129,13 +129,11 @@ export function validateGameOwner(
     return false;
   }
 
-  if (!isPlayerOwner(userID, game)) {
-    const firstPlayer = game.players[0];
-    const ownerName =
-      firstPlayer === undefined ? "unknown" : firstPlayer.username;
+  if (userID !== game.ownerUserID) {
+    const owner = getOwner(game);
     sendError(
       socket,
-      `You are not the owner of game ${game.id}; only ${ownerName} can ${verb} it.`,
+      `You are not the owner of game ${game.id}; only ${owner.username} can ${verb} it.`,
     );
     return false;
   }

@@ -18,7 +18,12 @@ export function commandReconnect(data: ReconnectDataToMod): void {
     return;
   }
 
-  g.game = new AmongUsGame(data.gameID, data.name, data.character);
+  g.game = new AmongUsGame(
+    data.gameID,
+    data.name,
+    data.ownerUserID,
+    data.character,
+  );
   g.game.players = data.players;
   g.game.started = true;
   g.game.imposterUserIDs = data.imposterUserIDs;

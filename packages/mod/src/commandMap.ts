@@ -11,6 +11,7 @@ import { commandKilled } from "./commands/killed";
 import { commandLeft } from "./commands/left";
 import { commandLoggedIn } from "./commands/loggedIn";
 import { commandNewGame } from "./commands/newGame";
+import { commandNewOwner } from "./commands/newOwner";
 import { commandPlayerJoined } from "./commands/playerJoined";
 import { commandPlayerLeft } from "./commands/playerLeft";
 import { commandReconnect } from "./commands/reconnect";
@@ -40,6 +41,7 @@ export const commandMap: CommandMap = {
   [SocketCommandServerToMod.GAME_DESCRIPTION]: commandGameDescription,
   [SocketCommandServerToMod.PLAYER_JOINED]: commandPlayerJoined,
   [SocketCommandServerToMod.PLAYER_LEFT]: commandPlayerLeft,
+  [SocketCommandServerToMod.NEW_OWNER]: commandNewOwner,
   [SocketCommandServerToMod.CHAT]: commandChat,
   [SocketCommandServerToMod.STARTED]: commandStarted,
   [SocketCommandServerToMod.RECONNECT]: commandReconnect,

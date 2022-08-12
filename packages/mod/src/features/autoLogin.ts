@@ -3,13 +3,13 @@ import { connectChatCommand } from "../chatCommands/connect";
 import g from "../globals";
 import { sendTCP } from "../network/send";
 import * as socketClient from "../network/socketClient";
-import { getOwner } from "../players";
 
 const DEBUG_FIRST_MOD = true;
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 const DEBUG_USERNAME = DEBUG_FIRST_MOD ? "Test1" : "Test2";
 const DEBUG_PASSWORD = "test";
 const DEBUG_GAME_NAME = "testGame";
+// (There is no game password.)
 
 let autoLogin = false;
 
@@ -59,12 +59,7 @@ export function onGameDescription(): void {
 
   autoLogin = false;
 
-  const owner = getOwner();
-  if (
-    owner !== undefined &&
-    owner.userID === g.userID &&
-    g.game.players.length >= 2
-  ) {
+  if (g.game.ownerUserID === g.userID && g.game.players.length >= 2) {
     sendTCP(SocketCommandModToServer.START, {
       gameID: g.game.id,
     });

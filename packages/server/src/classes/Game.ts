@@ -6,6 +6,7 @@ export class Game {
   name: string;
   password: string | null;
   players: Player[] = [];
+  ownerUserID: number;
   started = false;
   impostorUserIDs: number[] = [];
   meeting: Meeting | null = null;
@@ -16,9 +17,15 @@ export class Game {
 
   emergencyButtonOnCooldown = true;
 
-  constructor(id: number, name: string, password: string | null) {
+  constructor(
+    id: number,
+    name: string,
+    password: string | null,
+    ownerUserID: number,
+  ) {
     this.id = id;
     this.name = name;
     this.password = password;
+    this.ownerUserID = ownerUserID;
   }
 }

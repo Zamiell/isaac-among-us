@@ -8,7 +8,7 @@ import { sendTCP } from "./network/send";
 import * as socketClient from "./network/socketClient";
 import { getOurPlayer } from "./players";
 import { getSkeldRoom } from "./stageAPI";
-import { amOwner, restart } from "./utils";
+import { amOwner } from "./utils";
 
 export const chatCommandFunctions = new Map<string, (args: string[]) => void>();
 
@@ -150,10 +150,6 @@ chatCommandFunctions.set("leave", (_args: string[]) => {
 });
 
 chatCommandFunctions.set("password", passwordChatCommand);
-
-chatCommandFunctions.set("restart", (_args: string[]) => {
-  restart();
-});
 
 chatCommandFunctions.set("revive", (_args: string[]) => {
   if (g.game === null) {

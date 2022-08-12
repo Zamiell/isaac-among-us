@@ -21,6 +21,7 @@ export enum SocketCommandServerToMod {
   GAME_DESCRIPTION = "gameDescription",
   PLAYER_JOINED = "playerJoined",
   PLAYER_LEFT = "playerLeft",
+  NEW_OWNER = "newOwner",
   CHAT = "chat",
   STARTED = "started",
   RECONNECT = "reconnect",
@@ -76,6 +77,7 @@ export class NewGameDataToMod {
 export class JoinedDataToMod {
   gameID!: number;
   name!: string;
+  ownerUserID!: number;
   created!: boolean;
   hasPassword!: boolean;
   character!: PlayerTypeAllowed;
@@ -99,6 +101,11 @@ export class PlayerJoinedDataToMod {
 }
 
 export class PlayerLeftDataToMod {
+  gameID!: number;
+  userID!: number;
+}
+
+export class NewOwnerDataToMod {
   gameID!: number;
   userID!: number;
 }
@@ -129,6 +136,7 @@ export class StartedDataToMod {
 export class ReconnectDataToMod {
   gameID!: number;
   name!: string;
+  ownerUserID!: number;
   players!: GameDescriptionPlayer[];
   imposterUserIDs!: number[];
   meeting!: Meeting | null;
@@ -189,7 +197,7 @@ export class EndMeetingDataToMod {
 export class EndGameDataToMod {
   gameID!: number;
   winningRole!: Role;
-  roles!: Role[];
+  imposterUserIDs!: number[];
 }
 
 export class TerminatedDataToMod {
@@ -208,6 +216,7 @@ export const SocketCommandServerToModData = {
   [SocketCommandServerToMod.GAME_DESCRIPTION]: GameDescriptionDataToMod,
   [SocketCommandServerToMod.PLAYER_JOINED]: PlayerJoinedDataToMod,
   [SocketCommandServerToMod.PLAYER_LEFT]: PlayerLeftDataToMod,
+  [SocketCommandServerToMod.NEW_OWNER]: NewOwnerDataToMod,
   [SocketCommandServerToMod.CHAT]: ChatDataToMod,
   [SocketCommandServerToMod.STARTED]: StartedDataToMod,
   [SocketCommandServerToMod.RECONNECT]: ReconnectDataToMod,

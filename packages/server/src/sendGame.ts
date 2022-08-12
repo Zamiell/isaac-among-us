@@ -66,6 +66,13 @@ export function sendPlayerLeft(game: Game, userID: number): void {
   });
 }
 
+export function sendNewOwner(game: Game): void {
+  sendAllInGame(game, SocketCommandServerToMod.NEW_OWNER, {
+    gameID: game.id,
+    userID: game.ownerUserID,
+  });
+}
+
 export function sendStarted(game: Game): void {
   // We can't use sendAll because each player gets a customized message.
   for (const player of game.players) {
@@ -158,15 +165,10 @@ export function sendEndMeeting(
 }
 
 export function sendEndGame(game: Game, winningRole: Role): void {
-  const roles: Role[] = [];
-  for (const player of game.players) {
-    roles.push(player.role);
-  }
-
   sendAllInGame(game, SocketCommandServerToMod.END_GAME, {
     gameID: game.id,
     winningRole,
-    roles,
+    imposterUserIDs: game.impostorUserIDs,
   });
 }
 

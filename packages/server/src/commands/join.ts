@@ -110,6 +110,7 @@ export function join(userID: number, gameID: number, created: boolean): void {
   sendTCP(socket, SocketCommandServerToMod.JOINED, {
     gameID: game.id,
     name: game.name,
+    ownerUserID: game.ownerUserID,
     created,
     hasPassword,
     character,

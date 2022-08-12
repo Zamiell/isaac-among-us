@@ -4,7 +4,11 @@ import { games } from "../games";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
 import { Socket } from "../interfaces/Socket";
 import { logGameEvent } from "../log";
-import { sendNewGameDescription, sendPlayerLeft } from "../sendGame";
+import {
+  sendNewGameDescription,
+  sendNewOwner,
+  sendPlayerLeft,
+} from "../sendGame";
 import { sendTCP } from "../sendTCP";
 
 export function commandLeave(
@@ -38,4 +42,13 @@ export function commandLeave(
   game.players.forEach((player, i) => {
     player.index = i;
   });
+
+  // If the owner left, update the owner ID.
+  if (userID === game.ownerUserID) {
+    const firstPlayer = game.players[0];
+    if (firstPlayer !== undefined) {
+      game.ownerUserID = firstPlayer.userID;
+      sendNewOwner(game);
+    }
+  }
 }

@@ -23,12 +23,7 @@ export function amOwner(): boolean {
     return false;
   }
 
-  const firstPlayer = g.game.players[0];
-  if (firstPlayer === undefined) {
-    return false;
-  }
-
-  return firstPlayer.username === g.username;
+  return g.userID === g.game.ownerUserID;
 }
 
 export function consoleCommand(command: string): void {
@@ -138,10 +133,6 @@ export function removeGridEntity(gridEntity: GridEntity): void {
   // It is best practice to call the "Update()" method after removing a grid entity; otherwise,
   // spawning grid entities on the same tile can fail.
   room.Update();
-}
-
-export function restart(): void {
-  consoleCommand("restart");
 }
 
 export function spawnEntity(

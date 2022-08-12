@@ -43,8 +43,16 @@ export function isPlayerInGame(userID: number, game: Game): boolean {
 }
 
 export function isPlayerOwner(userID: number, game: Game): boolean {
-  const playerIndex = getPlayerIndex(userID, game);
-  return playerIndex === 0;
+  return userID === game.ownerUserID;
+}
+
+export function getOwner(game: Game): Player {
+  const player = getPlayer(game.ownerUserID, game);
+  if (player === undefined) {
+    throw new Error(`Failed to find the owner of game ID: ${game.id}`);
+  }
+
+  return player;
 }
 
 export function removePlayerFromGame(userID: number, game: Game): void {

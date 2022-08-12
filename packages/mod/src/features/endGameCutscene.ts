@@ -7,7 +7,6 @@ import {
   sfxManager,
   VectorZero,
 } from "isaacscript-common";
-import { AmongUsGame } from "../classes/AmongUsGame";
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { CutsceneState } from "../enums/CutsceneState";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
@@ -131,30 +130,11 @@ function drawText() {
     bottomCenterPos.sub(offsetFromBetweenLine),
     opacity,
   );
-  const imposterNames = getImposterNames(g.game);
   drawFontText(
-    imposterNames,
+    g.game.endGameCutscene.imposterNames,
     bottomCenterPos.add(offsetFromBetweenLine),
     opacity,
   );
-}
-
-function getImposterNames(game: AmongUsGame) {
-  const { roles } = game.endGameCutscene;
-  const names: string[] = [];
-
-  for (let i = 0; i < roles.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const role = roles[i]!;
-    if (role === Role.IMPOSTER) {
-      const player = game.players[i];
-      if (player !== undefined) {
-        names.push(player.username);
-      }
-    }
-  }
-
-  return names.join(", ");
 }
 
 function getTextOpacity() {
