@@ -1,5 +1,4 @@
 Bugs:
-- reconnecting as imposter does not show kill UI
 - imposter should not get real tasks
 
 TODO:

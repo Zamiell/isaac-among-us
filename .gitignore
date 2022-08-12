@@ -3,10 +3,14 @@
 # ------------------
 
 # Per-user IsaacScript settings
-isaacscript.json
+packages/mod/isaacscript.json
 
 # The transpiled Lua output
-mod/main.lua
+# (Commented out so that people can easily beta-test.)
+# packages/mod/mod/main.lua
+
+# Windows artifacts
+thumbs.db
 
 # MacOS artifacts
 .DS_Store

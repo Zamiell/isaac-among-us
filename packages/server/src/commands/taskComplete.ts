@@ -27,7 +27,11 @@ export function commandTaskComplete(
 }
 
 function allTasksComplete(game: Game) {
-  for (const player of game.players) {
+  // Imposters are given tasks, but those do not count towards game completion. Thus, we have to
+  // filter out the imposters.
+  const crew = game.players.filter((player) => player.role === Role.CREW);
+
+  for (const player of crew) {
     for (const taskList of Object.values(player.tasks)) {
       if (taskList.length > 0) {
         return false;

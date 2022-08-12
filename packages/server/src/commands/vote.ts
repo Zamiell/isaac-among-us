@@ -58,7 +58,7 @@ export function commandVote(
       : `for: ${playerVotedFor.username}`;
   sendChat(game, "", `${username} voted ${text}`);
 
-  if (allPlayersHaveVoted(game)) {
+  if (haveAllPlayersVoted(game)) {
     meetingPhaseOverVoting(game);
   }
 }
@@ -118,7 +118,7 @@ function validate(
   return true;
 }
 
-function allPlayersHaveVoted(game: Game) {
+function haveAllPlayersVoted(game: Game) {
   if (game.meeting === null) {
     return false;
   }

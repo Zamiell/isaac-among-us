@@ -18,6 +18,14 @@ import { StartMeetingState } from "./enums/StartMeetingState";
 import { fonts } from "./fonts";
 import g from "./globals";
 
+export function amImposter(): boolean {
+  if (g.game === null) {
+    return false;
+  }
+
+  return g.game.role === Role.IMPOSTER;
+}
+
 export function amOwner(): boolean {
   if (g.game === null) {
     return false;
