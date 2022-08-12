@@ -22,10 +22,13 @@
         "mod/main.lua"
     ],
     "words": [
+        "amongus",
+        "amongususer",
         "autoincrement",
         "basementrenovator",
         "cloc",
         "COMMS",
+        "CREATEDB",
         "Cucco",
         "datasource",
         "datetime",
@@ -34,6 +37,7 @@
         "isaacracing",
         "killme",
         "Medbay",
+        "psql",
         "Skeld",
         "Somdudewillson",
         "STAGEAPI",
