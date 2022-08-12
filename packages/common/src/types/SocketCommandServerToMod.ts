@@ -132,6 +132,7 @@ export class ReconnectDataToMod {
   players!: GameDescriptionPlayer[];
   imposterUserIDs!: number[];
   meeting!: Meeting | null;
+  emergencyButtonOnCooldown!: boolean;
   tasks!: TaskList;
   character!: PlayerTypeAllowed;
   room!: SkeldRoom;

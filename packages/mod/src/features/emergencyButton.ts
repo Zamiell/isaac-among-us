@@ -60,6 +60,6 @@ function shouldEmergencyButtonBeEnabled() {
   return (
     ourPlayer.alive &&
     !g.game.usedEmergencyMeeting &&
-    !g.game.emergencyButtonCooldown
+    !g.game.emergencyButtonOnCooldown
   );
 }

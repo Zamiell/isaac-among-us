@@ -14,7 +14,7 @@ export class Game {
   /** How many rounds of play there have been. */
   night = 1;
 
-  emergencyButtonCooldown = true;
+  emergencyButtonOnCooldown = true;
 
   constructor(id: number, name: string, password: string | null) {
     this.id = id;

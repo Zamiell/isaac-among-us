@@ -23,7 +23,7 @@ export class AmongUsGame {
   meeting: Meeting | null = null;
   players: GameDescriptionPlayer[] = [];
   bodies: PlayerBody[] = [];
-  emergencyButtonCooldown = true;
+  emergencyButtonOnCooldown = true;
 
   /** Indexed by user ID. Contains only UDP data. */
   playerMap = new Map<int, PlayerData>();

@@ -8,8 +8,9 @@ export function commandUserConnected(data: UserConnectedDataToMod): void {
     return;
   }
 
-  // Don't display notifications for players who are not in our current game.
-  if (g.game !== null && !g.game.isPlayerJoined(data.userID)) {
+  // Don't display notifications if we are currently in a game. (We will get a message when they
+  // explicitly join the game.)
+  if (g.game !== null) {
     return;
   }
 

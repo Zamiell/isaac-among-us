@@ -54,7 +54,7 @@ function validate(socket: Socket, extraData: ExtraCommandData) {
 }
 
 function setEmergencyButtonCooldown(game: Game) {
-  game.emergencyButtonCooldown = true;
+  game.emergencyButtonOnCooldown = true;
   const currentNight = game.night;
   setTimeout(() => {
     if (
@@ -63,7 +63,7 @@ function setEmergencyButtonCooldown(game: Game) {
       game.meeting === null &&
       game.night === currentNight
     ) {
-      game.emergencyButtonCooldown = false;
+      game.emergencyButtonOnCooldown = false;
       sendEmergencyButtonCooldown(game);
     }
   }, EMERGENCY_BUTTON_COOLDOWN_SECONDS * 1000);

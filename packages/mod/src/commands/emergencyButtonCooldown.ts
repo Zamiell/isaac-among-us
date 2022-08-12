@@ -9,6 +9,6 @@ export function commandEmergencyButtonCooldown(
     return;
   }
 
-  g.game.emergencyButtonCooldown = data.cooldown;
+  g.game.emergencyButtonOnCooldown = data.cooldown;
   setEmergencyButtonState();
 }

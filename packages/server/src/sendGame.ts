@@ -85,7 +85,7 @@ export function sendStarted(game: Game): void {
 export function sendEmergencyButtonCooldown(game: Game): void {
   sendAllInGame(game, SocketCommandServerToMod.EMERGENCY_BUTTON_COOLDOWN, {
     gameID: game.id,
-    cooldown: game.emergencyButtonCooldown,
+    cooldown: game.emergencyButtonOnCooldown,
   });
 }
 

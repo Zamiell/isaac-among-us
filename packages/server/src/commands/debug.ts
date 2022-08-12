@@ -20,7 +20,7 @@ export function commandDebug(
   console.log("- meeting:", game.meeting);
   console.log("- bodies:", game.bodies);
   console.log(`- night: ${game.night}`);
-  console.log(`- emergencyButtonCooldown: ${game.emergencyButtonCooldown}`);
+  console.log(`- emergencyButtonCooldown: ${game.emergencyButtonOnCooldown}`);
 
   console.log("Players:");
   game.players.forEach((player, i) => {

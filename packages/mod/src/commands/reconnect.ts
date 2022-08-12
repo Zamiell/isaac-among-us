@@ -25,6 +25,7 @@ export function commandReconnect(data: ReconnectDataToMod): void {
   g.game.ourTasks = data.tasks;
   g.game.role = data.imposterUserIDs.length === 0 ? Role.CREW : Role.IMPOSTER;
   g.game.meeting = data.meeting;
+  g.game.emergencyButtonOnCooldown = data.emergencyButtonOnCooldown;
 
   const player = g.game.getPlayerFromUserID(g.userID);
   if (player === undefined) {
