@@ -1,6 +1,6 @@
 import { EffectVariant, ModCallback } from "isaac-typescript-definitions";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
-import * as button from "../features/button";
+import * as buttons from "../features/buttons";
 import * as makePentagram from "../tasks/makePentagram";
 
 export function init(mod: Mod): void {
@@ -23,5 +23,5 @@ function pentagramBlackPowder(effect: EntityEffect) {
 }
 
 function postEffectUpdateButton(effect: EntityEffect) {
-  button.postEffectUpdateButton(effect);
+  buttons.postEffectUpdateButton(effect);
 }

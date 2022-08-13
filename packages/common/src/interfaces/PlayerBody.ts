@@ -1,11 +1,9 @@
 import { SkeldRoom } from "../enums/SkeldRoom";
 
 export interface PlayerBody {
-  userID: number;
-
-  room: SkeldRoom;
-
-  x: number;
-  y: number;
-  renderFrameKilled?: number;
+  readonly userID: number;
+  readonly room: SkeldRoom;
+  readonly x: number;
+  readonly y: number;
+  readonly renderFrameKilled?: number;
 }

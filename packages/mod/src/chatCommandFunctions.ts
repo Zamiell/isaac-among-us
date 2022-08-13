@@ -1,4 +1,5 @@
 import { NOT_VOTED_YET, SocketCommandModToServer } from "common";
+import { logTable } from "isaacscript-common";
 import { addLocalChat } from "./chat";
 import { connectChatCommand } from "./chatCommands/connect";
 import { passwordChatCommand } from "./chatCommands/password";
@@ -147,6 +148,10 @@ chatCommandFunctions.set("leave", (_args: string[]) => {
   sendTCP(SocketCommandModToServer.LEAVE, {
     gameID: g.game.id,
   });
+});
+
+chatCommandFunctions.set("log", (_args: string[]) => {
+  logTable(g.game);
 });
 
 chatCommandFunctions.set("password", passwordChatCommand);

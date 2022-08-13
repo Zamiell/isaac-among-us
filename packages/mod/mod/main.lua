@@ -2767,26 +2767,146 @@ local Task = ____Task.Task
 local ____TaskType = require("packages.common.src.enums.TaskType")
 local TaskType = ____TaskType.TaskType
 ____exports.TASK_DESCRIPTIONS = {
-    [Task.SHORT_DESTROY_GIANT_POOP] = {name = "Toilet Cleaning", taskType = TaskType.SHORT, room = SkeldRoom.CAFETERIA, gridIndex = 418},
-    [Task.SHORT_BOMB_ROCKS] = {name = "Debris Clearing", taskType = TaskType.SHORT, room = SkeldRoom.UPPER_ENGINE, gridIndex = 228},
-    [Task.SHORT_IDENTIFY_COLLECTIBLES] = {name = "Item Calibration", taskType = TaskType.SHORT, room = SkeldRoom.SECURITY, gridIndex = 56},
-    [Task.SHORT_IDENTIFY_TRINKETS] = {name = "Trinket Calibration", taskType = TaskType.SHORT, room = SkeldRoom.SECURITY, gridIndex = 102},
-    [Task.SHORT_PRESS_BUTTONS_WITH_GRUDGE] = {name = "Shutdown Robotics", taskType = TaskType.SHORT, room = SkeldRoom.SHIELDS, gridIndex = 91},
-    [Task.SHORT_FIX_WIRES] = {name = "Fix Wires", taskType = TaskType.SHORT, room = SkeldRoom.ELECTRICAL, gridIndex = 57},
-    [Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES] = {name = "Disengage Thruster", taskType = TaskType.SHORT, room = SkeldRoom.WEAPONS, gridIndex = 101},
-    [Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS] = {name = "Repair Ship Hull", taskType = TaskType.SHORT, room = SkeldRoom.STORAGE, gridIndex = 190},
-    [Task.SHORT_WALK_BETWEEN_SLIDES] = {name = "Deactivate Drones", taskType = TaskType.SHORT, room = SkeldRoom.ELECTRICAL, gridIndex = 48},
-    [Task.SHORT_PUSH_TNT_BARREL] = {name = "Explode Excess Material", taskType = TaskType.SHORT, room = SkeldRoom.REACTOR, gridIndex = 106},
-    [Task.SHORT_DODGE_RETRACTING_SPIKES] = {name = "Retrieve Fuel", taskType = TaskType.LONG, room = SkeldRoom.STORAGE, gridIndex = 170},
-    [Task.SHORT_BUTTONS_BEHIND_KEY_BLOCKS] = {name = "Recover Locked Hard Drives", taskType = TaskType.LONG, room = SkeldRoom.COMMUNICATION, gridIndex = 46},
-    [Task.SHORT_PUSH_BUTTONS_IN_ORDER] = {name = "Plot Ship Course", taskType = TaskType.LONG, room = SkeldRoom.NAVIGATION, gridIndex = 71},
-    [Task.SHORT_COLLECT_PENNIES] = {name = "Collect Spare Cash", taskType = TaskType.LONG, room = SkeldRoom.ADMIN, gridIndex = 17},
-    [Task.LONG_LOAD_SLOT_MACHINES] = {name = "Engine Boosting", taskType = TaskType.SHORT, room = SkeldRoom.LOWER_ENGINE, gridIndex = 368},
-    [Task.LONG_MAKE_PENTAGRAM] = {name = "Summon Devil", taskType = TaskType.SHORT, room = SkeldRoom.COMMUNICATION, gridIndex = 108},
-    [Task.LONG_IDENTIFY_PICKUPS_IN_ORDER] = {name = "Pickup Calibration", taskType = TaskType.LONG, room = SkeldRoom.ADMIN, gridIndex = 118},
-    [Task.LONG_KILL_WORMS] = {name = "Kill Space Worms", taskType = TaskType.LONG, room = SkeldRoom.MEDBAY, gridIndex = 109},
-    [Task.LONG_DODGE_STONE_SHOOTERS] = {name = "Suppress Enemy Fire", taskType = TaskType.LONG, room = SkeldRoom.WEAPONS, gridIndex = 244},
-    [Task.LONG_DEFEAT_MONSTRO] = {name = "Defeat Space Blob", taskType = TaskType.LONG, room = SkeldRoom.O2, gridIndex = 61}
+    [Task.SHORT_DESTROY_GIANT_POOP] = {
+        name = "Toilet Cleaning",
+        taskType = TaskType.SHORT,
+        room = SkeldRoom.CAFETERIA,
+        gridIndex = 418,
+        returnGridIndex = 416
+    },
+    [Task.SHORT_BOMB_ROCKS] = {
+        name = "Debris Clearing",
+        taskType = TaskType.SHORT,
+        room = SkeldRoom.UPPER_ENGINE,
+        gridIndex = 228,
+        returnGridIndex = 230
+    },
+    [Task.SHORT_IDENTIFY_COLLECTIBLES] = {
+        name = "Item Calibration",
+        taskType = TaskType.SHORT,
+        room = SkeldRoom.SECURITY,
+        gridIndex = 56,
+        returnGridIndex = 54
+    },
+    [Task.SHORT_IDENTIFY_TRINKETS] = {
+        name = "Trinket Calibration",
+        taskType = TaskType.SHORT,
+        room = SkeldRoom.SECURITY,
+        gridIndex = 102,
+        returnGridIndex = 100
+    },
+    [Task.SHORT_PRESS_BUTTONS_WITH_GRUDGE] = {
+        name = "Shutdown Robotics",
+        taskType = TaskType.SHORT,
+        room = SkeldRoom.SHIELDS,
+        gridIndex = 91,
+        returnGridIndex = 93
+    },
+    [Task.SHORT_FIX_WIRES] = {
+        name = "Fix Wires",
+        taskType = TaskType.SHORT,
+        room = SkeldRoom.ELECTRICAL,
+        gridIndex = 57,
+        returnGridIndex = 55
+    },
+    [Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES] = {
+        name = "Disengage Thruster",
+        taskType = TaskType.SHORT,
+        room = SkeldRoom.WEAPONS,
+        gridIndex = 101,
+        returnGridIndex = 99
+    },
+    [Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS] = {
+        name = "Repair Ship Hull",
+        taskType = TaskType.SHORT,
+        room = SkeldRoom.STORAGE,
+        gridIndex = 190,
+        returnGridIndex = 192
+    },
+    [Task.SHORT_WALK_BETWEEN_SLIDES] = {
+        name = "Deactivate Drones",
+        taskType = TaskType.SHORT,
+        room = SkeldRoom.ELECTRICAL,
+        gridIndex = 48,
+        returnGridIndex = 50
+    },
+    [Task.SHORT_PUSH_TNT_BARREL] = {
+        name = "Explode Excess Material",
+        taskType = TaskType.SHORT,
+        room = SkeldRoom.REACTOR,
+        gridIndex = 106,
+        returnGridIndex = 108
+    },
+    [Task.SHORT_DODGE_RETRACTING_SPIKES] = {
+        name = "Retrieve Fuel",
+        taskType = TaskType.LONG,
+        room = SkeldRoom.STORAGE,
+        gridIndex = 170,
+        returnGridIndex = 168
+    },
+    [Task.SHORT_BUTTONS_BEHIND_KEY_BLOCKS] = {
+        name = "Recover Locked Hard Drives",
+        taskType = TaskType.LONG,
+        room = SkeldRoom.COMMUNICATION,
+        gridIndex = 46,
+        returnGridIndex = 48
+    },
+    [Task.SHORT_PUSH_BUTTONS_IN_ORDER] = {
+        name = "Plot Ship Course",
+        taskType = TaskType.LONG,
+        room = SkeldRoom.NAVIGATION,
+        gridIndex = 71,
+        returnGridIndex = 69
+    },
+    [Task.SHORT_COLLECT_PENNIES] = {
+        name = "Collect Spare Cash",
+        taskType = TaskType.LONG,
+        room = SkeldRoom.ADMIN,
+        gridIndex = 17,
+        returnGridIndex = 47
+    },
+    [Task.LONG_LOAD_SLOT_MACHINES] = {
+        name = "Engine Boosting",
+        taskType = TaskType.SHORT,
+        room = SkeldRoom.LOWER_ENGINE,
+        gridIndex = 368,
+        returnGridIndex = 370
+    },
+    [Task.LONG_MAKE_PENTAGRAM] = {
+        name = "Summon Devil",
+        taskType = TaskType.SHORT,
+        room = SkeldRoom.COMMUNICATION,
+        gridIndex = 108,
+        returnGridIndex = 110
+    },
+    [Task.LONG_IDENTIFY_PICKUPS_IN_ORDER] = {
+        name = "Pickup Calibration",
+        taskType = TaskType.LONG,
+        room = SkeldRoom.ADMIN,
+        gridIndex = 118,
+        returnGridIndex = 116
+    },
+    [Task.LONG_KILL_WORMS] = {
+        name = "Kill Space Worms",
+        taskType = TaskType.LONG,
+        room = SkeldRoom.MEDBAY,
+        gridIndex = 109,
+        returnGridIndex = 111
+    },
+    [Task.LONG_DODGE_STONE_SHOOTERS] = {
+        name = "Suppress Enemy Fire",
+        taskType = TaskType.LONG,
+        room = SkeldRoom.WEAPONS,
+        gridIndex = 244,
+        returnGridIndex = 242
+    },
+    [Task.LONG_DEFEAT_MONSTRO] = {
+        name = "Defeat Space Blob",
+        taskType = TaskType.LONG,
+        room = SkeldRoom.O2,
+        gridIndex = 61,
+        returnGridIndex = 63
+    }
 }
 return ____exports
  end,
@@ -55833,7 +55953,7 @@ function AmongUsGame.prototype.____constructor(self, id, name, ownerUserID, char
     self.startTaskTime = 0
     self.endTaskTime = 0
     self.taskReturnRoomName = ""
-    self.taskReturnRoomGridIndex = 0
+    self.taskReturnGridIndex = 0
     self.startGameCutscene = {state = CutsceneState.DISABLED, startRenderFrame = nil}
     self.startMeeting = {state = StartMeetingState.DISABLED, startRenderFrame = nil}
     self.endMeeting = {state = EndMeetingState.DISABLED, startRenderFrame = nil, meetingResolution = MeetingResolution.EJECT, userIDEjected = nil}
@@ -56893,12 +57013,6 @@ local ____StartMeetingState = require("packages.mod.src.enums.StartMeetingState"
 local StartMeetingState = ____StartMeetingState.StartMeetingState
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
-function ____exports.amImposter(self)
-    if g.game == nil then
-        return false
-    end
-    return g.game.role == Role.IMPOSTER
-end
 function ____exports.amOwner(self)
     if g.game == nil then
         return false
@@ -56940,15 +57054,15 @@ function ____exports.getRoleName(self, role, plural)
         plural = false
     end
     repeat
-        local ____switch11 = role
-        local ____cond11 = ____switch11 == Role.CREW
-        if ____cond11 then
+        local ____switch9 = role
+        local ____cond9 = ____switch9 == Role.CREW
+        if ____cond9 then
             do
                 return "Crew"
             end
         end
-        ____cond11 = ____cond11 or ____switch11 == Role.IMPOSTER
-        if ____cond11 then
+        ____cond9 = ____cond9 or ____switch9 == Role.IMPOSTER
+        if ____cond9 then
             do
                 return plural and "Imposters" or "Imposter"
             end
@@ -57742,6 +57856,8 @@ local ____exports = {}
 local ____common = require("packages.common.src.index")
 local NOT_VOTED_YET = ____common.NOT_VOTED_YET
 local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
+local logTable = ____isaacscript_2Dcommon.logTable
 local ____chat = require("packages.mod.src.chat")
 local addLocalChat = ____chat.addLocalChat
 local ____connect = require("packages.mod.src.chatCommands.connect")
@@ -57881,6 +57997,12 @@ ____exports.chatCommandFunctions:set(
             return
         end
         sendTCP(nil, SocketCommandModToServer.LEAVE, {gameID = g.game.id})
+    end
+)
+____exports.chatCommandFunctions:set(
+    "log",
+    function(____, _args)
+        logTable(g.game)
     end
 )
 ____exports.chatCommandFunctions:set("password", passwordChatCommand)
@@ -59783,7 +59905,7 @@ function ____exports.taskLeave(self)
     setupPlayerAndUI(nil)
     enableMinimapAPI(nil)
     ____exports.clearRoomEntities(nil)
-    goToStageAPIRoom(nil, g.game.taskReturnRoomName, g.game.taskReturnRoomGridIndex)
+    goToStageAPIRoom(nil, g.game.taskReturnRoomName, g.game.taskReturnGridIndex)
 end
 function ____exports.clearRoomEntities(self)
     removeAllMatchingEntities(nil, EntityType.BOMB)
@@ -64077,23 +64199,22 @@ function ____exports.init(self, mod)
 end
 return ____exports
  end,
-["packages.mod.src.features.button"] = function(...) 
+["packages.mod.src.features.buttons"] = function(...) 
 local ____exports = {}
 local checkIfButtonIsPressed, buttonPressed, buttonPressedGoToTask, buttonPressedEmergency, buttonPressedTask, BUTTON_ACTIVATION_DISTANCE
 local ____common = require("packages.common.src.index")
 local FAKE_TASK = ____common.FAKE_TASK
 local MeetingType = ____common.MeetingType
 local Role = ____common.Role
-local SkeldRoom = ____common.SkeldRoom
 local SocketCommandModToServer = ____common.SocketCommandModToServer
 local Task = ____common.Task
+local TASK_DESCRIPTIONS = ____common.TASK_DESCRIPTIONS
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local PressurePlateState = ____isaac_2Dtypescript_2Ddefinitions.PressurePlateState
 local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
 local asNumber = ____isaacscript_2Dcommon.asNumber
 local getPlayerCloserThan = ____isaacscript_2Dcommon.getPlayerCloserThan
-local getRoomGridIndex = ____isaacscript_2Dcommon.getRoomGridIndex
 local sfxManager = ____isaacscript_2Dcommon.sfxManager
 local ____ButtonSubType = require("packages.mod.src.enums.ButtonSubType")
 local ButtonSubType = ____ButtonSubType.ButtonSubType
@@ -64105,8 +64226,6 @@ local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
 local SKELD_ROOM_REVERSE_MAP = ____skeldRoomMap.SKELD_ROOM_REVERSE_MAP
 local ____stageAPI = require("packages.mod.src.stageAPI")
 local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
-local ____stageAPISubroutines = require("packages.mod.src.stageAPISubroutines")
-local getStageAPIRoomName = ____stageAPISubroutines.getStageAPIRoomName
 local ____buttonsBehindKeyBlocks = require("packages.mod.src.tasks.buttonsBehindKeyBlocks")
 local buttonsBehindKeyBlocksButtonPressed = ____buttonsBehindKeyBlocks.buttonsBehindKeyBlocksButtonPressed
 local ____fixWires = require("packages.mod.src.tasks.fixWires")
@@ -64250,9 +64369,10 @@ function buttonPressedGoToTask(self, effect)
     if task == nil then
         error("Failed to read the task from a task button.")
     end
+    local taskDescription = TASK_DESCRIPTIONS[task]
     g.game.currentTask = g.game.role == Role.IMPOSTER and FAKE_TASK or task
-    g.game.taskReturnRoomName = getStageAPIRoomName(nil) or SKELD_ROOM_REVERSE_MAP[SkeldRoom.CAFETERIA]
-    g.game.taskReturnRoomGridIndex = getRoomGridIndex(nil)
+    g.game.taskReturnRoomName = SKELD_ROOM_REVERSE_MAP[taskDescription.room]
+    g.game.taskReturnGridIndex = taskDescription.returnGridIndex
     goToStageAPIRoom(nil, "Task")
 end
 function buttonPressedEmergency(self)
@@ -64372,13 +64492,13 @@ local EffectVariant = ____isaac_2Dtypescript_2Ddefinitions.EffectVariant
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
 local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
-local button = require("packages.mod.src.features.button")
+local buttons = require("packages.mod.src.features.buttons")
 local makePentagram = require("packages.mod.src.tasks.makePentagram")
 function pentagramBlackPowder(self, effect)
     makePentagram:postEffectUpdatePentagramBlackPowder(effect)
 end
 function postEffectUpdateButton(self, effect)
-    button:postEffectUpdateButton(effect)
+    buttons:postEffectUpdateButton(effect)
 end
 function ____exports.init(self, mod)
     mod:AddCallback(ModCallback.POST_EFFECT_UPDATE, pentagramBlackPowder, EffectVariant.PENTAGRAM_BLACK_POWDER)

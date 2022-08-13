@@ -44,7 +44,7 @@ export class AmongUsGame {
   startTaskTime = 0;
   endTaskTime = 0;
   taskReturnRoomName = "";
-  taskReturnRoomGridIndex = 0;
+  taskReturnGridIndex = 0;
 
   startGameCutscene = {
     state: CutsceneState.DISABLED,

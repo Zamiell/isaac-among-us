@@ -72,7 +72,7 @@ export function taskLeave(): void {
   enableMinimapAPI();
 
   clearRoomEntities();
-  goToStageAPIRoom(g.game.taskReturnRoomName, g.game.taskReturnRoomGridIndex);
+  goToStageAPIRoom(g.game.taskReturnRoomName, g.game.taskReturnGridIndex);
 }
 
 export function clearRoomEntities(): void {
