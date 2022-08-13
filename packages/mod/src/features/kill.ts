@@ -37,7 +37,7 @@ function isCrewMemberClose() {
   return distance <= KILL_DISTANCE;
 }
 
-export function getClosestAliveCrewMember(): PlayerData | undefined {
+function getClosestAliveCrewMember(): PlayerData | undefined {
   if (g.game === null) {
     return undefined;
   }

@@ -38,7 +38,7 @@ function getClosestVent(): EntityEffect | undefined {
   }
 
   const player = Isaac.GetPlayer();
-  const vents = getVents();
+  const vents = getEffects(EffectVariantCustom.VENT);
 
   let closestVent: EntityEffect | undefined;
   let closestDistance = math.huge;
@@ -52,10 +52,6 @@ function getClosestVent(): EntityEffect | undefined {
   }
 
   return closestVent;
-}
-
-export function getVents(): EntityEffect[] {
-  return getEffects(EffectVariantCustom.VENT);
 }
 
 export function useVent(): void {
