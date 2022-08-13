@@ -64814,7 +64814,6 @@ return ____exports
 ["packages.mod.src.features.drawRoomDescription"] = function(...) 
 local ____exports = {}
 local ____common = require("packages.common.src.index")
-local IS_DEV = ____common.IS_DEV
 local MAX_PLAYERS = ____common.MAX_PLAYERS
 local TASK_DESCRIPTIONS = ____common.TASK_DESCRIPTIONS
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
@@ -64865,7 +64864,7 @@ function ____exports.postRender(self)
     if skeldRoom == nil then
         return
     end
-    local roomDescription = IS_DEV and ((roomName .. " (") .. tostring(skeldRoom)) .. ")" or roomName
+    local roomDescription = roomName
     drawFontText(nil, roomDescription, position)
 end
 return ____exports

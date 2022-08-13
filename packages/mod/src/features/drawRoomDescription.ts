@@ -1,4 +1,4 @@
-import { IS_DEV, MAX_PLAYERS, TASK_DESCRIPTIONS } from "common";
+import { MAX_PLAYERS, TASK_DESCRIPTIONS } from "common";
 import { game } from "isaacscript-common";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
@@ -49,7 +49,7 @@ export function postRender(): void {
     return;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const roomDescription = IS_DEV ? `${roomName} (${skeldRoom})` : roomName;
+  /// const roomDescription = IS_DEV ? `${roomName} (${skeldRoom})` : roomName;
+  const roomDescription = roomName;
   drawFontText(roomDescription, position);
 }
