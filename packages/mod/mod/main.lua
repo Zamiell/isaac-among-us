@@ -3384,14 +3384,13 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local ____exports = {}
-local ____common = require("packages.common.src.index")
-local IS_DEV = ____common.IS_DEV
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
 local RENDER_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.RENDER_FRAMES_PER_SECOND
 ____exports.MOD_NAME = "Among Us"
 --- The version is updated automatically by a pre-publish script.
 ____exports.VERSION = "0.0.1"
-____exports.REMOTE_HOSTNAME = IS_DEV and "192.168.1.10" or "isaacracing.net"
+local USE_LOCAL_NETWORK = false
+____exports.REMOTE_HOSTNAME = USE_LOCAL_NETWORK and "192.168.1.10" or "isaacracing.net"
 ____exports.SOCKET_CONNECT_TIMEOUT_SECONDS = 1
 ____exports.SOCKET_CLIENT_RETURN_SUCCESS = 1
 local FieldType = FieldType or ({})

@@ -55,7 +55,9 @@ Are you interested in helping with development? Then fork the repository, make s
 
 ### 3) Change the Development Constant
 
-- In "packages/common/constants.ts", change `IS_DEV` to true, if it is not set that way already.
+- In "packages/common/constants.ts", change `IS_DEV` to true.
+- In "packages/mod/constants.ts", change `USE_LOCAL_NETWORK` to true.
+- In "packages/mod/constants.ts", change `REMOTE_HOSTNAME` to your IP address.
 
 ### 4) Install and Run the Mod
 
