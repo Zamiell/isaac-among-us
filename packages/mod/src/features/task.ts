@@ -1,10 +1,9 @@
-import { SkeldRoom } from "common";
+import { FAKE_TASK, SkeldRoom } from "common";
 import g from "../globals";
 import { disableMinimapAPI } from "../minimapAPI";
 import { getSkeldRoom } from "../stageAPI";
 import { taskFunctions } from "../taskFunctions";
 import { fakeTask } from "../tasks/fakeTask";
-import { amImposter } from "../utils";
 import { clearRoomEntities } from "./taskSubroutines";
 
 export function postStageAPINewRoom(): void {
@@ -19,7 +18,7 @@ function setupTaskRoom() {
   disableMinimapAPI();
   clearRoomEntities();
 
-  if (amImposter()) {
+  if (g.game.currentTask === FAKE_TASK) {
     fakeTask();
   } else {
     const taskFunction = taskFunctions.get(g.game.currentTask);

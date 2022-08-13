@@ -8,13 +8,18 @@ export function assignImpostors(game: Game): void {
   if (IS_DEV) {
     const firstPlayer = game.players[0];
     if (firstPlayer !== undefined) {
-      firstPlayer.role = Role.CREW;
+      firstPlayer.role = Role.IMPOSTER;
     }
 
     const secondPlayer = game.players[1];
     if (secondPlayer !== undefined) {
-      secondPlayer.role = Role.IMPOSTER;
-      game.impostorUserIDs.push(secondPlayer.userID);
+      secondPlayer.role = Role.CREW;
+    }
+
+    for (const player of game.players) {
+      if (player.role === Role.IMPOSTER) {
+        game.impostorUserIDs.push(player.userID);
+      }
     }
 
     return;

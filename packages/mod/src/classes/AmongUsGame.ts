@@ -40,7 +40,7 @@ export class AmongUsGame {
     [TaskType.COMMON]: [] as Task[],
   };
 
-  currentTask: Task | null = null;
+  currentTask: Task | -1 | null = null; // -1 is the type of the "FAKE_TASK" constant.
   startTaskTime = 0;
   endTaskTime = 0;
 

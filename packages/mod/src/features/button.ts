@@ -1,4 +1,10 @@
-import { MeetingType, SocketCommandModToServer, Task } from "common";
+import {
+  FAKE_TASK,
+  MeetingType,
+  Role,
+  SocketCommandModToServer,
+  Task,
+} from "common";
 import { PressurePlateState, SoundEffect } from "isaac-typescript-definitions";
 import { asNumber, getPlayerCloserThan, sfxManager } from "isaacscript-common";
 import { ButtonSubType } from "../enums/ButtonSubType";
@@ -143,12 +149,13 @@ function buttonPressedGoToTask(effect: EntityEffect) {
     return;
   }
 
-  const data = effect.GetData() as unknown as TaskButtonData;
+  const data = effect.GetData() as TaskButtonData;
   const { task } = data;
   if (task === undefined) {
     error("Failed to read the task from a task button.");
   }
-  g.game.currentTask = task;
+
+  g.game.currentTask = g.game.role === Role.IMPOSTER ? FAKE_TASK : task;
 
   goToStageAPIRoom("Task");
 }

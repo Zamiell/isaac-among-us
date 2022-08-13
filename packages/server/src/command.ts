@@ -53,7 +53,7 @@ export function handleCommand(
   possibleCommand: string,
   rawData: unknown,
 ): void {
-  const command = possibleCommand as unknown as SocketCommandModToServer;
+  const command = possibleCommand as SocketCommandModToServer;
   const commandFunction = commandMap[command];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (commandFunction === undefined) {

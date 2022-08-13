@@ -2563,6 +2563,7 @@ ____exports.UDP_PORT = 9123
 ____exports.DEV_MIN_PLAYERS = 1
 ____exports.MIN_PLAYERS = 4
 ____exports.MAX_PLAYERS = 15
+____exports.FAKE_TASK = -1
 ____exports.NOT_VOTED_YET = -1
 ____exports.VOTE_SKIP = -2
 ____exports.EMERGENCY_BUTTON_COOLDOWN_SECONDS = 30
@@ -3381,66 +3382,68 @@ local ____exports = {}
 return ____exports
  end,
 ["packages.mod.src.constants"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
-local RENDER_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.RENDER_FRAMES_PER_SECOND
 ____exports.MOD_NAME = "Among Us"
 --- The version is updated automatically by a pre-publish script.
 ____exports.VERSION = "0.0.1"
 local USE_LOCAL_NETWORK = false
 ____exports.REMOTE_HOSTNAME = USE_LOCAL_NETWORK and "192.168.1.10" or "isaacracing.net"
-____exports.SOCKET_CONNECT_TIMEOUT_SECONDS = 1
-____exports.SOCKET_CLIENT_RETURN_SUCCESS = 1
-local FieldType = FieldType or ({})
-FieldType.SIGNED_CHAR = "b"
-FieldType.UNSIGNED_CHAR = "B"
-FieldType.SIGNED_SHORT = "h"
-FieldType.UNSIGNED_SHORT = "H"
-FieldType.SIGNED_INT = "i"
-FieldType.UNSIGNED_INT = "I"
-FieldType.SIGNED_LONG = "l"
-FieldType.UNSIGNED_LONG = "L"
-FieldType.FLOAT = "f"
-FieldType.DOUBLE = "d"
-FieldType.STRING = "s"
-FieldType.CHAR_SEQUENCE = "cn"
-____exports.UDP_BEACON_MESSAGE = "HELLO"
-____exports.UDP_BEACON_FIELDS = {
-    {"gameID", "I"},
-    {"userID", "I"},
-    {
-        "message",
-        "c" .. tostring(#____exports.UDP_BEACON_MESSAGE)
-    }
-}
-____exports.UDP_BEACON_DATA_FORMAT = table.concat(
-    __TS__ArrayMap(
-        ____exports.UDP_BEACON_FIELDS,
-        function(____, tuple) return tuple[2] end
-    ),
-    ","
-)
-____exports.UDP_BEACON_INTERVAL = 10 * RENDER_FRAMES_PER_SECOND
-____exports.UDP_POSITION_FIELDS = {
-    {"gameID", FieldType.UNSIGNED_INT},
-    {"userID", FieldType.UNSIGNED_INT},
-    {"x", FieldType.FLOAT},
-    {"y", FieldType.FLOAT},
-    {"room", FieldType.UNSIGNED_INT},
-    {"animation", "c20"},
-    {"animationFrame", FieldType.UNSIGNED_INT},
-    {"overlayAnimation", "c20"},
-    {"overlayAnimationFrame", FieldType.UNSIGNED_INT}
-}
-____exports.UDP_POSITION_DATA_FORMAT = table.concat(
-    __TS__ArrayMap(
-        ____exports.UDP_POSITION_FIELDS,
-        function(____, tuple) return tuple[2] end
-    ),
-    ","
-)
+return ____exports
+ end,
+["packages.mod.src.network.sandbox"] = function(...) 
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
+local log = ____isaacscript_2Dcommon.log
+local ____constants = require("packages.mod.src.constants")
+local REMOTE_HOSTNAME = ____constants.REMOTE_HOSTNAME
+local sandbox = nil
+function ____exports.getClientFromSandbox(self, port, useTCP)
+    if sandbox == nil then
+        return nil
+    end
+    return sandbox.connect(REMOTE_HOSTNAME, port, useTCP)
+end
+--- Helper function to call `os.date()`.
+function ____exports.getFormattedTime(self)
+    local format = "%X"
+    if sandbox ~= nil then
+        return sandbox.getDate(format)
+    end
+    return os.date(format)
+end
+--- Helper function to call `socket.gettime()`.
+function ____exports.getSocketTime(self)
+    if sandbox == nil then
+        error("The sandbox is not initialized.")
+    end
+    return sandbox.getSocketTime()
+end
+function ____exports.isSandboxEnabled(self)
+    return sandbox ~= nil
+end
+--- Racing+ installs a sandbox that prevents mods from doing unsafe things. If the sandbox is in
+-- place, then the require call in the "init()" function will fail even though the "--luadebug" flag
+-- is enabled.
+-- 
+-- This function is similar to the Racing+ "init()" function in "socketClient.ts".
+function ____exports.tryInitRacingPlusSandbox(self)
+    local ok, requiredSandbox = pcall(require, "sandbox")
+    if not ok then
+        return
+    end
+    sandbox = requiredSandbox
+    if sandboxTraceback == nil then
+        sandbox = nil
+        log("Detected the sandbox environment, but it was not initialized correctly. (The invocation in the \"main.lua\" file is probably missing.)")
+        return
+    end
+    if not sandbox.isSocketInitialized() then
+        sandbox = nil
+        log("Detected the sandbox environment, but the socket library failed to load. (The \"--luadebug\" flag is probably turned off.)")
+        return
+    end
+    log("Detected the sandbox environment.")
+end
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.index"] = function(...) 
@@ -55676,62 +55679,6 @@ ____exports.COLORS = {
 }
 return ____exports
  end,
-["packages.mod.src.network.sandbox"] = function(...) 
-local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
-local log = ____isaacscript_2Dcommon.log
-local ____constants = require("packages.mod.src.constants")
-local REMOTE_HOSTNAME = ____constants.REMOTE_HOSTNAME
-local sandbox = nil
-function ____exports.getClientFromSandbox(self, port, useTCP)
-    if sandbox == nil then
-        return nil
-    end
-    return sandbox.connect(REMOTE_HOSTNAME, port, useTCP)
-end
---- Helper function to call `os.date()`.
-function ____exports.getFormattedTime(self)
-    local format = "%X"
-    if sandbox ~= nil then
-        return sandbox.getDate(format)
-    end
-    return os.date(format)
-end
---- Helper function to call `socket.gettime()`.
-function ____exports.getSocketTime(self)
-    if sandbox == nil then
-        error("The sandbox is not initialized.")
-    end
-    return sandbox.getSocketTime()
-end
-function ____exports.isSandboxEnabled(self)
-    return sandbox ~= nil
-end
---- Racing+ installs a sandbox that prevents mods from doing unsafe things. If the sandbox is in
--- place, then the require call in the "init()" function will fail even though the "--luadebug" flag
--- is enabled.
--- 
--- This function is similar to the Racing+ "init()" function in "socketClient.ts".
-function ____exports.tryInitRacingPlusSandbox(self)
-    local ok, requiredSandbox = pcall(require, "sandbox")
-    if not ok then
-        return
-    end
-    sandbox = requiredSandbox
-    if sandboxTraceback == nil then
-        sandbox = nil
-        log("Detected the sandbox environment, but it was not initialized correctly. (The invocation in the \"main.lua\" file is probably missing.)")
-        return
-    end
-    if not sandbox.isSocketInitialized() then
-        sandbox = nil
-        log("Detected the sandbox environment, but the socket library failed to load. (The \"--luadebug\" flag is probably turned off.)")
-        return
-    end
-    log("Detected the sandbox environment.")
-end
-return ____exports
- end,
 ["packages.mod.src.chat"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__ArrayUnshift = ____lualib.__TS__ArrayUnshift
@@ -56122,7 +56069,7 @@ return ____exports
  end,
 ["packages.mod.src.network.socketClient"] = function(...) 
 local ____exports = {}
-local getClient, socket
+local getClient, SOCKET_CONNECT_TIMEOUT_SECONDS, SOCKET_CLIENT_RETURN_SUCCESS, socket
 local ____common = require("packages.common.src.index")
 local TCP_PORT = ____common.TCP_PORT
 local UDP_PORT = ____common.UDP_PORT
@@ -56133,8 +56080,6 @@ local ____chat = require("packages.mod.src.chat")
 local addLocalChat = ____chat.addLocalChat
 local ____constants = require("packages.mod.src.constants")
 local REMOTE_HOSTNAME = ____constants.REMOTE_HOSTNAME
-local SOCKET_CLIENT_RETURN_SUCCESS = ____constants.SOCKET_CLIENT_RETURN_SUCCESS
-local SOCKET_CONNECT_TIMEOUT_SECONDS = ____constants.SOCKET_CONNECT_TIMEOUT_SECONDS
 local ____BlackSpriteState = require("packages.mod.src.enums.BlackSpriteState")
 local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
 local ____blackSprite = require("packages.mod.src.features.blackSprite")
@@ -56187,6 +56132,8 @@ function getClient(self, port, useTCP)
     log("Connected to: " .. url)
     return socketClient
 end
+SOCKET_CONNECT_TIMEOUT_SECONDS = 1
+SOCKET_CLIENT_RETURN_SUCCESS = 1
 socket = nil
 local clientTCP = nil
 local clientUDP = nil
@@ -56339,15 +56286,15 @@ function ____exports.unpackUDPPlayerMessage(self, rawData)
     local playerMessage = {}
     do
         local i = 0
-        while i < #UDP_POSITION_FIELDS do
-            local name = table.unpack(UDP_POSITION_FIELDS[i + 1])
+        while i < UDP_POSITION_FIELDS.length do
+            local name = table.unpack(UDP_POSITION_FIELDS[i])
             local fieldData = dataArray[i + 1]
             if type(fieldData) == "string" then
                 fieldData = __TS__StringTrim(fieldData)
             end
             playerMessage[name] = fieldData
             if DEBUG then
-                log((("- " .. name) .. " - ") .. tostring(fieldData))
+                log((("- " .. tostring(name)) .. " - ") .. tostring(fieldData))
             end
             i = i + 1
         end
@@ -62168,6 +62115,7 @@ local Map = ____lualib.Map
 local ____exports = {}
 local setupTaskRoom
 local ____common = require("packages.common.src.index")
+local FAKE_TASK = ____common.FAKE_TASK
 local SkeldRoom = ____common.SkeldRoom
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
@@ -62179,8 +62127,6 @@ local ____taskFunctions = require("packages.mod.src.taskFunctions")
 local taskFunctions = ____taskFunctions.taskFunctions
 local ____fakeTask = require("packages.mod.src.tasks.fakeTask")
 local fakeTask = ____fakeTask.fakeTask
-local ____utils = require("packages.mod.src.utils")
-local amImposter = ____utils.amImposter
 local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
 local clearRoomEntities = ____taskSubroutines.clearRoomEntities
 function setupTaskRoom(self)
@@ -62189,7 +62135,7 @@ function setupTaskRoom(self)
     end
     disableMinimapAPI(nil)
     clearRoomEntities(nil)
-    if amImposter(nil) then
+    if g.game.currentTask == FAKE_TASK then
         fakeTask(nil)
     else
         local taskFunction = taskFunctions:get(g.game.currentTask)
@@ -64204,7 +64150,9 @@ return ____exports
 local ____exports = {}
 local checkIfButtonIsPressed, buttonPressed, buttonPressedGoToTask, buttonPressedEmergency, buttonPressedTask, BUTTON_ACTIVATION_DISTANCE
 local ____common = require("packages.common.src.index")
+local FAKE_TASK = ____common.FAKE_TASK
 local MeetingType = ____common.MeetingType
+local Role = ____common.Role
 local SocketCommandModToServer = ____common.SocketCommandModToServer
 local Task = ____common.Task
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
@@ -64365,7 +64313,7 @@ function buttonPressedGoToTask(self, effect)
     if task == nil then
         error("Failed to read the task from a task button.")
     end
-    g.game.currentTask = task
+    g.game.currentTask = g.game.role == Role.IMPOSTER and FAKE_TASK or task
     goToStageAPIRoom(nil, "Task")
 end
 function buttonPressedEmergency(self)
@@ -65084,7 +65032,11 @@ function ____exports.postRender(self)
     local position = Isaac.WorldToRenderPosition(worldPosition)
     if g.game.currentTask ~= nil then
         local taskDescription = TASK_DESCRIPTIONS[g.game.currentTask]
-        drawFontText(nil, "Task: " .. taskDescription.name, position)
+        drawFontText(
+            nil,
+            "Task: " .. tostring(taskDescription.name),
+            position
+        )
         return
     end
     if inLobby(nil) then
@@ -65277,16 +65229,65 @@ function ____exports.postRender(self)
 end
 return ____exports
  end,
+["packages.mod.src.network.udpData"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
+local RENDER_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.RENDER_FRAMES_PER_SECOND
+local FieldType = FieldType or ({})
+FieldType.SIGNED_CHAR = "b"
+FieldType.UNSIGNED_CHAR = "B"
+FieldType.SIGNED_SHORT = "h"
+FieldType.UNSIGNED_SHORT = "H"
+FieldType.SIGNED_INT = "i"
+FieldType.UNSIGNED_INT = "I"
+FieldType.SIGNED_LONG = "l"
+FieldType.UNSIGNED_LONG = "L"
+FieldType.FLOAT = "f"
+FieldType.DOUBLE = "d"
+FieldType.STRING = "s"
+FieldType.CHAR_SEQUENCE = "cn"
+____exports.UDP_BEACON_MESSAGE = "HELLO"
+____exports.UDP_BEACON_FIELDS = {
+    {"gameID", "I"},
+    {"userID", "I"},
+    {
+        "message",
+        "c" .. tostring(#____exports.UDP_BEACON_MESSAGE)
+    }
+}
+____exports.UDP_BEACON_DATA_FORMAT = table.concat(
+    __TS__ArrayMap(
+        ____exports.UDP_BEACON_FIELDS,
+        function(____, tuple) return tuple[2] end
+    ),
+    ","
+)
+____exports.UDP_BEACON_INTERVAL = 10 * RENDER_FRAMES_PER_SECOND
+____exports.UDP_POSITION_FIELDS = {
+    {"gameID", FieldType.UNSIGNED_INT},
+    {"userID", FieldType.UNSIGNED_INT},
+    {"x", FieldType.FLOAT},
+    {"y", FieldType.FLOAT},
+    {"room", FieldType.UNSIGNED_INT},
+    {"animation", "c20"},
+    {"animationFrame", FieldType.UNSIGNED_INT},
+    {"overlayAnimation", "c20"},
+    {"overlayAnimationFrame", FieldType.UNSIGNED_INT}
+}
+____exports.UDP_POSITION_DATA_FORMAT = table.concat(
+    __TS__ArrayMap(
+        ____exports.UDP_POSITION_FIELDS,
+        function(____, tuple) return tuple[2] end
+    ),
+    ","
+)
+return ____exports
+ end,
 ["packages.mod.src.network.udp"] = function(...) 
 local ____exports = {}
 local sendBeacon, sendPosition, lastBeaconRenderFrame
-local ____constants = require("packages.mod.src.constants")
-local UDP_BEACON_DATA_FORMAT = ____constants.UDP_BEACON_DATA_FORMAT
-local UDP_BEACON_FIELDS = ____constants.UDP_BEACON_FIELDS
-local UDP_BEACON_INTERVAL = ____constants.UDP_BEACON_INTERVAL
-local UDP_BEACON_MESSAGE = ____constants.UDP_BEACON_MESSAGE
-local UDP_POSITION_DATA_FORMAT = ____constants.UDP_POSITION_DATA_FORMAT
-local UDP_POSITION_FIELDS = ____constants.UDP_POSITION_FIELDS
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
 local struct = require("packages.mod.src.lib.struct")
@@ -65294,6 +65295,13 @@ local ____stageAPI = require("packages.mod.src.stageAPI")
 local getSkeldRoom = ____stageAPI.getSkeldRoom
 local ____send = require("packages.mod.src.network.send")
 local sendUDP = ____send.sendUDP
+local ____udpData = require("packages.mod.src.network.udpData")
+local UDP_BEACON_DATA_FORMAT = ____udpData.UDP_BEACON_DATA_FORMAT
+local UDP_BEACON_FIELDS = ____udpData.UDP_BEACON_FIELDS
+local UDP_BEACON_INTERVAL = ____udpData.UDP_BEACON_INTERVAL
+local UDP_BEACON_MESSAGE = ____udpData.UDP_BEACON_MESSAGE
+local UDP_POSITION_DATA_FORMAT = ____udpData.UDP_POSITION_DATA_FORMAT
+local UDP_POSITION_FIELDS = ____udpData.UDP_POSITION_FIELDS
 function sendBeacon(self)
     if g.game == nil or g.userID == nil then
         return

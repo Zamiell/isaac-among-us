@@ -1,6 +1,10 @@
 // Position data for players is sent using UDP due to the heavy bandwidth usage. All other traffic
 // is sent using TCP.
 
+import g from "../globals";
+import * as struct from "../lib/struct";
+import { getSkeldRoom } from "../stageAPI";
+import { sendUDP } from "./send";
 import {
   UDPBeaconInterface,
   UDPPositionInterface,
@@ -10,11 +14,7 @@ import {
   UDP_BEACON_MESSAGE,
   UDP_POSITION_DATA_FORMAT,
   UDP_POSITION_FIELDS,
-} from "../constants";
-import g from "../globals";
-import * as struct from "../lib/struct";
-import { getSkeldRoom } from "../stageAPI";
-import { sendUDP } from "./send";
+} from "./udpData";
 
 let lastBeaconRenderFrame: int | null = null;
 

@@ -1,11 +1,7 @@
 import { TCP_PORT, UDP_PORT } from "common";
 import { log, restart } from "isaacscript-common";
 import { addLocalChat } from "../chat";
-import {
-  REMOTE_HOSTNAME,
-  SOCKET_CLIENT_RETURN_SUCCESS,
-  SOCKET_CONNECT_TIMEOUT_SECONDS,
-} from "../constants";
+import { REMOTE_HOSTNAME } from "../constants";
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { setBlackSpriteState } from "../features/blackSprite";
 import g from "../globals";
@@ -15,6 +11,9 @@ import {
   isSandboxEnabled,
   tryInitRacingPlusSandbox,
 } from "./sandbox";
+
+const SOCKET_CONNECT_TIMEOUT_SECONDS = 1;
+const SOCKET_CLIENT_RETURN_SUCCESS = 1;
 
 let socket: Socket | null = null;
 let clientTCP = null as SocketClient | null;

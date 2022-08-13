@@ -68,7 +68,7 @@ export function spawnGoToTaskButtons(): void {
       taskDescription.gridIndex,
       enabled,
     );
-    const data = button.GetData() as unknown as TaskButtonData;
+    const data = button.GetData() as TaskButtonData;
     data.task = task;
   }
 }
