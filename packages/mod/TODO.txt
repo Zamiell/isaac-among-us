@@ -1,5 +1,4 @@
 TODO:
-- bug: kill UI in shields exit
 - vents
 - imposter thing where you close the doors
 - imposter lights

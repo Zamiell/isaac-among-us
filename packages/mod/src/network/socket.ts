@@ -119,9 +119,7 @@ function readUDP() {
   return true;
 }
 
-export function updatePlayerMap(
-  playerPositionMessage: UDPPositionInterface,
-): void {
+function updatePlayerMap(playerPositionMessage: UDPPositionInterface) {
   if (g.game === null) {
     return;
   }

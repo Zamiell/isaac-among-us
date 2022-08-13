@@ -65177,7 +65177,7 @@ return ____exports
  end,
 ["packages.mod.src.network.socket"] = function(...) 
 local ____exports = {}
-local readTCP, validateTCPData, readUDP, DEBUG
+local readTCP, validateTCPData, readUDP, updatePlayerMap, DEBUG
 local ____common = require("packages.common.src.index")
 local SocketCommandModToServer = ____common.SocketCommandModToServer
 local SocketCommandServerToMod = ____common.SocketCommandServerToMod
@@ -65255,10 +65255,10 @@ function readUDP(self)
         return false
     end
     local playerMessage = unpackUDPPlayerMessage(nil, data)
-    ____exports.updatePlayerMap(nil, playerMessage)
+    updatePlayerMap(nil, playerMessage)
     return true
 end
-function ____exports.updatePlayerMap(self, playerPositionMessage)
+function updatePlayerMap(self, playerPositionMessage)
     if g.game == nil then
         return
     end
