@@ -55904,6 +55904,19 @@ ____exports.StartMeetingState.FADING_TO_GAME = 3
 ____exports.StartMeetingState[____exports.StartMeetingState.FADING_TO_GAME] = "FADING_TO_GAME"
 return ____exports
  end,
+["packages.mod.src.enums.VentState"] = function(...) 
+local ____exports = {}
+____exports.VentState = {}
+____exports.VentState.NONE = 0
+____exports.VentState[____exports.VentState.NONE] = "NONE"
+____exports.VentState.JUMPING_IN = 1
+____exports.VentState[____exports.VentState.JUMPING_IN] = "JUMPING_IN"
+____exports.VentState.IN_VENT = 2
+____exports.VentState[____exports.VentState.IN_VENT] = "IN_VENT"
+____exports.VentState.JUMPING_OUT = 3
+____exports.VentState[____exports.VentState.JUMPING_OUT] = "JUMPING_OUT"
+return ____exports
+ end,
 ["packages.mod.src.interfaces.PlayerData"] = function(...) 
 local ____exports = {}
 return ____exports
@@ -55934,6 +55947,8 @@ local ____EndMeetingState = require("packages.mod.src.enums.EndMeetingState")
 local EndMeetingState = ____EndMeetingState.EndMeetingState
 local ____StartMeetingState = require("packages.mod.src.enums.StartMeetingState")
 local StartMeetingState = ____StartMeetingState.StartMeetingState
+local ____VentState = require("packages.mod.src.enums.VentState")
+local VentState = ____VentState.VentState
 ____exports.AmongUsGame = __TS__Class()
 local AmongUsGame = ____exports.AmongUsGame
 AmongUsGame.name = "AmongUsGame"
@@ -55948,7 +55963,7 @@ function AmongUsGame.prototype.____constructor(self, id, name, ownerUserID, char
     self.character = PlayerTypeAllowed.ISAAC
     self.role = Role.CREW
     self.usedEmergencyMeeting = false
-    self.inVent = false
+    self.ventState = VentState.NONE
     self.ourTasks = {[TaskType.SHORT] = {}, [TaskType.LONG] = {}, [TaskType.COMMON] = {}}
     self.currentTask = nil
     self.startTaskTime = 0
@@ -59369,6 +59384,7 @@ local sendTCP = ____send.sendTCP
 local socketClient = require("packages.mod.src.network.socketClient")
 local ____utils = require("packages.mod.src.utils")
 local getScreenPosition = ____utils.getScreenPosition
+local inCutscene = ____utils.inCutscene
 local ____drawText = require("packages.mod.src.features.drawText")
 local drawText = ____drawText.drawText
 function checkAllKeyboardInput(self, isaacFrameCount)
@@ -59496,7 +59512,7 @@ end
 function ____exports.postRender(self)
     local isPaused = game:IsPaused()
     local isaacFrameCount = Isaac.GetFrameCount()
-    if isPaused then
+    if isPaused or inCutscene(nil) then
         return
     end
     if ModConfigMenu ~= nil and ModConfigMenu.IsVisible then
@@ -64613,6 +64629,8 @@ local isCrewMemberClose, getClosestAliveCrewMember, KILL_DISTANCE
 local ____common = require("packages.common.src.index")
 local Role = ____common.Role
 local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____VentState = require("packages.mod.src.enums.VentState")
+local VentState = ____VentState.VentState
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
 local ____send = require("packages.mod.src.network.send")
@@ -64665,7 +64683,7 @@ end
 KILL_DISTANCE = 60
 function ____exports.ableToKillAPlayer(self)
     local ourPlayer = getOurPlayer(nil)
-    return g.game ~= nil and g.game.role == Role.IMPOSTER and not g.game.inVent and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isCrewMemberClose(nil)
+    return g.game ~= nil and g.game.role == Role.IMPOSTER and g.game.ventState == VentState.NONE and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isCrewMemberClose(nil)
 end
 function ____exports.kill(self)
     if g.game == nil then
@@ -64693,6 +64711,8 @@ local isDeadBodyClose, getClosestDeadBody, REPORT_DISTANCE
 local ____common = require("packages.common.src.index")
 local MeetingType = ____common.MeetingType
 local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____VentState = require("packages.mod.src.enums.VentState")
+local VentState = ____VentState.VentState
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
 local ____send = require("packages.mod.src.network.send")
@@ -64741,7 +64761,7 @@ end
 REPORT_DISTANCE = 60
 function ____exports.ableToReportDeadBody(self)
     local ourPlayer = getOurPlayer(nil)
-    return g.game ~= nil and not g.game.inVent and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isDeadBodyClose(nil)
+    return g.game ~= nil and g.game.ventState == VentState.NONE and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isDeadBodyClose(nil)
 end
 function ____exports.reportDeadBody(self)
     if g.game == nil then
@@ -64757,18 +64777,23 @@ return ____exports
  end,
 ["packages.mod.src.features.vent"] = function(...) 
 local ____exports = {}
-local isVentClose, getClosestVent, checkJumpIn, VENT_DISTANCE
+local isVentClose, getClosestVent, drawInstructions, checkJumpIn, checkJumpOut, VENT_DISTANCE, TEXT_GRID_INDEX
 local ____common = require("packages.common.src.index")
 local Role = ____common.Role
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
+local game = ____isaacscript_2Dcommon.game
 local getEffects = ____isaacscript_2Dcommon.getEffects
 local getLastFrameOfAnimation = ____isaacscript_2Dcommon.getLastFrameOfAnimation
 local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
 local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
+local ____VentState = require("packages.mod.src.enums.VentState")
+local VentState = ____VentState.VentState
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
 local ____players = require("packages.mod.src.players")
 local getOurPlayer = ____players.getOurPlayer
+local ____utils = require("packages.mod.src.utils")
+local drawFontText = ____utils.drawFontText
 local ____actionSubroutines = require("packages.mod.src.features.actionSubroutines")
 local shouldShowActionButton = ____actionSubroutines.shouldShowActionButton
 function isVentClose(self)
@@ -64797,6 +64822,16 @@ function getClosestVent(self)
     end
     return closestVent
 end
+function drawInstructions(self)
+    if g.game == nil or g.game.ventState ~= VentState.IN_VENT then
+        return
+    end
+    local room = game:GetRoom()
+    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
+    local position = Isaac.WorldToRenderPosition(worldPosition)
+    local text = "Press [card] to switch rooms. Press [bomb] to leave."
+    drawFontText(nil, text, position)
+end
 function checkJumpIn(self, player)
     if g.game == nil then
         return
@@ -64812,14 +64847,32 @@ function checkJumpIn(self, player)
     end
     player:StopExtraAnimation()
     player.Visible = false
-    g.game.inVent = true
+    g.game.ventState = VentState.IN_VENT
+end
+function checkJumpOut(self, player)
+    if g.game == nil then
+        return
+    end
+    local sprite = player:GetSprite()
+    if not sprite:IsPlaying("Jump") then
+        return
+    end
+    local frame = sprite:GetFrame()
+    local lastFrame = getLastFrameOfAnimation(nil, sprite)
+    if frame ~= lastFrame then
+        return
+    end
+    player:StopExtraAnimation()
+    player.ControlsEnabled = true
+    g.game.ventState = VentState.NONE
 end
 VENT_DISTANCE = 60
+TEXT_GRID_INDEX = 97
 function ____exports.ableToVent(self)
     local ourPlayer = getOurPlayer(nil)
-    return g.game ~= nil and g.game.role == Role.IMPOSTER and not g.game.inVent and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isVentClose(nil)
+    return g.game ~= nil and g.game.role == Role.IMPOSTER and g.game.ventState == VentState.NONE and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isVentClose(nil)
 end
-function ____exports.useVent(self)
+function ____exports.jumpInVent(self)
     if g.game == nil then
         return
     end
@@ -64829,12 +64882,29 @@ function ____exports.useVent(self)
     end
     local player = Isaac.GetPlayer()
     player.Position = closestVent.Position
-    player.ControlsEnabled = false
     player:PlayExtraAnimation("Trapdoor")
+    player.ControlsEnabled = false
+    g.game.ventState = VentState.JUMPING_IN
+end
+function ____exports.jumpOutVent(self)
+    if g.game == nil then
+        return
+    end
+    local closestVent = getClosestVent(nil)
+    if closestVent == nil then
+        return
+    end
+    local player = Isaac.GetPlayer()
+    player.Position = closestVent.Position
+    player:PlayExtraAnimation("Jump")
+    player.Visible = true
+    g.game.ventState = VentState.JUMPING_OUT
 end
 function ____exports.postRender(self)
+    drawInstructions(nil)
     local player = Isaac.GetPlayer()
     checkJumpIn(nil, player)
+    checkJumpOut(nil, player)
 end
 return ____exports
  end,
@@ -65326,6 +65396,8 @@ return ____exports
 ["packages.mod.src.network.udp"] = function(...) 
 local ____exports = {}
 local sendBeacon, sendPosition, lastBeaconRenderFrame
+local ____VentState = require("packages.mod.src.enums.VentState")
+local VentState = ____VentState.VentState
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
 local struct = require("packages.mod.src.lib.struct")
@@ -65360,7 +65432,7 @@ function sendBeacon(self)
     sendUDP(nil, packedData)
 end
 function sendPosition(self)
-    if g.userID == nil or g.username == nil or g.game == nil or g.game.inVent then
+    if g.userID == nil or g.username == nil or g.game == nil or g.game.ventState == VentState.NONE then
         return
     end
     local player = Isaac.GetPlayer()
@@ -65481,6 +65553,10 @@ local ButtonAction = ____isaac_2Dtypescript_2Ddefinitions.ButtonAction
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
 local isActionPressedOnAnyInput = ____isaacscript_2Dcommon.isActionPressedOnAnyInput
 local todo = ____isaacscript_2Dcommon.todo
+local ____VentState = require("packages.mod.src.enums.VentState")
+local VentState = ____VentState.VentState
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.default
 local ____kill = require("packages.mod.src.features.kill")
 local ableToKillAPlayer = ____kill.ableToKillAPlayer
 local kill = ____kill.kill
@@ -65489,7 +65565,8 @@ local ableToReportDeadBody = ____report.ableToReportDeadBody
 local reportDeadBody = ____report.reportDeadBody
 local ____vent = require("packages.mod.src.features.vent")
 local ableToVent = ____vent.ableToVent
-local useVent = ____vent.useVent
+local jumpInVent = ____vent.jumpInVent
+local jumpOutVent = ____vent.jumpOutVent
 function checkInput(self)
     if not isActionPressedOnAnyInput(nil, ButtonAction.BOMB) then
         isPressed = false
@@ -65502,12 +65579,16 @@ function checkInput(self)
     actionPressed(nil)
 end
 function actionPressed(self)
+    if g.game ~= nil and g.game.ventState == VentState.IN_VENT then
+        jumpOutVent(nil)
+        return
+    end
     if ableToKillAPlayer(nil) then
         kill(nil)
         return
     end
     if ableToVent(nil) then
-        useVent(nil)
+        jumpInVent(nil)
         return
     end
     if ableToReportDeadBody(nil) then
@@ -65528,6 +65609,41 @@ function ____exports.postUpdate(self)
 end
 return ____exports
  end,
+["packages.mod.src.features.pillCardInput"] = function(...) 
+local ____exports = {}
+local checkInput, pillCardPressed, isPressed
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
+local ButtonAction = ____isaac_2Dtypescript_2Ddefinitions.ButtonAction
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
+local isActionPressedOnAnyInput = ____isaacscript_2Dcommon.isActionPressedOnAnyInput
+local todo = ____isaacscript_2Dcommon.todo
+local ____VentState = require("packages.mod.src.enums.VentState")
+local VentState = ____VentState.VentState
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.default
+function checkInput(self)
+    if not isActionPressedOnAnyInput(nil, ButtonAction.PILL_CARD) then
+        isPressed = false
+        return
+    end
+    if isPressed then
+        return
+    end
+    isPressed = true
+    pillCardPressed(nil)
+end
+function pillCardPressed(self)
+    if g.game == nil or g.game.ventState ~= VentState.IN_VENT then
+        return
+    end
+    todo(nil, "other actions")
+end
+isPressed = false
+function ____exports.postUpdate(self)
+    checkInput(nil)
+end
+return ____exports
+ end,
 ["packages.mod.src.callbacks.postUpdate"] = function(...) 
 local ____exports = {}
 local main
@@ -65535,6 +65651,7 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local actionInput = require("packages.mod.src.features.actionInput")
 local doors = require("packages.mod.src.features.doors")
+local pillCardInput = require("packages.mod.src.features.pillCardInput")
 local defeatMonstro = require("packages.mod.src.tasks.defeatMonstro")
 local loadSlotMachines = require("packages.mod.src.tasks.loadSlotMachines")
 local pushTNTBarrel = require("packages.mod.src.tasks.pushTNTBarrel")
@@ -65544,6 +65661,7 @@ function main(self)
     loadSlotMachines:postUpdate()
     defeatMonstro:postUpdate()
     actionInput:postUpdate()
+    pillCardInput:postUpdate()
 end
 function ____exports.init(self, mod)
     mod:AddCallback(ModCallback.POST_UPDATE, main)

@@ -1,8 +1,10 @@
 import { ButtonAction } from "isaac-typescript-definitions";
 import { isActionPressedOnAnyInput, todo } from "isaacscript-common";
+import { VentState } from "../enums/VentState";
+import g from "../globals";
 import { ableToKillAPlayer, kill } from "./kill";
 import { ableToReportDeadBody, reportDeadBody } from "./report";
-import { ableToVent, useVent } from "./vent";
+import { ableToVent, jumpInVent, jumpOutVent } from "./vent";
 
 let isPressed = false;
 
@@ -26,13 +28,18 @@ function checkInput() {
 }
 
 function actionPressed() {
+  if (g.game !== null && g.game.ventState === VentState.IN_VENT) {
+    jumpOutVent();
+    return;
+  }
+
   if (ableToKillAPlayer()) {
     kill();
     return;
   }
 
   if (ableToVent()) {
-    useVent();
+    jumpInVent();
     return;
   }
 

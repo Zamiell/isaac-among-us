@@ -1,6 +1,7 @@
 import { ModCallback } from "isaac-typescript-definitions";
 import * as actionInput from "../features/actionInput";
 import * as doors from "../features/doors";
+import * as pillCardInput from "../features/pillCardInput";
 import * as defeatMonstro from "../tasks/defeatMonstro";
 import * as loadSlotMachines from "../tasks/loadSlotMachines";
 import * as pushTNTBarrel from "../tasks/pushTNTBarrel";
@@ -15,4 +16,5 @@ function main() {
   loadSlotMachines.postUpdate();
   defeatMonstro.postUpdate();
   actionInput.postUpdate();
+  pillCardInput.postUpdate();
 }

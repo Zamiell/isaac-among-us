@@ -13,6 +13,7 @@ import { log, logTable } from "isaacscript-common";
 import { CutsceneState } from "../enums/CutsceneState";
 import { EndMeetingState } from "../enums/EndMeetingState";
 import { StartMeetingState } from "../enums/StartMeetingState";
+import { VentState } from "../enums/VentState";
 import { PlayerData } from "../interfaces/PlayerData";
 
 export class AmongUsGame {
@@ -32,7 +33,7 @@ export class AmongUsGame {
   character = PlayerTypeAllowed.ISAAC;
   role = Role.CREW;
   usedEmergencyMeeting = false;
-  inVent = false;
+  ventState = VentState.NONE;
 
   ourTasks: TaskList = {
     [TaskType.SHORT]: [] as Task[],

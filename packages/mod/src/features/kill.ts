@@ -1,4 +1,5 @@
 import { Role, SocketCommandModToServer } from "common";
+import { VentState } from "../enums/VentState";
 import g from "../globals";
 import { PlayerData } from "../interfaces/PlayerData";
 import { sendTCP } from "../network/send";
@@ -14,7 +15,7 @@ export function ableToKillAPlayer(): boolean {
   return (
     g.game !== null &&
     g.game.role === Role.IMPOSTER &&
-    !g.game.inVent &&
+    g.game.ventState === VentState.NONE &&
     ourPlayer !== undefined &&
     ourPlayer.alive &&
     shouldShowActionButton() &&

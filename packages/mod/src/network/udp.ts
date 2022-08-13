@@ -1,6 +1,7 @@
 // Position data for players is sent using UDP due to the heavy bandwidth usage. All other traffic
 // is sent using TCP.
 
+import { VentState } from "../enums/VentState";
 import g from "../globals";
 import * as struct from "../lib/struct";
 import { getSkeldRoom } from "../stageAPI";
@@ -64,7 +65,7 @@ function sendPosition() {
     g.userID === null ||
     g.username === null ||
     g.game === null ||
-    g.game.inVent
+    g.game.ventState === VentState.NONE
   ) {
     return;
   }

@@ -18,7 +18,7 @@ import { HexColors } from "../enums/HexColors";
 import g from "../globals";
 import { sendTCP } from "../network/send";
 import * as socketClient from "../network/socketClient";
-import { getScreenPosition } from "../utils";
+import { getScreenPosition, inCutscene } from "../utils";
 import { drawText } from "./drawText";
 
 export const SPACING_FROM_LEFT_EDGE = 0.167;
@@ -65,7 +65,7 @@ export function postRender(): void {
   const isPaused = game.IsPaused();
   const isaacFrameCount = Isaac.GetFrameCount();
 
-  if (isPaused) {
+  if (isPaused || inCutscene()) {
     return;
   }
 

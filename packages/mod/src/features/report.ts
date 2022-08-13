@@ -1,4 +1,5 @@
 import { MeetingType, PlayerBody, SocketCommandModToServer } from "common";
+import { VentState } from "../enums/VentState";
 import g from "../globals";
 import { sendTCP } from "../network/send";
 import { getOurPlayer } from "../players";
@@ -12,7 +13,7 @@ export function ableToReportDeadBody(): boolean {
 
   return (
     g.game !== null &&
-    !g.game.inVent &&
+    g.game.ventState === VentState.NONE &&
     ourPlayer !== undefined &&
     ourPlayer.alive &&
     shouldShowActionButton() &&
