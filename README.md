@@ -5,7 +5,7 @@
 This is the source code for the Among Us in Isaac mod, a multiplayer recreation of the popular game [Among Us](https://store.steampowered.com/app/945360/Among_Us/), but using the [Binding of Isaac: Repentance](https://store.steampowered.com/app/1426300/The_Binding_of_Isaac_Repentance/) engine.
 
 - You can play by [subscribing to the mod on the Steam Workshop](https://steamcommunity.com/app/250900/workshop/).
-- You can chat with others by joining the [Discord server](https://discord.gg/K7Rh66G2vM)
+- You can chat with others by joining the [Discord server](https://discord.gg/vTCw5Q34B7)
 
 <br>
 

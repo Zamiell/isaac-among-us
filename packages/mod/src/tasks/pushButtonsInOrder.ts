@@ -83,9 +83,11 @@ export function postRender(): void {
     const textGridIndex = gridIndex - gridWidth;
     const worldPosition = room.GetGridPosition(textGridIndex);
     const position = Isaac.WorldToRenderPosition(worldPosition);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const num = buttonOrder[i]!;
-    const text = (num + 1).toString();
-    drawFontText(text, position);
+    const num = buttonOrder[i];
+    if (num !== undefined) {
+      const nextNum = num + 1;
+      const text = nextNum.toString();
+      drawFontText(text, position);
+    }
   }
 }

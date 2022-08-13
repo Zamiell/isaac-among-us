@@ -7,7 +7,7 @@
 
 This is a multiplayer recreation of the popular game [url=https://store.steampowered.com/app/945360/Among_Us/]Among Us[/url], but using the Isaac engine.
 
-The mod is currently in [b]ALPHA[/b], which means that you will experience game-breaking bugs.
+The mod is currently in [b]ALPHA[/b], which means that you will experience game-breaking bugs. See below about reporting bugs.
 
 [h2][b]Features[/b][/h2]
 
@@ -15,41 +15,66 @@ The mod is currently in [b]ALPHA[/b], which means that you will experience game-
 [*] 12 concurrent players in a game at a time.
 [*] Brand-new Isaac-themed tasks.
 
-[h2][b]How to Play?[/b][/h2]
+[h2][b]How to Connect and Join a Game[/b][/h2]
+
+[*] Subscribe to the following mods:
+  [*] This mod.
+  [*] [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1348031964]Custom Stage API[/url]
+  [*] [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1978904635]MiniMAPI: A Minimap API[/url]
+[*] Make sure that the only mods enabled in your mod list are this mod, Custom Stage API, and MiniMAPI.
+[*] Completely close and reopen the game after enabling or disabling any mods.
+[*] When you start a new run, you should be placed in an empty room.
+[*] Type enter, "/connect", then enter again.
+[*] If successful, a WiFi icon should appear in the bottom right-hand corner to indicate that you are currently connected to the server.
+[*] Type enter, "/username [username]", then enter again. (For example, "/username Alice".)
+[*] Type enter, "/password [password]", then enter again. (For example, "/password hunter2".) Obviously, don't [url=https://www.cnet.com/tech/services-and-software/why-you-seriously-need-a-password-manager/]re-use any of your existing passwords[/url].
+[*] If authentication is successful, the server will send you a list of the current games. You can use the "/gamelist" command at any time to get a new, updated list.
+[*] To create a new game, use the "/create" command. For example, "/create Alice-game". Game names must be alphanumeric. (Hyphens are allowed.) Optionally, you can create a game with a password by specifying the password after the name. For example "/create Alice-game hunter2".
+[*] To join an existing game, use the "/join" command. For example, "/join Alice-game". If the game is password-protected, then you need to specify the password after the name. For example "/join Alice-game hunter2".
+[*] When all of the players have joined the game, the owner of the game needs to use the "/start" command to start the game.
+
+[h2][b]Controls[/b][/h2]
+
+[*] Movement keys (e.g. W/A/S/D) - Move around.
+[*] Tear fire keys (e.g. Up/Down/Left/Right) - Move your head around. (You can't shoot any tears in this mod.)
+[*] Use active item (e.g. Space bar) - Interact with an object, like a vent.
+[*] Bomb (e.g. E) - Kill another player. (Only when playing as an imposter.)
+
+[h2][b]How to Play[/b][/h2]
 
 The mod is meant for experienced Among Us players. It does not have a tutorial. It does not have any explanation on how to play. If you have never played Among Us before, then go play the original for a while and then come back here.
 
 [h2][b]How to Find Other Players[/b][/h2]
 
-The best Among Us games consist of adult players that use voice chat. If you are 18+, you can join the [url=https://discord.gg/K7Rh66G2vM]Among Us in Isaac Discord server[/url] in order to try to organize a game. (Discord is a voice and text chat application that you can run in a browser.)
+The best Among Us games consist of adult players that are using voice chat. If you are 18+, you can join the [url=https://discord.gg/vTCw5Q34B7]Among Us in Isaac Discord server[/url] in order to try to organize a game. (Discord is a voice and text chat application that you can run in a browser.)
 
 If you are under 18, then sorry, this isn't the mod for you. Please enjoy the original Among Us and come back when you are older.
 
 [h2][b]What's Missing?[/b][/h2]
 
-Currently, many things from the original are not implemented, such as cameras. If you want to help, see below.
+Currently, many things from the original game are not implemented, such as cameras. If you want to help, see below.
 
 [h2][b]How to Report a Bug[/b][/h2]
 
-The mod was written hastily and was barely tested, so you will experience many bugs. In return for permission to use the mod, you should report any bugs that you experience in the #bugs channel of the Discord server. [b]Please follow the bug reporting rules[/b] that are located in the pinned message of that channel.
+The mod was written hastily and was not tested very well, so you will experience many bugs. You should report any bugs that you experience in the #bugs channel of the Discord server. [b]Please follow the bug reporting rules[/b] that are located in the pinned message of that channel.
 
 Any Steam workshop comments reporting bugs will be deleted.
 
 [h2][b]How to Ask Questions[/b][/h2]
 
-If you have a question about the mod, please post in the #help-and-questions channel in the [url=https://discord.gg/K7Rh66G2vM]Among Us in Isaac Discord server[/url]. You can also explicitly request that your question is added to this FAQ section.
+If you have a question about the mod, please post in the #help-and-questions channel in the [url=https://discord.gg/vTCw5Q34B7]Among Us in Isaac Discord server[/url]. You can also explicitly request that your question is added to this FAQ section.
 
 Any Steam workshop comments asking questions will be deleted.
 
 [h2][b]How Can I Help?[/b][/h2]
 
-[*] The mod is [url=https://github.com/Zamiell/isaac-among-us]open source and located on GitHub[/url]. If you know how to code, you can help to fix bugs and add features by submitting a pull request.
-[*] Chat with the other developers by joining the #development channel of [url=https://discord.gg/K7Rh66G2vM]the Among Us in Isaac Discord server[/url].
+[*] The mod is [url=https://github.com/Zamiell/isaac-among-us]open source and located on GitHub[/url]. If you know how to code, you can help to fix bugs and add features.
+[*] Chat with the other developers by joining the #development channel of [url=https://discord.gg/vTCw5Q34B7]the Among Us in Isaac Discord server[/url].
 [*] If you want to submit an application to become a moderator, you can get in touch with an existing moderator.
 
 [h2][b]Cheating[/b][/h2]
 
-Please don't cheat. Just like in the original Among Us, it is possible to cheat by e.g. modifying the client, spoofing network traffic, and so on. Rather than ruin games for others, consider putting your skills towards the power of good by helping with development instead! (See the "How Can I Help?" section above.)
+Please don't cheat. Just like in the original Among Us, it is possible to cheat by e.g. modifying the client, spoofing network traffic, and so on. Rather than ruin games for others, consider putting your skills towards the power of good by helping with development instead. (See the "How Can I Help?" section above.)
 
 [h2][b]Community Guidelines[/b][/h2]
 
@@ -70,7 +95,7 @@ Since user accounts are free and do not require email validation, the staff only
 
 [h2][b]Credits[/b][/h2]
 
-The Among Us Mod was made by Zamiel. It makes use of DeadInfinity's StageAPI library, Sentinel's collision library, and Somdudewillson's stage backdrops; special thanks goes to them. Thanks also goes to JSG, im_tem, Wofsauge, and AgentCucco for providing technical assistance.
+The Among Us Mod was made by Zamiel. It makes use of DeadInfinity's StageAPI library, Sentinel's collision library, and Somdudewillson's stage backdrops; special thanks goes to them. Thanks also goes to JSG, im_tem, Wofsauge, AgentCucco, and budjmt for providing technical assistance.
   </description>
   <version>1.0</version>
   <visibility />

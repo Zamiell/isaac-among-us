@@ -64,6 +64,22 @@ export function validateAlphanumeric(
   return true;
 }
 
+export function validateAlphanumericHyphen(
+  socket: Socket,
+  key: string,
+  value: string,
+): boolean {
+  if (/^[a-z0-9-]+$/i.exec(value) === null) {
+    sendError(
+      socket,
+      `The "${key}" field must be alphanumeric. (Hyphens are also allowed.)`,
+    );
+    return false;
+  }
+
+  return true;
+}
+
 export function validateNumber(
   socket: Socket,
   key: string,

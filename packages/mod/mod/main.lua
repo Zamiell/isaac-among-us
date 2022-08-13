@@ -61755,8 +61755,11 @@ function ____exports.postRender(self)
             local worldPosition = room:GetGridPosition(textGridIndex)
             local position = Isaac.WorldToRenderPosition(worldPosition)
             local num = buttonOrder[i + 1]
-            local text = tostring(num + 1)
-            drawFontText(nil, text, position)
+            if num ~= nil then
+                local nextNum = num + 1
+                local text = tostring(nextNum)
+                drawFontText(nil, text, position)
+            end
             i = i + 1
         end
     end

@@ -8,6 +8,7 @@ import { ExtraCommandData } from "./interfaces/ExtraCommandData";
 import { Socket } from "./interfaces/Socket";
 import {
   validateAlphanumeric,
+  validateAlphanumericHyphen,
   validateBoolean,
   validateInteger,
   validateMaxStringLength,
@@ -192,6 +193,10 @@ validateFunctionMap.set(
     }
 
     if (!validateMaxStringLength(socket, key, username, MAX_GAME_NAME_LENGTH)) {
+      return false;
+    }
+
+    if (!validateAlphanumericHyphen(socket, key, username)) {
       return false;
     }
 
