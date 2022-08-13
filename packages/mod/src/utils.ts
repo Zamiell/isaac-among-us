@@ -6,6 +6,7 @@ import {
   NullItemID,
 } from "isaac-typescript-definitions";
 import {
+  fonts,
   game,
   getScreenBottomRightPos,
   log,
@@ -15,7 +16,6 @@ import {
 import { CutsceneState } from "./enums/CutsceneState";
 import { EndMeetingState } from "./enums/EndMeetingState";
 import { StartMeetingState } from "./enums/StartMeetingState";
-import { fonts } from "./fonts";
 import g from "./globals";
 
 export function amImposter(): boolean {

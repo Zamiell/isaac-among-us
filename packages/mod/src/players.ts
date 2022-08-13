@@ -4,40 +4,6 @@ import { GameDescriptionPlayer } from "common";
 import { UDPPositionInterface } from "./constants";
 import g from "./globals";
 import { PlayerData } from "./interfaces/PlayerData";
-import { getSkeldRoom } from "./stageAPI";
-
-export function getClosestAmongUsPlayer(): PlayerData | undefined {
-  if (g.game === null) {
-    return undefined;
-  }
-
-  const player = Isaac.GetPlayer();
-  const room = getSkeldRoom();
-
-  let closestPlayer: PlayerData | undefined;
-  let closestDistance = math.huge;
-  for (const otherPlayerData of g.game.playerMap.values()) {
-    if (otherPlayerData.room !== room) {
-      continue;
-    }
-
-    const otherPlayerDescription = g.game.getPlayerFromUserID(
-      otherPlayerData.userID,
-    );
-    if (otherPlayerDescription === undefined || !otherPlayerDescription.alive) {
-      continue;
-    }
-
-    const otherPlayerPosition = Vector(otherPlayerData.x, otherPlayerData.y);
-    const distance = otherPlayerPosition.Distance(player.Position);
-    if (distance < closestDistance) {
-      closestPlayer = otherPlayerData;
-      closestDistance = distance;
-    }
-  }
-
-  return closestPlayer;
-}
 
 export function getOurPlayer(): GameDescriptionPlayer | undefined {
   if (g.game === null) {

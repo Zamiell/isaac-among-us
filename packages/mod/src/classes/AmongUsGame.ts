@@ -32,6 +32,7 @@ export class AmongUsGame {
   character = PlayerTypeAllowed.ISAAC;
   role = Role.CREW;
   usedEmergencyMeeting = false;
+  inVent = false;
 
   ourTasks: TaskList = {
     [TaskType.SHORT]: [] as Task[],

@@ -25,6 +25,7 @@
     "**/*.png": true,
     "**/*.wav": true,
     "**/dist/": true,
+    "**/main.lua": true,
     "**/node_modules/": true,
   },
 

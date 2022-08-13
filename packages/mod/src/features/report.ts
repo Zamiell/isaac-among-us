@@ -1,47 +1,38 @@
 import { MeetingType, PlayerBody, SocketCommandModToServer } from "common";
-import { getScreenBottomRightPos } from "isaacscript-common";
 import g from "../globals";
 import { sendTCP } from "../network/send";
-import { initSprite } from "../sprite";
+import { getOurPlayer } from "../players";
 import { getSkeldRoom } from "../stageAPI";
-import { OTHER_UI_BUTTON_OFFSET } from "./connectedIcon";
-import { ableToReportDeadBody } from "./reportSubroutines";
+import { shouldShowActionButton } from "./actionSubroutines";
 
-const sprite = initSprite("gfx/ui/report.anm2");
+const REPORT_DISTANCE = 60;
 
-// ModCallback.POST_RENDER (2)
-export function postRender(): void {
-  if (!ableToReportDeadBody()) {
-    return;
-  }
+export function ableToReportDeadBody(): boolean {
+  const ourPlayer = getOurPlayer();
 
-  drawReportUI();
+  return (
+    g.game !== null &&
+    !g.game.inVent &&
+    ourPlayer !== undefined &&
+    ourPlayer.alive &&
+    shouldShowActionButton() &&
+    isDeadBodyClose()
+  );
 }
 
-function drawReportUI() {
-  const bottomRightPos = getScreenBottomRightPos();
-  const position = bottomRightPos.add(OTHER_UI_BUTTON_OFFSET);
-  sprite.RenderLayer(0, position);
-}
-
-export function reportDeadBody(): void {
-  if (g.game === null) {
-    return;
+function isDeadBodyClose() {
+  const player = Isaac.GetPlayer();
+  const closestDeadBody = getClosestDeadBody();
+  if (closestDeadBody === undefined) {
+    return false;
   }
 
-  const closestBody = getClosestBody();
-  if (closestBody === undefined) {
-    return;
-  }
-
-  sendTCP(SocketCommandModToServer.MEETING, {
-    gameID: g.game.id,
-    userIDKilled: closestBody.userID,
-    meetingType: MeetingType.REPORT_BODY,
-  });
+  const bodyPosition = Vector(closestDeadBody.x, closestDeadBody.y);
+  const distance = player.Position.Distance(bodyPosition);
+  return distance <= REPORT_DISTANCE;
 }
 
-function getClosestBody(): PlayerBody | undefined {
+function getClosestDeadBody(): PlayerBody | undefined {
   if (g.game === null) {
     return undefined;
   }
@@ -66,4 +57,21 @@ function getClosestBody(): PlayerBody | undefined {
   }
 
   return closestBody;
+}
+
+export function reportDeadBody(): void {
+  if (g.game === null) {
+    return;
+  }
+
+  const closestBody = getClosestDeadBody();
+  if (closestBody === undefined) {
+    return;
+  }
+
+  sendTCP(SocketCommandModToServer.MEETING, {
+    gameID: g.game.id,
+    userIDKilled: closestBody.userID,
+    meetingType: MeetingType.REPORT_BODY,
+  });
 }

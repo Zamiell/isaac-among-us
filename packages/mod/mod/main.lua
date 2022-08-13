@@ -56000,6 +56000,7 @@ function AmongUsGame.prototype.____constructor(self, id, name, ownerUserID, char
     self.character = PlayerTypeAllowed.ISAAC
     self.role = Role.CREW
     self.usedEmergencyMeeting = false
+    self.inVent = false
     self.ourTasks = {[TaskType.SHORT] = {}, [TaskType.LONG] = {}, [TaskType.COMMON] = {}}
     self.currentTask = nil
     self.startTaskTime = 0
@@ -56679,6 +56680,56 @@ function ____exports.usernameChatCommand(self, args)
 end
 return ____exports
  end,
+["packages.mod.src.players"] = function(...) 
+local ____exports = {}
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.default
+function ____exports.getOurPlayer(self)
+    if g.game == nil then
+        return nil
+    end
+    if g.userID == nil then
+        return nil
+    end
+    local player = g.game:getPlayerFromUserID(g.userID)
+    if player == nil then
+        return nil
+    end
+    return player
+end
+function ____exports.getOurPlayerIndex(self)
+    local ourPlayer = ____exports.getOurPlayer(nil)
+    local ____temp_0
+    if ourPlayer == nil then
+        ____temp_0 = nil
+    else
+        ____temp_0 = ourPlayer.index
+    end
+    return ____temp_0
+end
+function ____exports.updatePlayerMap(self, playerPositionMessage)
+    if g.game == nil then
+        return
+    end
+    if playerPositionMessage.gameID ~= g.game.id then
+        return
+    end
+    local isaacFrameCount = Isaac.GetFrameCount()
+    local playerData = {
+        userID = playerPositionMessage.userID,
+        x = playerPositionMessage.x,
+        y = playerPositionMessage.y,
+        room = playerPositionMessage.room,
+        animation = playerPositionMessage.animation,
+        animationFrame = playerPositionMessage.animationFrame,
+        overlayAnimation = playerPositionMessage.overlayAnimation,
+        overlayAnimationFrame = playerPositionMessage.overlayAnimationFrame,
+        renderFrameUpdated = isaacFrameCount
+    }
+    g.game.playerMap:set(playerData.userID, playerData)
+end
+return ____exports
+ end,
 ["packages.mod.src.minimapAPI"] = function(...) 
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
@@ -56934,16 +56985,6 @@ function ____exports.postGameStarted(self)
 end
 return ____exports
  end,
-["packages.mod.src.fonts"] = function(...) 
-local ____exports = {}
-____exports.fonts = {
-    droid = Font(),
-    pf = Font()
-}
-____exports.fonts.droid:Load("font/droid.fnt")
-____exports.fonts.pf:Load("font/pftempestasevencondensed.fnt")
-return ____exports
- end,
 ["packages.mod.src.utils"] = function(...) 
 local ____exports = {}
 local ____common = require("packages.common.src.index")
@@ -56953,6 +56994,7 @@ local CacheFlag = ____isaac_2Dtypescript_2Ddefinitions.CacheFlag
 local EntityFlag = ____isaac_2Dtypescript_2Ddefinitions.EntityFlag
 local NullItemID = ____isaac_2Dtypescript_2Ddefinitions.NullItemID
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
+local fonts = ____isaacscript_2Dcommon.fonts
 local game = ____isaacscript_2Dcommon.game
 local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
 local log = ____isaacscript_2Dcommon.log
@@ -56964,8 +57006,6 @@ local ____EndMeetingState = require("packages.mod.src.enums.EndMeetingState")
 local EndMeetingState = ____EndMeetingState.EndMeetingState
 local ____StartMeetingState = require("packages.mod.src.enums.StartMeetingState")
 local StartMeetingState = ____StartMeetingState.StartMeetingState
-local ____fonts = require("packages.mod.src.fonts")
-local fonts = ____fonts.fonts
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
 function ____exports.amImposter(self)
@@ -57808,88 +57848,6 @@ function ____exports.loadBackdrops(self)
         return
     end
     StageAPI.ChangeBackdrop(backdrop, false, true)
-end
-return ____exports
- end,
-["packages.mod.src.players"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Iterator = ____lualib.__TS__Iterator
-local ____exports = {}
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.default
-local ____stageAPI = require("packages.mod.src.stageAPI")
-local getSkeldRoom = ____stageAPI.getSkeldRoom
-function ____exports.getClosestAmongUsPlayer(self)
-    if g.game == nil then
-        return nil
-    end
-    local player = Isaac.GetPlayer()
-    local room = getSkeldRoom(nil)
-    local closestPlayer
-    local closestDistance = math.huge
-    for ____, otherPlayerData in __TS__Iterator(g.game.playerMap:values()) do
-        do
-            if otherPlayerData.room ~= room then
-                goto __continue4
-            end
-            local otherPlayerDescription = g.game:getPlayerFromUserID(otherPlayerData.userID)
-            if otherPlayerDescription == nil or not otherPlayerDescription.alive then
-                goto __continue4
-            end
-            local otherPlayerPosition = Vector(otherPlayerData.x, otherPlayerData.y)
-            local distance = otherPlayerPosition:Distance(player.Position)
-            if distance < closestDistance then
-                closestPlayer = otherPlayerData
-                closestDistance = distance
-            end
-        end
-        ::__continue4::
-    end
-    return closestPlayer
-end
-function ____exports.getOurPlayer(self)
-    if g.game == nil then
-        return nil
-    end
-    if g.userID == nil then
-        return nil
-    end
-    local player = g.game:getPlayerFromUserID(g.userID)
-    if player == nil then
-        return nil
-    end
-    return player
-end
-function ____exports.getOurPlayerIndex(self)
-    local ourPlayer = ____exports.getOurPlayer(nil)
-    local ____temp_0
-    if ourPlayer == nil then
-        ____temp_0 = nil
-    else
-        ____temp_0 = ourPlayer.index
-    end
-    return ____temp_0
-end
-function ____exports.updatePlayerMap(self, playerPositionMessage)
-    if g.game == nil then
-        return
-    end
-    if playerPositionMessage.gameID ~= g.game.id then
-        return
-    end
-    local isaacFrameCount = Isaac.GetFrameCount()
-    local playerData = {
-        userID = playerPositionMessage.userID,
-        x = playerPositionMessage.x,
-        y = playerPositionMessage.y,
-        room = playerPositionMessage.room,
-        animation = playerPositionMessage.animation,
-        animationFrame = playerPositionMessage.animationFrame,
-        overlayAnimation = playerPositionMessage.overlayAnimation,
-        overlayAnimationFrame = playerPositionMessage.overlayAnimationFrame,
-        renderFrameUpdated = isaacFrameCount
-    }
-    g.game.playerMap:set(playerData.userID, playerData)
 end
 return ____exports
  end,
@@ -59302,6 +59260,16 @@ function ____exports.warp(self, params)
     goToStageAPIRoom(nil, roomName)
     print("Warped to room: " .. roomName)
 end
+return ____exports
+ end,
+["packages.mod.src.fonts"] = function(...) 
+local ____exports = {}
+____exports.fonts = {
+    droid = Font(),
+    pf = Font()
+}
+____exports.fonts.droid:Load("font/droid.fnt")
+____exports.fonts.pf:Load("font/pftempestasevencondensed.fnt")
 return ____exports
  end,
 ["packages.mod.src.enums.HexColors"] = function(...) 
@@ -64599,6 +64567,299 @@ function ____exports.init(self, mod)
 end
 return ____exports
  end,
+["packages.mod.src.features.connectedIcon"] = function(...) 
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
+local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
+local socketClient = require("packages.mod.src.network.socketClient")
+local CONNECTED_ICON_OFFSET = Vector(-33, -30)
+____exports.OTHER_UI_BUTTON_OFFSET = CONNECTED_ICON_OFFSET + Vector(5, -30)
+local connectedSprite = Sprite()
+connectedSprite:Load("gfx/wifi.anm2", true)
+connectedSprite:SetFrame("Default", 0)
+function ____exports.postRender(self)
+    if not socketClient:isConnected() then
+        return
+    end
+    local bottomRightPos = getScreenBottomRightPos(nil)
+    local position = bottomRightPos + CONNECTED_ICON_OFFSET
+    connectedSprite:RenderLayer(0, position)
+end
+return ____exports
+ end,
+["packages.mod.src.features.actionSubroutines"] = function(...) 
+local ____exports = {}
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.default
+local ____utils = require("packages.mod.src.utils")
+local inCutscene = ____utils.inCutscene
+local inEndMeeting = ____utils.inEndMeeting
+local ____console = require("packages.mod.src.features.console")
+local isConsoleOpen = ____console.isConsoleOpen
+function ____exports.shouldShowActionButton(self)
+    return g.game ~= nil and g.game.started and g.game.meeting == nil and not inCutscene(nil) and not inEndMeeting(nil) and not isConsoleOpen(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.features.kill"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__Spread = ____lualib.__TS__Spread
+local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local ____exports = {}
+local isCrewMemberClose, KILL_DISTANCE
+local ____common = require("packages.common.src.index")
+local Role = ____common.Role
+local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.default
+local ____send = require("packages.mod.src.network.send")
+local sendTCP = ____send.sendTCP
+local ____players = require("packages.mod.src.players")
+local getOurPlayer = ____players.getOurPlayer
+local ____stageAPI = require("packages.mod.src.stageAPI")
+local getSkeldRoom = ____stageAPI.getSkeldRoom
+local ____actionSubroutines = require("packages.mod.src.features.actionSubroutines")
+local shouldShowActionButton = ____actionSubroutines.shouldShowActionButton
+function isCrewMemberClose(self)
+    local player = Isaac.GetPlayer()
+    local closestAliveCrewMember = ____exports.getClosestAliveCrewMember(nil)
+    if closestAliveCrewMember == nil then
+        return false
+    end
+    local crewMemberPosition = Vector(closestAliveCrewMember.x, closestAliveCrewMember.y)
+    local distance = player.Position:Distance(crewMemberPosition)
+    return distance <= KILL_DISTANCE
+end
+function ____exports.getClosestAliveCrewMember(self)
+    if g.game == nil then
+        return nil
+    end
+    local player = Isaac.GetPlayer()
+    local room = getSkeldRoom(nil)
+    local otherPlayersData = {__TS__Spread(g.game.playerMap:values())}
+    local aliveCrewMembersInRoom = __TS__ArrayFilter(
+        otherPlayersData,
+        function(____, otherPlayerData)
+            if g.game == nil then
+                return
+            end
+            local playerDescription = g.game:getPlayerFromUserID(otherPlayerData.userID)
+            return playerDescription ~= nil and playerDescription.alive and not __TS__ArrayIncludes(g.game.imposterUserIDs, playerDescription.userID) and otherPlayerData.room ~= room
+        end
+    )
+    local closestCrewMember
+    local closestDistance = math.huge
+    for ____, otherPlayerData in ipairs(aliveCrewMembersInRoom) do
+        local otherPlayerPosition = Vector(otherPlayerData.x, otherPlayerData.y)
+        local distance = otherPlayerPosition:Distance(player.Position)
+        if distance < closestDistance then
+            closestCrewMember = otherPlayerData
+            closestDistance = distance
+        end
+    end
+    return closestCrewMember
+end
+KILL_DISTANCE = 60
+function ____exports.ableToKillAPlayer(self)
+    local ourPlayer = getOurPlayer(nil)
+    return g.game ~= nil and g.game.role == Role.IMPOSTER and not g.game.inVent and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isCrewMemberClose(nil)
+end
+function ____exports.kill(self)
+    if g.game == nil then
+        return
+    end
+    local closestAliveCrewMember = ____exports.getClosestAliveCrewMember(nil)
+    if closestAliveCrewMember == nil then
+        return
+    end
+    sendTCP(nil, SocketCommandModToServer.KILL, {
+        gameID = g.game.id,
+        userIDKilled = closestAliveCrewMember.userID,
+        room = closestAliveCrewMember.room,
+        x = closestAliveCrewMember.x,
+        y = closestAliveCrewMember.y
+    })
+end
+return ____exports
+ end,
+["packages.mod.src.features.report"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local ____exports = {}
+local isDeadBodyClose, getClosestDeadBody, REPORT_DISTANCE
+local ____common = require("packages.common.src.index")
+local MeetingType = ____common.MeetingType
+local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.default
+local ____send = require("packages.mod.src.network.send")
+local sendTCP = ____send.sendTCP
+local ____players = require("packages.mod.src.players")
+local getOurPlayer = ____players.getOurPlayer
+local ____stageAPI = require("packages.mod.src.stageAPI")
+local getSkeldRoom = ____stageAPI.getSkeldRoom
+local ____actionSubroutines = require("packages.mod.src.features.actionSubroutines")
+local shouldShowActionButton = ____actionSubroutines.shouldShowActionButton
+function isDeadBodyClose(self)
+    local player = Isaac.GetPlayer()
+    local closestDeadBody = getClosestDeadBody(nil)
+    if closestDeadBody == nil then
+        return false
+    end
+    local bodyPosition = Vector(closestDeadBody.x, closestDeadBody.y)
+    local distance = player.Position:Distance(bodyPosition)
+    return distance <= REPORT_DISTANCE
+end
+function getClosestDeadBody(self)
+    if g.game == nil then
+        return nil
+    end
+    local player = Isaac.GetPlayer()
+    local room = getSkeldRoom(nil)
+    local bodiesInThisRoom = __TS__ArrayFilter(
+        g.game.bodies,
+        function(____, body) return body.room == room end
+    )
+    if #bodiesInThisRoom == 0 then
+        return nil
+    end
+    local closestBody
+    local closestDistance = math.huge
+    for ____, body in ipairs(bodiesInThisRoom) do
+        local position = Vector(body.x, body.y)
+        local distance = player.Position:Distance(position)
+        if distance < closestDistance then
+            closestBody = body
+            closestDistance = distance
+        end
+    end
+    return closestBody
+end
+REPORT_DISTANCE = 60
+function ____exports.ableToReportDeadBody(self)
+    local ourPlayer = getOurPlayer(nil)
+    return g.game ~= nil and not g.game.inVent and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isDeadBodyClose(nil)
+end
+function ____exports.reportDeadBody(self)
+    if g.game == nil then
+        return
+    end
+    local closestBody = getClosestDeadBody(nil)
+    if closestBody == nil then
+        return
+    end
+    sendTCP(nil, SocketCommandModToServer.MEETING, {gameID = g.game.id, userIDKilled = closestBody.userID, meetingType = MeetingType.REPORT_BODY})
+end
+return ____exports
+ end,
+["packages.mod.src.features.vent"] = function(...) 
+local ____exports = {}
+local isVentClose, getClosestVent, VENT_DISTANCE
+local ____common = require("packages.common.src.index")
+local Role = ____common.Role
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
+local getEffects = ____isaacscript_2Dcommon.getEffects
+local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
+local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.default
+local ____players = require("packages.mod.src.players")
+local getOurPlayer = ____players.getOurPlayer
+local ____actionSubroutines = require("packages.mod.src.features.actionSubroutines")
+local shouldShowActionButton = ____actionSubroutines.shouldShowActionButton
+function isVentClose(self)
+    local player = Isaac.GetPlayer()
+    local closestVent = getClosestVent(nil)
+    if closestVent == nil then
+        return false
+    end
+    local distance = player.Position:Distance(closestVent.Position)
+    return distance <= VENT_DISTANCE
+end
+function getClosestVent(self)
+    if g.game == nil then
+        return nil
+    end
+    local player = Isaac.GetPlayer()
+    local vents = ____exports.getVents(nil)
+    local closestVent
+    local closestDistance = math.huge
+    for ____, vent in ipairs(vents) do
+        local distance = player.Position:Distance(vent.Position)
+        if distance < closestDistance then
+            closestVent = vent
+            closestDistance = distance
+        end
+    end
+    return closestVent
+end
+function ____exports.getVents(self)
+    return getEffects(nil, EffectVariantCustom.VENT)
+end
+VENT_DISTANCE = 60
+function ____exports.ableToVent(self)
+    local ourPlayer = getOurPlayer(nil)
+    return g.game ~= nil and g.game.role == Role.IMPOSTER and not g.game.inVent and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isVentClose(nil)
+end
+function ____exports.useVent(self)
+    if g.game == nil then
+        return
+    end
+    local closestVent = getClosestVent(nil)
+    if closestVent == nil then
+        return
+    end
+    local player = Isaac.GetPlayer()
+    player.Position = closestVent.Position
+    player.ControlsEnabled = false
+    g.game.inVent = true
+end
+return ____exports
+ end,
+["packages.mod.src.features.actionUI"] = function(...) 
+local ____exports = {}
+local drawSprite
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
+local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
+local todo = ____isaacscript_2Dcommon.todo
+local ____sprite = require("packages.mod.src.sprite")
+local initSprite = ____sprite.initSprite
+local ____connectedIcon = require("packages.mod.src.features.connectedIcon")
+local OTHER_UI_BUTTON_OFFSET = ____connectedIcon.OTHER_UI_BUTTON_OFFSET
+local ____kill = require("packages.mod.src.features.kill")
+local ableToKillAPlayer = ____kill.ableToKillAPlayer
+local ____report = require("packages.mod.src.features.report")
+local ableToReportDeadBody = ____report.ableToReportDeadBody
+local ____vent = require("packages.mod.src.features.vent")
+local ableToVent = ____vent.ableToVent
+function drawSprite(self, sprite)
+    local bottomRightPos = getScreenBottomRightPos(nil)
+    local position = bottomRightPos + OTHER_UI_BUTTON_OFFSET
+    sprite:RenderLayer(0, position)
+end
+local sprites = {
+    kill = initSprite(nil, "gfx/ui/kill.anm2"),
+    report = initSprite(nil, "gfx/ui/report.anm2"),
+    vent = initSprite(nil, "gfx/ui/vent.anm2")
+}
+function ____exports.postRender(self)
+    if ableToKillAPlayer(nil) then
+        drawSprite(nil, sprites.kill)
+        return
+    end
+    if ableToVent(nil) then
+        drawSprite(nil, sprites.vent)
+        return
+    end
+    if ableToReportDeadBody(nil) then
+        drawSprite(nil, sprites.report)
+        return
+    end
+    todo(nil)
+end
+return ____exports
+ end,
 ["packages.mod.src.features.chatCallbacks"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__StringSplit = ____lualib.__TS__StringSplit
@@ -64702,26 +64963,6 @@ MAX_CHAT_MESSAGES = 10
 RENDER_FRAMES_FOR_CHAT_TO_SHOW = 120
 function ____exports.postRender(self)
     drawChat(nil)
-end
-return ____exports
- end,
-["packages.mod.src.features.connectedIcon"] = function(...) 
-local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
-local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
-local socketClient = require("packages.mod.src.network.socketClient")
-local CONNECTED_ICON_OFFSET = Vector(-33, -30)
-____exports.OTHER_UI_BUTTON_OFFSET = CONNECTED_ICON_OFFSET + Vector(5, -30)
-local connectedSprite = Sprite()
-connectedSprite:Load("gfx/wifi.anm2", true)
-connectedSprite:SetFrame("Default", 0)
-function ____exports.postRender(self)
-    if not socketClient:isConnected() then
-        return
-    end
-    local bottomRightPos = getScreenBottomRightPos(nil)
-    local position = bottomRightPos + CONNECTED_ICON_OFFSET
-    connectedSprite:RenderLayer(0, position)
 end
 return ____exports
  end,
@@ -64866,210 +65107,6 @@ function ____exports.postRender(self)
     end
     local roomDescription = roomName
     drawFontText(nil, roomDescription, position)
-end
-return ____exports
- end,
-["packages.mod.src.ui"] = function(...) 
-local ____exports = {}
-local ____console = require("packages.mod.src.features.console")
-local isConsoleOpen = ____console.isConsoleOpen
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.default
-local ____utils = require("packages.mod.src.utils")
-local inCutscene = ____utils.inCutscene
-local inEndMeeting = ____utils.inEndMeeting
-function ____exports.shouldShowUIButton(self)
-    return g.game ~= nil and g.game.started and g.game.meeting == nil and not inCutscene(nil) and not inEndMeeting(nil) and not isConsoleOpen(nil)
-end
-return ____exports
- end,
-["packages.mod.src.features.killSubroutines"] = function(...) 
-local ____exports = {}
-local ____common = require("packages.common.src.index")
-local Role = ____common.Role
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.default
-local ____players = require("packages.mod.src.players")
-local getClosestAmongUsPlayer = ____players.getClosestAmongUsPlayer
-local getOurPlayer = ____players.getOurPlayer
-local ____ui = require("packages.mod.src.ui")
-local shouldShowUIButton = ____ui.shouldShowUIButton
-local KILL_DISTANCE = 60
-function ____exports.ableToKillAPlayer(self)
-    if not shouldShowUIButton(nil) or g.game == nil or g.game.role ~= Role.IMPOSTER then
-        return false
-    end
-    local ourPlayer = getOurPlayer(nil)
-    if ourPlayer == nil or not ourPlayer.alive then
-        return false
-    end
-    local closestPlayer = getClosestAmongUsPlayer(nil)
-    if closestPlayer == nil then
-        return false
-    end
-    local player = Isaac.GetPlayer()
-    local otherPlayerPosition = Vector(closestPlayer.x, closestPlayer.y)
-    local distance = player.Position:Distance(otherPlayerPosition)
-    return distance <= KILL_DISTANCE
-end
-return ____exports
- end,
-["packages.mod.src.features.kill"] = function(...) 
-local ____exports = {}
-local drawKillUI, sprite
-local ____common = require("packages.common.src.index")
-local SocketCommandModToServer = ____common.SocketCommandModToServer
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
-local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.default
-local ____send = require("packages.mod.src.network.send")
-local sendTCP = ____send.sendTCP
-local ____players = require("packages.mod.src.players")
-local getClosestAmongUsPlayer = ____players.getClosestAmongUsPlayer
-local ____sprite = require("packages.mod.src.sprite")
-local initSprite = ____sprite.initSprite
-local ____connectedIcon = require("packages.mod.src.features.connectedIcon")
-local OTHER_UI_BUTTON_OFFSET = ____connectedIcon.OTHER_UI_BUTTON_OFFSET
-local ____killSubroutines = require("packages.mod.src.features.killSubroutines")
-local ableToKillAPlayer = ____killSubroutines.ableToKillAPlayer
-function drawKillUI(self)
-    local bottomRightPos = getScreenBottomRightPos(nil)
-    local position = bottomRightPos + OTHER_UI_BUTTON_OFFSET
-    sprite:RenderLayer(0, position)
-end
-sprite = initSprite(nil, "gfx/ui/kill.anm2")
-function ____exports.postRender(self)
-    if not ableToKillAPlayer(nil) then
-        return
-    end
-    drawKillUI(nil)
-end
-function ____exports.kill(self)
-    if g.game == nil then
-        return
-    end
-    local closestPlayer = getClosestAmongUsPlayer(nil)
-    if closestPlayer == nil then
-        return
-    end
-    sendTCP(nil, SocketCommandModToServer.KILL, {
-        gameID = g.game.id,
-        userIDKilled = closestPlayer.userID,
-        room = closestPlayer.room,
-        x = closestPlayer.x,
-        y = closestPlayer.y
-    })
-end
-return ____exports
- end,
-["packages.mod.src.features.reportSubroutines"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
-local __TS__ArraySome = ____lualib.__TS__ArraySome
-local ____exports = {}
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.default
-local ____players = require("packages.mod.src.players")
-local getOurPlayer = ____players.getOurPlayer
-local ____stageAPI = require("packages.mod.src.stageAPI")
-local getSkeldRoom = ____stageAPI.getSkeldRoom
-local ____ui = require("packages.mod.src.ui")
-local shouldShowUIButton = ____ui.shouldShowUIButton
-local REPORT_DISTANCE = 60
-function ____exports.ableToReportDeadBody(self)
-    if not shouldShowUIButton(nil) or g.game == nil then
-        return false
-    end
-    local ourPlayer = getOurPlayer(nil)
-    if ourPlayer == nil or not ourPlayer.alive then
-        return false
-    end
-    local player = Isaac.GetPlayer()
-    local room = getSkeldRoom(nil)
-    local bodiesInThisRoom = __TS__ArrayFilter(
-        g.game.bodies,
-        function(____, body) return body.room == room end
-    )
-    return __TS__ArraySome(
-        bodiesInThisRoom,
-        function(____, body)
-            local bodyPosition = Vector(body.x, body.y)
-            local distance = player.Position:Distance(bodyPosition)
-            return distance <= REPORT_DISTANCE
-        end
-    )
-end
-return ____exports
- end,
-["packages.mod.src.features.report"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
-local ____exports = {}
-local drawReportUI, getClosestBody, sprite
-local ____common = require("packages.common.src.index")
-local MeetingType = ____common.MeetingType
-local SocketCommandModToServer = ____common.SocketCommandModToServer
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
-local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.default
-local ____send = require("packages.mod.src.network.send")
-local sendTCP = ____send.sendTCP
-local ____sprite = require("packages.mod.src.sprite")
-local initSprite = ____sprite.initSprite
-local ____stageAPI = require("packages.mod.src.stageAPI")
-local getSkeldRoom = ____stageAPI.getSkeldRoom
-local ____connectedIcon = require("packages.mod.src.features.connectedIcon")
-local OTHER_UI_BUTTON_OFFSET = ____connectedIcon.OTHER_UI_BUTTON_OFFSET
-local ____reportSubroutines = require("packages.mod.src.features.reportSubroutines")
-local ableToReportDeadBody = ____reportSubroutines.ableToReportDeadBody
-function drawReportUI(self)
-    local bottomRightPos = getScreenBottomRightPos(nil)
-    local position = bottomRightPos + OTHER_UI_BUTTON_OFFSET
-    sprite:RenderLayer(0, position)
-end
-function getClosestBody(self)
-    if g.game == nil then
-        return nil
-    end
-    local player = Isaac.GetPlayer()
-    local room = getSkeldRoom(nil)
-    local bodiesInThisRoom = __TS__ArrayFilter(
-        g.game.bodies,
-        function(____, body) return body.room == room end
-    )
-    if #bodiesInThisRoom == 0 then
-        return nil
-    end
-    local closestBody
-    local closestDistance = math.huge
-    for ____, body in ipairs(bodiesInThisRoom) do
-        local position = Vector(body.x, body.y)
-        local distance = player.Position:Distance(position)
-        if distance < closestDistance then
-            closestBody = body
-            closestDistance = distance
-        end
-    end
-    return closestBody
-end
-sprite = initSprite(nil, "gfx/ui/report.anm2")
-function ____exports.postRender(self)
-    if not ableToReportDeadBody(nil) then
-        return
-    end
-    drawReportUI(nil)
-end
-function ____exports.reportDeadBody(self)
-    if g.game == nil then
-        return
-    end
-    local closestBody = getClosestBody(nil)
-    if closestBody == nil then
-        return
-    end
-    sendTCP(nil, SocketCommandModToServer.MEETING, {gameID = g.game.id, userIDKilled = closestBody.userID, meetingType = MeetingType.REPORT_BODY})
 end
 return ____exports
  end,
@@ -65331,6 +65368,7 @@ local ____exports = {}
 local main
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local actionUI = require("packages.mod.src.features.actionUI")
 local blackSprite = require("packages.mod.src.features.blackSprite")
 local chatCallbacks = require("packages.mod.src.features.chatCallbacks")
 local connectedIcon = require("packages.mod.src.features.connectedIcon")
@@ -65342,8 +65380,6 @@ local drawRoomDescription = require("packages.mod.src.features.drawRoomDescripti
 local endGameCutscene = require("packages.mod.src.features.endGameCutscene")
 local endMeeting = require("packages.mod.src.features.endMeeting")
 local errors = require("packages.mod.src.features.errors")
-local kill = require("packages.mod.src.features.kill")
-local report = require("packages.mod.src.features.report")
 local restartOnNextFrame = require("packages.mod.src.features.restartOnNextFrame")
 local startGameCutscene = require("packages.mod.src.features.startGameCutscene")
 local startMeeting = require("packages.mod.src.features.startMeeting")
@@ -65367,6 +65403,7 @@ function main(self)
     drawOtherPlayers:postRender()
     drawOurUsername:postRender()
     console:postRender()
+    actionUI:postRender()
     connectedIcon:postRender()
     chatCallbacks:postRender()
     blackSprite:postRender()
@@ -65375,8 +65412,6 @@ function main(self)
     startMeeting:postRender()
     drawMeeting:postRender()
     endMeeting:postRender()
-    kill:postRender()
-    report:postRender()
     identifyCollectibles:postRender()
     identifyTrinkets:postRender()
     makePentagram:postRender()
@@ -65390,7 +65425,7 @@ function ____exports.init(self, mod)
 end
 return ____exports
  end,
-["packages.mod.src.features.action"] = function(...) 
+["packages.mod.src.features.actionInput"] = function(...) 
 local ____exports = {}
 local checkInput, actionPressed, isPressed
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
@@ -65399,13 +65434,14 @@ local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.in
 local isActionPressedOnAnyInput = ____isaacscript_2Dcommon.isActionPressedOnAnyInput
 local todo = ____isaacscript_2Dcommon.todo
 local ____kill = require("packages.mod.src.features.kill")
+local ableToKillAPlayer = ____kill.ableToKillAPlayer
 local kill = ____kill.kill
-local ____killSubroutines = require("packages.mod.src.features.killSubroutines")
-local ableToKillAPlayer = ____killSubroutines.ableToKillAPlayer
 local ____report = require("packages.mod.src.features.report")
+local ableToReportDeadBody = ____report.ableToReportDeadBody
 local reportDeadBody = ____report.reportDeadBody
-local ____reportSubroutines = require("packages.mod.src.features.reportSubroutines")
-local ableToReportDeadBody = ____reportSubroutines.ableToReportDeadBody
+local ____vent = require("packages.mod.src.features.vent")
+local ableToVent = ____vent.ableToVent
+local useVent = ____vent.useVent
 function checkInput(self)
     if not isActionPressedOnAnyInput(nil, ButtonAction.BOMB) then
         isPressed = false
@@ -65420,6 +65456,10 @@ end
 function actionPressed(self)
     if ableToKillAPlayer(nil) then
         kill(nil)
+        return
+    end
+    if ableToVent(nil) then
+        useVent(nil)
         return
     end
     if ableToReportDeadBody(nil) then
@@ -65445,7 +65485,7 @@ local ____exports = {}
 local main
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local action = require("packages.mod.src.features.action")
+local actionInput = require("packages.mod.src.features.actionInput")
 local doors = require("packages.mod.src.features.doors")
 local defeatMonstro = require("packages.mod.src.tasks.defeatMonstro")
 local loadSlotMachines = require("packages.mod.src.tasks.loadSlotMachines")
@@ -65455,7 +65495,7 @@ function main(self)
     pushTNTBarrel:postUpdate()
     loadSlotMachines:postUpdate()
     defeatMonstro:postUpdate()
-    action:postUpdate()
+    actionInput:postUpdate()
 end
 function ____exports.init(self, mod)
     mod:AddCallback(ModCallback.POST_UPDATE, main)

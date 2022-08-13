@@ -1,4 +1,5 @@
 import { ModCallback } from "isaac-typescript-definitions";
+import * as actionUI from "../features/actionUI";
 import * as blackSprite from "../features/blackSprite";
 import * as chatCallbacks from "../features/chatCallbacks";
 import * as connectedIcon from "../features/connectedIcon";
@@ -10,8 +11,6 @@ import * as drawRoomDescription from "../features/drawRoomDescription";
 import * as endGameCutscene from "../features/endGameCutscene";
 import * as endMeeting from "../features/endMeeting";
 import * as errors from "../features/errors";
-import * as kill from "../features/kill";
-import * as report from "../features/report";
 import * as restartOnNextFrame from "../features/restartOnNextFrame";
 import * as startGameCutscene from "../features/startGameCutscene";
 import * as startMeeting from "../features/startMeeting";
@@ -42,6 +41,7 @@ function main() {
   drawOurUsername.postRender();
 
   console.postRender();
+  actionUI.postRender();
   connectedIcon.postRender();
   chatCallbacks.postRender();
 
@@ -51,8 +51,6 @@ function main() {
   startMeeting.postRender();
   drawMeeting.postRender();
   endMeeting.postRender();
-  kill.postRender();
-  report.postRender();
 
   // Tasks
   identifyCollectibles.postRender();

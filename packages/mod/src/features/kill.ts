@@ -1,27 +1,79 @@
-import { SocketCommandModToServer } from "common";
-import { getScreenBottomRightPos } from "isaacscript-common";
+import { Role, SocketCommandModToServer } from "common";
 import g from "../globals";
+import { PlayerData } from "../interfaces/PlayerData";
 import { sendTCP } from "../network/send";
-import { getClosestAmongUsPlayer } from "../players";
-import { initSprite } from "../sprite";
-import { OTHER_UI_BUTTON_OFFSET } from "./connectedIcon";
-import { ableToKillAPlayer } from "./killSubroutines";
+import { getOurPlayer } from "../players";
+import { getSkeldRoom } from "../stageAPI";
+import { shouldShowActionButton } from "./actionSubroutines";
 
-const sprite = initSprite("gfx/ui/kill.anm2");
+const KILL_DISTANCE = 60;
 
-// ModCallback.POST_RENDER (2)
-export function postRender(): void {
-  if (!ableToKillAPlayer()) {
-    return;
-  }
+export function ableToKillAPlayer(): boolean {
+  const ourPlayer = getOurPlayer();
 
-  drawKillUI();
+  return (
+    g.game !== null &&
+    g.game.role === Role.IMPOSTER &&
+    !g.game.inVent &&
+    ourPlayer !== undefined &&
+    ourPlayer.alive &&
+    shouldShowActionButton() &&
+    isCrewMemberClose()
+  );
 }
 
-function drawKillUI() {
-  const bottomRightPos = getScreenBottomRightPos();
-  const position = bottomRightPos.add(OTHER_UI_BUTTON_OFFSET);
-  sprite.RenderLayer(0, position);
+function isCrewMemberClose() {
+  const player = Isaac.GetPlayer();
+  const closestAliveCrewMember = getClosestAliveCrewMember();
+  if (closestAliveCrewMember === undefined) {
+    return false;
+  }
+
+  const crewMemberPosition = Vector(
+    closestAliveCrewMember.x,
+    closestAliveCrewMember.y,
+  );
+  const distance = player.Position.Distance(crewMemberPosition);
+  return distance <= KILL_DISTANCE;
+}
+
+export function getClosestAliveCrewMember(): PlayerData | undefined {
+  if (g.game === null) {
+    return undefined;
+  }
+
+  const player = Isaac.GetPlayer();
+  const room = getSkeldRoom();
+
+  const otherPlayersData = [...g.game.playerMap.values()];
+  const aliveCrewMembersInRoom = otherPlayersData.filter((otherPlayerData) => {
+    if (g.game === null) {
+      return;
+    }
+
+    const playerDescription = g.game.getPlayerFromUserID(
+      otherPlayerData.userID,
+    );
+    return (
+      playerDescription !== undefined &&
+      playerDescription.alive &&
+      !g.game.imposterUserIDs.includes(playerDescription.userID) &&
+      otherPlayerData.room !== room
+    );
+  });
+
+  let closestCrewMember: PlayerData | undefined;
+  let closestDistance = math.huge;
+  for (const otherPlayerData of aliveCrewMembersInRoom) {
+    const otherPlayerPosition = Vector(otherPlayerData.x, otherPlayerData.y);
+    const distance = otherPlayerPosition.Distance(player.Position);
+    if (distance < closestDistance) {
+      closestCrewMember = otherPlayerData;
+      closestDistance = distance;
+    }
+  }
+
+  return closestCrewMember;
 }
 
 export function kill(): void {
@@ -29,16 +81,16 @@ export function kill(): void {
     return;
   }
 
-  const closestPlayer = getClosestAmongUsPlayer();
-  if (closestPlayer === undefined) {
+  const closestAliveCrewMember = getClosestAliveCrewMember();
+  if (closestAliveCrewMember === undefined) {
     return;
   }
 
   sendTCP(SocketCommandModToServer.KILL, {
     gameID: g.game.id,
-    userIDKilled: closestPlayer.userID,
-    room: closestPlayer.room,
-    x: closestPlayer.x,
-    y: closestPlayer.y,
+    userIDKilled: closestAliveCrewMember.userID,
+    room: closestAliveCrewMember.room,
+    x: closestAliveCrewMember.x,
+    y: closestAliveCrewMember.y,
   });
 }

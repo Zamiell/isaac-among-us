@@ -1,5 +1,5 @@
 import { ModCallback } from "isaac-typescript-definitions";
-import * as action from "../features/action";
+import * as actionInput from "../features/actionInput";
 import * as doors from "../features/doors";
 import * as defeatMonstro from "../tasks/defeatMonstro";
 import * as loadSlotMachines from "../tasks/loadSlotMachines";
@@ -14,5 +14,5 @@ function main() {
   pushTNTBarrel.postUpdate();
   loadSlotMachines.postUpdate();
   defeatMonstro.postUpdate();
-  action.postUpdate();
+  actionInput.postUpdate();
 }
