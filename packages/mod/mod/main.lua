@@ -64607,7 +64607,7 @@ local __TS__Spread = ____lualib.__TS__Spread
 local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local ____exports = {}
-local isCrewMemberClose, KILL_DISTANCE
+local isCrewMemberClose, getClosestAliveCrewMember, KILL_DISTANCE
 local ____common = require("packages.common.src.index")
 local Role = ____common.Role
 local SocketCommandModToServer = ____common.SocketCommandModToServer
@@ -64623,7 +64623,7 @@ local ____actionSubroutines = require("packages.mod.src.features.actionSubroutin
 local shouldShowActionButton = ____actionSubroutines.shouldShowActionButton
 function isCrewMemberClose(self)
     local player = Isaac.GetPlayer()
-    local closestAliveCrewMember = ____exports.getClosestAliveCrewMember(nil)
+    local closestAliveCrewMember = getClosestAliveCrewMember(nil)
     if closestAliveCrewMember == nil then
         return false
     end
@@ -64631,7 +64631,7 @@ function isCrewMemberClose(self)
     local distance = player.Position:Distance(crewMemberPosition)
     return distance <= KILL_DISTANCE
 end
-function ____exports.getClosestAliveCrewMember(self)
+function getClosestAliveCrewMember(self)
     if g.game == nil then
         return nil
     end
@@ -64669,7 +64669,7 @@ function ____exports.kill(self)
     if g.game == nil then
         return
     end
-    local closestAliveCrewMember = ____exports.getClosestAliveCrewMember(nil)
+    local closestAliveCrewMember = getClosestAliveCrewMember(nil)
     if closestAliveCrewMember == nil then
         return
     end
@@ -64782,7 +64782,7 @@ function getClosestVent(self)
         return nil
     end
     local player = Isaac.GetPlayer()
-    local vents = ____exports.getVents(nil)
+    local vents = getEffects(nil, EffectVariantCustom.VENT)
     local closestVent
     local closestDistance = math.huge
     for ____, vent in ipairs(vents) do
@@ -64793,9 +64793,6 @@ function getClosestVent(self)
         end
     end
     return closestVent
-end
-function ____exports.getVents(self)
-    return getEffects(nil, EffectVariantCustom.VENT)
 end
 VENT_DISTANCE = 60
 function ____exports.ableToVent(self)

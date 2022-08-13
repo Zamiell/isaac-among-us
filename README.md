@@ -87,8 +87,12 @@ Are you interested in helping with development? Then fork the repository, make s
   - `ALTER USER amongususer CREATEDB;`
   - `\q`
 - Set up the environment variables:
-  - `cp .env_template .env`
+  - `cp .env.example .env`
 - Install the database schema:
   - `npx prisma migrate dev --name init`
+- Build the server:
+  - `npx tsc` <br>
+    (or run "build.sh" if you are in Bash)
 - Run the server:
-  - `npx ts-node --require "tsconfig-paths/register" "./src/main.ts"`
+  - `node --require "tsconfig-paths/register" --require "ts-node/register" "./dist/packages/server/src/main.js"` <br>
+    (or run "run.sh" if you are in Bash)
