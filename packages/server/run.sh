@@ -7,4 +7,5 @@ set -e # Exit on any errors
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 cd "$DIR"
-npx ts-node --require "tsconfig-paths/register" "$DIR/src/main.ts"
+bash "$DIR/build.sh"
+node --require "tsconfig-paths/register" --require "ts-node/register" "$DIR/dist/packages/server/src/main.js"

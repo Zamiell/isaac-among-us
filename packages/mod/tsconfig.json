@@ -9,6 +9,7 @@
 
   // https://www.typescriptlang.org/docs/handbook/compiler-options.html
   "compilerOptions": {
+    // Monorepo config.
     "rootDir": "../..",
     "baseUrl": "../..",
     "paths": {

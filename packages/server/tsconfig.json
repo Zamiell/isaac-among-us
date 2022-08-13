@@ -9,14 +9,14 @@
 
   // https://www.typescriptlang.org/docs/handbook/compiler-options.html
   "compilerOptions": {
-    // "outDir" specifies the output directory
-    // By default, it will put the compiled ".js" next to the respective ".ts" file,
-    // which will clutter the "src" directory
-    "outDir": "./dist",
-
+    // Monorepo config.
+    "rootDir": "../..",
+    "baseUrl": "../..",
     "paths": {
-      "common": ["../common/src/index.ts"],
+      "common": ["./packages/common/src/index.ts"],
     },
+
+    "outDir": "./dist",
   },
 
   // A list of the TypeScript files to compile
