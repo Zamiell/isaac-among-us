@@ -65,7 +65,7 @@ function sendPosition() {
     g.userID === null ||
     g.username === null ||
     g.game === null ||
-    g.game.ventState === VentState.NONE
+    g.game.ventState === VentState.IN_VENT
   ) {
     return;
   }

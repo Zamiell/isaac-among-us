@@ -65432,7 +65432,7 @@ function sendBeacon(self)
     sendUDP(nil, packedData)
 end
 function sendPosition(self)
-    if g.userID == nil or g.username == nil or g.game == nil or g.game.ventState == VentState.NONE then
+    if g.userID == nil or g.username == nil or g.game == nil or g.game.ventState == VentState.IN_VENT then
         return
     end
     local player = Isaac.GetPlayer()
