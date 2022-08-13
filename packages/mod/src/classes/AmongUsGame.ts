@@ -43,6 +43,8 @@ export class AmongUsGame {
   currentTask: Task | -1 | null = null; // -1 is the type of the "FAKE_TASK" constant.
   startTaskTime = 0;
   endTaskTime = 0;
+  taskReturnRoomName = "";
+  taskReturnRoomGridIndex = 0;
 
   startGameCutscene = {
     state: CutsceneState.DISABLED,

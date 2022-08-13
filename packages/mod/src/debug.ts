@@ -2,7 +2,7 @@ import { IS_DEV, SkeldRoom } from "common";
 import { startAutoLogin } from "./features/autoLogin";
 import { startEndGameCutscene } from "./features/endGameCutscene";
 import g from "./globals";
-import { skeldRoomReverseMap } from "./skeldRoomMap";
+import { SKELD_ROOM_REVERSE_MAP } from "./skeldRoomMap";
 import { goToStageAPIRoom } from "./stageAPI";
 
 /** From the "d" console command. */
@@ -76,7 +76,7 @@ export function warp(params: string): void {
     roomName = params;
   } else {
     const skeldRoom = num as SkeldRoom;
-    roomName = skeldRoomReverseMap[skeldRoom];
+    roomName = SKELD_ROOM_REVERSE_MAP[skeldRoom];
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (roomName === undefined) {
       print(`Failed to find the room name for room ID: ${skeldRoom}`);

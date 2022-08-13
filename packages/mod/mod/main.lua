@@ -2767,146 +2767,26 @@ local Task = ____Task.Task
 local ____TaskType = require("packages.common.src.enums.TaskType")
 local TaskType = ____TaskType.TaskType
 ____exports.TASK_DESCRIPTIONS = {
-    [Task.SHORT_DESTROY_GIANT_POOP] = {
-        name = "Toilet Cleaning",
-        taskType = TaskType.SHORT,
-        room = SkeldRoom.CAFETERIA,
-        gridIndex = 418,
-        returnGridIndex = 416
-    },
-    [Task.SHORT_BOMB_ROCKS] = {
-        name = "Debris Clearing",
-        taskType = TaskType.SHORT,
-        room = SkeldRoom.UPPER_ENGINE,
-        gridIndex = 228,
-        returnGridIndex = 230
-    },
-    [Task.SHORT_IDENTIFY_COLLECTIBLES] = {
-        name = "Item Calibration",
-        taskType = TaskType.SHORT,
-        room = SkeldRoom.SECURITY,
-        gridIndex = 56,
-        returnGridIndex = 54
-    },
-    [Task.SHORT_IDENTIFY_TRINKETS] = {
-        name = "Trinket Calibration",
-        taskType = TaskType.SHORT,
-        room = SkeldRoom.SECURITY,
-        gridIndex = 102,
-        returnGridIndex = 100
-    },
-    [Task.SHORT_PRESS_BUTTONS_WITH_GRUDGE] = {
-        name = "Shutdown Robotics",
-        taskType = TaskType.SHORT,
-        room = SkeldRoom.SHIELDS,
-        gridIndex = 91,
-        returnGridIndex = 93
-    },
-    [Task.SHORT_FIX_WIRES] = {
-        name = "Fix Wires",
-        taskType = TaskType.SHORT,
-        room = SkeldRoom.ELECTRICAL,
-        gridIndex = 57,
-        returnGridIndex = 55
-    },
-    [Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES] = {
-        name = "Disengage Thruster",
-        taskType = TaskType.SHORT,
-        room = SkeldRoom.WEAPONS,
-        gridIndex = 101,
-        returnGridIndex = 99
-    },
-    [Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS] = {
-        name = "Repair Ship Hull",
-        taskType = TaskType.SHORT,
-        room = SkeldRoom.STORAGE,
-        gridIndex = 190,
-        returnGridIndex = 192
-    },
-    [Task.SHORT_WALK_BETWEEN_SLIDES] = {
-        name = "Deactivate Drones",
-        taskType = TaskType.SHORT,
-        room = SkeldRoom.ELECTRICAL,
-        gridIndex = 48,
-        returnGridIndex = 50
-    },
-    [Task.SHORT_PUSH_TNT_BARREL] = {
-        name = "Explode Excess Material",
-        taskType = TaskType.SHORT,
-        room = SkeldRoom.REACTOR,
-        gridIndex = 106,
-        returnGridIndex = 108
-    },
-    [Task.SHORT_DODGE_RETRACTING_SPIKES] = {
-        name = "Retrieve Fuel",
-        taskType = TaskType.LONG,
-        room = SkeldRoom.STORAGE,
-        gridIndex = 170,
-        returnGridIndex = 168
-    },
-    [Task.SHORT_BUTTONS_BEHIND_KEY_BLOCKS] = {
-        name = "Recover Locked Hard Drives",
-        taskType = TaskType.LONG,
-        room = SkeldRoom.COMMUNICATION,
-        gridIndex = 46,
-        returnGridIndex = 48
-    },
-    [Task.SHORT_PUSH_BUTTONS_IN_ORDER] = {
-        name = "Plot Ship Course",
-        taskType = TaskType.LONG,
-        room = SkeldRoom.NAVIGATION,
-        gridIndex = 71,
-        returnGridIndex = 69
-    },
-    [Task.SHORT_COLLECT_PENNIES] = {
-        name = "Collect Spare Cash",
-        taskType = TaskType.LONG,
-        room = SkeldRoom.ADMIN,
-        gridIndex = 17,
-        returnGridIndex = 47
-    },
-    [Task.LONG_LOAD_SLOT_MACHINES] = {
-        name = "Engine Boosting",
-        taskType = TaskType.SHORT,
-        room = SkeldRoom.LOWER_ENGINE,
-        gridIndex = 368,
-        returnGridIndex = 370
-    },
-    [Task.LONG_MAKE_PENTAGRAM] = {
-        name = "Summon Devil",
-        taskType = TaskType.SHORT,
-        room = SkeldRoom.COMMUNICATION,
-        gridIndex = 108,
-        returnGridIndex = 110
-    },
-    [Task.LONG_IDENTIFY_PICKUPS_IN_ORDER] = {
-        name = "Pickup Calibration",
-        taskType = TaskType.LONG,
-        room = SkeldRoom.ADMIN,
-        gridIndex = 118,
-        returnGridIndex = 116
-    },
-    [Task.LONG_KILL_WORMS] = {
-        name = "Kill Space Worms",
-        taskType = TaskType.LONG,
-        room = SkeldRoom.MEDBAY,
-        gridIndex = 109,
-        returnGridIndex = 111
-    },
-    [Task.LONG_DODGE_STONE_SHOOTERS] = {
-        name = "Suppress Enemy Fire",
-        taskType = TaskType.LONG,
-        room = SkeldRoom.WEAPONS,
-        gridIndex = 244,
-        returnGridIndex = 242
-    },
-    [Task.LONG_DEFEAT_MONSTRO] = {
-        name = "Defeat Space Blob",
-        taskType = TaskType.LONG,
-        room = SkeldRoom.O2,
-        gridIndex = 61,
-        returnGridIndex = 63
-    }
+    [Task.SHORT_DESTROY_GIANT_POOP] = {name = "Toilet Cleaning", taskType = TaskType.SHORT, room = SkeldRoom.CAFETERIA, gridIndex = 418},
+    [Task.SHORT_BOMB_ROCKS] = {name = "Debris Clearing", taskType = TaskType.SHORT, room = SkeldRoom.UPPER_ENGINE, gridIndex = 228},
+    [Task.SHORT_IDENTIFY_COLLECTIBLES] = {name = "Item Calibration", taskType = TaskType.SHORT, room = SkeldRoom.SECURITY, gridIndex = 56},
+    [Task.SHORT_IDENTIFY_TRINKETS] = {name = "Trinket Calibration", taskType = TaskType.SHORT, room = SkeldRoom.SECURITY, gridIndex = 102},
+    [Task.SHORT_PRESS_BUTTONS_WITH_GRUDGE] = {name = "Shutdown Robotics", taskType = TaskType.SHORT, room = SkeldRoom.SHIELDS, gridIndex = 91},
+    [Task.SHORT_FIX_WIRES] = {name = "Fix Wires", taskType = TaskType.SHORT, room = SkeldRoom.ELECTRICAL, gridIndex = 57},
+    [Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES] = {name = "Disengage Thruster", taskType = TaskType.SHORT, room = SkeldRoom.WEAPONS, gridIndex = 101},
+    [Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS] = {name = "Repair Ship Hull", taskType = TaskType.SHORT, room = SkeldRoom.STORAGE, gridIndex = 190},
+    [Task.SHORT_WALK_BETWEEN_SLIDES] = {name = "Deactivate Drones", taskType = TaskType.SHORT, room = SkeldRoom.ELECTRICAL, gridIndex = 48},
+    [Task.SHORT_PUSH_TNT_BARREL] = {name = "Explode Excess Material", taskType = TaskType.SHORT, room = SkeldRoom.REACTOR, gridIndex = 106},
+    [Task.SHORT_DODGE_RETRACTING_SPIKES] = {name = "Retrieve Fuel", taskType = TaskType.LONG, room = SkeldRoom.STORAGE, gridIndex = 170},
+    [Task.SHORT_BUTTONS_BEHIND_KEY_BLOCKS] = {name = "Recover Locked Hard Drives", taskType = TaskType.LONG, room = SkeldRoom.COMMUNICATION, gridIndex = 46},
+    [Task.SHORT_PUSH_BUTTONS_IN_ORDER] = {name = "Plot Ship Course", taskType = TaskType.LONG, room = SkeldRoom.NAVIGATION, gridIndex = 71},
+    [Task.SHORT_COLLECT_PENNIES] = {name = "Collect Spare Cash", taskType = TaskType.LONG, room = SkeldRoom.ADMIN, gridIndex = 17},
+    [Task.LONG_LOAD_SLOT_MACHINES] = {name = "Engine Boosting", taskType = TaskType.SHORT, room = SkeldRoom.LOWER_ENGINE, gridIndex = 368},
+    [Task.LONG_MAKE_PENTAGRAM] = {name = "Summon Devil", taskType = TaskType.SHORT, room = SkeldRoom.COMMUNICATION, gridIndex = 108},
+    [Task.LONG_IDENTIFY_PICKUPS_IN_ORDER] = {name = "Pickup Calibration", taskType = TaskType.LONG, room = SkeldRoom.ADMIN, gridIndex = 118},
+    [Task.LONG_KILL_WORMS] = {name = "Kill Space Worms", taskType = TaskType.LONG, room = SkeldRoom.MEDBAY, gridIndex = 109},
+    [Task.LONG_DODGE_STONE_SHOOTERS] = {name = "Suppress Enemy Fire", taskType = TaskType.LONG, room = SkeldRoom.WEAPONS, gridIndex = 244},
+    [Task.LONG_DEFEAT_MONSTRO] = {name = "Defeat Space Blob", taskType = TaskType.LONG, room = SkeldRoom.O2, gridIndex = 61}
 }
 return ____exports
  end,
@@ -55952,6 +55832,8 @@ function AmongUsGame.prototype.____constructor(self, id, name, ownerUserID, char
     self.currentTask = nil
     self.startTaskTime = 0
     self.endTaskTime = 0
+    self.taskReturnRoomName = ""
+    self.taskReturnRoomGridIndex = 0
     self.startGameCutscene = {state = CutsceneState.DISABLED, startRenderFrame = nil}
     self.startMeeting = {state = StartMeetingState.DISABLED, startRenderFrame = nil}
     self.endMeeting = {state = EndMeetingState.DISABLED, startRenderFrame = nil, meetingResolution = MeetingResolution.EJECT, userIDEjected = nil}
@@ -56246,6 +56128,62 @@ function ____exports.connectChatCommand(self, autoLogin)
 end
 return ____exports
  end,
+["packages.mod.src.network.udpData"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
+local RENDER_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.RENDER_FRAMES_PER_SECOND
+local FieldType = FieldType or ({})
+FieldType.SIGNED_CHAR = "b"
+FieldType.UNSIGNED_CHAR = "B"
+FieldType.SIGNED_SHORT = "h"
+FieldType.UNSIGNED_SHORT = "H"
+FieldType.SIGNED_INT = "i"
+FieldType.UNSIGNED_INT = "I"
+FieldType.SIGNED_LONG = "l"
+FieldType.UNSIGNED_LONG = "L"
+FieldType.FLOAT = "f"
+FieldType.DOUBLE = "d"
+FieldType.STRING = "s"
+FieldType.CHAR_SEQUENCE = "cn"
+____exports.UDP_BEACON_MESSAGE = "HELLO"
+____exports.UDP_BEACON_FIELDS = {
+    {"gameID", "I"},
+    {"userID", "I"},
+    {
+        "message",
+        "c" .. tostring(#____exports.UDP_BEACON_MESSAGE)
+    }
+}
+____exports.UDP_BEACON_DATA_FORMAT = table.concat(
+    __TS__ArrayMap(
+        ____exports.UDP_BEACON_FIELDS,
+        function(____, tuple) return tuple[2] end
+    ),
+    ","
+)
+____exports.UDP_BEACON_INTERVAL = 10 * RENDER_FRAMES_PER_SECOND
+____exports.UDP_POSITION_FIELDS = {
+    {"gameID", FieldType.UNSIGNED_INT},
+    {"userID", FieldType.UNSIGNED_INT},
+    {"x", FieldType.FLOAT},
+    {"y", FieldType.FLOAT},
+    {"room", FieldType.UNSIGNED_INT},
+    {"animation", "c20"},
+    {"animationFrame", FieldType.UNSIGNED_INT},
+    {"overlayAnimation", "c20"},
+    {"overlayAnimationFrame", FieldType.UNSIGNED_INT}
+}
+____exports.UDP_POSITION_DATA_FORMAT = table.concat(
+    __TS__ArrayMap(
+        ____exports.UDP_POSITION_FIELDS,
+        function(____, tuple) return tuple[2] end
+    ),
+    ","
+)
+return ____exports
+ end,
 ["packages.mod.src.network.pack"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__StringTrim = ____lualib.__TS__StringTrim
@@ -56256,10 +56194,10 @@ local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.in
 local jsonDecode = ____isaacscript_2Dcommon.jsonDecode
 local jsonEncode = ____isaacscript_2Dcommon.jsonEncode
 local log = ____isaacscript_2Dcommon.log
-local ____constants = require("packages.mod.src.constants")
-local UDP_POSITION_DATA_FORMAT = ____constants.UDP_POSITION_DATA_FORMAT
-local UDP_POSITION_FIELDS = ____constants.UDP_POSITION_FIELDS
 local struct = require("packages.mod.src.lib.struct")
+local ____udpData = require("packages.mod.src.network.udpData")
+local UDP_POSITION_DATA_FORMAT = ____udpData.UDP_POSITION_DATA_FORMAT
+local UDP_POSITION_FIELDS = ____udpData.UDP_POSITION_FIELDS
 local DATA_SEPARATOR = " "
 local DEBUG = false
 function ____exports.packTCPMsg(self, command, data)
@@ -56286,15 +56224,15 @@ function ____exports.unpackUDPPlayerMessage(self, rawData)
     local playerMessage = {}
     do
         local i = 0
-        while i < UDP_POSITION_FIELDS.length do
-            local name = table.unpack(UDP_POSITION_FIELDS[i])
+        while i < #UDP_POSITION_FIELDS do
+            local name = table.unpack(UDP_POSITION_FIELDS[i + 1])
             local fieldData = dataArray[i + 1]
             if type(fieldData) == "string" then
                 fieldData = __TS__StringTrim(fieldData)
             end
             playerMessage[name] = fieldData
             if DEBUG then
-                log((("- " .. tostring(name)) .. " - ") .. tostring(fieldData))
+                log((("- " .. name) .. " - ") .. tostring(fieldData))
             end
             i = i + 1
         end
@@ -57552,7 +57490,7 @@ local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____common = require("packages.common.src.index")
 local SkeldRoom = ____common.SkeldRoom
-____exports.skeldRoomMap = __TS__New(Map, {
+____exports.SKELD_ROOM_MAP = __TS__New(Map, {
     {"Cafeteria", SkeldRoom.CAFETERIA},
     {"Admin Hall", SkeldRoom.ADMIN_HALL},
     {"Admin", SkeldRoom.ADMIN},
@@ -57576,7 +57514,7 @@ ____exports.skeldRoomMap = __TS__New(Map, {
     {"Communication", SkeldRoom.COMMUNICATION},
     {"Task", SkeldRoom.TASK}
 })
-____exports.skeldRoomReverseMap = {
+____exports.SKELD_ROOM_REVERSE_MAP = {
     [SkeldRoom.CAFETERIA] = "Cafeteria",
     [SkeldRoom.ADMIN_HALL] = "Admin Hall",
     [SkeldRoom.ADMIN] = "Admin",
@@ -57618,8 +57556,6 @@ end
 return ____exports
  end,
 ["packages.mod.src.features.sendGameEvents"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local ____exports = {}
 local sendEvents
 local ____common = require("packages.common.src.index")
@@ -57632,7 +57568,7 @@ local g = ____globals.default
 local ____send = require("packages.mod.src.network.send")
 local sendTCP = ____send.sendTCP
 local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local skeldRoomMap = ____skeldRoomMap.skeldRoomMap
+local SKELD_ROOM_MAP = ____skeldRoomMap.SKELD_ROOM_MAP
 local ____stageAPISubroutines = require("packages.mod.src.stageAPISubroutines")
 local getStageAPIRoomName = ____stageAPISubroutines.getStageAPIRoomName
 function ____exports.sendRoom(self)
@@ -57643,7 +57579,7 @@ function ____exports.sendRoom(self)
     if roomName == nil then
         return
     end
-    local skeldRoom = skeldRoomMap:get(roomName)
+    local skeldRoom = SKELD_ROOM_MAP:get(roomName)
     if skeldRoom == nil or skeldRoom == SkeldRoom.TASK then
         return
     end
@@ -57686,7 +57622,7 @@ local sendRoom = ____sendGameEvents.sendRoom
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
 local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local skeldRoomMap = ____skeldRoomMap.skeldRoomMap
+local SKELD_ROOM_MAP = ____skeldRoomMap.SKELD_ROOM_MAP
 local ____stageAPISubroutines = require("packages.mod.src.stageAPISubroutines")
 local getStageAPIRoomName = ____stageAPISubroutines.getStageAPIRoomName
 function fixRoomEntrancePosition(self)
@@ -57747,7 +57683,7 @@ function ____exports.getSkeldRoom(self)
     if roomName == nil then
         return nil
     end
-    return skeldRoomMap:get(roomName)
+    return SKELD_ROOM_MAP:get(roomName)
 end
 function ____exports.getStageAPIDoors(self)
     if StageAPI == nil then
@@ -57781,7 +57717,7 @@ function ____exports.loadBackdrops(self)
     if roomName == nil then
         return nil
     end
-    local room = skeldRoomMap:get(roomName)
+    local room = SKELD_ROOM_MAP:get(roomName)
     if room == nil then
         return
     end
@@ -59116,7 +59052,7 @@ local startEndGameCutscene = ____endGameCutscene.startEndGameCutscene
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
 local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local skeldRoomReverseMap = ____skeldRoomMap.skeldRoomReverseMap
+local SKELD_ROOM_REVERSE_MAP = ____skeldRoomMap.SKELD_ROOM_REVERSE_MAP
 local ____stageAPI = require("packages.mod.src.stageAPI")
 local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
 --- From the "d" console command.
@@ -59198,7 +59134,7 @@ function ____exports.warp(self, params)
         roomName = params
     else
         local skeldRoom = num
-        roomName = skeldRoomReverseMap[skeldRoom]
+        roomName = SKELD_ROOM_REVERSE_MAP[skeldRoom]
         if roomName == nil then
             print("Failed to find the room name for room ID: " .. tostring(skeldRoom))
             return
@@ -59802,7 +59738,6 @@ local ____exports = {}
 local muteSoundEffects, removeAllNPCs, removeAllGridEntities
 local ____common = require("packages.common.src.index")
 local SocketCommandModToServer = ____common.SocketCommandModToServer
-local TASK_DESCRIPTIONS = ____common.TASK_DESCRIPTIONS
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
@@ -59810,6 +59745,7 @@ local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.in
 local arrayRemoveInPlace = ____isaacscript_2Dcommon.arrayRemoveInPlace
 local game = ____isaacscript_2Dcommon.game
 local getNPCs = ____isaacscript_2Dcommon.getNPCs
+local log = ____isaacscript_2Dcommon.log
 local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
 local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local sfxManager = ____isaacscript_2Dcommon.sfxManager
@@ -59825,8 +59761,6 @@ local ____send = require("packages.mod.src.network.send")
 local sendTCP = ____send.sendTCP
 local ____setupPlayersAndUI = require("packages.mod.src.setupPlayersAndUI")
 local setupPlayerAndUI = ____setupPlayersAndUI.setupPlayerAndUI
-local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local skeldRoomReverseMap = ____skeldRoomMap.skeldRoomReverseMap
 local ____stageAPI = require("packages.mod.src.stageAPI")
 local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
 local ____utils = require("packages.mod.src.utils")
@@ -59842,16 +59776,14 @@ function ____exports.taskLeave(self)
     if g.game == nil or g.game.currentTask == nil then
         return
     end
-    local taskDescription = TASK_DESCRIPTIONS[g.game.currentTask]
-    local roomName = skeldRoomReverseMap[taskDescription.room]
     g.game.currentTask = nil
     g.game.endTaskTime = Isaac.GetTime()
     local elapsedTime = g.game.endTaskTime - g.game.startTaskTime
-    Isaac.DebugString("Task took: " .. tostring(elapsedTime))
+    log("Task took: " .. tostring(elapsedTime))
     setupPlayerAndUI(nil)
     enableMinimapAPI(nil)
     ____exports.clearRoomEntities(nil)
-    goToStageAPIRoom(nil, roomName, taskDescription.returnGridIndex)
+    goToStageAPIRoom(nil, g.game.taskReturnRoomName, g.game.taskReturnRoomGridIndex)
 end
 function ____exports.clearRoomEntities(self)
     removeAllMatchingEntities(nil, EntityType.BOMB)
@@ -60931,7 +60863,6 @@ function ____exports.identifyCollectibles(self)
     setupRound(nil)
 end
 function ____exports.identifyCollectibleButtonPressed(self, num)
-    Isaac.DebugString("correctItemIndex: " .. tostring(correctCollectibleIndex))
     if num == correctCollectibleIndex + 1 then
         correctSelection(nil)
     else
@@ -63333,7 +63264,7 @@ local loadMap = ____loadMap.loadMap
 local ____minimapAPI = require("packages.mod.src.minimapAPI")
 local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
 local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local skeldRoomReverseMap = ____skeldRoomMap.skeldRoomReverseMap
+local SKELD_ROOM_REVERSE_MAP = ____skeldRoomMap.SKELD_ROOM_REVERSE_MAP
 local ____stageAPI = require("packages.mod.src.stageAPI")
 local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
 local ____killed = require("packages.mod.src.commands.killed")
@@ -63376,7 +63307,7 @@ function ____exports.commandReconnect(self, data)
         return
     end
     if data.room ~= SkeldRoom.CAFETERIA then
-        local roomName = skeldRoomReverseMap[data.room]
+        local roomName = SKELD_ROOM_REVERSE_MAP[data.room]
         goToStageAPIRoom(nil, roomName)
     end
     setPlayerPosition(nil, data.enterGridIndex)
@@ -64153,6 +64084,7 @@ local ____common = require("packages.common.src.index")
 local FAKE_TASK = ____common.FAKE_TASK
 local MeetingType = ____common.MeetingType
 local Role = ____common.Role
+local SkeldRoom = ____common.SkeldRoom
 local SocketCommandModToServer = ____common.SocketCommandModToServer
 local Task = ____common.Task
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
@@ -64161,6 +64093,7 @@ local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
 local asNumber = ____isaacscript_2Dcommon.asNumber
 local getPlayerCloserThan = ____isaacscript_2Dcommon.getPlayerCloserThan
+local getRoomGridIndex = ____isaacscript_2Dcommon.getRoomGridIndex
 local sfxManager = ____isaacscript_2Dcommon.sfxManager
 local ____ButtonSubType = require("packages.mod.src.enums.ButtonSubType")
 local ButtonSubType = ____ButtonSubType.ButtonSubType
@@ -64168,8 +64101,12 @@ local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
 local ____send = require("packages.mod.src.network.send")
 local sendTCP = ____send.sendTCP
+local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
+local SKELD_ROOM_REVERSE_MAP = ____skeldRoomMap.SKELD_ROOM_REVERSE_MAP
 local ____stageAPI = require("packages.mod.src.stageAPI")
 local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
+local ____stageAPISubroutines = require("packages.mod.src.stageAPISubroutines")
+local getStageAPIRoomName = ____stageAPISubroutines.getStageAPIRoomName
 local ____buttonsBehindKeyBlocks = require("packages.mod.src.tasks.buttonsBehindKeyBlocks")
 local buttonsBehindKeyBlocksButtonPressed = ____buttonsBehindKeyBlocks.buttonsBehindKeyBlocksButtonPressed
 local ____fixWires = require("packages.mod.src.tasks.fixWires")
@@ -64314,6 +64251,8 @@ function buttonPressedGoToTask(self, effect)
         error("Failed to read the task from a task button.")
     end
     g.game.currentTask = g.game.role == Role.IMPOSTER and FAKE_TASK or task
+    g.game.taskReturnRoomName = getStageAPIRoomName(nil) or SKELD_ROOM_REVERSE_MAP[SkeldRoom.CAFETERIA]
+    g.game.taskReturnRoomGridIndex = getRoomGridIndex(nil)
     goToStageAPIRoom(nil, "Task")
 end
 function buttonPressedEmergency(self)
@@ -65003,6 +64942,7 @@ return ____exports
 ["packages.mod.src.features.drawRoomDescription"] = function(...) 
 local ____exports = {}
 local ____common = require("packages.common.src.index")
+local FAKE_TASK = ____common.FAKE_TASK
 local MAX_PLAYERS = ____common.MAX_PLAYERS
 local TASK_DESCRIPTIONS = ____common.TASK_DESCRIPTIONS
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
@@ -65030,13 +64970,13 @@ function ____exports.postRender(self)
     local room = game:GetRoom()
     local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
     local position = Isaac.WorldToRenderPosition(worldPosition)
+    if g.game.currentTask == FAKE_TASK then
+        drawFontText(nil, "Fake Task", position)
+        return
+    end
     if g.game.currentTask ~= nil then
         local taskDescription = TASK_DESCRIPTIONS[g.game.currentTask]
-        drawFontText(
-            nil,
-            "Task: " .. tostring(taskDescription.name),
-            position
-        )
+        drawFontText(nil, "Task: " .. taskDescription.name, position)
         return
     end
     if inLobby(nil) then
@@ -65227,62 +65167,6 @@ function ____exports.postRender(self)
     while readUDP(nil) do
     end
 end
-return ____exports
- end,
-["packages.mod.src.network.udpData"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ArrayMap = ____lualib.__TS__ArrayMap
-local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
-local RENDER_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.RENDER_FRAMES_PER_SECOND
-local FieldType = FieldType or ({})
-FieldType.SIGNED_CHAR = "b"
-FieldType.UNSIGNED_CHAR = "B"
-FieldType.SIGNED_SHORT = "h"
-FieldType.UNSIGNED_SHORT = "H"
-FieldType.SIGNED_INT = "i"
-FieldType.UNSIGNED_INT = "I"
-FieldType.SIGNED_LONG = "l"
-FieldType.UNSIGNED_LONG = "L"
-FieldType.FLOAT = "f"
-FieldType.DOUBLE = "d"
-FieldType.STRING = "s"
-FieldType.CHAR_SEQUENCE = "cn"
-____exports.UDP_BEACON_MESSAGE = "HELLO"
-____exports.UDP_BEACON_FIELDS = {
-    {"gameID", "I"},
-    {"userID", "I"},
-    {
-        "message",
-        "c" .. tostring(#____exports.UDP_BEACON_MESSAGE)
-    }
-}
-____exports.UDP_BEACON_DATA_FORMAT = table.concat(
-    __TS__ArrayMap(
-        ____exports.UDP_BEACON_FIELDS,
-        function(____, tuple) return tuple[2] end
-    ),
-    ","
-)
-____exports.UDP_BEACON_INTERVAL = 10 * RENDER_FRAMES_PER_SECOND
-____exports.UDP_POSITION_FIELDS = {
-    {"gameID", FieldType.UNSIGNED_INT},
-    {"userID", FieldType.UNSIGNED_INT},
-    {"x", FieldType.FLOAT},
-    {"y", FieldType.FLOAT},
-    {"room", FieldType.UNSIGNED_INT},
-    {"animation", "c20"},
-    {"animationFrame", FieldType.UNSIGNED_INT},
-    {"overlayAnimation", "c20"},
-    {"overlayAnimationFrame", FieldType.UNSIGNED_INT}
-}
-____exports.UDP_POSITION_DATA_FORMAT = table.concat(
-    __TS__ArrayMap(
-        ____exports.UDP_POSITION_FIELDS,
-        function(____, tuple) return tuple[2] end
-    ),
-    ","
-)
 return ____exports
  end,
 ["packages.mod.src.network.udp"] = function(...) 

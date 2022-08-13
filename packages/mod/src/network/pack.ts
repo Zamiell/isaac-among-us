@@ -1,11 +1,11 @@
 import { SocketCommandModToServer, SocketCommandModToServerData } from "common";
 import { jsonDecode, jsonEncode, log } from "isaacscript-common";
+import * as struct from "../lib/struct";
 import {
   UDPPositionInterface,
   UDP_POSITION_DATA_FORMAT,
   UDP_POSITION_FIELDS,
-} from "../constants";
-import * as struct from "../lib/struct";
+} from "./udpData";
 
 const DATA_SEPARATOR = " ";
 const DEBUG = false;

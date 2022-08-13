@@ -6,5 +6,4 @@ export interface TaskDescription {
   taskType: TaskType;
   room: SkeldRoom;
   gridIndex: number;
-  returnGridIndex: number;
 }

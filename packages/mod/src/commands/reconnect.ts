@@ -9,7 +9,7 @@ import { setupMeeting } from "../features/setupMeeting";
 import g from "../globals";
 import { loadMap } from "../loadMap";
 import { enableMinimapAPI } from "../minimapAPI";
-import { skeldRoomReverseMap } from "../skeldRoomMap";
+import { SKELD_ROOM_REVERSE_MAP } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
 import { convertPlayerToGhostForm } from "./killed";
 
@@ -50,7 +50,7 @@ export function commandReconnect(data: ReconnectDataToMod): void {
   }
 
   if (data.room !== SkeldRoom.CAFETERIA) {
-    const roomName = skeldRoomReverseMap[data.room];
+    const roomName = SKELD_ROOM_REVERSE_MAP[data.room];
     goToStageAPIRoom(roomName);
   }
 

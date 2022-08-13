@@ -90,7 +90,6 @@ function getRandomCollectibles(): CollectibleType[] {
 }
 
 export function identifyCollectibleButtonPressed(num: int): void {
-  Isaac.DebugString(`correctItemIndex: ${correctCollectibleIndex}`);
   if (num === correctCollectibleIndex + 1) {
     correctSelection();
   } else {

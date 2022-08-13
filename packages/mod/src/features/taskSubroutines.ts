@@ -1,9 +1,10 @@
-import { SocketCommandModToServer, TASK_DESCRIPTIONS } from "common";
+import { SocketCommandModToServer } from "common";
 import { EntityType, SoundEffect } from "isaac-typescript-definitions";
 import {
   arrayRemoveInPlace,
   game,
   getNPCs,
+  log,
   removeAllMatchingEntities,
   runNextGameFrame,
   sfxManager,
@@ -14,7 +15,6 @@ import g from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
 import { sendTCP } from "../network/send";
 import { setupPlayerAndUI } from "../setupPlayersAndUI";
-import { skeldRoomReverseMap } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
 import { removeGridEntity } from "../utils";
 import { isWallGridIndex } from "../wall";
@@ -63,19 +63,16 @@ export function taskLeave(): void {
     return;
   }
 
-  const taskDescription = TASK_DESCRIPTIONS[g.game.currentTask];
-  const roomName = skeldRoomReverseMap[taskDescription.room];
-
   g.game.currentTask = null;
   g.game.endTaskTime = Isaac.GetTime();
   const elapsedTime = g.game.endTaskTime - g.game.startTaskTime;
-  Isaac.DebugString(`Task took: ${elapsedTime}`);
+  log(`Task took: ${elapsedTime}`);
 
   setupPlayerAndUI();
   enableMinimapAPI();
 
   clearRoomEntities();
-  goToStageAPIRoom(roomName, taskDescription.returnGridIndex);
+  goToStageAPIRoom(g.game.taskReturnRoomName, g.game.taskReturnRoomGridIndex);
 }
 
 export function clearRoomEntities(): void {

@@ -2,7 +2,7 @@ import { SkeldRoom, SocketCommandModToServer } from "common";
 import { game } from "isaacscript-common";
 import g from "../globals";
 import { sendTCP } from "../network/send";
-import { skeldRoomMap } from "../skeldRoomMap";
+import { SKELD_ROOM_MAP } from "../skeldRoomMap";
 import { getStageAPIRoomName } from "../stageAPISubroutines";
 
 let sendEvents = true;
@@ -26,7 +26,7 @@ export function sendRoom(): void {
     return;
   }
 
-  const skeldRoom = skeldRoomMap.get(roomName);
+  const skeldRoom = SKELD_ROOM_MAP.get(roomName);
   if (skeldRoom === undefined || skeldRoom === SkeldRoom.TASK) {
     return;
   }

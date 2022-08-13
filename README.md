@@ -53,7 +53,7 @@ Are you interested in helping with development? Then fork the repository, make s
 - Install dependencies:
   - `yarn install`
 
-### 3) Change the Development Constant
+### 3) Change the Development Constants
 
 - In "packages/common/constants.ts", change `IS_DEV` to true.
 - In "packages/mod/constants.ts", change `USE_LOCAL_NETWORK` to true.

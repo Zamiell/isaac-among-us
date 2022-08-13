@@ -2,15 +2,23 @@ import {
   FAKE_TASK,
   MeetingType,
   Role,
+  SkeldRoom,
   SocketCommandModToServer,
   Task,
 } from "common";
 import { PressurePlateState, SoundEffect } from "isaac-typescript-definitions";
-import { asNumber, getPlayerCloserThan, sfxManager } from "isaacscript-common";
+import {
+  asNumber,
+  getPlayerCloserThan,
+  getRoomGridIndex,
+  sfxManager,
+} from "isaacscript-common";
 import { ButtonSubType } from "../enums/ButtonSubType";
 import g from "../globals";
 import { sendTCP } from "../network/send";
+import { SKELD_ROOM_REVERSE_MAP } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
+import { getStageAPIRoomName } from "../stageAPISubroutines";
 import { buttonsBehindKeyBlocksButtonPressed } from "../tasks/buttonsBehindKeyBlocks";
 import { fixWiresButtonPressed } from "../tasks/fixWires";
 import { identifyCollectibleButtonPressed } from "../tasks/identifyCollectibles";
@@ -156,6 +164,9 @@ function buttonPressedGoToTask(effect: EntityEffect) {
   }
 
   g.game.currentTask = g.game.role === Role.IMPOSTER ? FAKE_TASK : task;
+  g.game.taskReturnRoomName =
+    getStageAPIRoomName() ?? SKELD_ROOM_REVERSE_MAP[SkeldRoom.CAFETERIA];
+  g.game.taskReturnRoomGridIndex = getRoomGridIndex();
 
   goToStageAPIRoom("Task");
 }

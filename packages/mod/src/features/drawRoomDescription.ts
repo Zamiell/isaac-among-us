@@ -1,4 +1,4 @@
-import { MAX_PLAYERS, TASK_DESCRIPTIONS } from "common";
+import { FAKE_TASK, MAX_PLAYERS, TASK_DESCRIPTIONS } from "common";
 import { game } from "isaacscript-common";
 import g from "../globals";
 import { getSkeldRoom } from "../stageAPI";
@@ -25,6 +25,11 @@ export function postRender(): void {
   const room = game.GetRoom();
   const worldPosition = room.GetGridPosition(TEXT_GRID_INDEX);
   const position = Isaac.WorldToRenderPosition(worldPosition);
+
+  if (g.game.currentTask === FAKE_TASK) {
+    drawFontText("Fake Task", position);
+    return;
+  }
 
   if (g.game.currentTask !== null) {
     const taskDescription = TASK_DESCRIPTIONS[g.game.currentTask];
