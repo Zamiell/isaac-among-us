@@ -26,6 +26,8 @@ const USERNAME_FADE_DEATH = 0.25;
 const DEATH_SPRITE_OFFSET = Vector(-20, -10);
 const DEATH_ANIMATION_FINAL_FRAME = 55;
 
+const NO_USERNAME_ANIMATIONS: ReadonlySet<string> = new Set(["Trapdoor"]);
+
 /** Indexed by user ID. */
 const playerEffectMap = new Map<int, EntityRef>();
 
@@ -92,7 +94,9 @@ function drawOtherPlayersFromUDP() {
     const position = Vector(playerData.x, playerData.y);
     entity.Position = position;
 
-    drawUsername(playerData.userID, position);
+    if (!NO_USERNAME_ANIMATIONS.has(playerData.animation)) {
+      drawUsername(playerData.userID, position);
+    }
   }
 }
 

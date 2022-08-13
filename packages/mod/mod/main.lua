@@ -62199,15 +62199,15 @@ return ____exports
  end,
 ["packages.mod.src.features.drawOtherPlayers"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
-local __TS__New = ____lualib.__TS__New
-local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local Set = ____lualib.Set
+local __TS__New = ____lualib.__TS__New
+local Map = ____lualib.Map
+local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__StringSlice = ____lualib.__TS__StringSlice
 local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
 local ____exports = {}
-local drawOtherPlayersFromUDP, drawOtherPlayersBodies, drawOtherPlayersMeeting, getMultiplayerEntity, spawnPlayerEffect, setPlayerCharacter, setMultiplayerAnimation, MULTIPLAYER_ANM2_PREFIX, MULTIPLAYER_ANM2_SUFFIX, USERNAME_TEXT_OFFSET, USERNAME_FADE, USERNAME_FADE_DEATH, DEATH_SPRITE_OFFSET, DEATH_ANIMATION_FINAL_FRAME, playerEffectMap
+local drawOtherPlayersFromUDP, drawOtherPlayersBodies, drawOtherPlayersMeeting, getMultiplayerEntity, spawnPlayerEffect, setPlayerCharacter, setMultiplayerAnimation, MULTIPLAYER_ANM2_PREFIX, MULTIPLAYER_ANM2_SUFFIX, USERNAME_TEXT_OFFSET, USERNAME_FADE, USERNAME_FADE_DEATH, DEATH_SPRITE_OFFSET, DEATH_ANIMATION_FINAL_FRAME, NO_USERNAME_ANIMATIONS, playerEffectMap
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
@@ -62269,7 +62269,9 @@ function drawOtherPlayersFromUDP(self)
             )
             local position = Vector(playerData.x, playerData.y)
             entity.Position = position
-            ____exports.drawUsername(nil, playerData.userID, position)
+            if not NO_USERNAME_ANIMATIONS:has(playerData.animation) then
+                ____exports.drawUsername(nil, playerData.userID, position)
+            end
         end
         ::__continue8::
     end
@@ -62283,7 +62285,7 @@ function drawOtherPlayersBodies(self)
     for ____, body in ipairs(g.game.bodies) do
         do
             if body.room ~= room then
-                goto __continue14
+                goto __continue15
             end
             local entity = getMultiplayerEntity(nil, body.userID)
             entity.Visible = true
@@ -62307,7 +62309,7 @@ function drawOtherPlayersBodies(self)
             entity.Position = position
             ____exports.drawUsername(nil, body.userID, position)
         end
-        ::__continue14::
+        ::__continue15::
     end
 end
 function drawOtherPlayersMeeting(self)
@@ -62472,6 +62474,7 @@ USERNAME_FADE = 0.75
 USERNAME_FADE_DEATH = 0.25
 DEATH_SPRITE_OFFSET = Vector(-20, -10)
 DEATH_ANIMATION_FINAL_FRAME = 55
+NO_USERNAME_ANIMATIONS = __TS__New(Set, {"Trapdoor"})
 playerEffectMap = __TS__New(Map)
 function ____exports.postRender(self)
     if g.game == nil then
@@ -64754,11 +64757,12 @@ return ____exports
  end,
 ["packages.mod.src.features.vent"] = function(...) 
 local ____exports = {}
-local isVentClose, getClosestVent, VENT_DISTANCE
+local isVentClose, getClosestVent, checkJumpIn, VENT_DISTANCE
 local ____common = require("packages.common.src.index")
 local Role = ____common.Role
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
 local getEffects = ____isaacscript_2Dcommon.getEffects
+local getLastFrameOfAnimation = ____isaacscript_2Dcommon.getLastFrameOfAnimation
 local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
 local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
 local ____globals = require("packages.mod.src.globals")
@@ -64793,6 +64797,23 @@ function getClosestVent(self)
     end
     return closestVent
 end
+function checkJumpIn(self, player)
+    if g.game == nil then
+        return
+    end
+    local sprite = player:GetSprite()
+    if not sprite:IsPlaying("Trapdoor") then
+        return
+    end
+    local frame = sprite:GetFrame()
+    local lastFrame = getLastFrameOfAnimation(nil, sprite)
+    if frame ~= lastFrame then
+        return
+    end
+    player:StopExtraAnimation()
+    player.Visible = false
+    g.game.inVent = true
+end
 VENT_DISTANCE = 60
 function ____exports.ableToVent(self)
     local ourPlayer = getOurPlayer(nil)
@@ -64809,7 +64830,11 @@ function ____exports.useVent(self)
     local player = Isaac.GetPlayer()
     player.Position = closestVent.Position
     player.ControlsEnabled = false
-    g.game.inVent = true
+    player:PlayExtraAnimation("Trapdoor")
+end
+function ____exports.postRender(self)
+    local player = Isaac.GetPlayer()
+    checkJumpIn(nil, player)
 end
 return ____exports
  end,
@@ -65335,7 +65360,7 @@ function sendBeacon(self)
     sendUDP(nil, packedData)
 end
 function sendPosition(self)
-    if g.game == nil or g.userID == nil or g.username == nil then
+    if g.userID == nil or g.username == nil or g.game == nil or g.game.inVent then
         return
     end
     local player = Isaac.GetPlayer()
@@ -65404,6 +65429,7 @@ local errors = require("packages.mod.src.features.errors")
 local restartOnNextFrame = require("packages.mod.src.features.restartOnNextFrame")
 local startGameCutscene = require("packages.mod.src.features.startGameCutscene")
 local startMeeting = require("packages.mod.src.features.startMeeting")
+local vent = require("packages.mod.src.features.vent")
 local welcomeNotification = require("packages.mod.src.features.welcomeNotification")
 local socket = require("packages.mod.src.network.socket")
 local udp = require("packages.mod.src.network.udp")
@@ -65427,6 +65453,7 @@ function main(self)
     actionUI:postRender()
     connectedIcon:postRender()
     chatCallbacks:postRender()
+    vent:postRender()
     blackSprite:postRender()
     startGameCutscene:postRender()
     endGameCutscene:postRender()

@@ -1,5 +1,5 @@
 import { Role } from "common";
-import { getEffects } from "isaacscript-common";
+import { getEffects, getLastFrameOfAnimation } from "isaacscript-common";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import g from "../globals";
 import { getOurPlayer } from "../players";
@@ -67,5 +67,32 @@ export function useVent(): void {
   const player = Isaac.GetPlayer();
   player.Position = closestVent.Position;
   player.ControlsEnabled = false;
+  player.PlayExtraAnimation("Trapdoor");
+}
+
+export function postRender(): void {
+  const player = Isaac.GetPlayer();
+  checkJumpIn(player);
+}
+
+function checkJumpIn(player: EntityPlayer) {
+  if (g.game === null) {
+    return;
+  }
+
+  const sprite = player.GetSprite();
+  if (!sprite.IsPlaying("Trapdoor")) {
+    return;
+  }
+
+  const frame = sprite.GetFrame();
+  const lastFrame = getLastFrameOfAnimation(sprite);
+  if (frame !== lastFrame) {
+    return;
+  }
+
+  player.StopExtraAnimation();
+  player.Visible = false;
+
   g.game.inVent = true;
 }

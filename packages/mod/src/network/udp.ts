@@ -60,7 +60,12 @@ function sendBeacon() {
 }
 
 function sendPosition() {
-  if (g.game === null || g.userID === null || g.username === null) {
+  if (
+    g.userID === null ||
+    g.username === null ||
+    g.game === null ||
+    g.game.inVent
+  ) {
     return;
   }
 
