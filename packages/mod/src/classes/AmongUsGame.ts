@@ -103,9 +103,9 @@ export class AmongUsGame {
     return player === undefined ? undefined : player.username;
   }
 
-  isPlayerJoined(userID: int): boolean {
+  isImposter(userID: int): boolean {
     const player = this.getPlayerFromUserID(userID);
-    return player !== undefined;
+    return player !== undefined && this.imposterUserIDs.includes(player.userID);
   }
 
   logBodies(): void {

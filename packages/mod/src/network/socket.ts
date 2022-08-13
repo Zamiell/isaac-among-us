@@ -2,10 +2,11 @@ import { SocketCommandModToServer, SocketCommandServerToMod } from "common";
 import { asString, log } from "isaacscript-common";
 import { commandMap } from "../commandMap";
 import g from "../globals";
-import * as players from "../players";
+import { PlayerData } from "../interfaces/PlayerData";
 import { unpackTCPMsg, unpackUDPPlayerMessage } from "./pack";
 import { sendTCP } from "./send";
 import * as socketClient from "./socketClient";
+import { UDPPositionInterface } from "./udpData";
 
 const DEBUG = true;
 
@@ -113,7 +114,34 @@ function readUDP() {
 
   // Only player positions are sent over the UDP socket.
   const playerMessage = unpackUDPPlayerMessage(data);
-  players.updatePlayerMap(playerMessage);
+  updatePlayerMap(playerMessage);
 
   return true;
+}
+
+export function updatePlayerMap(
+  playerPositionMessage: UDPPositionInterface,
+): void {
+  if (g.game === null) {
+    return;
+  }
+
+  if (playerPositionMessage.gameID !== g.game.id) {
+    return;
+  }
+
+  const isaacFrameCount = Isaac.GetFrameCount();
+
+  const playerData: PlayerData = {
+    userID: playerPositionMessage.userID,
+    x: playerPositionMessage.x,
+    y: playerPositionMessage.y,
+    room: playerPositionMessage.room,
+    animation: playerPositionMessage.animation,
+    animationFrame: playerPositionMessage.animationFrame,
+    overlayAnimation: playerPositionMessage.overlayAnimation,
+    overlayAnimationFrame: playerPositionMessage.overlayAnimationFrame,
+    renderFrameUpdated: isaacFrameCount,
+  };
+  g.game.playerMap.set(playerData.userID, playerData);
 }

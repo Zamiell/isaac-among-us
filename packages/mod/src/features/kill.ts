@@ -48,17 +48,18 @@ function getClosestAliveCrewMember(): PlayerData | undefined {
   const otherPlayersData = [...g.game.playerMap.values()];
   const aliveCrewMembersInRoom = otherPlayersData.filter((otherPlayerData) => {
     if (g.game === null) {
-      return;
+      return false;
     }
 
     const playerDescription = g.game.getPlayerFromUserID(
       otherPlayerData.userID,
     );
+
     return (
       playerDescription !== undefined &&
       playerDescription.alive &&
-      !g.game.imposterUserIDs.includes(playerDescription.userID) &&
-      otherPlayerData.room !== room
+      !g.game.isImposter(playerDescription.userID) &&
+      otherPlayerData.room === room
     );
   });
 

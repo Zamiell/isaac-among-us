@@ -10,7 +10,6 @@ export interface PlayerData {
   /** In world position. */
   y: float;
 
-  /** The absolute value of the room grid index. */
   room: SkeldRoom;
 
   animation: string;

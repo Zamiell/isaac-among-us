@@ -5,13 +5,14 @@ import {
   enableAllInputs,
   game,
   getEnumValues,
+  getMapPartialMatch,
   isKeyboardPressed,
   keyboardToString,
   RENDER_FRAMES_PER_SECOND,
   saveDataManager,
 } from "isaacscript-common";
 import { addLocalChat } from "../chat";
-import { chatCommandFunctions } from "../chatCommandFunctions";
+import { chatCommandFunctionMap } from "../chatCommandFunctions";
 import { MOD_NAME } from "../constants";
 import { HexColors } from "../enums/HexColors";
 import g from "../globals";
@@ -200,16 +201,16 @@ function executeChatCommand(msg: string) {
   if (command === undefined) {
     return;
   }
-  const lowercaseCommand = command.toLowerCase();
-  const args = [...segments];
 
-  const chatCommandFunction = chatCommandFunctions.get(lowercaseCommand);
-  if (chatCommandFunction === undefined) {
+  const resultTuple = getMapPartialMatch(command, chatCommandFunctionMap);
+  if (resultTuple === undefined) {
     addLocalChat(`Unknown command: ${command}`);
     return;
   }
 
-  const onlineCommand = !OFFLINE_COMMANDS.has(lowercaseCommand);
+  const [commandName, commandFunction] = resultTuple;
+
+  const onlineCommand = !OFFLINE_COMMANDS.has(commandName);
   if (onlineCommand && !socketClient.isConnected()) {
     addLocalChat(
       `You can only perform this command when connected to the ${MOD_NAME} server.`,
@@ -217,7 +218,8 @@ function executeChatCommand(msg: string) {
     return;
   }
 
-  chatCommandFunction(args);
+  const args = [...segments];
+  commandFunction(args);
 }
 
 function appendHistory() {
@@ -271,7 +273,7 @@ keyFunctionMap.set(Keyboard.TAB, () => {
   }
 
   const partialCommand = inputText.slice(COMMAND_PREFIX.length);
-  const commands = chatCommandFunctions.keys();
+  const commands = chatCommandFunctionMap.keys();
   for (const command of commands) {
     if (command.startsWith(partialCommand)) {
       inputText = COMMAND_PREFIX + command;

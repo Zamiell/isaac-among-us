@@ -55915,6 +55915,7 @@ local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArrayFind = ____lualib.__TS__ArrayFind
+local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
 local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
 local __TS__ObjectEntries = ____lualib.__TS__ObjectEntries
 local ____exports = {}
@@ -56011,9 +56012,9 @@ function AmongUsGame.prototype.getPlayerUsername(self, userID)
     end
     return ____temp_2
 end
-function AmongUsGame.prototype.isPlayerJoined(self, userID)
+function AmongUsGame.prototype.isImposter(self, userID)
     local player = self:getPlayerFromUserID(userID)
-    return player ~= nil
+    return player ~= nil and __TS__ArrayIncludes(self.imposterUserIDs, player.userID)
 end
 function AmongUsGame.prototype.logBodies(self)
     __TS__ArrayForEach(
@@ -56711,27 +56712,6 @@ function ____exports.getOurPlayerIndex(self)
         ____temp_0 = ourPlayer.index
     end
     return ____temp_0
-end
-function ____exports.updatePlayerMap(self, playerPositionMessage)
-    if g.game == nil then
-        return
-    end
-    if playerPositionMessage.gameID ~= g.game.id then
-        return
-    end
-    local isaacFrameCount = Isaac.GetFrameCount()
-    local playerData = {
-        userID = playerPositionMessage.userID,
-        x = playerPositionMessage.x,
-        y = playerPositionMessage.y,
-        room = playerPositionMessage.room,
-        animation = playerPositionMessage.animation,
-        animationFrame = playerPositionMessage.animationFrame,
-        overlayAnimation = playerPositionMessage.overlayAnimation,
-        overlayAnimationFrame = playerPositionMessage.overlayAnimationFrame,
-        renderFrameUpdated = isaacFrameCount
-    }
-    g.game.playerMap:set(playerData.userID, playerData)
 end
 return ____exports
  end,
@@ -57877,14 +57857,14 @@ local ____stageAPI = require("packages.mod.src.stageAPI")
 local getSkeldRoom = ____stageAPI.getSkeldRoom
 local ____utils = require("packages.mod.src.utils")
 local amOwner = ____utils.amOwner
-____exports.chatCommandFunctions = __TS__New(Map)
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap = __TS__New(Map)
+____exports.chatCommandFunctionMap:set(
     "connect",
     function()
         connectChatCommand(nil, false)
     end
 )
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap:set(
     "create",
     function(____, args)
         if #args == 0 then
@@ -57900,13 +57880,13 @@ ____exports.chatCommandFunctions:set(
         sendTCP(nil, SocketCommandModToServer.CREATE, {name = name, password = password})
     end
 )
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap:set(
     "credits",
     function(____, _args)
         addLocalChat(nil, "The Among Us Mod was made by Zamiel. It makes use of DeadInfinity's StageAPI library, Sentinel's collision library, and Somdudewillson's stage backdrops; special thanks goes to them. Thanks also goes to JSG, im_tem, Wofsauge, and AgentCucco for providing technical assistance.")
     end
 )
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap:set(
     "debug",
     function(____, _args)
         if g.game == nil then
@@ -57916,26 +57896,26 @@ ____exports.chatCommandFunctions:set(
         sendTCP(nil, SocketCommandModToServer.DEBUG, {gameID = g.game.id})
     end
 )
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap:set(
     "disconnect",
     function(____, _args)
         socketClient:disconnect()
     end
 )
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap:set(
     "echo",
     function(____, args)
         local text = table.concat(args, " ")
         addLocalChat(nil, text)
     end
 )
-____exports.chatCommandFunctions:set(
-    "gamelist",
+____exports.chatCommandFunctionMap:set(
+    "gameList",
     function(____, _args)
         sendTCP(nil, SocketCommandModToServer.GAME_LIST, {})
     end
 )
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap:set(
     "help",
     function(____, _args)
         if g.loggedIn then
@@ -57949,7 +57929,7 @@ ____exports.chatCommandFunctions:set(
         g.welcomeNotificationEnabled = false
     end
 )
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap:set(
     "join",
     function(____, args)
         if #args == 0 then
@@ -57969,8 +57949,8 @@ ____exports.chatCommandFunctions:set(
         sendTCP(nil, SocketCommandModToServer.JOIN, {name = name, password = password, created = false})
     end
 )
-____exports.chatCommandFunctions:set(
-    "killme",
+____exports.chatCommandFunctionMap:set(
+    "killMe",
     function(____, _args)
         if g.game == nil or g.userID == nil then
             return
@@ -57989,7 +57969,7 @@ ____exports.chatCommandFunctions:set(
         })
     end
 )
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap:set(
     "leave",
     function(____, _args)
         if g.game == nil then
@@ -57999,14 +57979,14 @@ ____exports.chatCommandFunctions:set(
         sendTCP(nil, SocketCommandModToServer.LEAVE, {gameID = g.game.id})
     end
 )
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap:set(
     "log",
     function(____, _args)
         logTable(g.game)
     end
 )
-____exports.chatCommandFunctions:set("password", passwordChatCommand)
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap:set("password", passwordChatCommand)
+____exports.chatCommandFunctionMap:set(
     "revive",
     function(____, _args)
         if g.game == nil then
@@ -58015,7 +57995,7 @@ ____exports.chatCommandFunctions:set(
         sendTCP(nil, SocketCommandModToServer.REVIVE, {gameID = g.game.id})
     end
 )
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap:set(
     "start",
     function(____, _args)
         if g.game == nil then
@@ -58029,7 +58009,7 @@ ____exports.chatCommandFunctions:set(
         sendTCP(nil, SocketCommandModToServer.START, {gameID = g.game.id})
     end
 )
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap:set(
     "terminate",
     function(____, _args)
         if g.game == nil then
@@ -58043,8 +58023,17 @@ ____exports.chatCommandFunctions:set(
         sendTCP(nil, SocketCommandModToServer.TERMINATE, {gameID = g.game.id})
     end
 )
-____exports.chatCommandFunctions:set("username", usernameChatCommand)
-____exports.chatCommandFunctions:set(
+____exports.chatCommandFunctionMap:set(
+    "userID",
+    function(____, _args)
+        addLocalChat(
+            nil,
+            "Your user ID is: " .. tostring(g.userID)
+        )
+    end
+)
+____exports.chatCommandFunctionMap:set("username", usernameChatCommand)
+____exports.chatCommandFunctionMap:set(
     "vote",
     function(____, args)
         local nameVotedFor = args[1]
@@ -58084,8 +58073,8 @@ ____exports.chatCommandFunctions:set(
         sendTCP(nil, SocketCommandModToServer.VOTE, {gameID = g.game.id, userIDVotedFor = playerVotedFor.userID, skip = false})
     end
 )
-____exports.chatCommandFunctions:set(
-    "voteskip",
+____exports.chatCommandFunctionMap:set(
+    "voteSkip",
     function(____, _args)
         if g.game == nil then
             addLocalChat(nil, "You can only perform that command in a game.")
@@ -59360,6 +59349,7 @@ local disableAllInputs = ____isaacscript_2Dcommon.disableAllInputs
 local enableAllInputs = ____isaacscript_2Dcommon.enableAllInputs
 local game = ____isaacscript_2Dcommon.game
 local getEnumValues = ____isaacscript_2Dcommon.getEnumValues
+local getMapPartialMatch = ____isaacscript_2Dcommon.getMapPartialMatch
 local isKeyboardPressed = ____isaacscript_2Dcommon.isKeyboardPressed
 local keyboardToString = ____isaacscript_2Dcommon.keyboardToString
 local RENDER_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.RENDER_FRAMES_PER_SECOND
@@ -59367,7 +59357,7 @@ local saveDataManager = ____isaacscript_2Dcommon.saveDataManager
 local ____chat = require("packages.mod.src.chat")
 local addLocalChat = ____chat.addLocalChat
 local ____chatCommandFunctions = require("packages.mod.src.chatCommandFunctions")
-local chatCommandFunctions = ____chatCommandFunctions.chatCommandFunctions
+local chatCommandFunctionMap = ____chatCommandFunctions.chatCommandFunctionMap
 local ____constants = require("packages.mod.src.constants")
 local MOD_NAME = ____constants.MOD_NAME
 local ____HexColors = require("packages.mod.src.enums.HexColors")
@@ -59444,19 +59434,19 @@ function executeChatCommand(self, msg)
     if command == nil then
         return
     end
-    local lowercaseCommand = string.lower(command)
-    local args = {table.unpack(segments)}
-    local chatCommandFunction = chatCommandFunctions:get(lowercaseCommand)
-    if chatCommandFunction == nil then
+    local resultTuple = getMapPartialMatch(nil, command, chatCommandFunctionMap)
+    if resultTuple == nil then
         addLocalChat(nil, "Unknown command: " .. command)
         return
     end
-    local onlineCommand = not OFFLINE_COMMANDS:has(lowercaseCommand)
+    local commandName, commandFunction = table.unpack(resultTuple)
+    local onlineCommand = not OFFLINE_COMMANDS:has(commandName)
     if onlineCommand and not socketClient:isConnected() then
         addLocalChat(nil, ("You can only perform this command when connected to the " .. MOD_NAME) .. " server.")
         return
     end
-    chatCommandFunction(nil, args)
+    local args = {table.unpack(segments)}
+    commandFunction(nil, args)
 end
 function appendHistory(self)
     if #v.persistent.inputHistory > 0 then
@@ -59568,7 +59558,7 @@ keyFunctionMap:set(
             return
         end
         local partialCommand = __TS__StringSlice(inputText, #COMMAND_PREFIX)
-        local commands = chatCommandFunctions:keys()
+        local commands = chatCommandFunctionMap:keys()
         for ____, command in __TS__Iterator(commands) do
             if __TS__StringStartsWith(command, partialCommand) then
                 inputText = COMMAND_PREFIX .. command
@@ -64614,7 +64604,6 @@ return ____exports
 ["packages.mod.src.features.kill"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__Spread = ____lualib.__TS__Spread
-local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local ____exports = {}
 local isCrewMemberClose, getClosestAliveCrewMember, KILL_DISTANCE
@@ -64652,10 +64641,10 @@ function getClosestAliveCrewMember(self)
         otherPlayersData,
         function(____, otherPlayerData)
             if g.game == nil then
-                return
+                return false
             end
             local playerDescription = g.game:getPlayerFromUserID(otherPlayerData.userID)
-            return playerDescription ~= nil and playerDescription.alive and not __TS__ArrayIncludes(g.game.imposterUserIDs, playerDescription.userID) and otherPlayerData.room ~= room
+            return playerDescription ~= nil and playerDescription.alive and not g.game:isImposter(playerDescription.userID) and otherPlayerData.room == room
         end
     )
     local closestCrewMember
@@ -65199,7 +65188,6 @@ local ____commandMap = require("packages.mod.src.commandMap")
 local commandMap = ____commandMap.commandMap
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
-local players = require("packages.mod.src.players")
 local ____pack = require("packages.mod.src.network.pack")
 local unpackTCPMsg = ____pack.unpackTCPMsg
 local unpackUDPPlayerMessage = ____pack.unpackUDPPlayerMessage
@@ -65267,8 +65255,29 @@ function readUDP(self)
         return false
     end
     local playerMessage = unpackUDPPlayerMessage(nil, data)
-    players:updatePlayerMap(playerMessage)
+    ____exports.updatePlayerMap(nil, playerMessage)
     return true
+end
+function ____exports.updatePlayerMap(self, playerPositionMessage)
+    if g.game == nil then
+        return
+    end
+    if playerPositionMessage.gameID ~= g.game.id then
+        return
+    end
+    local isaacFrameCount = Isaac.GetFrameCount()
+    local playerData = {
+        userID = playerPositionMessage.userID,
+        x = playerPositionMessage.x,
+        y = playerPositionMessage.y,
+        room = playerPositionMessage.room,
+        animation = playerPositionMessage.animation,
+        animationFrame = playerPositionMessage.animationFrame,
+        overlayAnimation = playerPositionMessage.overlayAnimation,
+        overlayAnimationFrame = playerPositionMessage.overlayAnimationFrame,
+        renderFrameUpdated = isaacFrameCount
+    }
+    g.game.playerMap:set(playerData.userID, playerData)
 end
 DEBUG = true
 function ____exports.postRender(self)
