@@ -14,7 +14,7 @@ import * as errors from "../features/errors";
 import * as restartOnNextFrame from "../features/restartOnNextFrame";
 import * as startGameCutscene from "../features/startGameCutscene";
 import * as startMeeting from "../features/startMeeting";
-import * as vent from "../features/vent";
+import * as vents from "../features/vents";
 import * as welcomeNotification from "../features/welcomeNotification";
 import * as socket from "../network/socket";
 import * as udp from "../network/udp";
@@ -45,7 +45,7 @@ function main() {
   actionUI.postRender();
   connectedIcon.postRender();
   chatCallbacks.postRender();
-  vent.postRender();
+  vents.postRender();
 
   blackSprite.postRender(); // The black sprite has to be drawn before the text.
   startGameCutscene.postRender();

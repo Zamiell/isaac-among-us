@@ -1,6 +1,6 @@
 import { SkeldRoom } from "common";
 
-export const SKELD_ROOM_MAP: ReadonlyMap<string, SkeldRoom> = new Map([
+const SKELD_ROOM_MAP: ReadonlyMap<string, SkeldRoom> = new Map([
   ["Cafeteria", SkeldRoom.CAFETERIA],
   ["Admin Hall", SkeldRoom.ADMIN_HALL],
   ["Admin", SkeldRoom.ADMIN],
@@ -22,10 +22,16 @@ export const SKELD_ROOM_MAP: ReadonlyMap<string, SkeldRoom> = new Map([
   ["Shields", SkeldRoom.SHIELDS],
   ["Communication Hall", SkeldRoom.COMMUNICATION_HALL],
   ["Communication", SkeldRoom.COMMUNICATION],
+
   ["Task", SkeldRoom.TASK],
+  ["Lobby", SkeldRoom.LOBBY],
 ]);
 
-export const SKELD_ROOM_REVERSE_MAP: {
+export function getSkeldRoomFromName(roomName: string): SkeldRoom | undefined {
+  return SKELD_ROOM_MAP.get(roomName);
+}
+
+const SKELD_ROOM_REVERSE_MAP: {
   readonly [key in SkeldRoom]: string;
 } = {
   [SkeldRoom.CAFETERIA]: "Cafeteria",
@@ -53,3 +59,11 @@ export const SKELD_ROOM_REVERSE_MAP: {
   [SkeldRoom.TASK]: "Task",
   [SkeldRoom.LOBBY]: "Lobby",
 } as const;
+
+export function getSkeldRoomName(room: SkeldRoom): string {
+  return SKELD_ROOM_REVERSE_MAP[room];
+}
+
+export function getSkeldRoomNames(): string[] {
+  return Object.values(SKELD_ROOM_REVERSE_MAP);
+}

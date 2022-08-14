@@ -1,8 +1,9 @@
 import { IS_DEV, SkeldRoom } from "common";
+import { getPartialMatch, printConsole } from "isaacscript-common";
 import { startAutoLogin } from "./features/autoLogin";
 import { startEndGameCutscene } from "./features/endGameCutscene";
 import g from "./globals";
-import { SKELD_ROOM_REVERSE_MAP } from "./skeldRoomMap";
+import { getSkeldRoomName, getSkeldRoomNames } from "./skeldRoomMap";
 import { goToStageAPIRoom } from "./stageAPI";
 
 /** From the "d" console command. */
@@ -71,19 +72,29 @@ export function injectTestPlayers(): void {
 
 export function warp(params: string): void {
   let roomName: string | undefined;
+
   const num = tonumber(params);
   if (num === undefined) {
-    roomName = params;
-  } else {
-    const skeldRoom = num as SkeldRoom;
-    roomName = SKELD_ROOM_REVERSE_MAP[skeldRoom];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (roomName === undefined) {
-      print(`Failed to find the room name for room ID: ${skeldRoom}`);
+    const roomNames = getSkeldRoomNames();
+    const partialMatch = getPartialMatch(params, roomNames);
+    if (partialMatch === undefined) {
+      printConsole(`Failed to find the room name corresponding to: ${params}`);
       return;
     }
+
+    roomName = partialMatch;
+  } else {
+    const room = num as SkeldRoom;
+    const potentialRoomName = getSkeldRoomName(room);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (potentialRoomName === undefined) {
+      printConsole(`Failed to find the room name for room ID: ${room}`);
+      return;
+    }
+
+    roomName = potentialRoomName;
   }
 
   goToStageAPIRoom(roomName);
-  print(`Warped to room: ${roomName}`);
+  printConsole(`Warped to room: ${roomName}`);
 }

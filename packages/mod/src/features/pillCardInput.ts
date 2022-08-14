@@ -2,6 +2,7 @@ import { ButtonAction } from "isaac-typescript-definitions";
 import { isActionPressedOnAnyInput, todo } from "isaacscript-common";
 import { VentState } from "../enums/VentState";
 import g from "../globals";
+import { ventSwitchRoom } from "./vents";
 
 let isPressed = false;
 
@@ -25,7 +26,8 @@ function checkInput() {
 }
 
 function pillCardPressed() {
-  if (g.game === null || g.game.ventState !== VentState.IN_VENT) {
+  if (g.game !== null && g.game.ventState === VentState.IN_VENT) {
+    ventSwitchRoom();
     return;
   }
 

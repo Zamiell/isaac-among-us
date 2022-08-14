@@ -4,7 +4,7 @@ import { VentState } from "../enums/VentState";
 import g from "../globals";
 import { ableToKillAPlayer, kill } from "./kill";
 import { ableToReportDeadBody, reportDeadBody } from "./report";
-import { ableToVent, jumpInVent, jumpOutVent } from "./vent";
+import { ableToVent, jumpInVent, jumpOutVent } from "./vents";
 
 let isPressed = false;
 

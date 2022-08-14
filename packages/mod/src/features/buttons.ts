@@ -11,7 +11,7 @@ import { asNumber, getPlayerCloserThan, sfxManager } from "isaacscript-common";
 import { ButtonSubType } from "../enums/ButtonSubType";
 import g from "../globals";
 import { sendTCP } from "../network/send";
-import { SKELD_ROOM_REVERSE_MAP } from "../skeldRoomMap";
+import { getSkeldRoomName } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";
 import { buttonsBehindKeyBlocksButtonPressed } from "../tasks/buttonsBehindKeyBlocks";
 import { fixWiresButtonPressed } from "../tasks/fixWires";
@@ -160,7 +160,7 @@ function buttonPressedGoToTask(effect: EntityEffect) {
   const taskDescription = TASK_DESCRIPTIONS[task];
 
   g.game.currentTask = g.game.role === Role.IMPOSTER ? FAKE_TASK : task;
-  g.game.taskReturnRoomName = SKELD_ROOM_REVERSE_MAP[taskDescription.room];
+  g.game.taskReturnRoomName = getSkeldRoomName(taskDescription.room);
   g.game.taskReturnGridIndex = taskDescription.returnGridIndex;
 
   goToStageAPIRoom("Task");

@@ -21123,9 +21123,11 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.functions.string"] = function(...) 
 local ____lualib = require("lualib_bundle")
+local __TS__ArraySort = ____lualib.__TS__ArraySort
 local __TS__StringReplaceAll = ____lualib.__TS__StringReplaceAll
-local __TS__StringSlice = ____lualib.__TS__StringSlice
 local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local __TS__StringSlice = ____lualib.__TS__StringSlice
 local __TS__StringEndsWith = ____lualib.__TS__StringEndsWith
 local ____exports = {}
 function ____exports.capitalizeFirstLetter(self, ____string)
@@ -21133,6 +21135,34 @@ function ____exports.capitalizeFirstLetter(self, ____string)
     local capitalizedFirstLetter = string.upper(firstCharacter)
     local restOfString = string.sub(____string, 2)
     return capitalizedFirstLetter .. restOfString
+end
+--- Helper function to get the closest value from an array of strings based on partial search text.
+-- For the purposes of this function, both search text and the array are converted to lowercase
+-- before attempting to find a match.
+-- 
+-- For example:
+-- 
+-- ```ts
+-- const array = ["foo", "bar"];
+-- const searchText = "f";
+-- const match = getPartialMatch(array, searchText); // match is now equal to "foo"
+-- 
+-- @returns If a match was found, returns the array element. If a match was not
+-- found, returns undefined.
+-- ```
+function ____exports.getPartialMatch(self, searchText, array)
+    __TS__ArraySort(array)
+    searchText = string.lower(searchText)
+    searchText = __TS__StringReplaceAll(searchText, " ", "")
+    local matchingElements = __TS__ArrayFilter(
+        array,
+        function(____, element) return __TS__StringStartsWith(
+            string.lower(element),
+            searchText
+        ) end
+    )
+    __TS__ArraySort(matchingElements)
+    return matchingElements[1]
 end
 function ____exports.removeAllCharacters(self, ____string, character)
     return __TS__StringReplaceAll(____string, character, "")
@@ -21480,13 +21510,13 @@ ____exports["repeat"] = function(self, n, func)
 end
 --- Helper function to signify that the enclosing code block is not yet complete. Using this function
 -- is similar to writing a "TODO" comment, but it has the benefit of preventing ESLint errors due to
--- early returns.
+-- unused variables or early returns.
 -- 
 -- When you see this function, it simply means that the programmer intends to add in more code to
 -- this spot later.
 -- 
 -- This function is variadic, meaning that you can pass as many arguments as you want. (This is
--- useful as a means to prevent lint warnings.)
+-- useful as a means to prevent unused variables.)
 -- 
 -- This function does not actually do anything. (It is an "empty" function.)
 function ____exports.todo(self, ...)
@@ -49046,13 +49076,11 @@ local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__Spread = ____lualib.__TS__Spread
-local __TS__ArraySort = ____lualib.__TS__ArraySort
-local __TS__StringReplaceAll = ____lualib.__TS__StringReplaceAll
-local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
-local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local ____exports = {}
 local ____array = require("lua_modules.isaacscript-common.dist.functions.array")
 local sumArray = ____array.sumArray
+local ____string = require("lua_modules.isaacscript-common.dist.functions.string")
+local getPartialMatch = ____string.getPartialMatch
 --- Helper function to copy a map. (You can also use a Map constructor to accomplish this task.)
 function ____exports.copyMap(self, oldMap)
     local newMap = __TS__New(Map)
@@ -49082,24 +49110,13 @@ end
 -- ```
 function ____exports.getMapPartialMatch(self, searchText, map)
     local keys = {__TS__Spread(map:keys())}
-    __TS__ArraySort(keys)
-    searchText = string.lower(searchText)
-    searchText = __TS__StringReplaceAll(searchText, " ", "")
-    local matchingKeys = __TS__ArrayFilter(
-        keys,
-        function(____, key) return __TS__StringStartsWith(
-            string.lower(key),
-            searchText
-        ) end
-    )
-    __TS__ArraySort(matchingKeys)
-    local matchingKey = matchingKeys[1]
+    local matchingKey = getPartialMatch(nil, searchText, keys)
     if matchingKey == nil then
         return nil
     end
     local value = map:get(matchingKey)
     if value == nil then
-        return nil
+        error("Failed to get the map value corresponding to the partial match of: " .. matchingKey)
     end
     return {matchingKey, value}
 end
@@ -57103,6 +57120,7 @@ function ____exports.removeGridEntity(self, gridEntity)
     room:RemoveGridEntity(gridIndex, 0, false)
     room:Update()
 end
+--- A special spawn function for Among Us objects. Allows spawning by grid index.
 function ____exports.spawnEntity(self, entityType, variant, subType, gridIndex, depthOffset, playAppearAnimation)
     if depthOffset == nil then
         depthOffset = -100
@@ -57298,16 +57316,6 @@ ____exports.CarpetSubTypeCustom.BLOCK = 11
 ____exports.CarpetSubTypeCustom[____exports.CarpetSubTypeCustom.BLOCK] = "BLOCK"
 return ____exports
  end,
-["packages.mod.src.enums.EffectVariantCustom"] = function(...) 
-local ____exports = {}
-____exports.EffectVariantCustom = {
-    STAGE_API_DOOR = Isaac.GetEntityVariantByName("StageAPIDoor"),
-    VENT = Isaac.GetEntityVariantByName("Vent"),
-    BUTTON = Isaac.GetEntityVariantByName("Button"),
-    MULTIPLAYER_PLAYER = Isaac.GetEntityVariantByName("Multiplayer Player")
-}
-return ____exports
- end,
 ["packages.mod.src.enums.EntityTypeCustom"] = function(...) 
 local ____exports = {}
 ____exports.EntityTypeCustom = {
@@ -57347,8 +57355,6 @@ local ____BoxVariant = require("packages.mod.src.enums.BoxVariant")
 local BoxVariant = ____BoxVariant.BoxVariant
 local ____CarpetSubTypeCustom = require("packages.mod.src.enums.CarpetSubTypeCustom")
 local CarpetSubTypeCustom = ____CarpetSubTypeCustom.CarpetSubTypeCustom
-local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
-local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
 local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
 local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
 local ____utils = require("packages.mod.src.utils")
@@ -57478,15 +57484,6 @@ function ____exports.spawnSpikesLine(self, gridIndex, num, direction)
         end
     end
 end
-function ____exports.spawnVent(self, gridIndex)
-    spawnEntity(
-        nil,
-        EntityType.EFFECT,
-        EffectVariantCustom.VENT,
-        0,
-        gridIndex
-    )
-end
 return ____exports
  end,
 ["packages.mod.src.features.lobby"] = function(...) 
@@ -57596,10 +57593,11 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
+local __TS__ObjectValues = ____lualib.__TS__ObjectValues
 local ____exports = {}
 local ____common = require("packages.common.src.index")
 local SkeldRoom = ____common.SkeldRoom
-____exports.SKELD_ROOM_MAP = __TS__New(Map, {
+local SKELD_ROOM_MAP = __TS__New(Map, {
     {"Cafeteria", SkeldRoom.CAFETERIA},
     {"Admin Hall", SkeldRoom.ADMIN_HALL},
     {"Admin", SkeldRoom.ADMIN},
@@ -57621,9 +57619,13 @@ ____exports.SKELD_ROOM_MAP = __TS__New(Map, {
     {"Shields", SkeldRoom.SHIELDS},
     {"Communication Hall", SkeldRoom.COMMUNICATION_HALL},
     {"Communication", SkeldRoom.COMMUNICATION},
-    {"Task", SkeldRoom.TASK}
+    {"Task", SkeldRoom.TASK},
+    {"Lobby", SkeldRoom.LOBBY}
 })
-____exports.SKELD_ROOM_REVERSE_MAP = {
+function ____exports.getSkeldRoomFromName(self, roomName)
+    return SKELD_ROOM_MAP:get(roomName)
+end
+local SKELD_ROOM_REVERSE_MAP = {
     [SkeldRoom.CAFETERIA] = "Cafeteria",
     [SkeldRoom.ADMIN_HALL] = "Admin Hall",
     [SkeldRoom.ADMIN] = "Admin",
@@ -57648,6 +57650,12 @@ ____exports.SKELD_ROOM_REVERSE_MAP = {
     [SkeldRoom.TASK] = "Task",
     [SkeldRoom.LOBBY] = "Lobby"
 }
+function ____exports.getSkeldRoomName(self, room)
+    return SKELD_ROOM_REVERSE_MAP[room]
+end
+function ____exports.getSkeldRoomNames(self)
+    return __TS__ObjectValues(SKELD_ROOM_REVERSE_MAP)
+end
 return ____exports
  end,
 ["packages.mod.src.stageAPISubroutines"] = function(...) 
@@ -57677,7 +57685,7 @@ local g = ____globals.default
 local ____send = require("packages.mod.src.network.send")
 local sendTCP = ____send.sendTCP
 local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local SKELD_ROOM_MAP = ____skeldRoomMap.SKELD_ROOM_MAP
+local getSkeldRoomFromName = ____skeldRoomMap.getSkeldRoomFromName
 local ____stageAPISubroutines = require("packages.mod.src.stageAPISubroutines")
 local getStageAPIRoomName = ____stageAPISubroutines.getStageAPIRoomName
 function ____exports.sendRoom(self)
@@ -57688,7 +57696,7 @@ function ____exports.sendRoom(self)
     if roomName == nil then
         return
     end
-    local skeldRoom = SKELD_ROOM_MAP:get(roomName)
+    local skeldRoom = getSkeldRoomFromName(nil, roomName)
     if skeldRoom == nil or skeldRoom == SkeldRoom.TASK then
         return
     end
@@ -57731,7 +57739,7 @@ local sendRoom = ____sendGameEvents.sendRoom
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
 local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local SKELD_ROOM_MAP = ____skeldRoomMap.SKELD_ROOM_MAP
+local getSkeldRoomFromName = ____skeldRoomMap.getSkeldRoomFromName
 local ____stageAPISubroutines = require("packages.mod.src.stageAPISubroutines")
 local getStageAPIRoomName = ____stageAPISubroutines.getStageAPIRoomName
 function fixRoomEntrancePosition(self)
@@ -57792,7 +57800,7 @@ function ____exports.getSkeldRoom(self)
     if roomName == nil then
         return nil
     end
-    return SKELD_ROOM_MAP:get(roomName)
+    return getSkeldRoomFromName(nil, roomName)
 end
 function ____exports.getStageAPIDoors(self)
     if StageAPI == nil then
@@ -57826,7 +57834,7 @@ function ____exports.loadBackdrops(self)
     if roomName == nil then
         return nil
     end
-    local room = SKELD_ROOM_MAP:get(roomName)
+    local room = getSkeldRoomFromName(nil, roomName)
     if room == nil then
         return
     end
@@ -58629,6 +58637,16 @@ ____exports.ButtonSubType.TASK_8 = 13
 ____exports.ButtonSubType[____exports.ButtonSubType.TASK_8] = "TASK_8"
 return ____exports
  end,
+["packages.mod.src.enums.EffectVariantCustom"] = function(...) 
+local ____exports = {}
+____exports.EffectVariantCustom = {
+    STAGE_API_DOOR = Isaac.GetEntityVariantByName("StageAPIDoor"),
+    VENT = Isaac.GetEntityVariantByName("Vent"),
+    BUTTON = Isaac.GetEntityVariantByName("Button"),
+    MULTIPLAYER_PLAYER = Isaac.GetEntityVariantByName("Multiplayer Player")
+}
+return ____exports
+ end,
 ["packages.mod.src.features.buttonSubroutines"] = function(...) 
 local ____exports = {}
 local EMERGENCY_BUTTON_ANIMATION_SUFFIX, SPECIAL_BUTTON_ANIMATION_SUFFIX
@@ -59171,6 +59189,9 @@ local ____exports = {}
 local ____common = require("packages.common.src.index")
 local IS_DEV = ____common.IS_DEV
 local SkeldRoom = ____common.SkeldRoom
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
+local getPartialMatch = ____isaacscript_2Dcommon.getPartialMatch
+local printConsole = ____isaacscript_2Dcommon.printConsole
 local ____autoLogin = require("packages.mod.src.features.autoLogin")
 local startAutoLogin = ____autoLogin.startAutoLogin
 local ____endGameCutscene = require("packages.mod.src.features.endGameCutscene")
@@ -59178,7 +59199,8 @@ local startEndGameCutscene = ____endGameCutscene.startEndGameCutscene
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
 local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local SKELD_ROOM_REVERSE_MAP = ____skeldRoomMap.SKELD_ROOM_REVERSE_MAP
+local getSkeldRoomName = ____skeldRoomMap.getSkeldRoomName
+local getSkeldRoomNames = ____skeldRoomMap.getSkeldRoomNames
 local ____stageAPI = require("packages.mod.src.stageAPI")
 local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
 --- From the "d" console command.
@@ -59257,17 +59279,27 @@ function ____exports.warp(self, params)
     local roomName
     local num = tonumber(params)
     if num == nil then
-        roomName = params
-    else
-        local skeldRoom = num
-        roomName = SKELD_ROOM_REVERSE_MAP[skeldRoom]
-        if roomName == nil then
-            print("Failed to find the room name for room ID: " .. tostring(skeldRoom))
+        local roomNames = getSkeldRoomNames(nil)
+        local partialMatch = getPartialMatch(nil, params, roomNames)
+        if partialMatch == nil then
+            printConsole(nil, "Failed to find the room name corresponding to: " .. params)
             return
         end
+        roomName = partialMatch
+    else
+        local room = num
+        local potentialRoomName = getSkeldRoomName(nil, room)
+        if potentialRoomName == nil then
+            printConsole(
+                nil,
+                "Failed to find the room name for room ID: " .. tostring(room)
+            )
+            return
+        end
+        roomName = potentialRoomName
     end
     goToStageAPIRoom(nil, roomName)
-    print("Warped to room: " .. roomName)
+    printConsole(nil, "Warped to room: " .. roomName)
 end
 return ____exports
  end,
@@ -63395,7 +63427,7 @@ local loadMap = ____loadMap.loadMap
 local ____minimapAPI = require("packages.mod.src.minimapAPI")
 local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
 local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local SKELD_ROOM_REVERSE_MAP = ____skeldRoomMap.SKELD_ROOM_REVERSE_MAP
+local getSkeldRoomName = ____skeldRoomMap.getSkeldRoomName
 local ____stageAPI = require("packages.mod.src.stageAPI")
 local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
 local ____killed = require("packages.mod.src.commands.killed")
@@ -63438,7 +63470,7 @@ function ____exports.commandReconnect(self, data)
         return
     end
     if data.room ~= SkeldRoom.CAFETERIA then
-        local roomName = SKELD_ROOM_REVERSE_MAP[data.room]
+        local roomName = getSkeldRoomName(nil, data.room)
         goToStageAPIRoom(nil, roomName)
     end
     setPlayerPosition(nil, data.enterGridIndex)
@@ -64094,6 +64126,7 @@ function speed(self, player)
         player.MoveSpeed = 1
     end
     if IS_DEV then
+        player.MoveSpeed = 2
     end
 end
 function ____exports.init(self, mod)
@@ -64232,7 +64265,7 @@ local g = ____globals.default
 local ____send = require("packages.mod.src.network.send")
 local sendTCP = ____send.sendTCP
 local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local SKELD_ROOM_REVERSE_MAP = ____skeldRoomMap.SKELD_ROOM_REVERSE_MAP
+local getSkeldRoomName = ____skeldRoomMap.getSkeldRoomName
 local ____stageAPI = require("packages.mod.src.stageAPI")
 local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
 local ____buttonsBehindKeyBlocks = require("packages.mod.src.tasks.buttonsBehindKeyBlocks")
@@ -64380,7 +64413,7 @@ function buttonPressedGoToTask(self, effect)
     end
     local taskDescription = TASK_DESCRIPTIONS[task]
     g.game.currentTask = g.game.role == Role.IMPOSTER and FAKE_TASK or task
-    g.game.taskReturnRoomName = SKELD_ROOM_REVERSE_MAP[taskDescription.room]
+    g.game.taskReturnRoomName = getSkeldRoomName(nil, taskDescription.room)
     g.game.taskReturnGridIndex = taskDescription.returnGridIndex
     goToStageAPIRoom(nil, "Task")
 end
@@ -64775,11 +64808,78 @@ function ____exports.reportDeadBody(self)
 end
 return ____exports
  end,
-["packages.mod.src.features.vent"] = function(...) 
+["packages.mod.src.enums.Vent"] = function(...) 
 local ____exports = {}
-local isVentClose, getClosestVent, drawInstructions, checkJumpIn, checkJumpOut, VENT_DISTANCE, TEXT_GRID_INDEX
+--- Also see the `VENT_DESCRIPTIONS` object.
+____exports.Vent = {}
+____exports.Vent.UPPER_ENGINE = 0
+____exports.Vent[____exports.Vent.UPPER_ENGINE] = "UPPER_ENGINE"
+____exports.Vent.REACTOR_TOP = 1
+____exports.Vent[____exports.Vent.REACTOR_TOP] = "REACTOR_TOP"
+____exports.Vent.WEAPONS = 2
+____exports.Vent[____exports.Vent.WEAPONS] = "WEAPONS"
+____exports.Vent.NAVIGATION_TOP = 3
+____exports.Vent[____exports.Vent.NAVIGATION_TOP] = "NAVIGATION_TOP"
+____exports.Vent.CAFETERIA = 4
+____exports.Vent[____exports.Vent.CAFETERIA] = "CAFETERIA"
+____exports.Vent.NAVIGATION_HALL = 5
+____exports.Vent[____exports.Vent.NAVIGATION_HALL] = "NAVIGATION_HALL"
+____exports.Vent.ADMIN = 6
+____exports.Vent[____exports.Vent.ADMIN] = "ADMIN"
+____exports.Vent.MEDBAY = 7
+____exports.Vent[____exports.Vent.MEDBAY] = "MEDBAY"
+____exports.Vent.ELECTRICAL = 8
+____exports.Vent[____exports.Vent.ELECTRICAL] = "ELECTRICAL"
+____exports.Vent.SECURITY = 9
+____exports.Vent[____exports.Vent.SECURITY] = "SECURITY"
+____exports.Vent.NAVIGATION_BOTTOM = 10
+____exports.Vent[____exports.Vent.NAVIGATION_BOTTOM] = "NAVIGATION_BOTTOM"
+____exports.Vent.SHIELDS = 11
+____exports.Vent[____exports.Vent.SHIELDS] = "SHIELDS"
+____exports.Vent.REACTOR_BOTTOM = 12
+____exports.Vent[____exports.Vent.REACTOR_BOTTOM] = "REACTOR_BOTTOM"
+____exports.Vent.LOWER_ENGINE = 13
+____exports.Vent[____exports.Vent.LOWER_ENGINE] = "LOWER_ENGINE"
+return ____exports
+ end,
+["packages.mod.src.interfaces.VentDescription"] = function(...) 
+local ____exports = {}
+return ____exports
+ end,
+["packages.mod.src.objects.ventDescriptions"] = function(...) 
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local SkeldRoom = ____common.SkeldRoom
+local ____Vent = require("packages.mod.src.enums.Vent")
+local Vent = ____Vent.Vent
+____exports.VENT_DESCRIPTIONS = {
+    [Vent.UPPER_ENGINE] = {room = SkeldRoom.UPPER_ENGINE, gridIndex = 68, destination = Vent.REACTOR_TOP},
+    [Vent.REACTOR_TOP] = {room = SkeldRoom.REACTOR, gridIndex = 31, destination = Vent.UPPER_ENGINE},
+    [Vent.WEAPONS] = {room = SkeldRoom.WEAPONS, gridIndex = 81, destination = Vent.NAVIGATION_TOP},
+    [Vent.NAVIGATION_TOP] = {room = SkeldRoom.NAVIGATION, gridIndex = 16, destination = Vent.WEAPONS},
+    [Vent.CAFETERIA] = {room = SkeldRoom.CAFETERIA, gridIndex = 334, destination = Vent.NAVIGATION_HALL},
+    [Vent.NAVIGATION_HALL] = {room = SkeldRoom.NAVIGATION_HALL, gridIndex = 46, destination = Vent.ADMIN},
+    [Vent.ADMIN] = {room = SkeldRoom.ADMIN, gridIndex = 106, destination = Vent.CAFETERIA},
+    [Vent.MEDBAY] = {room = SkeldRoom.MEDBAY, gridIndex = 114, destination = Vent.ELECTRICAL},
+    [Vent.ELECTRICAL] = {room = SkeldRoom.ELECTRICAL, gridIndex = 16, destination = Vent.SECURITY},
+    [Vent.SECURITY] = {room = SkeldRoom.SECURITY, gridIndex = 27, destination = Vent.MEDBAY},
+    [Vent.NAVIGATION_BOTTOM] = {room = SkeldRoom.NAVIGATION, gridIndex = 106, destination = Vent.SHIELDS},
+    [Vent.SHIELDS] = {room = SkeldRoom.SHIELDS, gridIndex = 99, destination = Vent.NAVIGATION_BOTTOM},
+    [Vent.REACTOR_BOTTOM] = {room = SkeldRoom.REACTOR, gridIndex = 76, destination = Vent.LOWER_ENGINE},
+    [Vent.LOWER_ENGINE] = {room = SkeldRoom.LOWER_ENGINE, gridIndex = 114, destination = Vent.REACTOR_BOTTOM}
+}
+return ____exports
+ end,
+["packages.mod.src.features.vents"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ObjectValues = ____lualib.__TS__ObjectValues
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local ____exports = {}
+local getVentsForThisRoom, spawnVent, isVentClose, getClosestVent, drawInstructions, checkJumpIn, checkJumpOut, VENT_DISTANCE, TEXT_GRID_INDEX
 local ____common = require("packages.common.src.index")
 local Role = ____common.Role
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.index")
 local game = ____isaacscript_2Dcommon.game
 local getEffects = ____isaacscript_2Dcommon.getEffects
@@ -64790,12 +64890,42 @@ local ____VentState = require("packages.mod.src.enums.VentState")
 local VentState = ____VentState.VentState
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
+local ____ventDescriptions = require("packages.mod.src.objects.ventDescriptions")
+local VENT_DESCRIPTIONS = ____ventDescriptions.VENT_DESCRIPTIONS
 local ____players = require("packages.mod.src.players")
 local getOurPlayer = ____players.getOurPlayer
+local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
+local getSkeldRoomName = ____skeldRoomMap.getSkeldRoomName
+local ____stageAPI = require("packages.mod.src.stageAPI")
+local getSkeldRoom = ____stageAPI.getSkeldRoom
+local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
 local ____utils = require("packages.mod.src.utils")
 local drawFontText = ____utils.drawFontText
+local spawnEntity = ____utils.spawnEntity
 local ____actionSubroutines = require("packages.mod.src.features.actionSubroutines")
 local shouldShowActionButton = ____actionSubroutines.shouldShowActionButton
+function getVentsForThisRoom(self)
+    local room = getSkeldRoom(nil)
+    if room == nil then
+        return {}
+    end
+    local ventDescriptions = __TS__ObjectValues(VENT_DESCRIPTIONS)
+    return __TS__ArrayFilter(
+        ventDescriptions,
+        function(____, ventDescription) return ventDescription.room == room end
+    )
+end
+function spawnVent(self, ventDescription)
+    local vent = spawnEntity(
+        nil,
+        EntityType.EFFECT,
+        EffectVariantCustom.VENT,
+        0,
+        ventDescription.gridIndex
+    )
+    local data = vent:GetData()
+    data.destination = ventDescription.destination
+end
 function isVentClose(self)
     local player = Isaac.GetPlayer()
     local closestVent = getClosestVent(nil)
@@ -64868,6 +64998,12 @@ function checkJumpOut(self, player)
 end
 VENT_DISTANCE = 60
 TEXT_GRID_INDEX = 97
+function ____exports.spawnVents(self)
+    local vents = getVentsForThisRoom(nil)
+    for ____, ventDescription in ipairs(vents) do
+        spawnVent(nil, ventDescription)
+    end
+end
 function ____exports.ableToVent(self)
     local ourPlayer = getOurPlayer(nil)
     return g.game ~= nil and g.game.role == Role.IMPOSTER and g.game.ventState == VentState.NONE and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isVentClose(nil)
@@ -64906,6 +65042,23 @@ function ____exports.postRender(self)
     checkJumpIn(nil, player)
     checkJumpOut(nil, player)
 end
+function ____exports.ventSwitchRoom(self)
+    local closestVent = getClosestVent(nil)
+    if closestVent == nil then
+        return
+    end
+    local data = closestVent:GetData()
+    local destination = data.destination
+    if destination == nil then
+        return
+    end
+    local ventDescription = VENT_DESCRIPTIONS[destination]
+    if ventDescription == nil then
+        return
+    end
+    local roomName = getSkeldRoomName(nil, ventDescription.room)
+    goToStageAPIRoom(nil, roomName)
+end
 return ____exports
  end,
 ["packages.mod.src.features.actionUI"] = function(...) 
@@ -64922,8 +65075,8 @@ local ____kill = require("packages.mod.src.features.kill")
 local ableToKillAPlayer = ____kill.ableToKillAPlayer
 local ____report = require("packages.mod.src.features.report")
 local ableToReportDeadBody = ____report.ableToReportDeadBody
-local ____vent = require("packages.mod.src.features.vent")
-local ableToVent = ____vent.ableToVent
+local ____vents = require("packages.mod.src.features.vents")
+local ableToVent = ____vents.ableToVent
 function drawSprite(self, sprite)
     local bottomRightPos = getScreenBottomRightPos(nil)
     local position = bottomRightPos + OTHER_UI_BUTTON_OFFSET
@@ -65501,7 +65654,7 @@ local errors = require("packages.mod.src.features.errors")
 local restartOnNextFrame = require("packages.mod.src.features.restartOnNextFrame")
 local startGameCutscene = require("packages.mod.src.features.startGameCutscene")
 local startMeeting = require("packages.mod.src.features.startMeeting")
-local vent = require("packages.mod.src.features.vent")
+local vents = require("packages.mod.src.features.vents")
 local welcomeNotification = require("packages.mod.src.features.welcomeNotification")
 local socket = require("packages.mod.src.network.socket")
 local udp = require("packages.mod.src.network.udp")
@@ -65525,7 +65678,7 @@ function main(self)
     actionUI:postRender()
     connectedIcon:postRender()
     chatCallbacks:postRender()
-    vent:postRender()
+    vents:postRender()
     blackSprite:postRender()
     startGameCutscene:postRender()
     endGameCutscene:postRender()
@@ -65563,10 +65716,10 @@ local kill = ____kill.kill
 local ____report = require("packages.mod.src.features.report")
 local ableToReportDeadBody = ____report.ableToReportDeadBody
 local reportDeadBody = ____report.reportDeadBody
-local ____vent = require("packages.mod.src.features.vent")
-local ableToVent = ____vent.ableToVent
-local jumpInVent = ____vent.jumpInVent
-local jumpOutVent = ____vent.jumpOutVent
+local ____vents = require("packages.mod.src.features.vents")
+local ableToVent = ____vents.ableToVent
+local jumpInVent = ____vents.jumpInVent
+local jumpOutVent = ____vents.jumpOutVent
 function checkInput(self)
     if not isActionPressedOnAnyInput(nil, ButtonAction.BOMB) then
         isPressed = false
@@ -65621,6 +65774,8 @@ local ____VentState = require("packages.mod.src.enums.VentState")
 local VentState = ____VentState.VentState
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
+local ____vents = require("packages.mod.src.features.vents")
+local ventSwitchRoom = ____vents.ventSwitchRoom
 function checkInput(self)
     if not isActionPressedOnAnyInput(nil, ButtonAction.PILL_CARD) then
         isPressed = false
@@ -65633,7 +65788,8 @@ function checkInput(self)
     pillCardPressed(nil)
 end
 function pillCardPressed(self)
-    if g.game == nil or g.game.ventState ~= VentState.IN_VENT then
+    if g.game ~= nil and g.game.ventState == VentState.IN_VENT then
+        ventSwitchRoom(nil)
         return
     end
     todo(nil, "other actions")
@@ -65815,8 +65971,6 @@ local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
 local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
 local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
-local ____spawnObjects = require("packages.mod.src.spawnObjects")
-local spawnVent = ____spawnObjects.spawnVent
 local ____utils = require("packages.mod.src.utils")
 local spawnEntity = ____utils.spawnEntity
 function spawnAdminTable(self)
@@ -65846,9 +66000,7 @@ function spawnAdminTop(self)
     )
 end
 function ____exports.spawnAdminObjects(self)
-    local bottomLeftGridIndex = 106
     spawnAdminTable(nil)
-    spawnVent(nil, bottomLeftGridIndex)
     spawnAdminTop(nil)
 end
 return ____exports
@@ -65903,8 +66055,6 @@ local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
 local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
 local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
-local ____spawnObjects = require("packages.mod.src.spawnObjects")
-local spawnVent = ____spawnObjects.spawnVent
 local ____utils = require("packages.mod.src.utils")
 local spawnEntity = ____utils.spawnEntity
 function ____exports.spawnElectricalObjects(self)
@@ -65916,8 +66066,6 @@ function ____exports.spawnElectricalObjects(self)
         0,
         nextToTopLeftGridIndex
     )
-    local topLeftGridIndex = 16
-    spawnVent(nil, topLeftGridIndex)
     runNextGameFrame(
         nil,
         function()
@@ -65986,8 +66134,6 @@ local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
 local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
 local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
-local ____spawnObjects = require("packages.mod.src.spawnObjects")
-local spawnVent = ____spawnObjects.spawnVent
 local ____utils = require("packages.mod.src.utils")
 local spawnEntity = ____utils.spawnEntity
 function ____exports.spawnNavigationObjects(self)
@@ -65999,10 +66145,6 @@ function ____exports.spawnNavigationObjects(self)
         0,
         rightGridIndex
     )
-    local gridIndexTopLeft = 16
-    spawnVent(nil, gridIndexTopLeft)
-    local gridIndexBottomLeft = 106
-    spawnVent(nil, gridIndexBottomLeft)
     runNextGameFrame(
         nil,
         function()
@@ -66360,6 +66502,8 @@ local ____utils = require("packages.mod.src.utils")
 local removeGridEntity = ____utils.removeGridEntity
 local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
 local spawnGoToTaskButtons = ____buttonSpawn.spawnGoToTaskButtons
+local ____vents = require("packages.mod.src.features.vents")
+local spawnVents = ____vents.spawnVents
 function emptyRoom(self)
     for ____, entityType in ipairs(getEnumValues(nil, EntityTypeCustom)) do
         local entities = Isaac.FindByType(entityType)
@@ -66379,6 +66523,7 @@ function ____exports.postRoomLoad(self)
     end
     emptyRoom(nil)
     spawnGoToTaskButtons(nil)
+    spawnVents(nil)
     local setupFunction = functionMap:get(skeldRoom)
     if setupFunction ~= nil then
         setupFunction(nil)

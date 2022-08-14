@@ -24,6 +24,7 @@ import { spawnWeaponsObjects } from "../rooms/weapons";
 import { getSkeldRoom } from "../stageAPI";
 import { removeGridEntity } from "../utils";
 import { spawnGoToTaskButtons } from "./buttonSpawn";
+import { spawnVents } from "./vents";
 
 export function postRoomLoad(): void {
   if (g.game === null || !g.game.started) {
@@ -37,6 +38,7 @@ export function postRoomLoad(): void {
 
   emptyRoom();
   spawnGoToTaskButtons();
+  spawnVents();
   const setupFunction = functionMap.get(skeldRoom);
   if (setupFunction !== undefined) {
     setupFunction();

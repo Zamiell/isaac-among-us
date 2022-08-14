@@ -1,14 +1,51 @@
 import { Role } from "common";
+import { EntityType } from "isaac-typescript-definitions";
 import { game, getEffects, getLastFrameOfAnimation } from "isaacscript-common";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
+import { Vent } from "../enums/Vent";
 import { VentState } from "../enums/VentState";
 import g from "../globals";
+import { VentDescription } from "../interfaces/VentDescription";
+import { VENT_DESCRIPTIONS } from "../objects/ventDescriptions";
 import { getOurPlayer } from "../players";
-import { drawFontText } from "../utils";
+import { getSkeldRoomName } from "../skeldRoomMap";
+import { getSkeldRoom, goToStageAPIRoom } from "../stageAPI";
+import { drawFontText, spawnEntity } from "../utils";
 import { shouldShowActionButton } from "./actionSubroutines";
 
 const VENT_DISTANCE = 60;
 const TEXT_GRID_INDEX = 97;
+
+export function spawnVents(): void {
+  const vents = getVentsForThisRoom();
+  for (const ventDescription of vents) {
+    spawnVent(ventDescription);
+  }
+}
+
+function getVentsForThisRoom(): VentDescription[] {
+  const room = getSkeldRoom();
+  if (room === undefined) {
+    return [];
+  }
+
+  const ventDescriptions = Object.values(VENT_DESCRIPTIONS);
+  return ventDescriptions.filter(
+    (ventDescription) => ventDescription.room === room,
+  );
+}
+
+function spawnVent(ventDescription: VentDescription) {
+  const vent = spawnEntity(
+    EntityType.EFFECT,
+    EffectVariantCustom.VENT,
+    0,
+    ventDescription.gridIndex,
+  );
+
+  const data = vent.GetData();
+  data["destination"] = ventDescription.destination;
+}
 
 export function ableToVent(): boolean {
   const ourPlayer = getOurPlayer();
@@ -156,4 +193,26 @@ function checkJumpOut(player: EntityPlayer) {
   player.ControlsEnabled = true;
 
   g.game.ventState = VentState.NONE;
+}
+
+export function ventSwitchRoom(): void {
+  const closestVent = getClosestVent();
+  if (closestVent === undefined) {
+    return;
+  }
+
+  const data = closestVent.GetData();
+  const destination = data["destination"] as Vent | undefined;
+  if (destination === undefined) {
+    return;
+  }
+
+  const ventDescription = VENT_DESCRIPTIONS[destination];
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (ventDescription === undefined) {
+    return;
+  }
+
+  const roomName = getSkeldRoomName(ventDescription.room);
+  goToStageAPIRoom(roomName);
 }

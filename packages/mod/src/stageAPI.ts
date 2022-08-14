@@ -8,7 +8,7 @@ import { asNumber, game } from "isaacscript-common";
 import { inLobby } from "./features/lobby";
 import { sendRoom } from "./features/sendGameEvents";
 import g from "./globals";
-import { SKELD_ROOM_MAP } from "./skeldRoomMap";
+import { getSkeldRoomFromName } from "./skeldRoomMap";
 import { getStageAPIRoomName } from "./stageAPISubroutines";
 
 const BACKDROP_MAP: ReadonlyMap<SkeldRoom, string> = new Map([
@@ -43,7 +43,7 @@ export function getSkeldRoom(): SkeldRoom | undefined {
     return undefined;
   }
 
-  return SKELD_ROOM_MAP.get(roomName);
+  return getSkeldRoomFromName(roomName);
 }
 
 export function getStageAPIDoors(): StageAPICustomGridEntity[] {
@@ -123,7 +123,7 @@ export function loadBackdrops(): void {
     return undefined;
   }
 
-  const room = SKELD_ROOM_MAP.get(roomName);
+  const room = getSkeldRoomFromName(roomName);
   if (room === undefined) {
     return;
   }

@@ -28,6 +28,6 @@ function speed(player: EntityPlayer) {
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (IS_DEV) {
-    // player.MoveSpeed = 2;
+    player.MoveSpeed = 2;
   }
 }

@@ -135,6 +135,7 @@ export function removeGridEntity(gridEntity: GridEntity): void {
   room.Update();
 }
 
+/** A special spawn function for Among Us objects. Allows spawning by grid index. */
 export function spawnEntity(
   entityType: EntityType,
   variant: int,

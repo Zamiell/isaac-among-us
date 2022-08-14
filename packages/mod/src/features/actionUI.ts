@@ -3,7 +3,7 @@ import { initSprite } from "../sprite";
 import { OTHER_UI_BUTTON_OFFSET } from "./connectedIcon";
 import { ableToKillAPlayer } from "./kill";
 import { ableToReportDeadBody } from "./report";
-import { ableToVent } from "./vent";
+import { ableToVent } from "./vents";
 
 const sprites = {
   kill: initSprite("gfx/ui/kill.anm2"),

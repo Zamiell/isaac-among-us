@@ -7,7 +7,6 @@ import {
 import { game, spawnGridEntity } from "isaacscript-common";
 import { BoxVariant } from "./enums/BoxVariant";
 import { CarpetSubTypeCustom } from "./enums/CarpetSubTypeCustom";
-import { EffectVariantCustom } from "./enums/EffectVariantCustom";
 import { EntityTypeCustom } from "./enums/EntityTypeCustom";
 import { spawnEntity } from "./utils";
 
@@ -121,8 +120,4 @@ export function spawnSpikesLine(
     spawnSpikes(gridIndex);
     gridIndex += gridIncrement;
   }
-}
-
-export function spawnVent(gridIndex: int): void {
-  spawnEntity(EntityType.EFFECT, EffectVariantCustom.VENT, 0, gridIndex);
 }
