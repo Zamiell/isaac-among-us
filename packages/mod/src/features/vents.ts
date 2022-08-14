@@ -1,6 +1,11 @@
 import { Role } from "common";
 import { EntityType } from "isaac-typescript-definitions";
-import { game, getEffects, getLastFrameOfAnimation } from "isaacscript-common";
+import {
+  game,
+  getEffects,
+  getLastFrameOfAnimation,
+  VectorZero,
+} from "isaacscript-common";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import { Vent } from "../enums/Vent";
 import { VentState } from "../enums/VentState";
@@ -14,7 +19,7 @@ import { drawFontText, spawnEntity } from "../utils";
 import { shouldShowActionButton } from "./actionSubroutines";
 
 const VENT_DISTANCE = 60;
-const TEXT_GRID_INDEX = 97;
+const TEXT_GRID_INDEX = 7;
 
 export function spawnVents(): void {
   const vents = getVentsForThisRoom();
@@ -106,6 +111,7 @@ export function jumpInVent(): void {
 
   const player = Isaac.GetPlayer();
   player.Position = closestVent.Position;
+  player.Velocity = VectorZero;
   player.PlayExtraAnimation("Trapdoor");
   player.ControlsEnabled = false;
 
@@ -147,8 +153,9 @@ function drawInstructions() {
   const room = game.GetRoom();
   const worldPosition = room.GetGridPosition(TEXT_GRID_INDEX);
   const position = Isaac.WorldToRenderPosition(worldPosition);
+  const modifiedPosition = position.add(Vector(0, 160));
   const text = "Press [card] to switch rooms. Press [bomb] to leave.";
-  drawFontText(text, position);
+  drawFontText(text, modifiedPosition);
 }
 
 function checkJumpIn(player: EntityPlayer) {
@@ -214,5 +221,5 @@ export function ventSwitchRoom(): void {
   }
 
   const roomName = getSkeldRoomName(ventDescription.room);
-  goToStageAPIRoom(roomName);
+  goToStageAPIRoom(roomName, ventDescription.gridIndex);
 }

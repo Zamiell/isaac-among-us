@@ -64884,6 +64884,7 @@ local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.in
 local game = ____isaacscript_2Dcommon.game
 local getEffects = ____isaacscript_2Dcommon.getEffects
 local getLastFrameOfAnimation = ____isaacscript_2Dcommon.getLastFrameOfAnimation
+local VectorZero = ____isaacscript_2Dcommon.VectorZero
 local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
 local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
 local ____VentState = require("packages.mod.src.enums.VentState")
@@ -64959,8 +64960,9 @@ function drawInstructions(self)
     local room = game:GetRoom()
     local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
     local position = Isaac.WorldToRenderPosition(worldPosition)
+    local modifiedPosition = position + Vector(0, 160)
     local text = "Press [card] to switch rooms. Press [bomb] to leave."
-    drawFontText(nil, text, position)
+    drawFontText(nil, text, modifiedPosition)
 end
 function checkJumpIn(self, player)
     if g.game == nil then
@@ -64997,7 +64999,7 @@ function checkJumpOut(self, player)
     g.game.ventState = VentState.NONE
 end
 VENT_DISTANCE = 60
-TEXT_GRID_INDEX = 97
+TEXT_GRID_INDEX = 7
 function ____exports.spawnVents(self)
     local vents = getVentsForThisRoom(nil)
     for ____, ventDescription in ipairs(vents) do
@@ -65018,6 +65020,7 @@ function ____exports.jumpInVent(self)
     end
     local player = Isaac.GetPlayer()
     player.Position = closestVent.Position
+    player.Velocity = VectorZero
     player:PlayExtraAnimation("Trapdoor")
     player.ControlsEnabled = false
     g.game.ventState = VentState.JUMPING_IN
@@ -65057,7 +65060,7 @@ function ____exports.ventSwitchRoom(self)
         return
     end
     local roomName = getSkeldRoomName(nil, ventDescription.room)
-    goToStageAPIRoom(nil, roomName)
+    goToStageAPIRoom(nil, roomName, ventDescription.gridIndex)
 end
 return ____exports
  end,
