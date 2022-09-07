@@ -33,12 +33,19 @@ The mod is currently in [b]ALPHA[/b], which means that you will experience game-
 [*] To join an existing game, use the "/join" command. For example, "/join Alice-game". If the game is password-protected, then you need to specify the password after the name. For example "/join Alice-game hunter2".
 [*] When all of the players have joined the game, the owner of the game needs to use the "/start" command to start the game.
 
+[h2][b]Why does the mod require "--luadebug"?[/b][/h2]
+
+In order to communicate over the internet, this mod requires that you have the "--luadebug" flag turned on in your Steam settings. If you have it turned off, then the mod will show instructions for how to turn it on once you go into a run.
+
+Note that normally, you should not have this flag turned on, since it lets mods access your file system, which could be dangerous. Thus, make sure to turn the flag back off when you are done playing this mod.
+
+(This only thing that this mod uses the "--luadebug" flag for is to send network traffic to and from the server located at isaacracing.net, which is also used for racing other people with [url="https://steamcommunity.com/sharedfiles/filedetails/?id=857628390"]the Racing+ mod[/url].)
+
 [h2][b]Controls[/b][/h2]
 
 [*] Movement keys (e.g. W/A/S/D) - Move around.
 [*] Tear fire keys (e.g. Up/Down/Left/Right) - Move your head around. (You can't shoot any tears in this mod.)
-[*] Use active item (e.g. Space bar) - Interact with an object, like a vent.
-[*] Bomb (e.g. E) - Kill another player. (Only when playing as an imposter.)
+[*] Bomb (e.g. E) - Kill another player (when playing as an imposter) or interact with an object, like a vent.
 
 [h2][b]How to Play[/b][/h2]
 
@@ -56,25 +63,26 @@ Currently, many things from the original game are not implemented, such as camer
 
 [h2][b]How to Report a Bug[/b][/h2]
 
-The mod was written hastily and was not tested very well, so you will experience many bugs. You should report any bugs that you experience in the #bugs channel of the Discord server. [b]Please follow the bug reporting rules[/b] that are located in the pinned message of that channel.
+The mod is in alpha, so you will experience many bugs. You should report any bugs that you experience in the #bugs channel of the Discord server. [b]Please follow the bug reporting rules[/b] that are located in the pinned message of that channel.
 
 Any Steam workshop comments reporting bugs will be deleted.
 
 [h2][b]How to Ask Questions[/b][/h2]
 
-If you have a question about the mod, please post in the #help-and-questions channel in the [url=https://discord.gg/vTCw5Q34B7]Among Us in Isaac Discord server[/url]. You can also explicitly request that your question is added to this FAQ section.
+If you have a question about the mod, please post in the #help-and-questions channel in the Discord server (see above for link).
 
 Any Steam workshop comments asking questions will be deleted.
 
 [h2][b]How Can I Help?[/b][/h2]
 
 [*] The mod is [url=https://github.com/Zamiell/isaac-among-us]open source and located on GitHub[/url]. If you know how to code, you can help to fix bugs and add features.
-[*] Chat with the other developers by joining the #development channel of [url=https://discord.gg/vTCw5Q34B7]the Among Us in Isaac Discord server[/url].
-[*] If you want to submit an application to become a moderator, you can get in touch with an existing moderator.
+[*] Chat with the other developers by joining the #development channel of Discord server (see above for link).
 
 [h2][b]Cheating[/b][/h2]
 
-Please don't cheat. Just like in the original Among Us, it is possible to cheat by e.g. modifying the client, spoofing network traffic, and so on. Rather than ruin games for others, consider putting your skills towards the power of good by helping with development instead. (See the "How Can I Help?" section above.)
+Please don't cheat. If you suspect someone of cheating, please report them to a moderator in the Discord server (see above for link).
+
+Just like in the original Among Us, it is possible to cheat by e.g. modifying the client, spoofing network traffic, and so on. Rather than ruin games for others, consider putting your skills towards the power of good by helping with development instead. (See the "How Can I Help?" section above.)
 
 [h2][b]Community Guidelines[/b][/h2]
 

@@ -1,5 +1,4 @@
 TODO:
-- vents
 - imposter thing where you close the doors
 - imposter lights
 

@@ -6,7 +6,7 @@ import { setMapToFullVisibility, setMinimapAPIRoomIcon } from "./minimapAPI";
 import { setupPlayerAndUI } from "./setupPlayersAndUI";
 import { getStageAPIRoomMapID } from "./stageAPI";
 
-const MAP_ROOM_VARIANT = 99; // Set in the "map.xml" file
+const MAP_ROOM_VARIANT = 99; // Set in the "map.xml" file.
 
 export function loadMap(): void {
   setupPlayerAndUI();
