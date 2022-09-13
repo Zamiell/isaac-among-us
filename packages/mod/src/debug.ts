@@ -26,7 +26,6 @@ export function hotkeyFunction1(): void {
 export function hotkeyFunction2(): void {}
 
 export function injectTestPlayers(): void {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (g.game === null || g.game.players.length !== 1 || !IS_DEV) {
     return;
   }
@@ -86,7 +85,6 @@ export function warp(params: string): void {
   } else {
     const room = num as SkeldRoom;
     const potentialRoomName = getSkeldRoomName(room);
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (potentialRoomName === undefined) {
       printConsole(`Failed to find the room name for room ID: ${room}`);
       return;

@@ -14,7 +14,6 @@ export function commandKillMe(
     return;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!IS_DEV) {
     return;
   }

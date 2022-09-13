@@ -8,7 +8,7 @@ import { sendTCP } from "./send";
 import * as socketClient from "./socketClient";
 import { UDPPositionInterface } from "./udpData";
 
-const DEBUG = true;
+const DEBUG = true as boolean;
 
 // ModCallback.POST_RENDER (2)
 export function postRender(): void {
@@ -47,7 +47,6 @@ function readTCP() {
     return false;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (DEBUG) {
     log(`Got socket data: ${data}`);
   }

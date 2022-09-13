@@ -214,12 +214,19 @@ export function ventSwitchRoom(): void {
     return;
   }
 
-  const ventDescription = VENT_DESCRIPTIONS[destination];
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const ventDescription = getVentDescription(destination);
   if (ventDescription === undefined) {
     return;
   }
 
   const roomName = getSkeldRoomName(ventDescription.room);
+  if (roomName === undefined) {
+    return;
+  }
+
   goToStageAPIRoom(roomName, ventDescription.gridIndex);
+}
+
+function getVentDescription(vent: Vent): VentDescription | undefined {
+  return VENT_DESCRIPTIONS[vent];
 }

@@ -4,7 +4,6 @@ import { Game } from "./classes/Game";
 import { repeat } from "./utils";
 
 export function assignImpostors(game: Game): void {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (IS_DEV) {
     const firstPlayer = game.players[0];
     if (firstPlayer !== undefined) {

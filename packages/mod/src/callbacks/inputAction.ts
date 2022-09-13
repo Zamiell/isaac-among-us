@@ -97,7 +97,6 @@ function disableVanillaConsole(
   inputHook: InputHook,
   buttonAction: ButtonAction,
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (IS_DEV) {
     return undefined;
   }
@@ -110,7 +109,6 @@ function disableVanillaConsole(
 }
 
 function disableReset(inputHook: InputHook, buttonAction: ButtonAction) {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (IS_DEV) {
     return undefined;
   }

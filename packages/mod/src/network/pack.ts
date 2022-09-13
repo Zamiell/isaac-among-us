@@ -8,7 +8,7 @@ import {
 } from "./udpData";
 
 const DATA_SEPARATOR = " ";
-const DEBUG = false;
+const DEBUG = false as boolean;
 
 export function packTCPMsg<T extends SocketCommandModToServer>(
   command: T,
@@ -36,7 +36,6 @@ export function unpackTCPMsg(msg: string): [string, unknown] {
 }
 
 export function unpackUDPPlayerMessage(rawData: string): UDPPositionInterface {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (DEBUG) {
     log("Unpacking UDP message:");
   }
@@ -52,7 +51,6 @@ export function unpackUDPPlayerMessage(rawData: string): UDPPositionInterface {
     }
     playerMessage[name] = fieldData;
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (DEBUG) {
       log(`- ${name} - ${fieldData}`);
     }

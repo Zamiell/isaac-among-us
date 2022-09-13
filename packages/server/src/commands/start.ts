@@ -40,7 +40,6 @@ function validate(socket: Socket, extraData: ExtraCommandData) {
     return false;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const minPlayers = IS_DEV ? DEV_MIN_PLAYERS : MIN_PLAYERS;
   if (game.players.length < minPlayers) {
     sendError(
