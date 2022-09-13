@@ -60,7 +60,7 @@ const SKELD_ROOM_REVERSE_MAP: {
   [SkeldRoom.LOBBY]: "Lobby",
 } as const;
 
-export function getSkeldRoomName(room: SkeldRoom): string | undefined {
+export function getSkeldRoomName(room: SkeldRoom): string {
   return SKELD_ROOM_REVERSE_MAP[room];
 }
 

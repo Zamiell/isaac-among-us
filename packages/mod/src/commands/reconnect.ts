@@ -51,7 +51,9 @@ export function commandReconnect(data: ReconnectDataToMod): void {
 
   if (data.room !== SkeldRoom.CAFETERIA) {
     const roomName = getSkeldRoomName(data.room);
-    goToStageAPIRoom(roomName);
+    if (roomName !== undefined) {
+      goToStageAPIRoom(roomName);
+    }
   }
 
   setPlayerPosition(data.enterGridIndex);
