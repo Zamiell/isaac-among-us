@@ -220,10 +220,6 @@ export function ventSwitchRoom(): void {
   }
 
   const roomName = getSkeldRoomName(ventDescription.room);
-  if (roomName === undefined) {
-    return;
-  }
-
   goToStageAPIRoom(roomName, ventDescription.gridIndex);
 }
 
