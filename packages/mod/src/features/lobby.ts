@@ -6,8 +6,6 @@ import {
 } from "isaac-typescript-definitions";
 import {
   asNumber,
-  forceNewLevelCallback,
-  forceNewRoomCallback,
   game,
   getEffectiveStage,
   getNPCs,
@@ -21,6 +19,7 @@ import {
 } from "isaacscript-common";
 import g from "../globals";
 import { disableMinimapAPI } from "../minimapAPI";
+import { mod } from "../mod";
 import { setupPlayerAndUI } from "../setupPlayersAndUI";
 import { spawnBox } from "../spawnObjects";
 import { consoleCommand } from "../utils";
@@ -59,13 +58,13 @@ function gotoLobby() {
   ) {
     // Since we might be going to a new floor on frame 0, we have to specify that the PostNewLevel
     // callback should fire.
-    forceNewLevelCallback();
+    mod.forceNewLevelCallback();
     consoleCommand(`stage ${STAGE_ARGUMENT_FOR_LOBBY}`);
   }
 
   // Since we might be going to a new room on frame 0, we have to specify that the PostNewRoom
   // callback should fire.
-  forceNewRoomCallback();
+  mod.forceNewRoomCallback();
   consoleCommand(`goto d.${ROOM_VARIANT_FOR_LOBBY}`);
   // We will not actually be sent to the room until a frame passes, so wait until the next
   // PostNewRoom fires.

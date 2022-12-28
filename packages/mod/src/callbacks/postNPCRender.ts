@@ -1,8 +1,9 @@
 import { EntityType, ModCallback } from "isaac-typescript-definitions";
 import { VectorZero } from "isaacscript-common";
 import { EntityTypeCustom } from "../enums/EntityTypeCustom";
+import { mod } from "../mod";
 
-export function init(mod: Mod): void {
+export function init(): void {
   mod.AddCallback(
     ModCallback.POST_NPC_RENDER,
     keepStationary,

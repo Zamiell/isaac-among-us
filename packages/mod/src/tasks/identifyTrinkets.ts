@@ -5,7 +5,6 @@ import {
   game,
   getRandomArrayElement,
   getRandomArrayIndex,
-  getTrinketArray,
   getTrinketName,
   repeat,
   sfxManager,
@@ -15,6 +14,7 @@ import { resetAllButtons } from "../features/buttonSubroutines";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
+import { mod } from "../mod";
 import { initGlowingItemSprite } from "../sprite";
 import { drawFontText, movePlayerToGridIndex } from "../utils";
 
@@ -75,7 +75,7 @@ function setupRound() {
 }
 
 function getRandomTrinkets(): TrinketType[] {
-  const trinketArray = getTrinketArray();
+  const trinketArray = mod.getTrinketArray();
 
   const randomTrinkets: TrinketType[] = [];
   repeat(NUM_RANDOM_TRINKETS, () => {

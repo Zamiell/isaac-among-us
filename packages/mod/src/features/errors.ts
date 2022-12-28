@@ -1,12 +1,7 @@
 import { Difficulty } from "isaac-typescript-definitions";
-import {
-  game,
-  getLastCollectibleType,
-  LAST_VANILLA_COLLECTIBLE_TYPE,
-  log,
-  saveDataManager,
-} from "isaacscript-common";
+import { game, LAST_VANILLA_COLLECTIBLE_TYPE, log } from "isaacscript-common";
 import { MOD_NAME } from "../constants";
+import { mod } from "../mod";
 import { isLuaDebugEnabled } from "../network/socketClient";
 
 const STARTING_X = 115;
@@ -30,7 +25,7 @@ const v = {
 };
 
 export function init(): void {
-  saveDataManager("errors", v);
+  mod.saveDataManager("errors", v);
 }
 
 export function postGameStarted(): boolean {
@@ -40,7 +35,7 @@ export function postGameStarted(): boolean {
 // Check to see if there are any mods enabled that have added custom items. (It is difficult to
 // detect other mods in other ways.)
 function areOtherModsEnabled() {
-  const lastCollectibleType = getLastCollectibleType();
+  const lastCollectibleType = mod.getLastCollectibleType();
 
   if (lastCollectibleType !== LAST_VANILLA_COLLECTIBLE_TYPE) {
     log(

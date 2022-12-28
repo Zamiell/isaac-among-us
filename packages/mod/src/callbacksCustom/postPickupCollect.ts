@@ -1,8 +1,9 @@
 import { PickupVariant } from "isaac-typescript-definitions";
-import { ModCallbackCustom, ModUpgraded } from "isaacscript-common";
+import { ModCallbackCustom } from "isaacscript-common";
+import { mod } from "../mod";
 import * as collectPennies from "../tasks/collectPennies";
 
-export function init(mod: ModUpgraded): void {
+export function init(): void {
   mod.AddCallbackCustom(
     ModCallbackCustom.POST_PICKUP_COLLECT,
     coin,

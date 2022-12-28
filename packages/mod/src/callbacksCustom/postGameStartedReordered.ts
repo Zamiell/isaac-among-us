@@ -3,7 +3,6 @@ import {
   game,
   log,
   ModCallbackCustom,
-  ModUpgraded,
   removeAllActiveItems,
   removeAllPlayerTrinkets,
 } from "isaacscript-common";
@@ -12,9 +11,10 @@ import * as errors from "../features/errors";
 import * as goToEmptyRoom from "../features/goToEmptyRoom";
 import * as restartOnNextFrame from "../features/restartOnNextFrame";
 import g from "../globals";
+import { mod } from "../mod";
 import { disableShooting } from "../utils";
 
-export function init(mod: ModUpgraded): void {
+export function init(): void {
   mod.AddCallbackCustom(ModCallbackCustom.POST_GAME_STARTED_REORDERED, main);
 }
 

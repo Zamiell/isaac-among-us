@@ -1,6 +1,6 @@
-import { runNextGameFrame } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { EntityTypeCustom } from "../enums/EntityTypeCustom";
+import { mod } from "../mod";
 import { spawnEntity } from "../utils";
 
 export function spawnAdminObjects(): void {
@@ -17,7 +17,7 @@ function spawnAdminTop() {
   const topCenterGridIndex = 22; // We can't spawn it inside the wall, so we have to use an offset.
   spawnEntity(EntityTypeCustom.ADMIN_TOP, 0, 0, topCenterGridIndex);
 
-  runNextGameFrame(() => {
+  mod.runNextGameFrame(() => {
     addCollision(19, 26);
   });
 }

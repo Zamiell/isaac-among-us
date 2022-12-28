@@ -1,6 +1,6 @@
-import { runNextGameFrame } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { EntityTypeCustom } from "../enums/EntityTypeCustom";
+import { mod } from "../mod";
 import { spawnEntity } from "../utils";
 
 export function spawnO2Objects(): void {
@@ -9,7 +9,7 @@ export function spawnO2Objects(): void {
     spawnEntity(EntityTypeCustom.TANK, 0, 0, gridIndex);
   }
 
-  runNextGameFrame(() => {
+  mod.runNextGameFrame(() => {
     addCollision(16, 57);
   });
 }

@@ -16,6 +16,7 @@ import * as startGameCutscene from "../features/startGameCutscene";
 import * as startMeeting from "../features/startMeeting";
 import * as vents from "../features/vents";
 import * as welcomeNotification from "../features/welcomeNotification";
+import { mod } from "../mod";
 import * as socket from "../network/socket";
 import * as udp from "../network/udp";
 import * as fixWires from "../tasks/fixWires";
@@ -25,7 +26,7 @@ import * as identifyTrinkets from "../tasks/identifyTrinkets";
 import * as makePentagram from "../tasks/makePentagram";
 import * as pushButtonsInOrder from "../tasks/pushButtonsInOrder";
 
-export function init(mod: Mod): void {
+export function init(): void {
   mod.AddCallback(ModCallback.POST_RENDER, main);
 }
 

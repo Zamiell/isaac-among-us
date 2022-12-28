@@ -4,9 +4,10 @@ import {
   EntityGridCollisionClass,
   SoundEffect,
 } from "isaac-typescript-definitions";
-import { runInNRenderFrames, sfxManager, VectorZero } from "isaacscript-common";
+import { sfxManager, VectorZero } from "isaacscript-common";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
 import g from "../globals";
+import { mod } from "../mod";
 import { getSkeldRoom } from "../stageAPI";
 
 /** The death animation is 55 frames long, but we render it in 110 frames. */
@@ -52,7 +53,7 @@ export function commandKilled(data: KilledDataToMod): void {
     player.ControlsEnabled = false;
     player.Visible = false;
 
-    runInNRenderFrames(
+    mod.runInNRenderFrames(
       convertPlayerToGhostForm,
       POST_DEATH_DELAY_RENDER_FRAMES,
     );

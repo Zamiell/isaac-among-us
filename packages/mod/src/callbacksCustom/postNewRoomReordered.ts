@@ -5,15 +5,15 @@ import {
   getRoomVariant,
   log,
   ModCallbackCustom,
-  ModUpgraded,
 } from "isaacscript-common";
 import { convertPlayerToGhostForm } from "../commands/killed";
 import * as lobby from "../features/lobby";
 import g from "../globals";
+import { mod } from "../mod";
 import { getOurPlayer } from "../players";
 import { getSkeldRoom } from "../stageAPI";
 
-export function init(mod: ModUpgraded): void {
+export function init(): void {
   mod.AddCallbackCustom(ModCallbackCustom.POST_NEW_ROOM_REORDERED, main);
 }
 

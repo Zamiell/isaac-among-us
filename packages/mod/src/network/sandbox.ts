@@ -31,7 +31,7 @@ export function getSocketTime(): float {
     error("The sandbox is not initialized.");
   }
 
-  return sandbox.getSocketTime();
+  return sandbox.getTime();
 }
 
 export function isSandboxEnabled(): boolean {
@@ -53,7 +53,7 @@ export function tryInitRacingPlusSandbox(): void {
 
   sandbox = requiredSandbox as Sandbox;
 
-  if (sandboxTraceback === undefined) {
+  if (SandboxTraceback === undefined) {
     sandbox = null;
     log(
       'Detected the sandbox environment, but it was not initialized correctly. (The invocation in the "main.lua" file is probably missing.)',

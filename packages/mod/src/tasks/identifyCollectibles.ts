@@ -3,7 +3,6 @@ import { CollectibleType, SoundEffect } from "isaac-typescript-definitions";
 import {
   emptyArray,
   game,
-  getCollectibleArray,
   getCollectibleName,
   getRandomArrayElement,
   getRandomArrayIndex,
@@ -15,6 +14,7 @@ import { resetAllButtons } from "../features/buttonSubroutines";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
+import { mod } from "../mod";
 import { initGlowingItemSprite } from "../sprite";
 import { drawFontText, movePlayerToGridIndex } from "../utils";
 
@@ -74,7 +74,7 @@ function setupRound() {
 }
 
 function getRandomCollectibles(): CollectibleType[] {
-  const collectibleArray = getCollectibleArray();
+  const collectibleArray = mod.getCollectibleArray();
 
   const randomCollectibles: CollectibleType[] = [];
   repeat(NUM_RANDOM_COLLECTIBLES, () => {

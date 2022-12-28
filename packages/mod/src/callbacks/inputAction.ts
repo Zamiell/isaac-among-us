@@ -6,6 +6,7 @@ import {
 } from "isaac-typescript-definitions";
 import { game } from "isaacscript-common";
 import g from "../globals";
+import { mod } from "../mod";
 import { inCutscene, inEndMeeting } from "../utils";
 
 const MOVEMENT_BUTTONS = new Set<ButtonAction>([
@@ -15,7 +16,7 @@ const MOVEMENT_BUTTONS = new Set<ButtonAction>([
   ButtonAction.DOWN, // 3
 ]);
 
-export function init(mod: Mod): void {
+export function init(): void {
   mod.AddCallback(ModCallback.INPUT_ACTION, main);
 }
 

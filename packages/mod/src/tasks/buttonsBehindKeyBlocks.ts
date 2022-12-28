@@ -5,12 +5,13 @@ import {
   KeySubType,
   PickupVariant,
 } from "isaac-typescript-definitions";
-import { runNextGameFrame, spawnGridEntity } from "isaacscript-common";
+import { spawnGridEntity } from "isaacscript-common";
 import { addCollision } from "../collisionObjects";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { allButtonsPressed } from "../features/buttonSubroutines";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
+import { mod } from "../mod";
 import { spawnFakeBlockLine } from "../spawnObjects";
 import { movePlayerToGridIndex, spawnEntity } from "../utils";
 
@@ -32,19 +33,19 @@ export function buttonsBehindKeyBlocks(): void {
   spawnTaskButton(114, 1);
 
   spawnFakeBlockLine(64, 4, Direction.DOWN);
-  runNextGameFrame(() => {
+  mod.runNextGameFrame(() => {
     addCollision(64, 109);
   });
   spawnFakeBlockLine(66, 4, Direction.DOWN);
-  runNextGameFrame(() => {
+  mod.runNextGameFrame(() => {
     addCollision(66, 111);
   });
   spawnFakeBlockLine(68, 4, Direction.DOWN);
-  runNextGameFrame(() => {
+  mod.runNextGameFrame(() => {
     addCollision(68, 113);
   });
   spawnFakeBlockLine(70, 4, Direction.DOWN);
-  runNextGameFrame(() => {
+  mod.runNextGameFrame(() => {
     addCollision(70, 115);
   });
 

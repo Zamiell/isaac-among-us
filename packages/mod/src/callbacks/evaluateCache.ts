@@ -1,8 +1,9 @@
 import { IS_DEV, Task } from "common";
 import { CacheFlag, ModCallback } from "isaac-typescript-definitions";
 import g from "../globals";
+import { mod } from "../mod";
 
-export function init(mod: Mod): void {
+export function init(): void {
   mod.AddCallback(ModCallback.EVALUATE_CACHE, speed, CacheFlag.SPEED);
 }
 

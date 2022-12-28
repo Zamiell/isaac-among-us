@@ -8,7 +8,6 @@ import {
   getRandomEnumValue,
   removeAllMatchingEntities,
   repeat,
-  runInNGameFrames,
   sfxManager,
 } from "isaacscript-common";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
@@ -16,6 +15,7 @@ import { spawnTaskButton } from "../features/buttonSpawn";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import g from "../globals";
+import { mod } from "../mod";
 import { drawFontText, movePlayerToGridIndex } from "../utils";
 
 const THIS_TASK = Task.LONG_IDENTIFY_PICKUPS_IN_ORDER;
@@ -130,7 +130,7 @@ function setupRound() {
 
   // Delay a second so that the player gets a chance to react before seeing the text.
   showingPickupIndex = 0;
-  runInNGameFrames(() => {
+  mod.runInNGameFrames(() => {
     showingPickupRenderFrame = Isaac.GetFrameCount();
   }, GAME_FRAMES_PER_SECOND / 2);
 }

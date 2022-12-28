@@ -6,13 +6,13 @@ import {
   getNPCs,
   log,
   removeAllMatchingEntities,
-  runNextGameFrame,
   sfxManager,
 } from "isaacscript-common";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
 import g from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
+import { mod } from "../mod";
 import { sendTCP } from "../network/send";
 import { setupPlayerAndUI } from "../setupPlayersAndUI";
 import { goToStageAPIRoom } from "../stageAPI";
@@ -27,7 +27,7 @@ export function taskComplete(): void {
   const task = g.game.currentTask;
 
   muteSoundEffects();
-  runNextGameFrame(() => {
+  mod.runNextGameFrame(() => {
     // Some sound effects might not happen until the next frame, so mute everything again just in
     // case.
     muteSoundEffects();

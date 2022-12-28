@@ -1,13 +1,6 @@
 import { IS_DEV } from "common";
 import { Keyboard } from "isaac-typescript-definitions";
-import {
-  addConsoleCommand,
-  enableDevFeatures,
-  log,
-  ModUpgraded,
-  registerHotkey,
-  upgradeMod,
-} from "isaacscript-common";
+import { log } from "isaacscript-common";
 import * as entityTakeDmg from "./callbacks/entityTakeDmg";
 import * as evaluateCache from "./callbacks/evaluateCache";
 import * as inputAction from "./callbacks/inputAction";
@@ -37,59 +30,56 @@ import {
 } from "./debug";
 import { initFeatures } from "./initFeatures";
 import * as collisionObjects from "./lib/collisionObjects";
+import { mod } from "./mod";
 import { disconnect } from "./network/socketClient";
 
 main();
 
 function main() {
-  const modVanilla = RegisterMod("isaacAmongUsMod", 1);
-  const mod = upgradeMod(modVanilla);
-
-  initLibraries(mod);
+  initLibraries();
   initFeatures();
-  initCallbacks(mod);
-  initCallbacksCustom(mod);
+  initCallbacks();
+  initCallbacksCustom();
   initCallbacksStageAPI();
 
   if (IS_DEV) {
-    enableDevFeatures(mod);
-    addConsoleCommand("d", debugFunction1);
-    addConsoleCommand("d2", debugFunction2);
-    addConsoleCommand("w", warp);
+    mod.addConsoleCommand("d", debugFunction1);
+    mod.addConsoleCommand("d2", debugFunction2);
+    mod.addConsoleCommand("w", warp);
 
-    registerHotkey(Keyboard.F1, hotkeyFunction1);
-    registerHotkey(Keyboard.F2, hotkeyFunction2);
-    registerHotkey(Keyboard.F4, disconnect);
+    mod.setHotkey(Keyboard.F1, hotkeyFunction1);
+    mod.setHotkey(Keyboard.F2, hotkeyFunction2);
+    mod.setHotkey(Keyboard.F4, disconnect);
   }
 
   log(`${MOD_NAME} ${VERSION} initialized.`);
 }
 
-function initLibraries(mod: Mod) {
+function initLibraries() {
   collisionObjects.init(mod);
 }
 
-function initCallbacks(mod: ModUpgraded) {
-  postUpdate.init(mod); // 1
-  postRender.init(mod); // 2
-  evaluateCache.init(mod); // 8
-  postPlayerInit.init(mod); // 9
-  entityTakeDmg.init(mod); // 11
-  postCurseEval.init(mod); // 12
-  inputAction.init(mod); // 13
-  preGameExit.init(mod); // 17
-  postNPCRender.init(mod); // 28
-  postPickupInit.init(mod); // 34
-  postEffectUpdate.init(mod); // 55
-  postEntityKill.init(mod); // 68
+function initCallbacks() {
+  postUpdate.init(); // 1
+  postRender.init(); // 2
+  evaluateCache.init(); // 8
+  postPlayerInit.init(); // 9
+  entityTakeDmg.init(); // 11
+  postCurseEval.init(); // 12
+  inputAction.init(); // 13
+  preGameExit.init(); // 17
+  postNPCRender.init(); // 28
+  postPickupInit.init(); // 34
+  postEffectUpdate.init(); // 55
+  postEntityKill.init(); // 68
 }
 
-function initCallbacksCustom(mod: ModUpgraded) {
-  postNewRoomReordered.init(mod);
-  postGameStartedReordered.init(mod);
-  postGridEntityUpdate.init(mod);
-  postPickupCollect.init(mod);
-  postPlayerInitLate.init(mod);
+function initCallbacksCustom() {
+  postNewRoomReordered.init();
+  postGameStartedReordered.init();
+  postGridEntityUpdate.init();
+  postPickupCollect.init();
+  postPlayerInitLate.init();
 }
 
 function initCallbacksStageAPI() {

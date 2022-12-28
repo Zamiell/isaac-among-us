@@ -14,6 +14,16 @@ see the official website: https://isaacscript.github.io/
 
 --]]
 
+---@diagnostic disable: assign-type-mismatch
+---@diagnostic disable: deprecated
+---@diagnostic disable: lowercase-global
+---@diagnostic disable: need-check-nil
+---@diagnostic disable: redefined-local
+---@diagnostic disable: redundant-parameter
+---@diagnostic disable: unused-function
+---@diagnostic disable: unused-local
+---@diagnostic disable: unused-vararg
+
 
 local ____modules = {}
 local ____moduleCache = {}
@@ -1010,8 +1020,7 @@ do
         if not rawget(metatable, "_descriptors") then
             metatable._descriptors = {}
         end
-        local descriptor = __TS__CloneDescriptor(desc)
-        metatable._descriptors[key] = descriptor
+        metatable._descriptors[key] = __TS__CloneDescriptor(desc)
         metatable.__index = descriptorIndex
         metatable.__newindex = descriptorNewIndex
     end
@@ -1423,10 +1432,6 @@ local function __TS__MathSign(val)
     return 0
 end
 
-local function __TS__Modulo50(a, b)
-    return a - math.floor(a / b) * b
-end
-
 local function __TS__Number(value)
     local valueType = type(value)
     if valueType == "number" then
@@ -1647,22 +1652,6 @@ local function __TS__ParseFloat(numberString)
     return ____number_1
 end
 
-local function __TS__StringSubstr(self, from, length)
-    if from ~= from then
-        from = 0
-    end
-    if length ~= nil then
-        if length ~= length or length <= 0 then
-            return ""
-        end
-        length = length + from
-    end
-    if from >= 0 then
-        from = from + 1
-    end
-    return string.sub(self, from, length)
-end
-
 local function __TS__StringSubstring(self, start, ____end)
     if ____end ~= ____end then
         ____end = 0
@@ -1692,9 +1681,9 @@ do
                 base = 16
                 local ____TS__Match_result__0_0
                 if __TS__Match(hexMatch, "-") then
-                    ____TS__Match_result__0_0 = "-" .. __TS__StringSubstr(numberString, #hexMatch)
+                    ____TS__Match_result__0_0 = "-" .. __TS__StringSubstring(numberString, #hexMatch)
                 else
-                    ____TS__Match_result__0_0 = __TS__StringSubstr(numberString, #hexMatch)
+                    ____TS__Match_result__0_0 = __TS__StringSubstring(numberString, #hexMatch)
                 end
                 numberString = ____TS__Match_result__0_0
             end
@@ -1706,7 +1695,7 @@ do
         if base <= 10 then
             ____temp_1 = __TS__StringSubstring(parseIntBasePattern, 0, base)
         else
-            ____temp_1 = __TS__StringSubstr(parseIntBasePattern, 0, 10 + 2 * (base - 10))
+            ____temp_1 = __TS__StringSubstring(parseIntBasePattern, 0, 10 + 2 * (base - 10))
         end
         local allowedDigits = ____temp_1
         local pattern = ("^%s*(-?[" .. allowedDigits) .. "]*)"
@@ -2416,6 +2405,22 @@ local function __TS__StringStartsWith(self, searchString, position)
     return string.sub(self, position + 1, #searchString + position) == searchString
 end
 
+local function __TS__StringSubstr(self, from, length)
+    if from ~= from then
+        from = 0
+    end
+    if length ~= nil then
+        if length ~= length or length <= 0 then
+            return ""
+        end
+        length = length + from
+    end
+    if from >= 0 then
+        from = from + 1
+    end
+    return string.sub(self, from, length)
+end
+
 local function __TS__StringTrim(self)
     local result = string.gsub(self, "^[%s ﻿]*(.-)[%s ﻿]*$", "%1")
     return result
@@ -2515,7 +2520,6 @@ return {
   __TS__MathAtan2 = __TS__MathAtan2,
   __TS__MathModf = __TS__MathModf,
   __TS__MathSign = __TS__MathSign,
-  __TS__Modulo50 = __TS__Modulo50,
   __TS__New = __TS__New,
   __TS__Number = __TS__Number,
   __TS__NumberIsFinite = __TS__NumberIsFinite,
@@ -3432,7 +3436,7 @@ function ____exports.getSocketTime(self)
     if sandbox == nil then
         error("The sandbox is not initialized.")
     end
-    return sandbox:getSocketTime()
+    return sandbox.getTime()
 end
 function ____exports.isSandboxEnabled(self)
     return sandbox ~= nil
@@ -3448,7 +3452,7 @@ function ____exports.tryInitRacingPlusSandbox(self)
         return
     end
     sandbox = requiredSandbox
-    if sandboxTraceback == nil then
+    if SandboxTraceback == nil then
         sandbox = nil
         log(nil, "Detected the sandbox environment, but it was not initialized correctly. (The invocation in the \"main.lua\" file is probably missing.)")
         return
@@ -57319,7 +57323,7 @@ function AmongUsGame.prototype.logOurTasks(self)
         for ____, task in ipairs(tasks) do
             log(
                 nil,
-                ((("  - Task." .. tostring(Task[task])) .. " (") .. tostring(task)) .. ")"
+                ((("  - Task." .. Task[task]) .. " (") .. tostring(task)) .. ")"
             )
         end
     end
@@ -57543,7 +57547,7 @@ local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local ____exports = {}
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local RENDER_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.RENDER_FRAMES_PER_SECOND
-local FieldType = FieldType or ({})
+local FieldType = {}
 FieldType.SIGNED_CHAR = "b"
 FieldType.UNSIGNED_CHAR = "B"
 FieldType.SIGNED_SHORT = "h"
@@ -58057,6 +58061,35 @@ function ____exports.setMinimapAPIRoomIcon(self, mapID, icon)
 end
 return ____exports
  end,
+["packages.mod.src.mod"] = function(...) 
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local ISCFeature = ____isaacscript_2Dcommon.ISCFeature
+local ModCallbackCustom = ____isaacscript_2Dcommon.ModCallbackCustom
+local upgradeMod = ____isaacscript_2Dcommon.upgradeMod
+local ____constants = require("packages.mod.src.constants")
+local MOD_NAME = ____constants.MOD_NAME
+local ISC_FEATURES_FOR_THIS_MOD = {
+    ISCFeature.CUSTOM_HOTKEYS,
+    ISCFeature.DISABLE_INPUTS,
+    ISCFeature.EXTRA_CONSOLE_COMMANDS,
+    ISCFeature.GAME_REORDERED_CALLBACKS,
+    ISCFeature.RUN_IN_N_FRAMES,
+    ISCFeature.MODDED_ELEMENT_DETECTION,
+    ISCFeature.MODDED_ELEMENT_SETS,
+    ISCFeature.SAVE_DATA_MANAGER
+}
+local CUSTOM_CALLBACKS_USED = {
+    ModCallbackCustom.POST_NEW_ROOM_REORDERED,
+    ModCallbackCustom.POST_GAME_STARTED_REORDERED,
+    ModCallbackCustom.POST_GRID_ENTITY_UPDATE,
+    ModCallbackCustom.POST_PICKUP_COLLECT,
+    ModCallbackCustom.POST_PLAYER_INIT_LATE
+}
+local modVanilla = RegisterMod(MOD_NAME, 1)
+____exports.mod = upgradeMod(nil, modVanilla, ISC_FEATURES_FOR_THIS_MOD, CUSTOM_CALLBACKS_USED)
+return ____exports
+ end,
 ["packages.mod.src.features.disableMultiplayer"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
@@ -58068,13 +58101,14 @@ local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.sr
 local game = ____isaacscript_2Dcommon.game
 local getPlayers = ____isaacscript_2Dcommon.getPlayers
 local isChildPlayer = ____isaacscript_2Dcommon.isChildPlayer
-local saveDataManager = ____isaacscript_2Dcommon.saveDataManager
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 function endRun(self)
     game:Fadeout(0.05, FadeoutTarget.TITLE_SCREEN)
 end
 local v = {run = {firstPlayerControllerIndex = nil}}
 function ____exports.init(self)
-    saveDataManager(nil, "disableMultiplayer", v)
+    mod:saveDataManager("disableMultiplayer", v)
 end
 function ____exports.postPlayerInit(self, player)
     if v.run.firstPlayerControllerIndex == nil then
@@ -58116,16 +58150,16 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local Difficulty = ____isaac_2Dtypescript_2Ddefinitions.Difficulty
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local game = ____isaacscript_2Dcommon.game
-local getLastCollectibleType = ____isaacscript_2Dcommon.getLastCollectibleType
 local LAST_VANILLA_COLLECTIBLE_TYPE = ____isaacscript_2Dcommon.LAST_VANILLA_COLLECTIBLE_TYPE
 local log = ____isaacscript_2Dcommon.log
-local saveDataManager = ____isaacscript_2Dcommon.saveDataManager
 local ____constants = require("packages.mod.src.constants")
 local MOD_NAME = ____constants.MOD_NAME
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____socketClient = require("packages.mod.src.network.socketClient")
 local isLuaDebugEnabled = ____socketClient.isLuaDebugEnabled
 function areOtherModsEnabled(self)
-    local lastCollectibleType = getLastCollectibleType(nil)
+    local lastCollectibleType = mod:getLastCollectibleType()
     if lastCollectibleType ~= LAST_VANILLA_COLLECTIBLE_TYPE then
         log(
             nil,
@@ -58193,7 +58227,7 @@ MAX_CHARACTERS = 55
 local LUA_DEBUG_ERROR_TEXT = "Error: You do not have the \"--luadebug\" launch option turned on. This option is needed so that Isaac can communicate with Internet servers.\n\nTo turn on \"--luadebug\", perform the following steps:\n- Open Steam.\n- Click on the \"Library\" tab near the top of the screen.\n- Right-click on \"The Binding of Isaac: Rebirth\" and select \"Properties\".\n- Click on the \"General\" tab on the left.\n- At the bottom of the screen, there will be a box to specify \"Launch Options\".\n- Enter \"--luadebug\" in the box (without the quotations).\n- Close the window and then completely close and re-open the game."
 v = {run = {otherModsEnabled = false, wrongDifficulty = false}}
 function ____exports.init(self)
-    saveDataManager(nil, "errors", v)
+    mod:saveDataManager("errors", v)
 end
 function ____exports.postGameStarted(self)
     return areOtherModsEnabled(nil) or isWrongDifficulty(nil)
@@ -58495,6 +58529,8 @@ local goToEmptyRoom = require("packages.mod.src.features.goToEmptyRoom")
 local restartOnNextFrame = require("packages.mod.src.features.restartOnNextFrame")
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____utils = require("packages.mod.src.utils")
 local disableShooting = ____utils.disableShooting
 function main(self, isContinued)
@@ -58542,7 +58578,7 @@ function ____exports.checkChangeOurCharacter(self)
         player:ChangePlayerType(correctCharacter)
     end
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallbackCustom(ModCallbackCustom.POST_GAME_STARTED_REORDERED, main)
 end
 return ____exports
@@ -58769,8 +58805,6 @@ local StageID = ____isaac_2Dtypescript_2Ddefinitions.StageID
 local StageType = ____isaac_2Dtypescript_2Ddefinitions.StageType
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local asNumber = ____isaacscript_2Dcommon.asNumber
-local forceNewLevelCallback = ____isaacscript_2Dcommon.forceNewLevelCallback
-local forceNewRoomCallback = ____isaacscript_2Dcommon.forceNewRoomCallback
 local game = ____isaacscript_2Dcommon.game
 local getEffectiveStage = ____isaacscript_2Dcommon.getEffectiveStage
 local getNPCs = ____isaacscript_2Dcommon.getNPCs
@@ -58785,6 +58819,8 @@ local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
 local ____minimapAPI = require("packages.mod.src.minimapAPI")
 local disableMinimapAPI = ____minimapAPI.disableMinimapAPI
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____setupPlayersAndUI = require("packages.mod.src.setupPlayersAndUI")
 local setupPlayerAndUI = ____setupPlayersAndUI.setupPlayerAndUI
 local ____spawnObjects = require("packages.mod.src.spawnObjects")
@@ -58802,10 +58838,10 @@ function gotoLobby(self)
     local stageType = level:GetStageType()
     local effectiveStage = getEffectiveStage(nil)
     if effectiveStage ~= STAGE_FOR_LOBBY or stageType ~= STAGE_TYPE_FOR_LOBBY then
-        forceNewLevelCallback(nil)
+        mod:forceNewLevelCallback()
         consoleCommand(nil, "stage " .. STAGE_ARGUMENT_FOR_LOBBY)
     end
-    forceNewRoomCallback(nil)
+    mod:forceNewRoomCallback()
     consoleCommand(
         nil,
         "goto d." .. tostring(ROOM_VARIANT_FOR_LOBBY)
@@ -60308,7 +60344,7 @@ function setState(self, state)
     g.endGame.startRenderFrame = isaacFrameCount
     log(
         nil,
-        ((("Changed end game cutscene state: " .. tostring(CutsceneState[state])) .. " (") .. tostring(state)) .. ")"
+        ((("Changed end game cutscene state: " .. CutsceneState[state]) .. " (") .. tostring(state)) .. ")"
     )
 end
 function setSprite(self, role)
@@ -60668,15 +60704,12 @@ local SocketCommandModToServer = ____common.SocketCommandModToServer
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local Keyboard = ____isaac_2Dtypescript_2Ddefinitions.Keyboard
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local disableAllInputs = ____isaacscript_2Dcommon.disableAllInputs
-local enableAllInputs = ____isaacscript_2Dcommon.enableAllInputs
 local game = ____isaacscript_2Dcommon.game
 local getEnumValues = ____isaacscript_2Dcommon.getEnumValues
 local getMapPartialMatch = ____isaacscript_2Dcommon.getMapPartialMatch
 local isKeyboardPressed = ____isaacscript_2Dcommon.isKeyboardPressed
 local keyboardToString = ____isaacscript_2Dcommon.keyboardToString
 local RENDER_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.RENDER_FRAMES_PER_SECOND
-local saveDataManager = ____isaacscript_2Dcommon.saveDataManager
 local ____chat = require("packages.mod.src.chat")
 local addLocalChat = ____chat.addLocalChat
 local ____chatCommandFunctions = require("packages.mod.src.chatCommandFunctions")
@@ -60687,6 +60720,8 @@ local ____HexColors = require("packages.mod.src.enums.HexColors")
 local HexColors = ____HexColors.HexColors
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____send = require("packages.mod.src.network.send")
 local sendTCP = ____send.sendTCP
 local socketClient = require("packages.mod.src.network.socketClient")
@@ -60815,7 +60850,7 @@ local historyIndex = -1
 keysPressed = __TS__New(Map)
 v = {persistent = {inputHistory = {}}}
 function ____exports.init(self)
-    saveDataManager(nil, "console", v)
+    mod:saveDataManager("console", v)
 end
 function ____exports.postRender(self)
     local isPaused = game:IsPaused()
@@ -60836,7 +60871,7 @@ function ____exports.postRender(self)
 end
 local function open(self)
     consoleOpen = true
-    disableAllInputs(nil, MOD_NAME)
+    mod:disableAllInputs(MOD_NAME)
     AwaitingTextInput = true
 end
 local function close(self, execute)
@@ -60844,7 +60879,7 @@ local function close(self, execute)
         execute = true
     end
     consoleOpen = false
-    enableAllInputs(nil, MOD_NAME)
+    mod:enableAllInputs(MOD_NAME)
     AwaitingTextInput = false
     if not execute or inputText == "" then
         savedText = ""
@@ -61183,7 +61218,6 @@ local game = ____isaacscript_2Dcommon.game
 local getNPCs = ____isaacscript_2Dcommon.getNPCs
 local log = ____isaacscript_2Dcommon.log
 local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
-local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local sfxManager = ____isaacscript_2Dcommon.sfxManager
 local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
 local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
@@ -61193,6 +61227,8 @@ local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
 local ____minimapAPI = require("packages.mod.src.minimapAPI")
 local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____send = require("packages.mod.src.network.send")
 local sendTCP = ____send.sendTCP
 local ____setupPlayersAndUI = require("packages.mod.src.setupPlayersAndUI")
@@ -61262,12 +61298,9 @@ function ____exports.taskComplete(self)
     end
     local task = g.game.currentTask
     muteSoundEffects(nil)
-    runNextGameFrame(
-        nil,
-        function()
-            muteSoundEffects(nil)
-        end
-    )
+    mod:runNextGameFrame(function()
+        muteSoundEffects(nil)
+    end)
     sfxManager:Play(SoundEffectCustom.TASK_COMPLETE)
     sendTCP(nil, SocketCommandModToServer.TASK_COMPLETE, {gameID = g.game.id, task = task})
     for ____, tasks in ipairs(__TS__ObjectValues(g.game.ourTasks)) do
@@ -61426,7 +61459,6 @@ local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local KeySubType = ____isaac_2Dtypescript_2Ddefinitions.KeySubType
 local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
 local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
@@ -61438,6 +61470,8 @@ local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
 local taskComplete = ____taskSubroutines.taskComplete
 local ____teleporter = require("packages.mod.src.features.teleporter")
 local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____spawnObjects = require("packages.mod.src.spawnObjects")
 local spawnFakeBlockLine = ____spawnObjects.spawnFakeBlockLine
 local ____utils = require("packages.mod.src.utils")
@@ -61468,33 +61502,21 @@ function ____exports.buttonsBehindKeyBlocks(self)
     spawnTaskButton(nil, 112, 1)
     spawnTaskButton(nil, 114, 1)
     spawnFakeBlockLine(nil, 64, 4, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 64, 109)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 64, 109)
+    end)
     spawnFakeBlockLine(nil, 66, 4, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 66, 111)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 66, 111)
+    end)
     spawnFakeBlockLine(nil, 68, 4, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 68, 113)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 68, 113)
+    end)
     spawnFakeBlockLine(nil, 70, 4, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 70, 115)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 70, 115)
+    end)
     spawnGridEntity(nil, GridEntityType.LOCK, 65)
     spawnGridEntity(nil, GridEntityType.LOCK, 80)
     spawnGridEntity(nil, GridEntityType.LOCK, 95)
@@ -61673,7 +61695,6 @@ local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local KeySubType = ____isaac_2Dtypescript_2Ddefinitions.KeySubType
 local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
 local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
@@ -61681,6 +61702,8 @@ local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
 local spawnTaskButton = ____buttonSpawn.spawnTaskButton
 local ____teleporter = require("packages.mod.src.features.teleporter")
 local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____spawnObjects = require("packages.mod.src.spawnObjects")
 local spawnFakeBlockLine = ____spawnObjects.spawnFakeBlockLine
 local ____utils = require("packages.mod.src.utils")
@@ -61703,68 +61726,41 @@ function ____exports.dodgeRetractingSpikes(self)
     local bottomLeftGridIndex = 107
     spawnTeleporter(nil, bottomLeftGridIndex)
     spawnFakeBlockLine(nil, 19, 7, Direction.RIGHT)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 19, 25)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 19, 25)
+    end)
     spawnFakeBlockLine(nil, 34, 7, Direction.RIGHT)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 34, 40)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 34, 40)
+    end)
     spawnFakeBlockLine(nil, 51, 3, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 51, 81)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 51, 81)
+    end)
     spawnFakeBlockLine(nil, 53, 3, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 53, 83)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 53, 83)
+    end)
     spawnFakeBlockLine(nil, 64, 3, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 64, 94)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 64, 94)
+    end)
     spawnFakeBlockLine(nil, 70, 3, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 70, 100)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 70, 100)
+    end)
     spawnFakeBlockLine(nil, 109, 7, Direction.RIGHT)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 109, 115)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 109, 115)
+    end)
     spawnFakeBlockLine(nil, 27, 3, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 27, 57)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 27, 57)
+    end)
     spawnFakeBlockLine(nil, 87, 3, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 87, 117)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 87, 117)
+    end)
     spawnGridEntity(nil, GridEntityType.LOCK, 72)
     spawnTaskButton(nil, 73, 1)
     local retractingSpikesGridIndexes = {
@@ -61800,7 +61796,6 @@ local Direction = ____isaac_2Dtypescript_2Ddefinitions.Direction
 local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
 local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
@@ -61808,6 +61803,8 @@ local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
 local spawnTaskButton = ____buttonSpawn.spawnTaskButton
 local ____teleporter = require("packages.mod.src.features.teleporter")
 local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____spawnObjects = require("packages.mod.src.spawnObjects")
 local spawnFakeBlock = ____spawnObjects.spawnFakeBlock
 local spawnFakeBlockLine = ____spawnObjects.spawnFakeBlockLine
@@ -61817,12 +61814,9 @@ local spawnEntity = ____utils.spawnEntity
 local updatePlayerStats = ____utils.updatePlayerStats
 function spawnOneBlock(self, gridIndex)
     spawnFakeBlock(nil, gridIndex)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, gridIndex, gridIndex)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, gridIndex, gridIndex)
+    end)
 end
 function spawnShooter(self, direction, gridIndex)
     spawnEntity(
@@ -61842,53 +61836,35 @@ function ____exports.dodgeStoneShooters(self)
     local topRightGridIndex = 28
     spawnTaskButton(nil, topRightGridIndex, 1)
     spawnFakeBlockLine(nil, 16, 10, Direction.RIGHT)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 16, 25)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 16, 25)
+    end)
     spawnFakeBlockLine(nil, 27, 4, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 27, 72)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 27, 72)
+    end)
     spawnOneBlock(nil, 106)
     spawnFakeBlockLine(nil, 62, 4, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 62, 107)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 62, 107)
+    end)
     spawnFakeBlockLine(nil, 48, 2, Direction.RIGHT)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 48, 49)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 48, 49)
+    end)
     spawnFakeBlockLine(nil, 51, 3, Direction.RIGHT)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 51, 53)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 51, 53)
+    end)
     spawnOneBlock(nil, 55)
     spawnOneBlock(nil, 66)
     spawnOneBlock(nil, 68)
     spawnOneBlock(nil, 94)
     spawnOneBlock(nil, 97)
     spawnFakeBlockLine(nil, 100, 3, Direction.RIGHT)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 100, 102)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 100, 102)
+    end)
     spawnShooter(nil, Direction.RIGHT, 31)
     spawnShooter(nil, Direction.LEFT, 87)
     spawnShooter(nil, Direction.DOWN, 26)
@@ -62017,7 +61993,7 @@ end
 local THIS_TASK = Task.SHORT_FIX_WIRES
 local NUM_BUTTONS = 4
 local WIRE_SIGN_OFFSET = Vector(-28, 0)
-WireColor = WireColor or ({})
+WireColor = {}
 WireColor.YELLOW = 0
 WireColor[WireColor.YELLOW] = "YELLOW"
 WireColor.BLUE = 1
@@ -62183,7 +62159,6 @@ local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local emptyArray = ____isaacscript_2Dcommon.emptyArray
 local game = ____isaacscript_2Dcommon.game
-local getCollectibleArray = ____isaacscript_2Dcommon.getCollectibleArray
 local getCollectibleName = ____isaacscript_2Dcommon.getCollectibleName
 local getRandomArrayElement = ____isaacscript_2Dcommon.getRandomArrayElement
 local getRandomArrayIndex = ____isaacscript_2Dcommon.getRandomArrayIndex
@@ -62200,6 +62175,8 @@ local ____teleporter = require("packages.mod.src.features.teleporter")
 local spawnTeleporter = ____teleporter.spawnTeleporter
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____sprite = require("packages.mod.src.sprite")
 local initGlowingItemSprite = ____sprite.initGlowingItemSprite
 local ____utils = require("packages.mod.src.utils")
@@ -62232,7 +62209,7 @@ function setupRound(self)
     resetAllButtons(nil)
 end
 function getRandomCollectibles(self)
-    local collectibleArray = getCollectibleArray(nil)
+    local collectibleArray = mod:getCollectibleArray()
     local randomCollectibles = {}
     ____repeat(
         nil,
@@ -62333,7 +62310,6 @@ local getEnumValues = ____isaacscript_2Dcommon.getEnumValues
 local getRandomEnumValue = ____isaacscript_2Dcommon.getRandomEnumValue
 local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
 local ____repeat = ____isaacscript_2Dcommon["repeat"]
-local runInNGameFrames = ____isaacscript_2Dcommon.runInNGameFrames
 local sfxManager = ____isaacscript_2Dcommon.sfxManager
 local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
 local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
@@ -62346,6 +62322,8 @@ local ____teleporter = require("packages.mod.src.features.teleporter")
 local spawnTeleporter = ____teleporter.spawnTeleporter
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____utils = require("packages.mod.src.utils")
 local drawFontText = ____utils.drawFontText
 local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
@@ -62362,8 +62340,7 @@ function setupRound(self)
         end
     )
     showingPickupIndex = 0
-    runInNGameFrames(
-        nil,
+    mod:runInNGameFrames(
         function()
             showingPickupRenderFrame = Isaac.GetFrameCount()
         end,
@@ -62468,7 +62445,7 @@ BUTTON_GRID_INDEXES = {
 }
 ROW_LENGTH = 15
 SPRITE_OFFSET = Vector(0, 10)
-PickupType = PickupType or ({})
+PickupType = {}
 PickupType.HEART = 0
 PickupType[PickupType.HEART] = "HEART"
 PickupType.COIN = 1
@@ -62555,7 +62532,6 @@ local emptyArray = ____isaacscript_2Dcommon.emptyArray
 local game = ____isaacscript_2Dcommon.game
 local getRandomArrayElement = ____isaacscript_2Dcommon.getRandomArrayElement
 local getRandomArrayIndex = ____isaacscript_2Dcommon.getRandomArrayIndex
-local getTrinketArray = ____isaacscript_2Dcommon.getTrinketArray
 local getTrinketName = ____isaacscript_2Dcommon.getTrinketName
 local ____repeat = ____isaacscript_2Dcommon["repeat"]
 local sfxManager = ____isaacscript_2Dcommon.sfxManager
@@ -62570,6 +62546,8 @@ local ____teleporter = require("packages.mod.src.features.teleporter")
 local spawnTeleporter = ____teleporter.spawnTeleporter
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____sprite = require("packages.mod.src.sprite")
 local initGlowingItemSprite = ____sprite.initGlowingItemSprite
 local ____utils = require("packages.mod.src.utils")
@@ -62602,7 +62580,7 @@ function setupRound(self)
     resetAllButtons(nil)
 end
 function getRandomTrinkets(self)
-    local trinketArray = getTrinketArray(nil)
+    local trinketArray = mod:getTrinketArray()
     local randomTrinkets = {}
     ____repeat(
         nil,
@@ -63163,14 +63141,14 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local Direction = ____isaac_2Dtypescript_2Ddefinitions.Direction
 local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local PokyVariant = ____isaac_2Dtypescript_2Ddefinitions.PokyVariant
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
 local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
 local spawnTaskButton = ____buttonSpawn.spawnTaskButton
 local ____teleporter = require("packages.mod.src.features.teleporter")
 local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____spawnObjects = require("packages.mod.src.spawnObjects")
 local spawnFakeBlockLine = ____spawnObjects.spawnFakeBlockLine
 local ____utils = require("packages.mod.src.utils")
@@ -63184,61 +63162,37 @@ function ____exports.walkBetweenSlides(self)
     local rightGridIndex = 72
     spawnTaskButton(nil, rightGridIndex, 1)
     spawnFakeBlockLine(nil, 19, 3, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 19, 49)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 19, 49)
+    end)
     spawnFakeBlockLine(nil, 79, 3, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 79, 109)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 79, 109)
+    end)
     spawnFakeBlockLine(nil, 21, 2, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 21, 36)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 21, 36)
+    end)
     spawnFakeBlockLine(nil, 66, 4, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 66, 111)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 66, 111)
+    end)
     spawnFakeBlockLine(nil, 23, 4, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 23, 68)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 23, 68)
+    end)
     spawnFakeBlockLine(nil, 98, 2, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 98, 113)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 98, 113)
+    end)
     spawnFakeBlockLine(nil, 25, 3, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 25, 55)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 25, 55)
+    end)
     spawnFakeBlockLine(nil, 85, 3, Direction.DOWN)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 85, 115)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 85, 115)
+    end)
     local slideGridIndexes = {
         20,
         110,
@@ -64162,13 +64116,14 @@ local EntityCollisionClass = ____isaac_2Dtypescript_2Ddefinitions.EntityCollisio
 local EntityGridCollisionClass = ____isaac_2Dtypescript_2Ddefinitions.EntityGridCollisionClass
 local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local runInNRenderFrames = ____isaacscript_2Dcommon.runInNRenderFrames
 local sfxManager = ____isaacscript_2Dcommon.sfxManager
 local VectorZero = ____isaacscript_2Dcommon.VectorZero
 local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
 local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____stageAPI = require("packages.mod.src.stageAPI")
 local getSkeldRoom = ____stageAPI.getSkeldRoom
 function ____exports.convertPlayerToGhostForm(self)
@@ -64215,7 +64170,7 @@ function ____exports.commandKilled(self, data)
         player.Velocity = VectorZero
         player.ControlsEnabled = false
         player.Visible = false
-        runInNRenderFrames(nil, ____exports.convertPlayerToGhostForm, POST_DEATH_DELAY_RENDER_FRAMES)
+        mod:runInNRenderFrames(____exports.convertPlayerToGhostForm, POST_DEATH_DELAY_RENDER_FRAMES)
     end
     sfxManager:Play(SoundEffect.ISAAC_DIES)
     sfxManager:Play(SoundEffectCustom.KILL)
@@ -64895,7 +64850,7 @@ function setState(self, state)
     g.game.startGameCutscene.startRenderFrame = isaacFrameCount
     log(
         nil,
-        ((("Changed start game cutscene state: " .. tostring(CutsceneState[state])) .. " (") .. tostring(state)) .. ")"
+        ((("Changed start game cutscene state: " .. CutsceneState[state]) .. " (") .. tostring(state)) .. ")"
     )
 end
 function setSprite(self, role)
@@ -65364,6 +65319,8 @@ local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
 local taskLeave = ____taskSubroutines.taskLeave
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 function entityTakeDmgPlayer(self, tookDamage, _damageAmount, _damageFlags, _damageSource, _damageCountdownFrames)
     local gameFrameCount = game:GetFrameCount()
     if gameFrameCount == gameFrameReturningFromTask then
@@ -65382,7 +65339,7 @@ function entityTakeDmgPlayer(self, tookDamage, _damageAmount, _damageFlags, _dam
     return false
 end
 gameFrameReturningFromTask = nil
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallback(ModCallback.ENTITY_TAKE_DMG, entityTakeDmgPlayer, EntityType.PLAYER)
 end
 return ____exports
@@ -65398,6 +65355,8 @@ local CacheFlag = ____isaac_2Dtypescript_2Ddefinitions.CacheFlag
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 function speed(self, player)
     if g.game == nil then
         return
@@ -65413,7 +65372,7 @@ function speed(self, player)
         player.MoveSpeed = 2
     end
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallback(ModCallback.EVALUATE_CACHE, speed, CacheFlag.SPEED)
 end
 return ____exports
@@ -65434,6 +65393,8 @@ local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.sr
 local game = ____isaacscript_2Dcommon.game
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____utils = require("packages.mod.src.utils")
 local inCutscene = ____utils.inCutscene
 local inEndMeeting = ____utils.inEndMeeting
@@ -65504,7 +65465,7 @@ function disableReset(self, inputHook, buttonAction)
     return nil
 end
 MOVEMENT_BUTTONS = __TS__New(Set, {ButtonAction.LEFT, ButtonAction.RIGHT, ButtonAction.UP, ButtonAction.DOWN})
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallback(ModCallback.INPUT_ACTION, main)
 end
 return ____exports
@@ -65517,10 +65478,12 @@ local LevelCurse = ____isaac_2Dtypescript_2Ddefinitions.LevelCurse
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local bitFlags = ____isaacscript_2Dcommon.bitFlags
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 function main(self)
     return bitFlags(nil, LevelCurse.NONE)
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallback(ModCallback.POST_CURSE_EVAL, main)
 end
 return ____exports
@@ -65819,6 +65782,8 @@ local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
 local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
 local buttons = require("packages.mod.src.features.buttons")
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local makePentagram = require("packages.mod.src.tasks.makePentagram")
 function pentagramBlackPowder(self, effect)
     makePentagram:postEffectUpdatePentagramBlackPowder(effect)
@@ -65826,7 +65791,7 @@ end
 function postEffectUpdateButton(self, effect)
     buttons:postEffectUpdateButton(effect)
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallback(ModCallback.POST_EFFECT_UPDATE, pentagramBlackPowder, EffectVariant.PENTAGRAM_BLACK_POWDER)
     mod:AddCallback(ModCallback.POST_EFFECT_UPDATE, postEffectUpdateButton, EffectVariantCustom.BUTTON)
 end
@@ -65837,11 +65802,13 @@ local ____exports = {}
 local main
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local killWorms = require("packages.mod.src.tasks.killWorms")
 function main(self, _entity)
     killWorms:postEntityKill()
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallback(ModCallback.POST_ENTITY_KILL, main)
 end
 return ____exports
@@ -65856,6 +65823,8 @@ local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.sr
 local VectorZero = ____isaacscript_2Dcommon.VectorZero
 local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
 local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 function keepStationary(self, npc)
     if npc.Type >= EntityType.EFFECT then
         return
@@ -65867,7 +65836,7 @@ function keepStationary(self, npc)
     npc.Position = data.position
     npc.Velocity = VectorZero
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallback(ModCallback.POST_NPC_RENDER, keepStationary, EntityTypeCustom.BOX)
     mod:AddCallback(ModCallback.POST_NPC_RENDER, keepStationary, EntityTypeCustom.TABLE)
     mod:AddCallback(ModCallback.POST_NPC_RENDER, keepStationary, EntityTypeCustom.ADMIN_TABLE)
@@ -65880,11 +65849,13 @@ local pill
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local loadSlotMachines = require("packages.mod.src.tasks.loadSlotMachines")
 function pill(self, pickup)
     loadSlotMachines:postPickupInitPill(pickup)
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallback(ModCallback.POST_PICKUP_INIT, pill, PickupVariant.PILL)
 end
 return ____exports
@@ -65895,10 +65866,12 @@ local main
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local disableMultiplayer = require("packages.mod.src.features.disableMultiplayer")
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 function main(self, player)
     disableMultiplayer:postPlayerInit(player)
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallback(ModCallback.POST_PLAYER_INIT, main)
 end
 return ____exports
@@ -66955,6 +66928,8 @@ local startGameCutscene = require("packages.mod.src.features.startGameCutscene")
 local startMeeting = require("packages.mod.src.features.startMeeting")
 local vents = require("packages.mod.src.features.vents")
 local welcomeNotification = require("packages.mod.src.features.welcomeNotification")
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local socket = require("packages.mod.src.network.socket")
 local udp = require("packages.mod.src.network.udp")
 local fixWires = require("packages.mod.src.tasks.fixWires")
@@ -66992,7 +66967,7 @@ function main(self)
     pushButtonsInOrder:postRender()
     drawRoomDescription:postRender()
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallback(ModCallback.POST_RENDER, main)
 end
 return ____exports
@@ -67107,6 +67082,8 @@ local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local actionInput = require("packages.mod.src.features.actionInput")
 local doors = require("packages.mod.src.features.doors")
 local pillCardInput = require("packages.mod.src.features.pillCardInput")
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local defeatMonstro = require("packages.mod.src.tasks.defeatMonstro")
 local loadSlotMachines = require("packages.mod.src.tasks.loadSlotMachines")
 local pushTNTBarrel = require("packages.mod.src.tasks.pushTNTBarrel")
@@ -67118,7 +67095,7 @@ function main(self)
     actionInput:postUpdate()
     pillCardInput:postUpdate()
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallback(ModCallback.POST_UPDATE, main)
 end
 return ____exports
@@ -67131,6 +67108,8 @@ local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local log = ____isaacscript_2Dcommon.log
 local disableMultiplayer = require("packages.mod.src.features.disableMultiplayer")
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 function main(self, shouldSave)
     log(
         nil,
@@ -67138,7 +67117,7 @@ function main(self, shouldSave)
     )
     disableMultiplayer:preGameExit(shouldSave)
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallback(ModCallback.PRE_GAME_EXIT, main)
 end
 return ____exports
@@ -67151,6 +67130,8 @@ local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local ModCallbackCustom = ____isaacscript_2Dcommon.ModCallbackCustom
 local featureTeleporter = require("packages.mod.src.features.teleporter")
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local bombRocks = require("packages.mod.src.tasks.bombRocks")
 local destroyGiantPoop = require("packages.mod.src.tasks.destroyGiantPoop")
 function rock(self, gridEntity)
@@ -67162,7 +67143,7 @@ end
 function teleporter(self, gridEntity)
     featureTeleporter:postGridEntityUpdateTeleporter(gridEntity)
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallbackCustom(ModCallbackCustom.POST_GRID_ENTITY_UPDATE, rock, GridEntityType.ROCK)
     mod:AddCallbackCustom(ModCallbackCustom.POST_GRID_ENTITY_UPDATE, poop, GridEntityType.POOP)
     mod:AddCallbackCustom(ModCallbackCustom.POST_GRID_ENTITY_UPDATE, teleporter, GridEntityType.TELEPORTER)
@@ -67185,6 +67166,8 @@ local convertPlayerToGhostForm = ____killed.convertPlayerToGhostForm
 local lobby = require("packages.mod.src.features.lobby")
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.default
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____players = require("packages.mod.src.players")
 local getOurPlayer = ____players.getOurPlayer
 local ____stageAPI = require("packages.mod.src.stageAPI")
@@ -67217,7 +67200,7 @@ function checkSetPlayerToGhostForm(self)
         convertPlayerToGhostForm(nil)
     end
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallbackCustom(ModCallbackCustom.POST_NEW_ROOM_REORDERED, main)
 end
 return ____exports
@@ -67229,11 +67212,13 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local ModCallbackCustom = ____isaacscript_2Dcommon.ModCallbackCustom
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local collectPennies = require("packages.mod.src.tasks.collectPennies")
 function coin(self, _pickup)
     collectPennies:postPickupCollectCoin()
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallbackCustom(ModCallbackCustom.POST_PICKUP_COLLECT, coin, PickupVariant.COIN)
 end
 return ____exports
@@ -67244,10 +67229,12 @@ local main
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local ModCallbackCustom = ____isaacscript_2Dcommon.ModCallbackCustom
 local disableMultiplayer = require("packages.mod.src.features.disableMultiplayer")
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 function main(self, player)
     disableMultiplayer:postPlayerInitLate(player)
 end
-function ____exports.init(self, mod)
+function ____exports.init(self)
     mod:AddCallbackCustom(ModCallbackCustom.POST_PLAYER_INIT_LATE, main)
 end
 return ____exports
@@ -67270,12 +67257,12 @@ return ____exports
 ["packages.mod.src.rooms.admin"] = function(...) 
 local ____exports = {}
 local spawnAdminTable, spawnAdminTop
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
 local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
 local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____utils = require("packages.mod.src.utils")
 local spawnEntity = ____utils.spawnEntity
 function spawnAdminTable(self)
@@ -67297,12 +67284,9 @@ function spawnAdminTop(self)
         0,
         topCenterGridIndex
     )
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 19, 26)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 19, 26)
+    end)
 end
 function ____exports.spawnAdminObjects(self)
     spawnAdminTable(nil)
@@ -67315,12 +67299,13 @@ local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
 local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
 local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
 local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____utils = require("packages.mod.src.utils")
 local spawnEntity = ____utils.spawnEntity
 function ____exports.spawnCommunicationObjects(self)
@@ -67342,24 +67327,21 @@ function ____exports.spawnCommunicationObjects(self)
     )
     local bottomLeftGridIndex = 106
     spawnGridEntity(nil, GridEntityType.STATUE, bottomLeftGridIndex)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 16, 35, -20)
-            addCollision(nil, 26, 28)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 16, 35, -20)
+        addCollision(nil, 26, 28)
+    end)
 end
 return ____exports
  end,
 ["packages.mod.src.rooms.electrical"] = function(...) 
 local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
 local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
 local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____utils = require("packages.mod.src.utils")
 local spawnEntity = ____utils.spawnEntity
 function ____exports.spawnElectricalObjects(self)
@@ -67371,12 +67353,9 @@ function ____exports.spawnElectricalObjects(self)
         0,
         nextToTopLeftGridIndex
     )
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 17, 43)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 17, 43)
+    end)
 end
 return ____exports
  end,
@@ -67392,12 +67371,12 @@ return ____exports
  end,
 ["packages.mod.src.rooms.medbay"] = function(...) 
 local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
 local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
 local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____utils = require("packages.mod.src.utils")
 local spawnEntity = ____utils.spawnEntity
 function ____exports.spawnMedbayObjects(self)
@@ -67421,24 +67400,21 @@ function ____exports.spawnMedbayObjects(self)
         local sprite = bed:GetSprite()
         sprite.FlipX = true
     end
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 16, 108)
-            addCollision(nil, 26, 118)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 16, 108)
+        addCollision(nil, 26, 118)
+    end)
 end
 return ____exports
  end,
 ["packages.mod.src.rooms.navigation"] = function(...) 
 local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
 local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
 local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____utils = require("packages.mod.src.utils")
 local spawnEntity = ____utils.spawnEntity
 function ____exports.spawnNavigationObjects(self)
@@ -67450,23 +67426,20 @@ function ____exports.spawnNavigationObjects(self)
         0,
         rightGridIndex
     )
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 27, 118)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 27, 118)
+    end)
 end
 return ____exports
  end,
 ["packages.mod.src.rooms.o2"] = function(...) 
 local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
 local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
 local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____utils = require("packages.mod.src.utils")
 local spawnEntity = ____utils.spawnEntity
 function ____exports.spawnO2Objects(self)
@@ -67479,12 +67452,9 @@ function ____exports.spawnO2Objects(self)
             gridIndex
         )
     end
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 16, 57)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 16, 57)
+    end)
 end
 return ____exports
  end,
@@ -67527,12 +67497,12 @@ return ____exports
  end,
 ["packages.mod.src.rooms.security"] = function(...) 
 local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
 local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
 local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____utils = require("packages.mod.src.utils")
 local spawnEntity = ____utils.spawnEntity
 function ____exports.spawnSecurityObjects(self)
@@ -67544,13 +67514,10 @@ function ____exports.spawnSecurityObjects(self)
         0,
         rightWallGridIndex
     )
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 57, 88)
-            addCollision(nil, 103)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 57, 88)
+        addCollision(nil, 103)
+    end)
 end
 return ____exports
  end,
@@ -67558,12 +67525,12 @@ return ____exports
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local Direction = ____isaac_2Dtypescript_2Ddefinitions.Direction
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local runNextGameFrame = ____isaacscript_2Dcommon.runNextGameFrame
 local ____collisionObjects = require("packages.mod.src.collisionObjects")
 local addCollision = ____collisionObjects.addCollision
 local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
 local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____spawnObjects = require("packages.mod.src.spawnObjects")
 local spawnFakeBlockLine = ____spawnObjects.spawnFakeBlockLine
 local ____utils = require("packages.mod.src.utils")
@@ -67571,24 +67538,18 @@ local spawnEntity = ____utils.spawnEntity
 function ____exports.spawnShieldsObjects(self)
     spawnFakeBlockLine(nil, 196, 13, Direction.RIGHT)
     spawnFakeBlockLine(nil, 211, 13, Direction.RIGHT)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 196, 223)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 196, 223)
+    end)
     spawnFakeBlockLine(nil, 151, 5, Direction.RIGHT)
     spawnFakeBlockLine(nil, 136, 5, Direction.RIGHT)
     spawnFakeBlockLine(nil, 121, 3, Direction.RIGHT)
     spawnFakeBlockLine(nil, 106, 2, Direction.RIGHT)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 121, 153)
-            addCollision(nil, 139, 154)
-            addCollision(nil, 155, 155, -20)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 121, 153)
+        addCollision(nil, 139, 154)
+        addCollision(nil, 155, 155, -20)
+    end)
     spawnFakeBlockLine(nil, 187, 7, Direction.RIGHT)
     spawnFakeBlockLine(nil, 173, 6, Direction.RIGHT)
     spawnFakeBlockLine(nil, 159, 5, Direction.RIGHT)
@@ -67600,28 +67561,22 @@ function ____exports.spawnShieldsObjects(self)
     spawnFakeBlockLine(nil, 84, 4, Direction.RIGHT)
     spawnFakeBlockLine(nil, 69, 4, Direction.RIGHT)
     spawnFakeBlockLine(nil, 54, 4, Direction.RIGHT)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 188, 193)
-            addCollision(nil, 174, 178)
-            addCollision(nil, 129, 163)
-            addCollision(nil, 100, 148)
-            addCollision(nil, 54, 87)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 188, 193)
+        addCollision(nil, 174, 178)
+        addCollision(nil, 129, 163)
+        addCollision(nil, 100, 148)
+        addCollision(nil, 54, 87)
+    end)
     spawnFakeBlockLine(nil, 61, 4, Direction.RIGHT)
     spawnFakeBlockLine(nil, 46, 5, Direction.RIGHT)
     spawnFakeBlockLine(nil, 31, 5, Direction.RIGHT)
     spawnFakeBlockLine(nil, 16, 13, Direction.RIGHT)
-    runNextGameFrame(
-        nil,
-        function()
-            addCollision(nil, 16, 63)
-            addCollision(nil, 19, 49)
-            addCollision(nil, 20, 28)
-        end
-    )
+    mod:runNextGameFrame(function()
+        addCollision(nil, 16, 63)
+        addCollision(nil, 19, 49)
+        addCollision(nil, 20, 28)
+    end)
     local gridIndex = 111
     spawnEntity(
         nil,
@@ -67932,11 +67887,7 @@ local IS_DEV = ____common.IS_DEV
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local Keyboard = ____isaac_2Dtypescript_2Ddefinitions.Keyboard
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local addConsoleCommand = ____isaacscript_2Dcommon.addConsoleCommand
-local enableDevFeatures = ____isaacscript_2Dcommon.enableDevFeatures
 local log = ____isaacscript_2Dcommon.log
-local registerHotkey = ____isaacscript_2Dcommon.registerHotkey
-local upgradeMod = ____isaacscript_2Dcommon.upgradeMod
 local entityTakeDmg = require("packages.mod.src.callbacks.entityTakeDmg")
 local evaluateCache = require("packages.mod.src.callbacks.evaluateCache")
 local inputAction = require("packages.mod.src.callbacks.inputAction")
@@ -67968,50 +67919,49 @@ local warp = ____debug.warp
 local ____initFeatures = require("packages.mod.src.initFeatures")
 local initFeatures = ____initFeatures.initFeatures
 local collisionObjects = require("packages.mod.src.lib.collisionObjects")
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____socketClient = require("packages.mod.src.network.socketClient")
 local disconnect = ____socketClient.disconnect
 function main(self)
-    local modVanilla = RegisterMod("isaacAmongUsMod", 1)
-    local mod = upgradeMod(nil, modVanilla)
-    initLibraries(nil, mod)
+    initLibraries(nil)
     initFeatures(nil)
-    initCallbacks(nil, mod)
-    initCallbacksCustom(nil, mod)
+    initCallbacks(nil)
+    initCallbacksCustom(nil)
     initCallbacksStageAPI(nil)
     if IS_DEV then
-        enableDevFeatures(nil, mod)
-        addConsoleCommand(nil, "d", debugFunction1)
-        addConsoleCommand(nil, "d2", debugFunction2)
-        addConsoleCommand(nil, "w", warp)
-        registerHotkey(nil, Keyboard.F1, hotkeyFunction1)
-        registerHotkey(nil, Keyboard.F2, hotkeyFunction2)
-        registerHotkey(nil, Keyboard.F4, disconnect)
+        mod:addConsoleCommand("d", debugFunction1)
+        mod:addConsoleCommand("d2", debugFunction2)
+        mod:addConsoleCommand("w", warp)
+        mod:setHotkey(Keyboard.F1, hotkeyFunction1)
+        mod:setHotkey(Keyboard.F2, hotkeyFunction2)
+        mod:setHotkey(Keyboard.F4, disconnect)
     end
     log(nil, ((MOD_NAME .. " ") .. VERSION) .. " initialized.")
 end
-function initLibraries(self, mod)
+function initLibraries(self)
     collisionObjects:init(mod)
 end
-function initCallbacks(self, mod)
-    postUpdate:init(mod)
-    postRender:init(mod)
-    evaluateCache:init(mod)
-    postPlayerInit:init(mod)
-    entityTakeDmg:init(mod)
-    postCurseEval:init(mod)
-    inputAction:init(mod)
-    preGameExit:init(mod)
-    postNPCRender:init(mod)
-    postPickupInit:init(mod)
-    postEffectUpdate:init(mod)
-    postEntityKill:init(mod)
+function initCallbacks(self)
+    postUpdate:init()
+    postRender:init()
+    evaluateCache:init()
+    postPlayerInit:init()
+    entityTakeDmg:init()
+    postCurseEval:init()
+    inputAction:init()
+    preGameExit:init()
+    postNPCRender:init()
+    postPickupInit:init()
+    postEffectUpdate:init()
+    postEntityKill:init()
 end
-function initCallbacksCustom(self, mod)
-    postNewRoomReordered:init(mod)
-    postGameStartedReordered:init(mod)
-    postGridEntityUpdate:init(mod)
-    postPickupCollect:init(mod)
-    postPlayerInitLate:init(mod)
+function initCallbacksCustom(self)
+    postNewRoomReordered:init()
+    postGameStartedReordered:init()
+    postGridEntityUpdate:init()
+    postPickupCollect:init()
+    postPlayerInitLate:init()
 end
 function initCallbacksStageAPI(self)
     if StageAPI == nil then

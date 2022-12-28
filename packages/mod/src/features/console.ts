@@ -1,21 +1,19 @@
 import { SocketCommandModToServer } from "common";
 import { Keyboard } from "isaac-typescript-definitions";
 import {
-  disableAllInputs,
-  enableAllInputs,
   game,
   getEnumValues,
   getMapPartialMatch,
   isKeyboardPressed,
   keyboardToString,
   RENDER_FRAMES_PER_SECOND,
-  saveDataManager,
 } from "isaacscript-common";
 import { addLocalChat } from "../chat";
 import { chatCommandFunctionMap } from "../chatCommandFunctions";
 import { MOD_NAME } from "../constants";
 import { HexColors } from "../enums/HexColors";
 import g from "../globals";
+import { mod } from "../mod";
 import { sendTCP } from "../network/send";
 import * as socketClient from "../network/socketClient";
 import { getScreenPosition, inCutscene } from "../utils";
@@ -57,7 +55,7 @@ const v = {
 };
 
 export function init(): void {
-  saveDataManager("console", v);
+  mod.saveDataManager("console", v);
 }
 
 // ModCallback.POST_RENDER (2)
@@ -157,13 +155,13 @@ function insertNewCharacter(character: string) {
 
 function open() {
   consoleOpen = true;
-  disableAllInputs(MOD_NAME);
+  mod.disableAllInputs(MOD_NAME);
   AwaitingTextInput = true;
 }
 
 function close(execute = true) {
   consoleOpen = false;
-  enableAllInputs(MOD_NAME);
+  mod.enableAllInputs(MOD_NAME);
   AwaitingTextInput = false;
 
   if (!execute || inputText === "") {
