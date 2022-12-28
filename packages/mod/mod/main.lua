@@ -64705,9 +64705,7 @@ function ____exports.commandReconnect(self, data)
     end
     if data.room ~= SkeldRoom.CAFETERIA then
         local roomName = getSkeldRoomName(nil, data.room)
-        if roomName ~= nil then
-            goToStageAPIRoom(nil, roomName)
-        end
+        goToStageAPIRoom(nil, roomName)
     end
     setPlayerPosition(nil, data.enterGridIndex)
     if not player.alive then
@@ -66320,9 +66318,6 @@ function ____exports.ventSwitchRoom(self)
         return
     end
     local roomName = getSkeldRoomName(nil, ventDescription.room)
-    if roomName == nil then
-        return
-    end
     goToStageAPIRoom(nil, roomName, ventDescription.gridIndex)
 end
 return ____exports

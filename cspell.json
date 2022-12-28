@@ -1,47 +1,43 @@
 {
-    "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
-    "version": "0.2",
-    "import": [
-        "isaacscript-spell/cspell-isaacscript.json"
-    ],
-    "files": [
-        "**"
-    ],
-    "enableFiletypes": [
-        "*"
-    ],
-    "ignorePaths": [
-        "*.anm2",
-        "*.lua",
-        "*.pyc",
-        "*.wav",
-        ".git/**",
-        "dist/**",
-        "node_modules/**",
-        "migration.sql",
-        "mod/main.lua"
-    ],
-    "words": [
-        "amongus",
-        "amongususer",
-        "autoincrement",
-        "basementrenovator",
-        "budjmt",
-        "cloc",
-        "COMMS",
-        "CREATEDB",
-        "datasource",
-        "datetime",
-        "floatle",
-        "gamelist",
-        "isaacracing",
-        "MAPI",
-        "Medbay",
-        "psql",
-        "Skeld",
-        "Somdudewillson",
-        "STAGEAPI",
-        "unstarted",
-        "voteskip"
-    ]
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "import": ["isaacscript-spell/cspell-isaacscript.json"],
+  "files": ["**"],
+  "enableFiletypes": ["*"],
+  "enableGlobDot": true,
+  "useGitignore": true,
+  "ignorePaths": [
+    "*.anm2",
+    "*.lua",
+    "*.pyc",
+    "*.wav",
+    ".git/**",
+    "dist/**",
+    "node_modules/**",
+    "migration.sql",
+    "mod/main.lua"
+  ],
+  "words": [
+    "amongus",
+    "amongususer",
+    "autoincrement",
+    "basementrenovator",
+    "budjmt",
+    "cloc",
+    "COMMS",
+    "CREATEDB",
+    "datasource",
+    "datetime",
+    "floatle",
+    "gamelist",
+    "isaacracing",
+    "MAPI",
+    "Medbay",
+    "psql",
+    "Skeld",
+    "Somdudewillson",
+    "STAGEAPI",
+    "unstarted",
+    "voteskip"
+  ]
 }
