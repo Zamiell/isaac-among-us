@@ -15,6 +15,7 @@ import { commandNewOwner } from "./commands/newOwner";
 import { commandPlayerJoined } from "./commands/playerJoined";
 import { commandPlayerLeft } from "./commands/playerLeft";
 import { commandReconnect } from "./commands/reconnect";
+import { commandSabotage } from "./commands/sabotage";
 import { commandStarted } from "./commands/started";
 import { commandStartMeeting } from "./commands/startMeeting";
 import { commandStartVoting } from "./commands/startVoting";
@@ -48,6 +49,7 @@ export const commandMap: CommandMap = {
   [SocketCommandServerToMod.EMERGENCY_BUTTON_COOLDOWN]:
     commandEmergencyButtonCooldown,
   [SocketCommandServerToMod.KILLED]: commandKilled,
+  [SocketCommandServerToMod.SABOTAGE]: commandSabotage,
   [SocketCommandServerToMod.START_MEETING]: commandStartMeeting,
   [SocketCommandServerToMod.START_VOTING]: commandStartVoting,
   [SocketCommandServerToMod.VOTE]: commandVote,
