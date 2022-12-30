@@ -1,6 +1,6 @@
 TODO:
-- imposter thing where you close the doors
 - imposter lights
+- imposter thing where you close the doors
 
 - change characters
 - animation for when someone talks in meeting

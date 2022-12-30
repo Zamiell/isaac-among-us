@@ -1,12 +1,15 @@
 /* eslint-disable max-classes-per-file */
 
+import { HasAllEnumKeys } from "isaacscript-common";
 import { MeetingResolution } from "../enums/MeetingResolution";
 import { MeetingType } from "../enums/MeetingType";
 import { PlayerTypeAllowed } from "../enums/PlayerTypeAllowed";
 import { Role } from "../enums/Role";
+import { SabotageType } from "../enums/SabotageType";
 import { SkeldRoom } from "../enums/SkeldRoom";
 import { Meeting } from "../interfaces/Meeting";
 import { PlayerBody } from "../interfaces/PlayerBody";
+import { AnyClass } from "./AnyClass";
 import { TaskList } from "./TaskList";
 
 export enum SocketCommandServerToMod {
@@ -27,6 +30,7 @@ export enum SocketCommandServerToMod {
   RECONNECT = "reconnect",
   EMERGENCY_BUTTON_COOLDOWN = "emergencyButtonCooldown",
   KILLED = "killed",
+  SABOTAGE = "sabotage",
   START_MEETING = "startMeeting",
   START_VOTING = "startVoting",
   VOTE = "vote",
@@ -161,6 +165,11 @@ export class KilledDataToMod {
   y!: number;
 }
 
+export class SabotageDataToMod {
+  gameID!: number;
+  sabotageType!: SabotageType;
+}
+
 export class StartMeetingDataToMod {
   gameID!: number;
   meetingType!: MeetingType;
@@ -223,10 +232,11 @@ export const SocketCommandServerToModData = {
   [SocketCommandServerToMod.EMERGENCY_BUTTON_COOLDOWN]:
     EmergencyButtonCooldownDataToMod,
   [SocketCommandServerToMod.KILLED]: KilledDataToMod,
+  [SocketCommandServerToMod.SABOTAGE]: SabotageDataToMod,
   [SocketCommandServerToMod.START_MEETING]: StartMeetingDataToMod,
   [SocketCommandServerToMod.START_VOTING]: StartVotingDataToMod,
   [SocketCommandServerToMod.VOTE]: VoteDataToMod,
   [SocketCommandServerToMod.END_MEETING]: EndMeetingDataToMod,
   [SocketCommandServerToMod.END_GAME]: EndGameDataToMod,
   [SocketCommandServerToMod.TERMINATED]: TerminatedDataToMod,
-} as const;
+} as const satisfies HasAllEnumKeys<SocketCommandServerToMod, AnyClass>;

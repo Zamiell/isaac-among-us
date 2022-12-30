@@ -4,6 +4,7 @@ export * from "./enums/MeetingResolution";
 export * from "./enums/MeetingType";
 export * from "./enums/PlayerTypeAllowed";
 export * from "./enums/Role";
+export * from "./enums/SabotageType";
 export * from "./enums/SkeldRoom";
 export * from "./enums/Task";
 export * from "./enums/TaskType";

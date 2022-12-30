@@ -14,7 +14,7 @@
   "devDependencies": {
     "@types/node": "^18.11.18",
     "@types/struct": "^0.0.3",
-    "isaacscript": "^3.3.8",
+    "isaacscript": "^3.4.0",
     "isaacscript-lint": "^4.2.1",
     "isaacscript-spell": "^1.2.21",
     "isaacscript-tsconfig": "^2.2.0",

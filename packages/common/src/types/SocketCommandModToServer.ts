@@ -1,7 +1,10 @@
 /* eslint-disable max-classes-per-file */
 
 import { MeetingType } from "../enums/MeetingType";
+import { SabotageType } from "../enums/SabotageType";
 import { SkeldRoom } from "../enums/SkeldRoom";
+import { AnyClass } from "./AnyClass";
+import { HasAllEnumKeys } from "./HasAllEnumKeys";
 
 export enum SocketCommandModToServer {
   PING = "ping",
@@ -16,6 +19,7 @@ export enum SocketCommandModToServer {
   RECONNECT = "reconnect",
   ROOM = "room",
   KILL = "kill",
+  SABOTAGE = "sabotage",
   MEETING = "meeting",
   VOTE = "vote",
   TASK_COMPLETE = "taskComplete",
@@ -76,6 +80,11 @@ export class KillDataToServer {
   y = 0;
 }
 
+export class SabotageDataToServer {
+  gameID = 0;
+  sabotageType = SabotageType.FIX_LIGHTS;
+}
+
 export class MeetingDataToServer {
   gameID = 0;
   meetingType = MeetingType.REPORT_BODY;
@@ -129,6 +138,7 @@ export const SocketCommandModToServerData = {
   [SocketCommandModToServer.RECONNECT]: ReconnectDataToServer,
   [SocketCommandModToServer.ROOM]: RoomDataToServer,
   [SocketCommandModToServer.KILL]: KillDataToServer,
+  [SocketCommandModToServer.SABOTAGE]: SabotageDataToServer,
   [SocketCommandModToServer.MEETING]: MeetingDataToServer,
   [SocketCommandModToServer.VOTE]: VoteDataToServer,
   [SocketCommandModToServer.TASK_COMPLETE]: TaskCompleteDataToServer,
@@ -136,4 +146,4 @@ export const SocketCommandModToServerData = {
   [SocketCommandModToServer.REVIVE]: ReviveDataToServer,
   [SocketCommandModToServer.KILL_ME]: KillMeDataToServer,
   [SocketCommandModToServer.DEBUG]: DebugDataToServer,
-} as const;
+} as const satisfies HasAllEnumKeys<SocketCommandModToServer, AnyClass>;

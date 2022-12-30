@@ -2660,6 +2660,15 @@ ____exports.Role.IMPOSTER = 1
 ____exports.Role[____exports.Role.IMPOSTER] = "IMPOSTER"
 return ____exports
  end,
+["packages.common.src.enums.SabotageType"] = function(...) 
+local ____exports = {}
+____exports.SabotageType = {}
+____exports.SabotageType.FIX_LIGHTS = 0
+____exports.SabotageType[____exports.SabotageType.FIX_LIGHTS] = "FIX_LIGHTS"
+____exports.SabotageType.DOOR_SABOTAGE = 1
+____exports.SabotageType[____exports.SabotageType.DOOR_SABOTAGE] = "DOOR_SABOTAGE"
+return ____exports
+ end,
 ["packages.common.src.enums.SkeldRoom"] = function(...) 
 local ____exports = {}
 --- - The enum values must match the variant IDs defined in "map.xml" / "map.stb" files.
@@ -2930,12 +2939,22 @@ ____exports.TASK_DESCRIPTIONS = {
 }
 return ____exports
  end,
+["packages.common.src.types.AnyClass"] = function(...) 
+local ____exports = {}
+return ____exports
+ end,
+["packages.common.src.types.HasAllEnumKeys"] = function(...) 
+local ____exports = {}
+return ____exports
+ end,
 ["packages.common.src.types.SocketCommandModToServer"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local ____exports = {}
 local ____MeetingType = require("packages.common.src.enums.MeetingType")
 local MeetingType = ____MeetingType.MeetingType
+local ____SabotageType = require("packages.common.src.enums.SabotageType")
+local SabotageType = ____SabotageType.SabotageType
 local ____SkeldRoom = require("packages.common.src.enums.SkeldRoom")
 local SkeldRoom = ____SkeldRoom.SkeldRoom
 ____exports.SocketCommandModToServer = {}
@@ -2951,6 +2970,7 @@ ____exports.SocketCommandModToServer.START = "start"
 ____exports.SocketCommandModToServer.RECONNECT = "reconnect"
 ____exports.SocketCommandModToServer.ROOM = "room"
 ____exports.SocketCommandModToServer.KILL = "kill"
+____exports.SocketCommandModToServer.SABOTAGE = "sabotage"
 ____exports.SocketCommandModToServer.MEETING = "meeting"
 ____exports.SocketCommandModToServer.VOTE = "vote"
 ____exports.SocketCommandModToServer.TASK_COMPLETE = "taskComplete"
@@ -3029,6 +3049,13 @@ function KillDataToServer.prototype.____constructor(self)
     self.x = 0
     self.y = 0
 end
+____exports.SabotageDataToServer = __TS__Class()
+local SabotageDataToServer = ____exports.SabotageDataToServer
+SabotageDataToServer.name = "SabotageDataToServer"
+function SabotageDataToServer.prototype.____constructor(self)
+    self.gameID = 0
+    self.sabotageType = SabotageType.FIX_LIGHTS
+end
 ____exports.MeetingDataToServer = __TS__Class()
 local MeetingDataToServer = ____exports.MeetingDataToServer
 MeetingDataToServer.name = "MeetingDataToServer"
@@ -3098,6 +3125,7 @@ ____exports.SocketCommandModToServerData = {
     [____exports.SocketCommandModToServer.RECONNECT] = ____exports.ReconnectDataToServer,
     [____exports.SocketCommandModToServer.ROOM] = ____exports.RoomDataToServer,
     [____exports.SocketCommandModToServer.KILL] = ____exports.KillDataToServer,
+    [____exports.SocketCommandModToServer.SABOTAGE] = ____exports.SabotageDataToServer,
     [____exports.SocketCommandModToServer.MEETING] = ____exports.MeetingDataToServer,
     [____exports.SocketCommandModToServer.VOTE] = ____exports.VoteDataToServer,
     [____exports.SocketCommandModToServer.TASK_COMPLETE] = ____exports.TaskCompleteDataToServer,
@@ -3341,6 +3369,14 @@ do
 end
 do
     local ____export = require("packages.common.src.enums.Role")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+do
+    local ____export = require("packages.common.src.enums.SabotageType")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
             ____exports[____exportKey] = ____exportValue
@@ -59167,6 +59203,7 @@ local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____common = require("packages.common.src.index")
 local NOT_VOTED_YET = ____common.NOT_VOTED_YET
+local SabotageType = ____common.SabotageType
 local SocketCommandModToServer = ____common.SocketCommandModToServer
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local logTable = ____isaacscript_2Dcommon.logTable
@@ -59309,6 +59346,15 @@ ____exports.chatCommandFunctionMap:set(
             return
         end
         sendTCP(nil, SocketCommandModToServer.LEAVE, {gameID = g.game.id})
+    end
+)
+____exports.chatCommandFunctionMap:set(
+    "lights",
+    function(____, _args)
+        if g.game == nil then
+            return
+        end
+        sendTCP(nil, SocketCommandModToServer.SABOTAGE, {gameID = g.game.id, sabotageType = SabotageType.FIX_LIGHTS})
     end
 )
 ____exports.chatCommandFunctionMap:set(

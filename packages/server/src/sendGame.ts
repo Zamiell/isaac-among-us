@@ -5,6 +5,7 @@ import {
   GameDescriptionPlayer,
   MeetingResolution,
   Role,
+  SabotageType,
   SkeldRoom,
   SocketCommandServerToMod,
   SocketCommandServerToModData,
@@ -109,6 +110,13 @@ export function sendKilled(
     room,
     x,
     y,
+  });
+}
+
+export function sendSabotage(game: Game, sabotageType: SabotageType): void {
+  sendAllInGame(game, SocketCommandServerToMod.SABOTAGE, {
+    gameID: game.id,
+    sabotageType,
   });
 }
 

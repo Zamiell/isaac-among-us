@@ -1,12 +1,11 @@
 import { SkeldRoom } from "common";
+import { HasAllEnumKeys } from "isaacscript-common";
 import { Vent } from "../enums/Vent";
 import { VentDescription } from "../interfaces/VentDescription";
 
 // Listed in order from top left to bottom right:
 // https://www.pcgamesn.com/wp-content/uploads/2020/10/among-us-maps-the-skeld.jpg
-export const VENT_DESCRIPTIONS: {
-  readonly [key in Vent]: VentDescription;
-} = {
+export const VENT_DESCRIPTIONS = {
   [Vent.UPPER_ENGINE]: {
     room: SkeldRoom.UPPER_ENGINE,
     gridIndex: 68, // Right of the engine
@@ -82,4 +81,4 @@ export const VENT_DESCRIPTIONS: {
     gridIndex: 114, // Above the engine
     destination: Vent.REACTOR_BOTTOM,
   },
-} as const;
+} as const satisfies HasAllEnumKeys<Vent, VentDescription>;

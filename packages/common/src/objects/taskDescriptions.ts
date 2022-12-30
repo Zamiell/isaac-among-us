@@ -2,6 +2,7 @@ import { SkeldRoom } from "../enums/SkeldRoom";
 import { Task } from "../enums/Task";
 import { TaskType } from "../enums/TaskType";
 import { TaskDescription } from "../interfaces/TaskDescription";
+import { HasAllEnumKeys } from "../types/HasAllEnumKeys";
 
 // Return grid indexes need to be at least 2 tiles away so that if the player is holding down a
 // movement key, they do not automatically return to the task.
@@ -9,7 +10,7 @@ import { TaskDescription } from "../interfaces/TaskDescription";
 // - Short tasks should take between 5-15 seconds.
 // - Long tasks should take between 16-30 seconds.
 
-export const TASK_DESCRIPTIONS: { readonly [key in Task]: TaskDescription } = {
+export const TASK_DESCRIPTIONS = {
   [Task.SHORT_DESTROY_GIANT_POOP]: {
     name: "Toilet Cleaning",
     taskType: TaskType.SHORT, // 14 seconds
@@ -169,4 +170,4 @@ export const TASK_DESCRIPTIONS: { readonly [key in Task]: TaskDescription } = {
     gridIndex: 61,
     returnGridIndex: 63,
   },
-} as const;
+} as const satisfies HasAllEnumKeys<Task, TaskDescription>;

@@ -1,4 +1,4 @@
-import { NOT_VOTED_YET, SocketCommandModToServer } from "common";
+import { NOT_VOTED_YET, SabotageType, SocketCommandModToServer } from "common";
 import { logTable } from "isaacscript-common";
 import { addLocalChat } from "./chat";
 import { connectChatCommand } from "./chatCommands/connect";
@@ -150,6 +150,17 @@ chatCommandFunctionMap.set("leave", (_args: string[]) => {
 
   sendTCP(SocketCommandModToServer.LEAVE, {
     gameID: g.game.id,
+  });
+});
+
+chatCommandFunctionMap.set("lights", (_args: string[]) => {
+  if (g.game === null) {
+    return;
+  }
+
+  sendTCP(SocketCommandModToServer.SABOTAGE, {
+    gameID: g.game.id,
+    sabotageType: SabotageType.FIX_LIGHTS,
   });
 });
 
