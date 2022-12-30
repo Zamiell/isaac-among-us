@@ -43,7 +43,7 @@ function validate(
   return true;
 }
 
-export function sabotage(game: Game, data: SabotageDataToServer): void {
+function sabotage(game: Game, data: SabotageDataToServer) {
   // TODO: logic for no multiple sabotages
   sendSabotage(game, data.sabotageType);
 }
