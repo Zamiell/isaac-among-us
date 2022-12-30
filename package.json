@@ -7,16 +7,16 @@
   "dependencies": {
     "@prisma/client": "^4.8.0",
     "argon2": "^0.30.2",
-    "isaac-typescript-definitions": "^10.0.4",
-    "isaacscript-common": "^17.4.3",
+    "isaac-typescript-definitions": "^10.0.6",
+    "isaacscript-common": "^17.7.2",
     "struct": "^0.0.12"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
     "@types/struct": "^0.0.3",
     "isaacscript": "^3.4.0",
-    "isaacscript-lint": "^4.2.1",
-    "isaacscript-spell": "^1.2.21",
+    "isaacscript-lint": "^4.3.0",
+    "isaacscript-spell": "^1.2.22",
     "isaacscript-tsconfig": "^2.2.0",
     "npm-check-updates": "^16.6.2",
     "prisma": "^4.8.0",
