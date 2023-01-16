@@ -24,13 +24,13 @@ import { commandUserConnected } from "./commands/userConnected";
 import { commandUsername } from "./commands/username";
 import { commandVote } from "./commands/vote";
 
-type CommandMap = {
+type ClientCommandMap = {
   [Value in SocketCommandServerToMod]: (
     data: InstanceType<typeof SocketCommandServerToModData[Value]>,
   ) => void;
 };
 
-export const commandMap: CommandMap = {
+export const CLIENT_COMMAND_MAP = {
   [SocketCommandServerToMod.ERROR]: commandError,
   [SocketCommandServerToMod.USERNAME]: commandUsername,
   [SocketCommandServerToMod.LOGGED_IN]: commandLoggedIn,
@@ -56,4 +56,4 @@ export const commandMap: CommandMap = {
   [SocketCommandServerToMod.END_MEETING]: commandEndMeeting,
   [SocketCommandServerToMod.END_GAME]: commandEndGame,
   [SocketCommandServerToMod.TERMINATED]: commandTerminated,
-};
+} as const satisfies ClientCommandMap;

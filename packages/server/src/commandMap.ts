@@ -22,7 +22,7 @@ import { commandVote } from "./commands/vote";
 import { ExtraCommandData } from "./interfaces/ExtraCommandData";
 import { Socket } from "./interfaces/Socket";
 
-type CommandMap = {
+type ServerCommandMap = {
   [Key in SocketCommandModToServer]: (
     socket: Socket,
     data: InstanceType<typeof SocketCommandModToServerData[Key]>,
@@ -30,7 +30,7 @@ type CommandMap = {
   ) => void | Promise<void>;
 };
 
-export const commandMap = {
+export const SERVER_COMMAND_MAP = {
   [SocketCommandModToServer.PING]: commandPing,
   [SocketCommandModToServer.CHECK_USERNAME]: commandCheckUsername,
   [SocketCommandModToServer.LOGIN]: commandLogin,
@@ -51,4 +51,4 @@ export const commandMap = {
   [SocketCommandModToServer.REVIVE]: commandRevive,
   [SocketCommandModToServer.KILL_ME]: commandKillMe,
   [SocketCommandModToServer.DEBUG]: commandDebug,
-} as const satisfies CommandMap;
+} as const satisfies ServerCommandMap;

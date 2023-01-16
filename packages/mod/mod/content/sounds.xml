@@ -1,3 +1,4 @@
+<?xml-model href="https://wofsauge.github.io/isaac-xml-validator/xsd/sounds.xsd" ?>
 <sounds root="sfx/">
   <sound name="Dead Body Report">
     <sample weight="1" path="dead-body-report.wav" />

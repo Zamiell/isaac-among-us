@@ -1,6 +1,6 @@
 import { SocketCommandModToServer, SocketCommandModToServerData } from "common";
 import { Game } from "./classes/Game";
-import { commandMap } from "./commandMap";
+import { SERVER_COMMAND_MAP } from "./commandMap";
 import { sendError } from "./error";
 import { getPlayer } from "./game";
 import { games, getGameByName } from "./games";
@@ -54,7 +54,7 @@ export function handleCommand(
   rawData: unknown,
 ): void {
   const command = possibleCommand as SocketCommandModToServer;
-  const commandFunction = commandMap[command];
+  const commandFunction = SERVER_COMMAND_MAP[command];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (commandFunction === undefined) {
     sendError(socket, `Invalid command: ${command}`);

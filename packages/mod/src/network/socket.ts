@@ -1,6 +1,6 @@
 import { SocketCommandModToServer, SocketCommandServerToMod } from "common";
 import { asString, log } from "isaacscript-common";
-import { commandMap } from "../commandMap";
+import { CLIENT_COMMAND_MAP } from "../commandMap";
 import g from "../globals";
 import { PlayerData } from "../interfaces/PlayerData";
 import { unpackTCPMsg, unpackUDPPlayerMessage } from "./pack";
@@ -56,7 +56,8 @@ function readTCP() {
     return true;
   }
 
-  const commandFunction = commandMap[command as SocketCommandServerToMod];
+  const commandFunction =
+    CLIENT_COMMAND_MAP[command as SocketCommandServerToMod];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (commandFunction !== undefined) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any

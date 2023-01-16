@@ -12,8 +12,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          # The default version is 14. The ESLint config requires Node 16 to work properly.
-          node-version: "16"
+          # The default version is 14. The ESLint config requires at least Node 16 to work properly.
+          # We use 18, which is the official LTS version.
+          node-version: "18"
           cache: "yarn"
 
       - name: Retrieve the cached "node_modules" directory (main)
@@ -23,7 +24,7 @@ jobs:
           path: node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
-      - name: Install dependencies (main)
+      - name: Install dependencies (if the cached directory was not found)
         if: steps.node-cache-main.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
@@ -42,7 +43,7 @@ jobs:
     if: always() # This is needed to always run this job, even if the other jobs fail.
     runs-on: ubuntu-latest
     steps:
-      - uses: technote-space/workflow-conclusion-action@v2
+      - uses: technote-space/workflow-conclusion-action@v3
       - if: env.WORKFLOW_CONCLUSION != 'success' && env.WORKFLOW_CONCLUSION != 'cancelled'
         uses: sarisia/actions-status-discord@v1
         with:
