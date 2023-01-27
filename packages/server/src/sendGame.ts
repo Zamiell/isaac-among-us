@@ -189,7 +189,7 @@ export function sendTerminated(game: Game): void {
 function sendAllInGame<T extends SocketCommandServerToMod>(
   game: Game,
   command: T,
-  data: InstanceType<typeof SocketCommandServerToModData[T]>,
+  data: InstanceType<(typeof SocketCommandServerToModData)[T]>,
 ) {
   for (const socket of getActiveSockets(game)) {
     sendTCP(socket, command, data);

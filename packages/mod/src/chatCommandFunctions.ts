@@ -4,7 +4,7 @@ import { addLocalChat } from "./chat";
 import { connectChatCommand } from "./chatCommands/connect";
 import { passwordChatCommand } from "./chatCommands/password";
 import { usernameChatCommand } from "./chatCommands/username";
-import g from "./globals";
+import { g } from "./globals";
 import { sendTCP } from "./network/send";
 import * as socketClient from "./network/socketClient";
 import { getOurPlayer } from "./players";

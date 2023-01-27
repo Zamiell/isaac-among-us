@@ -6,7 +6,7 @@ import {
   enableSendingEvents,
 } from "../features/sendGameEvents";
 import { setupMeeting } from "../features/setupMeeting";
-import g from "../globals";
+import { g } from "../globals";
 import { loadMap } from "../loadMap";
 import { enableMinimapAPI } from "../minimapAPI";
 import { getSkeldRoomName } from "../skeldRoomMap";

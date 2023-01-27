@@ -1,6 +1,6 @@
 import { UsernameDataToMod } from "common";
 import { addLocalChat } from "../chat";
-import g from "../globals";
+import { g } from "../globals";
 
 export function commandUsername(data: UsernameDataToMod): void {
   g.username = data.username;

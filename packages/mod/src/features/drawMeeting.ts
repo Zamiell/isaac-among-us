@@ -1,5 +1,5 @@
 import { Meeting, MeetingPhase } from "common";
-import g from "../globals";
+import { g } from "../globals";
 import { getTime } from "../network/socketClient";
 import {
   drawFontText,

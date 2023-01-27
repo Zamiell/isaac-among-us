@@ -4,7 +4,7 @@ const DATA_SEPARATOR = " ";
 
 export function packTCPMsg<T extends SocketCommandServerToMod>(
   command: T,
-  data: InstanceType<typeof SocketCommandServerToModData[T]>,
+  data: InstanceType<(typeof SocketCommandServerToModData)[T]>,
 ): string {
   const dataString = JSON.stringify(data);
   return `${command}${DATA_SEPARATOR}${dataString}\n`;

@@ -8,7 +8,7 @@ import {
 import { game, VectorZero } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
-import g from "../globals";
+import { g } from "../globals";
 import {
   drawFontText,
   movePlayerToGridIndex,

@@ -22,13 +22,11 @@ export interface UDPBeaconInterface {
   message: string;
 }
 export const UDP_BEACON_MESSAGE = "HELLO";
-export const UDP_BEACON_FIELDS: ReadonlyArray<
-  [name: keyof UDPBeaconInterface, format: string]
-> = [
-  ["gameID", "I"],
-  ["userID", "I"],
+export const UDP_BEACON_FIELDS = [
+  ["gameID", FieldType.UNSIGNED_INT],
+  ["userID", FieldType.UNSIGNED_INT],
   ["message", `c${UDP_BEACON_MESSAGE.length}`],
-];
+] as const;
 export const UDP_BEACON_DATA_FORMAT = UDP_BEACON_FIELDS.map(
   (tuple) => tuple[1],
 ).join();
@@ -45,9 +43,7 @@ export interface UDPPositionInterface {
   overlayAnimation: string;
   overlayAnimationFrame: int;
 }
-export const UDP_POSITION_FIELDS: ReadonlyArray<
-  [name: keyof UDPPositionInterface, format: FieldType | string]
-> = [
+export const UDP_POSITION_FIELDS = [
   ["gameID", FieldType.UNSIGNED_INT],
   ["userID", FieldType.UNSIGNED_INT],
   ["x", FieldType.FLOAT],
@@ -57,7 +53,7 @@ export const UDP_POSITION_FIELDS: ReadonlyArray<
   ["animationFrame", FieldType.UNSIGNED_INT],
   ["overlayAnimation", "c20"],
   ["overlayAnimationFrame", FieldType.UNSIGNED_INT],
-];
+] as const;
 export const UDP_POSITION_DATA_FORMAT = UDP_POSITION_FIELDS.map(
   (tuple) => tuple[1],
 ).join();

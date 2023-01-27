@@ -1,7 +1,7 @@
 import { ButtonAction } from "isaac-typescript-definitions";
 import { isActionPressedOnAnyInput, todo } from "isaacscript-common";
 import { VentState } from "../enums/VentState";
-import g from "../globals";
+import { g } from "../globals";
 import { ableToKillAPlayer, kill } from "./kill";
 import { ableToReportDeadBody, reportDeadBody } from "./report";
 import { ableToVent, jumpInVent, jumpOutVent } from "./vents";

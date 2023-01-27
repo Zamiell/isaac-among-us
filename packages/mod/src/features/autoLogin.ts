@@ -1,6 +1,6 @@
 import { GameListDescription, SocketCommandModToServer } from "common";
 import { connectChatCommand } from "../chatCommands/connect";
-import g from "../globals";
+import { g } from "../globals";
 import { sendTCP } from "../network/send";
 import * as socketClient from "../network/socketClient";
 

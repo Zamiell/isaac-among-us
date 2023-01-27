@@ -13,7 +13,7 @@ import { spawnTaskButton } from "../features/buttonSpawn";
 import { resetAllButtons } from "../features/buttonSubroutines";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
-import g from "../globals";
+import { g } from "../globals";
 import { mod } from "../mod";
 import { initGlowingItemSprite } from "../sprite";
 import { drawFontText, movePlayerToGridIndex } from "../utils";

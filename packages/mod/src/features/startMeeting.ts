@@ -7,7 +7,7 @@ import {
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
 import { StartMeetingState } from "../enums/StartMeetingState";
-import g from "../globals";
+import { g } from "../globals";
 import { disableMinimapAPI } from "../minimapAPI";
 import { initSprite } from "../sprite";
 import { drawFontText } from "../utils";

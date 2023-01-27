@@ -1,7 +1,7 @@
 import { game, log } from "isaacscript-common";
 import * as sendGameEvents from "../features/sendGameEvents";
 import * as task from "../features/task";
-import g from "../globals";
+import { g } from "../globals";
 import { setTasksOnMap } from "../loadMap";
 import { goToStageAPIRoom } from "../stageAPI";
 import { getStageAPIRoomName } from "../stageAPISubroutines";

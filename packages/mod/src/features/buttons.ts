@@ -9,7 +9,7 @@ import {
 import { PressurePlateState, SoundEffect } from "isaac-typescript-definitions";
 import { asNumber, getPlayerCloserThan, sfxManager } from "isaacscript-common";
 import { ButtonSubType } from "../enums/ButtonSubType";
-import g from "../globals";
+import { g } from "../globals";
 import { sendTCP } from "../network/send";
 import { getSkeldRoomName } from "../skeldRoomMap";
 import { goToStageAPIRoom } from "../stageAPI";

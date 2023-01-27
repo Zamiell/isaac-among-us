@@ -1,6 +1,6 @@
 import { FAKE_TASK, MAX_PLAYERS, TASK_DESCRIPTIONS } from "common";
 import { game } from "isaacscript-common";
-import g from "../globals";
+import { g } from "../globals";
 import { getSkeldRoom } from "../stageAPI";
 import { getStageAPIRoomName } from "../stageAPISubroutines";
 import { drawFontText, inCutscene, inEndMeeting } from "../utils";

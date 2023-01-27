@@ -2,7 +2,7 @@ import { PlayerLeftDataToMod } from "common";
 import { sfxManager } from "isaacscript-common";
 import { addLocalChat } from "../chat";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
-import g from "../globals";
+import { g } from "../globals";
 
 export function commandPlayerLeft(data: PlayerLeftDataToMod): void {
   if (g.game === null) {

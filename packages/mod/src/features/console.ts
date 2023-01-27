@@ -12,7 +12,7 @@ import { addLocalChat } from "../chat";
 import { chatCommandFunctionMap } from "../chatCommandFunctions";
 import { MOD_NAME } from "../constants";
 import { HexColors } from "../enums/HexColors";
-import g from "../globals";
+import { g } from "../globals";
 import { mod } from "../mod";
 import { sendTCP } from "../network/send";
 import * as socketClient from "../network/socketClient";

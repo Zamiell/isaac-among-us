@@ -1,7 +1,7 @@
 import { getAllChat } from "../chat";
 import { HexColors } from "../enums/HexColors";
 import { fonts } from "../fonts";
-import g from "../globals";
+import { g } from "../globals";
 import { getScreenPosition } from "../utils";
 import {
   CONSOLE_POSITION,

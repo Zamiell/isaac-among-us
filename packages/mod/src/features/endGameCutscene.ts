@@ -11,7 +11,7 @@ import {
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { CutsceneState } from "../enums/CutsceneState";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
-import g from "../globals";
+import { g } from "../globals";
 import { disableMinimapAPI } from "../minimapAPI";
 import { setSpriteOpacity } from "../sprite";
 import { drawFontText, getRoleName } from "../utils";

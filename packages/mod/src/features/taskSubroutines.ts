@@ -4,20 +4,20 @@ import {
   arrayRemoveInPlace,
   game,
   getNPCs,
+  isVanillaWallGridIndex,
   log,
   removeAllMatchingEntities,
   sfxManager,
 } from "isaacscript-common";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
-import g from "../globals";
+import { g } from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
 import { mod } from "../mod";
 import { sendTCP } from "../network/send";
 import { setupPlayerAndUI } from "../setupPlayersAndUI";
 import { goToStageAPIRoom } from "../stageAPI";
 import { removeGridEntity } from "../utils";
-import { isWallGridIndex } from "../wall";
 
 export function taskComplete(): void {
   if (g.game === null || g.game.currentTask === null) {
@@ -92,11 +92,12 @@ function removeAllNPCs() {
 
 function removeAllGridEntities() {
   const room = game.GetRoom();
+  const gridSize = room.GetGridSize();
 
   // Sometimes, walls can appear in the center of the room due to StageAPI bugs Remove every grid
   // entity that is not positioned where a wall is supposed to be.
-  for (let gridIndex = 0; gridIndex < room.GetGridSize(); gridIndex++) {
-    if (isWallGridIndex(gridIndex)) {
+  for (let gridIndex = 0; gridIndex < gridSize; gridIndex++) {
+    if (isVanillaWallGridIndex(gridIndex)) {
       continue;
     }
 

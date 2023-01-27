@@ -1,5 +1,5 @@
 import { IS_DEV, NoData } from "common";
-import { emptyArray } from "../array";
+import { emptyArray } from "isaacscript-common-ts";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";
 import { Socket } from "../interfaces/Socket";
 

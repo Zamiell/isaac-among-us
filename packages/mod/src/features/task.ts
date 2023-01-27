@@ -1,5 +1,5 @@
 import { FAKE_TASK, SkeldRoom } from "common";
-import g from "../globals";
+import { g } from "../globals";
 import { disableMinimapAPI } from "../minimapAPI";
 import { getSkeldRoom } from "../stageAPI";
 import { taskFunctions } from "../taskFunctions";

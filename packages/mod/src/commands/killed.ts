@@ -6,7 +6,7 @@ import {
 } from "isaac-typescript-definitions";
 import { sfxManager, VectorZero } from "isaacscript-common";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
-import g from "../globals";
+import { g } from "../globals";
 import { mod } from "../mod";
 import { getSkeldRoom } from "../stageAPI";
 

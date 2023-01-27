@@ -1,5 +1,5 @@
 import { IS_DEV, Role } from "common";
-import { getRandomArrayIndex } from "./array";
+import { getRandomArrayIndex } from "isaacscript-common-ts";
 import { Game } from "./classes/Game";
 import { repeat } from "./utils";
 

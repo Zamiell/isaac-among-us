@@ -5,7 +5,7 @@ import {
 } from "isaacscript-common";
 import { MOD_NAME } from "../constants";
 import { fonts } from "../fonts";
-import g from "../globals";
+import { g } from "../globals";
 import { isConsoleOpen } from "./console";
 import { START_ROOM_INDEX } from "./goToEmptyRoom";
 

@@ -1,6 +1,6 @@
 import { MeetingPhase, MeetingType, StartMeetingDataToMod } from "common";
 import { startMeeting } from "../features/startMeeting";
-import g from "../globals";
+import { g } from "../globals";
 
 export function commandStartMeeting(data: StartMeetingDataToMod): void {
   if (g.game === null) {

@@ -9,7 +9,7 @@ import {
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import { Vent } from "../enums/Vent";
 import { VentState } from "../enums/VentState";
-import g from "../globals";
+import { g } from "../globals";
 import { VentDescription } from "../interfaces/VentDescription";
 import { VENT_DESCRIPTIONS } from "../objects/ventDescriptions";
 import { getOurPlayer } from "../players";

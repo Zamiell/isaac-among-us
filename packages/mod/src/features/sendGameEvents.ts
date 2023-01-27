@@ -1,6 +1,6 @@
 import { SkeldRoom, SocketCommandModToServer } from "common";
 import { game } from "isaacscript-common";
-import g from "../globals";
+import { g } from "../globals";
 import { sendTCP } from "../network/send";
 import { getSkeldRoomFromName } from "../skeldRoomMap";
 import { getStageAPIRoomName } from "../stageAPISubroutines";

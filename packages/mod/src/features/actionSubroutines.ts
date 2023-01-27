@@ -1,4 +1,4 @@
-import g from "../globals";
+import { g } from "../globals";
 import { inCutscene, inEndMeeting } from "../utils";
 import { isConsoleOpen } from "./console";
 

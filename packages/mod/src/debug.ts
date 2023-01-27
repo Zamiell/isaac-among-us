@@ -1,8 +1,8 @@
 import { IS_DEV, SkeldRoom } from "common";
-import { getPartialMatch, printConsole } from "isaacscript-common";
+import { getPartialMatch, logError } from "isaacscript-common";
 import { startAutoLogin } from "./features/autoLogin";
 import { startEndGameCutscene } from "./features/endGameCutscene";
-import g from "./globals";
+import { g } from "./globals";
 import { getSkeldRoomName, getSkeldRoomNames } from "./skeldRoomMap";
 import { goToStageAPIRoom } from "./stageAPI";
 
@@ -77,7 +77,7 @@ export function warp(params: string): void {
     const roomNames = getSkeldRoomNames();
     const partialMatch = getPartialMatch(params, roomNames);
     if (partialMatch === undefined) {
-      printConsole(`Failed to find the room name corresponding to: ${params}`);
+      logError(`Failed to find the room name corresponding to: ${params}`);
       return;
     }
 
@@ -87,7 +87,7 @@ export function warp(params: string): void {
     const potentialRoomName = getSkeldRoomName(room);
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (potentialRoomName === undefined) {
-      printConsole(`Failed to find the room name for room ID: ${room}`);
+      logError(`Failed to find the room name for room ID: ${room}`);
       return;
     }
 
@@ -95,5 +95,5 @@ export function warp(params: string): void {
   }
 
   goToStageAPIRoom(roomName);
-  printConsole(`Warped to room: ${roomName}`);
+  logError(`Warped to room: ${roomName}`);
 }

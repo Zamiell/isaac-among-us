@@ -9,11 +9,11 @@ import {
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
-import g from "../globals";
+import { g } from "../globals";
 import { drawFontText, movePlayerToGridIndex } from "../utils";
 
 const THIS_TASK = Task.SHORT_PUSH_BUTTONS_IN_ORDER;
-const BUTTON_GRID_INDEXES: int[] = [32, 35, 39, 42, 62, 65, 69, 72, 92, 102];
+const BUTTON_GRID_INDEXES = [32, 35, 39, 42, 62, 65, 69, 72, 92, 102] as const;
 
 const buttonOrder: int[] = [];
 let nextButtonToPress = 0;

@@ -26,7 +26,7 @@ import { commandVote } from "./commands/vote";
 
 type ClientCommandMap = {
   [Value in SocketCommandServerToMod]: (
-    data: InstanceType<typeof SocketCommandServerToModData[Value]>,
+    data: InstanceType<(typeof SocketCommandServerToModData)[Value]>,
   ) => void;
 };
 

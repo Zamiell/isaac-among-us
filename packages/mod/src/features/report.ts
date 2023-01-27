@@ -1,6 +1,6 @@
 import { MeetingType, PlayerBody, SocketCommandModToServer } from "common";
 import { VentState } from "../enums/VentState";
-import g from "../globals";
+import { g } from "../globals";
 import { sendTCP } from "../network/send";
 import { getOurPlayer } from "../players";
 import { getSkeldRoom } from "../stageAPI";

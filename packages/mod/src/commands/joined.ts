@@ -2,7 +2,7 @@ import { JoinedDataToMod } from "common";
 import { restart } from "isaacscript-common";
 import { addLocalChat } from "../chat";
 import { AmongUsGame } from "../classes/AmongUsGame";
-import g from "../globals";
+import { g } from "../globals";
 
 export function commandJoined(data: JoinedDataToMod): void {
   g.game = new AmongUsGame(

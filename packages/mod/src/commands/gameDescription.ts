@@ -1,6 +1,6 @@
 import { GameDescriptionDataToMod } from "common";
 import { checkChangeOurCharacter } from "../callbacksCustom/postGameStartedReordered";
-import g from "../globals";
+import { g } from "../globals";
 import { getOurPlayer } from "../players";
 import { inCutscene } from "../utils";
 

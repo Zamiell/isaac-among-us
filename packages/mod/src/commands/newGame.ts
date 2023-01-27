@@ -1,6 +1,6 @@
 import { NewGameDataToMod } from "common";
 import { addLocalChat } from "../chat";
-import g from "../globals";
+import { g } from "../globals";
 
 export function commandNewGame(data: NewGameDataToMod): void {
   // Don't display new game notifications if we are already in a game.

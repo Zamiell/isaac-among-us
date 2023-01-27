@@ -2,7 +2,7 @@
 // is sent using TCP.
 
 import { VentState } from "../enums/VentState";
-import g from "../globals";
+import { g } from "../globals";
 import * as struct from "../lib/struct";
 import { getSkeldRoom } from "../stageAPI";
 import { sendUDP } from "./send";

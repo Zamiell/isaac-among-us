@@ -2,7 +2,7 @@ import { MeetingResolution } from "common";
 import { getScreenCenterPos } from "isaacscript-common";
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { EndMeetingState } from "../enums/EndMeetingState";
-import g from "../globals";
+import { g } from "../globals";
 import { enableMinimapAPI } from "../minimapAPI";
 import { drawFontText } from "../utils";
 import { FADE_TO_BLACK_FRAMES, setBlackSpriteState } from "./blackSprite";

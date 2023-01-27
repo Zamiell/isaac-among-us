@@ -4,7 +4,7 @@ import { addLocalChat } from "../chat";
 import { REMOTE_HOSTNAME } from "../constants";
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { setBlackSpriteState } from "../features/blackSprite";
-import g from "../globals";
+import { g } from "../globals";
 import {
   getClientFromSandbox,
   getSocketTime,

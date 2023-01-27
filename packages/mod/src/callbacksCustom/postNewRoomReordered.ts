@@ -8,7 +8,7 @@ import {
 } from "isaacscript-common";
 import { convertPlayerToGhostForm } from "../commands/killed";
 import * as lobby from "../features/lobby";
-import g from "../globals";
+import { g } from "../globals";
 import { mod } from "../mod";
 import { getOurPlayer } from "../players";
 import { getSkeldRoom } from "../stageAPI";

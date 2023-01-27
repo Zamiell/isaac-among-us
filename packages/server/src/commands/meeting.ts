@@ -6,7 +6,7 @@ import {
   NOT_VOTED_YET,
   VOTE_SKIP,
 } from "common";
-import { emptyArray, initArray } from "../array";
+import { emptyArray, newArray } from "isaacscript-common-ts";
 import { Game } from "../classes/Game";
 import {
   DEFAULT_MEETING_PRE_VOTE_SECONDS,
@@ -50,7 +50,7 @@ export function commandMeeting(
     meetingPhase: MeetingPhase.PRE_VOTING,
     timePhaseStarted: getTimestamp(),
     phaseLengthSeconds: DEFAULT_MEETING_PRE_VOTE_SECONDS,
-    votes: initArray(game.players.length, NOT_VOTED_YET),
+    votes: newArray(game.players.length, NOT_VOTED_YET),
   };
   sendStartMeeting(game);
 
@@ -229,7 +229,7 @@ function getUserIDsThatHaveNumVotes(
   voteMap: Map<number, number>,
 ) {
   const userIDs: number[] = [];
-  for (const [userID, numVotes] of voteMap.entries()) {
+  for (const [userID, numVotes] of voteMap) {
     if (numVotes === numVotesToMatch) {
       userIDs.push(userID);
     }

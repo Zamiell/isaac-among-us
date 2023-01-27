@@ -1,7 +1,7 @@
 import { GameListDataToMod, SocketCommandModToServer } from "common";
 import { addLocalChat } from "../chat";
 import * as autoLogin from "../features/autoLogin";
-import g from "../globals";
+import { g } from "../globals";
 import { sendTCP } from "../network/send";
 
 export function commandGameList(data: GameListDataToMod): void {

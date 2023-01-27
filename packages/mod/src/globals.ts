@@ -1,7 +1,3 @@
 import { Globals } from "./classes/Globals";
 
-const globals = new Globals();
-export default globals;
-
-declare let g: Globals;
-g = globals; // eslint-disable-line
+export const g = new Globals();

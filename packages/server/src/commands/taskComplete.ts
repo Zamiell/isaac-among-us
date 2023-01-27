@@ -1,5 +1,5 @@
 import { Role, TaskCompleteDataToServer } from "common";
-import { arrayRemoveInPlace } from "../array";
+import { arrayRemoveInPlace } from "isaacscript-common-ts";
 import { Game } from "../classes/Game";
 import { endGame } from "../endGame";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData";

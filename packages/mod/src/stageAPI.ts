@@ -7,7 +7,7 @@ import {
 import { asNumber, game } from "isaacscript-common";
 import { inLobby } from "./features/lobby";
 import { sendRoom } from "./features/sendGameEvents";
-import g from "./globals";
+import { g } from "./globals";
 import { getSkeldRoomFromName } from "./skeldRoomMap";
 import { getStageAPIRoomName } from "./stageAPISubroutines";
 

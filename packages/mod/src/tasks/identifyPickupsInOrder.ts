@@ -14,7 +14,7 @@ import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import { spawnTaskButton } from "../features/buttonSpawn";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
-import g from "../globals";
+import { g } from "../globals";
 import { mod } from "../mod";
 import { drawFontText, movePlayerToGridIndex } from "../utils";
 
@@ -26,7 +26,7 @@ const TEXT_GRID_INDEX = 37; // Below the room description
 const TEXT_SHOW_FRAMES = 30;
 const BUTTON_GRID_INDEXES: readonly int[] = [
   32, 62, 92, 42, 72, 102, 35, 37, 39,
-];
+] as const;
 const ROW_LENGTH = 15;
 const SPRITE_OFFSET = Vector(0, 10);
 

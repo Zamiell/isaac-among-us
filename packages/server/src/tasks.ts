@@ -1,5 +1,5 @@
 import { IS_DEV, Task, TaskType, TASK_DESCRIPTIONS } from "common";
-import { getRandomArrayElement } from "./array";
+import { getRandomArrayElement } from "isaacscript-common-ts";
 import { Game } from "./classes/Game";
 import { Player } from "./classes/Player";
 import {
@@ -51,7 +51,7 @@ function addDevTask(player: Player) {
 
 function getTasksOfType(tasks: Set<Task>, taskType: TaskType): Set<Task> {
   const tasksOfType = new Set<Task>();
-  for (const task of tasks.values()) {
+  for (const task of tasks) {
     const taskDescription = TASK_DESCRIPTIONS[task];
     if (taskDescription.taskType === taskType) {
       tasksOfType.add(task);

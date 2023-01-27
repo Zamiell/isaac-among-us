@@ -1,5 +1,5 @@
 import { MeetingPhase, StartVotingDataToMod } from "common";
-import g from "../globals";
+import { g } from "../globals";
 
 export function commandStartVoting(data: StartVotingDataToMod): void {
   if (g.game === null || g.game.meeting === null) {

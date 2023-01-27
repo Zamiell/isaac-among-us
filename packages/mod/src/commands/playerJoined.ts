@@ -3,7 +3,7 @@ import { sfxManager } from "isaacscript-common";
 import { addLocalChat } from "../chat";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
 import * as autoLogin from "../features/autoLogin";
-import g from "../globals";
+import { g } from "../globals";
 
 export function commandPlayerJoined(data: PlayerJoinedDataToMod): void {
   if (g.game === null) {

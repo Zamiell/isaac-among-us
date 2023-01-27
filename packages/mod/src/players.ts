@@ -1,7 +1,7 @@
 // Many player methods are located on the `AmongUsGame` class.
 
 import { GameDescriptionPlayer } from "common";
-import g from "./globals";
+import { g } from "./globals";
 
 export function getOurPlayer(): GameDescriptionPlayer | undefined {
   if (g.game === null) {

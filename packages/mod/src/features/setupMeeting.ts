@@ -6,7 +6,7 @@ import {
   game,
   getCircleDiscretizedPoints,
 } from "isaacscript-common";
-import g from "../globals";
+import { g } from "../globals";
 import { setMinimapAPIEnabled } from "../minimapAPI";
 import { getOurPlayerIndex } from "../players";
 import { CENTER_TABLE_GRID_INDEX } from "../rooms/cafeteria";

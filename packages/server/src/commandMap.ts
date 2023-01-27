@@ -25,7 +25,7 @@ import { Socket } from "./interfaces/Socket";
 type ServerCommandMap = {
   [Key in SocketCommandModToServer]: (
     socket: Socket,
-    data: InstanceType<typeof SocketCommandModToServerData[Key]>,
+    data: InstanceType<(typeof SocketCommandModToServerData)[Key]>,
     extraData: ExtraCommandData,
   ) => void | Promise<void>;
 };

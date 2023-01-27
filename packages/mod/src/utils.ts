@@ -16,7 +16,7 @@ import {
 import { CutsceneState } from "./enums/CutsceneState";
 import { EndMeetingState } from "./enums/EndMeetingState";
 import { StartMeetingState } from "./enums/StartMeetingState";
-import g from "./globals";
+import { g } from "./globals";
 
 export function amOwner(): boolean {
   if (g.game === null) {

@@ -13,7 +13,7 @@ import {
 } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
-import g from "../globals";
+import { g } from "../globals";
 import { enableShooting, movePlayerToGridIndex } from "../utils";
 
 const THIS_TASK = Task.SHORT_PUSH_TNT_BARREL;

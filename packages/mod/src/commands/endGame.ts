@@ -1,7 +1,7 @@
 import { EndGameDataToMod } from "common";
 import { AmongUsGame } from "../classes/AmongUsGame";
 import { startEndGameCutscene } from "../features/endGameCutscene";
-import g from "../globals";
+import { g } from "../globals";
 
 export function commandEndGame(data: EndGameDataToMod): void {
   if (g.game === null) {

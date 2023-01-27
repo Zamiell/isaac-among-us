@@ -2,7 +2,7 @@ import { Task, TASK_DESCRIPTIONS } from "common";
 import { EntityType, PressurePlateState } from "isaac-typescript-definitions";
 import { ButtonSubType } from "../enums/ButtonSubType";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
-import g from "../globals";
+import { g } from "../globals";
 import { getSkeldRoom } from "../stageAPI";
 import { spawnEntity } from "../utils";
 import { getButtonAnimationSuffix, TaskButtonData } from "./buttonSubroutines";

@@ -6,7 +6,7 @@ import {
   removeEntities,
 } from "isaacscript-common";
 import { EntityTypeCustom } from "../enums/EntityTypeCustom";
-import g from "../globals";
+import { g } from "../globals";
 import { spawnAdminObjects } from "../rooms/admin";
 import { spawnCafeteriaObjects } from "../rooms/cafeteria";
 import { spawnCommunicationObjects } from "../rooms/communication";

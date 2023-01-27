@@ -10,7 +10,7 @@ import {
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { CutsceneState } from "../enums/CutsceneState";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
-import g from "../globals";
+import { g } from "../globals";
 import { loadMap } from "../loadMap";
 import { disableMinimapAPI, enableMinimapAPI } from "../minimapAPI";
 import { getOurPlayerIndex } from "../players";

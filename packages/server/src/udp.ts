@@ -118,8 +118,8 @@ function handleError(err: Error) {
 }
 
 function purgeOldUDPSessions() {
-  for (const [gameID, gameMap] of udpSockets.entries()) {
-    for (const [userID, udpSocket] of gameMap.entries()) {
+  for (const [gameID, gameMap] of udpSockets) {
+    for (const [userID, udpSocket] of gameMap) {
       udpSocket.TTL--;
 
       if (udpSocket.TTL > 0) {

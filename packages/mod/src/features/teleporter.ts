@@ -1,6 +1,6 @@
 import { GridEntityType } from "isaac-typescript-definitions";
 import { getPlayerCloserThan, log, spawnGridEntity } from "isaacscript-common";
-import g from "../globals";
+import { g } from "../globals";
 import { taskLeave } from "./taskSubroutines";
 
 const TELEPORTER_ACTIVATION_DISTANCE = 20; // Exactly the same as a vanilla teleporter

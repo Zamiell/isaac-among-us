@@ -11,7 +11,7 @@ import {
 import { injectTestPlayers } from "../debug";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
 import { fonts } from "../fonts";
-import g from "../globals";
+import { g } from "../globals";
 import { getSkeldRoom } from "../stageAPI";
 import { inEndMeeting, inStartMeeting } from "../utils";
 import { isConsoleOpen } from "./console";

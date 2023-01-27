@@ -1,4 +1,4 @@
-import g from "../globals";
+import { g } from "../globals";
 import { isConsoleOpen } from "./console";
 import { drawUsername } from "./drawOtherPlayers";
 

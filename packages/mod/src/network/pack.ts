@@ -12,7 +12,7 @@ const DEBUG = false as boolean;
 
 export function packTCPMsg<T extends SocketCommandModToServer>(
   command: T,
-  data: InstanceType<typeof SocketCommandModToServerData[T]>,
+  data: InstanceType<(typeof SocketCommandModToServerData)[T]>,
 ): string {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (data === undefined) {

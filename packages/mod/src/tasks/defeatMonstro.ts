@@ -3,7 +3,7 @@ import { EntityType } from "isaac-typescript-definitions";
 import { game, VectorZero } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
-import g from "../globals";
+import { g } from "../globals";
 import { enableShooting, movePlayerToGridIndex } from "../utils";
 
 const THIS_TASK = Task.LONG_DEFEAT_MONSTRO;

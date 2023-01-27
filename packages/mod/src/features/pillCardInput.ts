@@ -1,7 +1,7 @@
 import { ButtonAction } from "isaac-typescript-definitions";
 import { isActionPressedOnAnyInput, todo } from "isaacscript-common";
 import { VentState } from "../enums/VentState";
-import g from "../globals";
+import { g } from "../globals";
 import { ventSwitchRoom } from "./vents";
 
 let isPressed = false;

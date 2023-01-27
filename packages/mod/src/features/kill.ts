@@ -1,6 +1,6 @@
 import { Role, SocketCommandModToServer } from "common";
 import { VentState } from "../enums/VentState";
-import g from "../globals";
+import { g } from "../globals";
 import { PlayerData } from "../interfaces/PlayerData";
 import { sendTCP } from "../network/send";
 import { getOurPlayer } from "../players";

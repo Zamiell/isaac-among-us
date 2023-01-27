@@ -1,6 +1,7 @@
 import {
   BackdropType,
   GridRoom,
+  LevelStage,
   StageID,
   StageType,
 } from "isaac-typescript-definitions";
@@ -17,7 +18,7 @@ import {
   removeEntities,
   setBackdrop,
 } from "isaacscript-common";
-import g from "../globals";
+import { g } from "../globals";
 import { disableMinimapAPI } from "../minimapAPI";
 import { mod } from "../mod";
 import { setupPlayerAndUI } from "../setupPlayersAndUI";
@@ -26,10 +27,11 @@ import { consoleCommand } from "../utils";
 
 // We use the Cellar because it is the cleanest floor.
 const STAGE_ARGUMENT_FOR_LOBBY = "1a";
-const STAGE_FOR_LOBBY = 1;
+const STAGE_FOR_LOBBY = LevelStage.BASEMENT_1;
 const STAGE_TYPE_FOR_LOBBY = StageType.WRATH_OF_THE_LAMB;
 const STAGE_ID_FOR_LOBBY = StageID.CELLAR;
-// We use a room with no grid entities and a single Gaper.
+
+/** We use a room with no grid entities and a single Gaper. */
 const ROOM_VARIANT_FOR_LOBBY = 5;
 
 // ModCallback.POST_NEW_ROOM (19)

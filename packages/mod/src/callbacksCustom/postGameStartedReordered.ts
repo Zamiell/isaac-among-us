@@ -10,7 +10,7 @@ import * as disableMultiplayer from "../features/disableMultiplayer";
 import * as errors from "../features/errors";
 import * as goToEmptyRoom from "../features/goToEmptyRoom";
 import * as restartOnNextFrame from "../features/restartOnNextFrame";
-import g from "../globals";
+import { g } from "../globals";
 import { mod } from "../mod";
 import { disableShooting } from "../utils";
 

@@ -1,7 +1,7 @@
 import { TASK_DESCRIPTIONS } from "common";
 import { MOD_NAME } from "./constants";
 import * as mapData from "./data/map";
-import g from "./globals";
+import { g } from "./globals";
 import { setMapToFullVisibility, setMinimapAPIRoomIcon } from "./minimapAPI";
 import { setupPlayerAndUI } from "./setupPlayersAndUI";
 import { getStageAPIRoomMapID } from "./stageAPI";

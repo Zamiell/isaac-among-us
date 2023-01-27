@@ -15,7 +15,7 @@ import { spawnTaskButton } from "../features/buttonSpawn";
 import { resetButton } from "../features/buttonSubroutines";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
-import g from "../globals";
+import { g } from "../globals";
 import { movePlayerToGridIndex, spawnEntity } from "../utils";
 
 const THIS_TASK = Task.SHORT_FIX_WIRES;
@@ -91,7 +91,6 @@ export function fixWires(): void {
 
   const centerGridIndex = 52;
   movePlayerToGridIndex(centerGridIndex);
-  updatePlayerStats();
 
   const bottomGridIndex = 97;
   spawnTeleporter(bottomGridIndex);
@@ -234,8 +233,4 @@ export function postRender(): void {
     sprite.Color = WIRE_COLORS[color];
     sprite.Render(startPosition);
   }
-}
-
-function updatePlayerStats() {
-  throw new Error("Function not implemented.");
 }

@@ -14,7 +14,7 @@ import {
 } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
-import g from "../globals";
+import { g } from "../globals";
 import { movePlayerToGridIndex, spawnEntity } from "../utils";
 
 const THIS_TASK = Task.SHORT_BOMB_ROCKS;
@@ -23,11 +23,17 @@ const NUM_ROCKS_TO_SPAWN = 20;
 const TOP_LEFT_GRID_INDEX = 16;
 const ONE_BY_ONE_ROOM_HEIGHT_WITHOUT_WALLS = 7;
 const ONE_BY_ONE_ROOM_WIDTH = 15;
-const LEFT_SIDE_GRID_INDEXES: int[] = [];
-for (let i = 0; i < ONE_BY_ONE_ROOM_HEIGHT_WITHOUT_WALLS; i++) {
-  const gridIndex = TOP_LEFT_GRID_INDEX + i * ONE_BY_ONE_ROOM_WIDTH;
-  LEFT_SIDE_GRID_INDEXES.push(gridIndex);
-}
+
+const LEFT_SIDE_GRID_INDEXES: readonly int[] = (() => {
+  const gridIndexes: int[] = [];
+
+  for (let i = 0; i < ONE_BY_ONE_ROOM_HEIGHT_WITHOUT_WALLS; i++) {
+    const gridIndex = TOP_LEFT_GRID_INDEX + i * ONE_BY_ONE_ROOM_WIDTH;
+    gridIndexes.push(gridIndex);
+  }
+
+  return gridIndexes;
+})();
 
 /** Keys are grid indexes. Values are whether or not the rock is broken. */
 const rockBrokenMap = new Map<int, boolean>();

@@ -27,7 +27,7 @@ export function sendAllNewGame(game: Game, creator: string): void {
 
 function sendAll<T extends SocketCommandServerToMod>(
   command: T,
-  data: InstanceType<typeof SocketCommandServerToModData[T]>,
+  data: InstanceType<(typeof SocketCommandServerToModData)[T]>,
 ) {
   for (const socket of getAllSockets()) {
     sendTCP(socket, command, data);

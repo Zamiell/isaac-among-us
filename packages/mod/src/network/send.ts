@@ -5,7 +5,7 @@ import * as socketClient from "./socketClient";
 
 export function sendTCP<T extends SocketCommandModToServer>(
   command: T,
-  data: InstanceType<typeof SocketCommandModToServerData[T]>,
+  data: InstanceType<(typeof SocketCommandModToServerData)[T]>,
 ): void {
   if (!socketClient.isConnected()) {
     return;

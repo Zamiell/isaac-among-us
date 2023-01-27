@@ -3,7 +3,7 @@ import { EntityType } from "isaac-typescript-definitions";
 import { countEntities, game, VectorZero } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
-import g from "../globals";
+import { g } from "../globals";
 import { enableShooting, movePlayerToGridIndex } from "../utils";
 
 const THIS_TASK = Task.LONG_KILL_WORMS;

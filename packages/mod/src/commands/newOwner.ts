@@ -1,6 +1,6 @@
 import { NewOwnerDataToMod } from "common";
 import { addLocalChat } from "../chat";
-import g from "../globals";
+import { g } from "../globals";
 
 export function commandNewOwner(data: NewOwnerDataToMod): void {
   if (g.game === null) {
