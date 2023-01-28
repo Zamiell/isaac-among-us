@@ -1,10 +1,9 @@
 /* eslint-disable max-classes-per-file */
 
+import { AnyClass } from "isaacscript-common";
 import { MeetingType } from "../enums/MeetingType";
 import { SabotageType } from "../enums/SabotageType";
 import { SkeldRoom } from "../enums/SkeldRoom";
-import { AnyClass } from "./AnyClass";
-import { HasAllEnumKeys } from "./HasAllEnumKeys";
 
 export enum SocketCommandModToServer {
   PING = "ping",
@@ -146,4 +145,4 @@ export const SocketCommandModToServerData = {
   [SocketCommandModToServer.REVIVE]: ReviveDataToServer,
   [SocketCommandModToServer.KILL_ME]: KillMeDataToServer,
   [SocketCommandModToServer.DEBUG]: DebugDataToServer,
-} as const satisfies HasAllEnumKeys<SocketCommandModToServer, AnyClass>;
+} as const satisfies Record<SocketCommandModToServer, AnyClass>;

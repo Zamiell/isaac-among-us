@@ -2757,10 +2757,6 @@ return ____exports
 local ____exports = {}
 return ____exports
  end,
-["packages.common.src.types.HasAllEnumKeys"] = function(...) 
-local ____exports = {}
-return ____exports
- end,
 ["packages.common.src.objects.taskDescriptions"] = function(...) 
 local ____exports = {}
 local ____SkeldRoom = require("packages.common.src.enums.SkeldRoom")
@@ -2911,10 +2907,6 @@ ____exports.TASK_DESCRIPTIONS = {
         returnGridIndex = 63
     }
 }
-return ____exports
- end,
-["packages.common.src.types.AnyClass"] = function(...) 
-local ____exports = {}
 return ____exports
  end,
 ["packages.common.src.types.SocketCommandModToServer"] = function(...) 
@@ -4545,16 +4537,49 @@ do
         end
     end
 end
+do
+    local ____export = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+do
+    local ____export = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.types.ReadonlySet"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local Set = ____lualib.Set
+local ____exports = {}
+--- An alias for the `Set` constructor that returns a read-only set.
+____exports.ReadonlySet = Set
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.types.ReadonlyMap"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local Map = ____lualib.Map
+local ____exports = {}
+--- An alias for the `Map` constructor that returns a read-only map.
+____exports.ReadonlyMap = Map
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.types.PickingUpItem"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
 local ItemType = ____isaac_2Dtypescript_2Ddefinitions.ItemType
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local DEFAULT_ITEM_TYPE = ItemType.NULL
 local DEFAULT_SUB_TYPE = CollectibleType.NULL
 function ____exports.newPickingUpItem(self)
@@ -4564,7 +4589,7 @@ function ____exports.resetPickingUpItem(self, pickingUpItem)
     pickingUpItem.itemType = DEFAULT_ITEM_TYPE
     pickingUpItem.subType = DEFAULT_SUB_TYPE
 end
-local COLLECTIBLE_ITEM_TYPES = __TS__New(Set, {ItemType.PASSIVE, ItemType.ACTIVE, ItemType.FAMILIAR})
+local COLLECTIBLE_ITEM_TYPES = __TS__New(ReadonlySet, {ItemType.PASSIVE, ItemType.ACTIVE, ItemType.FAMILIAR})
 --- Helper function to narrow the type of `PickingUpItem`.
 function ____exports.isPickingUpItemNull(self, pickingUpItem)
     return pickingUpItem.itemType == ItemType.NULL
@@ -17047,13 +17072,14 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.transformationNameToPlayerFormMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PlayerForm = ____isaac_2Dtypescript_2Ddefinitions.PlayerForm
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 --- Maps transformation names to the values of the `PlayerForm` enum.
-____exports.TRANSFORMATION_NAME_TO_PLAYER_FORM_MAP = __TS__New(Map, {
+____exports.TRANSFORMATION_NAME_TO_PLAYER_FORM_MAP = __TS__New(ReadonlyMap, {
     {"guppy", PlayerForm.GUPPY},
     {"cat", PlayerForm.GUPPY},
     {"beelzebub", PlayerForm.BEELZEBUB},
@@ -17086,13 +17112,14 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.roomNameToTypeMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 --- Maps room names to the values of the `RoomType` enum.
-____exports.ROOM_NAME_TO_TYPE_MAP = __TS__New(Map, {
+____exports.ROOM_NAME_TO_TYPE_MAP = __TS__New(ReadonlyMap, {
     {"default", RoomType.DEFAULT},
     {"shop", RoomType.SHOP},
     {"error", RoomType.ERROR},
@@ -17132,13 +17159,14 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.pillNameToEffectMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PillEffect = ____isaac_2Dtypescript_2Ddefinitions.PillEffect
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 --- Maps pill effect names to the values of the `PillEffect` enum.
-____exports.PILL_NAME_TO_EFFECT_MAP = __TS__New(Map, {
+____exports.PILL_NAME_TO_EFFECT_MAP = __TS__New(ReadonlyMap, {
     {"badGas", PillEffect.BAD_GAS},
     {"gas", PillEffect.BAD_GAS},
     {"badTrip", PillEffect.BAD_TRIP},
@@ -17224,13 +17252,14 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.characterNameToTypeMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 --- Maps character names to the values of the `PlayerType` enum.
-____exports.CHARACTER_NAME_TO_TYPE_MAP = __TS__New(Map, {
+____exports.CHARACTER_NAME_TO_TYPE_MAP = __TS__New(ReadonlyMap, {
     {"isaac", PlayerType.ISAAC},
     {"magdalene", PlayerType.MAGDALENE},
     {"maggy", PlayerType.MAGDALENE},
@@ -17318,13 +17347,14 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.cardNameToTypeMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local CardType = ____isaac_2Dtypescript_2Ddefinitions.CardType
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 --- Maps card names to the values of the `CardType` enum.
-____exports.CARD_NAME_TO_TYPE_MAP = __TS__New(Map, {
+____exports.CARD_NAME_TO_TYPE_MAP = __TS__New(ReadonlyMap, {
     {"fool", CardType.FOOL},
     {"magician", CardType.MAGICIAN},
     {"mag", CardType.MAGICIAN},
@@ -19060,7 +19090,7 @@ end
 -- 
 -- This function is only meant to be used with interfaces (i.e. types that will not exist at
 -- run-time). If you are generating an object that will contain all of the keys of an enum, use the
--- `satisfies` operator with the `HasAllEnumValues` helper type instead.
+-- `satisfies` operator with the `Record` type instead.
 function ____exports.validateInterfaceMatchesEnum(self)
 end
 return ____exports
@@ -19123,12 +19153,13 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.consoleCommandsSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 --- The set of vanilla console commands, as documented here:
 -- https://bindingofisaacrebirth.fandom.com/wiki/Debug_Console
-____exports.CONSOLE_COMMANDS_SET = __TS__New(Set, {
+____exports.CONSOLE_COMMANDS_SET = __TS__New(ReadonlySet, {
     "achievement",
     "challenge",
     "clear",
@@ -19378,30 +19409,65 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local Direction = ____isaac_2Dtypescript_2Ddefinitions.Direction
 local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
 local VectorZero = ____constants.VectorZero
+local ____readOnly = require("lua_modules.isaacscript-common.dist.src.functions.readOnly")
+local newReadonlyVector = ____readOnly.newReadonlyVector
 ____exports.DIRECTION_TO_VECTOR = {
     [Direction.NO_DIRECTION] = VectorZero,
-    [Direction.LEFT] = Vector(-1, 0),
-    [Direction.UP] = Vector(0, -1),
-    [Direction.RIGHT] = Vector(1, 0),
-    [Direction.DOWN] = Vector(0, 1)
+    [Direction.LEFT] = newReadonlyVector(nil, -1, 0),
+    [Direction.UP] = newReadonlyVector(nil, 0, -1),
+    [Direction.RIGHT] = newReadonlyVector(nil, 1, 0),
+    [Direction.DOWN] = newReadonlyVector(nil, 0, 1)
 }
 return ____exports
  end,
+["lua_modules.isaacscript-common.dist.src.functions.readOnly"] = function(...) 
+local ____exports = {}
+--- Helper function to create a read-only `Color` object. (Otherwise, you would have to manually
+-- specify both the type and the constructor.)
+-- 
+-- Note that read-only colors will be writable at run-time.
+function ____exports.newReadonlyColor(self, r, g, b, a, ro, go, bo)
+    return Color(
+        r,
+        g,
+        b,
+        a,
+        ro,
+        go,
+        bo
+    )
+end
+--- Helper function to create a read-only `KColor` object. (Otherwise, you would have to manually
+-- specify both the type and the constructor.)
+-- 
+-- Note that read-only colors will be writable at run-time.
+function ____exports.newReadonlyKColor(self, r, g, b, a)
+    return KColor(r, g, b, a)
+end
+--- Helper function to create a read-only `Vector` object. (Otherwise, you would have to manually
+-- specify both the type and the constructor.)
+-- 
+-- Note that read-only vectors will be writable at run-time.
+function ____exports.newReadonlyVector(self, x, y)
+    return Vector(x, y)
+end
+return ____exports
+ end,
 ["lua_modules.isaacscript-common.dist.src.core.constants"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
-local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local Dimension = ____isaac_2Dtypescript_2Ddefinitions.Dimension
 local DisplayFlag = ____isaac_2Dtypescript_2Ddefinitions.DisplayFlag
-local ItemConfigCardType = ____isaac_2Dtypescript_2Ddefinitions.ItemConfigCardType
 local ItemPoolType = ____isaac_2Dtypescript_2Ddefinitions.ItemPoolType
 local TrinketSlot = ____isaac_2Dtypescript_2Ddefinitions.TrinketSlot
 local ____enums = require("lua_modules.isaacscript-common.dist.src.functions.enums")
 local getEnumLength = ____enums.getEnumLength
 local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
 local addFlag = ____flag.addFlag
+local ____readOnly = require("lua_modules.isaacscript-common.dist.src.functions.readOnly")
+local newReadonlyColor = ____readOnly.newReadonlyColor
+local newReadonlyKColor = ____readOnly.newReadonlyKColor
+local newReadonlyVector = ____readOnly.newReadonlyVector
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local asCollectibleType = ____types.asCollectibleType
 local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.src.core.constantsFirstLast")
@@ -19443,8 +19509,6 @@ ____exports.FIRST_GLITCHED_COLLECTIBLE_TYPE = asCollectibleType(nil, (1 << 32) -
 ____exports.GAME_FRAMES_PER_SECOND = 30
 --- Game frames are what is returned by the `Game.GetFrameCount` method.
 ____exports.GAME_FRAMES_PER_MINUTE = ____exports.GAME_FRAMES_PER_SECOND * 60
---- The set of all `ItemConfigCardType` values that are not a rune or special object.
-____exports.ITEM_CONFIG_CARD_TYPES_FOR_CARDS = __TS__New(Set, {ItemConfigCardType.TAROT, ItemConfigCardType.SUIT, ItemConfigCardType.SPECIAL, ItemConfigCardType.TAROT_REVERSE})
 --- Render frames are what is returned by the `Isaac.GetFrameCount` method.
 ____exports.RENDER_FRAMES_PER_SECOND = 60
 --- Render frames are what is returned by the `Isaac.GetFrameCount` method.
@@ -19483,12 +19547,12 @@ ____exports.MIN_PLAYER_SPEED_STAT = 0.1
 -- effect.
 ____exports.MAX_SPEED_STAT = 2
 --- This is in the center of the room.
-____exports.NEW_FLOOR_STARTING_POSITION_NORMAL_MODE = Vector(320, 280)
+____exports.NEW_FLOOR_STARTING_POSITION_NORMAL_MODE = newReadonlyVector(nil, 320, 280)
 --- This is near the top door.
-____exports.NEW_FLOOR_STARTING_POSITION_GREED_MODE = Vector(320, 280)
+____exports.NEW_FLOOR_STARTING_POSITION_GREED_MODE = newReadonlyVector(nil, 320, 280)
 --- This is next to the bottom door. Presumably, the player does not start in the center of the room
 -- (like they do when getting to a new stage) so that the controls graphic is more visible.
-____exports.NEW_RUN_PLAYER_STARTING_POSITION = Vector(320, 380)
+____exports.NEW_RUN_PLAYER_STARTING_POSITION = newReadonlyVector(nil, 320, 380)
 --- Corresponds to the maximum value for `EntityPlayer.SamsonBerserkCharge`.
 ____exports.MAX_TAINTED_SAMSON_BERSERK_CHARGE = 100000
 ____exports.NUM_DIMENSIONS = getEnumLength(nil, Dimension) - 1
@@ -19509,23 +19573,29 @@ ____exports.UI_HEART_WIDTH = 12
 -- 
 -- This is a safe version of the `Vector.One` constant. (Other mods can mutate `Vector.One`, so it
 -- is not safe to use.)
-____exports.VectorOne = Vector(1, 1)
+____exports.VectorOne = newReadonlyVector(nil, 1, 1)
 --- Equal to `Vector(0, 0)`.
 -- 
 -- This is a safe version of the `Vector.Zero` constant. (Other mods can mutate `Vector.Zero`, so it
 -- is not safe to use.)
-____exports.VectorZero = Vector(0, 0)
+____exports.VectorZero = newReadonlyVector(nil, 0, 0)
 --- Equal to `Color(1, 1, 1)`.
 -- 
 -- This is a safe version of the `Color.Default` constant. (Other mods can mutate `Color.Default`,
 -- so it is not safe to use.)
 -- 
 -- If you need to mutate this, make a copy first with the `copyColor` helper function.
-____exports.ColorDefault = Color(1, 1, 1)
+____exports.ColorDefault = newReadonlyColor(nil, 1, 1, 1)
 --- Equal to `KColor(1, 1, 1, 1)`.
 -- 
 -- If you need to mutate this, make a copy first with the `copyKColor` helper function.
-____exports.KColorDefault = KColor(1, 1, 1, 1)
+____exports.KColorDefault = newReadonlyKColor(
+    nil,
+    1,
+    1,
+    1,
+    1
+)
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.core.constantsFirstLast"] = function(...) 
@@ -21453,7 +21523,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.playerIndex"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArrayFind = ____lualib.__TS__ArrayFind
@@ -21464,6 +21533,8 @@ local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local game = ____cachedClasses.game
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 --- Helper function to get every player with no restrictions, by using `Game.GetNumPlayers` and
 -- `Isaac.GetPlayer`.
 -- 
@@ -21585,7 +21656,7 @@ function ____exports.isChildPlayer(self, player)
     return player.Parent ~= nil
 end
 DEFAULT_COLLECTIBLE_TYPE = CollectibleType.SAD_ONION
-EXCLUDED_CHARACTERS = __TS__New(Set, {PlayerType.ESAU, PlayerType.SOUL_B})
+EXCLUDED_CHARACTERS = __TS__New(ReadonlySet, {PlayerType.ESAU, PlayerType.SOUL_B})
 --- Helper function to get all of the other players in the room besides the one provided. (This
 -- includes "child" players.)
 function ____exports.getOtherPlayers(self, player)
@@ -22347,6 +22418,7 @@ local __TS__ArrayFind = ____lualib.__TS__ArrayFind
 local __TS__New = ____lualib.__TS__New
 local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local __TS__ObjectEntries = ____lualib.__TS__ObjectEntries
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local DoorSlot = ____isaac_2Dtypescript_2Ddefinitions.DoorSlot
@@ -22593,11 +22665,12 @@ function ____exports.getRepentanceDoor(self)
 end
 --- Helper function to get the corresponding door slot for a given room shape and grid coordinates.
 function ____exports.getRoomShapeDoorSlot(self, roomShape, x, y)
-    local coordinatesMap = ROOM_SHAPE_TO_DOOR_SLOT_COORDINATES[roomShape]
-    for ____, ____value in __TS__Iterator(coordinatesMap) do
-        local doorSlot = ____value[1]
-        local doorX = ____value[2][1]
-        local doorY = ____value[2][2]
+    local doorSlotCoordinates = ROOM_SHAPE_TO_DOOR_SLOT_COORDINATES[roomShape]
+    for ____, ____value in ipairs(__TS__ObjectEntries(doorSlotCoordinates)) do
+        local doorSlotString = ____value[1]
+        local coordinates = ____value[2]
+        local doorSlot = tonumber(doorSlotString)
+        local doorX, doorY = table.unpack(coordinates)
         if x == doorX and y == doorY then
             return doorSlot
         end
@@ -22607,8 +22680,8 @@ end
 --- Helper function to get the room grid coordinates for a specific room shape and door slot
 -- combination.
 function ____exports.getRoomShapeDoorSlotCoordinates(self, roomShape, doorSlot)
-    local coordinatesMap = ROOM_SHAPE_TO_DOOR_SLOT_COORDINATES[roomShape]
-    return coordinatesMap:get(doorSlot)
+    local doorSlotCoordinates = ROOM_SHAPE_TO_DOOR_SLOT_COORDINATES[roomShape]
+    return doorSlotCoordinates[doorSlot]
 end
 --- Helper function to find unused door slots in the current room that can be used to make custom
 -- doors.
@@ -22816,13 +22889,14 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.objects.roomShapeToDoorSlots"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local DoorSlot = ____isaac_2Dtypescript_2Ddefinitions.DoorSlot
 local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
-local ALL_DOOR_SLOTS_SET = __TS__New(Set, {
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+local ALL_DOOR_SLOTS_SET = __TS__New(ReadonlySet, {
     DoorSlot.LEFT_0,
     DoorSlot.UP_0,
     DoorSlot.RIGHT_0,
@@ -22833,10 +22907,10 @@ local ALL_DOOR_SLOTS_SET = __TS__New(Set, {
     DoorSlot.DOWN_1
 })
 ____exports.ROOM_SHAPE_TO_DOOR_SLOTS = {
-    [RoomShape.SHAPE_1x1] = __TS__New(Set, {DoorSlot.LEFT_0, DoorSlot.UP_0, DoorSlot.RIGHT_0, DoorSlot.DOWN_0}),
-    [RoomShape.IH] = __TS__New(Set, {DoorSlot.LEFT_0, DoorSlot.RIGHT_0}),
-    [RoomShape.IV] = __TS__New(Set, {DoorSlot.UP_0, DoorSlot.DOWN_0}),
-    [RoomShape.SHAPE_1x2] = __TS__New(Set, {
+    [RoomShape.SHAPE_1x1] = __TS__New(ReadonlySet, {DoorSlot.LEFT_0, DoorSlot.UP_0, DoorSlot.RIGHT_0, DoorSlot.DOWN_0}),
+    [RoomShape.IH] = __TS__New(ReadonlySet, {DoorSlot.LEFT_0, DoorSlot.RIGHT_0}),
+    [RoomShape.IV] = __TS__New(ReadonlySet, {DoorSlot.UP_0, DoorSlot.DOWN_0}),
+    [RoomShape.SHAPE_1x2] = __TS__New(ReadonlySet, {
         DoorSlot.LEFT_0,
         DoorSlot.UP_0,
         DoorSlot.RIGHT_0,
@@ -22844,8 +22918,8 @@ ____exports.ROOM_SHAPE_TO_DOOR_SLOTS = {
         DoorSlot.LEFT_1,
         DoorSlot.RIGHT_1
     }),
-    [RoomShape.IIV] = __TS__New(Set, {DoorSlot.UP_0, DoorSlot.DOWN_0}),
-    [RoomShape.SHAPE_2x1] = __TS__New(Set, {
+    [RoomShape.IIV] = __TS__New(ReadonlySet, {DoorSlot.UP_0, DoorSlot.DOWN_0}),
+    [RoomShape.SHAPE_2x1] = __TS__New(ReadonlySet, {
         DoorSlot.LEFT_0,
         DoorSlot.UP_0,
         DoorSlot.RIGHT_0,
@@ -22853,7 +22927,7 @@ ____exports.ROOM_SHAPE_TO_DOOR_SLOTS = {
         DoorSlot.UP_1,
         DoorSlot.DOWN_1
     }),
-    [RoomShape.IIH] = __TS__New(Set, {DoorSlot.LEFT_0, DoorSlot.RIGHT_0}),
+    [RoomShape.IIH] = __TS__New(ReadonlySet, {DoorSlot.LEFT_0, DoorSlot.RIGHT_0}),
     [RoomShape.SHAPE_2x2] = ALL_DOOR_SLOTS_SET,
     [RoomShape.LTL] = ALL_DOOR_SLOTS_SET,
     [RoomShape.LTR] = ALL_DOOR_SLOTS_SET,
@@ -22863,9 +22937,6 @@ ____exports.ROOM_SHAPE_TO_DOOR_SLOTS = {
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.objects.roomShapeToDoorSlotCoordinates"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
-local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local DoorSlot = ____isaac_2Dtypescript_2Ddefinitions.DoorSlot
@@ -22874,77 +22945,77 @@ local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
 -- 
 -- e.g. `<door exists="False" x="-1" y="3" />`
 ____exports.ROOM_SHAPE_TO_DOOR_SLOT_COORDINATES = {
-    [RoomShape.SHAPE_1x1] = __TS__New(Map, {{DoorSlot.LEFT_0, {-1, 3}}, {DoorSlot.UP_0, {6, -1}}, {DoorSlot.RIGHT_0, {13, 3}}, {DoorSlot.DOWN_0, {6, 7}}}),
-    [RoomShape.IH] = __TS__New(Map, {{DoorSlot.LEFT_0, {-1, 3}}, {DoorSlot.RIGHT_0, {13, 3}}}),
-    [RoomShape.IV] = __TS__New(Map, {{DoorSlot.UP_0, {6, -1}}, {DoorSlot.DOWN_0, {6, 7}}}),
-    [RoomShape.SHAPE_1x2] = __TS__New(Map, {
-        {DoorSlot.LEFT_0, {-1, 3}},
-        {DoorSlot.UP_0, {6, -1}},
-        {DoorSlot.RIGHT_0, {13, 3}},
-        {DoorSlot.DOWN_0, {6, 14}},
-        {DoorSlot.LEFT_1, {-1, 10}},
-        {DoorSlot.RIGHT_1, {13, 10}}
-    }),
-    [RoomShape.IIV] = __TS__New(Map, {{DoorSlot.UP_0, {6, -1}}, {DoorSlot.DOWN_0, {6, 14}}}),
-    [RoomShape.SHAPE_2x1] = __TS__New(Map, {
-        {DoorSlot.LEFT_0, {-1, 3}},
-        {DoorSlot.UP_0, {6, -1}},
-        {DoorSlot.RIGHT_0, {26, 3}},
-        {DoorSlot.DOWN_0, {6, 7}},
-        {DoorSlot.UP_1, {19, -1}},
-        {DoorSlot.DOWN_1, {19, 7}}
-    }),
-    [RoomShape.IIH] = __TS__New(Map, {{DoorSlot.LEFT_0, {-1, 3}}, {DoorSlot.RIGHT_0, {26, 3}}}),
-    [RoomShape.SHAPE_2x2] = __TS__New(Map, {
-        {DoorSlot.LEFT_0, {-1, 3}},
-        {DoorSlot.UP_0, {6, -1}},
-        {DoorSlot.RIGHT_0, {26, 3}},
-        {DoorSlot.DOWN_0, {6, 14}},
-        {DoorSlot.LEFT_1, {-1, 10}},
-        {DoorSlot.UP_1, {19, -1}},
-        {DoorSlot.RIGHT_1, {26, 10}},
-        {DoorSlot.DOWN_1, {19, 14}}
-    }),
-    [RoomShape.LTL] = __TS__New(Map, {
-        {DoorSlot.LEFT_0, {12, 3}},
-        {DoorSlot.UP_0, {6, 6}},
-        {DoorSlot.RIGHT_0, {26, 3}},
-        {DoorSlot.DOWN_0, {6, 14}},
-        {DoorSlot.LEFT_1, {-1, 10}},
-        {DoorSlot.UP_1, {19, -1}},
-        {DoorSlot.RIGHT_1, {26, 10}},
-        {DoorSlot.DOWN_1, {19, 14}}
-    }),
-    [RoomShape.LTR] = __TS__New(Map, {
-        {DoorSlot.LEFT_0, {-1, 3}},
-        {DoorSlot.UP_0, {6, -1}},
-        {DoorSlot.RIGHT_0, {13, 3}},
-        {DoorSlot.DOWN_0, {6, 14}},
-        {DoorSlot.LEFT_1, {-1, 10}},
-        {DoorSlot.UP_1, {19, 6}},
-        {DoorSlot.RIGHT_1, {26, 10}},
-        {DoorSlot.DOWN_1, {19, 14}}
-    }),
-    [RoomShape.LBL] = __TS__New(Map, {
-        {DoorSlot.LEFT_0, {-1, 3}},
-        {DoorSlot.UP_0, {6, -1}},
-        {DoorSlot.RIGHT_0, {26, 3}},
-        {DoorSlot.DOWN_0, {6, 7}},
-        {DoorSlot.LEFT_1, {12, 10}},
-        {DoorSlot.UP_1, {19, -1}},
-        {DoorSlot.RIGHT_1, {26, 10}},
-        {DoorSlot.DOWN_1, {19, 14}}
-    }),
-    [RoomShape.LBR] = __TS__New(Map, {
-        {DoorSlot.LEFT_0, {-1, 3}},
-        {DoorSlot.UP_0, {6, -1}},
-        {DoorSlot.RIGHT_0, {26, 3}},
-        {DoorSlot.DOWN_0, {6, 14}},
-        {DoorSlot.LEFT_1, {-1, 10}},
-        {DoorSlot.UP_1, {19, -1}},
-        {DoorSlot.RIGHT_1, {13, 10}},
-        {DoorSlot.DOWN_1, {19, 7}}
-    })
+    [RoomShape.SHAPE_1x1] = {[DoorSlot.LEFT_0] = {-1, 3}, [DoorSlot.UP_0] = {6, -1}, [DoorSlot.RIGHT_0] = {13, 3}, [DoorSlot.DOWN_0] = {6, 7}},
+    [RoomShape.IH] = {[DoorSlot.LEFT_0] = {-1, 3}, [DoorSlot.RIGHT_0] = {13, 3}},
+    [RoomShape.IV] = {[DoorSlot.UP_0] = {6, -1}, [DoorSlot.DOWN_0] = {6, 7}},
+    [RoomShape.SHAPE_1x2] = {
+        [DoorSlot.LEFT_0] = {-1, 3},
+        [DoorSlot.UP_0] = {6, -1},
+        [DoorSlot.RIGHT_0] = {13, 3},
+        [DoorSlot.DOWN_0] = {6, 14},
+        [DoorSlot.LEFT_1] = {-1, 10},
+        [DoorSlot.RIGHT_1] = {13, 10}
+    },
+    [RoomShape.IIV] = {[DoorSlot.UP_0] = {6, -1}, [DoorSlot.DOWN_0] = {6, 14}},
+    [RoomShape.SHAPE_2x1] = {
+        [DoorSlot.LEFT_0] = {-1, 3},
+        [DoorSlot.UP_0] = {6, -1},
+        [DoorSlot.RIGHT_0] = {26, 3},
+        [DoorSlot.DOWN_0] = {6, 7},
+        [DoorSlot.UP_1] = {19, -1},
+        [DoorSlot.DOWN_1] = {19, 7}
+    },
+    [RoomShape.IIH] = {[DoorSlot.LEFT_0] = {-1, 3}, [DoorSlot.RIGHT_0] = {26, 3}},
+    [RoomShape.SHAPE_2x2] = {
+        [DoorSlot.LEFT_0] = {-1, 3},
+        [DoorSlot.UP_0] = {6, -1},
+        [DoorSlot.RIGHT_0] = {26, 3},
+        [DoorSlot.DOWN_0] = {6, 14},
+        [DoorSlot.LEFT_1] = {-1, 10},
+        [DoorSlot.UP_1] = {19, -1},
+        [DoorSlot.RIGHT_1] = {26, 10},
+        [DoorSlot.DOWN_1] = {19, 14}
+    },
+    [RoomShape.LTL] = {
+        [DoorSlot.LEFT_0] = {12, 3},
+        [DoorSlot.UP_0] = {6, 6},
+        [DoorSlot.RIGHT_0] = {26, 3},
+        [DoorSlot.DOWN_0] = {6, 14},
+        [DoorSlot.LEFT_1] = {-1, 10},
+        [DoorSlot.UP_1] = {19, -1},
+        [DoorSlot.RIGHT_1] = {26, 10},
+        [DoorSlot.DOWN_1] = {19, 14}
+    },
+    [RoomShape.LTR] = {
+        [DoorSlot.LEFT_0] = {-1, 3},
+        [DoorSlot.UP_0] = {6, -1},
+        [DoorSlot.RIGHT_0] = {13, 3},
+        [DoorSlot.DOWN_0] = {6, 14},
+        [DoorSlot.LEFT_1] = {-1, 10},
+        [DoorSlot.UP_1] = {19, 6},
+        [DoorSlot.RIGHT_1] = {26, 10},
+        [DoorSlot.DOWN_1] = {19, 14}
+    },
+    [RoomShape.LBL] = {
+        [DoorSlot.LEFT_0] = {-1, 3},
+        [DoorSlot.UP_0] = {6, -1},
+        [DoorSlot.RIGHT_0] = {26, 3},
+        [DoorSlot.DOWN_0] = {6, 7},
+        [DoorSlot.LEFT_1] = {12, 10},
+        [DoorSlot.UP_1] = {19, -1},
+        [DoorSlot.RIGHT_1] = {26, 10},
+        [DoorSlot.DOWN_1] = {19, 14}
+    },
+    [RoomShape.LBR] = {
+        [DoorSlot.LEFT_0] = {-1, 3},
+        [DoorSlot.UP_0] = {6, -1},
+        [DoorSlot.RIGHT_0] = {26, 3},
+        [DoorSlot.DOWN_0] = {6, 14},
+        [DoorSlot.LEFT_1] = {-1, 10},
+        [DoorSlot.UP_1] = {19, -1},
+        [DoorSlot.RIGHT_1] = {13, 10},
+        [DoorSlot.DOWN_1] = {19, 7}
+    }
 }
 return ____exports
  end,
@@ -23094,6 +23165,8 @@ local ____isaacAPIClass = require("lua_modules.isaacscript-common.dist.src.funct
 local getIsaacAPIClassName = ____isaacAPIClass.getIsaacAPIClassName
 local ____random = require("lua_modules.isaacscript-common.dist.src.functions.random")
 local getRandom = ____random.getRandom
+local ____readOnly = require("lua_modules.isaacscript-common.dist.src.functions.readOnly")
+local newReadonlyColor = ____readOnly.newReadonlyColor
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
 local isRNG = ____rng.isRNG
 local newRNG = ____rng.newRNG
@@ -23205,7 +23278,8 @@ function ____exports.removeEntities(self, entities, cap)
     return entitiesRemoved
 end
 --- From DeadInfinity.
-local DAMAGE_FLASH_COLOR = Color(
+local DAMAGE_FLASH_COLOR = newReadonlyColor(
+    nil,
     0.5,
     0.5,
     0.5,
@@ -23639,12 +23713,13 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.storyBossesSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-____exports.STORY_BOSSES_SET = __TS__New(Set, {
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.STORY_BOSSES_SET = __TS__New(ReadonlySet, {
     EntityType.MOM,
     EntityType.MOMS_HEART,
     EntityType.SATAN,
@@ -23663,7 +23738,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.entitiesWithArmorSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -23688,6 +23762,8 @@ local SubHorfVariant = ____isaac_2Dtypescript_2Ddefinitions.SubHorfVariant
 local SuckerVariant = ____isaac_2Dtypescript_2Ddefinitions.SuckerVariant
 local UltraGreedVariant = ____isaac_2Dtypescript_2Ddefinitions.UltraGreedVariant
 local WallCreepVariant = ____isaac_2Dtypescript_2Ddefinitions.WallCreepVariant
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 --- "Armor" refers to the damage scaling mechanic. The following list corresponds to the entities
 -- that have the "shieldStrength" field in the "entities2.xml" file, with some exceptions.
 -- (Invulnerable enemies are not included. Furthermore, Ultra Greed, Ultra Greedier, and Delirium
@@ -23698,7 +23774,7 @@ local WallCreepVariant = ____isaac_2Dtypescript_2Ddefinitions.WallCreepVariant
 -- 
 -- We use strings instead of a type + variant tuple so that we can have O(1) lookups.
 ____exports.ENTITIES_WITH_ARMOR_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.POOTER) .. ".") .. tostring(PooterVariant.TAINTED_POOTER),
         (tostring(EntityType.HIVE) .. ".") .. tostring(HiveVariant.TAINTED_MULLIGAN),
@@ -23747,12 +23823,13 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.singleUseActiveCollectibleTypesSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
-____exports.SINGLE_USE_ACTIVE_COLLECTIBLE_TYPES_SET = __TS__New(Set, {
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.SINGLE_USE_ACTIVE_COLLECTIBLE_TYPES_SET = __TS__New(ReadonlySet, {
     CollectibleType.FORGET_ME_NOW,
     CollectibleType.EDENS_SOUL,
     CollectibleType.ALABASTER_BOX,
@@ -23766,9 +23843,10 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.collectibleTypeToNameMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 ____exports.DEFAULT_COLLECTIBLE_NAME = "Unknown"
 --- Maps collectible types to the real English names from the "stringtable.sta" file.
 -- 
@@ -23776,7 +23854,7 @@ ____exports.DEFAULT_COLLECTIBLE_NAME = "Unknown"
 -- converted to a type-safe object.)
 -- 
 -- For a mapping of name to `CollectibleType`, see `COLLECTIBLE_NAME_TO_TYPE_MAP`.
-____exports.COLLECTIBLE_TYPE_TO_NAME_MAP = __TS__New(Map, {
+____exports.COLLECTIBLE_TYPE_TO_NAME_MAP = __TS__New(ReadonlyMap, {
     {1, "The Sad Onion"},
     {2, "The Inner Eye"},
     {3, "Spoon Bender"},
@@ -24502,15 +24580,16 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.collectibleDescriptionMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 ____exports.DEFAULT_COLLECTIBLE_DESCRIPTION = "Unknown"
 --- Maps collectible types to the real English descriptions from the "stringtable.sta" file.
 -- 
 -- This is a temporary map due to missing features in the vanilla API. (Otherwise, this would be
 -- converted to a type-safe object.)
-____exports.COLLECTIBLE_DESCRIPTION_MAP = __TS__New(Map, {
+____exports.COLLECTIBLE_DESCRIPTION_MAP = __TS__New(ReadonlyMap, {
     {1, "Tears up"},
     {2, "Triple shot"},
     {3, "Homing shots"},
@@ -25236,7 +25315,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.characters"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -25259,13 +25337,15 @@ local ____charactersWithNoSoulHeartsSet = require("lua_modules.isaacscript-commo
 local CHARACTERS_WITH_NO_SOUL_HEARTS_SET = ____charactersWithNoSoulHeartsSet.CHARACTERS_WITH_NO_SOUL_HEARTS_SET
 local ____lostStyleCharactersSet = require("lua_modules.isaacscript-common.dist.src.sets.lostStyleCharactersSet")
 local LOST_STYLE_CHARACTERS_SET = ____lostStyleCharactersSet.LOST_STYLE_CHARACTERS_SET
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 function ____exports.isModdedCharacter(self, character)
     return not ____exports.isVanillaCharacter(nil, character)
 end
 function ____exports.isVanillaCharacter(self, character)
     return character <= LAST_VANILLA_CHARACTER
 end
-local FLYING_CHARACTERS = __TS__New(Set, {
+local FLYING_CHARACTERS = __TS__New(ReadonlySet, {
     PlayerType.AZAZEL,
     PlayerType.LOST,
     PlayerType.SOUL,
@@ -25359,14 +25439,15 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.lostStyleCharactersSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 --- This is the set of characters that look like The Lost and play the "LostDeath" animation when
 -- they die.
-____exports.LOST_STYLE_CHARACTERS_SET = __TS__New(Set, {
+____exports.LOST_STYLE_CHARACTERS_SET = __TS__New(ReadonlySet, {
     PlayerType.LOST,
     PlayerType.SOUL,
     PlayerType.LOST_B,
@@ -25377,14 +25458,15 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.charactersWithNoSoulHeartsSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 --- The set of characters where soul hearts will be automatically stripped away (e.g. Bethany). This
 -- includes The Lost and Tainted Lost.
-____exports.CHARACTERS_WITH_NO_SOUL_HEARTS_SET = __TS__New(Set, {
+____exports.CHARACTERS_WITH_NO_SOUL_HEARTS_SET = __TS__New(ReadonlySet, {
     PlayerType.LOST,
     PlayerType.KEEPER,
     PlayerType.BETHANY,
@@ -25395,14 +25477,15 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.charactersWithNoRedHeartsSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 --- The set of characters where red heart containers will be turned into soul hearts (e.g. Blue
 -- Baby). This includes The Lost and Tainted Lost. This does not include Keeper or Tainted Keeper.
-____exports.CHARACTERS_WITH_NO_RED_HEARTS_SET = __TS__New(Set, {
+____exports.CHARACTERS_WITH_NO_RED_HEARTS_SET = __TS__New(ReadonlySet, {
     PlayerType.BLUE_BABY,
     PlayerType.LOST,
     PlayerType.DARK_JUDAS,
@@ -25416,32 +25499,35 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.charactersWithFreeDevilDealsSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
-____exports.CHARACTERS_WITH_FREE_DEVIL_DEALS_SET = __TS__New(Set, {PlayerType.LOST, PlayerType.LOST_B, PlayerType.JACOB_2_B})
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.CHARACTERS_WITH_FREE_DEVIL_DEALS_SET = __TS__New(ReadonlySet, {PlayerType.LOST, PlayerType.LOST_B, PlayerType.JACOB_2_B})
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.charactersWithBlackHeartFromEternalHeartSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
-____exports.CHARACTERS_WITH_BLACK_HEART_FROM_ETERNAL_HEART_SET = __TS__New(Set, {PlayerType.DARK_JUDAS, PlayerType.JUDAS_B})
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.CHARACTERS_WITH_BLACK_HEART_FROM_ETERNAL_HEART_SET = __TS__New(ReadonlySet, {PlayerType.DARK_JUDAS, PlayerType.JUDAS_B})
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.charactersThatStartWithAnActiveItemSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
-____exports.CHARACTERS_THAT_START_WITH_AN_ACTIVE_ITEM_SET = __TS__New(Set, {
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.CHARACTERS_THAT_START_WITH_AN_ACTIVE_ITEM_SET = __TS__New(ReadonlySet, {
     PlayerType.ISAAC,
     PlayerType.MAGDALENE,
     PlayerType.JUDAS,
@@ -25559,9 +25645,10 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.trinketTypeToNameMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 ____exports.DEFAULT_TRINKET_NAME = "Unknown"
 --- Maps trinket types to the real English names from the "stringtable.sta" file.
 -- 
@@ -25569,7 +25656,7 @@ ____exports.DEFAULT_TRINKET_NAME = "Unknown"
 -- converted to a type-safe object.)
 -- 
 -- For a mapping of name to `TrinketType`, see `TRINKET_NAME_TO_TYPE_MAP`.
-____exports.TRINKET_TYPE_TO_NAME_MAP = __TS__New(Map, {
+____exports.TRINKET_TYPE_TO_NAME_MAP = __TS__New(ReadonlyMap, {
     {1, "Swallowed Penny"},
     {2, "Petrified Poop"},
     {3, "AAA Battery"},
@@ -25763,15 +25850,16 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.trinketDescriptionMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 ____exports.DEFAULT_TRINKET_DESCRIPTION = "Unknown"
 --- Maps trinket types to the real English descriptions from the "stringtable.sta" file.
 -- 
 -- This is a temporary map due to missing features in the vanilla API. (Otherwise, this would be
 -- converted to a type-safe object.)
-____exports.TRINKET_DESCRIPTION_MAP = __TS__New(Map, {
+____exports.TRINKET_DESCRIPTION_MAP = __TS__New(ReadonlyMap, {
     {1, "Gulp!"},
     {2, "It feels lucky?"},
     {3, "Trickle charge"},
@@ -26114,7 +26202,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.transformations"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local Set = ____lualib.Set
 local __TS__Iterator = ____lualib.__TS__Iterator
@@ -26124,13 +26211,17 @@ local ItemConfigTag = ____isaac_2Dtypescript_2Ddefinitions.ItemConfigTag
 local PlayerForm = ____isaac_2Dtypescript_2Ddefinitions.PlayerForm
 local ____transformationNames = require("lua_modules.isaacscript-common.dist.src.objects.transformationNames")
 local TRANSFORMATION_NAMES = ____transformationNames.TRANSFORMATION_NAMES
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____collectibles = require("lua_modules.isaacscript-common.dist.src.functions.collectibles")
 local getCollectibleTags = ____collectibles.getCollectibleTags
 local ____enums = require("lua_modules.isaacscript-common.dist.src.functions.enums")
 local getEnumValues = ____enums.getEnumValues
 local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
 local hasFlag = ____flag.hasFlag
-local TRANSFORMATION_TO_TAG_MAP = __TS__New(Map, {
+local TRANSFORMATION_TO_TAG_MAP = __TS__New(ReadonlyMap, {
     {PlayerForm.GUPPY, ItemConfigTag.GUPPY},
     {PlayerForm.BEELZEBUB, ItemConfigTag.FLY},
     {PlayerForm.FUN_GUY, ItemConfigTag.MUSHROOM},
@@ -26144,7 +26235,7 @@ local TRANSFORMATION_TO_TAG_MAP = __TS__New(Map, {
     {PlayerForm.BOOKWORM, ItemConfigTag.BOOK},
     {PlayerForm.SPIDER_BABY, ItemConfigTag.SPIDER}
 })
-local TRANSFORMATIONS_THAT_GRANT_FLYING = __TS__New(Set, {PlayerForm.GUPPY, PlayerForm.BEELZEBUB, PlayerForm.SERAPHIM, PlayerForm.LEVIATHAN})
+local TRANSFORMATIONS_THAT_GRANT_FLYING = __TS__New(ReadonlySet, {PlayerForm.GUPPY, PlayerForm.BEELZEBUB, PlayerForm.SERAPHIM, PlayerForm.LEVIATHAN})
 --- Returns a set of the player's current transformations.
 function ____exports.getPlayerTransformations(self, player)
     local transformations = __TS__New(Set)
@@ -26315,16 +26406,17 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.stats"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local CacheFlag = ____isaac_2Dtypescript_2Ddefinitions.CacheFlag
 local ____defaultPlayerStatMap = require("lua_modules.isaacscript-common.dist.src.maps.defaultPlayerStatMap")
 local DEFAULT_PLAYER_STAT_MAP = ____defaultPlayerStatMap.DEFAULT_PLAYER_STAT_MAP
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____tears = require("lua_modules.isaacscript-common.dist.src.functions.tears")
 local addTearsStat = ____tears.addTearsStat
-local STAT_CACHE_FLAGS_SET = __TS__New(Set, {
+local STAT_CACHE_FLAGS_SET = __TS__New(ReadonlySet, {
     CacheFlag.DAMAGE,
     CacheFlag.FIRE_DELAY,
     CacheFlag.SHOT_SPEED,
@@ -26406,17 +26498,18 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.defaultPlayerStatMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local CacheFlag = ____isaac_2Dtypescript_2Ddefinitions.CacheFlag
 local ____tears = require("lua_modules.isaacscript-common.dist.src.functions.tears")
 local getTearsStat = ____tears.getTearsStat
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 local DEFAULT_MAX_FIRE_DELAY = 10
 --- The default fire delay is represented in the tear stat, not the `MaxFireDelay` value.
 ____exports.DEFAULT_PLAYER_STAT_MAP = __TS__New(
-    Map,
+    ReadonlyMap,
     {
         {CacheFlag.DAMAGE, 3.5},
         {
@@ -28040,14 +28133,15 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.slots"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local SlotVariant = ____isaac_2Dtypescript_2Ddefinitions.SlotVariant
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____entityTypes = require("lua_modules.isaacscript-common.dist.src.functions.entityTypes")
 local isSlot = ____entityTypes.isSlot
-local SLOT_MACHINE_VARIANTS = __TS__New(Set, {
+local SLOT_MACHINE_VARIANTS = __TS__New(ReadonlySet, {
     SlotVariant.SLOT_MACHINE,
     SlotVariant.BLOOD_DONATION_MACHINE,
     SlotVariant.FORTUNE_TELLING_MACHINE,
@@ -28216,7 +28310,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.serialization"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__TypeOf = ____lualib.__TS__TypeOf
 local __TS__ObjectEntries = ____lualib.__TS__ObjectEntries
@@ -28231,6 +28324,8 @@ local ____isaacAPIClassTypeToBrand = require("lua_modules.isaacscript-common.dis
 local ISAAC_API_CLASS_TYPE_TO_BRAND = ____isaacAPIClassTypeToBrand.ISAAC_API_CLASS_TYPE_TO_BRAND
 local ____isaacAPIClassTypeToFunctions = require("lua_modules.isaacscript-common.dist.src.objects.isaacAPIClassTypeToFunctions")
 local ISAAC_API_CLASS_TYPE_TO_FUNCTIONS = ____isaacAPIClassTypeToFunctions.ISAAC_API_CLASS_TYPE_TO_FUNCTIONS
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____enums = require("lua_modules.isaacscript-common.dist.src.functions.enums")
 local getEnumValues = ____enums.getEnumValues
 local ____isaacAPIClass = require("lua_modules.isaacscript-common.dist.src.functions.isaacAPIClass")
@@ -28250,7 +28345,7 @@ function getSerializedTableType(self, serializedIsaacAPIClass)
     return nil
 end
 local SERIALIZATION_BRANDS = getEnumValues(nil, SerializationBrand)
-local SERIALIZATION_BRAND_SET = __TS__New(Set, SERIALIZATION_BRANDS)
+local SERIALIZATION_BRAND_SET = __TS__New(ReadonlySet, SERIALIZATION_BRANDS)
 --- Helper function to generically copy an Isaac API class without knowing what specific type of
 -- class it is. (This is used by the save data manager.)
 -- 
@@ -28662,7 +28757,7 @@ local __TS__SparseArrayPush = ____lualib.__TS__SparseArrayPush
 local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
 local Set = ____lualib.Set
 local ____exports = {}
-local getRoomShapeToWallGridIndexSet, getVanillaWallGridIndexSetForRoomShape, getWallGridIndexSetForRectangleRoomShape
+local getVanillaWallGridIndexSetForRoomShape, getWallGridIndexSetForRectangleRoomShape
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
 local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
@@ -28680,14 +28775,6 @@ local inHomeCloset = ____rooms.inHomeCloset
 local ____roomShape = require("lua_modules.isaacscript-common.dist.src.functions.roomShape")
 local getRoomShapeCorners = ____roomShape.getRoomShapeCorners
 local isLRoom = ____roomShape.isLRoom
-function getRoomShapeToWallGridIndexSet(self)
-    local roomShapeToWallGridIndexSet = __TS__New(Map)
-    for ____, roomShape in ipairs(getEnumValues(nil, RoomShape)) do
-        local gridIndexSet = getVanillaWallGridIndexSetForRoomShape(nil, roomShape)
-        roomShapeToWallGridIndexSet:set(roomShape, gridIndexSet)
-    end
-    return roomShapeToWallGridIndexSet
-end
 function getVanillaWallGridIndexSetForRoomShape(self, roomShape)
     local corners = getRoomShapeCorners(nil, roomShape)
     local lRoom = isLRoom(nil, roomShape)
@@ -28855,7 +28942,14 @@ function getWallGridIndexSetForRectangleRoomShape(self, roomShape, corners)
         {__TS__SparseArraySpread(____array_8)}
     )
 end
-local ROOM_SHAPE_TO_WALL_GRID_INDEX_SET = getRoomShapeToWallGridIndexSet(nil)
+local ROOM_SHAPE_TO_WALL_GRID_INDEX_SET = (function()
+    local roomShapeToWallGridIndexSet = __TS__New(Map)
+    for ____, roomShape in ipairs(getEnumValues(nil, RoomShape)) do
+        local gridIndexSet = getVanillaWallGridIndexSetForRoomShape(nil, roomShape)
+        roomShapeToWallGridIndexSet:set(roomShape, gridIndexSet)
+    end
+    return roomShapeToWallGridIndexSet
+end)(nil)
 --- The Home closet is is 9x3, which is different from `RoomShape.IH` (which is 13x3).
 local HOME_CLOSET_CORNERS = {
     {
@@ -29029,22 +29123,24 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.narrowRoomShapesSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
-____exports.NARROW_ROOM_SHAPES_SET = __TS__New(Set, {RoomShape.IH, RoomShape.IV, RoomShape.IIV, RoomShape.IIH})
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.NARROW_ROOM_SHAPES_SET = __TS__New(ReadonlySet, {RoomShape.IH, RoomShape.IV, RoomShape.IIV, RoomShape.IIH})
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.LRoomShapesSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
-____exports.L_ROOM_SHAPES_SET = __TS__New(Set, {RoomShape.LTL, RoomShape.LTR, RoomShape.LBL, RoomShape.LBR})
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.L_ROOM_SHAPES_SET = __TS__New(ReadonlySet, {RoomShape.LTL, RoomShape.LTR, RoomShape.LBL, RoomShape.LBR})
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.objects.roomShapeVolumes"] = function(...) 
@@ -29085,8 +29181,10 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
 local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
 local VectorZero = ____constants.VectorZero
-local NARROW_HORIZONTAL_TOP_LEFT_POSITION = Vector(0, 2)
-local NARROW_VERTICAL_TOP_LEFT_POSITION = Vector(4, 0)
+local ____readOnly = require("lua_modules.isaacscript-common.dist.src.functions.readOnly")
+local newReadonlyVector = ____readOnly.newReadonlyVector
+local NARROW_HORIZONTAL_TOP_LEFT_POSITION = newReadonlyVector(nil, 0, 2)
+local NARROW_VERTICAL_TOP_LEFT_POSITION = newReadonlyVector(nil, 4, 0)
 --- "Vector(0, 0)" corresponds to the top left tile of a room, not including the walls. (The top-left
 -- wall would be at "Vector(-1, -1)".)
 ____exports.ROOM_SHAPE_TO_TOP_LEFT_POSITION = {
@@ -29098,7 +29196,7 @@ ____exports.ROOM_SHAPE_TO_TOP_LEFT_POSITION = {
     [RoomShape.SHAPE_2x1] = VectorZero,
     [RoomShape.IIH] = NARROW_HORIZONTAL_TOP_LEFT_POSITION,
     [RoomShape.SHAPE_2x2] = VectorZero,
-    [RoomShape.LTL] = Vector(13, 0),
+    [RoomShape.LTL] = newReadonlyVector(nil, 13, 0),
     [RoomShape.LTR] = VectorZero,
     [RoomShape.LBL] = VectorZero,
     [RoomShape.LBR] = VectorZero
@@ -29129,7 +29227,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.objects.roomShapeToDoorSlotsToGridIndexDelta"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -29137,6 +29234,8 @@ local DoorSlot = ____isaac_2Dtypescript_2Ddefinitions.DoorSlot
 local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
 local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
 local LEVEL_GRID_ROW_WIDTH = ____constants.LEVEL_GRID_ROW_WIDTH
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 local LEFT = -1
 local UP = -LEVEL_GRID_ROW_WIDTH
 local RIGHT = 1
@@ -29144,10 +29243,10 @@ local DOWN = LEVEL_GRID_ROW_WIDTH
 --- Deltas are considered to be from the safe grid index of the room (i.e. the top left corner, or
 -- top right corner in the case of `RoomShape.LTL`).
 ____exports.ROOM_SHAPE_TO_DOOR_SLOTS_TO_GRID_INDEX_DELTA = {
-    [RoomShape.SHAPE_1x1] = __TS__New(Map, {{DoorSlot.LEFT_0, LEFT}, {DoorSlot.UP_0, UP}, {DoorSlot.RIGHT_0, RIGHT}, {DoorSlot.DOWN_0, DOWN}}),
-    [RoomShape.IH] = __TS__New(Map, {{DoorSlot.LEFT_0, LEFT}, {DoorSlot.RIGHT_0, RIGHT}}),
-    [RoomShape.IV] = __TS__New(Map, {{DoorSlot.UP_0, UP}, {DoorSlot.DOWN_0, DOWN}}),
-    [RoomShape.SHAPE_1x2] = __TS__New(Map, {
+    [RoomShape.SHAPE_1x1] = __TS__New(ReadonlyMap, {{DoorSlot.LEFT_0, LEFT}, {DoorSlot.UP_0, UP}, {DoorSlot.RIGHT_0, RIGHT}, {DoorSlot.DOWN_0, DOWN}}),
+    [RoomShape.IH] = __TS__New(ReadonlyMap, {{DoorSlot.LEFT_0, LEFT}, {DoorSlot.RIGHT_0, RIGHT}}),
+    [RoomShape.IV] = __TS__New(ReadonlyMap, {{DoorSlot.UP_0, UP}, {DoorSlot.DOWN_0, DOWN}}),
+    [RoomShape.SHAPE_1x2] = __TS__New(ReadonlyMap, {
         {DoorSlot.LEFT_0, LEFT},
         {DoorSlot.UP_0, UP},
         {DoorSlot.RIGHT_0, RIGHT},
@@ -29155,8 +29254,8 @@ ____exports.ROOM_SHAPE_TO_DOOR_SLOTS_TO_GRID_INDEX_DELTA = {
         {DoorSlot.LEFT_1, DOWN + LEFT},
         {DoorSlot.RIGHT_1, DOWN + RIGHT}
     }),
-    [RoomShape.IIV] = __TS__New(Map, {{DoorSlot.UP_0, UP}, {DoorSlot.DOWN_0, DOWN + DOWN}}),
-    [RoomShape.SHAPE_2x1] = __TS__New(Map, {
+    [RoomShape.IIV] = __TS__New(ReadonlyMap, {{DoorSlot.UP_0, UP}, {DoorSlot.DOWN_0, DOWN + DOWN}}),
+    [RoomShape.SHAPE_2x1] = __TS__New(ReadonlyMap, {
         {DoorSlot.LEFT_0, LEFT},
         {DoorSlot.UP_0, UP},
         {DoorSlot.RIGHT_0, RIGHT + RIGHT},
@@ -29164,8 +29263,8 @@ ____exports.ROOM_SHAPE_TO_DOOR_SLOTS_TO_GRID_INDEX_DELTA = {
         {DoorSlot.UP_1, RIGHT + UP},
         {DoorSlot.DOWN_1, RIGHT + DOWN}
     }),
-    [RoomShape.IIH] = __TS__New(Map, {{DoorSlot.LEFT_0, LEFT}, {DoorSlot.RIGHT_0, RIGHT + RIGHT}}),
-    [RoomShape.SHAPE_2x2] = __TS__New(Map, {
+    [RoomShape.IIH] = __TS__New(ReadonlyMap, {{DoorSlot.LEFT_0, LEFT}, {DoorSlot.RIGHT_0, RIGHT + RIGHT}}),
+    [RoomShape.SHAPE_2x2] = __TS__New(ReadonlyMap, {
         {DoorSlot.LEFT_0, LEFT},
         {DoorSlot.UP_0, UP},
         {DoorSlot.RIGHT_0, RIGHT + RIGHT},
@@ -29175,7 +29274,7 @@ ____exports.ROOM_SHAPE_TO_DOOR_SLOTS_TO_GRID_INDEX_DELTA = {
         {DoorSlot.RIGHT_1, RIGHT + DOWN + RIGHT},
         {DoorSlot.DOWN_1, RIGHT + DOWN + DOWN}
     }),
-    [RoomShape.LTL] = __TS__New(Map, {
+    [RoomShape.LTL] = __TS__New(ReadonlyMap, {
         {DoorSlot.LEFT_0, LEFT},
         {DoorSlot.UP_0, DOWN + LEFT + UP},
         {DoorSlot.RIGHT_0, RIGHT},
@@ -29185,7 +29284,7 @@ ____exports.ROOM_SHAPE_TO_DOOR_SLOTS_TO_GRID_INDEX_DELTA = {
         {DoorSlot.RIGHT_1, DOWN + RIGHT},
         {DoorSlot.DOWN_1, DOWN + DOWN}
     }),
-    [RoomShape.LTR] = __TS__New(Map, {
+    [RoomShape.LTR] = __TS__New(ReadonlyMap, {
         {DoorSlot.LEFT_0, LEFT},
         {DoorSlot.UP_0, UP},
         {DoorSlot.RIGHT_0, RIGHT},
@@ -29195,7 +29294,7 @@ ____exports.ROOM_SHAPE_TO_DOOR_SLOTS_TO_GRID_INDEX_DELTA = {
         {DoorSlot.RIGHT_1, DOWN + RIGHT + RIGHT},
         {DoorSlot.DOWN_1, DOWN + RIGHT + DOWN}
     }),
-    [RoomShape.LBL] = __TS__New(Map, {
+    [RoomShape.LBL] = __TS__New(ReadonlyMap, {
         {DoorSlot.LEFT_0, LEFT},
         {DoorSlot.UP_0, UP},
         {DoorSlot.RIGHT_0, RIGHT + RIGHT},
@@ -29205,7 +29304,7 @@ ____exports.ROOM_SHAPE_TO_DOOR_SLOTS_TO_GRID_INDEX_DELTA = {
         {DoorSlot.RIGHT_1, RIGHT + DOWN + RIGHT},
         {DoorSlot.DOWN_1, RIGHT + DOWN + DOWN}
     }),
-    [RoomShape.LBR] = __TS__New(Map, {
+    [RoomShape.LBR] = __TS__New(ReadonlyMap, {
         {DoorSlot.LEFT_0, LEFT},
         {DoorSlot.UP_0, UP},
         {DoorSlot.RIGHT_0, RIGHT + RIGHT},
@@ -29222,18 +29321,20 @@ return ____exports
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
-local TWO_BY_TWO_BOTTOM_RIGHT_POSITION = Vector(25, 13)
-local ONE_BY_TWO_VERTICAL_BOTTOM_RIGHT_POSITION = Vector(12, 13)
+local ____readOnly = require("lua_modules.isaacscript-common.dist.src.functions.readOnly")
+local newReadonlyVector = ____readOnly.newReadonlyVector
+local TWO_BY_TWO_BOTTOM_RIGHT_POSITION = newReadonlyVector(nil, 25, 13)
+local ONE_BY_TWO_VERTICAL_BOTTOM_RIGHT_POSITION = newReadonlyVector(nil, 12, 13)
 --- "Vector(0, 0)" corresponds to the top left tile of a room, not including the walls. (The top-left
 -- wall would be at "Vector(-1, -1)".)
 ____exports.ROOM_SHAPE_TO_BOTTOM_RIGHT_POSITION = {
-    [RoomShape.SHAPE_1x1] = Vector(12, 6),
-    [RoomShape.IH] = Vector(12, 4),
-    [RoomShape.IV] = Vector(8, 6),
+    [RoomShape.SHAPE_1x1] = newReadonlyVector(nil, 12, 6),
+    [RoomShape.IH] = newReadonlyVector(nil, 12, 4),
+    [RoomShape.IV] = newReadonlyVector(nil, 8, 6),
     [RoomShape.SHAPE_1x2] = ONE_BY_TWO_VERTICAL_BOTTOM_RIGHT_POSITION,
-    [RoomShape.IIV] = Vector(8, 13),
-    [RoomShape.SHAPE_2x1] = Vector(25, 6),
-    [RoomShape.IIH] = Vector(25, 4),
+    [RoomShape.IIV] = newReadonlyVector(nil, 8, 13),
+    [RoomShape.SHAPE_2x1] = newReadonlyVector(nil, 25, 6),
+    [RoomShape.IIH] = newReadonlyVector(nil, 25, 4),
     [RoomShape.SHAPE_2x2] = TWO_BY_TWO_BOTTOM_RIGHT_POSITION,
     [RoomShape.LTL] = TWO_BY_TWO_BOTTOM_RIGHT_POSITION,
     [RoomShape.LTR] = TWO_BY_TWO_BOTTOM_RIGHT_POSITION,
@@ -29279,6 +29380,8 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
 local ____CornerType = require("lua_modules.isaacscript-common.dist.src.enums.CornerType")
 local CornerType = ____CornerType.CornerType
+local ____readOnly = require("lua_modules.isaacscript-common.dist.src.functions.readOnly")
+local newReadonlyVector = ____readOnly.newReadonlyVector
 --- The locations of the corners for each room shape.
 -- 
 -- Note that these corner locations are not accurate for the Mother Boss Room and the Home closet
@@ -29288,304 +29391,304 @@ ____exports.ROOM_SHAPE_CORNERS = {
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 0,
-            position = Vector(60, 140)
+            position = newReadonlyVector(nil, 60, 140)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 14,
-            position = Vector(580, 140)
+            position = newReadonlyVector(nil, 580, 140)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 120,
-            position = Vector(60, 420)
+            position = newReadonlyVector(nil, 60, 420)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 134,
-            position = Vector(580, 420)
+            position = newReadonlyVector(nil, 580, 420)
         }
     },
     [RoomShape.IH] = {
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 30,
-            position = Vector(60, 220)
+            position = newReadonlyVector(nil, 60, 220)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 44,
-            position = Vector(580, 220)
+            position = newReadonlyVector(nil, 580, 220)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 90,
-            position = Vector(60, 340)
+            position = newReadonlyVector(nil, 60, 340)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 104,
-            position = Vector(580, 340)
+            position = newReadonlyVector(nil, 580, 340)
         }
     },
     [RoomShape.IV] = {
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 4,
-            position = Vector(220, 140)
+            position = newReadonlyVector(nil, 220, 140)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 10,
-            position = Vector(420, 140)
+            position = newReadonlyVector(nil, 420, 140)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 124,
-            position = Vector(220, 420)
+            position = newReadonlyVector(nil, 220, 420)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 130,
-            position = Vector(420, 420)
+            position = newReadonlyVector(nil, 420, 420)
         }
     },
     [RoomShape.SHAPE_1x2] = {
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 0,
-            position = Vector(60, 140)
+            position = newReadonlyVector(nil, 60, 140)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 14,
-            position = Vector(580, 140)
+            position = newReadonlyVector(nil, 580, 140)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 225,
-            position = Vector(60, 700)
+            position = newReadonlyVector(nil, 60, 700)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 239,
-            position = Vector(580, 700)
+            position = newReadonlyVector(nil, 580, 700)
         }
     },
     [RoomShape.IIV] = {
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 4,
-            position = Vector(220, 140)
+            position = newReadonlyVector(nil, 220, 140)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 10,
-            position = Vector(420, 140)
+            position = newReadonlyVector(nil, 420, 140)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 229,
-            position = Vector(220, 700)
+            position = newReadonlyVector(nil, 220, 700)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 235,
-            position = Vector(420, 700)
+            position = newReadonlyVector(nil, 420, 700)
         }
     },
     [RoomShape.SHAPE_2x1] = {
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 0,
-            position = Vector(60, 140)
+            position = newReadonlyVector(nil, 60, 140)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 27,
-            position = Vector(1100, 140)
+            position = newReadonlyVector(nil, 1100, 140)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 224,
-            position = Vector(60, 420)
+            position = newReadonlyVector(nil, 60, 420)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 251,
-            position = Vector(1100, 420)
+            position = newReadonlyVector(nil, 1100, 420)
         }
     },
     [RoomShape.IIH] = {
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 56,
-            position = Vector(60, 220)
+            position = newReadonlyVector(nil, 60, 220)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 83,
-            position = Vector(1100, 220)
+            position = newReadonlyVector(nil, 1100, 220)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 168,
-            position = Vector(60, 340)
+            position = newReadonlyVector(nil, 60, 340)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 195,
-            position = Vector(1100, 340)
+            position = newReadonlyVector(nil, 1100, 340)
         }
     },
     [RoomShape.SHAPE_2x2] = {
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 0,
-            position = Vector(60, 140)
+            position = newReadonlyVector(nil, 60, 140)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 27,
-            position = Vector(1100, 140)
+            position = newReadonlyVector(nil, 1100, 140)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 420,
-            position = Vector(60, 700)
+            position = newReadonlyVector(nil, 60, 700)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 447,
-            position = Vector(1100, 700)
+            position = newReadonlyVector(nil, 1100, 700)
         }
     },
     [RoomShape.LTL] = {
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 13,
-            position = Vector(580, 140)
+            position = newReadonlyVector(nil, 580, 140)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 27,
-            position = Vector(1100, 140)
+            position = newReadonlyVector(nil, 1100, 140)
         },
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 196,
-            position = Vector(60, 420)
+            position = newReadonlyVector(nil, 60, 420)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 209,
-            position = Vector(580, 420)
+            position = newReadonlyVector(nil, 580, 420)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 420,
-            position = Vector(60, 700)
+            position = newReadonlyVector(nil, 60, 700)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 447,
-            position = Vector(1100, 700)
+            position = newReadonlyVector(nil, 1100, 700)
         }
     },
     [RoomShape.LTR] = {
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 0,
-            position = Vector(60, 140)
+            position = newReadonlyVector(nil, 60, 140)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 14,
-            position = Vector(580, 140)
+            position = newReadonlyVector(nil, 580, 140)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 210,
-            position = Vector(580, 420)
+            position = newReadonlyVector(nil, 580, 420)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 223,
-            position = Vector(1100, 420)
+            position = newReadonlyVector(nil, 1100, 420)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 420,
-            position = Vector(60, 700)
+            position = newReadonlyVector(nil, 60, 700)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 447,
-            position = Vector(1100, 700)
+            position = newReadonlyVector(nil, 1100, 700)
         }
     },
     [RoomShape.LBL] = {
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 0,
-            position = Vector(60, 140)
+            position = newReadonlyVector(nil, 60, 140)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 27,
-            position = Vector(1100, 140)
+            position = newReadonlyVector(nil, 1100, 140)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 224,
-            position = Vector(580, 140)
+            position = newReadonlyVector(nil, 580, 140)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 237,
-            position = Vector(580, 420)
+            position = newReadonlyVector(nil, 580, 420)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 433,
-            position = Vector(580, 700)
+            position = newReadonlyVector(nil, 580, 700)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 447,
-            position = Vector(1100, 700)
+            position = newReadonlyVector(nil, 1100, 700)
         }
     },
     [RoomShape.LBR] = {
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 0,
-            position = Vector(60, 140)
+            position = newReadonlyVector(nil, 60, 140)
         },
         {
             type = CornerType.TOP_RIGHT,
             gridIndex = 27,
-            position = Vector(1100, 140)
+            position = newReadonlyVector(nil, 1100, 140)
         },
         {
             type = CornerType.TOP_LEFT,
             gridIndex = 238,
-            position = Vector(580, 420)
+            position = newReadonlyVector(nil, 580, 420)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 251,
-            position = Vector(1100, 420)
+            position = newReadonlyVector(nil, 1100, 420)
         },
         {
             type = CornerType.BOTTOM_LEFT,
             gridIndex = 420,
-            position = Vector(60, 700)
+            position = newReadonlyVector(nil, 60, 700)
         },
         {
             type = CornerType.BOTTOM_RIGHT,
             gridIndex = 434,
-            position = Vector(580, 700)
+            position = newReadonlyVector(nil, 580, 700)
         }
     }
 }
@@ -30300,12 +30403,13 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.mineShaftRoomSubTypesSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local MinesRoomSubType = ____isaac_2Dtypescript_2Ddefinitions.MinesRoomSubType
-____exports.MINE_SHAFT_ROOM_SUB_TYPE_SET = __TS__New(Set, {
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.MINE_SHAFT_ROOM_SUB_TYPE_SET = __TS__New(ReadonlySet, {
     MinesRoomSubType.MINESHAFT_ENTRANCE,
     MinesRoomSubType.MINESHAFT_LOBBY,
     MinesRoomSubType.MINESHAFT_KNIFE_PIECE,
@@ -30415,7 +30519,10 @@ function isValidGridPositionLRoom(self, gridPosition, roomShape)
     if rectangles == nil then
         return false
     end
-    local verticalTopLeft, verticalBottomRight, horizontalTopLeft, horizontalBottomRight = table.unpack(rectangles)
+    local verticalTopLeft = rectangles.verticalTopLeft
+    local verticalBottomRight = rectangles.verticalBottomRight
+    local horizontalTopLeft = rectangles.horizontalTopLeft
+    local horizontalBottomRight = rectangles.horizontalBottomRight
     return inRectangle(nil, gridPosition, verticalTopLeft, verticalBottomRight) or inRectangle(nil, gridPosition, horizontalTopLeft, horizontalBottomRight)
 end
 --- Helper function to convert grid coordinates to a world position `Vector`.
@@ -30593,33 +30700,35 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
 local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
 local VectorZero = ____constants.VectorZero
-local TWO_BY_TWO_BOTTOM_RIGHT = Vector(25, 13)
+local ____readOnly = require("lua_modules.isaacscript-common.dist.src.functions.readOnly")
+local newReadonlyVector = ____readOnly.newReadonlyVector
+local TWO_BY_TWO_BOTTOM_RIGHT = newReadonlyVector(nil, 25, 13)
 --- "Vector(0, 0)" corresponds to the top left tile of a room, not including the walls. (The top-left
 -- wall would be at "Vector(-1, -1)".)
 ____exports.L_ROOM_SHAPE_TO_RECTANGLES = {
     [RoomShape.LTL] = {
-        Vector(13, 0),
-        Vector(25, 13),
-        Vector(0, 7),
-        TWO_BY_TWO_BOTTOM_RIGHT
+        verticalTopLeft = newReadonlyVector(nil, 13, 0),
+        verticalBottomRight = newReadonlyVector(nil, 25, 13),
+        horizontalTopLeft = newReadonlyVector(nil, 0, 7),
+        horizontalBottomRight = TWO_BY_TWO_BOTTOM_RIGHT
     },
     [RoomShape.LTR] = {
-        VectorZero,
-        Vector(12, 13),
-        Vector(0, 7),
-        TWO_BY_TWO_BOTTOM_RIGHT
+        verticalTopLeft = VectorZero,
+        verticalBottomRight = newReadonlyVector(nil, 12, 13),
+        horizontalTopLeft = newReadonlyVector(nil, 0, 7),
+        horizontalBottomRight = TWO_BY_TWO_BOTTOM_RIGHT
     },
     [RoomShape.LBL] = {
-        VectorZero,
-        Vector(25, 6),
-        Vector(13, 0),
-        TWO_BY_TWO_BOTTOM_RIGHT
+        verticalTopLeft = VectorZero,
+        verticalBottomRight = newReadonlyVector(nil, 25, 6),
+        horizontalTopLeft = newReadonlyVector(nil, 13, 0),
+        horizontalBottomRight = TWO_BY_TWO_BOTTOM_RIGHT
     },
     [RoomShape.LBR] = {
-        VectorZero,
-        Vector(25, 6),
-        VectorZero,
-        Vector(12, 13)
+        verticalTopLeft = VectorZero,
+        verticalBottomRight = newReadonlyVector(nil, 25, 6),
+        horizontalTopLeft = VectorZero,
+        horizontalBottomRight = newReadonlyVector(nil, 12, 13)
     }
 }
 return ____exports
@@ -31239,10 +31348,10 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.gridEntities"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__StringSplit = ____lualib.__TS__StringSplit
+local Set = ____lualib.Set
 local Map = ____lualib.Map
 local ____exports = {}
 local getAllGridEntities
@@ -31265,6 +31374,8 @@ local GRID_ENTITY_XML_MAP = ____gridEntityXMLMap.GRID_ENTITY_XML_MAP
 local ____roomShapeToTopLeftWallGridIndexMap = require("lua_modules.isaacscript-common.dist.src.maps.roomShapeToTopLeftWallGridIndexMap")
 local DEFAULT_TOP_LEFT_WALL_GRID_INDEX = ____roomShapeToTopLeftWallGridIndexMap.DEFAULT_TOP_LEFT_WALL_GRID_INDEX
 local ROOM_SHAPE_TO_TOP_LEFT_WALL_GRID_INDEX_MAP = ____roomShapeToTopLeftWallGridIndexMap.ROOM_SHAPE_TO_TOP_LEFT_WALL_GRID_INDEX_MAP
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.entities")
 local removeEntities = ____entities.removeEntities
 local ____entitiesSpecific = require("lua_modules.isaacscript-common.dist.src.functions.entitiesSpecific")
@@ -31390,7 +31501,7 @@ function ____exports.spawnGridEntityWithVariant(self, gridEntityType, variant, g
     end
     return gridEntity
 end
-local BREAKABLE_GRID_ENTITY_TYPES_BY_EXPLOSIONS = __TS__New(Set, {
+local BREAKABLE_GRID_ENTITY_TYPES_BY_EXPLOSIONS = __TS__New(ReadonlySet, {
     GridEntityType.ROCK,
     GridEntityType.ROCK_TINTED,
     GridEntityType.ROCK_BOMB,
@@ -31404,7 +31515,7 @@ local BREAKABLE_GRID_ENTITY_TYPES_BY_EXPLOSIONS = __TS__New(Set, {
     GridEntityType.ROCK_GOLD
 })
 local BREAKABLE_GRID_ENTITY_TYPES_VARIANTS_BY_EXPLOSIONS = __TS__New(
-    Set,
+    ReadonlySet,
     {(tostring(GridEntityType.STATUE) .. ".") .. tostring(StatueVariant.ANGEL)}
 )
 --- Helper function to convert the grid entity type found in a room XML file to the corresponding
@@ -31790,15 +31901,16 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.roomShapeToTopLeftWallGridIndexMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 ____exports.DEFAULT_TOP_LEFT_WALL_GRID_INDEX = 0
 --- Only used for special room shapes where the top left wall grid index is not equal to
 -- `DEFAULT_TOP_LEFT_WALL_GRID_INDEX`.
-____exports.ROOM_SHAPE_TO_TOP_LEFT_WALL_GRID_INDEX_MAP = __TS__New(Map, {
+____exports.ROOM_SHAPE_TO_TOP_LEFT_WALL_GRID_INDEX_MAP = __TS__New(ReadonlyMap, {
     {RoomShape.IH, 30},
     {RoomShape.IV, 4},
     {RoomShape.IIV, 4},
@@ -31809,7 +31921,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.gridEntityXMLMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -31822,9 +31933,11 @@ local PressurePlateVariant = ____isaac_2Dtypescript_2Ddefinitions.PressurePlateV
 local RockVariant = ____isaac_2Dtypescript_2Ddefinitions.RockVariant
 local StatueVariant = ____isaac_2Dtypescript_2Ddefinitions.StatueVariant
 local TrapdoorVariant = ____isaac_2Dtypescript_2Ddefinitions.TrapdoorVariant
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 --- This maps the GridEntityXMLType (i.e. the type contained in the room XML/STB file) to the
 -- GridEntityType and the variant used by the game.
-____exports.GRID_ENTITY_XML_MAP = __TS__New(Map, {
+____exports.GRID_ENTITY_XML_MAP = __TS__New(ReadonlyMap, {
     {GridEntityXMLType.DECORATION, {GridEntityType.DECORATION, 0}},
     {GridEntityXMLType.ROCK, {GridEntityType.ROCK, RockVariant.NORMAL}},
     {GridEntityXMLType.ROCK_BOMB, {GridEntityType.ROCK_BOMB, 0}},
@@ -31865,7 +31978,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.gridEntityTypeToBrokenStateMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -31875,7 +31987,9 @@ local PoopState = ____isaac_2Dtypescript_2Ddefinitions.PoopState
 local RockState = ____isaac_2Dtypescript_2Ddefinitions.RockState
 local SpiderWebState = ____isaac_2Dtypescript_2Ddefinitions.SpiderWebState
 local TNTState = ____isaac_2Dtypescript_2Ddefinitions.TNTState
-____exports.GRID_ENTITY_TYPE_TO_BROKEN_STATE_MAP = __TS__New(Map, {
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
+____exports.GRID_ENTITY_TYPE_TO_BROKEN_STATE_MAP = __TS__New(ReadonlyMap, {
     {GridEntityType.ROCK, RockState.BROKEN},
     {GridEntityType.ROCK_TINTED, RockState.BROKEN},
     {GridEntityType.ROCK_BOMB, RockState.BROKEN},
@@ -34058,12 +34172,13 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.familiarsThatShootPlayerTearsSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local FamiliarVariant = ____isaac_2Dtypescript_2Ddefinitions.FamiliarVariant
-____exports.FAMILIARS_THAT_SHOOT_PLAYER_TEARS_SET = __TS__New(Set, {
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.FAMILIARS_THAT_SHOOT_PLAYER_TEARS_SET = __TS__New(ReadonlySet, {
     FamiliarVariant.SCISSORS,
     FamiliarVariant.INCUBUS,
     FamiliarVariant.FATES_REWARD,
@@ -34395,12 +34510,13 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.PHDPillConversions"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PillEffect = ____isaac_2Dtypescript_2Ddefinitions.PillEffect
-____exports.PHD_PILL_CONVERSIONS = __TS__New(Map, {
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
+____exports.PHD_PILL_CONVERSIONS = __TS__New(ReadonlyMap, {
     {PillEffect.BAD_TRIP, PillEffect.BALLS_OF_STEEL},
     {PillEffect.HEALTH_DOWN, PillEffect.HEALTH_UP},
     {PillEffect.RANGE_DOWN, PillEffect.RANGE_UP},
@@ -34422,12 +34538,13 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.falsePHDPillConversions"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PillEffect = ____isaac_2Dtypescript_2Ddefinitions.PillEffect
-____exports.FALSE_PHD_PILL_CONVERSIONS = __TS__New(Map, {
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
+____exports.FALSE_PHD_PILL_CONVERSIONS = __TS__New(ReadonlyMap, {
     {PillEffect.BAD_GAS, PillEffect.HEALTH_DOWN},
     {PillEffect.BALLS_OF_STEEL, PillEffect.BAD_TRIP},
     {PillEffect.BOMBS_ARE_KEYS, PillEffect.TEARS_DOWN},
@@ -34512,22 +34629,24 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.redHeartSubTypesSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local HeartSubType = ____isaac_2Dtypescript_2Ddefinitions.HeartSubType
-____exports.RED_HEART_SUB_TYPES_SET = __TS__New(Set, {HeartSubType.FULL, HeartSubType.HALF, HeartSubType.DOUBLE_PACK})
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.RED_HEART_SUB_TYPES_SET = __TS__New(ReadonlySet, {HeartSubType.FULL, HeartSubType.HALF, HeartSubType.DOUBLE_PACK})
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.chestPickupVariantsSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
-____exports.CHEST_PICKUP_VARIANTS = __TS__New(Set, {
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.CHEST_PICKUP_VARIANTS = __TS__New(ReadonlySet, {
     PickupVariant.CHEST,
     PickupVariant.BOMB_CHEST,
     PickupVariant.SPIKED_CHEST,
@@ -34562,7 +34681,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.npcs"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local ____exports = {}
@@ -34586,6 +34704,8 @@ local RaglingVariant = ____isaac_2Dtypescript_2Ddefinitions.RaglingVariant
 local VisVariant = ____isaac_2Dtypescript_2Ddefinitions.VisVariant
 local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
 local EGGY_STATE_FRAME_OF_FINAL_SPIDER = ____constants.EGGY_STATE_FRAME_OF_FINAL_SPIDER
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____entitiesSpecific = require("lua_modules.isaacscript-common.dist.src.functions.entitiesSpecific")
 local getNPCs = ____entitiesSpecific.getNPCs
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
@@ -34644,7 +34764,7 @@ function ____exports.isRaglingDeathPatch(self, npc)
     return npc.Type == EntityType.RAGLING and npc.Variant == asNumber(nil, RaglingVariant.RAG_MANS_RAGLING) and npc.State == NpcState.SPECIAL
 end
 NON_ALIVE_NPCS_TYPE_VARIANT = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.VIS) .. ".") .. tostring(VisVariant.CHUBBER_PROJECTILE),
         (tostring(EntityType.DEATH) .. ".") .. tostring(DeathVariant.DEATH_SCYTHE),
@@ -34660,7 +34780,7 @@ NON_ALIVE_NPCS_TYPE_VARIANT = __TS__New(
     }
 )
 NON_ALIVE_NPCS_TYPE_VARIANT_SUB_TYPE = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (((tostring(EntityType.CHARGER) .. ".") .. tostring(ChargerVariant.CHARGER)) .. ".") .. tostring(ChargerSubType.MY_SHADOW),
         (((tostring(EntityType.MOTHER) .. ".") .. tostring(MotherVariant.MOTHER_1)) .. ".") .. tostring(MotherSubType.PHASE_2)
@@ -36362,6 +36482,34 @@ function ____exports.getMapPartialMatch(self, searchText, map)
     end
     return {matchingKey, value}
 end
+--- Helper function to get a copy of a map with the keys and the values reversed.
+-- 
+-- For example:
+-- 
+-- ```ts
+-- new Map<string, number>([
+--   ["foo", 1],
+--   ["bar", 2],
+-- ]);
+-- ```
+-- 
+-- Would be reversed to:
+-- 
+-- ```ts
+-- new Map<number, string>([
+--   [1, "foo"],
+--   [2, "bar"],
+-- ]);
+-- ```
+function ____exports.getReversedMap(self, map)
+    local reverseMap = __TS__New(Map)
+    for ____, ____value in __TS__Iterator(map) do
+        local key = ____value[1]
+        local value = ____value[2]
+        reverseMap:set(value, key)
+    end
+    return reverseMap
+end
 --- Helper function to sum every value in a map together.
 function ____exports.sumMap(self, map)
     local values = {__TS__Spread(map:values())}
@@ -36813,7 +36961,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.logEntities"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
 local __TS__StringTrim = ____lualib.__TS__StringTrim
@@ -36831,6 +36978,8 @@ local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
 local PlayerVariant = ____isaac_2Dtypescript_2Ddefinitions.PlayerVariant
 local ProjectileVariant = ____isaac_2Dtypescript_2Ddefinitions.ProjectileVariant
 local TearVariant = ____isaac_2Dtypescript_2Ddefinitions.TearVariant
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.entities")
 local getEntities = ____entities.getEntities
 local getEntityFromPtrHash = ____entities.getEntityFromPtrHash
@@ -36954,7 +37103,7 @@ function getGridEntityLogLine(gridEntity, num)
     end
     return msg
 end
-local IGNORE_EFFECT_VARIANTS = __TS__New(Set, {
+local IGNORE_EFFECT_VARIANTS = __TS__New(ReadonlySet, {
     EffectVariant.BLOOD_EXPLOSION,
     EffectVariant.BLOOD_PARTICLE,
     EffectVariant.TINY_BUG,
@@ -38206,7 +38355,6 @@ return json
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.input"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__ArraySome = ____lualib.__TS__ArraySome
 local ____exports = {}
@@ -38217,6 +38365,8 @@ local ControllerIndex = ____isaac_2Dtypescript_2Ddefinitions.ControllerIndex
 local Keyboard = ____isaac_2Dtypescript_2Ddefinitions.Keyboard
 local ____keyboardToString = require("lua_modules.isaacscript-common.dist.src.maps.keyboardToString")
 local KEYBOARD_TO_STRING = ____keyboardToString.KEYBOARD_TO_STRING
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____enums = require("lua_modules.isaacscript-common.dist.src.functions.enums")
 local getEnumValues = ____enums.getEnumValues
 local ____string = require("lua_modules.isaacscript-common.dist.src.functions.string")
@@ -38232,9 +38382,9 @@ local MODIFIER_KEYS = {
     Keyboard.RIGHT_SUPER
 }
 local MOVEMENT_ACTIONS = {ButtonAction.LEFT, ButtonAction.RIGHT, ButtonAction.UP, ButtonAction.DOWN}
-____exports.MOVEMENT_ACTIONS_SET = __TS__New(Set, MOVEMENT_ACTIONS)
+____exports.MOVEMENT_ACTIONS_SET = __TS__New(ReadonlySet, MOVEMENT_ACTIONS)
 local SHOOTING_ACTIONS = {ButtonAction.SHOOT_LEFT, ButtonAction.SHOOT_RIGHT, ButtonAction.SHOOT_UP, ButtonAction.SHOOT_DOWN}
-____exports.SHOOTING_ACTIONS_SET = __TS__New(Set, SHOOTING_ACTIONS)
+____exports.SHOOTING_ACTIONS_SET = __TS__New(ReadonlySet, SHOOTING_ACTIONS)
 --- Helper function to get the enum name for the specified `Controller` value. Note that this will
 -- trim off the "BUTTON_" prefix.
 -- 
@@ -38406,13 +38556,14 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.keyboardToString"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local Keyboard = ____isaac_2Dtypescript_2Ddefinitions.Keyboard
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 --- Maps each keyboard enum member to its corresponding lowercase and uppercase characters.
-____exports.KEYBOARD_TO_STRING = __TS__New(Map, {
+____exports.KEYBOARD_TO_STRING = __TS__New(ReadonlyMap, {
     {Keyboard.SPACE, {" ", " "}},
     {Keyboard.APOSTROPHE, {"'", "\""}},
     {Keyboard.COMMA, {",", "<"}},
@@ -38575,13 +38726,15 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.globals"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
+local Set = ____lualib.Set
 local __TS__ArraySort = ____lualib.__TS__ArraySort
 local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
 local __TS__ObjectEntries = ____lualib.__TS__ObjectEntries
 local ____exports = {}
 local isRacingPlusSandboxEnabled
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____debugFunctions = require("lua_modules.isaacscript-common.dist.src.functions.debugFunctions")
 local getTraceback = ____debugFunctions.getTraceback
 local isLuaDebugEnabled = ____debugFunctions.isLuaDebugEnabled
@@ -38599,7 +38752,7 @@ local twoDimensionalSort = ____utils.twoDimensionalSort
 function isRacingPlusSandboxEnabled(self)
     return SandboxGetParentFunctionDescription ~= nil
 end
-local DEFAULT_GLOBALS = __TS__New(Set, {
+local DEFAULT_GLOBALS = __TS__New(ReadonlySet, {
     "ActionTriggers",
     "ActiveSlot",
     "BabySubType",
@@ -38763,7 +38916,7 @@ local DEFAULT_GLOBALS = __TS__New(Set, {
     "utf8",
     "xpcall"
 })
-local LUA_DEBUG_ADDED_GLOBALS = __TS__New(Set, {
+local LUA_DEBUG_ADDED_GLOBALS = __TS__New(ReadonlySet, {
     "debug",
     "dofile",
     "loadfile",
@@ -38771,7 +38924,7 @@ local LUA_DEBUG_ADDED_GLOBALS = __TS__New(Set, {
     "os",
     "package"
 })
-local RACING_PLUS_SANDBOX_ADDED_GLOBALS = __TS__New(Set, {"sandboxTraceback", "sandboxGetTraceback", "getParentFunctionDescription"})
+local RACING_PLUS_SANDBOX_ADDED_GLOBALS = __TS__New(ReadonlySet, {"sandboxTraceback", "sandboxGetTraceback", "getParentFunctionDescription"})
 --- Helper function to get a set containing all of the global variable names that are contained
 -- within the Isaac environment by default.
 -- 
@@ -38917,7 +39070,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.emptyRoom"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local emptyRoomEntities, EMPTY_ROOM_BLACKLIST_ENTITY_SET
@@ -38927,6 +39079,8 @@ local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local game = ____cachedClasses.game
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.entities")
 local getEntities = ____entities.getEntities
 local ____gridEntities = require("lua_modules.isaacscript-common.dist.src.functions.gridEntities")
@@ -38978,7 +39132,7 @@ function ____exports.emptyRoomGridEntities(self)
         roomUpdateSafe(nil)
     end
 end
-EMPTY_ROOM_BLACKLIST_ENTITY_SET = __TS__New(Set, {
+EMPTY_ROOM_BLACKLIST_ENTITY_SET = __TS__New(ReadonlySet, {
     EntityType.PLAYER,
     EntityType.TEAR,
     EntityType.FAMILIAR,
@@ -40019,8 +40173,6 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local ItemConfigCardType = ____isaac_2Dtypescript_2Ddefinitions.ItemConfigCardType
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local itemConfig = ____cachedClasses.itemConfig
-local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
-local ITEM_CONFIG_CARD_TYPES_FOR_CARDS = ____constants.ITEM_CONFIG_CARD_TYPES_FOR_CARDS
 local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.src.core.constantsFirstLast")
 local FIRST_CARD_TYPE = ____constantsFirstLast.FIRST_CARD_TYPE
 local LAST_VANILLA_CARD_TYPE = ____constantsFirstLast.LAST_VANILLA_CARD_TYPE
@@ -40030,6 +40182,8 @@ local DEFAULT_CARD_DESCRIPTION = ____cardDescriptions.DEFAULT_CARD_DESCRIPTION
 local ____cardNames = require("lua_modules.isaacscript-common.dist.src.objects.cardNames")
 local CARD_NAMES = ____cardNames.CARD_NAMES
 local DEFAULT_CARD_NAME = ____cardNames.DEFAULT_CARD_NAME
+local ____itemConfigCardTypesForCardsSet = require("lua_modules.isaacscript-common.dist.src.sets.itemConfigCardTypesForCardsSet")
+local ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET = ____itemConfigCardTypesForCardsSet.ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
 local iRange = ____utils.iRange
 --- Returns true for any vanilla card or rune.
@@ -40092,7 +40246,7 @@ function ____exports.isCard(self, cardType)
     if itemConfigCardType == nil then
         return false
     end
-    return ITEM_CONFIG_CARD_TYPES_FOR_CARDS:has(itemConfigCardType)
+    return ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET:has(itemConfigCardType)
 end
 --- Returns whether or not the given card type matches the specified item config card type.
 function ____exports.isCardType(self, cardType, itemConfigCardType)
@@ -40126,6 +40280,18 @@ end
 function ____exports.isTarotCard(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.TAROT)
 end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.sets.itemConfigCardTypesForCardsSet"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local ItemConfigCardType = ____isaac_2Dtypescript_2Ddefinitions.ItemConfigCardType
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+--- The set of all `ItemConfigCardType` values that are not a rune or special object.
+____exports.ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET = __TS__New(ReadonlySet, {ItemConfigCardType.TAROT, ItemConfigCardType.SUIT, ItemConfigCardType.SPECIAL, ItemConfigCardType.TAROT_REVERSE})
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.objects.cardNames"] = function(...) 
@@ -40346,7 +40512,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.bosses"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local ____exports = {}
@@ -40363,6 +40528,8 @@ local STAGE_TO_COMBINED_BOSS_SET_MAP = ____bossSets.STAGE_TO_COMBINED_BOSS_SET_M
 local STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP = ____bossSets.STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP
 local ____sinEntityTypesSet = require("lua_modules.isaacscript-common.dist.src.sets.sinEntityTypesSet")
 local SIN_ENTITY_TYPES_SET = ____sinEntityTypesSet.SIN_ENTITY_TYPES_SET
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____entitiesSpecific = require("lua_modules.isaacscript-common.dist.src.functions.entitiesSpecific")
 local getNPCs = ____entitiesSpecific.getNPCs
 local spawnNPC = ____entitiesSpecific.spawnNPC
@@ -40405,7 +40572,7 @@ function getNumBossSegments(self, entityType, variant, numSegments)
         end
     until true
 end
-local BOSSES_THAT_REQUIRE_MULTIPLE_SPAWNS = __TS__New(Set, {
+local BOSSES_THAT_REQUIRE_MULTIPLE_SPAWNS = __TS__New(ReadonlySet, {
     EntityType.LARRY_JR,
     EntityType.CHUB,
     EntityType.LOKI,
@@ -40605,12 +40772,13 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.sinEntityTypesSet"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-____exports.SIN_ENTITY_TYPES_SET = __TS__New(Set, {
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.SIN_ENTITY_TYPES_SET = __TS__New(ReadonlySet, {
     EntityType.SLOTH,
     EntityType.LUST,
     EntityType.WRATH,
@@ -40623,13 +40791,12 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.bossSets"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__Spread = ____lualib.__TS__Spread
 local __TS__SparseArrayNew = ____lualib.__TS__SparseArrayNew
 local __TS__SparseArrayPush = ____lualib.__TS__SparseArrayPush
 local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
-local Map = ____lualib.Map
+local Set = ____lualib.Set
 local ____exports = {}
 local getAllBossesExcludingStoryBossesSet
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -40666,6 +40833,10 @@ local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.
 local parseEntityTypeVariantString = ____entities.parseEntityTypeVariantString
 local ____set = require("lua_modules.isaacscript-common.dist.src.functions.set")
 local copySet = ____set.copySet
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____storyBossesSet = require("lua_modules.isaacscript-common.dist.src.sets.storyBossesSet")
 local STORY_BOSSES_SET = ____storyBossesSet.STORY_BOSSES_SET
 function getAllBossesExcludingStoryBossesSet(self)
@@ -40685,7 +40856,7 @@ function getAllBossesExcludingStoryBossesSet(self)
 end
 --- Contains just the bosses in Basement (not e.g. Burning Basement).
 local BASEMENT_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.LARRY_JR) .. ".") .. tostring(LarryJrVariant.LARRY_JR),
         tostring(EntityType.MONSTRO) .. ".0",
@@ -40705,7 +40876,7 @@ local BASEMENT_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Cellar (not e.g. Burning Basement).
 local CELLAR_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.PIN) .. ".") .. tostring(PinVariant.PIN),
         tostring(EntityType.FAMINE) .. ".0",
@@ -40722,7 +40893,7 @@ local CELLAR_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Burning Basement (not e.g. Cellar).
 local BURNING_BASEMENT_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.LARRY_JR) .. ".") .. tostring(LarryJrVariant.LARRY_JR),
         tostring(EntityType.MONSTRO) .. ".0",
@@ -40743,7 +40914,7 @@ local BURNING_BASEMENT_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Downpour (not e.g. Burning Basement).
 local DOWNPOUR_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.PIN) .. ".") .. tostring(PinVariant.WORMWOOD),
         tostring(EntityType.LIL_BLUB) .. ".0",
@@ -40753,7 +40924,7 @@ local DOWNPOUR_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Dross (not e.g. Burning Basement).
 local DROSS_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.PIN) .. ".") .. tostring(PinVariant.WORMWOOD),
         tostring(EntityType.LIL_BLUB) .. ".0",
@@ -40762,7 +40933,7 @@ local DROSS_BOSSES_SET = __TS__New(
         tostring(EntityType.TURDLET) .. ".0"
     }
 )
-local ____Set_1 = Set
+local ____ReadonlySet_1 = ReadonlySet
 local ____array_0 = __TS__SparseArrayNew(__TS__Spread(BASEMENT_BOSSES_SET:values()))
 __TS__SparseArrayPush(
     ____array_0,
@@ -40782,10 +40953,10 @@ __TS__SparseArrayPush(
 )
 --- The set of unique bosses for Basement, Cellar, and so on.
 local ALL_BASEMENT_BOSSES_SET = __TS__New(
-    ____Set_1,
+    ____ReadonlySet_1,
     {__TS__SparseArraySpread(____array_0)}
 )
-local BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(Map, {
+local BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
     {StageType.ORIGINAL, BASEMENT_BOSSES_SET},
     {StageType.WRATH_OF_THE_LAMB, CELLAR_BOSSES_SET},
     {StageType.AFTERBIRTH, BURNING_BASEMENT_BOSSES_SET},
@@ -40794,7 +40965,7 @@ local BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(Map, {
 })
 --- Contains just the bosses in Caves (not e.g. Flooded Caves).
 local CAVES_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.CHUB) .. ".") .. tostring(ChubVariant.CHUB),
         (tostring(EntityType.CHUB) .. ".") .. tostring(ChubVariant.CHAD),
@@ -40815,7 +40986,7 @@ local CAVES_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Catacombs (not e.g. Flooded Caves).
 local CATACOMBS_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.LARRY_JR) .. ".") .. tostring(LarryJrVariant.THE_HOLLOW),
         (tostring(EntityType.CHUB) .. ".") .. tostring(ChubVariant.CARRION_QUEEN),
@@ -40837,7 +41008,7 @@ local CATACOMBS_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Flooded Caves (not e.g. Catacombs).
 local FLOODED_CAVES_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.CHUB) .. ".") .. tostring(ChubVariant.CHUB),
         (tostring(EntityType.CHUB) .. ".") .. tostring(ChubVariant.CHAD),
@@ -40860,7 +41031,7 @@ local FLOODED_CAVES_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Mines (not e.g. Flooded Caves).
 local MINES_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.LARRY_JR) .. ".") .. tostring(LarryJrVariant.TUFF_TWIN),
         tostring(EntityType.REAP_CREEP) .. ".0",
@@ -40870,7 +41041,7 @@ local MINES_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Ashpit (not e.g. Flooded Caves).
 local ASHPIT_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.LARRY_JR) .. ".") .. tostring(LarryJrVariant.THE_SHELL),
         (tostring(EntityType.POLYCEPHALUS) .. ".") .. tostring(PolycephalusVariant.THE_PILE),
@@ -40879,7 +41050,7 @@ local ASHPIT_BOSSES_SET = __TS__New(
         tostring(EntityType.CLUTCH) .. ".0"
     }
 )
-local ____Set_3 = Set
+local ____ReadonlySet_3 = ReadonlySet
 local ____array_2 = __TS__SparseArrayNew(__TS__Spread(CAVES_BOSSES_SET:values()))
 __TS__SparseArrayPush(
     ____array_2,
@@ -40899,10 +41070,10 @@ __TS__SparseArrayPush(
 )
 --- The set of unique bosses for Caves, Catacombs, and so on.
 local ALL_CAVES_BOSSES_SET = __TS__New(
-    ____Set_3,
+    ____ReadonlySet_3,
     {__TS__SparseArraySpread(____array_2)}
 )
-local CAVES_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(Map, {
+local CAVES_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
     {StageType.ORIGINAL, CAVES_BOSSES_SET},
     {StageType.WRATH_OF_THE_LAMB, CATACOMBS_BOSSES_SET},
     {StageType.AFTERBIRTH, FLOODED_CAVES_BOSSES_SET},
@@ -40911,7 +41082,7 @@ local CAVES_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(Map, {
 })
 --- Contains just the bosses in Depths (not e.g. Dank Depths).
 local DEPTHS_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.MONSTRO_2) .. ".") .. tostring(Monstro2Variant.MONSTRO_2),
         (tostring(EntityType.MONSTRO_2) .. ".") .. tostring(Monstro2Variant.GISH),
@@ -40929,7 +41100,7 @@ local DEPTHS_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Necropolis (not e.g. Dank Depths).
 local NECROPOLIS_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.MOM) .. ".") .. tostring(MomVariant.MOM),
         (tostring(EntityType.WAR) .. ".") .. tostring(WarVariant.WAR),
@@ -40946,7 +41117,7 @@ local NECROPOLIS_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Dank Depths (not e.g. Necropolis).
 local DANK_DEPTHS_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.MONSTRO_2) .. ".") .. tostring(Monstro2Variant.MONSTRO_2),
         (tostring(EntityType.MONSTRO_2) .. ".") .. tostring(Monstro2Variant.GISH),
@@ -40964,7 +41135,7 @@ local DANK_DEPTHS_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Mausoleum (not e.g. Dank Depths).
 local MAUSOLEUM_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.MOM) .. ".") .. tostring(MomVariant.MOM),
         tostring(EntityType.SIREN) .. ".0",
@@ -40973,14 +41144,14 @@ local MAUSOLEUM_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Gehenna (not e.g. Dank Depths).
 local GEHENNA_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.MOM) .. ".") .. tostring(MomVariant.MOM),
         tostring(EntityType.VISAGE) .. ".0",
         tostring(EntityType.HORNY_BOYS) .. ".0"
     }
 )
-local ____Set_5 = Set
+local ____ReadonlySet_5 = ReadonlySet
 local ____array_4 = __TS__SparseArrayNew(__TS__Spread(DEPTHS_BOSSES_SET:values()))
 __TS__SparseArrayPush(
     ____array_4,
@@ -41000,10 +41171,10 @@ __TS__SparseArrayPush(
 )
 --- The set of unique bosses for Depths, Necropolis, and so on.
 local ALL_DEPTHS_BOSSES_SET = __TS__New(
-    ____Set_5,
+    ____ReadonlySet_5,
     {__TS__SparseArraySpread(____array_4)}
 )
-local DEPTHS_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(Map, {
+local DEPTHS_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
     {StageType.ORIGINAL, DEPTHS_BOSSES_SET},
     {StageType.WRATH_OF_THE_LAMB, NECROPOLIS_BOSSES_SET},
     {StageType.AFTERBIRTH, DANK_DEPTHS_BOSSES_SET},
@@ -41012,7 +41183,7 @@ local DEPTHS_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(Map, {
 })
 --- Contains just the bosses in Womb (not e.g. Scarred Womb).
 local WOMB_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.PIN) .. ".") .. tostring(PinVariant.SCOLEX),
         (tostring(EntityType.WAR) .. ".") .. tostring(WarVariant.CONQUEST),
@@ -41030,7 +41201,7 @@ local WOMB_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Utero (not e.g. Scarred Womb).
 local UTERO_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.WAR) .. ".") .. tostring(WarVariant.CONQUEST),
         tostring(EntityType.DEATH) .. ".0",
@@ -41047,7 +41218,7 @@ local UTERO_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Scarred Womb (not e.g. Utero).
 local SCARRED_WOMB_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         (tostring(EntityType.PIN) .. ".") .. tostring(PinVariant.SCOLEX),
         (tostring(EntityType.WAR) .. ".") .. tostring(WarVariant.CONQUEST),
@@ -41066,7 +41237,7 @@ local SCARRED_WOMB_BOSSES_SET = __TS__New(
 )
 --- Contains just the bosses in Corpse (not e.g. Scarred Womb).
 local CORPSE_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {
         tostring(EntityType.SCOURGE) .. ".0",
         tostring(EntityType.CHIMERA) .. ".0",
@@ -41074,7 +41245,7 @@ local CORPSE_BOSSES_SET = __TS__New(
         tostring(EntityType.MOTHER) .. ".0"
     }
 )
-local ____Set_7 = Set
+local ____ReadonlySet_7 = ReadonlySet
 local ____array_6 = __TS__SparseArrayNew(__TS__Spread(WOMB_BOSSES_SET:values()))
 __TS__SparseArrayPush(
     ____array_6,
@@ -41094,54 +41265,54 @@ __TS__SparseArrayPush(
 )
 --- The set of unique bosses for Depths, Necropolis, and so on.
 local ALL_WOMB_BOSSES_SET = __TS__New(
-    ____Set_7,
+    ____ReadonlySet_7,
     {__TS__SparseArraySpread(____array_6)}
 )
-local WOMB_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(Map, {{StageType.ORIGINAL, WOMB_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, UTERO_BOSSES_SET}, {StageType.AFTERBIRTH, SCARRED_WOMB_BOSSES_SET}, {StageType.REPENTANCE, CORPSE_BOSSES_SET}})
+local WOMB_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, WOMB_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, UTERO_BOSSES_SET}, {StageType.AFTERBIRTH, SCARRED_WOMB_BOSSES_SET}, {StageType.REPENTANCE, CORPSE_BOSSES_SET}})
 local BLUE_WOMB_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {tostring(EntityType.HUSH) .. ".0"}
 )
-local BLUE_WOMB_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(Map, {{StageType.ORIGINAL, BLUE_WOMB_BOSSES_SET}})
+local BLUE_WOMB_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, BLUE_WOMB_BOSSES_SET}})
 local SHEOL_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {(tostring(EntityType.SATAN) .. ".") .. tostring(SatanVariant.SATAN)}
 )
 local CATHEDRAL_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {(tostring(EntityType.ISAAC) .. ".") .. tostring(IsaacVariant.ISAAC)}
 )
-local ____Set_9 = Set
+local ____ReadonlySet_9 = ReadonlySet
 local ____array_8 = __TS__SparseArrayNew(__TS__Spread(SHEOL_BOSSES_SET:values()))
 __TS__SparseArrayPush(
     ____array_8,
     __TS__Spread(CATHEDRAL_BOSSES_SET:values())
 )
 local ALL_STAGE_10_BOSSES_SET = __TS__New(
-    ____Set_9,
+    ____ReadonlySet_9,
     {__TS__SparseArraySpread(____array_8)}
 )
-local STAGE_10_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(Map, {{StageType.ORIGINAL, SHEOL_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, CATHEDRAL_BOSSES_SET}})
+local STAGE_10_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, SHEOL_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, CATHEDRAL_BOSSES_SET}})
 local DARK_ROOM_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {(tostring(EntityType.THE_LAMB) .. ".") .. tostring(LambVariant.LAMB)}
 )
 local CHEST_BOSSES_SET = __TS__New(
-    Set,
+    ReadonlySet,
     {(tostring(EntityType.ISAAC) .. ".") .. tostring(IsaacVariant.BLUE_BABY)}
 )
-local ____Set_11 = Set
+local ____ReadonlySet_11 = ReadonlySet
 local ____array_10 = __TS__SparseArrayNew(__TS__Spread(DARK_ROOM_BOSSES_SET:values()))
 __TS__SparseArrayPush(
     ____array_10,
     __TS__Spread(CHEST_BOSSES_SET:values())
 )
 local ALL_STAGE_11_BOSSES_SET = __TS__New(
-    ____Set_11,
+    ____ReadonlySet_11,
     {__TS__SparseArraySpread(____array_10)}
 )
-local STAGE_11_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(Map, {{StageType.ORIGINAL, DARK_ROOM_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, CHEST_BOSSES_SET}})
-____exports.STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(Map, {
+local STAGE_11_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, DARK_ROOM_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, CHEST_BOSSES_SET}})
+____exports.STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
     {1, BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP},
     {2, BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP},
     {3, CAVES_STAGE_TYPE_TO_BOSS_SET_MAP},
@@ -41154,7 +41325,7 @@ ____exports.STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(Map, {
     {10, STAGE_10_STAGE_TYPE_TO_BOSS_SET_MAP},
     {11, STAGE_11_STAGE_TYPE_TO_BOSS_SET_MAP}
 })
-____exports.STAGE_TO_COMBINED_BOSS_SET_MAP = __TS__New(Map, {
+____exports.STAGE_TO_COMBINED_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
     {1, ALL_BASEMENT_BOSSES_SET},
     {2, ALL_BASEMENT_BOSSES_SET},
     {3, ALL_CAVES_BOSSES_SET},
@@ -41167,7 +41338,7 @@ ____exports.STAGE_TO_COMBINED_BOSS_SET_MAP = __TS__New(Map, {
     {10, ALL_STAGE_10_BOSSES_SET},
     {11, ALL_STAGE_11_BOSSES_SET}
 })
-local ____Set_13 = Set
+local ____ReadonlySet_13 = ReadonlySet
 local ____array_12 = __TS__SparseArrayNew(__TS__Spread(ALL_BASEMENT_BOSSES_SET:values()))
 __TS__SparseArrayPush(
     ____array_12,
@@ -41194,7 +41365,7 @@ __TS__SparseArrayPush(
     __TS__Spread(ALL_STAGE_11_BOSSES_SET:values())
 )
 ____exports.ALL_BOSSES_SET = __TS__New(
-    ____Set_13,
+    ____ReadonlySet_13,
     {__TS__SparseArraySpread(____array_12)}
 )
 ____exports.ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET = getAllBossesExcludingStoryBossesSet(nil)
@@ -43359,7 +43530,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.features.other.SaveDataManager"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
@@ -43390,6 +43560,8 @@ local isTSTLClass = ____tstlClass.isTSTLClass
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isString = ____types.isString
 local isTable = ____types.isTable
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____glowingHourGlass = require("lua_modules.isaacscript-common.dist.src.classes.features.other.saveDataManager.glowingHourGlass")
@@ -43403,7 +43575,7 @@ local restoreDefaultsForAllFeaturesAndKeys = ____restoreDefaults.restoreDefaults
 local restoreDefaultsForAllFeaturesKey = ____restoreDefaults.restoreDefaultsForAllFeaturesKey
 local ____saveToDisk = require("lua_modules.isaacscript-common.dist.src.classes.features.other.saveDataManager.saveToDisk")
 local saveToDisk = ____saveToDisk.saveToDisk
-local NON_USER_DEFINED_CLASS_NAMES = __TS__New(Set, {"Map", "Set", "DefaultMap"})
+local NON_USER_DEFINED_CLASS_NAMES = __TS__New(ReadonlySet, {"Map", "Set", "DefaultMap"})
 ____exports.SaveDataManager = __TS__Class()
 local SaveDataManager = ____exports.SaveDataManager
 SaveDataManager.name = "SaveDataManager"
@@ -43613,7 +43785,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.features.other.saveDataManager.restoreDefaults"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__Iterator = ____lualib.__TS__Iterator
 local ____exports = {}
@@ -43629,6 +43800,8 @@ local logError = ____logMisc.logError
 local ____table = require("lua_modules.isaacscript-common.dist.src.functions.table")
 local clearTable = ____table.clearTable
 local iterateTableInOrder = ____table.iterateTableInOrder
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____constants = require("lua_modules.isaacscript-common.dist.src.classes.features.other.saveDataManager.constants")
 local SAVE_DATA_MANAGER_DEBUG = ____constants.SAVE_DATA_MANAGER_DEBUG
 function ____exports.restoreDefaultsForAllFeaturesKey(self, saveDataMap, saveDataDefaultsMap, saveDataKey)
@@ -43674,7 +43847,7 @@ function clearAndCopyAllElements(self, oldTable, newTable)
         oldTable[key] = value
     end
 end
-RESETTABLE_SAVE_DATA_KEYS = __TS__New(Set, {SaveDataKey.RUN, SaveDataKey.LEVEL, SaveDataKey.ROOM})
+RESETTABLE_SAVE_DATA_KEYS = __TS__New(ReadonlySet, {SaveDataKey.RUN, SaveDataKey.LEVEL, SaveDataKey.ROOM})
 function ____exports.restoreDefaultsForAllFeaturesAndKeys(self, saveDataMap, saveDataDefaultsMap)
     for ____, saveDataKey in __TS__Iterator(RESETTABLE_SAVE_DATA_KEYS) do
         ____exports.restoreDefaultsForAllFeaturesKey(nil, saveDataMap, saveDataDefaultsMap, saveDataKey)
@@ -45226,11 +45399,11 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.features.other.ModdedElementSets"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local Set = ____lualib.Set
+local Map = ____lualib.Map
 local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__Decorate = ____lualib.__TS__Decorate
 local ____exports = {}
@@ -45246,7 +45419,6 @@ local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.
 local itemConfig = ____cachedClasses.itemConfig
 local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
 local FIRST_GLITCHED_COLLECTIBLE_TYPE = ____constants.FIRST_GLITCHED_COLLECTIBLE_TYPE
-local ITEM_CONFIG_CARD_TYPES_FOR_CARDS = ____constants.ITEM_CONFIG_CARD_TYPES_FOR_CARDS
 local ____decorators = require("lua_modules.isaacscript-common.dist.src.decorators")
 local Exported = ____decorators.Exported
 local ____ISCFeature = require("lua_modules.isaacscript-common.dist.src.enums.ISCFeature")
@@ -45278,10 +45450,14 @@ local getVanillaTrinketTypeRange = ____trinkets.getVanillaTrinketTypeRange
 local trinketHasCacheFlag = ____trinkets.trinketHasCacheFlag
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
 local ____repeat = ____utils["repeat"]
+local ____itemConfigCardTypesForCardsSet = require("lua_modules.isaacscript-common.dist.src.sets.itemConfigCardTypesForCardsSet")
+local ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET = ____itemConfigCardTypesForCardsSet.ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local CONDITIONAL_FLYING_COLLECTIBLE_TYPES = {CollectibleType.BIBLE, CollectibleType.EMPTY_VESSEL, CollectibleType.ASTRAL_PROJECTION, CollectibleType.RECALL}
-local TRANSFORMATION_TO_TAG_MAP = __TS__New(Map, {
+local TRANSFORMATION_TO_TAG_MAP = __TS__New(ReadonlyMap, {
     {PlayerForm.GUPPY, ItemConfigTag.GUPPY},
     {PlayerForm.BEELZEBUB, ItemConfigTag.FLY},
     {PlayerForm.FUN_GUY, ItemConfigTag.MUSHROOM},
@@ -45568,7 +45744,7 @@ function ModdedElementSets.prototype.lazyInitCardTypes(self)
                 error("Failed to get the card set for item config card type: " .. tostring(itemConfigCardType))
             end
             cardTypeSet:add(cardType)
-            if ITEM_CONFIG_CARD_TYPES_FOR_CARDS:has(itemConfigCardType) then
+            if ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET:has(itemConfigCardType) then
                 self.cardSet:add(cardType)
             end
         end
@@ -48074,14 +48250,16 @@ local TRINKET_TYPE_TO_NAME_MAP = ____trinketTypeToNameMap.TRINKET_TYPE_TO_NAME_M
 --- Maps trinket names to the values of the `TrinketType` enum.
 -- 
 -- For a mapping of `TrinketType` to name, see `TRINKET_TYPE_TO_NAME_MAP`.
-local trinketNameToTypeMap = __TS__New(Map)
-for ____, ____value in __TS__Iterator(TRINKET_TYPE_TO_NAME_MAP) do
-    local trinketType = ____value[1]
-    local name = ____value[2]
-    local simpleString = removeNonAlphanumericCharacters(nil, name)
-    trinketNameToTypeMap:set(simpleString, trinketType)
-end
-____exports.TRINKET_NAME_TO_TYPE_MAP = trinketNameToTypeMap
+____exports.TRINKET_NAME_TO_TYPE_MAP = (function()
+    local trinketNameToTypeMap = __TS__New(Map)
+    for ____, ____value in __TS__Iterator(TRINKET_TYPE_TO_NAME_MAP) do
+        local trinketType = ____value[1]
+        local name = ____value[2]
+        local simpleString = removeNonAlphanumericCharacters(nil, name)
+        trinketNameToTypeMap:set(simpleString, trinketType)
+    end
+    return trinketNameToTypeMap
+end)(nil)
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.collectibleNameToTypeMap"] = function(...) 
@@ -48097,14 +48275,16 @@ local COLLECTIBLE_TYPE_TO_NAME_MAP = ____collectibleTypeToNameMap.COLLECTIBLE_TY
 --- Maps collectible names to the values of the `CollectibleType` enum.
 -- 
 -- For a mapping of `CollectibleType` to name, see `COLLECTIBLE_TYPE_TO_NAME_MAP`.
-local collectibleNameToTypeMap = __TS__New(Map)
-for ____, ____value in __TS__Iterator(COLLECTIBLE_TYPE_TO_NAME_MAP) do
-    local collectibleType = ____value[1]
-    local name = ____value[2]
-    local simpleString = removeNonAlphanumericCharacters(nil, name)
-    collectibleNameToTypeMap:set(simpleString, collectibleType)
-end
-____exports.COLLECTIBLE_NAME_TO_TYPE_MAP = collectibleNameToTypeMap
+____exports.COLLECTIBLE_NAME_TO_TYPE_MAP = (function()
+    local collectibleNameToTypeMap = __TS__New(Map)
+    for ____, ____value in __TS__Iterator(COLLECTIBLE_TYPE_TO_NAME_MAP) do
+        local collectibleType = ____value[1]
+        local name = ____value[2]
+        local simpleString = removeNonAlphanumericCharacters(nil, name)
+        collectibleNameToTypeMap:set(simpleString, collectibleType)
+    end
+    return collectibleNameToTypeMap
+end)(nil)
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.features.other.DisableInputs"] = function(...) 
@@ -48267,7 +48447,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.features.other.DeployJSONRoom"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
@@ -48318,6 +48497,8 @@ local setRoomUncleared = ____rooms.setRoomUncleared
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local asCollectibleType = ____types.asCollectibleType
 local asNumber = ____types.asNumber
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 function spawnGridEntityForJSONRoom(self, gridEntityXMLType, gridEntityXMLVariant, x, y)
@@ -48451,7 +48632,7 @@ function getPitFrame(self, L, R, U, D, UL, UR, DL, DR)
     return F
 end
 local gridEntityXMLTypes = getEnumValues(nil, GridEntityXMLType)
-local GRID_ENTITY_XML_TYPE_SET = __TS__New(Set, gridEntityXMLTypes)
+local GRID_ENTITY_XML_TYPE_SET = __TS__New(ReadonlySet, gridEntityXMLTypes)
 ____exports.DeployJSONRoom = __TS__Class()
 local DeployJSONRoom = ____exports.DeployJSONRoom
 DeployJSONRoom.name = "DeployJSONRoom"
@@ -49343,11 +49524,11 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.features.other.CustomTrapdoors"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local Map = ____lualib.Map
+local Set = ____lualib.Set
 local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
 local __TS__Decorate = ____lualib.__TS__Decorate
 local __TS__ArraySome = ____lualib.__TS__ArraySome
@@ -49407,6 +49588,8 @@ local ____tstlClass = require("lua_modules.isaacscript-common.dist.src.functions
 local getTSTLClassName = ____tstlClass.getTSTLClassName
 local ____vector = require("lua_modules.isaacscript-common.dist.src.functions.vector")
 local isVector = ____vector.isVector
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____DefaultMap = require("lua_modules.isaacscript-common.dist.src.classes.DefaultMap")
 local DefaultMap = ____DefaultMap.DefaultMap
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
@@ -49460,7 +49643,7 @@ local TRAPDOOR_OPEN_DISTANCE = 60
 local TRAPDOOR_OPEN_DISTANCE_AFTER_BOSS = TRAPDOOR_OPEN_DISTANCE * 2.5
 local TRAPDOOR_BOSS_REACTION_FRAMES = 30
 local TRAPDOOR_TOUCH_DISTANCE = 16.5
-ANIMATIONS_THAT_PREVENT_STAGE_TRAVEL = __TS__New(Set, {"Death", "Happy", "Sad", "Jump"})
+ANIMATIONS_THAT_PREVENT_STAGE_TRAVEL = __TS__New(ReadonlySet, {"Death", "Happy", "Sad", "Jump"})
 local PIXELATION_TO_BLACK_FRAMES = 60
 local OTHER_PLAYER_TRAPDOOR_JUMP_DELAY_GAME_FRAMES = 6
 local OTHER_PLAYER_TRAPDOOR_JUMP_DURATION_GAME_FRAMES = 5
@@ -50520,37 +50703,39 @@ return ____exports
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local StageID = ____isaac_2Dtypescript_2Ddefinitions.StageID
+local ____readOnly = require("lua_modules.isaacscript-common.dist.src.functions.readOnly")
+local newReadonlyColor = ____readOnly.newReadonlyColor
 --- We arbitrarily specify a default color equal to that of Basement.
-local DEFAULT_COLOR = Color(201 / 255, 114 / 255, 96 / 255)
+local DEFAULT_COLOR = newReadonlyColor(nil, 201 / 255, 114 / 255, 96 / 255)
 --- These values are taken from StageAPI.
 ____exports.VERSUS_SCREEN_DIRT_SPOT_COLORS = {
     [StageID.SPECIAL_ROOMS] = DEFAULT_COLOR,
-    [StageID.BASEMENT] = Color(201 / 255, 114 / 255, 96 / 255),
-    [StageID.CELLAR] = Color(229 / 255, 157 / 255, 111 / 255),
-    [StageID.BURNING_BASEMENT] = Color(252 / 255, 108 / 255, 90 / 255),
-    [StageID.CAVES] = Color(167 / 255, 111 / 255, 75 / 255),
-    [StageID.CATACOMBS] = Color(135 / 255, 90 / 255, 80 / 255),
-    [StageID.FLOODED_CAVES] = Color(111 / 255, 147 / 255, 180 / 255),
-    [StageID.DEPTHS] = Color(70 / 255, 70 / 255, 72 / 255),
-    [StageID.NECROPOLIS] = Color(88 / 255, 67 / 255, 54 / 255),
-    [StageID.DANK_DEPTHS] = Color(70 / 255, 70 / 255, 72 / 255),
-    [StageID.WOMB] = Color(241 / 255, 28 / 255, 28 / 255),
-    [StageID.UTERO] = Color(199 / 255, 60 / 255, 48 / 255),
-    [StageID.SCARRED_WOMB] = Color(247 / 255, 152 / 255, 88 / 255),
-    [StageID.BLUE_WOMB] = Color(157 / 255, 209 / 255, 255 / 255),
-    [StageID.SHEOL] = Color(60 / 255, 54 / 255, 54 / 255),
-    [StageID.CATHEDRAL] = Color(44 / 255, 100 / 255, 111 / 255),
-    [StageID.DARK_ROOM] = Color(80 / 255, 38 / 255, 20 / 255),
-    [StageID.CHEST] = Color(175 / 255, 108 / 255, 72 / 255),
-    [StageID.VOID] = Color(70 / 255, 5 / 255, 5 / 255),
-    [StageID.DOWNPOUR] = Color(149 / 255, 157 / 255, 167 / 255),
-    [StageID.DROSS] = Color(179 / 255, 179 / 255, 143 / 255),
-    [StageID.MINES] = Color(93 / 255, 85 / 255, 72 / 255),
-    [StageID.ASHPIT] = Color(106 / 255, 102 / 255, 94 / 255),
-    [StageID.MAUSOLEUM] = Color(70 / 255, 59 / 255, 72 / 255),
-    [StageID.GEHENNA] = Color(59 / 255, 41 / 255, 41 / 255),
-    [StageID.CORPSE] = Color(124 / 255, 134 / 255, 111 / 255),
-    [StageID.MORTIS] = Color(124 / 255, 134 / 255, 111 / 255),
+    [StageID.BASEMENT] = newReadonlyColor(nil, 201 / 255, 114 / 255, 96 / 255),
+    [StageID.CELLAR] = newReadonlyColor(nil, 229 / 255, 157 / 255, 111 / 255),
+    [StageID.BURNING_BASEMENT] = newReadonlyColor(nil, 252 / 255, 108 / 255, 90 / 255),
+    [StageID.CAVES] = newReadonlyColor(nil, 167 / 255, 111 / 255, 75 / 255),
+    [StageID.CATACOMBS] = newReadonlyColor(nil, 135 / 255, 90 / 255, 80 / 255),
+    [StageID.FLOODED_CAVES] = newReadonlyColor(nil, 111 / 255, 147 / 255, 180 / 255),
+    [StageID.DEPTHS] = newReadonlyColor(nil, 70 / 255, 70 / 255, 72 / 255),
+    [StageID.NECROPOLIS] = newReadonlyColor(nil, 88 / 255, 67 / 255, 54 / 255),
+    [StageID.DANK_DEPTHS] = newReadonlyColor(nil, 70 / 255, 70 / 255, 72 / 255),
+    [StageID.WOMB] = newReadonlyColor(nil, 241 / 255, 28 / 255, 28 / 255),
+    [StageID.UTERO] = newReadonlyColor(nil, 199 / 255, 60 / 255, 48 / 255),
+    [StageID.SCARRED_WOMB] = newReadonlyColor(nil, 247 / 255, 152 / 255, 88 / 255),
+    [StageID.BLUE_WOMB] = newReadonlyColor(nil, 157 / 255, 209 / 255, 255 / 255),
+    [StageID.SHEOL] = newReadonlyColor(nil, 60 / 255, 54 / 255, 54 / 255),
+    [StageID.CATHEDRAL] = newReadonlyColor(nil, 44 / 255, 100 / 255, 111 / 255),
+    [StageID.DARK_ROOM] = newReadonlyColor(nil, 80 / 255, 38 / 255, 20 / 255),
+    [StageID.CHEST] = newReadonlyColor(nil, 175 / 255, 108 / 255, 72 / 255),
+    [StageID.VOID] = newReadonlyColor(nil, 70 / 255, 5 / 255, 5 / 255),
+    [StageID.DOWNPOUR] = newReadonlyColor(nil, 149 / 255, 157 / 255, 167 / 255),
+    [StageID.DROSS] = newReadonlyColor(nil, 179 / 255, 179 / 255, 143 / 255),
+    [StageID.MINES] = newReadonlyColor(nil, 93 / 255, 85 / 255, 72 / 255),
+    [StageID.ASHPIT] = newReadonlyColor(nil, 106 / 255, 102 / 255, 94 / 255),
+    [StageID.MAUSOLEUM] = newReadonlyColor(nil, 70 / 255, 59 / 255, 72 / 255),
+    [StageID.GEHENNA] = newReadonlyColor(nil, 59 / 255, 41 / 255, 41 / 255),
+    [StageID.CORPSE] = newReadonlyColor(nil, 124 / 255, 134 / 255, 111 / 255),
+    [StageID.MORTIS] = newReadonlyColor(nil, 124 / 255, 134 / 255, 111 / 255),
     [StageID.HOME] = DEFAULT_COLOR,
     [StageID.BACKWARDS] = DEFAULT_COLOR
 }
@@ -50560,37 +50745,39 @@ return ____exports
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local StageID = ____isaac_2Dtypescript_2Ddefinitions.StageID
+local ____readOnly = require("lua_modules.isaacscript-common.dist.src.functions.readOnly")
+local newReadonlyColor = ____readOnly.newReadonlyColor
 --- We arbitrarily specify a default color equal to that of Basement.
-local DEFAULT_COLOR = Color(26 / 255, 14 / 255, 12 / 255)
+local DEFAULT_COLOR = newReadonlyColor(nil, 26 / 255, 14 / 255, 12 / 255)
 --- These values are taken from StageAPI.
 ____exports.VERSUS_SCREEN_BACKGROUND_COLORS = {
     [StageID.SPECIAL_ROOMS] = DEFAULT_COLOR,
-    [StageID.BASEMENT] = Color(26 / 255, 14 / 255, 12 / 255),
-    [StageID.CELLAR] = Color(26 / 255, 17 / 255, 13 / 255),
-    [StageID.BURNING_BASEMENT] = Color(28 / 255, 12 / 255, 10 / 255),
-    [StageID.CAVES] = Color(18 / 255, 13 / 255, 8 / 255),
-    [StageID.CATACOMBS] = Color(15 / 255, 10 / 255, 8 / 255),
-    [StageID.FLOODED_CAVES] = Color(21 / 255, 28 / 255, 35 / 255),
-    [StageID.DEPTHS] = Color(8 / 255, 8 / 255, 8 / 255),
-    [StageID.NECROPOLIS] = Color(10 / 255, 6 / 255, 6 / 255),
-    [StageID.DANK_DEPTHS] = Color(8 / 255, 8 / 255, 8 / 255),
-    [StageID.WOMB] = Color(27 / 255, 3 / 255, 3 / 255),
-    [StageID.UTERO] = Color(22 / 255, 6 / 255, 5 / 255),
-    [StageID.SCARRED_WOMB] = Color(42 / 255, 19 / 255, 10 / 255),
-    [StageID.BLUE_WOMB] = Color(26 / 255, 32 / 255, 40 / 255),
-    [StageID.SHEOL] = Color(6 / 255, 6 / 255, 6 / 255),
-    [StageID.CATHEDRAL] = Color(6 / 255, 13 / 255, 17 / 255),
-    [StageID.DARK_ROOM] = Color(9 / 255, 4 / 255, 3 / 255),
-    [StageID.CHEST] = Color(15 / 255, 9 / 255, 6 / 255),
-    [StageID.VOID] = Color(0, 0, 0),
-    [StageID.DOWNPOUR] = Color(29 / 255, 30 / 255, 32 / 255),
-    [StageID.DROSS] = Color(35 / 255, 35 / 255, 29 / 255),
-    [StageID.MINES] = Color(17 / 255, 15 / 255, 12 / 255),
-    [StageID.ASHPIT] = Color(12 / 255, 10 / 255, 10 / 255),
-    [StageID.MAUSOLEUM] = Color(14 / 255, 10 / 255, 14 / 255),
-    [StageID.GEHENNA] = Color(15 / 255, 4 / 255, 4 / 255),
-    [StageID.CORPSE] = Color(13 / 255, 14 / 255, 12 / 255),
-    [StageID.MORTIS] = Color(13 / 255, 14 / 255, 12 / 255),
+    [StageID.BASEMENT] = newReadonlyColor(nil, 26 / 255, 14 / 255, 12 / 255),
+    [StageID.CELLAR] = newReadonlyColor(nil, 26 / 255, 17 / 255, 13 / 255),
+    [StageID.BURNING_BASEMENT] = newReadonlyColor(nil, 28 / 255, 12 / 255, 10 / 255),
+    [StageID.CAVES] = newReadonlyColor(nil, 18 / 255, 13 / 255, 8 / 255),
+    [StageID.CATACOMBS] = newReadonlyColor(nil, 15 / 255, 10 / 255, 8 / 255),
+    [StageID.FLOODED_CAVES] = newReadonlyColor(nil, 21 / 255, 28 / 255, 35 / 255),
+    [StageID.DEPTHS] = newReadonlyColor(nil, 8 / 255, 8 / 255, 8 / 255),
+    [StageID.NECROPOLIS] = newReadonlyColor(nil, 10 / 255, 6 / 255, 6 / 255),
+    [StageID.DANK_DEPTHS] = newReadonlyColor(nil, 8 / 255, 8 / 255, 8 / 255),
+    [StageID.WOMB] = newReadonlyColor(nil, 27 / 255, 3 / 255, 3 / 255),
+    [StageID.UTERO] = newReadonlyColor(nil, 22 / 255, 6 / 255, 5 / 255),
+    [StageID.SCARRED_WOMB] = newReadonlyColor(nil, 42 / 255, 19 / 255, 10 / 255),
+    [StageID.BLUE_WOMB] = newReadonlyColor(nil, 26 / 255, 32 / 255, 40 / 255),
+    [StageID.SHEOL] = newReadonlyColor(nil, 6 / 255, 6 / 255, 6 / 255),
+    [StageID.CATHEDRAL] = newReadonlyColor(nil, 6 / 255, 13 / 255, 17 / 255),
+    [StageID.DARK_ROOM] = newReadonlyColor(nil, 9 / 255, 4 / 255, 3 / 255),
+    [StageID.CHEST] = newReadonlyColor(nil, 15 / 255, 9 / 255, 6 / 255),
+    [StageID.VOID] = newReadonlyColor(nil, 0, 0, 0),
+    [StageID.DOWNPOUR] = newReadonlyColor(nil, 29 / 255, 30 / 255, 32 / 255),
+    [StageID.DROSS] = newReadonlyColor(nil, 35 / 255, 35 / 255, 29 / 255),
+    [StageID.MINES] = newReadonlyColor(nil, 17 / 255, 15 / 255, 12 / 255),
+    [StageID.ASHPIT] = newReadonlyColor(nil, 12 / 255, 10 / 255, 10 / 255),
+    [StageID.MAUSOLEUM] = newReadonlyColor(nil, 14 / 255, 10 / 255, 14 / 255),
+    [StageID.GEHENNA] = newReadonlyColor(nil, 15 / 255, 4 / 255, 4 / 255),
+    [StageID.CORPSE] = newReadonlyColor(nil, 13 / 255, 14 / 255, 12 / 255),
+    [StageID.MORTIS] = newReadonlyColor(nil, 13 / 255, 14 / 255, 12 / 255),
     [StageID.HOME] = DEFAULT_COLOR,
     [StageID.BACKWARDS] = DEFAULT_COLOR
 }
@@ -51531,7 +51718,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.features.other.customStages.backdrop"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local getBackdropPNGPath, spawnWallEntity, spawnSecondWallEntity, spawnFloorEntity, getNumFloorLayers, BackdropKind, DEFAULT_BACKDROP, ROOM_SHAPE_WALL_ANM2_LAYERS, ROOM_SHAPE_WALL_EXTRA_ANM2_LAYERS, WALL_OFFSET, L_FLOOR_ANM2_LAYERS, N_FLOOR_ANM2_LAYERS, BACKDROP_EFFECT_VARIANT, BACKDROP_EFFECT_SUB_TYPE
@@ -51561,6 +51747,8 @@ local trimPrefix = ____string.trimPrefix
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
 local eRange = ____utils.eRange
 local iRange = ____utils.iRange
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____constants = require("lua_modules.isaacscript-common.dist.src.classes.features.other.customStages.constants")
 local ISAACSCRIPT_CUSTOM_STAGE_GFX_PATH = ____constants.ISAACSCRIPT_CUSTOM_STAGE_GFX_PATH
 function getBackdropPNGPath(self, customStage, backdropKind, rng)
@@ -51716,7 +51904,7 @@ L_FLOOR_ANM2_LAYERS = {16, 17}
 N_FLOOR_ANM2_LAYERS = {18, 19}
 BACKDROP_EFFECT_VARIANT = EffectVariant.LADDER
 BACKDROP_EFFECT_SUB_TYPE = LadderSubTypeCustom.CUSTOM_BACKDROP
-local BACKDROP_ROOM_TYPE_SET = __TS__New(Set, {RoomType.DEFAULT, RoomType.BOSS, RoomType.MINI_BOSS})
+local BACKDROP_ROOM_TYPE_SET = __TS__New(ReadonlySet, {RoomType.DEFAULT, RoomType.BOSS, RoomType.MINI_BOSS})
 function ____exports.setCustomStageBackdrop(self, customStage)
     local room = game:GetRoom()
     local roomType = room:GetType()
@@ -54431,7 +54619,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.callbacks.PreNewLevel"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
@@ -54442,9 +54629,11 @@ local ____sprites = require("lua_modules.isaacscript-common.dist.src.functions.s
 local getLastFrameOfAnimation = ____sprites.getLastFrameOfAnimation
 local ____stage = require("lua_modules.isaacscript-common.dist.src.functions.stage")
 local getEffectiveStage = ____stage.getEffectiveStage
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____CustomCallback = require("lua_modules.isaacscript-common.dist.src.classes.private.CustomCallback")
 local CustomCallback = ____CustomCallback.CustomCallback
-local TRAVELING_TO_NEXT_FLOOR_ANIMATIONS = __TS__New(Set, {"Trapdoor", "LightTravel"})
+local TRAVELING_TO_NEXT_FLOOR_ANIMATIONS = __TS__New(ReadonlySet, {"Trapdoor", "LightTravel"})
 ____exports.PreNewLevel = __TS__Class()
 local PreNewLevel = ____exports.PreNewLevel
 PreNewLevel.name = "PreNewLevel"
@@ -57648,7 +57837,6 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.callbacks.PostBoneSwing"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
@@ -57657,9 +57845,11 @@ local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local KnifeVariant = ____isaac_2Dtypescript_2Ddefinitions.KnifeVariant
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____CustomCallback = require("lua_modules.isaacscript-common.dist.src.classes.private.CustomCallback")
 local CustomCallback = ____CustomCallback.CustomCallback
-local BONE_SWING_ANIMATIONS = __TS__New(Set, {"Swing", "Swing2", "Spin"})
+local BONE_SWING_ANIMATIONS = __TS__New(ReadonlySet, {"Swing", "Swing2", "Spin"})
 ____exports.PostBoneSwing = __TS__Class()
 local PostBoneSwing = ____exports.PostBoneSwing
 PostBoneSwing.name = "PostBoneSwing"
@@ -59899,13 +60089,14 @@ return ____exports
  end,
 ["packages.mod.src.skeldRoomMap"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local __TS__ObjectValues = ____lualib.__TS__ObjectValues
 local ____exports = {}
 local ____common = require("packages.common.src.index")
 local SkeldRoom = ____common.SkeldRoom
-local SKELD_ROOM_MAP = __TS__New(Map, {
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local ReadonlyMap = ____isaacscript_2Dcommon.ReadonlyMap
+local SKELD_ROOM_MAP = __TS__New(ReadonlyMap, {
     {"Cafeteria", SkeldRoom.CAFETERIA},
     {"Admin Hall", SkeldRoom.ADMIN_HALL},
     {"Admin", SkeldRoom.ADMIN},
@@ -60027,7 +60218,6 @@ return ____exports
  end,
 ["packages.mod.src.stageAPI"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayFind = ____lualib.__TS__ArrayFind
 local ____exports = {}
@@ -60040,6 +60230,7 @@ local DoorSlot = ____isaac_2Dtypescript_2Ddefinitions.DoorSlot
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local asNumber = ____isaacscript_2Dcommon.asNumber
 local game = ____isaacscript_2Dcommon.game
+local ReadonlyMap = ____isaacscript_2Dcommon.ReadonlyMap
 local ____lobby = require("packages.mod.src.features.lobby")
 local inLobby = ____lobby.inLobby
 local ____sendGameEvents = require("packages.mod.src.features.sendGameEvents")
@@ -60077,7 +60268,7 @@ function getStageAPIRoomID(self, levelMap, roomName)
     end
     return ____temp_1
 end
-local BACKDROP_MAP = __TS__New(Map, {{SkeldRoom.CAFETERIA, "cafeteria"}, {SkeldRoom.ELECTRICAL, "electrical"}, {SkeldRoom.SECURITY, "security"}})
+local BACKDROP_MAP = __TS__New(ReadonlyMap, {{SkeldRoom.CAFETERIA, "cafeteria"}, {SkeldRoom.ELECTRICAL, "electrical"}, {SkeldRoom.SECURITY, "security"}})
 local DEFAULT_BACKDROP_TYPE = "security"
 local NULL_STAGE_API_ANIMATION = -1
 function ____exports.getStageAPIRoomMapID(self, skeldRoom)
@@ -61693,7 +61884,6 @@ return ____exports
 ["packages.mod.src.features.console"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local Map = ____lualib.Map
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__StringSlice = ____lualib.__TS__StringSlice
 local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
@@ -61712,6 +61902,7 @@ local getEnumValues = ____isaacscript_2Dcommon.getEnumValues
 local getMapPartialMatch = ____isaacscript_2Dcommon.getMapPartialMatch
 local isKeyboardPressed = ____isaacscript_2Dcommon.isKeyboardPressed
 local keyboardToString = ____isaacscript_2Dcommon.keyboardToString
+local ReadonlySet = ____isaacscript_2Dcommon.ReadonlySet
 local RENDER_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.RENDER_FRAMES_PER_SECOND
 local ____chat = require("packages.mod.src.chat")
 local addLocalChat = ____chat.addLocalChat
@@ -61841,7 +62032,7 @@ ____exports.CONSOLE_POSITION_LEFT = getScreenPosition(nil, SPACING_FROM_LEFT_EDG
 MAX_HISTORY_LENGTH = 100
 REPEAT_KEY_DELAY_IN_RENDER_FRAMES = RENDER_FRAMES_PER_SECOND * 0.5
 COMMAND_PREFIX = "/"
-OFFLINE_COMMANDS = __TS__New(Set, {"help", "connect", "echo"})
+OFFLINE_COMMANDS = __TS__New(ReadonlySet, {"help", "connect", "echo"})
 consoleOpen = false
 inputText = ""
 inputTextIndex = 0
@@ -63658,7 +63849,6 @@ return ____exports
  end,
 ["packages.mod.src.tasks.loadSlotMachines"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local spawnDoubleCoin, isAnySlotActive, SLOT_ACTIVE_ANIMATIONS
@@ -63671,6 +63861,7 @@ local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
 local SlotVariant = ____isaac_2Dtypescript_2Ddefinitions.SlotVariant
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local getSlots = ____isaacscript_2Dcommon.getSlots
+local ReadonlySet = ____isaacscript_2Dcommon.ReadonlySet
 local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
 local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
 local taskComplete = ____taskSubroutines.taskComplete
@@ -63705,7 +63896,7 @@ end
 local THIS_TASK = Task.LONG_LOAD_SLOT_MACHINES
 local NUM_SLOT_MACHINES = 4
 local SLOT_MACHINE_SPACING = 2
-SLOT_ACTIVE_ANIMATIONS = __TS__New(Set, {"Initiate", "Wiggle", "WiggleEnd"})
+SLOT_ACTIVE_ANIMATIONS = __TS__New(ReadonlySet, {"Initiate", "Wiggle", "WiggleEnd"})
 function ____exports.loadSlotMachines(self)
     local topRightGridIndex = 42
     movePlayerToGridIndex(nil, topRightGridIndex)
@@ -64410,10 +64601,10 @@ return ____exports
  end,
 ["packages.mod.src.features.drawOtherPlayers"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local Map = ____lualib.Map
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local Set = ____lualib.Set
 local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__StringSlice = ____lualib.__TS__StringSlice
 local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
@@ -64423,6 +64614,7 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local asNumber = ____isaacscript_2Dcommon.asNumber
+local ReadonlySet = ____isaacscript_2Dcommon.ReadonlySet
 local RENDER_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.RENDER_FRAMES_PER_SECOND
 local VectorZero = ____isaacscript_2Dcommon.VectorZero
 local ____debug = require("packages.mod.src.debug")
@@ -64685,7 +64877,7 @@ USERNAME_FADE = 0.75
 USERNAME_FADE_DEATH = 0.25
 DEATH_SPRITE_OFFSET = Vector(-20, -10)
 DEATH_ANIMATION_FINAL_FRAME = 55
-NO_USERNAME_ANIMATIONS = __TS__New(Set, {"Trapdoor"})
+NO_USERNAME_ANIMATIONS = __TS__New(ReadonlySet, {"Trapdoor"})
 playerEffectMap = __TS__New(Map)
 function ____exports.postRender(self)
     if g.game == nil then
@@ -66321,7 +66513,6 @@ return ____exports
  end,
 ["packages.mod.src.callbacks.inputAction"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local main, disablePreRunMovement, disableCutsceneInputs, shouldDisableCutsceneInputs, disableVanillaConsole, disableReset, MOVEMENT_BUTTONS
@@ -66333,6 +66524,7 @@ local InputHook = ____isaac_2Dtypescript_2Ddefinitions.InputHook
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local game = ____isaacscript_2Dcommon.game
+local ReadonlySet = ____isaacscript_2Dcommon.ReadonlySet
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.g
 local ____mod = require("packages.mod.src.mod")
@@ -66406,7 +66598,7 @@ function disableReset(self, inputHook, buttonAction)
     end
     return nil
 end
-MOVEMENT_BUTTONS = __TS__New(Set, {ButtonAction.LEFT, ButtonAction.RIGHT, ButtonAction.UP, ButtonAction.DOWN})
+MOVEMENT_BUTTONS = __TS__New(ReadonlySet, {ButtonAction.LEFT, ButtonAction.RIGHT, ButtonAction.UP, ButtonAction.DOWN})
 function ____exports.init(self)
     mod:AddCallback(ModCallback.INPUT_ACTION, main)
 end

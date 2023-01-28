@@ -1,5 +1,6 @@
 /* eslint-disable max-classes-per-file */
 
+import { AnyClass } from "isaacscript-common";
 import { MeetingResolution } from "../enums/MeetingResolution";
 import { MeetingType } from "../enums/MeetingType";
 import { PlayerTypeAllowed } from "../enums/PlayerTypeAllowed";
@@ -8,7 +9,6 @@ import { SabotageType } from "../enums/SabotageType";
 import { SkeldRoom } from "../enums/SkeldRoom";
 import { Meeting } from "../interfaces/Meeting";
 import { PlayerBody } from "../interfaces/PlayerBody";
-import { AnyClass } from "./AnyClass";
 import { TaskList } from "./TaskList";
 
 export enum SocketCommandServerToMod {

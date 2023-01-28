@@ -1,5 +1,4 @@
 import { SkeldRoom } from "common";
-import { HasAllEnumKeys } from "isaacscript-common";
 import { Vent } from "../enums/Vent";
 import { VentDescription } from "../interfaces/VentDescription";
 
@@ -81,4 +80,4 @@ export const VENT_DESCRIPTIONS = {
     gridIndex: 114, // Above the engine
     destination: Vent.REACTOR_BOTTOM,
   },
-} as const satisfies HasAllEnumKeys<Vent, VentDescription>;
+} as const satisfies Record<Vent, VentDescription>;
