@@ -1,4 +1,5 @@
 import { SocketCommandModToServer, SocketCommandModToServerData } from "common";
+import { ReadonlySet } from "isaacscript-common-ts";
 import { Game } from "./classes/Game";
 import { SERVER_COMMAND_MAP } from "./commandMap";
 import { sendError } from "./error";
@@ -17,15 +18,15 @@ import {
   validateString,
 } from "./validate";
 
-const COMMANDS_ALLOWED_WHILE_NOT_LOGGED_IN: ReadonlySet<SocketCommandModToServer> =
-  new Set([
+const COMMANDS_ALLOWED_WHILE_NOT_LOGGED_IN =
+  new ReadonlySet<SocketCommandModToServer>([
     SocketCommandModToServer.PING,
     SocketCommandModToServer.CHECK_USERNAME,
     SocketCommandModToServer.LOGIN,
   ]);
 
-const COMMANDS_WITH_NO_ASSOCIATED_GAME: ReadonlySet<SocketCommandModToServer> =
-  new Set([
+const COMMANDS_WITH_NO_ASSOCIATED_GAME =
+  new ReadonlySet<SocketCommandModToServer>([
     ...COMMANDS_ALLOWED_WHILE_NOT_LOGGED_IN,
     SocketCommandModToServer.GAME_LIST,
     SocketCommandModToServer.CREATE,
@@ -34,8 +35,8 @@ const COMMANDS_WITH_NO_ASSOCIATED_GAME: ReadonlySet<SocketCommandModToServer> =
 
 // Note that JOIN explicitly handles the game not being started, since an associated game is not a
 // requirement for this command.
-const COMMANDS_ALLOWED_WHILE_GAME_NOT_STARTED: ReadonlySet<SocketCommandModToServer> =
-  new Set([
+const COMMANDS_ALLOWED_WHILE_GAME_NOT_STARTED =
+  new ReadonlySet<SocketCommandModToServer>([
     SocketCommandModToServer.CREATE,
     SocketCommandModToServer.JOIN,
     SocketCommandModToServer.LEAVE,

@@ -6,6 +6,7 @@ import {
   getMapPartialMatch,
   isKeyboardPressed,
   keyboardToString,
+  ReadonlySet,
   RENDER_FRAMES_PER_SECOND,
 } from "isaacscript-common";
 import { addLocalChat } from "../chat";
@@ -33,11 +34,7 @@ export const CONSOLE_POSITION_LEFT = getScreenPosition(
 const MAX_HISTORY_LENGTH = 100;
 const REPEAT_KEY_DELAY_IN_RENDER_FRAMES = RENDER_FRAMES_PER_SECOND * 0.5;
 const COMMAND_PREFIX = "/";
-const OFFLINE_COMMANDS: ReadonlySet<string> = new Set([
-  "help",
-  "connect",
-  "echo",
-]);
+const OFFLINE_COMMANDS = new ReadonlySet<string>(["help", "connect", "echo"]);
 
 let consoleOpen = false;
 let inputText = "";

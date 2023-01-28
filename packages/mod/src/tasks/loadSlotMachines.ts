@@ -5,7 +5,11 @@ import {
   PickupVariant,
   SlotVariant,
 } from "isaac-typescript-definitions";
-import { getSlots, removeAllMatchingEntities } from "isaacscript-common";
+import {
+  getSlots,
+  ReadonlySet,
+  removeAllMatchingEntities,
+} from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import { g } from "../globals";
@@ -15,7 +19,7 @@ const THIS_TASK = Task.LONG_LOAD_SLOT_MACHINES;
 const NUM_SLOT_MACHINES = 4;
 const SLOT_MACHINE_SPACING = 2;
 
-const SLOT_ACTIVE_ANIMATIONS: ReadonlySet<string> = new Set([
+const SLOT_ACTIVE_ANIMATIONS = new ReadonlySet<string>([
   "Initiate",
   "Wiggle",
   "WiggleEnd",

@@ -5,6 +5,7 @@
 import { EntityType } from "isaac-typescript-definitions";
 import {
   asNumber,
+  ReadonlySet,
   RENDER_FRAMES_PER_SECOND,
   VectorZero,
 } from "isaacscript-common";
@@ -26,7 +27,7 @@ const USERNAME_FADE_DEATH = 0.25;
 const DEATH_SPRITE_OFFSET = Vector(-20, -10);
 const DEATH_ANIMATION_FINAL_FRAME = 55;
 
-const NO_USERNAME_ANIMATIONS: ReadonlySet<string> = new Set(["Trapdoor"]);
+const NO_USERNAME_ANIMATIONS = new ReadonlySet<string>(["Trapdoor"]);
 
 /** Indexed by user ID. */
 const playerEffectMap = new Map<int, EntityRef>();

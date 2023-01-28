@@ -1,7 +1,7 @@
 import { SkeldRoom } from "common";
-import { HasAllEnumKeys } from "isaacscript-common";
+import { ReadonlyMap } from "isaacscript-common";
 
-const SKELD_ROOM_MAP: ReadonlyMap<string, SkeldRoom> = new Map([
+const SKELD_ROOM_MAP = new ReadonlyMap<string, SkeldRoom>([
   ["Cafeteria", SkeldRoom.CAFETERIA],
   ["Admin Hall", SkeldRoom.ADMIN_HALL],
   ["Admin", SkeldRoom.ADMIN],
@@ -57,7 +57,7 @@ const SKELD_ROOM_REVERSE_MAP = {
 
   [SkeldRoom.TASK]: "Task",
   [SkeldRoom.LOBBY]: "Lobby",
-} as const satisfies HasAllEnumKeys<SkeldRoom, string>;
+} as const satisfies Record<SkeldRoom, string>;
 
 export function getSkeldRoomName(room: SkeldRoom): string {
   return SKELD_ROOM_REVERSE_MAP[room];

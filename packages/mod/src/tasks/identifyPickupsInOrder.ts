@@ -24,9 +24,7 @@ const NUM_ROUNDS = 6;
 const PLAYER_START_GRID_INDEX = 82;
 const TEXT_GRID_INDEX = 37; // Below the room description
 const TEXT_SHOW_FRAMES = 30;
-const BUTTON_GRID_INDEXES: readonly int[] = [
-  32, 62, 92, 42, 72, 102, 35, 37, 39,
-] as const;
+const BUTTON_GRID_INDEXES = [32, 62, 92, 42, 72, 102, 35, 37, 39] as const;
 const ROW_LENGTH = 15;
 const SPRITE_OFFSET = Vector(0, 10);
 

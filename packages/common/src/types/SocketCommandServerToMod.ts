@@ -1,6 +1,5 @@
 /* eslint-disable max-classes-per-file */
 
-import { HasAllEnumKeys } from "isaacscript-common";
 import { MeetingResolution } from "../enums/MeetingResolution";
 import { MeetingType } from "../enums/MeetingType";
 import { PlayerTypeAllowed } from "../enums/PlayerTypeAllowed";
@@ -239,4 +238,4 @@ export const SocketCommandServerToModData = {
   [SocketCommandServerToMod.END_MEETING]: EndMeetingDataToMod,
   [SocketCommandServerToMod.END_GAME]: EndGameDataToMod,
   [SocketCommandServerToMod.TERMINATED]: TerminatedDataToMod,
-} as const satisfies HasAllEnumKeys<SocketCommandServerToMod, AnyClass>;
+} as const satisfies Record<SocketCommandServerToMod, AnyClass>;

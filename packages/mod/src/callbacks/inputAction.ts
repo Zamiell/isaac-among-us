@@ -4,12 +4,12 @@ import {
   InputHook,
   ModCallback,
 } from "isaac-typescript-definitions";
-import { game } from "isaacscript-common";
+import { game, ReadonlySet } from "isaacscript-common";
 import { g } from "../globals";
 import { mod } from "../mod";
 import { inCutscene, inEndMeeting } from "../utils";
 
-const MOVEMENT_BUTTONS: ReadonlySet<ButtonAction> = new Set([
+const MOVEMENT_BUTTONS = new ReadonlySet<ButtonAction>([
   ButtonAction.LEFT, // 0
   ButtonAction.RIGHT, // 1
   ButtonAction.UP, // 2

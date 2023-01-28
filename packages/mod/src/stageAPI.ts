@@ -4,14 +4,14 @@ import {
   DoorSlot,
   RoomTransitionAnim,
 } from "isaac-typescript-definitions";
-import { asNumber, game } from "isaacscript-common";
+import { asNumber, game, ReadonlyMap } from "isaacscript-common";
 import { inLobby } from "./features/lobby";
 import { sendRoom } from "./features/sendGameEvents";
 import { g } from "./globals";
 import { getSkeldRoomFromName } from "./skeldRoomMap";
 import { getStageAPIRoomName } from "./stageAPISubroutines";
 
-const BACKDROP_MAP: ReadonlyMap<SkeldRoom, string> = new Map([
+const BACKDROP_MAP = new ReadonlyMap<SkeldRoom, string>([
   [SkeldRoom.CAFETERIA, "cafeteria"],
   [SkeldRoom.ELECTRICAL, "electrical"],
   [SkeldRoom.SECURITY, "security"],
