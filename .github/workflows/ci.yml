@@ -32,6 +32,16 @@ jobs:
       - name: Perform automated checks
         run: bash lint.sh
 
+      # @template-customization-start
+      - name: Upload the mod to Steam Workshop (if this is a release commit)
+        uses: IsaacScript/isaac-steam-workshop-upload@v2
+        if: "contains(github.event.head_commit.message, 'chore: release') && github.event_name != 'pull_request'"
+        with:
+          mod_path: packages/mod/mod
+        env:
+          CONFIG_VDF_CONTENTS: ${{ secrets.CONFIG_VDF_CONTENTS }}
+      # @template-customization-end
+
   # @template-customization-start
   discord:
     name: Discord Failure Notification
