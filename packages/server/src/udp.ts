@@ -1,5 +1,5 @@
 import { UDP_PORT } from "common";
-import * as dgram from "dgram";
+import * as dgram from "node:dgram";
 import struct from "struct";
 import { IP } from "./constants";
 import { getTCPSocketByUserID } from "./tcpSockets";

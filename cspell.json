@@ -8,14 +8,20 @@
   "useGitignore": true,
   "ignorePaths": [
     "*.anm2",
+    // @template-ignore-next-line
     "*.lua",
-    "*.pyc",
+    "*.stb",
     "*.wav",
     ".git/**",
     "dist/**",
-    "node_modules/**",
+    // @template-ignore-next-line
     "migration.sql",
-    "mod/main.lua"
+    "mod/content/rooms/**",
+    "mod/resources/rooms/**",
+    "node_modules/**",
+    "package-lock.json",
+    "pnpm-lock.yaml",
+    "yarn.lock"
   ],
   "words": [
     "amongus",

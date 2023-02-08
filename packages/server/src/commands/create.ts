@@ -43,9 +43,7 @@ function validate(socket: Socket, name: string, extraData: ExtraCommandData) {
   return validateInNoGames(socket, "create");
 }
 
-/**
- * @returns The game ID of the new game.
- */
+/** @returns The game ID of the new game. */
 function create(
   userID: number,
   name: string,

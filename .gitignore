@@ -9,11 +9,9 @@ packages/mod/isaacscript.json
 # (Commented out so that people can easily beta-test.)
 # packages/mod/mod/main.lua
 
-# Windows artifacts
-thumbs.db
-
-# MacOS artifacts
+# OS-specific artifacts
 .DS_Store
+thumbs.db
 
 # --------------------------------------------------------------
 # GitHub Node.gitignore template

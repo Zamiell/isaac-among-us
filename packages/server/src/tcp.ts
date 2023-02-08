@@ -1,5 +1,5 @@
 import { TCP_PORT } from "common";
-import * as net from "net";
+import * as net from "node:net";
 import {
   ensureAllCommandDataFieldsHaveValidatorFunctions,
   handleCommand,

@@ -1,30 +1,34 @@
 {
   "name": "isaac-among-us",
-  "version": "0.0.0",
+  "private": true,
   "description": "A mod for The Binding of Isaac: Repentance",
   "license": "GPL-3.0",
   "author": "Zamiell",
+  "type": "commonjs",
+  "scripts": {
+    "postinstall": "prisma generate --schema=packages/server/prisma/schema.prisma"
+  },
   "dependencies": {
-    "@prisma/client": "^4.9.0",
+    "@prisma/client": "^4.10.0",
     "argon2": "^0.30.3",
-    "isaac-typescript-definitions": "^11.0.3",
-    "isaacscript-common": "^21.1.1",
-    "isaacscript-common-ts": "^2.1.1",
+    "isaac-typescript-definitions": "^11.1.1",
+    "isaacscript-common": "^21.2.0",
+    "isaacscript-common-ts": "^10.0.0",
     "struct": "^0.0.12"
   },
   "devDependencies": {
-    "@types/node": "^18.11.18",
+    "@types/node": "^18.13.0",
     "@types/struct": "^0.0.4",
-    "isaacscript": "^3.4.9",
-    "isaacscript-lint": "^4.8.0",
-    "isaacscript-spell": "^1.2.29",
-    "isaacscript-tsconfig": "^3.0.2",
-    "npm-check-updates": "^16.6.3",
-    "prisma": "^4.9.0",
+    "isaacscript": "^3.6.27",
+    "isaacscript-lint": "^4.10.3",
+    "isaacscript-spell": "^1.2.34",
+    "isaacscript-tsconfig": "^4.0.0",
+    "npm-check-updates": "^16.6.5",
+    "prisma": "^4.10.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.1.2",
-    "typescript": "^4.9.4",
+    "typescript": "^4.9.5",
     "typescript-to-lua": "^1.12.1"
   }
 }

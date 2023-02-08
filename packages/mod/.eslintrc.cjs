@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
-const path = require("path"); // eslint-disable-line @typescript-eslint/no-var-requires
+const path = require("node:path");
 
 // This is the configuration file for ESLint, the TypeScript linter:
 // https://eslint.org/docs/user-guide/configuring

@@ -1,12 +1,17 @@
-# Ignore compiled output.
+# Compiled output
 dist
 
-# Ignore all of the XML files created by Basement Renovator.
+# Package manager lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# XML files created by Basement Renovator
 packages/mod/content/rooms/**/*.xml
 packages/mod/content/luarooms/**/*.xml
 packages/mod/resources/rooms/**/*.xml
 packages/mod/resources/luarooms/**/*.xml
 packages/mod/**/map.xml
 
-# Ignore all of the XML files created by the animation editor.
+# XML files created by the animation editor
 packages/mod/resources/**/*.anm2

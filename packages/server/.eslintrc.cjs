@@ -1,4 +1,4 @@
-const path = require("path"); // eslint-disable-line @typescript-eslint/no-var-requires
+const path = require("node:path");
 
 // This is the configuration file for ESLint, the TypeScript linter:
 // https://eslint.org/docs/user-guide/configuring
@@ -18,5 +18,7 @@ module.exports = {
 
   ignorePatterns: ["dist/"],
 
-  rules: {},
+  rules: {
+    "no-param-reassign": "off",
+  },
 };

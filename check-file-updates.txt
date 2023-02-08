@@ -1,6 +1,0 @@
-.prettierrc.js
-check-file-updates.sh:check-file-updates.sh
-check-orphaned-words.sh
-packages/common/tsconfig.eslint.json:../static/tsconfig.eslint.json
-packages/server/tsconfig.eslint.json:../static/tsconfig.eslint.json
-packages/mod/tsconfig.eslint.json:../static/tsconfig.eslint.json

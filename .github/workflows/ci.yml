@@ -12,24 +12,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          # The default version is 14. The ESLint config requires at least Node 16 to work properly.
-          # We use 18, which is the official LTS version.
-          node-version: "18"
-          cache: "yarn"
+          node-version: lts/*
+          cache: yarn
 
-      - name: Retrieve the cached "node_modules" directory (main)
+      - name: Retrieve the cached "node_modules" directory (if present)
         uses: actions/cache@v3
-        id: node-cache-main
+        id: node-cache
         with:
           path: node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
       - name: Install dependencies (if the cached directory was not found)
-        if: steps.node-cache-main.outputs.cache-hit != 'true'
+        if: steps.node-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
-
-      - name: Initialize Prisma
-        run: bash ./packages/server/init_prisma.sh
 
       - name: Test to see if the project compiles
         run: bash build.sh
@@ -37,6 +32,7 @@ jobs:
       - name: Perform automated checks
         run: bash lint.sh
 
+  # @template-customization-start
   discord:
     name: Discord Failure Notification
     needs: [build_and_lint]
@@ -50,3 +46,4 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ env.WORKFLOW_CONCLUSION }}
           title: ""
+  # @template-customization-end

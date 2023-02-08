@@ -21,14 +21,20 @@
   "files.trimTrailingWhitespace": true,
 
   // Configure glob patterns for excluding files and folders in full text searches and quick open.
-  // (File extensions must be specified or the glob won't work properly.)
   "search.exclude": {
+    "**/*.mp3": true,
     "**/*.png": true,
     "**/*.wav": true,
     "**/dist/": true,
+    // @template-ignore-next-line
     "**/main.lua": true,
-    "**/node_modules/": true,
   },
+
+  // ------------------
+  // Extension settings
+  // ------------------
+  // Use Prettier to format "cspell.json".
+  "cSpell.autoFormatConfigFile": true,
 
   // -----------------
   // Language settings
@@ -37,6 +43,10 @@
   // By default, VSCode will not automatically fill-in function arguments.
   "javascript.suggest.completeFunctionCalls": true,
   "typescript.suggest.completeFunctionCalls": true,
+
+  // By default, VSCode will prefer non-relative paths for deeply nested files.
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "relative",
 
   // Automatically run the formatter when certain files are saved.
   "[javascript]": {
@@ -76,8 +86,10 @@
     "editor.formatOnSave": true,
     "editor.tabSize": 2,
   },
+  // @template-customization-start
   "[python]": {
     "editor.formatOnSave": true,
     "editor.tabSize": 4,
   },
+  // @template-customization-end
 }

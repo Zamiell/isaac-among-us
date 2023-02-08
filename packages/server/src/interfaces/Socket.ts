@@ -1,4 +1,4 @@
-import * as net from "net";
+import * as net from "node:net";
 
 export interface Socket extends net.Socket {
   socketID: number;
