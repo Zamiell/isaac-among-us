@@ -1,4 +1,4 @@
-import { ISCFeature, ModCallbackCustom, upgradeMod } from "isaacscript-common";
+import { ISCFeature, upgradeMod } from "isaacscript-common";
 import { MOD_NAME } from "./constants";
 
 const ISC_FEATURES_FOR_THIS_MOD = [
@@ -12,17 +12,5 @@ const ISC_FEATURES_FOR_THIS_MOD = [
   ISCFeature.SAVE_DATA_MANAGER,
 ] as const;
 
-const CUSTOM_CALLBACKS_USED = [
-  ModCallbackCustom.POST_NEW_ROOM_REORDERED,
-  ModCallbackCustom.POST_GAME_STARTED_REORDERED,
-  ModCallbackCustom.POST_GRID_ENTITY_UPDATE,
-  ModCallbackCustom.POST_PICKUP_COLLECT,
-  ModCallbackCustom.POST_PLAYER_INIT_LATE,
-] as const;
-
 const modVanilla = RegisterMod(MOD_NAME, 1);
-export const mod = upgradeMod(
-  modVanilla,
-  ISC_FEATURES_FOR_THIS_MOD,
-  CUSTOM_CALLBACKS_USED,
-);
+export const mod = upgradeMod(modVanilla, ISC_FEATURES_FOR_THIS_MOD);
