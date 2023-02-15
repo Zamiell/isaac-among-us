@@ -99,8 +99,8 @@ function setupLobby() {
   const room = game.GetRoom();
   const centerPos = room.GetCenterPos();
 
-  const NPCs = getNPCs();
-  removeEntities(NPCs);
+  const npcs = getNPCs();
+  removeEntities(npcs);
   room.SetClear(true);
 
   removeAllDoors();
