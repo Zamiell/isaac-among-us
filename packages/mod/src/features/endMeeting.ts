@@ -138,9 +138,9 @@ function getTextOpacity() {
     return 1;
   }
 
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
   const renderFramesPassed =
-    isaacFrameCount - g.game.endMeeting.startRenderFrame;
+    renderFrameCount - g.game.endMeeting.startRenderFrame;
   const opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES;
 
   if (g.game.endMeeting.state === EndMeetingState.TEXT_FADING_IN) {
@@ -159,9 +159,9 @@ function hasFadeFinished(): boolean {
     return false;
   }
 
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
   const renderFramesPassed =
-    isaacFrameCount - g.game.endMeeting.startRenderFrame;
+    renderFrameCount - g.game.endMeeting.startRenderFrame;
   return renderFramesPassed >= FADE_TO_BLACK_FRAMES;
 }
 
@@ -175,10 +175,10 @@ function setState(state: EndMeetingState) {
     return;
   }
 
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
 
   g.game.endMeeting.state = state;
-  g.game.endMeeting.startRenderFrame = isaacFrameCount;
+  g.game.endMeeting.startRenderFrame = renderFrameCount;
 
   if (state === EndMeetingState.DISABLED) {
     g.game.endMeeting.userIDEjected = null;

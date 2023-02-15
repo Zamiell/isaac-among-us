@@ -21,10 +21,10 @@ export function init(): void {
 function main(isContinued: boolean) {
   const seeds = game.GetSeeds();
   const startSeedString = seeds.GetStartSeedString();
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
 
   log(
-    `MC_POST_GAME_STARTED - startSeedString: ${startSeedString} - isaacFrameCount: ${isaacFrameCount} - isContinued: ${isContinued}`,
+    `MC_POST_GAME_STARTED - startSeedString: ${startSeedString} - renderFrameCount: ${renderFrameCount} - isContinued: ${isContinued}`,
   );
 
   // Check for errors that should prevent the mod from doing anything.

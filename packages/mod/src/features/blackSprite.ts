@@ -29,8 +29,8 @@ function getBlackSpriteOpacity() {
     return 1;
   }
 
-  const isaacFrameCount = Isaac.GetFrameCount();
-  const renderFramesPassed = isaacFrameCount - startRenderFrame;
+  const renderFrameCount = Isaac.GetFrameCount();
+  const renderFramesPassed = renderFrameCount - startRenderFrame;
   const opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES;
 
   if (state === BlackSpriteState.FADING_TO_BLACK) {
@@ -45,8 +45,8 @@ function getBlackSpriteOpacity() {
 }
 
 export function setBlackSpriteState(newState: BlackSpriteState): void {
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
 
   state = newState;
-  startRenderFrame = isaacFrameCount;
+  startRenderFrame = renderFrameCount;
 }

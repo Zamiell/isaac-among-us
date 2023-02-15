@@ -6,12 +6,12 @@ import { getFormattedTime } from "./network/sandbox";
 const chatMessages: ChatMessage[] = [];
 
 export function addChat(data: ChatDataToMod, local = false): void {
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
   const chatMessage: ChatMessage = {
     time: getFormattedTime(),
     username: data.from,
     msg: data.msg,
-    renderFrameReceived: isaacFrameCount,
+    renderFrameReceived: renderFrameCount,
     local,
   };
   chatMessages.unshift(chatMessage);

@@ -121,9 +121,9 @@ function hasFadeFinished(): boolean {
     return false;
   }
 
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
   const renderFramesPassed =
-    isaacFrameCount - g.game.startMeeting.startRenderFrame;
+    renderFrameCount - g.game.startMeeting.startRenderFrame;
   return renderFramesPassed >= FADE_TO_BLACK_FRAMES;
 }
 
@@ -150,8 +150,8 @@ function setState(state: StartMeetingState) {
     return;
   }
 
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
 
   g.game.startMeeting.state = state;
-  g.game.startMeeting.startRenderFrame = isaacFrameCount;
+  g.game.startMeeting.startRenderFrame = renderFrameCount;
 }

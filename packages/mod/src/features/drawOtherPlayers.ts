@@ -52,7 +52,7 @@ function drawOtherPlayersFromUDP() {
     return;
   }
 
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
   const room = getSkeldRoom();
   const userIDsInOurGame = g.game.players.map((player) => player.userID);
   const userIDsInOurGameSet = new Set(userIDsInOurGame);
@@ -67,7 +67,7 @@ function drawOtherPlayersFromUDP() {
     }
 
     const renderFramesSinceLastUpdate =
-      isaacFrameCount - playerData.renderFrameUpdated;
+      renderFrameCount - playerData.renderFrameUpdated;
     const player = g.game.getPlayerFromUserID(playerData.userID);
     if (
       // Don't draw stale players, since they might have disconnected.
@@ -106,7 +106,7 @@ function drawOtherPlayersBodies() {
     return;
   }
 
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
   const room = getSkeldRoom();
 
   for (const body of g.game.bodies) {
@@ -122,7 +122,7 @@ function drawOtherPlayersBodies() {
     let deathFrame = DEATH_ANIMATION_FINAL_FRAME;
     if (body.renderFrameKilled !== undefined) {
       // We divide it by two to slow it down.
-      deathFrame = Math.floor((isaacFrameCount - body.renderFrameKilled) / 2);
+      deathFrame = Math.floor((renderFrameCount - body.renderFrameKilled) / 2);
     }
 
     if (deathFrame < 0 || deathFrame > DEATH_ANIMATION_FINAL_FRAME) {

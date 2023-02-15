@@ -58,7 +58,7 @@ export function init(): void {
 // ModCallback.POST_RENDER (2)
 export function postRender(): void {
   const isPaused = game.IsPaused();
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
 
   if (isPaused || inCutscene()) {
     return;
@@ -69,22 +69,22 @@ export function postRender(): void {
   }
 
   if (!consoleOpen) {
-    checkKeyboardInput(Keyboard.ENTER, isaacFrameCount);
-    checkKeyboardInput(Keyboard.SLASH, isaacFrameCount);
+    checkKeyboardInput(Keyboard.ENTER, renderFrameCount);
+    checkKeyboardInput(Keyboard.SLASH, renderFrameCount);
     return;
   }
 
-  checkAllKeyboardInput(isaacFrameCount);
+  checkAllKeyboardInput(renderFrameCount);
   drawConsole();
 }
 
-function checkAllKeyboardInput(isaacFrameCount: int) {
+function checkAllKeyboardInput(renderFrameCount: int) {
   for (const keyboardValue of getEnumValues(Keyboard)) {
-    checkKeyboardInput(keyboardValue, isaacFrameCount);
+    checkKeyboardInput(keyboardValue, renderFrameCount);
   }
 }
 
-function checkKeyboardInput(keyboardValue: Keyboard, isaacFrameCount: int) {
+function checkKeyboardInput(keyboardValue: Keyboard, renderFrameCount: int) {
   const pressed = isKeyboardPressed(keyboardValue);
   if (!pressed) {
     keysPressed.delete(keyboardValue);
@@ -93,13 +93,13 @@ function checkKeyboardInput(keyboardValue: Keyboard, isaacFrameCount: int) {
 
   let renderFramePressed = keysPressed.get(keyboardValue);
   if (renderFramePressed === undefined) {
-    renderFramePressed = isaacFrameCount;
+    renderFramePressed = renderFrameCount;
     keysPressed.set(keyboardValue, renderFramePressed);
   }
 
   // We want the key to be repeated if they are holding down the key (after a short delay).
-  const pressedOnThisFrame = renderFramePressed === isaacFrameCount;
-  const renderFramesSinceKeyPressed = isaacFrameCount - renderFramePressed;
+  const pressedOnThisFrame = renderFramePressed === renderFrameCount;
+  const renderFramesSinceKeyPressed = renderFrameCount - renderFramePressed;
   const shouldTriggerRepeatPress =
     renderFramesSinceKeyPressed > REPEAT_KEY_DELAY_IN_RENDER_FRAMES &&
     renderFramesSinceKeyPressed % 2 === 0; // Every other frame

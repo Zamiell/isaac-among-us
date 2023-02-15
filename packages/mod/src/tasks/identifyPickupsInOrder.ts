@@ -148,10 +148,10 @@ function drawPickupText() {
     return;
   }
 
-  const isaacFrameCount = Isaac.GetFrameCount();
-  if (isaacFrameCount >= showingPickupRenderFrame + TEXT_SHOW_FRAMES) {
+  const renderFrameCount = Isaac.GetFrameCount();
+  if (renderFrameCount >= showingPickupRenderFrame + TEXT_SHOW_FRAMES) {
     showingPickupIndex++;
-    showingPickupRenderFrame = isaacFrameCount;
+    showingPickupRenderFrame = renderFrameCount;
 
     if (showingPickupIndex >= currentPickupOrder.length) {
       showingPickupIndex = null;

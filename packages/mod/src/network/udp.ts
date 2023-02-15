@@ -34,15 +34,15 @@ function sendBeacon() {
     return;
   }
 
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
 
   if (
     lastBeaconRenderFrame !== null &&
-    isaacFrameCount < lastBeaconRenderFrame + UDP_BEACON_INTERVAL
+    renderFrameCount < lastBeaconRenderFrame + UDP_BEACON_INTERVAL
   ) {
     return;
   }
-  lastBeaconRenderFrame = isaacFrameCount;
+  lastBeaconRenderFrame = renderFrameCount;
 
   const structObject: UDPBeaconInterface = {
     gameID: g.game.id,

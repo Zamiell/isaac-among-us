@@ -142,8 +142,8 @@ function getTextOpacity() {
     return 1;
   }
 
-  const isaacFrameCount = Isaac.GetFrameCount();
-  const renderFramesPassed = isaacFrameCount - g.endGame.startRenderFrame;
+  const renderFrameCount = Isaac.GetFrameCount();
+  const renderFramesPassed = renderFrameCount - g.endGame.startRenderFrame;
   const opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES;
 
   if (g.endGame.state === CutsceneState.TEXT_FADING_IN) {
@@ -168,8 +168,8 @@ function hasFadeFinished(): boolean {
     return false;
   }
 
-  const isaacFrameCount = Isaac.GetFrameCount();
-  const renderFramesPassed = isaacFrameCount - g.endGame.startRenderFrame;
+  const renderFrameCount = Isaac.GetFrameCount();
+  const renderFramesPassed = renderFrameCount - g.endGame.startRenderFrame;
   return renderFramesPassed >= FADE_TO_BLACK_FRAMES;
 }
 
@@ -190,10 +190,10 @@ export function startEndGameCutscene(): void {
 }
 
 function setState(state: CutsceneState) {
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
 
   g.endGame.state = state;
-  g.endGame.startRenderFrame = isaacFrameCount;
+  g.endGame.startRenderFrame = renderFrameCount;
   log(`Changed end game cutscene state: ${CutsceneState[state]} (${state})`);
 }
 

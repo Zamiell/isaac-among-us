@@ -17,8 +17,8 @@ export function postRender(): void {
   }
 
   // Send a ping as a quick test to see if the socket is still open.
-  const isaacFrameCount = Isaac.GetFrameCount();
-  if (isaacFrameCount % 60 === 0) {
+  const renderFrameCount = Isaac.GetFrameCount();
+  if (renderFrameCount % 60 === 0) {
     sendTCP(SocketCommandModToServer.PING, {});
   }
 
@@ -128,7 +128,7 @@ function updatePlayerMap(playerPositionMessage: UDPPositionInterface) {
     return;
   }
 
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
 
   const playerData: PlayerData = {
     userID: playerPositionMessage.userID,
@@ -139,7 +139,7 @@ function updatePlayerMap(playerPositionMessage: UDPPositionInterface) {
     animationFrame: playerPositionMessage.animationFrame,
     overlayAnimation: playerPositionMessage.overlayAnimation,
     overlayAnimationFrame: playerPositionMessage.overlayAnimationFrame,
-    renderFrameUpdated: isaacFrameCount,
+    renderFrameUpdated: renderFrameCount,
   };
   g.game.playerMap.set(playerData.userID, playerData);
 }

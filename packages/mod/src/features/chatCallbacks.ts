@@ -30,7 +30,7 @@ export function postRender(): void {
 }
 
 function drawChat() {
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
   const consoleOpen = isConsoleOpen();
 
   // If the console is open, display the last N messages with default opacity Otherwise, only
@@ -49,7 +49,7 @@ function drawChat() {
 
     // Make chat messages slowly fade away (if the console is closed).
     const renderFramesElapsed =
-      isaacFrameCount - chatMessage.renderFrameReceived;
+      renderFrameCount - chatMessage.renderFrameReceived;
     if (!consoleOpen && renderFramesElapsed > RENDER_FRAMES_FOR_CHAT_TO_SHOW) {
       const renderFramesOverThreshold =
         renderFramesElapsed - RENDER_FRAMES_FOR_CHAT_TO_SHOW;

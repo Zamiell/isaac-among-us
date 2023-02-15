@@ -26,14 +26,14 @@ export function commandKilled(data: KilledDataToMod): void {
   }
   killedPlayer.alive = false;
 
-  const isaacFrameCount = Isaac.GetFrameCount();
+  const renderFrameCount = Isaac.GetFrameCount();
 
   g.game.bodies.push({
     userID: data.userIDKilled,
     room: data.room,
     x: data.x,
     y: data.y,
-    renderFrameKilled: isaacFrameCount,
+    renderFrameKilled: renderFrameCount,
   });
 
   const weDied = killedPlayer.userID === g.userID;
