@@ -55,7 +55,7 @@ function drawOtherPlayersFromUDP() {
   const renderFrameCount = Isaac.GetFrameCount();
   const room = getSkeldRoom();
   const userIDsInOurGame = g.game.players.map((player) => player.userID);
-  const userIDsInOurGameSet = new Set(userIDsInOurGame);
+  const userIDsInOurGameSet = new ReadonlySet(userIDsInOurGame);
 
   for (const playerData of g.game.playerMap.values()) {
     const entity = getMultiplayerEntity(playerData.userID);

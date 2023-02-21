@@ -78,7 +78,7 @@ function getClient(port: int, useTCP = true): SocketClient | undefined {
     }
   }
 
-  // We check for new socket data on every PostRender frame. However, the remote socket might not
+  // We check for new socket data on every `POST_RENDER` frame. However, the remote socket might not
   // necessarily have any new data for us. Thus, we set the timeout to 0 in order to prevent lag.
   socketClient.settimeout(0);
 
