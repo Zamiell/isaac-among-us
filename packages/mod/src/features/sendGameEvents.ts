@@ -7,7 +7,7 @@ import { getStageAPIRoomName } from "../stageAPISubroutines";
 
 let sendEvents = true;
 
-export function postRoomLoad(): void {
+export function postStageAPINewRoom(): void {
   sendRoom();
 }
 

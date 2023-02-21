@@ -15,7 +15,11 @@ import { mod } from "../mod";
 import { disableShooting } from "../utils";
 
 export function init(): void {
-  mod.AddCallbackCustom(ModCallbackCustom.POST_GAME_STARTED_REORDERED, main);
+  mod.AddCallbackCustom(
+    ModCallbackCustom.POST_GAME_STARTED_REORDERED,
+    main,
+    undefined,
+  );
 }
 
 function main(isContinued: boolean) {
@@ -33,6 +37,10 @@ function main(isContinued: boolean) {
   }
 
   if (restartOnNextFrame.postGameStarted()) {
+    return;
+  }
+
+  if (isContinued) {
     return;
   }
 

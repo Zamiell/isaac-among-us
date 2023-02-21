@@ -18,7 +18,7 @@ export function main(this: void): void {
     return;
   }
 
-  sendGameEvents.postRoomLoad(); // This does not work properly in the PostRoomLoad callback
+  sendGameEvents.postStageAPINewRoom(); // This does not work properly in the `POST_ROOM_LOAD` callback.
   setTasksOnMap();
   fixOffsetBug();
   task.postStageAPINewRoom();

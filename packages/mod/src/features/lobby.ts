@@ -58,18 +58,18 @@ function gotoLobby() {
     effectiveStage !== STAGE_FOR_LOBBY ||
     stageType !== STAGE_TYPE_FOR_LOBBY
   ) {
-    // Since we might be going to a new floor on frame 0, we have to specify that the PostNewLevel
-    // callback should fire.
+    // Since we might be going to a new floor on frame 0, we have to specify that the
+    // `POST_NEW_LEVEL_REORDERED` callback should fire.
     mod.forceNewLevelCallback();
     consoleCommand(`stage ${STAGE_ARGUMENT_FOR_LOBBY}`);
   }
 
-  // Since we might be going to a new room on frame 0, we have to specify that the PostNewRoom
-  // callback should fire.
+  // Since we might be going to a new room on frame 0, we have to specify that the
+  // `POST_NEW_ROOM_REORDERED` callback should fire.
   mod.forceNewRoomCallback();
   consoleCommand(`goto d.${ROOM_VARIANT_FOR_LOBBY}`);
   // We will not actually be sent to the room until a frame passes, so wait until the next
-  // PostNewRoom fires.
+  // `POST_NEW_ROOM_REORDERED` callback fires.
 }
 
 export function inLobby(): boolean {
