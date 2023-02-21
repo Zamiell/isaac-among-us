@@ -10,10 +10,10 @@ import {
   SocketCommandServerToMod,
   SocketCommandServerToModData,
 } from "common";
-import { Game } from "./classes/Game";
-import { Socket } from "./interfaces/Socket";
-import { sendTCP } from "./sendTCP";
-import { getTCPSocketByUserID } from "./tcpSockets";
+import { Game } from "./classes/Game.js";
+import { Socket } from "./interfaces/Socket.js";
+import { sendTCP } from "./sendTCP.js";
+import { getTCPSocketByUserID } from "./tcpSockets.js";
 
 export function sendNewGameDescription(game: Game): void {
   const players = getGameDescriptionPlayers(game);

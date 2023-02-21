@@ -3,17 +3,17 @@ import * as net from "node:net";
 import {
   ensureAllCommandDataFieldsHaveValidatorFunctions,
   handleCommand,
-} from "./command";
-import { IP } from "./constants";
+} from "./command.js";
+import { IP } from "./constants.js";
 import {
   leaveNonStartedGames,
   setPlayerAsDisconnectedInOngoingGames,
-} from "./disconnect";
-import { getRemoteAddressTCP } from "./error";
-import { Socket } from "./interfaces/Socket";
-import { unpackTCPMsg } from "./pack";
-import { sendAllUserConnected } from "./sendAll";
-import { getNewTCPSocketID, tcpSockets } from "./tcpSockets";
+} from "./disconnect.js";
+import { getRemoteAddressTCP } from "./error.js";
+import { Socket } from "./interfaces/Socket.js";
+import { unpackTCPMsg } from "./pack.js";
+import { sendAllUserConnected } from "./sendAll.js";
+import { getNewTCPSocketID, tcpSockets } from "./tcpSockets.js";
 
 ensureAllCommandDataFieldsHaveValidatorFunctions();
 

@@ -1,15 +1,15 @@
 import { ReconnectDataToServer, Role, SocketCommandServerToMod } from "common";
-import { Game } from "../classes/Game";
-import { Player } from "../classes/Player";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData";
-import { Socket } from "../interfaces/Socket";
-import { logGameEvent } from "../log";
+import { Game } from "../classes/Game.js";
+import { Player } from "../classes/Player.js";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import { Socket } from "../interfaces/Socket.js";
+import { logGameEvent } from "../log.js";
 import {
   getGameDescriptionPlayers,
   sendChat,
   sendNewGameDescription,
-} from "../sendGame";
-import { sendTCP } from "../sendTCP";
+} from "../sendGame.js";
+import { sendTCP } from "../sendTCP.js";
 
 export function commandReconnect(
   socket: Socket,

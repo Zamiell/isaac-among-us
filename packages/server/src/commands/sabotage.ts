@@ -1,9 +1,9 @@
 import { Role, SabotageDataToServer } from "common";
-import { Game } from "../classes/Game";
-import { sendError } from "../error";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData";
-import { Socket } from "../interfaces/Socket";
-import { sendSabotage } from "../sendGame";
+import { Game } from "../classes/Game.js";
+import { sendError } from "../error.js";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import { Socket } from "../interfaces/Socket.js";
+import { sendSabotage } from "../sendGame.js";
 
 export function commandSabotage(
   socket: Socket,

@@ -1,9 +1,9 @@
 import { UDP_PORT } from "common";
 import * as dgram from "node:dgram";
 import struct from "struct";
-import { IP } from "./constants";
-import { getTCPSocketByUserID } from "./tcpSockets";
-import { getGameMap, udpSockets } from "./udpSockets";
+import { IP } from "./constants.js";
+import { getTCPSocketByUserID } from "./tcpSockets.js";
+import { getGameMap, udpSockets } from "./udpSockets.js";
 
 const UDP_TTL_SECONDS = 60;
 const PURGE_UDP_SESSIONS_INTERVAL_MILLISECONDS = 1000;
@@ -51,7 +51,7 @@ function handleDataUDP(msg: Buffer, rinfo: dgram.RemoteInfo) {
     return;
   }
 
-  const msgBody = msg.slice(UDPMessageHeaderLength);
+  const msgBody = msg.subarray(UDPMessageHeaderLength);
   if (msgBody.length === UDPMessageBodyBeaconLength) {
     handleBeacon(gameID, userID, rinfo);
   } else if (msgBody.length === UDPMessageBodyPositionLength) {

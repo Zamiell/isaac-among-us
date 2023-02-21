@@ -3,17 +3,17 @@ import {
   MAX_PLAYERS,
   SocketCommandServerToMod,
 } from "common";
-import { Player } from "../classes/Player";
-import { sendError } from "../error";
-import { getLowestUnusedCharacter } from "../game";
-import { games } from "../games";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData";
-import { Socket } from "../interfaces/Socket";
-import { logGameEvent } from "../log";
-import { sendNewGameDescription, sendPlayerJoined } from "../sendGame";
-import { sendTCP } from "../sendTCP";
-import { getTCPSocketByUserID } from "../tcpSockets";
-import { validateInNoGames } from "../validate";
+import { Player } from "../classes/Player.js";
+import { sendError } from "../error.js";
+import { getLowestUnusedCharacter } from "../game.js";
+import { games } from "../games.js";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import { Socket } from "../interfaces/Socket.js";
+import { logGameEvent } from "../log.js";
+import { sendNewGameDescription, sendPlayerJoined } from "../sendGame.js";
+import { sendTCP } from "../sendTCP.js";
+import { getTCPSocketByUserID } from "../tcpSockets.js";
+import { validateInNoGames } from "../validate.js";
 
 export function commandJoin(
   socket: Socket,

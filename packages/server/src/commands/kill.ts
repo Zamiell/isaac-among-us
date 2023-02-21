@@ -1,11 +1,11 @@
 import { KillDataToServer, PlayerBody, Role } from "common";
-import { Game } from "../classes/Game";
-import { endGame } from "../endGame";
-import { sendError } from "../error";
-import { getPlayer } from "../game";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData";
-import { Socket } from "../interfaces/Socket";
-import { sendKilled } from "../sendGame";
+import { Game } from "../classes/Game.js";
+import { endGame } from "../endGame.js";
+import { sendError } from "../error.js";
+import { getPlayer } from "../game.js";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import { Socket } from "../interfaces/Socket.js";
+import { sendKilled } from "../sendGame.js";
 
 export function commandKill(
   socket: Socket,

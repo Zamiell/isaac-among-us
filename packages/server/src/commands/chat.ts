@@ -1,7 +1,7 @@
 import { ChatDataToServer } from "common";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData";
-import { Socket } from "../interfaces/Socket";
-import { sendChat } from "../sendGame";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import { Socket } from "../interfaces/Socket.js";
+import { sendChat } from "../sendGame.js";
 
 export function commandChat(
   socket: Socket,

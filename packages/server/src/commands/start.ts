@@ -5,15 +5,15 @@ import {
   MIN_PLAYERS,
   StartDataToServer,
 } from "common";
-import { Game } from "../classes/Game";
-import { sendError } from "../error";
-import { doesGameIDExist } from "../games";
-import { assignImpostors } from "../imposters";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData";
-import { Socket } from "../interfaces/Socket";
-import { sendEmergencyButtonCooldown, sendStarted } from "../sendGame";
-import { assignTasks } from "../tasks";
-import { validateGameOwner } from "../validate";
+import { Game } from "../classes/Game.js";
+import { sendError } from "../error.js";
+import { doesGameIDExist } from "../games.js";
+import { assignImpostors } from "../imposters.js";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import { Socket } from "../interfaces/Socket.js";
+import { sendEmergencyButtonCooldown, sendStarted } from "../sendGame.js";
+import { assignTasks } from "../tasks.js";
+import { validateGameOwner } from "../validate.js";
 
 export function commandStart(
   socket: Socket,

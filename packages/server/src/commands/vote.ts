@@ -4,14 +4,14 @@ import {
   VoteDataToServer,
   VOTE_SKIP,
 } from "common";
-import { Game } from "../classes/Game";
-import { Player } from "../classes/Player";
-import { sendError } from "../error";
-import { getPlayer, getPlayerIndex } from "../game";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData";
-import { Socket } from "../interfaces/Socket";
-import { sendChat, sendVote } from "../sendGame";
-import { meetingPhaseOverVoting } from "./meeting";
+import { Game } from "../classes/Game.js";
+import { Player } from "../classes/Player.js";
+import { sendError } from "../error.js";
+import { getPlayer, getPlayerIndex } from "../game.js";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import { Socket } from "../interfaces/Socket.js";
+import { sendChat, sendVote } from "../sendGame.js";
+import { meetingPhaseOverVoting } from "./meeting.js";
 
 export function commandVote(
   socket: Socket,

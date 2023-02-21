@@ -1,12 +1,12 @@
 import { SocketCommandModToServer, SocketCommandModToServerData } from "common";
 import { ReadonlySet } from "isaacscript-common-ts";
-import { Game } from "./classes/Game";
-import { SERVER_COMMAND_MAP } from "./commandMap";
-import { sendError } from "./error";
-import { getPlayer } from "./game";
-import { games, getGameByName } from "./games";
-import { ExtraCommandData } from "./interfaces/ExtraCommandData";
-import { Socket } from "./interfaces/Socket";
+import { Game } from "./classes/Game.js";
+import { SERVER_COMMAND_MAP } from "./commandMap.js";
+import { sendError } from "./error.js";
+import { getPlayer } from "./game.js";
+import { games, getGameByName } from "./games.js";
+import { ExtraCommandData } from "./interfaces/ExtraCommandData.js";
+import { Socket } from "./interfaces/Socket.js";
 import {
   validateAlphanumeric,
   validateAlphanumericHyphen,
@@ -16,7 +16,7 @@ import {
   validateMinStringLength,
   validateNumber,
   validateString,
-} from "./validate";
+} from "./validate.js";
 
 const COMMANDS_ALLOWED_WHILE_NOT_LOGGED_IN =
   new ReadonlySet<SocketCommandModToServer>([

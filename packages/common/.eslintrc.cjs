@@ -18,5 +18,7 @@ module.exports = {
 
   ignorePatterns: ["dist/"],
 
-  rules: {},
+  rules: {
+    "n/file-extension-in-import": "off",
+  },
 };

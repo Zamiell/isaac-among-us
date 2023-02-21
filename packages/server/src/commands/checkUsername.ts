@@ -1,8 +1,8 @@
 import { CheckUsernameDataToServer, SocketCommandServerToMod } from "common";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData";
-import { Socket } from "../interfaces/Socket";
-import * as users from "../models/users";
-import { sendTCP } from "../sendTCP";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import { Socket } from "../interfaces/Socket.js";
+import * as users from "../models/users.js";
+import { sendTCP } from "../sendTCP.js";
 
 export async function commandCheckUsername(
   socket: Socket,

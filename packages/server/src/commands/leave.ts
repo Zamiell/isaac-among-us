@@ -1,15 +1,15 @@
 import { LeaveDataToServer, SocketCommandServerToMod } from "common";
-import { removePlayerFromGame } from "../game";
-import { games } from "../games";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData";
-import { Socket } from "../interfaces/Socket";
-import { logGameEvent } from "../log";
+import { removePlayerFromGame } from "../game.js";
+import { games } from "../games.js";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import { Socket } from "../interfaces/Socket.js";
+import { logGameEvent } from "../log.js";
 import {
   sendNewGameDescription,
   sendNewOwner,
   sendPlayerLeft,
-} from "../sendGame";
-import { sendTCP } from "../sendTCP";
+} from "../sendGame.js";
+import { sendTCP } from "../sendTCP.js";
 
 export function commandLeave(
   socket: Socket,

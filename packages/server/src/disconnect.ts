@@ -1,10 +1,10 @@
-import { Game } from "./classes/Game";
-import { Player } from "./classes/Player";
-import { commandLeave } from "./commands/leave";
-import { games } from "./games";
-import { Socket } from "./interfaces/Socket";
-import { logGameEvent } from "./log";
-import { sendChat, sendNewGameDescription } from "./sendGame";
+import { Game } from "./classes/Game.js";
+import { Player } from "./classes/Player.js";
+import { commandLeave } from "./commands/leave.js";
+import { games } from "./games.js";
+import { Socket } from "./interfaces/Socket.js";
+import { logGameEvent } from "./log.js";
+import { sendChat, sendNewGameDescription } from "./sendGame.js";
 
 export function setPlayerAsDisconnectedInOngoingGames(userID?: number): void {
   if (userID === undefined) {

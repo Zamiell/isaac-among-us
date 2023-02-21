@@ -1,26 +1,26 @@
 import { SocketCommandModToServer, SocketCommandModToServerData } from "common";
-import { commandChat } from "./commands/chat";
-import { commandCheckUsername } from "./commands/checkUsername";
-import { commandCreate } from "./commands/create";
-import { commandDebug } from "./commands/debug";
-import { commandGameList } from "./commands/gameList";
-import { commandJoin } from "./commands/join";
-import { commandKill } from "./commands/kill";
-import { commandKillMe } from "./commands/killMe";
-import { commandLeave } from "./commands/leave";
-import { commandLogin } from "./commands/login";
-import { commandMeeting } from "./commands/meeting";
-import { commandPing } from "./commands/ping";
-import { commandReconnect } from "./commands/reconnect";
-import { commandRevive } from "./commands/revive";
-import { commandRoom } from "./commands/room";
-import { commandSabotage } from "./commands/sabotage";
-import { commandStart } from "./commands/start";
-import { commandTaskComplete } from "./commands/taskComplete";
-import { commandTerminate } from "./commands/terminate";
-import { commandVote } from "./commands/vote";
-import { ExtraCommandData } from "./interfaces/ExtraCommandData";
-import { Socket } from "./interfaces/Socket";
+import { commandChat } from "./commands/chat.js";
+import { commandCheckUsername } from "./commands/checkUsername.js";
+import { commandCreate } from "./commands/create.js";
+import { commandDebug } from "./commands/debug.js";
+import { commandGameList } from "./commands/gameList.js";
+import { commandJoin } from "./commands/join.js";
+import { commandKill } from "./commands/kill.js";
+import { commandKillMe } from "./commands/killMe.js";
+import { commandLeave } from "./commands/leave.js";
+import { commandLogin } from "./commands/login.js";
+import { commandMeeting } from "./commands/meeting.js";
+import { commandPing } from "./commands/ping.js";
+import { commandReconnect } from "./commands/reconnect.js";
+import { commandRevive } from "./commands/revive.js";
+import { commandRoom } from "./commands/room.js";
+import { commandSabotage } from "./commands/sabotage.js";
+import { commandStart } from "./commands/start.js";
+import { commandTaskComplete } from "./commands/taskComplete.js";
+import { commandTerminate } from "./commands/terminate.js";
+import { commandVote } from "./commands/vote.js";
+import { ExtraCommandData } from "./interfaces/ExtraCommandData.js";
+import { Socket } from "./interfaces/Socket.js";
 
 type ServerCommandMap = {
   [Key in SocketCommandModToServer]: (

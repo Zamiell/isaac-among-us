@@ -7,17 +7,21 @@ import {
   VOTE_SKIP,
 } from "common";
 import { emptyArray, newArray } from "isaacscript-common-ts";
-import { Game } from "../classes/Game";
+import { Game } from "../classes/Game.js";
 import {
   DEFAULT_MEETING_PRE_VOTE_SECONDS,
   DEFAULT_MEETING_VOTE_SECONDS,
-} from "../constants";
-import { sendError } from "../error";
-import { doesGameIDExist } from "../games";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData";
-import { Socket } from "../interfaces/Socket";
-import { sendEndMeeting, sendStartMeeting, sendStartVoting } from "../sendGame";
-import { getTimestamp } from "../utils";
+} from "../constants.js";
+import { sendError } from "../error.js";
+import { doesGameIDExist } from "../games.js";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import { Socket } from "../interfaces/Socket.js";
+import {
+  sendEndMeeting,
+  sendStartMeeting,
+  sendStartVoting,
+} from "../sendGame.js";
+import { getTimestamp } from "../utils.js";
 
 export function commandMeeting(
   socket: Socket,

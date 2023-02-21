@@ -1,8 +1,8 @@
-import { Game } from "./classes/Game";
-import { sendError } from "./error";
-import { getOwner } from "./game";
-import { isUserInAnyGames } from "./games";
-import { Socket } from "./interfaces/Socket";
+import { Game } from "./classes/Game.js";
+import { sendError } from "./error.js";
+import { getOwner } from "./game.js";
+import { isUserInAnyGames } from "./games.js";
+import { Socket } from "./interfaces/Socket.js";
 
 export function validateString(
   socket: Socket,

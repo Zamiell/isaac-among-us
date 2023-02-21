@@ -1,9 +1,9 @@
 import { TerminateDataToServer } from "common";
-import { games } from "../games";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData";
-import { Socket } from "../interfaces/Socket";
-import { sendTerminated } from "../sendGame";
-import { validateGameOwner } from "../validate";
+import { games } from "../games.js";
+import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import { Socket } from "../interfaces/Socket.js";
+import { sendTerminated } from "../sendGame.js";
+import { validateGameOwner } from "../validate.js";
 
 export function commandTerminate(
   socket: Socket,

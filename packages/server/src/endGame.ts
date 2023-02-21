@@ -1,7 +1,7 @@
 import { Role } from "common";
-import { Game } from "./classes/Game";
-import { games } from "./games";
-import { sendEndGame } from "./sendGame";
+import { Game } from "./classes/Game.js";
+import { games } from "./games.js";
+import { sendEndGame } from "./sendGame.js";
 
 export function endGame(game: Game, winningRole: Role): void {
   sendEndGame(game, winningRole);
