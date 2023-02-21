@@ -4193,6 +4193,14 @@ do
     end
 end
 do
+    local ____export = require("lua_modules.isaacscript-common.dist.src.functions.readOnly")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+do
     local ____export = require("lua_modules.isaacscript-common.dist.src.functions.revive")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
@@ -18289,9 +18297,10 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.random"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
 local getRandomSeed = ____rng.getRandomSeed
 local isRNG = ____rng.isRNG
@@ -18367,7 +18376,7 @@ function ____exports.getRandomInt(self, min, max, seedOrRNG, exceptions)
         min = oldMax
         max = oldMin
     end
-    local exceptionsSet = __TS__New(Set, exceptions)
+    local exceptionsSet = __TS__New(ReadonlySet, exceptions)
     local randomInt
     repeat
         do
@@ -18383,7 +18392,6 @@ local ____lualib = require("lualib_bundle")
 local __TS__ArrayEvery = ____lualib.__TS__ArrayEvery
 local __TS__ArrayIndexOf = ____lualib.__TS__ArrayIndexOf
 local __TS__ArraySplice = ____lualib.__TS__ArraySplice
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
@@ -18396,6 +18404,8 @@ local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
 local __TS__ArraySome = ____lualib.__TS__ArraySome
 local __TS__ArrayReduce = ____lualib.__TS__ArrayReduce
 local ____exports = {}
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____random = require("lua_modules.isaacscript-common.dist.src.functions.random")
 local getRandomInt = ____random.getRandomInt
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
@@ -18578,7 +18588,7 @@ end
 -- This function is variadic, meaning that you can specify N arguments to remove N elements.
 function ____exports.arrayRemoveIndex(self, originalArray, ...)
     local indexesToRemove = {...}
-    local indexesToRemoveSet = __TS__New(Set, indexesToRemove)
+    local indexesToRemoveSet = __TS__New(ReadonlySet, indexesToRemove)
     local array = {}
     __TS__ArrayForEach(
         originalArray,
@@ -18872,13 +18882,14 @@ return ____exports
 ["lua_modules.isaacscript-common.dist.src.functions.utils"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local RenderMode = ____isaac_2Dtypescript_2Ddefinitions.RenderMode
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local game = ____cachedClasses.game
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____playerIndex = require("lua_modules.isaacscript-common.dist.src.functions.playerIndex")
 local getAllPlayers = ____playerIndex.getAllPlayers
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
@@ -18959,7 +18970,7 @@ function ____exports.isMultiplayer(self)
         players,
         function(____, player) return player.ControllerIndex end
     )
-    local controllerIndexesSet = __TS__New(Set, controllerIndexes)
+    local controllerIndexesSet = __TS__New(ReadonlySet, controllerIndexes)
     return controllerIndexesSet.size > 1
 end
 --- Helper function to see if the current render callback is rendering a water reflection.
@@ -19680,9 +19691,10 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local __TS__ArraySort = ____lualib.__TS__ArraySort
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
 local getRandomArrayElement = ____array.getRandomArrayElement
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
@@ -19846,7 +19858,7 @@ function ____exports.validateEnumContiguous(self, transpiledEnumName, transpiled
     if type(lastValue) ~= "number" then
         error("Failed to validate that an enum was contiguous, since the last value was not a number.")
     end
-    local valuesSet = __TS__New(Set, values)
+    local valuesSet = __TS__New(ReadonlySet, values)
     for ____, value in ipairs(iRange(nil, lastValue)) do
         if not valuesSet:has(value) then
             error((("Failed to find a custom enum value of " .. tostring(value)) .. " for: ") .. transpiledEnumName)
@@ -20844,7 +20856,6 @@ return ____exports
 ["lua_modules.isaacscript-common.dist.src.functions.players"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__ArraySome = ____lualib.__TS__ArraySome
-local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
@@ -20866,6 +20877,8 @@ local TRINKET_SLOT_VALUES = ____cachedEnumValues.TRINKET_SLOT_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local game = ____cachedClasses.game
 local itemConfig = ____cachedClasses.itemConfig
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
 local getLastElement = ____array.getLastElement
 local sumArray = ____array.sumArray
@@ -20896,7 +20909,7 @@ end
 -- for. Returns true if the player is any of the supplied characters.
 function ____exports.isCharacter(self, player, ...)
     local characters = {...}
-    local characterSet = __TS__New(Set, characters)
+    local characterSet = __TS__New(ReadonlySet, characters)
     local character = player:GetPlayerType()
     return characterSet:has(character)
 end
@@ -20951,7 +20964,7 @@ end
 -- for. Returns true if any of the characters supplied are present.
 function ____exports.anyPlayerIs(self, ...)
     local matchingCharacters = {...}
-    local matchingCharacterSet = __TS__New(Set, matchingCharacters)
+    local matchingCharacterSet = __TS__New(ReadonlySet, matchingCharacters)
     local characters = ____exports.getCharacters(nil)
     return __TS__ArraySome(
         characters,
@@ -21152,7 +21165,7 @@ end
 -- for. Returns true if any of the characters supplied are present.
 function ____exports.getPlayersOfType(self, ...)
     local characters = {...}
-    local charactersSet = __TS__New(Set, characters)
+    local charactersSet = __TS__New(ReadonlySet, characters)
     local players = getPlayers(nil)
     return __TS__ArrayFilter(
         players,
@@ -21249,7 +21262,7 @@ end
 -- provided.
 function ____exports.hasCollectibleInActiveSlot(self, player, collectibleType, ...)
     local activeSlots = {...}
-    local matchingActiveSlotsSet = __TS__New(Set, activeSlots)
+    local matchingActiveSlotsSet = __TS__New(ReadonlySet, activeSlots)
     local activeItemSlots = ____exports.getActiveItemSlots(nil, player, collectibleType)
     return __TS__ArraySome(
         activeItemSlots,
@@ -22334,6 +22347,8 @@ local ____roomShapeToDoorSlotCoordinates = require("lua_modules.isaacscript-comm
 local ROOM_SHAPE_TO_DOOR_SLOT_COORDINATES = ____roomShapeToDoorSlotCoordinates.ROOM_SHAPE_TO_DOOR_SLOT_COORDINATES
 local ____roomShapeToDoorSlots = require("lua_modules.isaacscript-common.dist.src.objects.roomShapeToDoorSlots")
 local ROOM_SHAPE_TO_DOOR_SLOTS = ____roomShapeToDoorSlots.ROOM_SHAPE_TO_DOOR_SLOTS
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____bitwise = require("lua_modules.isaacscript-common.dist.src.functions.bitwise")
 local arrayToBitFlags = ____bitwise.arrayToBitFlags
 local ____direction = require("lua_modules.isaacscript-common.dist.src.functions.direction")
@@ -22369,7 +22384,7 @@ function ____exports.getDoors(self, ...)
     local roomTypes = {...}
     local room = game:GetRoom()
     local roomShape = room:GetRoomShape()
-    local roomTypesSet = __TS__New(Set, roomTypes)
+    local roomTypesSet = __TS__New(ReadonlySet, roomTypes)
     local possibleDoorSlots = ____exports.getDoorSlotsForRoomShape(nil, roomShape)
     local doors = {}
     for ____, doorSlot in __TS__Iterator(possibleDoorSlots) do
@@ -22529,7 +22544,7 @@ end
 -- that match any of the N room grid indexes.
 function ____exports.getDoorsToRoomIndex(self, ...)
     local roomGridIndex = {...}
-    local roomGridIndexesSet = __TS__New(Set, roomGridIndex)
+    local roomGridIndexesSet = __TS__New(ReadonlySet, roomGridIndex)
     local doors = ____exports.getDoors(nil)
     return __TS__ArrayFilter(
         doors,
@@ -28458,6 +28473,8 @@ local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local __TS__Spread = ____lualib.__TS__Spread
 local __TS__ArraySort = ____lualib.__TS__ArraySort
 local ____exports = {}
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
 local getArrayCombinations = ____array.getArrayCombinations
 local getRandomArrayElement = ____array.getRandomArrayElement
@@ -28566,7 +28583,7 @@ function ____exports.getSetCombinations(self, set, includeEmptyArray)
     local combinations = getArrayCombinations(nil, values, includeEmptyArray)
     return __TS__ArrayMap(
         combinations,
-        function(____, array) return __TS__New(Set, array) end
+        function(____, array) return __TS__New(ReadonlySet, array) end
     )
 end
 --- Helper function to add one or more elements to a set at once without having to repeatedly call
@@ -29077,7 +29094,6 @@ local __TS__New = ____lualib.__TS__New
 local __TS__SparseArrayNew = ____lualib.__TS__SparseArrayNew
 local __TS__SparseArrayPush = ____lualib.__TS__SparseArrayPush
 local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
-local Set = ____lualib.Set
 local ____exports = {}
 local getVanillaWallGridIndexSetForRoomShape, getWallGridIndexSetForRectangleRoomShape
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -29089,6 +29105,8 @@ local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.
 local game = ____cachedClasses.game
 local ____CornerType = require("lua_modules.isaacscript-common.dist.src.enums.CornerType")
 local CornerType = ____CornerType.CornerType
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____gridIndex = require("lua_modules.isaacscript-common.dist.src.functions.gridIndex")
 local getGridIndexesBetween = ____gridIndex.getGridIndexesBetween
 local ____rooms = require("lua_modules.isaacscript-common.dist.src.functions.rooms")
@@ -29109,7 +29127,7 @@ function getVanillaWallGridIndexSetForRoomShape(self, roomShape)
         if ____cond7 then
             do
                 local topMiddle, topRight, middleLeft, middle, bottomLeft, bottomRight = table.unpack(corners)
-                local ____Set_1 = Set
+                local ____ReadonlySet_1 = ReadonlySet
                 local ____array_0 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topMiddle.gridIndex, topRight.gridIndex, roomShape)))
                 __TS__SparseArrayPush(
                     ____array_0,
@@ -29132,7 +29150,7 @@ function getVanillaWallGridIndexSetForRoomShape(self, roomShape)
                     table.unpack(getGridIndexesBetween(nil, topRight.gridIndex, bottomRight.gridIndex, roomShape))
                 )
                 return __TS__New(
-                    ____Set_1,
+                    ____ReadonlySet_1,
                     {__TS__SparseArraySpread(____array_0)}
                 )
             end
@@ -29141,7 +29159,7 @@ function getVanillaWallGridIndexSetForRoomShape(self, roomShape)
         if ____cond7 then
             do
                 local topLeft, topMiddle, middle, middleRight, bottomLeft, bottomRight = table.unpack(corners)
-                local ____Set_3 = Set
+                local ____ReadonlySet_3 = ReadonlySet
                 local ____array_2 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, topMiddle.gridIndex, roomShape)))
                 __TS__SparseArrayPush(
                     ____array_2,
@@ -29164,7 +29182,7 @@ function getVanillaWallGridIndexSetForRoomShape(self, roomShape)
                     table.unpack(getGridIndexesBetween(nil, middleRight.gridIndex, bottomRight.gridIndex, roomShape))
                 )
                 return __TS__New(
-                    ____Set_3,
+                    ____ReadonlySet_3,
                     {__TS__SparseArraySpread(____array_2)}
                 )
             end
@@ -29173,7 +29191,7 @@ function getVanillaWallGridIndexSetForRoomShape(self, roomShape)
         if ____cond7 then
             do
                 local topLeft, topRight, middleLeft, middle, bottomMiddle, bottomRight = table.unpack(corners)
-                local ____Set_5 = Set
+                local ____ReadonlySet_5 = ReadonlySet
                 local ____array_4 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, topRight.gridIndex, roomShape)))
                 __TS__SparseArrayPush(
                     ____array_4,
@@ -29196,7 +29214,7 @@ function getVanillaWallGridIndexSetForRoomShape(self, roomShape)
                     table.unpack(getGridIndexesBetween(nil, topRight.gridIndex, bottomRight.gridIndex, roomShape))
                 )
                 return __TS__New(
-                    ____Set_5,
+                    ____ReadonlySet_5,
                     {__TS__SparseArraySpread(____array_4)}
                 )
             end
@@ -29205,7 +29223,7 @@ function getVanillaWallGridIndexSetForRoomShape(self, roomShape)
         if ____cond7 then
             do
                 local topLeft, topRight, middle, middleRight, bottomLeft, bottomMiddle = table.unpack(corners)
-                local ____Set_7 = Set
+                local ____ReadonlySet_7 = ReadonlySet
                 local ____array_6 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, topRight.gridIndex, roomShape)))
                 __TS__SparseArrayPush(
                     ____array_6,
@@ -29228,7 +29246,7 @@ function getVanillaWallGridIndexSetForRoomShape(self, roomShape)
                     table.unpack(getGridIndexesBetween(nil, topRight.gridIndex, middleRight.gridIndex, roomShape))
                 )
                 return __TS__New(
-                    ____Set_7,
+                    ____ReadonlySet_7,
                     {__TS__SparseArraySpread(____array_6)}
                 )
             end
@@ -29245,7 +29263,7 @@ function getWallGridIndexSetForRectangleRoomShape(self, roomShape, corners)
         error("Failed to get the correct amount of corners for rectangular room shape.")
     end
     local topLeft, topRight, bottomLeft, bottomRight = table.unpack(corners)
-    local ____Set_9 = Set
+    local ____ReadonlySet_9 = ReadonlySet
     local ____array_8 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, topRight.gridIndex, roomShape)))
     __TS__SparseArrayPush(
         ____array_8,
@@ -29260,7 +29278,7 @@ function getWallGridIndexSetForRectangleRoomShape(self, roomShape, corners)
         table.unpack(getGridIndexesBetween(nil, topRight.gridIndex, bottomRight.gridIndex, roomShape))
     )
     return __TS__New(
-        ____Set_9,
+        ____ReadonlySet_9,
         {__TS__SparseArraySpread(____array_8)}
     )
 end
@@ -30070,7 +30088,6 @@ local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local __TS__StringIncludes = ____lualib.__TS__StringIncludes
 local __TS__ArraySome = ____lualib.__TS__ArraySome
-local Set = ____lualib.Set
 local __TS__ArrayEvery = ____lualib.__TS__ArrayEvery
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -30096,6 +30113,8 @@ local ____roomTypeNames = require("lua_modules.isaacscript-common.dist.src.objec
 local ROOM_TYPE_NAMES = ____roomTypeNames.ROOM_TYPE_NAMES
 local ____mineShaftRoomSubTypesSet = require("lua_modules.isaacscript-common.dist.src.sets.mineShaftRoomSubTypesSet")
 local MINE_SHAFT_ROOM_SUB_TYPE_SET = ____mineShaftRoomSubTypesSet.MINE_SHAFT_ROOM_SUB_TYPE_SET
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____dimensions = require("lua_modules.isaacscript-common.dist.src.functions.dimensions")
 local getAllDimensions = ____dimensions.getAllDimensions
 local inDimension = ____dimensions.inDimension
@@ -30464,7 +30483,7 @@ function ____exports.isAllRoomsClear(self, onlyCheckRoomTypes)
     if onlyCheckRoomTypes == nil then
         matchingRooms = rooms
     else
-        local roomTypeWhitelist = __TS__New(Set, onlyCheckRoomTypes)
+        local roomTypeWhitelist = __TS__New(ReadonlySet, onlyCheckRoomTypes)
         matchingRooms = __TS__ArrayFilter(
             rooms,
             function(____, roomDescriptor) return roomDescriptor.Data ~= nil and roomTypeWhitelist:has(roomDescriptor.Data.Type) end
@@ -31925,7 +31944,7 @@ function ____exports.getGridEntities(self, ...)
     if #gridEntityTypes == 0 then
         return gridEntities
     end
-    local gridEntityTypesSet = __TS__New(Set, gridEntityTypes)
+    local gridEntityTypesSet = __TS__New(ReadonlySet, gridEntityTypes)
     return __TS__ArrayFilter(
         gridEntities,
         function(____, gridEntity)
@@ -31944,7 +31963,7 @@ function ____exports.getGridEntitiesExcept(self, ...)
     if #gridEntityTypes == 0 then
         return gridEntities
     end
-    local gridEntityTypesSet = __TS__New(Set, gridEntityTypes)
+    local gridEntityTypesSet = __TS__New(ReadonlySet, gridEntityTypes)
     return __TS__ArrayFilter(
         gridEntities,
         function(____, gridEntity)
@@ -32097,7 +32116,7 @@ end
 -- @returns The grid entities that were removed.
 function ____exports.removeAllGridEntitiesExcept(self, ...)
     local gridEntityTypes = {...}
-    local gridEntityTypeExceptions = __TS__New(Set, gridEntityTypes)
+    local gridEntityTypeExceptions = __TS__New(ReadonlySet, gridEntityTypes)
     local gridEntities = ____exports.getGridEntities(nil)
     local removedGridEntities = {}
     for ____, gridEntity in ipairs(gridEntities) do
@@ -36850,6 +36869,8 @@ local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.
 local game = ____cachedClasses.game
 local musicManager = ____cachedClasses.musicManager
 local sfxManager = ____cachedClasses.sfxManager
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
 local arrayToString = ____array.arrayToString
 local isArray = ____array.isArray
@@ -37186,9 +37207,9 @@ end
 function ____exports.logTableDifferences(table1, table2)
     log("Comparing two Lua tables:")
     local table1Keys = __TS__ObjectKeys(table1)
-    local table1KeysSet = __TS__New(Set, table1Keys)
+    local table1KeysSet = __TS__New(ReadonlySet, table1Keys)
     local table2Keys = __TS__ObjectKeys(table2)
-    local table2KeysSet = __TS__New(Set, table2Keys)
+    local table2KeysSet = __TS__New(ReadonlySet, table2Keys)
     local keysSet = combineSets(nil, table1KeysSet, table2KeysSet)
     local keys = {__TS__Spread(keysSet:values())}
     __TS__ArraySort(keys)
@@ -45735,7 +45756,6 @@ local __TS__SparseArrayNew = ____lualib.__TS__SparseArrayNew
 local __TS__SparseArrayPush = ____lualib.__TS__SparseArrayPush
 local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
 local __TS__Decorate = ____lualib.__TS__Decorate
-local Set = ____lualib.Set
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ButtonAction = ____isaac_2Dtypescript_2Ddefinitions.ButtonAction
@@ -45761,6 +45781,8 @@ local ____players = require("lua_modules.isaacscript-common.dist.src.functions.p
 local useActiveItemTemp = ____players.useActiveItemTemp
 local ____tstlClass = require("lua_modules.isaacscript-common.dist.src.functions.tstlClass")
 local getTSTLClassName = ____tstlClass.getTSTLClassName
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local v = {run = {
@@ -45858,7 +45880,7 @@ function Pause.prototype.pause(self)
     if tstlClassName == nil then
         error("Failed to get the class name for the pause feature.")
     end
-    local whitelist = __TS__New(Set, {ButtonAction.MENU_CONFIRM, ButtonAction.CONSOLE})
+    local whitelist = __TS__New(ReadonlySet, {ButtonAction.MENU_CONFIRM, ButtonAction.CONSOLE})
     self.disableInputs:disableAllInputsExceptFor(tstlClassName, whitelist)
     for ____, player in ipairs(getAllPlayers(nil)) do
         player.ControlsEnabled = false
@@ -46009,6 +46031,8 @@ local ____itemConfigCardTypesForCardsSet = require("lua_modules.isaacscript-comm
 local ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET = ____itemConfigCardTypesForCardsSet.ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET
 local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
 local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local CONDITIONAL_FLYING_COLLECTIBLE_TYPES = {CollectibleType.BIBLE, CollectibleType.EMPTY_VESSEL, CollectibleType.ASTRAL_PROJECTION, CollectibleType.RECALL}
@@ -46349,7 +46373,7 @@ function ModdedElementSets.prototype.getCollectiblesWithCacheFlag(self, cacheFla
     self:lazyInitCacheFlagToCollectibleTypesMap()
     local collectiblesSet = self.cacheFlagToCollectibleTypesMap:get(cacheFlag)
     if collectiblesSet == nil then
-        return __TS__New(Set)
+        return __TS__New(ReadonlySet)
     end
     return collectiblesSet
 end
@@ -46546,7 +46570,7 @@ function ModdedElementSets.prototype.getTrinketsWithCacheFlag(self, cacheFlag)
     self:lazyInitCacheFlagToTrinketTypesMap()
     local trinketsSet = self.cacheFlagToTrinketTypesMap:get(cacheFlag)
     if trinketsSet == nil then
-        return __TS__New(Set)
+        return __TS__New(ReadonlySet)
     end
     return trinketsSet
 end
@@ -60114,6 +60138,7 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local Difficulty = ____isaac_2Dtypescript_2Ddefinitions.Difficulty
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local game = ____isaacscript_2Dcommon.game
+local isRepentance = ____isaacscript_2Dcommon.isRepentance
 local LAST_VANILLA_COLLECTIBLE_TYPE = ____isaacscript_2Dcommon.LAST_VANILLA_COLLECTIBLE_TYPE
 local log = ____isaacscript_2Dcommon.log
 local ____constants = require("packages.mod.src.constants")
@@ -60191,7 +60216,7 @@ function ____exports.postGameStarted(self)
     return areOtherModsEnabled(nil) or isWrongDifficulty(nil)
 end
 function ____exports.postRender(self)
-    if REPENTANCE == nil then
+    if not isRepentance(nil) then
         drawText(nil, ("Error: You must have the Repentance DLC installed in order to use the " .. MOD_NAME) .. " mod.")
         return true
     end
@@ -63822,6 +63847,7 @@ local emptyArray = ____isaacscript_2Dcommon.emptyArray
 local game = ____isaacscript_2Dcommon.game
 local getEffects = ____isaacscript_2Dcommon.getEffects
 local getEnumValues = ____isaacscript_2Dcommon.getEnumValues
+local newReadonlyColor = ____isaacscript_2Dcommon.newReadonlyColor
 local sfxManager = ____isaacscript_2Dcommon.sfxManager
 local shuffleArray = ____isaacscript_2Dcommon.shuffleArray
 local ____ButtonSubType = require("packages.mod.src.enums.ButtonSubType")
@@ -63895,10 +63921,10 @@ WireColor[WireColor.RED] = "RED"
 WireColor.MAGENTA = 3
 WireColor[WireColor.MAGENTA] = "MAGENTA"
 local WIRE_COLORS = {
-    [WireColor.YELLOW] = Color(1, 1, 0),
-    [WireColor.BLUE] = Color(0, 0, 1),
-    [WireColor.RED] = Color(1, 0, 0),
-    [WireColor.MAGENTA] = Color(1, 0, 1)
+    [WireColor.YELLOW] = newReadonlyColor(nil, 1, 1, 0),
+    [WireColor.BLUE] = newReadonlyColor(nil, 0, 0, 1),
+    [WireColor.RED] = newReadonlyColor(nil, 1, 0, 0),
+    [WireColor.MAGENTA] = newReadonlyColor(nil, 1, 0, 1)
 }
 buttonColorActive = nil
 colorsComplete = {}
