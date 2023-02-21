@@ -5,6 +5,7 @@ import {
   game,
   getEffects,
   getEnumValues,
+  newReadonlyColor,
   sfxManager,
   shuffleArray,
 } from "isaacscript-common";
@@ -29,16 +30,12 @@ enum WireColor {
   MAGENTA,
 }
 
-type WireColors = {
-  [Value in WireColor]: Color;
-};
-
-const WIRE_COLORS: WireColors = {
-  [WireColor.YELLOW]: Color(1, 1, 0),
-  [WireColor.BLUE]: Color(0, 0, 1),
-  [WireColor.RED]: Color(1, 0, 0),
-  [WireColor.MAGENTA]: Color(1, 0, 1),
-} as const;
+const WIRE_COLORS = {
+  [WireColor.YELLOW]: newReadonlyColor(1, 1, 0),
+  [WireColor.BLUE]: newReadonlyColor(0, 0, 1),
+  [WireColor.RED]: newReadonlyColor(1, 0, 0),
+  [WireColor.MAGENTA]: newReadonlyColor(1, 0, 1),
+} as const satisfies Record<WireColor, Readonly<Color>>;
 
 let buttonColorActive: WireColor | null = null;
 const colorsComplete: WireColor[] = [];

@@ -12,7 +12,7 @@
     "@prisma/client": "^4.10.1",
     "argon2": "^0.30.3",
     "isaac-typescript-definitions": "^12.0.1",
-    "isaacscript-common": "^26.2.0",
+    "isaacscript-common": "^26.2.1",
     "isaacscript-common-ts": "^10.0.0",
     "struct": "^0.0.12"
   },

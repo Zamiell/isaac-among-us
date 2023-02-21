@@ -1,5 +1,10 @@
 import { Difficulty } from "isaac-typescript-definitions";
-import { game, LAST_VANILLA_COLLECTIBLE_TYPE, log } from "isaacscript-common";
+import {
+  game,
+  isRepentance,
+  LAST_VANILLA_COLLECTIBLE_TYPE,
+  log,
+} from "isaacscript-common";
 import { MOD_NAME } from "../constants";
 import { mod } from "../mod";
 import { isLuaDebugEnabled } from "../network/socketClient";
@@ -61,7 +66,7 @@ function isWrongDifficulty() {
 
 // ModCallback.POST_RENDER (2)
 export function postRender(): boolean {
-  if (REPENTANCE === undefined) {
+  if (!isRepentance()) {
     drawText(
       `Error: You must have the Repentance DLC installed in order to use the ${MOD_NAME} mod.`,
     );
