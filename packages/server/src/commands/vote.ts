@@ -24,7 +24,7 @@ export function commandVote(
     username === undefined ||
     game === undefined ||
     player === undefined ||
-    game.meeting === null
+    game.meeting === undefined
   ) {
     return;
   }

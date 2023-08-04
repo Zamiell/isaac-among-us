@@ -46,6 +46,7 @@ export function isSandboxEnabled(): boolean {
  * This function is similar to the Racing+ "init()" function in "socketClient.ts".
  */
 export function tryInitRacingPlusSandbox(): void {
+  // eslint-disable-next-line unicorn/prefer-module
   const [ok, requiredSandbox] = pcall(require, "sandbox");
   if (!ok) {
     return;

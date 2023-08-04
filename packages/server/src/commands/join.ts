@@ -45,7 +45,7 @@ function validate(
     return false;
   }
 
-  if (game.password !== null && game.password !== password) {
+  if (game.password !== undefined && game.password !== password) {
     sendError(
       socket,
       `That is the incorrect password for game "${name}". Specify the connect password with: /join [name] [password]`,
@@ -103,7 +103,7 @@ export function join(userID: number, gameID: number, created: boolean): void {
   const player = new Player(index, socketID, userID, username, character);
   game.players.push(player);
 
-  const hasPassword = game.password !== null;
+  const hasPassword = game.password !== undefined;
   sendTCP(socket, SocketCommandServerToMod.JOINED, {
     gameID: game.id,
     name: game.name,

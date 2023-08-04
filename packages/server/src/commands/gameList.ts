@@ -22,7 +22,7 @@ export function commandGameList(
     const gameDescription: GameListDescription = {
       id: game.id,
       name: game.name,
-      hasPassword: game.password !== null,
+      hasPassword: game.password !== undefined,
       numPlayers: game.players.length,
       started: game.started,
       joined,

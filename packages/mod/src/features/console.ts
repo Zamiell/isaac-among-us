@@ -153,13 +153,13 @@ function insertNewCharacter(character: string) {
 function open() {
   consoleOpen = true;
   mod.disableAllInputs(MOD_NAME);
-  AwaitingTextInput = true;
+  AwaitingTextInput = true; // eslint-disable-line no-implicit-globals
 }
 
 function close(execute = true) {
   consoleOpen = false;
   mod.enableAllInputs(MOD_NAME);
-  AwaitingTextInput = false;
+  AwaitingTextInput = false; // eslint-disable-line no-implicit-globals
 
   if (!execute || inputText === "") {
     savedText = "";
