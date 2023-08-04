@@ -71,7 +71,7 @@ function validate(
     return false;
   }
 
-  if (game.meeting === null) {
+  if (game.meeting === undefined) {
     sendError(
       socket,
       "You cannot vote unless there is a meeting currently going.",
@@ -115,7 +115,7 @@ function validate(
 }
 
 function haveAllPlayersVoted(game: Game) {
-  if (game.meeting === null) {
+  if (game.meeting === undefined) {
     return false;
   }
 

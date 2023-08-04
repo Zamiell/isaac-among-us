@@ -6,4 +6,4 @@ export function commandPing(
   _socket: Socket,
   _data: NoData,
   _extraData: ExtraCommandData,
-): void {}
+): void {} // eslint-disable-line @typescript-eslint/no-empty-function

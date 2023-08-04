@@ -31,7 +31,7 @@ function validate(
     return false;
   }
 
-  if (game.meeting !== null) {
+  if (game.meeting !== undefined) {
     sendError(socket, "You cannot send that command while a meeting is going.");
     return false;
   }

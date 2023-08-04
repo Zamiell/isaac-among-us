@@ -47,7 +47,7 @@ function validate(socket: Socket, name: string, extraData: ExtraCommandData) {
 function create(
   userID: number,
   name: string,
-  password: string | null,
+  password: string | undefined,
 ): number | undefined {
   const socket = getTCPSocketByUserID(userID);
   if (socket === undefined) {
@@ -63,7 +63,7 @@ function create(
   }
 
   const gameID = getNewGameID();
-  const passwordToUse = password === "" ? null : password;
+  const passwordToUse = password === "" ? undefined : password;
   const game = new Game(gameID, name, passwordToUse, userID);
   games.set(gameID, game);
 
@@ -71,7 +71,7 @@ function create(
 
   logGameEvent(game, "Created.");
 
-  if (game.password === null) {
+  if (game.password === undefined) {
     sendAllNewGame(game, username);
   }
 

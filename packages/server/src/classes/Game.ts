@@ -4,12 +4,12 @@ import type { Player } from "./Player.js";
 export class Game {
   id: number;
   name: string;
-  password: string | null;
+  password?: string;
   players: Player[] = [];
   ownerUserID: number;
   started = false;
   impostorUserIDs: number[] = [];
-  meeting: Meeting | null = null;
+  meeting?: Meeting;
   bodies: PlayerBody[] = [];
 
   /** How many rounds of play there have been. */
@@ -20,7 +20,7 @@ export class Game {
   constructor(
     id: number,
     name: string,
-    password: string | null,
+    password: string | undefined,
     ownerUserID: number,
   ) {
     this.id = id;
