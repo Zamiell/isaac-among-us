@@ -1,5 +1,5 @@
-import { SkeldRoom } from "common";
-import { Vent } from "../enums/Vent";
+import type { SkeldRoom } from "common";
+import type { Vent } from "../enums/Vent";
 
 export interface VentDescription {
   readonly room: SkeldRoom;

@@ -1,4 +1,5 @@
-import { MeetingPhase, MeetingType, StartMeetingDataToMod } from "common";
+import type { StartMeetingDataToMod } from "common";
+import { MeetingPhase, MeetingType } from "common";
 import { startMeeting } from "../features/startMeeting";
 import { g } from "../globals";
 

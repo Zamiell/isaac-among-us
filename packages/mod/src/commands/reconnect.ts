@@ -1,4 +1,5 @@
-import { ReconnectDataToMod, Role, SkeldRoom } from "common";
+import type { ReconnectDataToMod} from "common";
+import { Role, SkeldRoom } from "common";
 import { game } from "isaacscript-common";
 import { AmongUsGame } from "../classes/AmongUsGame";
 import {

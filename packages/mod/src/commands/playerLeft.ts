@@ -1,4 +1,4 @@
-import { PlayerLeftDataToMod } from "common";
+import type { PlayerLeftDataToMod } from "common";
 import { sfxManager } from "isaacscript-common";
 import { addLocalChat } from "../chat";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";

@@ -49,7 +49,7 @@ export function injectTestPlayers(): void {
   const testPlayerCharacters = [
     1, 2, 3, 5, 6, 8, 9, 13, 18, 19, 21, 22, 23, 24,
   ];
-  for (let i = 0; i < testPlayerNames.length; i++) {
+  for (const [i, testPlayerName] of testPlayerNames.entries()) {
     let alive = true;
     if (i === 1 || i === 3 || i === 8 || i === 10 || i === 13) {
       alive = false;
@@ -57,8 +57,8 @@ export function injectTestPlayers(): void {
     g.game.players.push({
       index: g.game.players.length,
       userID: 100 + i,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      username: testPlayerNames[i]!,
+       
+      username: testPlayerName,
       connected: true,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       character: testPlayerCharacters[i]!,

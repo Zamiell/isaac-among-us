@@ -1,4 +1,4 @@
-import { NewOwnerDataToMod } from "common";
+import type { NewOwnerDataToMod } from "common";
 import { addLocalChat } from "../chat";
 import { g } from "../globals";
 

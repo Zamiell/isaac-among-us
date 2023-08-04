@@ -1,4 +1,5 @@
-import { SocketCommandServerToMod, SocketCommandServerToModData } from "common";
+import type { SocketCommandServerToModData } from "common";
+import { SocketCommandServerToMod } from "common";
 import { commandChat } from "./commands/chat";
 import { commandEmergencyButtonCooldown } from "./commands/emergencyButtonCooldown";
 import { commandEndGame } from "./commands/endGame";

@@ -1,4 +1,4 @@
-import { NewGameDataToMod } from "common";
+import type { NewGameDataToMod } from "common";
 import { addLocalChat } from "../chat";
 import { g } from "../globals";
 

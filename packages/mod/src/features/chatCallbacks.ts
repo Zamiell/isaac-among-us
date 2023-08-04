@@ -39,7 +39,7 @@ function drawChat() {
   /// const alpha = consoleOpen ? DEFAULT_OPACITY : FADED_CHAT_OPACITY;
   const alpha = DEFAULT_OPACITY;
 
-  const x = g.game?.meeting !== null ? CHAT_POSITION_LEFT.X : CHAT_POSITION.X;
+  const x = g.game?.meeting === null ? CHAT_POSITION.X : CHAT_POSITION_LEFT.X;
   let y = CHAT_POSITION.Y;
 
   let numMessagesDrawn = 0;

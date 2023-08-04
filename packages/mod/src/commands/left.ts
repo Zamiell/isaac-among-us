@@ -1,4 +1,4 @@
-import { LeftDataToMod } from "common";
+import type { LeftDataToMod } from "common";
 import { restart } from "isaacscript-common";
 import { g } from "../globals";
 

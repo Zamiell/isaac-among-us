@@ -1,6 +1,6 @@
 import { Role } from "common";
 import { CutsceneState } from "../enums/CutsceneState";
-import { AmongUsGame } from "./AmongUsGame";
+import type { AmongUsGame } from "./AmongUsGame";
 
 export class Globals {
   loggedIn = false;

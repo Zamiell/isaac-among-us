@@ -1,6 +1,6 @@
-import { ChatDataToMod } from "common";
+import type { ChatDataToMod } from "common";
 import { log, logTable } from "isaacscript-common";
-import { ChatMessage } from "./interfaces/ChatMessage";
+import type { ChatMessage } from "./interfaces/ChatMessage";
 import { getFormattedTime } from "./network/sandbox";
 
 const chatMessages: ChatMessage[] = [];
@@ -33,8 +33,8 @@ export function getAllChat(): ChatMessage[] {
 
 // ts-prune-ignore-next
 export function logAllChatMessages(): void {
-  chatMessages.forEach((chatMessage, i) => {
+  for (const [i, chatMessage] of chatMessages.entries()) {
     log(`Chat message ${i}:`);
     logTable(chatMessage);
-  });
+  }
 }

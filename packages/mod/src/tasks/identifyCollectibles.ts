@@ -1,5 +1,6 @@
 import { Task } from "common";
-import { CollectibleType, SoundEffect } from "isaac-typescript-definitions";
+import type { CollectibleType} from "isaac-typescript-definitions";
+import { SoundEffect } from "isaac-typescript-definitions";
 import {
   emptyArray,
   game,

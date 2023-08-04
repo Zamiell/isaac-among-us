@@ -1,4 +1,4 @@
-import { EffectVariant } from "isaac-typescript-definitions";
+import type { EffectVariant } from "isaac-typescript-definitions";
 
 export const EffectVariantCustom = {
   STAGE_API_DOOR: Isaac.GetEntityVariantByName("StageAPIDoor") as EffectVariant,

@@ -1,5 +1,6 @@
 import { Task } from "common";
-import { SoundEffect, TrinketType } from "isaac-typescript-definitions";
+import type { TrinketType } from "isaac-typescript-definitions";
+import { SoundEffect } from "isaac-typescript-definitions";
 import {
   emptyArray,
   game,

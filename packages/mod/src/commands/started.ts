@@ -1,4 +1,5 @@
-import { Role, StartedDataToMod } from "common";
+import type { StartedDataToMod } from "common";
+import { Role } from "common";
 import { addLocalChat } from "../chat";
 import { startStartGameCutscene } from "../features/startGameCutscene";
 import { g } from "../globals";

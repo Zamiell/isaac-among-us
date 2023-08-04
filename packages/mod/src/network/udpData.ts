@@ -1,4 +1,4 @@
-import { SkeldRoom } from "common";
+import type { SkeldRoom } from "common";
 import { RENDER_FRAMES_PER_SECOND } from "isaacscript-common";
 
 enum FieldType {
@@ -29,7 +29,7 @@ export const UDP_BEACON_FIELDS = [
 ] as const;
 export const UDP_BEACON_DATA_FORMAT = UDP_BEACON_FIELDS.map(
   (tuple) => tuple[1],
-).join();
+).join(",");
 export const UDP_BEACON_INTERVAL = 10 * RENDER_FRAMES_PER_SECOND;
 
 export interface UDPPositionInterface {
@@ -56,4 +56,4 @@ export const UDP_POSITION_FIELDS = [
 ] as const;
 export const UDP_POSITION_DATA_FORMAT = UDP_POSITION_FIELDS.map(
   (tuple) => tuple[1],
-).join();
+).join(",");

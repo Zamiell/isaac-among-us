@@ -1,7 +1,7 @@
 export enum HexColors {
-  WHITE = "\xB1ffffff",
-  YELLOW = "\xB1ffff00",
-  GREEN = "\xB133aa33",
+  WHITE = "\u00B1ffffff",
+  YELLOW = "\u00B1ffff00",
+  GREEN = "\u00B133aa33",
 }
 
-export const COLOR_BYTE = "\xB1";
+export const COLOR_BYTE = "\u00B1";

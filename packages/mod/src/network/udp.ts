@@ -6,9 +6,10 @@ import { g } from "../globals";
 import * as struct from "../lib/struct";
 import { getSkeldRoom } from "../stageAPI";
 import { sendUDP } from "./send";
-import {
+import type {
   UDPBeaconInterface,
-  UDPPositionInterface,
+  UDPPositionInterface} from "./udpData";
+import {
   UDP_BEACON_DATA_FORMAT,
   UDP_BEACON_FIELDS,
   UDP_BEACON_INTERVAL,

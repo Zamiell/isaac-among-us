@@ -20,7 +20,8 @@ import { identifyPickupsInOrderButtonPressed } from "../tasks/identifyPickupsInO
 import { identifyTrinketButtonPressed } from "../tasks/identifyTrinkets";
 import { pressButtonsWithGrudgeButtonPressed } from "../tasks/pressButtonsWithGrudge";
 import { pushButtonsInOrderButtonPressed } from "../tasks/pushButtonsInOrder";
-import { getButtonAnimationSuffix, TaskButtonData } from "./buttonSubroutines";
+import type { TaskButtonData } from "./buttonSubroutines";
+import { getButtonAnimationSuffix } from "./buttonSubroutines";
 import { taskComplete } from "./taskSubroutines";
 
 const BUTTON_ACTIVATION_DISTANCE = 20;

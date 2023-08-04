@@ -1,4 +1,4 @@
-import { KilledDataToMod } from "common";
+import type { KilledDataToMod } from "common";
 import {
   EntityCollisionClass,
   EntityGridCollisionClass,

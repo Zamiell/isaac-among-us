@@ -1,4 +1,4 @@
-import { TerminatedDataToMod } from "common";
+import type { TerminatedDataToMod } from "common";
 import { restart } from "isaacscript-common";
 import { g } from "../globals";
 

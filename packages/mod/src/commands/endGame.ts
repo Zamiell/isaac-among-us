@@ -1,5 +1,5 @@
-import { EndGameDataToMod } from "common";
-import { AmongUsGame } from "../classes/AmongUsGame";
+import type { EndGameDataToMod } from "common";
+import type { AmongUsGame } from "../classes/AmongUsGame";
 import { startEndGameCutscene } from "../features/endGameCutscene";
 import { g } from "../globals";
 

@@ -1,4 +1,4 @@
-import { GridCollisionClass } from "isaac-typescript-definitions";
+import type { GridCollisionClass } from "isaac-typescript-definitions";
 
 export function init(mod: Mod): void;
 export function setCollisionRect(

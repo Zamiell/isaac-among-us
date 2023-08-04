@@ -1,4 +1,4 @@
-import { JoinedDataToMod } from "common";
+import type { JoinedDataToMod } from "common";
 import { restart } from "isaacscript-common";
 import { addLocalChat } from "../chat";
 import { AmongUsGame } from "../classes/AmongUsGame";

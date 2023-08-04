@@ -2,11 +2,11 @@ import { SocketCommandModToServer, SocketCommandServerToMod } from "common";
 import { asString, log } from "isaacscript-common";
 import { CLIENT_COMMAND_MAP } from "../commandMap";
 import { g } from "../globals";
-import { PlayerData } from "../interfaces/PlayerData";
+import type { PlayerData } from "../interfaces/PlayerData";
 import { unpackTCPMsg, unpackUDPPlayerMessage } from "./pack";
 import { sendTCP } from "./send";
 import * as socketClient from "./socketClient";
-import { UDPPositionInterface } from "./udpData";
+import type { UDPPositionInterface } from "./udpData";
 
 const DEBUG = true as boolean;
 
@@ -59,11 +59,11 @@ function readTCP() {
   const commandFunction =
     CLIENT_COMMAND_MAP[command as SocketCommandServerToMod];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (commandFunction !== undefined) {
+  if (commandFunction === undefined) {
+    log(`Error: Received an unknown socket command: ${command}`);
+  } else {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
     commandFunction(dataObject as any);
-  } else {
-    log(`Error: Received an unknown socket command: ${command}`);
   }
 
   return true;

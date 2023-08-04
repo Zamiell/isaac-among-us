@@ -1,4 +1,4 @@
-import { SabotageDataToMod } from "common";
+import type { SabotageDataToMod } from "common";
 import { todo } from "isaacscript-common";
 import { g } from "../globals";
 

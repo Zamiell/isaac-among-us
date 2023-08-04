@@ -1,4 +1,5 @@
-import { MeetingPhase, StartVotingDataToMod } from "common";
+import type { StartVotingDataToMod } from "common";
+import { MeetingPhase } from "common";
 import { g } from "../globals";
 
 export function commandStartVoting(data: StartVotingDataToMod): void {

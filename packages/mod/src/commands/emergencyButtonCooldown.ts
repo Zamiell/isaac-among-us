@@ -1,4 +1,4 @@
-import { EmergencyButtonCooldownDataToMod } from "common";
+import type { EmergencyButtonCooldownDataToMod } from "common";
 import { setEmergencyButtonState } from "../features/emergencyButton";
 import { g } from "../globals";
 

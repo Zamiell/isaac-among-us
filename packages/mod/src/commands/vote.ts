@@ -1,4 +1,4 @@
-import { VoteDataToMod } from "common";
+import type { VoteDataToMod } from "common";
 import { g } from "../globals";
 
 export function commandVote(data: VoteDataToMod): void {

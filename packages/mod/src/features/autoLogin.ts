@@ -1,4 +1,5 @@
-import { GameListDescription, SocketCommandModToServer } from "common";
+import type { GameListDescription} from "common";
+import { SocketCommandModToServer } from "common";
 import { connectChatCommand } from "../chatCommands/connect";
 import { g } from "../globals";
 import { sendTCP } from "../network/send";

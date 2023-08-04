@@ -1,4 +1,4 @@
-import { ErrorDataToMod } from "common";
+import type { ErrorDataToMod } from "common";
 import { addLocalChat } from "../chat";
 
 export function commandError(data: ErrorDataToMod): void {

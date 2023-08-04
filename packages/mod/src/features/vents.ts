@@ -7,10 +7,10 @@ import {
   VectorZero,
 } from "isaacscript-common";
 import { EffectVariantCustom } from "../enums/EffectVariantCustom";
-import { Vent } from "../enums/Vent";
+import type { Vent } from "../enums/Vent";
 import { VentState } from "../enums/VentState";
 import { g } from "../globals";
-import { VentDescription } from "../interfaces/VentDescription";
+import type { VentDescription } from "../interfaces/VentDescription";
 import { VENT_DESCRIPTIONS } from "../objects/ventDescriptions";
 import { getOurPlayer } from "../players";
 import { getSkeldRoomName } from "../skeldRoomMap";

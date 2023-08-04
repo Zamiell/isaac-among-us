@@ -1,4 +1,4 @@
-import { UsernameDataToMod } from "common";
+import type { UsernameDataToMod } from "common";
 import { addLocalChat } from "../chat";
 import { g } from "../globals";
 

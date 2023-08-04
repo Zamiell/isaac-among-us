@@ -1,4 +1,5 @@
-import { CollectibleType, PlayerType } from "isaac-typescript-definitions";
+import type { PlayerType } from "isaac-typescript-definitions";
+import { CollectibleType } from "isaac-typescript-definitions";
 import {
   game,
   log,

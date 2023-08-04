@@ -62,12 +62,12 @@ function getFileNum(itemID: int) {
   }
 
   // Between Sigil of Baphomet and Golden Swallowed Penny.
-  if (itemID > 2189 && itemID < 32769) {
+  if (itemID > 2189 && itemID < 32_769) {
     return defaultReturn;
   }
 
   // Between Golden Swallowed Penny and Golden Sigil of Baphomet.
-  if (itemID >= 32769 && itemID <= 32957) {
+  if (itemID >= 32_769 && itemID <= 32_957) {
     return itemID.toString();
   }
 

@@ -1,8 +1,9 @@
 import { Role } from "common";
+import type {
+  EntityType} from "isaac-typescript-definitions";
 import {
   CacheFlag,
   EntityFlag,
-  EntityType,
   NullItemID,
 } from "isaac-typescript-definitions";
 import {

@@ -1,4 +1,4 @@
-import { EndMeetingDataToMod } from "common";
+import type { EndMeetingDataToMod } from "common";
 import { endMeeting } from "../features/endMeeting";
 import { g } from "../globals";
 

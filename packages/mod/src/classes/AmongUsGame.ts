@@ -1,12 +1,13 @@
-import {
+import type {
   GameDescriptionPlayer,
   Meeting,
-  MeetingResolution,
   PlayerBody,
+  TaskList} from "common";
+import {
+  MeetingResolution,
   PlayerTypeAllowed,
   Role,
   Task,
-  TaskList,
   TaskType,
 } from "common";
 import { log, logTable } from "isaacscript-common";
@@ -14,7 +15,7 @@ import { CutsceneState } from "../enums/CutsceneState";
 import { EndMeetingState } from "../enums/EndMeetingState";
 import { StartMeetingState } from "../enums/StartMeetingState";
 import { VentState } from "../enums/VentState";
-import { PlayerData } from "../interfaces/PlayerData";
+import type { PlayerData } from "../interfaces/PlayerData";
 
 export class AmongUsGame {
   id: number;
@@ -110,10 +111,10 @@ export class AmongUsGame {
   }
 
   logBodies(): void {
-    this.bodies.forEach((body, i) => {
+    for (const [i, body] of this.bodies.entries()) {
       log(`Body ${i}:`);
       logTable(body);
-    });
+    }
   }
 
   logOurTasks(): void {

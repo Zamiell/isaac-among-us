@@ -1,4 +1,4 @@
-import { Task } from "common";
+import type { Task } from "common";
 import { PressurePlateState } from "isaac-typescript-definitions";
 import { asNumber, getEffects } from "isaacscript-common";
 import { ButtonSubType } from "../enums/ButtonSubType";

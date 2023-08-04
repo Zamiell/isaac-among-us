@@ -1,4 +1,4 @@
-import { GameDescriptionDataToMod } from "common";
+import type { GameDescriptionDataToMod } from "common";
 import { checkChangeOurCharacter } from "../callbacksCustom/postGameStartedReordered";
 import { g } from "../globals";
 import { getOurPlayer } from "../players";

@@ -1,4 +1,4 @@
-import { SkeldRoom } from "common";
+import type { SkeldRoom } from "common";
 
 // Must roughly match `PlayerMessage`.
 export interface PlayerData {

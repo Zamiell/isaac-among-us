@@ -241,7 +241,7 @@ function drawConsole() {
   const back = inputText.slice(inputTextIndex);
   const text = `>${front}${HexColors.YELLOW}|${HexColors.WHITE}${back}`;
   const position =
-    g.game?.meeting !== null ? CONSOLE_POSITION_LEFT : CONSOLE_POSITION;
+    g.game?.meeting === null ? CONSOLE_POSITION : CONSOLE_POSITION_LEFT;
   drawText(text, position);
 }
 

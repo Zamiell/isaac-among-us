@@ -1,6 +1,6 @@
 import { SkeldRoom } from "common";
 import { Vent } from "../enums/Vent";
-import { VentDescription } from "../interfaces/VentDescription";
+import type { VentDescription } from "../interfaces/VentDescription";
 
 // Listed in order from top left to bottom right:
 // https://www.pcgamesn.com/wp-content/uploads/2020/10/among-us-maps-the-skeld.jpg

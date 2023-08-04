@@ -14,9 +14,9 @@ export function drawText(
   const y = position.Y;
 
   const textSegments = text.split(COLOR_BYTE);
-  for (let i = 0; i < textSegments.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const textSegment = textSegments[i]!;
+  for (const [i, textSegment_] of textSegments.entries()) {
+     
+    const textSegment = textSegment_;
     if (textSegment === "") {
       return;
     }

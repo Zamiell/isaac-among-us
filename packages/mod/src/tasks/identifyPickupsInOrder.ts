@@ -179,9 +179,9 @@ function drawPickupSprites() {
 
   const room = game.GetRoom();
 
-  for (let i = 0; i < BUTTON_GRID_INDEXES.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const buttonGridIndex = BUTTON_GRID_INDEXES[i]!;
+  for (const [i, BUTTON_GRID_INDEX] of BUTTON_GRID_INDEXES.entries()) {
+     
+    const buttonGridIndex = BUTTON_GRID_INDEX;
     const spriteGridIndex = buttonGridIndex - ROW_LENGTH;
     const gamePosition = room.GetGridPosition(spriteGridIndex);
     const renderPosition = Isaac.WorldToRenderPosition(gamePosition);
@@ -195,12 +195,12 @@ function drawPickupSprites() {
 
 function spawnButtons() {
   const pickupTypes = getEnumValues(PickupType);
-  for (let i = 0; i < pickupTypes.length; i++) {
+  for (const [i, pickupType] of pickupTypes.entries()) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const gridIndex = BUTTON_GRID_INDEXES[i]!;
     const button = spawnTaskButton(gridIndex, 1);
     const data = button.GetData();
-    data["pickupType"] = pickupTypes[i];
+    data["pickupType"] = pickupType;
   }
 }
 

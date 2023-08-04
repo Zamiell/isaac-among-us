@@ -126,7 +126,7 @@ export function getRandomArrayIndex<T>(
  *                   `[2]` would cause the function to return either 1, 3, or 4. Default is an empty
  *                   array.
  */
-export function getRandomInt(
+function getRandomInt(
   min: number,
   max: number,
   exceptions: number[] | readonly number[] = [],
