@@ -1,5 +1,4 @@
 import { SocketCommandModToServer, SocketCommandModToServerData } from "common";
-import { ReadonlySet } from "isaacscript-common-ts";
 import { Game } from "./classes/Game.js";
 import { SERVER_COMMAND_MAP } from "./commandMap.js";
 import { sendError } from "./error.js";
@@ -7,6 +6,7 @@ import { getPlayer } from "./game.js";
 import { games, getGameByName } from "./games.js";
 import { ExtraCommandData } from "./interfaces/ExtraCommandData.js";
 import { Socket } from "./interfaces/Socket.js";
+import { ReadonlySet } from "./isaacScriptCommonTS.js";
 import {
   validateAlphanumeric,
   validateAlphanumericHyphen,

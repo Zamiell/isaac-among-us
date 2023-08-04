@@ -6,7 +6,6 @@ import {
   NOT_VOTED_YET,
   VOTE_SKIP,
 } from "common";
-import { emptyArray, newArray } from "isaacscript-common-ts";
 import { Game } from "../classes/Game.js";
 import {
   DEFAULT_MEETING_PRE_VOTE_SECONDS,
@@ -16,6 +15,7 @@ import { sendError } from "../error.js";
 import { doesGameIDExist } from "../games.js";
 import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
 import { Socket } from "../interfaces/Socket.js";
+import { emptyArray, newArray } from "../isaacScriptCommonTS.js";
 import {
   sendEndMeeting,
   sendStartMeeting,
