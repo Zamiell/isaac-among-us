@@ -6,8 +6,7 @@ export function sendError(socket: Socket, msg: string): void {
   sendTCP(socket, SocketCommandServerToMod.ERROR, {
     msg,
   });
-  const userDescription =
-    socket.username ?? getRemoteAddressTCP(socket)
+  const userDescription = socket.username ?? getRemoteAddressTCP(socket);
   console.log(`Client error for "${userDescription}": ${msg}`);
 }
 

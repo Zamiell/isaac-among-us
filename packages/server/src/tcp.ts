@@ -46,8 +46,7 @@ function onConnData(socket: Socket) {
     try {
       handleDataTCP(data, socket);
     } catch (error) {
-      const userDescription =
-        socket.username ?? getRemoteAddressTCP(socket)
+      const userDescription = socket.username ?? getRemoteAddressTCP(socket);
       console.error(`Client error for "${userDescription}": ${error}`);
       console.error((error as Error).stack);
     }
