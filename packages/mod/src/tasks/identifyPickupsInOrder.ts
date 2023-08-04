@@ -1,9 +1,9 @@
 import { Task } from "common";
 import { EntityType, SoundEffect } from "isaac-typescript-definitions";
 import {
+  GAME_FRAMES_PER_SECOND,
   emptyArray,
   game,
-  GAME_FRAMES_PER_SECOND,
   getEnumValues,
   getRandomEnumValue,
   removeAllMatchingEntities,
@@ -179,9 +179,7 @@ function drawPickupSprites() {
 
   const room = game.GetRoom();
 
-  for (const [i, BUTTON_GRID_INDEX] of BUTTON_GRID_INDEXES.entries()) {
-     
-    const buttonGridIndex = BUTTON_GRID_INDEX;
+  for (const [i, buttonGridIndex] of BUTTON_GRID_INDEXES.entries()) {
     const spriteGridIndex = buttonGridIndex - ROW_LENGTH;
     const gamePosition = room.GetGridPosition(spriteGridIndex);
     const renderPosition = Isaac.WorldToRenderPosition(gamePosition);
@@ -196,8 +194,13 @@ function drawPickupSprites() {
 function spawnButtons() {
   const pickupTypes = getEnumValues(PickupType);
   for (const [i, pickupType] of pickupTypes.entries()) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const gridIndex = BUTTON_GRID_INDEXES[i]!;
+    const gridIndex = BUTTON_GRID_INDEXES[i];
+    if (gridIndex === undefined) {
+      error(
+        `Failed to find the button grid index corresponding to pickup index: ${i}`,
+      );
+    }
+
     const button = spawnTaskButton(gridIndex, 1);
     const data = button.GetData();
     data["pickupType"] = pickupType;

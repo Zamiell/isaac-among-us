@@ -6,6 +6,23 @@ import { g } from "./globals";
 import { getSkeldRoomName, getSkeldRoomNames } from "./skeldRoomMap";
 import { goToStageAPIRoom } from "./stageAPI";
 
+const TEST_PLAYERS = [
+  ["antizoubilamaka", 1], // cspell:disable-line
+  ["Hispa", 2], // cspell:disable-line
+  ["Gamonymous", 3], // cspell:disable-line
+  ["MoucheronQuipet", 5], // cspell:disable-line
+  ["leo_ze_tron", 6],
+  ["AshD0wn", 8],
+  ["Slash_SP", 9],
+  ["StoneAgeMarcus", 13],
+  ["thereisnofuture", 18], // cspell:disable-line
+  ["Dea1h", 19],
+  ["Fawkeyes", 21], // cspell:disable-line
+  ["toooschi", 22], // cspell:disable-line
+  ["CrafterLynx", 23],
+  ["Adrayon", 24], // cspell:disable-line
+] as const;
+
 /** From the "d" console command. */
 export function debugFunction1(): void {
   // Add code here
@@ -23,6 +40,7 @@ export function hotkeyFunction1(): void {
 }
 
 /** Bound to F2. */
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 export function hotkeyFunction2(): void {}
 
 export function injectTestPlayers(): void {
@@ -30,38 +48,18 @@ export function injectTestPlayers(): void {
     return;
   }
 
-  const testPlayerNames = [
-    "antizoubilamaka", // cspell:disable-line
-    "Hispa", // cspell:disable-line
-    "Gamonymous", // cspell:disable-line
-    "MoucheronQuipet", // cspell:disable-line
-    "leo_ze_tron",
-    "AshD0wn",
-    "Slash_SP",
-    "StoneAgeMarcus",
-    "thereisnofuture", // cspell:disable-line
-    "Dea1h",
-    "Fawkeyes", // cspell:disable-line
-    "toooschi", // cspell:disable-line
-    "CrafterLynx",
-    "Adrayon", // cspell:disable-line
-  ];
-  const testPlayerCharacters = [
-    1, 2, 3, 5, 6, 8, 9, 13, 18, 19, 21, 22, 23, 24,
-  ];
-  for (const [i, testPlayerName] of testPlayerNames.entries()) {
+  for (const [i, [username, character]] of TEST_PLAYERS.entries()) {
     let alive = true;
     if (i === 1 || i === 3 || i === 8 || i === 10 || i === 13) {
       alive = false;
     }
+
     g.game.players.push({
       index: g.game.players.length,
       userID: 100 + i,
-       
-      username: testPlayerName,
+      username,
       connected: true,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      character: testPlayerCharacters[i]!,
+      character,
       alive,
       room: SkeldRoom.CAFETERIA,
       usedEmergencyMeeting: false,

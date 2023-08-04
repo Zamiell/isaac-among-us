@@ -40,10 +40,8 @@ function setNewButtonOrder() {
 }
 
 function spawnButtons() {
-  for (const [i, BUTTON_GRID_INDEX] of BUTTON_GRID_INDEXES.entries()) {
-     
-    const gridIndex = BUTTON_GRID_INDEX;
-    const button = spawnTaskButton(gridIndex, 1);
+  for (const [i, buttonGridIndex] of BUTTON_GRID_INDEXES.entries()) {
+    const button = spawnTaskButton(buttonGridIndex, 1);
     const data = button.GetData();
     data["num"] = buttonOrder[i];
   }
@@ -77,10 +75,8 @@ export function postRender(): void {
   const room = game.GetRoom();
   const gridWidth = room.GetGridWidth();
 
-  for (const [i, BUTTON_GRID_INDEX] of BUTTON_GRID_INDEXES.entries()) {
-     
-    const gridIndex = BUTTON_GRID_INDEX;
-    const textGridIndex = gridIndex - gridWidth;
+  for (const [i, buttonGridIndex] of BUTTON_GRID_INDEXES.entries()) {
+    const textGridIndex = buttonGridIndex - gridWidth;
     const worldPosition = room.GetGridPosition(textGridIndex);
     const position = Isaac.WorldToRenderPosition(worldPosition);
     const num = buttonOrder[i];

@@ -1,12 +1,11 @@
-import type { SocketCommandModToServer, SocketCommandModToServerData } from "common";
+import type {
+  SocketCommandModToServer,
+  SocketCommandModToServerData,
+} from "common";
 import { jsonDecode, jsonEncode, log } from "isaacscript-common";
 import * as struct from "../lib/struct";
-import type {
-  UDPPositionInterface} from "./udpData";
-import {
-  UDP_POSITION_DATA_FORMAT,
-  UDP_POSITION_FIELDS,
-} from "./udpData";
+import type { UDPPositionInterface } from "./udpData";
+import { UDP_POSITION_DATA_FORMAT, UDP_POSITION_FIELDS } from "./udpData";
 
 const DATA_SEPARATOR = " ";
 const DEBUG = false as boolean;
@@ -43,9 +42,8 @@ export function unpackUDPPlayerMessage(rawData: string): UDPPositionInterface {
 
   const dataArray = [...struct.unpack(UDP_POSITION_DATA_FORMAT, rawData)];
   const playerMessage: Record<string, unknown> = {};
-  for (const [i, UDP_POSITION_FIELD] of UDP_POSITION_FIELDS.entries()) {
-     
-    const [name] = UDP_POSITION_FIELD;
+  for (const [i, udpPositionField] of UDP_POSITION_FIELDS.entries()) {
+    const [name] = udpPositionField;
     let fieldData = dataArray[i];
     if (type(fieldData) === "string") {
       fieldData = (fieldData as string).trim();

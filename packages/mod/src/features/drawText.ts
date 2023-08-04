@@ -14,9 +14,7 @@ export function drawText(
   const y = position.Y;
 
   const textSegments = text.split(COLOR_BYTE);
-  for (const [i, textSegment_] of textSegments.entries()) {
-     
-    const textSegment = textSegment_;
+  for (const [i, textSegment] of textSegments.entries()) {
     if (textSegment === "") {
       return;
     }
