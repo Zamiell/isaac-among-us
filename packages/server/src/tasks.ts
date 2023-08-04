@@ -9,7 +9,7 @@ import {
 import { getRandomArrayElement } from "./isaacScriptCommonTS.js";
 import { getEnumValues } from "./utils.js";
 
-const DEV_TASK: Task | null = null;
+const DEV_TASK = undefined as Task | undefined;
 
 export function assignTasks(game: Game): void {
   const allTasks = getEnumValues(Task);
@@ -22,7 +22,7 @@ export function assignTasks(game: Game): void {
       for (let i = 0; i < numTasks; i++) {
         checkRefillTasks(remainingTasksOfThisType, taskType);
 
-        const remainingTasksArray = [...remainingTasksOfThisType.values()];
+        const remainingTasksArray = [...remainingTasksOfThisType];
         const task = getRandomArrayElement(remainingTasksArray);
 
         player.tasks[taskType].push(task);
@@ -36,7 +36,7 @@ export function assignTasks(game: Game): void {
 }
 
 function addDevTask(player: Player) {
-  if (!IS_DEV || DEV_TASK === null) {
+  if (!IS_DEV || DEV_TASK === undefined) {
     return;
   }
 

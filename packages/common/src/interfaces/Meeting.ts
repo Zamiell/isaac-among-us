@@ -1,5 +1,5 @@
-import { MeetingPhase } from "../enums/MeetingPhase";
-import { MeetingType } from "../enums/MeetingType";
+import type { MeetingPhase } from "../enums/MeetingPhase";
+import type { MeetingType } from "../enums/MeetingType";
 
 export interface Meeting {
   meetingType: MeetingType;

@@ -60741,7 +60741,8 @@ return ____exports
 ["packages.mod.src.chat"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__ArrayUnshift = ____lualib.__TS__ArrayUnshift
-local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
+local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
+local __TS__Iterator = ____lualib.__TS__Iterator
 local ____exports = {}
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local log = ____isaacscript_2Dcommon.log
@@ -60772,13 +60773,12 @@ function ____exports.getAllChat(self)
     return {table.unpack(chatMessages)}
 end
 function ____exports.logAllChatMessages(self)
-    __TS__ArrayForEach(
-        chatMessages,
-        function(____, chatMessage, i)
-            log(("Chat message " .. tostring(i)) .. ":")
-            logTable(chatMessage)
-        end
-    )
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(chatMessages)) do
+        local i = ____value[1]
+        local chatMessage = ____value[2]
+        log(("Chat message " .. tostring(i)) .. ":")
+        logTable(chatMessage)
+    end
 end
 return ____exports
  end,
@@ -60988,7 +60988,8 @@ local __TS__New = ____lualib.__TS__New
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArrayFind = ____lualib.__TS__ArrayFind
 local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
-local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
+local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
+local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__ObjectEntries = ____lualib.__TS__ObjectEntries
 local ____exports = {}
 local ____common = require("packages.common.src.index")
@@ -61091,13 +61092,12 @@ function AmongUsGame.prototype.isImposter(self, userID)
     return player ~= nil and __TS__ArrayIncludes(self.imposterUserIDs, player.userID)
 end
 function AmongUsGame.prototype.logBodies(self)
-    __TS__ArrayForEach(
-        self.bodies,
-        function(____, body, i)
-            log(("Body " .. tostring(i)) .. ":")
-            logTable(body)
-        end
-    )
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(self.bodies)) do
+        local i = ____value[1]
+        local body = ____value[2]
+        log(("Body " .. tostring(i)) .. ":")
+        logTable(body)
+    end
 end
 function AmongUsGame.prototype.logOurTasks(self)
     log("Our tasks:")
@@ -61382,6 +61382,8 @@ local ____lualib = require("lualib_bundle")
 local __TS__StringTrim = ____lualib.__TS__StringTrim
 local __TS__StringSplit = ____lualib.__TS__StringSplit
 local __TS__ArraySlice = ____lualib.__TS__ArraySlice
+local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
+local __TS__Iterator = ____lualib.__TS__Iterator
 local ____exports = {}
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local jsonDecode = ____isaacscript_2Dcommon.jsonDecode
@@ -61415,19 +61417,17 @@ function ____exports.unpackUDPPlayerMessage(self, rawData)
     end
     local dataArray = {struct:unpack(UDP_POSITION_DATA_FORMAT, rawData)}
     local playerMessage = {}
-    do
-        local i = 0
-        while i < #UDP_POSITION_FIELDS do
-            local name = table.unpack(UDP_POSITION_FIELDS[i + 1])
-            local fieldData = dataArray[i + 1]
-            if type(fieldData) == "string" then
-                fieldData = __TS__StringTrim(fieldData)
-            end
-            playerMessage[name] = fieldData
-            if DEBUG then
-                log((("- " .. name) .. " - ") .. tostring(fieldData))
-            end
-            i = i + 1
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(UDP_POSITION_FIELDS)) do
+        local i = ____value[1]
+        local udpPositionField = ____value[2]
+        local name = table.unpack(udpPositionField)
+        local fieldData = dataArray[i + 1]
+        if type(fieldData) == "string" then
+            fieldData = __TS__StringTrim(fieldData)
+        end
+        playerMessage[name] = fieldData
+        if DEBUG then
+            log((("- " .. name) .. " - ") .. tostring(fieldData))
         end
     end
     return playerMessage
@@ -62073,12 +62073,12 @@ local CacheFlag = ____isaac_2Dtypescript_2Ddefinitions.CacheFlag
 local EntityFlag = ____isaac_2Dtypescript_2Ddefinitions.EntityFlag
 local NullItemID = ____isaac_2Dtypescript_2Ddefinitions.NullItemID
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local VectorZero = ____isaacscript_2Dcommon.VectorZero
 local fonts = ____isaacscript_2Dcommon.fonts
 local game = ____isaacscript_2Dcommon.game
 local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
 local log = ____isaacscript_2Dcommon.log
 local setBlindfold = ____isaacscript_2Dcommon.setBlindfold
-local VectorZero = ____isaacscript_2Dcommon.VectorZero
 local ____CutsceneState = require("packages.mod.src.enums.CutsceneState")
 local CutsceneState = ____CutsceneState.CutsceneState
 local ____EndMeetingState = require("packages.mod.src.enums.EndMeetingState")
@@ -62798,9 +62798,9 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local Direction = ____isaac_2Dtypescript_2Ddefinitions.Direction
 local DoorSlot = ____isaac_2Dtypescript_2Ddefinitions.DoorSlot
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local ReadonlyMap = ____isaacscript_2Dcommon.ReadonlyMap
 local asNumber = ____isaacscript_2Dcommon.asNumber
 local game = ____isaacscript_2Dcommon.game
-local ReadonlyMap = ____isaacscript_2Dcommon.ReadonlyMap
 local ____lobby = require("packages.mod.src.features.lobby")
 local inLobby = ____lobby.inLobby
 local ____sendGameEvents = require("packages.mod.src.features.sendGameEvents")
@@ -64264,6 +64264,9 @@ end
 return ____exports
  end,
 ["packages.mod.src.debug"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
+local __TS__Iterator = ____lualib.__TS__Iterator
 local ____exports = {}
 local ____common = require("packages.common.src.index")
 local IS_DEV = ____common.IS_DEV
@@ -64282,6 +64285,22 @@ local getSkeldRoomName = ____skeldRoomMap.getSkeldRoomName
 local getSkeldRoomNames = ____skeldRoomMap.getSkeldRoomNames
 local ____stageAPI = require("packages.mod.src.stageAPI")
 local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
+local TEST_PLAYERS = {
+    {"antizoubilamaka", 1},
+    {"Hispa", 2},
+    {"Gamonymous", 3},
+    {"MoucheronQuipet", 5},
+    {"leo_ze_tron", 6},
+    {"AshD0wn", 8},
+    {"Slash_SP", 9},
+    {"StoneAgeMarcus", 13},
+    {"thereisnofuture", 18},
+    {"Dea1h", 19},
+    {"Fawkeyes", 21},
+    {"toooschi", 22},
+    {"CrafterLynx", 23},
+    {"Adrayon", 24}
+}
 --- From the "d" console command.
 function ____exports.debugFunction1(self)
     startEndGameCutscene(nil)
@@ -64300,58 +64319,25 @@ function ____exports.injectTestPlayers(self)
     if g.game == nil or #g.game.players ~= 1 or not IS_DEV then
         return
     end
-    local testPlayerNames = {
-        "antizoubilamaka",
-        "Hispa",
-        "Gamonymous",
-        "MoucheronQuipet",
-        "leo_ze_tron",
-        "AshD0wn",
-        "Slash_SP",
-        "StoneAgeMarcus",
-        "thereisnofuture",
-        "Dea1h",
-        "Fawkeyes",
-        "toooschi",
-        "CrafterLynx",
-        "Adrayon"
-    }
-    local testPlayerCharacters = {
-        1,
-        2,
-        3,
-        5,
-        6,
-        8,
-        9,
-        13,
-        18,
-        19,
-        21,
-        22,
-        23,
-        24
-    }
-    do
-        local i = 0
-        while i < #testPlayerNames do
-            local alive = true
-            if i == 1 or i == 3 or i == 8 or i == 10 or i == 13 then
-                alive = false
-            end
-            local ____g_game_players_0 = g.game.players
-            ____g_game_players_0[#____g_game_players_0 + 1] = {
-                index = #g.game.players,
-                userID = 100 + i,
-                username = testPlayerNames[i + 1],
-                connected = true,
-                character = testPlayerCharacters[i + 1],
-                alive = alive,
-                room = SkeldRoom.CAFETERIA,
-                usedEmergencyMeeting = false
-            }
-            i = i + 1
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(TEST_PLAYERS)) do
+        local i = ____value[1]
+        local username = ____value[2][1]
+        local character = ____value[2][2]
+        local alive = true
+        if i == 1 or i == 3 or i == 8 or i == 10 or i == 13 then
+            alive = false
         end
+        local ____g_game_players_0 = g.game.players
+        ____g_game_players_0[#____g_game_players_0 + 1] = {
+            index = #g.game.players,
+            userID = 100 + i,
+            username = username,
+            connected = true,
+            character = character,
+            alive = alive,
+            room = SkeldRoom.CAFETERIA,
+            usedEmergencyMeeting = false
+        }
     end
 end
 function ____exports.warp(self, params)
@@ -64402,6 +64388,8 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local __TS__StringSplit = ____lualib.__TS__StringSplit
 local __TS__StringSlice = ____lualib.__TS__StringSlice
+local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
+local __TS__Iterator = ____lualib.__TS__Iterator
 local ____exports = {}
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local hexToKColor = ____isaacscript_2Dcommon.hexToKColor
@@ -64419,34 +64407,31 @@ function ____exports.drawText(self, text, position, alpha)
     local x = position.X
     local y = position.Y
     local textSegments = __TS__StringSplit(text, COLOR_BYTE)
-    do
-        local i = 0
-        while i < #textSegments do
-            local textSegment = textSegments[i + 1]
-            if textSegment == "" then
-                return
-            end
-            local hexColor
-            local textWithoutColor
-            if i == 0 then
-                hexColor = __TS__StringSlice(HexColors.WHITE, #COLOR_BYTE)
-                textWithoutColor = textSegment
-            else
-                hexColor = __TS__StringSlice(textSegment, 0, SIZE_OF_HEX_STRING)
-                textWithoutColor = __TS__StringSlice(textSegment, SIZE_OF_HEX_STRING)
-            end
-            local kColor = hexToKColor(nil, hexColor, alpha)
-            fonts.pf:DrawString(
-                textWithoutColor,
-                x,
-                y,
-                kColor,
-                0,
-                true
-            )
-            x = x + fonts.pf:GetStringWidth(textWithoutColor)
-            i = i + 1
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(textSegments)) do
+        local i = ____value[1]
+        local textSegment = ____value[2]
+        if textSegment == "" then
+            return
         end
+        local hexColor
+        local textWithoutColor
+        if i == 0 then
+            hexColor = __TS__StringSlice(HexColors.WHITE, #COLOR_BYTE)
+            textWithoutColor = textSegment
+        else
+            hexColor = __TS__StringSlice(textSegment, 0, SIZE_OF_HEX_STRING)
+            textWithoutColor = __TS__StringSlice(textSegment, SIZE_OF_HEX_STRING)
+        end
+        local kColor = hexToKColor(nil, hexColor, alpha)
+        fonts.pf:DrawString(
+            textWithoutColor,
+            x,
+            y,
+            kColor,
+            0,
+            true
+        )
+        x = x + fonts.pf:GetStringWidth(textWithoutColor)
     end
 end
 return ____exports
@@ -64591,7 +64576,7 @@ function drawConsole(self)
     local back = __TS__StringSlice(inputText, inputTextIndex)
     local text = ((((">" .. front) .. HexColors.YELLOW) .. "|") .. HexColors.WHITE) .. back
     local ____opt_0 = g.game
-    local position = (____opt_0 and ____opt_0.meeting) ~= nil and ____exports.CONSOLE_POSITION_LEFT or ____exports.CONSOLE_POSITION
+    local position = (____opt_0 and ____opt_0.meeting) == nil and ____exports.CONSOLE_POSITION or ____exports.CONSOLE_POSITION_LEFT
     drawText(nil, text, position)
 end
 ____exports.SPACING_FROM_LEFT_EDGE = 0.167
@@ -65987,6 +65972,9 @@ end
 return ____exports
  end,
 ["packages.mod.src.tasks.identifyPickupsInOrder"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
+local __TS__Iterator = ____lualib.__TS__Iterator
 local ____exports = {}
 local setupRound, drawPickupText, drawPickupSprites, spawnButtons, correctSelection, nextRound, incorrectSelection, NUM_ROUNDS, PLAYER_START_GRID_INDEX, TEXT_GRID_INDEX, TEXT_SHOW_FRAMES, BUTTON_GRID_INDEXES, ROW_LENGTH, SPRITE_OFFSET, PickupType, pickupDescriptions, currentRound, showingPickupIndex, showingPickupRenderFrame, pickupSprites, currentPickupOrder, currentChoosingIndex
 local ____common = require("packages.common.src.index")
@@ -65995,9 +65983,9 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local GAME_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.GAME_FRAMES_PER_SECOND
 local emptyArray = ____isaacscript_2Dcommon.emptyArray
 local game = ____isaacscript_2Dcommon.game
-local GAME_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.GAME_FRAMES_PER_SECOND
 local getEnumValues = ____isaacscript_2Dcommon.getEnumValues
 local getRandomEnumValue = ____isaacscript_2Dcommon.getRandomEnumValue
 local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
@@ -66068,33 +66056,31 @@ function drawPickupSprites(self)
         return
     end
     local room = game:GetRoom()
-    do
-        local i = 0
-        while i < #BUTTON_GRID_INDEXES do
-            local buttonGridIndex = BUTTON_GRID_INDEXES[i + 1]
-            local spriteGridIndex = buttonGridIndex - ROW_LENGTH
-            local gamePosition = room:GetGridPosition(spriteGridIndex)
-            local renderPosition = Isaac.WorldToRenderPosition(gamePosition)
-            local position = renderPosition + SPRITE_OFFSET
-            local sprite = pickupSprites[i + 1]
-            if sprite ~= nil then
-                sprite:RenderLayer(0, position)
-            end
-            i = i + 1
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(BUTTON_GRID_INDEXES)) do
+        local i = ____value[1]
+        local buttonGridIndex = ____value[2]
+        local spriteGridIndex = buttonGridIndex - ROW_LENGTH
+        local gamePosition = room:GetGridPosition(spriteGridIndex)
+        local renderPosition = Isaac.WorldToRenderPosition(gamePosition)
+        local position = renderPosition + SPRITE_OFFSET
+        local sprite = pickupSprites[i + 1]
+        if sprite ~= nil then
+            sprite:RenderLayer(0, position)
         end
     end
 end
 function spawnButtons(self)
     local pickupTypes = getEnumValues(nil, PickupType)
-    do
-        local i = 0
-        while i < #pickupTypes do
-            local gridIndex = BUTTON_GRID_INDEXES[i + 1]
-            local button = spawnTaskButton(nil, gridIndex, 1)
-            local data = button:GetData()
-            data.pickupType = pickupTypes[i + 1]
-            i = i + 1
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(pickupTypes)) do
+        local i = ____value[1]
+        local pickupType = ____value[2]
+        local gridIndex = BUTTON_GRID_INDEXES[i + 1]
+        if gridIndex == nil then
+            error("Failed to find the button grid index corresponding to pickup index: " .. tostring(i))
         end
+        local button = spawnTaskButton(nil, gridIndex, 1)
+        local data = button:GetData()
+        data.pickupType = pickupType
     end
 end
 function correctSelection(self)
@@ -66431,8 +66417,8 @@ local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
 local SlotVariant = ____isaac_2Dtypescript_2Ddefinitions.SlotVariant
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local getSlots = ____isaacscript_2Dcommon.getSlots
 local ReadonlySet = ____isaacscript_2Dcommon.ReadonlySet
+local getSlots = ____isaacscript_2Dcommon.getSlots
 local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
 local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
 local taskComplete = ____taskSubroutines.taskComplete
@@ -66532,8 +66518,8 @@ local EffectVariant = ____isaac_2Dtypescript_2Ddefinitions.EffectVariant
 local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local game = ____isaacscript_2Dcommon.game
 local VectorZero = ____isaacscript_2Dcommon.VectorZero
+local game = ____isaacscript_2Dcommon.game
 local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
 local taskComplete = ____taskSubroutines.taskComplete
 local ____teleporter = require("packages.mod.src.features.teleporter")
@@ -66642,6 +66628,9 @@ end
 return ____exports
  end,
 ["packages.mod.src.tasks.pushButtonsInOrder"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
+local __TS__Iterator = ____lualib.__TS__Iterator
 local ____exports = {}
 local setNewButtonOrder, spawnButtons, BUTTON_GRID_INDEXES, buttonOrder, nextButtonToPress
 local ____common = require("packages.common.src.index")
@@ -66678,15 +66667,12 @@ function setNewButtonOrder(self)
     nextButtonToPress = 0
 end
 function spawnButtons(self)
-    do
-        local i = 0
-        while i < #BUTTON_GRID_INDEXES do
-            local gridIndex = BUTTON_GRID_INDEXES[i + 1]
-            local button = spawnTaskButton(nil, gridIndex, 1)
-            local data = button:GetData()
-            data.num = buttonOrder[i + 1]
-            i = i + 1
-        end
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(BUTTON_GRID_INDEXES)) do
+        local i = ____value[1]
+        local buttonGridIndex = ____value[2]
+        local button = spawnTaskButton(nil, buttonGridIndex, 1)
+        local data = button:GetData()
+        data.num = buttonOrder[i + 1]
     end
 end
 local THIS_TASK = Task.SHORT_PUSH_BUTTONS_IN_ORDER
@@ -66734,20 +66720,17 @@ function ____exports.postRender(self)
     end
     local room = game:GetRoom()
     local gridWidth = room:GetGridWidth()
-    do
-        local i = 0
-        while i < #BUTTON_GRID_INDEXES do
-            local gridIndex = BUTTON_GRID_INDEXES[i + 1]
-            local textGridIndex = gridIndex - gridWidth
-            local worldPosition = room:GetGridPosition(textGridIndex)
-            local position = Isaac.WorldToRenderPosition(worldPosition)
-            local num = buttonOrder[i + 1]
-            if num ~= nil then
-                local nextNum = num + 1
-                local text = tostring(nextNum)
-                drawFontText(nil, text, position)
-            end
-            i = i + 1
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(BUTTON_GRID_INDEXES)) do
+        local i = ____value[1]
+        local buttonGridIndex = ____value[2]
+        local textGridIndex = buttonGridIndex - gridWidth
+        local worldPosition = room:GetGridPosition(textGridIndex)
+        local position = Isaac.WorldToRenderPosition(worldPosition)
+        local num = buttonOrder[i + 1]
+        if num ~= nil then
+            local nextNum = num + 1
+            local text = tostring(nextNum)
+            drawFontText(nil, text, position)
         end
     end
 end
@@ -66763,11 +66746,11 @@ local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local RockState = ____isaac_2Dtypescript_2Ddefinitions.RockState
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local VectorZero = ____isaacscript_2Dcommon.VectorZero
 local asNumber = ____isaacscript_2Dcommon.asNumber
 local game = ____isaacscript_2Dcommon.game
 local getGridEntities = ____isaacscript_2Dcommon.getGridEntities
 local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
-local VectorZero = ____isaacscript_2Dcommon.VectorZero
 local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
 local taskComplete = ____taskSubroutines.taskComplete
 local ____teleporter = require("packages.mod.src.features.teleporter")
@@ -67808,8 +67791,8 @@ local EntityCollisionClass = ____isaac_2Dtypescript_2Ddefinitions.EntityCollisio
 local EntityGridCollisionClass = ____isaac_2Dtypescript_2Ddefinitions.EntityGridCollisionClass
 local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
 local VectorZero = ____isaacscript_2Dcommon.VectorZero
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
 local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
 local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
 local ____globals = require("packages.mod.src.globals")
@@ -68421,6 +68404,206 @@ function ____exports.commandSabotage(self, _data)
 end
 return ____exports
  end,
+["packages.mod.src.features.startMeeting"] = function(...) 
+local ____exports = {}
+local postRenderAlertStrip, postRenderFadingToBlackWithAlertStrip, postRenderFadingToGame, drawAlertStrip, getAlertText, hasFadeFinished, setState, TEXT_OFFSET, blackSprite
+local ____common = require("packages.common.src.index")
+local MeetingType = ____common.MeetingType
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
+local VectorZero = ____isaacscript_2Dcommon.VectorZero
+local ____BlackSpriteState = require("packages.mod.src.enums.BlackSpriteState")
+local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
+local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
+local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
+local ____StartMeetingState = require("packages.mod.src.enums.StartMeetingState")
+local StartMeetingState = ____StartMeetingState.StartMeetingState
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____minimapAPI = require("packages.mod.src.minimapAPI")
+local disableMinimapAPI = ____minimapAPI.disableMinimapAPI
+local ____sprite = require("packages.mod.src.sprite")
+local initSprite = ____sprite.initSprite
+local ____utils = require("packages.mod.src.utils")
+local drawFontText = ____utils.drawFontText
+local ____blackSprite = require("packages.mod.src.features.blackSprite")
+local FADE_TO_BLACK_FRAMES = ____blackSprite.FADE_TO_BLACK_FRAMES
+local setBlackSpriteState = ____blackSprite.setBlackSpriteState
+local ____setupMeeting = require("packages.mod.src.features.setupMeeting")
+local setupMeeting = ____setupMeeting.setupMeeting
+function postRenderAlertStrip(self)
+    drawAlertStrip(nil)
+    if g.game ~= nil and hasFadeFinished(nil) then
+        setState(nil, StartMeetingState.FADING_TO_BLACK_WITH_ALERT_STRIP)
+        setBlackSpriteState(nil, BlackSpriteState.FADING_TO_BLACK)
+    end
+end
+function postRenderFadingToBlackWithAlertStrip(self)
+    drawAlertStrip(nil)
+    if g.game ~= nil and hasFadeFinished(nil) then
+        setState(nil, StartMeetingState.FADING_TO_GAME)
+        setBlackSpriteState(nil, BlackSpriteState.FADING_TO_GAME)
+        setupMeeting(nil, false)
+    end
+end
+function postRenderFadingToGame(self)
+    if g.game ~= nil and hasFadeFinished(nil) then
+        setState(nil, StartMeetingState.DISABLED)
+        setBlackSpriteState(nil, BlackSpriteState.DISABLED)
+    end
+end
+function drawAlertStrip(self)
+    local bottomRightPos = getScreenBottomRightPos(nil)
+    local position = Vector(0, bottomRightPos.Y / 3)
+    blackSprite:RenderLayer(0, position)
+    local opacity = 1
+    local centerPos = bottomRightPos / 2
+    local aboveCenterPos = centerPos + TEXT_OFFSET
+    local text = getAlertText(nil)
+    drawFontText(nil, text, aboveCenterPos, opacity)
+end
+function getAlertText(self)
+    local defaultValue = "???"
+    if g.game == nil or g.game.meeting == nil then
+        return defaultValue
+    end
+    local playerInitiated = g.game:getPlayerFromUserID(g.game.meeting.userIDInitiated)
+    if playerInitiated == nil then
+        return defaultValue
+    end
+    repeat
+        local ____switch19 = g.game.meeting.meetingType
+        local ____cond19 = ____switch19 == MeetingType.REPORT_BODY
+        if ____cond19 then
+            do
+                local playerKilled = g.game:getPlayerFromUserID(g.game.meeting.userIDKilled)
+                if playerKilled == nil then
+                    return defaultValue
+                end
+                return (playerInitiated.username .. " reported a dead body: ") .. playerKilled.username
+            end
+        end
+        ____cond19 = ____cond19 or ____switch19 == MeetingType.EMERGENCY
+        if ____cond19 then
+            do
+                return playerInitiated.username .. " called an emergency meeting!"
+            end
+        end
+    until true
+end
+function hasFadeFinished(self)
+    if g.game == nil or g.game.startMeeting.startRenderFrame == nil then
+        return false
+    end
+    local renderFrameCount = Isaac.GetFrameCount()
+    local renderFramesPassed = renderFrameCount - g.game.startMeeting.startRenderFrame
+    return renderFramesPassed >= FADE_TO_BLACK_FRAMES
+end
+function setState(self, state)
+    if g.game == nil or not g.game.started then
+        return
+    end
+    local renderFrameCount = Isaac.GetFrameCount()
+    g.game.startMeeting.state = state
+    g.game.startMeeting.startRenderFrame = renderFrameCount
+end
+TEXT_OFFSET = Vector(0, -10)
+blackSprite = initSprite(nil, "gfx/black.anm2")
+function ____exports.postRender(self)
+    if g.game == nil or not g.game.started then
+        return
+    end
+    repeat
+        local ____switch4 = g.game.startMeeting.state
+        local ____cond4 = ____switch4 == StartMeetingState.DISABLED
+        if ____cond4 then
+            do
+                break
+            end
+        end
+        ____cond4 = ____cond4 or ____switch4 == StartMeetingState.ALERT_STRIP
+        if ____cond4 then
+            do
+                postRenderAlertStrip(nil)
+                break
+            end
+        end
+        ____cond4 = ____cond4 or ____switch4 == StartMeetingState.FADING_TO_BLACK_WITH_ALERT_STRIP
+        if ____cond4 then
+            do
+                postRenderFadingToBlackWithAlertStrip(nil)
+                break
+            end
+        end
+        ____cond4 = ____cond4 or ____switch4 == StartMeetingState.FADING_TO_GAME
+        if ____cond4 then
+            do
+                postRenderFadingToGame(nil)
+                break
+            end
+        end
+    until true
+end
+function ____exports.startMeeting(self, meetingType)
+    local player = Isaac.GetPlayer()
+    player.Velocity = VectorZero
+    player.ControlsEnabled = false
+    local bottomRightPos = getScreenBottomRightPos(nil)
+    blackSprite.Scale = Vector(bottomRightPos.X, bottomRightPos.Y / 3)
+    setState(nil, StartMeetingState.ALERT_STRIP)
+    disableMinimapAPI(nil)
+    local soundEffect = meetingType == MeetingType.REPORT_BODY and SoundEffectCustom.DEAD_BODY_REPORT or SoundEffectCustom.EMERGENCY_MEETING
+    sfxManager:Play(soundEffect)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.startMeeting"] = function(...) 
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local MeetingPhase = ____common.MeetingPhase
+local MeetingType = ____common.MeetingType
+local ____startMeeting = require("packages.mod.src.features.startMeeting")
+local startMeeting = ____startMeeting.startMeeting
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function ____exports.commandStartMeeting(self, data)
+    if g.game == nil then
+        return
+    end
+    g.game.meeting = {
+        meetingType = data.meetingType,
+        userIDInitiated = data.userIDInitiated,
+        userIDKilled = data.userIDKilled,
+        playersKilledSinceLastMeeting = data.playersKilledSinceLastMeeting,
+        meetingPhase = MeetingPhase.PRE_VOTING,
+        timePhaseStarted = data.timePhaseStarted,
+        phaseLengthSeconds = data.phaseLengthSeconds,
+        votes = data.votes
+    }
+    if data.meetingType == MeetingType.EMERGENCY and data.userIDInitiated == g.userID then
+        g.game.usedEmergencyMeeting = true
+    end
+    startMeeting(nil, data.meetingType)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.startVoting"] = function(...) 
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local MeetingPhase = ____common.MeetingPhase
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function ____exports.commandStartVoting(self, data)
+    if g.game == nil or g.game.meeting == nil then
+        return
+    end
+    g.game.meeting.meetingPhase = MeetingPhase.VOTING
+    g.game.meeting.timePhaseStarted = data.timePhaseStarted
+    g.game.meeting.phaseLengthSeconds = data.phaseLengthSeconds
+end
+return ____exports
+ end,
 ["packages.mod.src.features.startGameCutscene"] = function(...) 
 local ____exports = {}
 local postRenderFadingToBlack, setStartingPosition, postRenderTextFadingIn, postRenderText, postRenderTextFadingOut, postRenderFadingToGame, drawText, getTextOpacity, drawItem, hasFadeFinished, setState, setSprite, ITEM_SPRITE_OFFSET, itemSprite
@@ -68650,206 +68833,6 @@ function ____exports.commandStarted(self, data)
 end
 return ____exports
  end,
-["packages.mod.src.features.startMeeting"] = function(...) 
-local ____exports = {}
-local postRenderAlertStrip, postRenderFadingToBlackWithAlertStrip, postRenderFadingToGame, drawAlertStrip, getAlertText, hasFadeFinished, setState, TEXT_OFFSET, blackSprite
-local ____common = require("packages.common.src.index")
-local MeetingType = ____common.MeetingType
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local VectorZero = ____isaacscript_2Dcommon.VectorZero
-local ____BlackSpriteState = require("packages.mod.src.enums.BlackSpriteState")
-local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
-local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
-local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
-local ____StartMeetingState = require("packages.mod.src.enums.StartMeetingState")
-local StartMeetingState = ____StartMeetingState.StartMeetingState
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____minimapAPI = require("packages.mod.src.minimapAPI")
-local disableMinimapAPI = ____minimapAPI.disableMinimapAPI
-local ____sprite = require("packages.mod.src.sprite")
-local initSprite = ____sprite.initSprite
-local ____utils = require("packages.mod.src.utils")
-local drawFontText = ____utils.drawFontText
-local ____blackSprite = require("packages.mod.src.features.blackSprite")
-local FADE_TO_BLACK_FRAMES = ____blackSprite.FADE_TO_BLACK_FRAMES
-local setBlackSpriteState = ____blackSprite.setBlackSpriteState
-local ____setupMeeting = require("packages.mod.src.features.setupMeeting")
-local setupMeeting = ____setupMeeting.setupMeeting
-function postRenderAlertStrip(self)
-    drawAlertStrip(nil)
-    if g.game ~= nil and hasFadeFinished(nil) then
-        setState(nil, StartMeetingState.FADING_TO_BLACK_WITH_ALERT_STRIP)
-        setBlackSpriteState(nil, BlackSpriteState.FADING_TO_BLACK)
-    end
-end
-function postRenderFadingToBlackWithAlertStrip(self)
-    drawAlertStrip(nil)
-    if g.game ~= nil and hasFadeFinished(nil) then
-        setState(nil, StartMeetingState.FADING_TO_GAME)
-        setBlackSpriteState(nil, BlackSpriteState.FADING_TO_GAME)
-        setupMeeting(nil, false)
-    end
-end
-function postRenderFadingToGame(self)
-    if g.game ~= nil and hasFadeFinished(nil) then
-        setState(nil, StartMeetingState.DISABLED)
-        setBlackSpriteState(nil, BlackSpriteState.DISABLED)
-    end
-end
-function drawAlertStrip(self)
-    local bottomRightPos = getScreenBottomRightPos(nil)
-    local position = Vector(0, bottomRightPos.Y / 3)
-    blackSprite:RenderLayer(0, position)
-    local opacity = 1
-    local centerPos = bottomRightPos / 2
-    local aboveCenterPos = centerPos + TEXT_OFFSET
-    local text = getAlertText(nil)
-    drawFontText(nil, text, aboveCenterPos, opacity)
-end
-function getAlertText(self)
-    local defaultValue = "???"
-    if g.game == nil or g.game.meeting == nil then
-        return defaultValue
-    end
-    local playerInitiated = g.game:getPlayerFromUserID(g.game.meeting.userIDInitiated)
-    if playerInitiated == nil then
-        return defaultValue
-    end
-    repeat
-        local ____switch19 = g.game.meeting.meetingType
-        local ____cond19 = ____switch19 == MeetingType.REPORT_BODY
-        if ____cond19 then
-            do
-                local playerKilled = g.game:getPlayerFromUserID(g.game.meeting.userIDKilled)
-                if playerKilled == nil then
-                    return defaultValue
-                end
-                return (playerInitiated.username .. " reported a dead body: ") .. playerKilled.username
-            end
-        end
-        ____cond19 = ____cond19 or ____switch19 == MeetingType.EMERGENCY
-        if ____cond19 then
-            do
-                return playerInitiated.username .. " called an emergency meeting!"
-            end
-        end
-    until true
-end
-function hasFadeFinished(self)
-    if g.game == nil or g.game.startMeeting.startRenderFrame == nil then
-        return false
-    end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local renderFramesPassed = renderFrameCount - g.game.startMeeting.startRenderFrame
-    return renderFramesPassed >= FADE_TO_BLACK_FRAMES
-end
-function setState(self, state)
-    if g.game == nil or not g.game.started then
-        return
-    end
-    local renderFrameCount = Isaac.GetFrameCount()
-    g.game.startMeeting.state = state
-    g.game.startMeeting.startRenderFrame = renderFrameCount
-end
-TEXT_OFFSET = Vector(0, -10)
-blackSprite = initSprite(nil, "gfx/black.anm2")
-function ____exports.postRender(self)
-    if g.game == nil or not g.game.started then
-        return
-    end
-    repeat
-        local ____switch4 = g.game.startMeeting.state
-        local ____cond4 = ____switch4 == StartMeetingState.DISABLED
-        if ____cond4 then
-            do
-                break
-            end
-        end
-        ____cond4 = ____cond4 or ____switch4 == StartMeetingState.ALERT_STRIP
-        if ____cond4 then
-            do
-                postRenderAlertStrip(nil)
-                break
-            end
-        end
-        ____cond4 = ____cond4 or ____switch4 == StartMeetingState.FADING_TO_BLACK_WITH_ALERT_STRIP
-        if ____cond4 then
-            do
-                postRenderFadingToBlackWithAlertStrip(nil)
-                break
-            end
-        end
-        ____cond4 = ____cond4 or ____switch4 == StartMeetingState.FADING_TO_GAME
-        if ____cond4 then
-            do
-                postRenderFadingToGame(nil)
-                break
-            end
-        end
-    until true
-end
-function ____exports.startMeeting(self, meetingType)
-    local player = Isaac.GetPlayer()
-    player.Velocity = VectorZero
-    player.ControlsEnabled = false
-    local bottomRightPos = getScreenBottomRightPos(nil)
-    blackSprite.Scale = Vector(bottomRightPos.X, bottomRightPos.Y / 3)
-    setState(nil, StartMeetingState.ALERT_STRIP)
-    disableMinimapAPI(nil)
-    local soundEffect = meetingType == MeetingType.REPORT_BODY and SoundEffectCustom.DEAD_BODY_REPORT or SoundEffectCustom.EMERGENCY_MEETING
-    sfxManager:Play(soundEffect)
-end
-return ____exports
- end,
-["packages.mod.src.commands.startMeeting"] = function(...) 
-local ____exports = {}
-local ____common = require("packages.common.src.index")
-local MeetingPhase = ____common.MeetingPhase
-local MeetingType = ____common.MeetingType
-local ____startMeeting = require("packages.mod.src.features.startMeeting")
-local startMeeting = ____startMeeting.startMeeting
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function ____exports.commandStartMeeting(self, data)
-    if g.game == nil then
-        return
-    end
-    g.game.meeting = {
-        meetingType = data.meetingType,
-        userIDInitiated = data.userIDInitiated,
-        userIDKilled = data.userIDKilled,
-        playersKilledSinceLastMeeting = data.playersKilledSinceLastMeeting,
-        meetingPhase = MeetingPhase.PRE_VOTING,
-        timePhaseStarted = data.timePhaseStarted,
-        phaseLengthSeconds = data.phaseLengthSeconds,
-        votes = data.votes
-    }
-    if data.meetingType == MeetingType.EMERGENCY and data.userIDInitiated == g.userID then
-        g.game.usedEmergencyMeeting = true
-    end
-    startMeeting(nil, data.meetingType)
-end
-return ____exports
- end,
-["packages.mod.src.commands.startVoting"] = function(...) 
-local ____exports = {}
-local ____common = require("packages.common.src.index")
-local MeetingPhase = ____common.MeetingPhase
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function ____exports.commandStartVoting(self, data)
-    if g.game == nil or g.game.meeting == nil then
-        return
-    end
-    g.game.meeting.meetingPhase = MeetingPhase.VOTING
-    g.game.meeting.timePhaseStarted = data.timePhaseStarted
-    g.game.meeting.phaseLengthSeconds = data.phaseLengthSeconds
-end
-return ____exports
- end,
 ["packages.mod.src.commands.terminated"] = function(...) 
 local ____exports = {}
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
@@ -68951,12 +68934,12 @@ local ____reconnect = require("packages.mod.src.commands.reconnect")
 local commandReconnect = ____reconnect.commandReconnect
 local ____sabotage = require("packages.mod.src.commands.sabotage")
 local commandSabotage = ____sabotage.commandSabotage
-local ____started = require("packages.mod.src.commands.started")
-local commandStarted = ____started.commandStarted
 local ____startMeeting = require("packages.mod.src.commands.startMeeting")
 local commandStartMeeting = ____startMeeting.commandStartMeeting
 local ____startVoting = require("packages.mod.src.commands.startVoting")
 local commandStartVoting = ____startVoting.commandStartVoting
+local ____started = require("packages.mod.src.commands.started")
+local commandStarted = ____started.commandStarted
 local ____terminated = require("packages.mod.src.commands.terminated")
 local commandTerminated = ____terminated.commandTerminated
 local ____userConnected = require("packages.mod.src.commands.userConnected")
@@ -69093,8 +69076,8 @@ local ButtonAction = ____isaac_2Dtypescript_2Ddefinitions.ButtonAction
 local InputHook = ____isaac_2Dtypescript_2Ddefinitions.InputHook
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local game = ____isaacscript_2Dcommon.game
 local ReadonlySet = ____isaacscript_2Dcommon.ReadonlySet
+local game = ____isaacscript_2Dcommon.game
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.g
 local ____mod = require("packages.mod.src.mod")
@@ -70099,7 +70082,7 @@ function drawChat(self)
     local consoleOpen = isConsoleOpen(nil)
     local alpha = DEFAULT_OPACITY
     local ____opt_0 = g.game
-    local x = (____opt_0 and ____opt_0.meeting) ~= nil and CHAT_POSITION_LEFT.X or CHAT_POSITION.X
+    local x = (____opt_0 and ____opt_0.meeting) == nil and CHAT_POSITION.X or CHAT_POSITION_LEFT.X
     local y = CHAT_POSITION.Y
     local numMessagesDrawn = 0
     for ____, chatMessage in ipairs(getAllChat(nil)) do
@@ -70428,10 +70411,10 @@ function readTCP(self)
         return true
     end
     local commandFunction = CLIENT_COMMAND_MAP[command]
-    if commandFunction ~= nil then
-        commandFunction(nil, dataObject)
-    else
+    if commandFunction == nil then
         log("Error: Received an unknown socket command: " .. command)
+    else
+        commandFunction(nil, dataObject)
     end
     return true
 end

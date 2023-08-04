@@ -1,4 +1,4 @@
-import { SkeldRoom } from "../enums/SkeldRoom";
+import type { SkeldRoom } from "../enums/SkeldRoom";
 
 export interface PlayerBody {
   readonly userID: number;

@@ -1,5 +1,5 @@
-import { Task } from "../enums/Task";
-import { TaskType } from "../enums/TaskType";
+import type { Task } from "../enums/Task";
+import type { TaskType } from "../enums/TaskType";
 
 export type TaskList = {
   [Value in TaskType]: Task[];

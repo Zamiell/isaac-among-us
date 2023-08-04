@@ -1,15 +1,15 @@
 /* eslint-disable max-classes-per-file */
 
-import { AnyClass } from "isaacscript-common";
-import { MeetingResolution } from "../enums/MeetingResolution";
-import { MeetingType } from "../enums/MeetingType";
-import { PlayerTypeAllowed } from "../enums/PlayerTypeAllowed";
-import { Role } from "../enums/Role";
-import { SabotageType } from "../enums/SabotageType";
-import { SkeldRoom } from "../enums/SkeldRoom";
-import { Meeting } from "../interfaces/Meeting";
-import { PlayerBody } from "../interfaces/PlayerBody";
-import { TaskList } from "./TaskList";
+import type { AnyClass } from "isaacscript-common";
+import type { MeetingResolution } from "../enums/MeetingResolution";
+import type { MeetingType } from "../enums/MeetingType";
+import type { PlayerTypeAllowed } from "../enums/PlayerTypeAllowed";
+import type { Role } from "../enums/Role";
+import type { SabotageType } from "../enums/SabotageType";
+import type { SkeldRoom } from "../enums/SkeldRoom";
+import type { Meeting } from "../interfaces/Meeting";
+import type { PlayerBody } from "../interfaces/PlayerBody";
+import type { TaskList } from "./TaskList";
 
 export enum SocketCommandServerToMod {
   ERROR = "error",

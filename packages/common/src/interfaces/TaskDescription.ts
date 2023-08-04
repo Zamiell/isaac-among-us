@@ -1,5 +1,5 @@
-import { SkeldRoom } from "../enums/SkeldRoom";
-import { TaskType } from "../enums/TaskType";
+import type { SkeldRoom } from "../enums/SkeldRoom";
+import type { TaskType } from "../enums/TaskType";
 
 export interface TaskDescription {
   readonly name: string;

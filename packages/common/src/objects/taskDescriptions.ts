@@ -1,7 +1,7 @@
 import { SkeldRoom } from "../enums/SkeldRoom";
 import { Task } from "../enums/Task";
 import { TaskType } from "../enums/TaskType";
-import { TaskDescription } from "../interfaces/TaskDescription";
+import type { TaskDescription } from "../interfaces/TaskDescription";
 
 // Return grid indexes need to be at least 2 tiles away so that if the player is holding down a
 // movement key, they do not automatically return to the task.

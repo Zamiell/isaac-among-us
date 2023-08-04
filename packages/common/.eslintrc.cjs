@@ -19,6 +19,9 @@ module.exports = {
   ignorePatterns: ["dist/"],
 
   rules: {
+    "@typescript-eslint/prefer-enum-initializers": "off",
+    "isaacscript/consistent-enum-values": "off",
+    "isaacscript/no-number-enums": "off",
     "n/file-extension-in-import": "off",
   },
 };

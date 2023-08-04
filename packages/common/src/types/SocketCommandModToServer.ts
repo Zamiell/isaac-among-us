@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 
-import { AnyClass } from "isaacscript-common";
+import type { AnyClass } from "isaacscript-common";
 import { MeetingType } from "../enums/MeetingType";
 import { SabotageType } from "../enums/SabotageType";
 import { SkeldRoom } from "../enums/SkeldRoom";
