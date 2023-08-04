@@ -120,7 +120,7 @@ export function sendSabotage(game: Game, sabotageType: SabotageType): void {
 }
 
 export function sendStartMeeting(game: Game): void {
-  if (game.meeting === undefined) {
+  if (game.meeting === null) {
     return;
   }
 
@@ -137,7 +137,7 @@ export function sendStartMeeting(game: Game): void {
 }
 
 export function sendStartVoting(game: Game): void {
-  if (game.meeting === undefined) {
+  if (game.meeting === null) {
     return;
   }
 
@@ -149,7 +149,7 @@ export function sendStartVoting(game: Game): void {
 }
 
 export function sendVote(game: Game): void {
-  if (game.meeting === undefined) {
+  if (game.meeting === null) {
     return;
   }
 

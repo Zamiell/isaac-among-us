@@ -24,7 +24,7 @@ export function commandVote(
     username === undefined ||
     game === undefined ||
     player === undefined ||
-    game.meeting === undefined
+    game.meeting === null
   ) {
     return;
   }
@@ -71,7 +71,7 @@ function validate(
     return false;
   }
 
-  if (game.meeting === undefined) {
+  if (game.meeting === null) {
     sendError(
       socket,
       "You cannot vote unless there is a meeting currently going.",
@@ -115,7 +115,7 @@ function validate(
 }
 
 function haveAllPlayersVoted(game: Game) {
-  if (game.meeting === undefined) {
+  if (game.meeting === null) {
     return false;
   }
 

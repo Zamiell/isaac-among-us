@@ -93,7 +93,7 @@ function validate(
   }
   */
 
-  if (game.meeting !== undefined) {
+  if (game.meeting !== null) {
     sendError(
       socket,
       "There is already a meeting going, so you cannot call another one.",
@@ -110,7 +110,7 @@ function meetingPhaseOver(game: Game) {
     return;
   }
 
-  if (game.meeting === undefined) {
+  if (game.meeting === null) {
     return;
   }
 
@@ -128,7 +128,7 @@ function meetingPhaseOver(game: Game) {
 }
 
 function meetingPhaseOverPreVoting(game: Game) {
-  if (game.meeting === undefined) {
+  if (game.meeting === null) {
     return;
   }
 
@@ -144,20 +144,20 @@ function meetingPhaseOverPreVoting(game: Game) {
 }
 
 export function meetingPhaseOverVoting(game: Game): void {
-  if (game.meeting === undefined) {
+  if (game.meeting === null) {
     return;
   }
 
   turnAllNonVotesIntoSkippedVotes(game);
   const [meetingResolution, userIDEjected] = getMeetingResolution(game);
 
-  game.meeting = undefined;
+  game.meeting = null;
 
   sendEndMeeting(game, meetingResolution, userIDEjected);
 }
 
 function turnAllNonVotesIntoSkippedVotes(game: Game) {
-  if (game.meeting === undefined) {
+  if (game.meeting === null) {
     return;
   }
 
@@ -175,7 +175,7 @@ function getMeetingResolution(game: Game): [MeetingResolution, number] {
     0,
   ];
 
-  if (game.meeting === undefined) {
+  if (game.meeting === null) {
     throw new Error(
       "Failed to get the meeting resolution since the meeting was null.",
     );

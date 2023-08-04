@@ -19,6 +19,10 @@ module.exports = {
   ignorePatterns: ["dist/"],
 
   rules: {
+    // We need to use `null` because the field needs to be present in the JSON transfer between
+    // client and server.
+    "unicorn/no-null": "off",
+
     "no-param-reassign": "off",
   },
 };

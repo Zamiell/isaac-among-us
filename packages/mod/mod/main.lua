@@ -67388,11 +67388,7 @@ function setMultiplayerAnimation(self, entity, animation, animationFrame, overla
     else
         sprite:SetOverlayFrame(overlayAnimation, overlayAnimationFrame)
     end
-    if animation == "Death" and g.game ~= nil and g.game.meeting ~= nil then
-        sprite.Offset = DEATH_SPRITE_OFFSET
-    else
-        sprite.Offset = VectorZero
-    end
+    sprite.Offset = animation == "Death" and g.game ~= nil and g.game.meeting ~= nil and DEATH_SPRITE_OFFSET or VectorZero
 end
 function ____exports.drawUsername(self, userID, positionGame, opacity)
     if opacity == nil then
@@ -68975,8 +68971,6 @@ ____exports.CLIENT_COMMAND_MAP = {
     [SocketCommandServerToMod.TERMINATED] = commandTerminated
 }
 return ____exports
- end,
-["packages.mod.src.dev"] = function(...) 
  end,
 ["packages.mod.src.initFeatures"] = function(...) 
 local ____exports = {}

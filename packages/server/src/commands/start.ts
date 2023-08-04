@@ -59,7 +59,7 @@ function setEmergencyButtonCooldown(game: Game) {
     if (
       doesGameIDExist(game.id) &&
       game.started &&
-      game.meeting === undefined &&
+      game.meeting === null &&
       game.night === currentNight
     ) {
       game.emergencyButtonOnCooldown = false;
