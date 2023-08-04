@@ -1,6 +1,6 @@
 import { PlayerTypeAllowed } from "common";
-import { Game } from "./classes/Game.js";
-import { Player } from "./classes/Player.js";
+import type { Game } from "./classes/Game.js";
+import type { Player } from "./classes/Player.js";
 import { getEnumValues } from "./utils.js";
 
 export function getLowestUnusedCharacter(game: Game): PlayerTypeAllowed {

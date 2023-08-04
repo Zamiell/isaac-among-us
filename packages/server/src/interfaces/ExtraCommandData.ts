@@ -1,5 +1,5 @@
-import { Game } from "../classes/Game.js";
-import { Player } from "../classes/Player.js";
+import type { Game } from "../classes/Game.js";
+import type { Player } from "../classes/Player.js";
 
 export interface ExtraCommandData {
   /**

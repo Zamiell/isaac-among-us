@@ -1,5 +1,5 @@
 import { IS_DEV, Role } from "common";
-import { Game } from "./classes/Game.js";
+import type { Game } from "./classes/Game.js";
 import { getRandomArrayIndex } from "./isaacScriptCommonTS.js";
 import { repeat } from "./utils.js";
 

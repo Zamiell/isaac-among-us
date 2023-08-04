@@ -1,5 +1,5 @@
-import { Meeting, PlayerBody } from "common";
-import { Player } from "./Player.js";
+import type { Meeting, PlayerBody } from "common";
+import type { Player } from "./Player.js";
 
 export class Game {
   id: number;

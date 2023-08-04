@@ -1,4 +1,4 @@
-import { Game } from "./classes/Game.js";
+import type { Game } from "./classes/Game.js";
 
 let currentGameID = 0; // Iterates upwards
 

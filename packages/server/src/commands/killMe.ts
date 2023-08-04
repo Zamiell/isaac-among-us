@@ -1,6 +1,7 @@
-import { IS_DEV, KillMeDataToServer } from "common";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { KillMeDataToServer } from "common";
+import { IS_DEV } from "common";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import { kill } from "./kill.js";
 
 export function commandKillMe(

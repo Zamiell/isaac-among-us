@@ -1,6 +1,7 @@
-import { CheckUsernameDataToServer, SocketCommandServerToMod } from "common";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { CheckUsernameDataToServer } from "common";
+import { SocketCommandServerToMod } from "common";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import * as users from "../models/users.js";
 import { sendTCP } from "../sendTCP.js";
 

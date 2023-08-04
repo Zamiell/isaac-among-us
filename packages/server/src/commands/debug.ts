@@ -1,6 +1,7 @@
-import { NoData, Role } from "common";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { NoData } from "common";
+import { Role } from "common";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 
 export function commandDebug(
   _socket: Socket,
@@ -23,7 +24,7 @@ export function commandDebug(
   console.log(`- emergencyButtonCooldown: ${game.emergencyButtonOnCooldown}`);
 
   console.log("Players:");
-  game.players.forEach((player, i) => {
+  for (const [i, player] of game.players.entries()) {
     console.log(`${i + 1} - ${player.username} (${player.userID})`);
     console.log(`    - connected: ${player.connected}`);
     console.log(`    - role: ${Role[player.role]} (${player.role})`);
@@ -36,5 +37,5 @@ export function commandDebug(
     console.log("        - short:", player.tasks.short);
     console.log("        - long:", player.tasks.long);
     console.log("        - common:", player.tasks.common);
-  });
+  }
 }

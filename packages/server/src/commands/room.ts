@@ -1,6 +1,6 @@
-import { RoomDataToServer } from "common";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { RoomDataToServer } from "common";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 
 export function commandRoom(
   _socket: Socket,

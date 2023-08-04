@@ -1,4 +1,5 @@
-import { SocketCommandModToServer, SocketCommandModToServerData } from "common";
+import type { SocketCommandModToServerData } from "common";
+import { SocketCommandModToServer } from "common";
 import { commandChat } from "./commands/chat.js";
 import { commandCheckUsername } from "./commands/checkUsername.js";
 import { commandCreate } from "./commands/create.js";
@@ -19,8 +20,8 @@ import { commandStart } from "./commands/start.js";
 import { commandTaskComplete } from "./commands/taskComplete.js";
 import { commandTerminate } from "./commands/terminate.js";
 import { commandVote } from "./commands/vote.js";
-import { ExtraCommandData } from "./interfaces/ExtraCommandData.js";
-import { Socket } from "./interfaces/Socket.js";
+import type { ExtraCommandData } from "./interfaces/ExtraCommandData.js";
+import type { Socket } from "./interfaces/Socket.js";
 
 type ServerCommandMap = {
   [Key in SocketCommandModToServer]: (

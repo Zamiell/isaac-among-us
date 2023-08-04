@@ -1,17 +1,16 @@
 // A collection of helper functions to send changes in the game state to all of the clients in the
 // particular game.
 
-import {
+import type {
   GameDescriptionPlayer,
   MeetingResolution,
-  Role,
   SabotageType,
   SkeldRoom,
-  SocketCommandServerToMod,
   SocketCommandServerToModData,
 } from "common";
-import { Game } from "./classes/Game.js";
-import { Socket } from "./interfaces/Socket.js";
+import { Role, SocketCommandServerToMod } from "common";
+import type { Game } from "./classes/Game.js";
+import type { Socket } from "./interfaces/Socket.js";
 import { sendTCP } from "./sendTCP.js";
 import { getTCPSocketByUserID } from "./tcpSockets.js";
 

@@ -1,15 +1,11 @@
-import {
-  MeetingPhase,
-  NOT_VOTED_YET,
-  VOTE_SKIP,
-  VoteDataToServer,
-} from "common";
-import { Game } from "../classes/Game.js";
-import { Player } from "../classes/Player.js";
+import type { VoteDataToServer } from "common";
+import { MeetingPhase, NOT_VOTED_YET, VOTE_SKIP } from "common";
+import type { Game } from "../classes/Game.js";
+import type { Player } from "../classes/Player.js";
 import { sendError } from "../error.js";
 import { getPlayer, getPlayerIndex } from "../game.js";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import { sendChat, sendVote } from "../sendGame.js";
 import { meetingPhaseOverVoting } from "./meeting.js";
 

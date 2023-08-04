@@ -35,8 +35,8 @@ server.on("error", handleError);
 function handleMessage(msg: Buffer, rinfo: dgram.RemoteInfo) {
   try {
     handleDataUDP(msg, rinfo);
-  } catch (err) {
-    console.error(`UDP error for ${getRemoteAddressUDP(rinfo)}: ${err}`);
+  } catch (error) {
+    console.error(`UDP error for ${getRemoteAddressUDP(rinfo)}: ${error}`);
   }
 }
 

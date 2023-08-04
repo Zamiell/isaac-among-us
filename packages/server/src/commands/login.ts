@@ -1,8 +1,9 @@
 import argon2 from "argon2";
-import { LoginDataToServer, SocketCommandServerToMod } from "common";
+import type { LoginDataToServer } from "common";
+import { SocketCommandServerToMod } from "common";
 import { sendError } from "../error.js";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import * as users from "../models/users.js";
 import { sendAllUserConnected } from "../sendAll.js";
 import { sendTCP } from "../sendTCP.js";

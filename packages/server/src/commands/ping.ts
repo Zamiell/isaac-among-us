@@ -1,6 +1,6 @@
-import { NoData } from "common";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { NoData } from "common";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 
 export function commandPing(
   _socket: Socket,

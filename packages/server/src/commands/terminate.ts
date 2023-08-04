@@ -1,7 +1,7 @@
-import { TerminateDataToServer } from "common";
+import type { TerminateDataToServer } from "common";
 import { games } from "../games.js";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import { sendTerminated } from "../sendGame.js";
 import { validateGameOwner } from "../validate.js";
 

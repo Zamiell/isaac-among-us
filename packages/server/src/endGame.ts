@@ -1,5 +1,5 @@
-import { Role } from "common";
-import { Game } from "./classes/Game.js";
+import type { Role } from "common";
+import type { Game } from "./classes/Game.js";
 import { games } from "./games.js";
 import { sendEndGame } from "./sendGame.js";
 

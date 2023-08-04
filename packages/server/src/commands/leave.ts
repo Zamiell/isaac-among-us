@@ -1,8 +1,9 @@
-import { LeaveDataToServer, SocketCommandServerToMod } from "common";
+import type { LeaveDataToServer } from "common";
+import { SocketCommandServerToMod } from "common";
 import { removePlayerFromGame } from "../game.js";
 import { games } from "../games.js";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import { logGameEvent } from "../log.js";
 import {
   sendNewGameDescription,
@@ -39,9 +40,9 @@ export function commandLeave(
   }
 
   // Update the indexes of the remaining players.
-  game.players.forEach((player, i) => {
+  for (const [i, player] of game.players.entries()) {
     player.index = i;
-  });
+  }
 
   // If the owner left, update the owner ID.
   if (userID === game.ownerUserID) {

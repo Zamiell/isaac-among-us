@@ -1,9 +1,9 @@
-import { CreateDataToServer } from "common";
+import type { CreateDataToServer } from "common";
 import { Game } from "../classes/Game.js";
 import { sendError } from "../error.js";
 import { games, getNewGameID } from "../games.js";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import { logGameEvent } from "../log.js";
 import { sendAllNewGame } from "../sendAll.js";
 import { getTCPSocketByUserID } from "../tcpSockets.js";

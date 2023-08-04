@@ -10,7 +10,7 @@ import {
   setPlayerAsDisconnectedInOngoingGames,
 } from "./disconnect.js";
 import { getRemoteAddressTCP } from "./error.js";
-import { Socket } from "./interfaces/Socket.js";
+import type { Socket } from "./interfaces/Socket.js";
 import { unpackTCPMsg } from "./pack.js";
 import { sendAllUserConnected } from "./sendAll.js";
 import { getNewTCPSocketID, tcpSockets } from "./tcpSockets.js";
@@ -45,13 +45,13 @@ function onConnData(socket: Socket) {
   return (data: Buffer | string) => {
     try {
       handleDataTCP(data, socket);
-    } catch (err) {
+    } catch (error) {
       const userDescription =
         socket.username === undefined
           ? getRemoteAddressTCP(socket)
           : socket.username;
-      console.error(`Client error for "${userDescription}": ${err}`);
-      console.error((err as Error).stack);
+      console.error(`Client error for "${userDescription}": ${error}`);
+      console.error((error as Error).stack);
     }
   };
 }

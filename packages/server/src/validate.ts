@@ -1,8 +1,8 @@
-import { Game } from "./classes/Game.js";
+import type { Game } from "./classes/Game.js";
 import { sendError } from "./error.js";
 import { getOwner } from "./game.js";
 import { isUserInAnyGames } from "./games.js";
-import { Socket } from "./interfaces/Socket.js";
+import type { Socket } from "./interfaces/Socket.js";
 
 export function validateString(
   socket: Socket,
@@ -56,7 +56,7 @@ export function validateAlphanumeric(
   key: string,
   value: string,
 ): boolean {
-  if (/^[a-z0-9]+$/i.exec(value) === null) {
+  if (/^[\da-z]+$/i.exec(value) === null) {
     sendError(socket, `The "${key}" field must be alphanumeric.`);
     return false;
   }
@@ -69,7 +69,7 @@ export function validateAlphanumericHyphen(
   key: string,
   value: string,
 ): boolean {
-  if (/^[a-z0-9-]+$/i.exec(value) === null) {
+  if (/^[\da-z-]+$/i.exec(value) === null) {
     sendError(
       socket,
       `The "${key}" field must be alphanumeric. (Hyphens are also allowed.)`,

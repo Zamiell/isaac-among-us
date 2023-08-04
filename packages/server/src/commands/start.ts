@@ -1,16 +1,16 @@
+import type { StartDataToServer } from "common";
 import {
   DEV_MIN_PLAYERS,
   EMERGENCY_BUTTON_COOLDOWN_SECONDS,
   IS_DEV,
   MIN_PLAYERS,
-  StartDataToServer,
 } from "common";
-import { Game } from "../classes/Game.js";
+import type { Game } from "../classes/Game.js";
 import { sendError } from "../error.js";
 import { doesGameIDExist } from "../games.js";
 import { assignImpostors } from "../imposters.js";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import { sendEmergencyButtonCooldown, sendStarted } from "../sendGame.js";
 import { assignTasks } from "../tasks.js";
 import { validateGameOwner } from "../validate.js";

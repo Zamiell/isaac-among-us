@@ -1,4 +1,5 @@
-import { PlayerTypeAllowed, Role, SkeldRoom, Task, TaskType } from "common";
+import type { PlayerTypeAllowed, Task } from "common";
+import { Role, SkeldRoom, TaskType } from "common";
 
 export class Player {
   index: number;

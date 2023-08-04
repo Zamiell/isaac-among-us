@@ -1,6 +1,7 @@
-import { IS_DEV, NoData } from "common";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { NoData } from "common";
+import { IS_DEV } from "common";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import { emptyArray } from "../isaacScriptCommonTS.js";
 
 export function commandRevive(

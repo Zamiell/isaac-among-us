@@ -1,20 +1,20 @@
+import type { MeetingDataToServer } from "common";
 import {
-  MeetingDataToServer,
   MeetingPhase,
   MeetingResolution,
   MeetingType,
   NOT_VOTED_YET,
   VOTE_SKIP,
 } from "common";
-import { Game } from "../classes/Game.js";
+import type { Game } from "../classes/Game.js";
 import {
   DEFAULT_MEETING_PRE_VOTE_SECONDS,
   DEFAULT_MEETING_VOTE_SECONDS,
 } from "../constants.js";
 import { sendError } from "../error.js";
 import { doesGameIDExist } from "../games.js";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import { emptyArray, newArray } from "../isaacScriptCommonTS.js";
 import {
   sendEndMeeting,

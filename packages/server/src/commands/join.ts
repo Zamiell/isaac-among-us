@@ -1,14 +1,11 @@
-import {
-  JoinDataToServer,
-  MAX_PLAYERS,
-  SocketCommandServerToMod,
-} from "common";
+import type { JoinDataToServer } from "common";
+import { MAX_PLAYERS, SocketCommandServerToMod } from "common";
 import { Player } from "../classes/Player.js";
 import { sendError } from "../error.js";
 import { getLowestUnusedCharacter } from "../game.js";
 import { games } from "../games.js";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import { logGameEvent } from "../log.js";
 import { sendNewGameDescription, sendPlayerJoined } from "../sendGame.js";
 import { sendTCP } from "../sendTCP.js";

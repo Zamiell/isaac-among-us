@@ -1,6 +1,6 @@
 import { IS_DEV, TASK_DESCRIPTIONS, Task, TaskType } from "common";
-import { Game } from "./classes/Game.js";
-import { Player } from "./classes/Player.js";
+import type { Game } from "./classes/Game.js";
+import type { Player } from "./classes/Player.js";
 import {
   DEFAULT_NUM_COMMON_TASKS,
   DEFAULT_NUM_LONG_TASKS,
@@ -22,9 +22,7 @@ export function assignTasks(game: Game): void {
       for (let i = 0; i < numTasks; i++) {
         checkRefillTasks(remainingTasksOfThisType, taskType);
 
-        const remainingTasksArray = Array.from(
-          remainingTasksOfThisType.values(),
-        );
+        const remainingTasksArray = [...remainingTasksOfThisType.values()];
         const task = getRandomArrayElement(remainingTasksArray);
 
         player.tasks[taskType].push(task);

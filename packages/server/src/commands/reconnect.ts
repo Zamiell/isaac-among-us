@@ -1,8 +1,9 @@
-import { ReconnectDataToServer, Role, SocketCommandServerToMod } from "common";
-import { Game } from "../classes/Game.js";
-import { Player } from "../classes/Player.js";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { ReconnectDataToServer } from "common";
+import { Role, SocketCommandServerToMod } from "common";
+import type { Game } from "../classes/Game.js";
+import type { Player } from "../classes/Player.js";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import { logGameEvent } from "../log.js";
 import {
   getGameDescriptionPlayers,

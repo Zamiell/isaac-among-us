@@ -1,8 +1,9 @@
-import { GameListDescription, NoData, SocketCommandServerToMod } from "common";
+import type { GameListDescription, NoData } from "common";
+import { SocketCommandServerToMod } from "common";
 import { isPlayerInGame } from "../game.js";
 import { games } from "../games.js";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import { sendTCP } from "../sendTCP.js";
 
 export function commandGameList(

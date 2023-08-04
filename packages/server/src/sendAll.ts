@@ -1,7 +1,8 @@
 // A collection of helper functions to send changes in the server state to every connected client.
 
-import { SocketCommandServerToMod, SocketCommandServerToModData } from "common";
-import { Game } from "./classes/Game.js";
+import type { SocketCommandServerToModData } from "common";
+import { SocketCommandServerToMod } from "common";
+import type { Game } from "./classes/Game.js";
 import { sendTCP } from "./sendTCP.js";
 import { tcpSockets } from "./tcpSockets.js";
 

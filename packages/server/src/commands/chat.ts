@@ -1,6 +1,6 @@
-import { ChatDataToServer } from "common";
-import { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
-import { Socket } from "../interfaces/Socket.js";
+import type { ChatDataToServer } from "common";
+import type { ExtraCommandData } from "../interfaces/ExtraCommandData.js";
+import type { Socket } from "../interfaces/Socket.js";
 import { sendChat } from "../sendGame.js";
 
 export function commandChat(

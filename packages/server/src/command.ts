@@ -1,11 +1,11 @@
 import { SocketCommandModToServer, SocketCommandModToServerData } from "common";
-import { Game } from "./classes/Game.js";
+import type { Game } from "./classes/Game.js";
 import { SERVER_COMMAND_MAP } from "./commandMap.js";
 import { sendError } from "./error.js";
 import { getPlayer } from "./game.js";
 import { games, getGameByName } from "./games.js";
-import { ExtraCommandData } from "./interfaces/ExtraCommandData.js";
-import { Socket } from "./interfaces/Socket.js";
+import type { ExtraCommandData } from "./interfaces/ExtraCommandData.js";
+import type { Socket } from "./interfaces/Socket.js";
 import { ReadonlySet } from "./isaacScriptCommonTS.js";
 import {
   validateAlphanumeric,
@@ -128,10 +128,11 @@ function validate(
 
     // A specific field may have additional validation requirements.
     const validateFunction = validateFunctionMap.get(key);
-    if (validateFunction !== undefined) {
-      if (!validateFunction(socket, key, modifiedValue)) {
-        return undefined;
-      }
+    if (
+      validateFunction !== undefined &&
+      !validateFunction(socket, key, modifiedValue)
+    ) {
+      return undefined;
     }
   }
 

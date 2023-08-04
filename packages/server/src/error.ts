@@ -1,5 +1,5 @@
 import { SocketCommandServerToMod } from "common";
-import { Socket } from "./interfaces/Socket.js";
+import type { Socket } from "./interfaces/Socket.js";
 import { sendTCP } from "./sendTCP.js";
 
 export function sendError(socket: Socket, msg: string): void {

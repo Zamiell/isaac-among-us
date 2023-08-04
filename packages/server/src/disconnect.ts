@@ -1,8 +1,8 @@
-import { Game } from "./classes/Game.js";
-import { Player } from "./classes/Player.js";
+import type { Game } from "./classes/Game.js";
+import type { Player } from "./classes/Player.js";
 import { commandLeave } from "./commands/leave.js";
 import { games } from "./games.js";
-import { Socket } from "./interfaces/Socket.js";
+import type { Socket } from "./interfaces/Socket.js";
 import { logGameEvent } from "./log.js";
 import { sendChat, sendNewGameDescription } from "./sendGame.js";
 
