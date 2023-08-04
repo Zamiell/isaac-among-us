@@ -2,7 +2,8 @@ import type {
   GameDescriptionPlayer,
   Meeting,
   PlayerBody,
-  TaskList} from "common";
+  TaskList,
+} from "common";
 import {
   MeetingResolution,
   PlayerTypeAllowed,

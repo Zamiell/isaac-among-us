@@ -1,4 +1,4 @@
-import type { GameListDataToMod} from "common";
+import type { GameListDataToMod } from "common";
 import { SocketCommandModToServer } from "common";
 import { addLocalChat } from "../chat";
 import * as autoLogin from "../features/autoLogin";

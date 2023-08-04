@@ -1,4 +1,4 @@
-import type { Task} from "common";
+import type { Task } from "common";
 import { TASK_DESCRIPTIONS } from "common";
 import { EntityType, PressurePlateState } from "isaac-typescript-definitions";
 import { ButtonSubType } from "../enums/ButtonSubType";

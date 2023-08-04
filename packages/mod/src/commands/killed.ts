@@ -4,7 +4,7 @@ import {
   EntityGridCollisionClass,
   SoundEffect,
 } from "isaac-typescript-definitions";
-import { sfxManager, VectorZero } from "isaacscript-common";
+import { VectorZero, sfxManager } from "isaacscript-common";
 import { SoundEffectCustom } from "../enums/SoundEffectCustom";
 import { g } from "../globals";
 import { mod } from "../mod";

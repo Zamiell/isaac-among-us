@@ -1,11 +1,7 @@
 import { SkeldRoom } from "common";
-import type {
-  RoomTransitionAnim} from "isaac-typescript-definitions";
-import {
-  Direction,
-  DoorSlot
-} from "isaac-typescript-definitions";
-import { asNumber, game, ReadonlyMap } from "isaacscript-common";
+import type { RoomTransitionAnim } from "isaac-typescript-definitions";
+import { Direction, DoorSlot } from "isaac-typescript-definitions";
+import { ReadonlyMap, asNumber, game } from "isaacscript-common";
 import { inLobby } from "./features/lobby";
 import { sendRoom } from "./features/sendGameEvents";
 import { g } from "./globals";

@@ -4,7 +4,7 @@ import {
   InputHook,
   ModCallback,
 } from "isaac-typescript-definitions";
-import { game, ReadonlySet } from "isaacscript-common";
+import { ReadonlySet, game } from "isaacscript-common";
 import { g } from "../globals";
 import { mod } from "../mod";
 import { inCutscene, inEndMeeting } from "../utils";

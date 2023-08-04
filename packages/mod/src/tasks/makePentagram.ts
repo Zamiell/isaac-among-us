@@ -5,7 +5,7 @@ import {
   EntityType,
   PickupVariant,
 } from "isaac-typescript-definitions";
-import { game, VectorZero } from "isaacscript-common";
+import { VectorZero, game } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import { g } from "../globals";

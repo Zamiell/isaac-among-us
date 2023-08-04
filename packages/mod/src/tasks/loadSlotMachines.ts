@@ -6,8 +6,8 @@ import {
   SlotVariant,
 } from "isaac-typescript-definitions";
 import {
-  getSlots,
   ReadonlySet,
+  getSlots,
   removeAllMatchingEntities,
 } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";

@@ -1,4 +1,4 @@
-import type { LoggedInDataToMod} from "common";
+import type { LoggedInDataToMod } from "common";
 import { SocketCommandModToServer } from "common";
 import { addLocalChat } from "../chat";
 import { g } from "../globals";

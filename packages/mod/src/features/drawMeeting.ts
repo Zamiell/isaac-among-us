@@ -1,4 +1,4 @@
-import type { Meeting} from "common";
+import type { Meeting } from "common";
 import { MeetingPhase } from "common";
 import { g } from "../globals";
 import { getTime } from "../network/socketClient";

@@ -1,18 +1,17 @@
 import { Role } from "common";
-import type {
-  EntityType} from "isaac-typescript-definitions";
+import type { EntityType } from "isaac-typescript-definitions";
 import {
   CacheFlag,
   EntityFlag,
   NullItemID,
 } from "isaac-typescript-definitions";
 import {
+  VectorZero,
   fonts,
   game,
   getScreenBottomRightPos,
   log,
   setBlindfold,
-  VectorZero,
 } from "isaacscript-common";
 import { CutsceneState } from "./enums/CutsceneState";
 import { EndMeetingState } from "./enums/EndMeetingState";

@@ -1,4 +1,4 @@
-import { IS_DEV, Task, TaskType, TASK_DESCRIPTIONS } from "common";
+import { IS_DEV, TASK_DESCRIPTIONS, Task, TaskType } from "common";
 import { Game } from "./classes/Game.js";
 import { Player } from "./classes/Player.js";
 import {

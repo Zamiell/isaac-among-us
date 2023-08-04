@@ -5,11 +5,11 @@ import {
   RockState,
 } from "isaac-typescript-definitions";
 import {
+  VectorZero,
   asNumber,
   game,
   getGridEntities,
   spawnGridEntity,
-  VectorZero,
 } from "isaacscript-common";
 import { taskComplete } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";

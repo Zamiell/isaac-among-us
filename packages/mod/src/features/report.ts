@@ -1,4 +1,4 @@
-import type { PlayerBody} from "common";
+import type { PlayerBody } from "common";
 import { MeetingType, SocketCommandModToServer } from "common";
 import { VentState } from "../enums/VentState";
 import { g } from "../globals";

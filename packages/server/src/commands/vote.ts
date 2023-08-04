@@ -1,8 +1,8 @@
 import {
   MeetingPhase,
   NOT_VOTED_YET,
-  VoteDataToServer,
   VOTE_SKIP,
+  VoteDataToServer,
 } from "common";
 import { Game } from "../classes/Game.js";
 import { Player } from "../classes/Player.js";
