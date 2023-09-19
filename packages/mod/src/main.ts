@@ -33,9 +33,7 @@ import * as collisionObjects from "./lib/collisionObjects";
 import { mod } from "./mod";
 import { disconnect } from "./network/socketClient";
 
-main();
-
-function main() {
+export function main(): void {
   initLibraries();
   initFeatures();
   initCallbacks();

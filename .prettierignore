@@ -6,6 +6,22 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
+# Minified files
+*.min.js
+*.min.css
+
+# XML files created by Basement Renovator
+mod/content/rooms/**/*.xml
+mod/content/luarooms/**/*.xml
+mod/resources/rooms/**/*.xml
+mod/resources/luarooms/**/*.xml
+customStages/**/*.xml
+
+# XML files created by the animation editor
+mod/resources/**/*.anm2
+
+# @template-customization-start
+
 # XML files created by Basement Renovator
 packages/mod/content/rooms/**/*.xml
 packages/mod/content/luarooms/**/*.xml
@@ -15,3 +31,5 @@ packages/mod/**/map.xml
 
 # XML files created by the animation editor
 packages/mod/resources/**/*.anm2
+
+# @template-customization-end

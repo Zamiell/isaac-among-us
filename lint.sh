@@ -6,6 +6,10 @@ set -euo pipefail # Exit on errors and undefined variables.
 # https://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+# Get the name of the repository:
+# https://stackoverflow.com/questions/23162299/how-to-get-the-last-part-of-dirname-in-bash/23162553
+REPO_NAME="$(basename "$DIR")"
+
 SECONDS=0
 
 cd "$DIR"
@@ -61,7 +65,7 @@ npx cspell-check-unused-words
 
 # @template-customization-start
 # Check for base file updates.
-npx isaacscript check --ignore ".eslintrc.cjs,.prettierignore,build.sh,publish.sh,run.sh,tsconfig.json,tsconfig.eslint.json"
+npx isaacscript check --ignore ".eslintrc.cjs,build.sh,bundleEntry.ts,publish.sh,run.sh,tsconfig.json,tsconfig.eslint.json"
 # @template-customization-end
 
-echo "Successfully linted in $SECONDS seconds."
+echo "Successfully linted $REPO_NAME in $SECONDS seconds."

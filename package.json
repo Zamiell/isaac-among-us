@@ -9,26 +9,26 @@
     "postinstall": "prisma generate --schema=packages/server/prisma/schema.prisma"
   },
   "dependencies": {
-    "@prisma/client": "^5.1.1",
-    "argon2": "^0.31.0",
-    "isaac-typescript-definitions": "^13.0.17",
-    "isaacscript-common": "^30.12.4",
+    "@prisma/client": "^5.3.1",
+    "argon2": "^0.31.1",
+    "isaac-typescript-definitions": "^16.1.1",
+    "isaacscript-common": "^36.1.0",
     "struct": "^0.0.12"
   },
   "devDependencies": {
-    "@types/node": "^20.4.7",
-    "@types/struct": "^0.0.4",
-    "isaacscript": "^3.6.54",
-    "isaacscript-lint": "^5.1.2",
-    "isaacscript-spell": "^1.2.41",
+    "@types/node": "^20.6.2",
+    "@types/struct": "^0.0.5",
+    "isaacscript": "^3.11.0",
+    "isaacscript-lint": "^5.10.0",
+    "isaacscript-spell": "^1.2.42",
     "isaacscript-tsconfig": "^4.0.0",
-    "npm-check-updates": "^16.10.17",
-    "prisma": "^5.1.1",
+    "npm-check-updates": "^16.14.4",
+    "prisma": "^5.3.1",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.1.6",
-    "typescript-to-lua": "^1.17.0"
+    "typescript": "^5.2.2",
+    "typescript-to-lua": "^1.19.2"
   },
   "packageManager": "yarn@3.6.1"
 }

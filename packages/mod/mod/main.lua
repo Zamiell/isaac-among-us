@@ -40,6 +40,14 @@ local function require(file, ...)
 end
 ____modules = {
 ["lualib_bundle"] = function(...) 
+local function __TS__ArrayAt(self, relativeIndex)
+    local absoluteIndex = relativeIndex < 0 and #self + relativeIndex or relativeIndex
+    if absoluteIndex >= 0 and absoluteIndex < #self then
+        return self[absoluteIndex + 1]
+    end
+    return nil
+end
+
 local function __TS__ArrayIsArray(value)
     return type(value) == "table" and (value[1] ~= nil or next(value) == nil)
 end
@@ -76,6 +84,8 @@ do
         return setmetatable({description = description}, symbolMetatable)
     end
     Symbol = {
+        asyncDispose = __TS__Symbol("Symbol.asyncDispose"),
+        dispose = __TS__Symbol("Symbol.dispose"),
         iterator = __TS__Symbol("Symbol.iterator"),
         hasInstance = __TS__Symbol("Symbol.hasInstance"),
         species = __TS__Symbol("Symbol.species"),
@@ -575,6 +585,32 @@ local function __TS__ArraySetLength(self, length)
     return length
 end
 
+local __TS__Unpack = table.unpack or unpack
+
+local function __TS__ArrayToReversed(self)
+    local copy = {__TS__Unpack(self)}
+    __TS__ArrayReverse(copy)
+    return copy
+end
+
+local function __TS__ArrayToSorted(self, compareFn)
+    local copy = {__TS__Unpack(self)}
+    __TS__ArraySort(copy, compareFn)
+    return copy
+end
+
+local function __TS__ArrayToSpliced(self, start, deleteCount, ...)
+    local copy = {__TS__Unpack(self)}
+    __TS__ArraySplice(copy, start, deleteCount, ...)
+    return copy
+end
+
+local function __TS__ArrayWith(self, index, value)
+    local copy = {__TS__Unpack(self)}
+    copy[index + 1] = value
+    return copy
+end
+
 local function __TS__InstanceOf(obj, classTbl)
     if type(classTbl) ~= "table" then
         error("Right-hand side of 'instanceof' is not an object", 0)
@@ -606,8 +642,6 @@ local function __TS__Class(self)
     c.prototype.constructor = c
     return c
 end
-
-local __TS__Unpack = table.unpack or unpack
 
 local function __TS__FunctionBind(fn, ...)
     local boundArgs = {...}
@@ -2424,7 +2458,72 @@ local function __TS__TypeOf(value)
     end
 end
 
+local function __TS__Using(self, cb, ...)
+    local args = {...}
+    local thrownError
+    local ok, result = xpcall(
+        function() return cb(
+            nil,
+            __TS__Unpack(args)
+        ) end,
+        function(err)
+            thrownError = err
+            return thrownError
+        end
+    )
+    local argArray = {__TS__Unpack(args)}
+    do
+        local i = #argArray - 1
+        while i >= 0 do
+            local ____self_0 = argArray[i + 1]
+            ____self_0[Symbol.dispose](____self_0)
+            i = i - 1
+        end
+    end
+    if not ok then
+        error(thrownError, 0)
+    end
+    return result
+end
+
+local function __TS__UsingAsync(self, cb, ...)
+    local args = {...}
+    return __TS__AsyncAwaiter(function(____awaiter_resolve)
+        local thrownError
+        local ok, result = xpcall(
+            function() return cb(
+                nil,
+                __TS__Unpack(args)
+            ) end,
+            function(err)
+                thrownError = err
+                return thrownError
+            end
+        )
+        local argArray = {__TS__Unpack(args)}
+        do
+            local i = #argArray - 1
+            while i >= 0 do
+                if argArray[i + 1][Symbol.dispose] ~= nil then
+                    local ____self_0 = argArray[i + 1]
+                    ____self_0[Symbol.dispose](____self_0)
+                end
+                if argArray[i + 1][Symbol.asyncDispose] ~= nil then
+                    local ____self_1 = argArray[i + 1]
+                    __TS__Await(____self_1[Symbol.asyncDispose](____self_1))
+                end
+                i = i - 1
+            end
+        end
+        if not ok then
+            error(thrownError, 0)
+        end
+        return ____awaiter_resolve(nil, result)
+    end)
+end
+
 return {
+  __TS__ArrayAt = __TS__ArrayAt,
   __TS__ArrayConcat = __TS__ArrayConcat,
   __TS__ArrayEntries = __TS__ArrayEntries,
   __TS__ArrayEvery = __TS__ArrayEvery,
@@ -2452,6 +2551,10 @@ return {
   __TS__ArrayFlat = __TS__ArrayFlat,
   __TS__ArrayFlatMap = __TS__ArrayFlatMap,
   __TS__ArraySetLength = __TS__ArraySetLength,
+  __TS__ArrayToReversed = __TS__ArrayToReversed,
+  __TS__ArrayToSorted = __TS__ArrayToSorted,
+  __TS__ArrayToSpliced = __TS__ArrayToSpliced,
+  __TS__ArrayWith = __TS__ArrayWith,
   __TS__AsyncAwaiter = __TS__AsyncAwaiter,
   __TS__Await = __TS__Await,
   __TS__Class = __TS__Class,
@@ -2533,7 +2636,9 @@ return {
   __TS__SymbolRegistryFor = __TS__SymbolRegistryFor,
   __TS__SymbolRegistryKeyFor = __TS__SymbolRegistryKeyFor,
   __TS__TypeOf = __TS__TypeOf,
-  __TS__Unpack = __TS__Unpack
+  __TS__Unpack = __TS__Unpack,
+  __TS__Using = __TS__Using,
+  __TS__UsingAsync = __TS__UsingAsync
 }
  end,
 ["packages.common.src.constants"] = function(...) 
@@ -3881,6 +3986,14 @@ do
     end
 end
 do
+    local ____export = require("lua_modules.isaacscript-common.dist.src.functions.external")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+do
     local ____export = require("lua_modules.isaacscript-common.dist.src.functions.familiars")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
@@ -3930,14 +4043,6 @@ do
 end
 do
     local ____export = require("lua_modules.isaacscript-common.dist.src.functions.hex")
-    for ____exportKey, ____exportValue in pairs(____export) do
-        if ____exportKey ~= "default" then
-            ____exports[____exportKey] = ____exportValue
-        end
-    end
-end
-do
-    local ____export = require("lua_modules.isaacscript-common.dist.src.functions.initArray")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
             ____exports[____exportKey] = ____exportValue
@@ -4089,6 +4194,14 @@ do
     end
 end
 do
+    local ____export = require("lua_modules.isaacscript-common.dist.src.functions.newArray")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+do
     local ____export = require("lua_modules.isaacscript-common.dist.src.functions.nextStage")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
@@ -4177,14 +4290,6 @@ do
     end
 end
 do
-    local ____export = require("lua_modules.isaacscript-common.dist.src.functions.playerStats")
-    for ____exportKey, ____exportValue in pairs(____export) do
-        if ____exportKey ~= "default" then
-            ____exports[____exportKey] = ____exportValue
-        end
-    end
-end
-do
     local ____export = require("lua_modules.isaacscript-common.dist.src.functions.players")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
@@ -4234,6 +4339,14 @@ do
 end
 do
     local ____export = require("lua_modules.isaacscript-common.dist.src.functions.readOnly")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+do
+    local ____export = require("lua_modules.isaacscript-common.dist.src.functions.render")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
             ____exports[____exportKey] = ____exportValue
@@ -4735,6 +4848,14 @@ do
 end
 do
     local ____export = require("lua_modules.isaac-typescript-definitions.dist.src.enums.CurseID")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+do
+    local ____export = require("lua_modules.isaac-typescript-definitions.dist.src.enums.DebugCommand")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
             ____exports[____exportKey] = ____exportValue
@@ -7367,8 +7488,8 @@ ____exports.PoopEntityVariant.STINKY = 14
 ____exports.PoopEntityVariant[____exports.PoopEntityVariant.STINKY] = "STINKY"
 ____exports.PoopEntityVariant.BLACK = 15
 ____exports.PoopEntityVariant[____exports.PoopEntityVariant.BLACK] = "BLACK"
-____exports.PoopEntityVariant.HOLY = 16
-____exports.PoopEntityVariant[____exports.PoopEntityVariant.HOLY] = "HOLY"
+____exports.PoopEntityVariant.WHITE = 16
+____exports.PoopEntityVariant[____exports.PoopEntityVariant.WHITE] = "WHITE"
 --- For `EntityType.RAGLING` (246).
 ____exports.RaglingVariant = {}
 ____exports.RaglingVariant.RAGLING = 0
@@ -10729,7 +10850,7 @@ ____exports.TrinketType[____exports.TrinketType.SIGIL_OF_BAPHOMET] = "SIGIL_OF_B
 ____exports.BedSubType = {}
 ____exports.BedSubType.ISAAC = 0
 ____exports.BedSubType[____exports.BedSubType.ISAAC] = "ISAAC"
-____exports.BedSubType.MOM = 1
+____exports.BedSubType.MOM = 10
 ____exports.BedSubType[____exports.BedSubType.MOM] = "MOM"
 --- For `EntityType.LASER` (7).
 ____exports.LaserSubType = {}
@@ -11081,6 +11202,16 @@ ____exports.TallLadderSubType.TALL_LADDER = 0
 ____exports.TallLadderSubType[____exports.TallLadderSubType.TALL_LADDER] = "TALL_LADDER"
 ____exports.TallLadderSubType.STAIRWAY = 1
 ____exports.TallLadderSubType[____exports.TallLadderSubType.STAIRWAY] = "STAIRWAY"
+--- For `EntityType.EFFECT` (1000), `EffectVariant.PORTAL_TELEPORT` (161).
+____exports.PortalTeleportSubType = {}
+____exports.PortalTeleportSubType.TREASURE_ROOM = 0
+____exports.PortalTeleportSubType[____exports.PortalTeleportSubType.TREASURE_ROOM] = "TREASURE_ROOM"
+____exports.PortalTeleportSubType.BOSS_ROOM = 1
+____exports.PortalTeleportSubType[____exports.PortalTeleportSubType.BOSS_ROOM] = "BOSS_ROOM"
+____exports.PortalTeleportSubType.SECRET_ROOM = 2
+____exports.PortalTeleportSubType[____exports.PortalTeleportSubType.SECRET_ROOM] = "SECRET_ROOM"
+____exports.PortalTeleportSubType.RANDOM_ROOM = 3
+____exports.PortalTeleportSubType[____exports.PortalTeleportSubType.RANDOM_ROOM] = "RANDOM_ROOM"
 --- For `EntityType.EFFECT` (1000), `EffectVariant.PURGATORY` (189).
 ____exports.PurgatorySubType = {}
 ____exports.PurgatorySubType.RIFT = 0
@@ -11643,8 +11774,8 @@ ____exports.PoopGridEntityVariant.NORMAL = 0
 ____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.NORMAL] = "NORMAL"
 ____exports.PoopGridEntityVariant.RED = 1
 ____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.RED] = "RED"
-____exports.PoopGridEntityVariant.CORN = 2
-____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.CORN] = "CORN"
+____exports.PoopGridEntityVariant.CORNY = 2
+____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.CORNY] = "CORNY"
 ____exports.PoopGridEntityVariant.GOLDEN = 3
 ____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.GOLDEN] = "GOLDEN"
 ____exports.PoopGridEntityVariant.RAINBOW = 4
@@ -11653,14 +11784,14 @@ ____exports.PoopGridEntityVariant.BLACK = 5
 ____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.BLACK] = "BLACK"
 ____exports.PoopGridEntityVariant.WHITE = 6
 ____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.WHITE] = "WHITE"
-____exports.PoopGridEntityVariant.GIGA_TOP_LEFT = 7
-____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.GIGA_TOP_LEFT] = "GIGA_TOP_LEFT"
-____exports.PoopGridEntityVariant.GIGA_TOP_RIGHT = 8
-____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.GIGA_TOP_RIGHT] = "GIGA_TOP_RIGHT"
-____exports.PoopGridEntityVariant.GIGA_BOTTOM_LEFT = 9
-____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.GIGA_BOTTOM_LEFT] = "GIGA_BOTTOM_LEFT"
-____exports.PoopGridEntityVariant.GIGA_BOTTOM_RIGHT = 10
-____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.GIGA_BOTTOM_RIGHT] = "GIGA_BOTTOM_RIGHT"
+____exports.PoopGridEntityVariant.GIANT_TOP_LEFT = 7
+____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.GIANT_TOP_LEFT] = "GIANT_TOP_LEFT"
+____exports.PoopGridEntityVariant.GIANT_TOP_RIGHT = 8
+____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.GIANT_TOP_RIGHT] = "GIANT_TOP_RIGHT"
+____exports.PoopGridEntityVariant.GIANT_BOTTOM_LEFT = 9
+____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.GIANT_BOTTOM_LEFT] = "GIANT_BOTTOM_LEFT"
+____exports.PoopGridEntityVariant.GIANT_BOTTOM_RIGHT = 10
+____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.GIANT_BOTTOM_RIGHT] = "GIANT_BOTTOM_RIGHT"
 ____exports.PoopGridEntityVariant.CHARMING = 11
 ____exports.PoopGridEntityVariant[____exports.PoopGridEntityVariant.CHARMING] = "CHARMING"
 --- For `GridEntityType.DOOR` (16).
@@ -14966,6 +15097,20 @@ ____exports.LevelStage.THE_VOID = 12
 ____exports.LevelStage[____exports.LevelStage.THE_VOID] = "THE_VOID"
 ____exports.LevelStage.HOME = 13
 ____exports.LevelStage[____exports.LevelStage.HOME] = "HOME"
+____exports.LevelStage.BASEMENT_GREED_MODE = 1
+____exports.LevelStage[____exports.LevelStage.BASEMENT_GREED_MODE] = "BASEMENT_GREED_MODE"
+____exports.LevelStage.CAVES_GREED_MODE = 2
+____exports.LevelStage[____exports.LevelStage.CAVES_GREED_MODE] = "CAVES_GREED_MODE"
+____exports.LevelStage.DEPTHS_GREED_MODE = 3
+____exports.LevelStage[____exports.LevelStage.DEPTHS_GREED_MODE] = "DEPTHS_GREED_MODE"
+____exports.LevelStage.WOMB_GREED_MODE = 4
+____exports.LevelStage[____exports.LevelStage.WOMB_GREED_MODE] = "WOMB_GREED_MODE"
+____exports.LevelStage.SHEOL_GREED_MODE = 5
+____exports.LevelStage[____exports.LevelStage.SHEOL_GREED_MODE] = "SHEOL_GREED_MODE"
+____exports.LevelStage.SHOP_GREED_MODE = 6
+____exports.LevelStage[____exports.LevelStage.SHOP_GREED_MODE] = "SHOP_GREED_MODE"
+____exports.LevelStage.ULTRA_GREED_GREED_MODE = 7
+____exports.LevelStage[____exports.LevelStage.ULTRA_GREED_GREED_MODE] = "ULTRA_GREED_GREED_MODE"
 return ____exports
  end,
 ["lua_modules.isaac-typescript-definitions.dist.src.enums.LaserOffset"] = function(...) 
@@ -15519,8 +15664,8 @@ ____exports.GridEntityXMLType.POOP_RED = 1490
 ____exports.GridEntityXMLType[____exports.GridEntityXMLType.POOP_RED] = "POOP_RED"
 ____exports.GridEntityXMLType.POOP_RAINBOW = 1494
 ____exports.GridEntityXMLType[____exports.GridEntityXMLType.POOP_RAINBOW] = "POOP_RAINBOW"
-____exports.GridEntityXMLType.POOP_CORN = 1495
-____exports.GridEntityXMLType[____exports.GridEntityXMLType.POOP_CORN] = "POOP_CORN"
+____exports.GridEntityXMLType.POOP_CORNY = 1495
+____exports.GridEntityXMLType[____exports.GridEntityXMLType.POOP_CORNY] = "POOP_CORNY"
 ____exports.GridEntityXMLType.POOP_GOLDEN = 1496
 ____exports.GridEntityXMLType[____exports.GridEntityXMLType.POOP_GOLDEN] = "POOP_GOLDEN"
 ____exports.GridEntityXMLType.POOP_BLACK = 1497
@@ -16576,6 +16721,38 @@ ____exports.Difficulty.GREED = 2
 ____exports.Difficulty[____exports.Difficulty.GREED] = "GREED"
 ____exports.Difficulty.GREEDIER = 3
 ____exports.Difficulty[____exports.Difficulty.GREEDIER] = "GREEDIER"
+return ____exports
+ end,
+["lua_modules.isaac-typescript-definitions.dist.src.enums.DebugCommand"] = function(...) 
+local ____exports = {}
+--- The values accepted by the `debug` console command.
+____exports.DebugCommand = {}
+____exports.DebugCommand.ENTITY_POSITIONS = 1
+____exports.DebugCommand[____exports.DebugCommand.ENTITY_POSITIONS] = "ENTITY_POSITIONS"
+____exports.DebugCommand.GRID_COST = 2
+____exports.DebugCommand[____exports.DebugCommand.GRID_COST] = "GRID_COST"
+____exports.DebugCommand.INFINITE_HP = 3
+____exports.DebugCommand[____exports.DebugCommand.INFINITE_HP] = "INFINITE_HP"
+____exports.DebugCommand.HIGH_DAMAGE = 4
+____exports.DebugCommand[____exports.DebugCommand.HIGH_DAMAGE] = "HIGH_DAMAGE"
+____exports.DebugCommand.SHOW_ROOM_INFO = 5
+____exports.DebugCommand[____exports.DebugCommand.SHOW_ROOM_INFO] = "SHOW_ROOM_INFO"
+____exports.DebugCommand.SHOW_HITSPHERES = 6
+____exports.DebugCommand[____exports.DebugCommand.SHOW_HITSPHERES] = "SHOW_HITSPHERES"
+____exports.DebugCommand.SHOW_DAMAGE_VALUES = 7
+____exports.DebugCommand[____exports.DebugCommand.SHOW_DAMAGE_VALUES] = "SHOW_DAMAGE_VALUES"
+____exports.DebugCommand.INFINITE_ITEM_CHARGES = 8
+____exports.DebugCommand[____exports.DebugCommand.INFINITE_ITEM_CHARGES] = "INFINITE_ITEM_CHARGES"
+____exports.DebugCommand.HIGH_LUCK = 9
+____exports.DebugCommand[____exports.DebugCommand.HIGH_LUCK] = "HIGH_LUCK"
+____exports.DebugCommand.QUICK_KILL = 10
+____exports.DebugCommand[____exports.DebugCommand.QUICK_KILL] = "QUICK_KILL"
+____exports.DebugCommand.GRID_INFO = 11
+____exports.DebugCommand[____exports.DebugCommand.GRID_INFO] = "GRID_INFO"
+____exports.DebugCommand.PLAYER_ITEM_INFO = 12
+____exports.DebugCommand[____exports.DebugCommand.PLAYER_ITEM_INFO] = "PLAYER_ITEM_INFO"
+____exports.DebugCommand.SHOW_GRID_COLLISION_POINTS = 13
+____exports.DebugCommand[____exports.DebugCommand.SHOW_GRID_COLLISION_POINTS] = "SHOW_GRID_COLLISION_POINTS"
 return ____exports
  end,
 ["lua_modules.isaac-typescript-definitions.dist.src.enums.CopyableIsaacAPIClassType"] = function(...) 
@@ -17640,6 +17817,8 @@ local ____random = require("lua_modules.isaacscript-common.dist.src.functions.ra
 local getRandomFloat = ____random.getRandomFloat
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
 local getRandomSeed = ____rng.getRandomSeed
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- Get a random index from a `WeightedArray`. (A `WeightedArray` is an array of tuples, where the
 -- first element in the tuple is a value, and the second element in the tuple is a float
 -- corresponding to the value's weight.)
@@ -17677,11 +17856,558 @@ function ____exports.getRandomFromWeightedArray(self, weightedArray, seedOrRNG)
     end
     local randomIndex = ____exports.getRandomIndexFromWeightedArray(nil, weightedArray, seedOrRNG)
     local randomElement = weightedArray[randomIndex + 1]
-    if randomElement == nil then
-        error("Failed to get an element from a weighted array using a random index of: " .. tostring(randomIndex))
-    end
+    assertDefined(
+        nil,
+        randomElement,
+        "Failed to get an element from a weighted array using a random index of: " .. tostring(randomIndex)
+    )
     return randomElement[1]
 end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.functions.utils"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+local ____playerIndex = require("lua_modules.isaacscript-common.dist.src.functions.playerIndex")
+local getAllPlayers = ____playerIndex.getAllPlayers
+local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
+local isFunction = ____types.isFunction
+--- Helper function to throw an error (using the `error` Lua function) if the provided value is equal
+-- to `undefined`.
+-- 
+-- This is useful to have TypeScript narrow a `T | undefined` value to `T` in a concise way.
+function ____exports.assertDefined(self, value, ...)
+    local ____bindingPattern0 = {...}
+    local msg
+    msg = ____bindingPattern0[1]
+    if value == nil then
+        error(msg)
+    end
+end
+--- Helper function to return an array of integers with the specified range, inclusive on the lower
+-- end and exclusive on the high end. (The "e" in the function name stands for exclusive.) Thus,
+-- this function works in a similar way as the built-in `range` function from Python.
+-- 
+-- If the end is lower than the start, then the range will be reversed.
+-- 
+-- For example:
+-- 
+-- - `eRange(2)` returns `[0, 1]`.
+-- - `eRange(3)` returns `[0, 1, 2]`.
+-- - `eRange(-3)` returns `[0, -1, -2]`.
+-- - `eRange(1, 3)` returns `[1, 2]`.
+-- - `eRange(2, 5)` returns `[2, 3, 4]`.
+-- - `eRange(5, 2)` returns `[5, 4, 3]`.
+-- 
+-- @param start The integer to start at.
+-- @param end Optional. The integer to end at. If not specified, then the start will be 0 and the
+-- first argument will be the end.
+-- @param increment Optional. The increment to use. Default is 1.
+function ____exports.eRange(self, start, ____end, increment)
+    if increment == nil then
+        increment = 1
+    end
+    if ____end == nil then
+        return ____exports.eRange(nil, 0, start, increment)
+    end
+    local array = {}
+    if start < ____end then
+        do
+            local i = start
+            while i < ____end do
+                array[#array + 1] = i
+                i = i + increment
+            end
+        end
+    else
+        do
+            local i = start
+            while i > ____end do
+                array[#array + 1] = i
+                i = i - increment
+            end
+        end
+    end
+    return array
+end
+--- Helper function to log what is happening in functions that recursively move through nested data
+-- structures.
+function ____exports.getTraversalDescription(self, key, traversalDescription)
+    if traversalDescription ~= "" then
+        traversalDescription = traversalDescription .. " --> "
+    end
+    traversalDescription = traversalDescription .. tostring(key)
+    return traversalDescription
+end
+--- Helper function to return an array of integers with the specified range, inclusive on both ends.
+-- (The "i" in the function name stands for inclusive.)
+-- 
+-- If the end is lower than the start, then the range will be reversed.
+-- 
+-- For example:
+-- 
+-- - `iRange(2)` returns `[0, 1, 2]`.
+-- - `iRange(3)` returns `[0, 1, 2, 3]`.
+-- - `iRange(-3)` returns `[0, -1, -2, -3]`.
+-- - `iRange(1, 3)` returns `[1, 2, 3]`.
+-- - `iRange(2, 5)` returns `[2, 3, 4, 5]`.
+-- - `iRange(5, 2)` returns `[5, 4, 3, 2]`.
+-- 
+-- @param start The integer to start at.
+-- @param end Optional. The integer to end at. If not specified, then the start will be 0 and the
+-- first argument will be the end.
+-- @param increment Optional. The increment to use. Default is 1.
+function ____exports.iRange(self, start, ____end, increment)
+    if increment == nil then
+        increment = 1
+    end
+    if ____end == nil then
+        return ____exports.iRange(nil, 0, start, increment)
+    end
+    local rangeIncreasing = start <= ____end
+    local exclusiveEnd = rangeIncreasing and ____end + 1 or ____end - 1
+    return ____exports.eRange(nil, start, exclusiveEnd, increment)
+end
+--- Helper function to check if a variable is within a certain range, inclusive on both ends.
+-- 
+-- - For example, `inRange(1, 1, 3)` will return `true`.
+-- - For example, `inRange(0, 1, 3)` will return `false`.
+-- 
+-- @param num The number to check.
+-- @param start The start of the range to check.
+-- @param end The end of the range to check.
+function ____exports.inRange(self, num, start, ____end)
+    return num >= start and num <= ____end
+end
+--- Helper function to detect if there is two or more players currently playing.
+-- 
+-- Specifically, this function looks for unique `ControllerIndex` values across all players.
+-- 
+-- This function is not safe to use in the `POST_PLAYER_INIT` callback, because the
+-- `ControllerIndex` will not be set properly. As a workaround, you can use it in the
+-- `POST_PLAYER_INIT_FIRST` callback (or some other callback like `POST_UPDATE`).
+function ____exports.isMultiplayer(self)
+    local players = getAllPlayers(nil)
+    local controllerIndexes = __TS__ArrayMap(
+        players,
+        function(____, player) return player.ControllerIndex end
+    )
+    local controllerIndexesSet = __TS__New(ReadonlySet, controllerIndexes)
+    return controllerIndexesSet.size > 1
+end
+--- Helper function to check if the player is using Afterbirth+ or Repentance.
+-- 
+-- This function should always be used over the `REPENTANCE` constant, since the latter is not safe.
+-- 
+-- Specifically, this function checks for the `Sprite.GetAnimation` method:
+-- https://bindingofisaacrebirth.fandom.com/wiki/V1.06.J818#Lua_Changes
+function ____exports.isRepentance(self)
+    local metatable = getmetatable(Sprite)
+    ____exports.assertDefined(nil, metatable, "Failed to get the metatable of the Sprite global table.")
+    local classTable = metatable.__class
+    ____exports.assertDefined(nil, classTable, "Failed to get the \"__class\" key of the Sprite metatable.")
+    local getAnimation = classTable.GetAnimation
+    return isFunction(nil, getAnimation)
+end
+--- Helper function to repeat code N times. This is faster to type and cleaner than using a for loop.
+-- 
+-- For example:
+-- 
+-- ```ts
+-- const player = Isaac.GetPlayer();
+-- repeat(10, () => {
+--   player.AddCollectible(CollectibleType.STEVEN);
+-- });
+-- ```
+-- 
+-- The repeated function is passed the index of the iteration, if needed:
+-- 
+-- ```ts
+-- repeat(3, (i) => {
+--   print(i); // Prints "0", "1", "2"
+-- });
+-- ```
+____exports["repeat"] = function(self, n, func)
+    do
+        local i = 0
+        while i < n do
+            func(nil, i)
+            i = i + 1
+        end
+    end
+end
+--- Helper function to signify that the enclosing code block is not yet complete. Using this function
+-- is similar to writing a "TODO" comment, but it has the benefit of preventing ESLint errors due to
+-- unused variables or early returns.
+-- 
+-- When you see this function, it simply means that the programmer intends to add in more code to
+-- this spot later.
+-- 
+-- This function is variadic, meaning that you can pass as many arguments as you want. (This is
+-- useful as a means to prevent unused variables.)
+-- 
+-- This function does not actually do anything. (It is an "empty" function.)
+-- 
+-- @allowEmptyVariadic
+function ____exports.todo(self, ...)
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.functions.types"] = function(...) 
+local ____exports = {}
+function ____exports.isNumber(self, variable)
+    return type(variable) == "number"
+end
+--- Helper function to safely cast an `int` to a `CardType`. (This is better than using the `as`
+-- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
+-- 
+-- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
+function ____exports.asCardType(self, num)
+    return num
+end
+--- Helper function to safely cast an `int` to a `CollectibleType`. (This is better than using the
+-- `as` TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
+-- 
+-- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
+function ____exports.asCollectibleType(self, num)
+    return num
+end
+--- Helper function to safely cast an enum to an `int`. (This is better than using the `as`
+-- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
+-- 
+-- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
+function ____exports.asFloat(self, num)
+    return num
+end
+--- Helper function to safely cast an enum to an `int`. (This is better than using the `as`
+-- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
+-- 
+-- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
+function ____exports.asInt(self, num)
+    return num
+end
+--- Helper function to safely cast an `int` to a `LevelStage`. (This is better than using the `as`
+-- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
+-- 
+-- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
+function ____exports.asLevelStage(self, num)
+    return num
+end
+--- Helper function to safely cast an `int` to a `NPCState`. (This is better than using the `as`
+-- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
+-- 
+-- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
+function ____exports.asNPCState(self, num)
+    return num
+end
+--- Helper function to safely cast an enum to a `number`. (This is better than using the `as`
+-- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
+-- 
+-- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
+function ____exports.asNumber(self, num)
+    return num
+end
+--- Helper function to safely cast an `int` to a `PillColor`. (This is better than using the `as`
+-- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
+-- 
+-- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
+function ____exports.asPillColor(self, num)
+    return num
+end
+--- Helper function to safely cast an `int` to a `PillEffect`. (This is better than using the `as`
+-- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
+-- 
+-- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
+function ____exports.asPillEffect(self, num)
+    return num
+end
+--- Helper function to safely cast an `int` to a `PlayerType`. (This is better than using the `as`
+-- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
+-- 
+-- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
+function ____exports.asPlayerType(self, num)
+    return num
+end
+--- Helper function to safely cast an enum to a `string`. (This is better than using the `as`
+-- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
+-- 
+-- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
+function ____exports.asString(self, str)
+    return str
+end
+--- Helper function to safely cast an `int` to a `TrinketType`. (This is better than using the `as`
+-- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
+-- 
+-- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
+function ____exports.asTrinketType(self, num)
+    return num
+end
+function ____exports.isBoolean(self, variable)
+    return type(variable) == "boolean"
+end
+function ____exports.isFunction(self, variable)
+    return type(variable) == "function"
+end
+function ____exports.isInteger(self, variable)
+    if not ____exports.isNumber(nil, variable) then
+        return false
+    end
+    return variable == math.floor(variable)
+end
+--- Helper function to detect if a variable is a boolean, number, or string.
+function ____exports.isPrimitive(self, variable)
+    local variableType = type(variable)
+    return variableType == "boolean" or variableType == "number" or variableType == "string"
+end
+function ____exports.isString(self, variable)
+    return type(variable) == "string"
+end
+function ____exports.isTable(self, variable)
+    return type(variable) == "table"
+end
+function ____exports.isUserdata(self, variable)
+    return type(variable) == "userdata"
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.functions.playerIndex"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local __TS__ArrayFind = ____lualib.__TS__ArrayFind
+local ____exports = {}
+local getPlayerIndexCollectibleType, DEFAULT_COLLECTIBLE_TYPE, EXCLUDED_CHARACTERS
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local BabySubType = ____isaac_2Dtypescript_2Ddefinitions.BabySubType
+local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
+local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
+local PlayerVariant = ____isaac_2Dtypescript_2Ddefinitions.PlayerVariant
+local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
+local game = ____cachedClasses.game
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+--- Helper function to get every player with no restrictions, by using `Game.GetNumPlayers` and
+-- `Isaac.GetPlayer`.
+-- 
+-- This function is almost never what you want to use. For most purposes, use the `getPlayers`
+-- helper function instead to get a filtered list of players.
+function ____exports.getAllPlayers(self)
+    local numPlayers = game:GetNumPlayers()
+    local players = {}
+    do
+        local i = 0
+        while i < numPlayers do
+            local player = Isaac.GetPlayer(i)
+            players[#players + 1] = player
+            i = i + 1
+        end
+    end
+    return players
+end
+--- Mods often have to track variables relating to the player. In naive mods, information will only
+-- be stored about the first player. However, in order to be robust, mods must handle up to 4
+-- players playing at the same time. This means that information must be stored on a map data
+-- structure. Finding a good index for these types of map data structures is difficult:
+-- 
+-- - We cannot use the index from `Isaac.GetPlayer(i)` since this fails in the case where there are
+--   two players and the first player leaves the run.
+-- - We cannot use `EntityPlayer.ControllerIndex` as an index because it fails in the case of Jacob
+--   & Esau or Tainted Forgotten. It also fails in the case of a player changing their controls
+--   mid-run.
+-- - We cannot use `EntityPlayer.GetData().index` because it does not persist across saving and
+--   continuing.
+-- - We cannot use `GetPtrHash()` as an index because it does not persist across exiting and
+--   relaunching the game.
+-- - We cannot use `EntityPlayer.InitSeed` because it is not consistent with additional players
+--   beyond the first.
+-- 
+-- Instead, we use the `EntityPlayer.GetCollectibleRNG` method with an arbitrary value of Sad Onion
+-- (1). This works even if the player does not have any Sad Onions.
+-- 
+-- Note that by default, this returns the same index for both The Forgotten and The Soul. (Even
+-- though they are technically different characters, they share the same inventory and `InitSeed`.)
+-- If this is not desired, pass true for the `differentiateForgottenAndSoul` argument, and the RNG
+-- of Spoon Bender (3) will be used for The Soul.
+-- 
+-- Also note that this index does not work in the `POST_PLAYER_INIT` function for players 2 through
+-- 4. With that said, in almost all cases, you should be lazy-initializing your data structures in
+-- other callbacks, so this should not be an issue.
+function ____exports.getPlayerIndex(self, player, differentiateForgottenAndSoul)
+    if differentiateForgottenAndSoul == nil then
+        differentiateForgottenAndSoul = false
+    end
+    local playerToUse = player
+    local isSubPlayer = player:IsSubPlayer()
+    if isSubPlayer then
+        local subPlayer = player
+        local playerParent = ____exports.getSubPlayerParent(nil, subPlayer)
+        if playerParent ~= nil then
+            playerToUse = playerParent
+        end
+    end
+    local collectibleType = getPlayerIndexCollectibleType(nil, player, differentiateForgottenAndSoul)
+    local collectibleRNG = playerToUse:GetCollectibleRNG(collectibleType)
+    local seed = collectibleRNG:GetSeed()
+    return seed
+end
+function getPlayerIndexCollectibleType(self, player, differentiateForgottenAndSoul)
+    local character = player:GetPlayerType()
+    if character == PlayerType.SOUL then
+        return differentiateForgottenAndSoul and CollectibleType.INNER_EYE or DEFAULT_COLLECTIBLE_TYPE
+    end
+    return DEFAULT_COLLECTIBLE_TYPE
+end
+--- This function always excludes players with a non-undefined parent, since they are not real
+-- players (e.g. the Strawman Keeper).
+-- 
+-- If this is not desired, use the `getAllPlayers` helper function instead.
+-- 
+-- @param performCharacterExclusions Whether to exclude characters that are not directly controlled
+-- by the player (i.e. Esau & Tainted Soul). Default is false.
+function ____exports.getPlayers(self, performCharacterExclusions)
+    if performCharacterExclusions == nil then
+        performCharacterExclusions = false
+    end
+    local players = ____exports.getAllPlayers(nil)
+    local nonChildPlayers = __TS__ArrayFilter(
+        players,
+        function(____, player) return not ____exports.isChildPlayer(nil, player) end
+    )
+    local nonChildPlayersFiltered = __TS__ArrayFilter(
+        nonChildPlayers,
+        function(____, player)
+            local character = player:GetPlayerType()
+            return not EXCLUDED_CHARACTERS:has(character)
+        end
+    )
+    return performCharacterExclusions and nonChildPlayersFiltered or nonChildPlayers
+end
+--- Helper function to get a parent `EntityPlayer` object for a given `EntitySubPlayer` object. This
+-- is useful because calling the `EntityPlayer.GetSubPlayer` method on a sub-player object will
+-- return undefined.
+function ____exports.getSubPlayerParent(self, subPlayer)
+    local subPlayerPtrHash = GetPtrHash(subPlayer)
+    local players = ____exports.getPlayers(nil)
+    return __TS__ArrayFind(
+        players,
+        function(____, player)
+            local thisPlayerSubPlayer = player:GetSubPlayer()
+            if thisPlayerSubPlayer == nil then
+                return false
+            end
+            local thisPlayerSubPlayerPtrHash = GetPtrHash(thisPlayerSubPlayer)
+            return thisPlayerSubPlayerPtrHash == subPlayerPtrHash
+        end
+    )
+end
+--- Helper function to detect if a particular player is a "child" player, meaning that they have a
+-- non-undefined `EntityPlayer.Parent` field. (For example, the Strawman Keeper.)
+function ____exports.isChildPlayer(self, player)
+    return player.Parent ~= nil
+end
+DEFAULT_COLLECTIBLE_TYPE = CollectibleType.SAD_ONION
+EXCLUDED_CHARACTERS = __TS__New(ReadonlySet, {PlayerType.ESAU, PlayerType.SOUL_B})
+--- Helper function to get all of the other players in the room besides the one provided. (This
+-- includes "child" players.)
+function ____exports.getOtherPlayers(self, player)
+    local playerPtrHash = GetPtrHash(player)
+    local players = ____exports.getAllPlayers(nil)
+    return __TS__ArrayFilter(
+        players,
+        function(____, otherPlayer) return GetPtrHash(otherPlayer) ~= playerPtrHash end
+    )
+end
+--- Helper function to get the corresponding `EntityPlayer` object that corresponds to a
+-- `PlayerIndex`.
+function ____exports.getPlayerFromIndex(self, playerIndex)
+    local players = ____exports.getAllPlayers(nil)
+    return __TS__ArrayFind(
+        players,
+        function(____, player) return ____exports.getPlayerIndex(nil, player) == playerIndex end
+    )
+end
+--- Helper function to return the index of this player with respect to the output of the
+-- `Isaac.GetPlayer` method.
+-- 
+-- Note that if you storing information about a player in a data structure, you never want to use
+-- this index; use the `getPlayerIndex` function instead.
+function ____exports.getPlayerIndexVanilla(self, playerToFind)
+    local numPlayers = game:GetNumPlayers()
+    local playerToFindHash = GetPtrHash(playerToFind)
+    do
+        local i = 0
+        while i < numPlayers do
+            local player = Isaac.GetPlayer(i)
+            local playerHash = GetPtrHash(player)
+            if playerHash == playerToFindHash then
+                return i
+            end
+            i = i + 1
+        end
+    end
+    return nil
+end
+--- Helper function to detect if a particular player is the Found Soul player provided by the
+-- trinket.
+function ____exports.isFoundSoul(self, player)
+    return ____exports.isChildPlayer(nil, player) and player.Variant == PlayerVariant.COOP_BABY and player.SubType == BabySubType.FOUND_SOUL
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.core.cachedClasses"] = function(...) 
+local ____exports = {}
+--- A cached version of the class returned from the `Game()` constructor.
+-- 
+-- Use this instead of invoking the constructor again for a miniscule performance increase.
+-- 
+-- Caching the results of this constructor is safe, but caching other classes (like `Level` or
+-- `Room`) is not safe and can lead to the game crashing in certain situations.
+____exports.game = Game()
+--- A cached version of the class returned from the `Isaac.GetItemConfig()` constructor.
+-- 
+-- Use this instead of invoking the constructor again for a miniscule performance increase.
+-- 
+-- Caching the results of this constructor is safe, but caching other classes (like `Level` or
+-- `Room`) is not safe and can lead to the game crashing in certain situations.
+____exports.itemConfig = Isaac.GetItemConfig()
+--- A cached version of the class returned from the `MusicManager()` constructor.
+-- 
+-- Use this instead of invoking the constructor again for a miniscule performance increase.
+-- 
+-- Caching the results of this constructor is safe, but caching other classes (like `Level` or
+-- `Room`) is not safe and can lead to the game crashing in certain situations.
+____exports.musicManager = MusicManager()
+--- A cached version of the class returned from the `SFXManager()` constructor.
+-- 
+-- Use this instead of invoking the constructor again for a miniscule performance increase.
+-- 
+-- Caching the results of this constructor is safe, but caching other classes (like `Level` or
+-- `Room`) is not safe and can lead to the game crashing in certain situations.
+____exports.sfxManager = SFXManager()
+--- An object containing all 7 vanilla fonts that are pre-loaded and ready to use.
+-- 
+-- For more information on the vanilla fonts and to see what they look like, see:
+-- https://wofsauge.github.io/IsaacDocs/rep/tutorials/Tutorial-Rendertext.html
+____exports.fonts = {
+    droid = Font(),
+    pfTempestaSevenCondensed = Font(),
+    teamMeatFont10 = Font(),
+    teamMeatFont12 = Font(),
+    teamMeatFont16Bold = Font(),
+    terminus = Font(),
+    upheaval = Font()
+}
+____exports.fonts.droid:Load("font/droid.fnt")
+____exports.fonts.pfTempestaSevenCondensed:Load("font/pftempestasevencondensed.fnt")
+____exports.fonts.teamMeatFont10:Load("font/teammeatfont10.fnt")
+____exports.fonts.teamMeatFont12:Load("font/teammeatfont12.fnt")
+____exports.fonts.teamMeatFont16Bold:Load("font/teammeatfont16bold.fnt")
+____exports.fonts.terminus:Load("font/terminus.fnt")
+____exports.fonts.upheaval:Load("font/upheaval.fnt")
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.rng"] = function(...) 
@@ -17701,6 +18427,8 @@ local getNumbersFromTable = ____table.getNumbersFromTable
 local tableHasKeys = ____table.tableHasKeys
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isTable = ____types.isTable
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- Helper function to get a random `Seed` value to be used in spawning entities and so on. Use this
 -- instead of calling the `Random` function directly since that can return a value of 0 and crash
 -- the game.
@@ -17754,9 +18482,7 @@ function ____exports.deserializeRNG(self, rng)
         OBJECT_NAME,
         table.unpack(KEYS)
     ))
-    if seed == nil then
-        error(("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: seed")
-    end
+    assertDefined(nil, seed, ("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: seed")
     return ____exports.newRNG(nil, seed)
 end
 --- Used to determine is the given table is a serialized `RNG` object created by the `deepCopy`
@@ -17812,103 +18538,6 @@ function ____exports.setAllRNGToStartSeed(self, object)
 end
 return ____exports
  end,
-["lua_modules.isaacscript-common.dist.src.functions.types"] = function(...) 
-local ____exports = {}
---- Helper function to safely cast a `number` to a `CardType`. (This is better than using the `as`
--- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
--- 
--- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
-function ____exports.asCardType(self, num)
-    return num
-end
---- Helper function to safely cast a `number` to a `CollectibleType`. (This is better than using the
--- `as` TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
--- 
--- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
-function ____exports.asCollectibleType(self, num)
-    return num
-end
---- Helper function to safely cast a `number` to a `LevelStage`. (This is better than using the `as`
--- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
--- 
--- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
-function ____exports.asLevelStage(self, num)
-    return num
-end
---- Helper function to safely cast a `number` to a `NPCState`. (This is better than using the `as`
--- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
--- 
--- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
-function ____exports.asNPCState(self, num)
-    return num
-end
---- Helper function to safely cast an enum to a `number`. (This is better than using the `as`
--- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
--- 
--- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
-function ____exports.asNumber(self, num)
-    return num
-end
---- Helper function to safely cast a `number` to a `PillColor`. (This is better than using the `as`
--- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
--- 
--- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
-function ____exports.asPillColor(self, num)
-    return num
-end
---- Helper function to safely cast a `number` to a `PillEffect`. (This is better than using the `as`
--- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
--- 
--- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
-function ____exports.asPillEffect(self, num)
-    return num
-end
---- Helper function to safely cast a `number` to a `PlayerType`. (This is better than using the `as`
--- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
--- 
--- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
-function ____exports.asPlayerType(self, num)
-    return num
-end
---- Helper function to safely cast an enum to a `string`. (This is better than using the `as`
--- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
--- 
--- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
-function ____exports.asString(self, str)
-    return str
-end
---- Helper function to safely cast a `number` to a `TrinketType`. (This is better than using the `as`
--- TypeScript keyword to do a type assertion, since that can obfuscate compiler errors. )
--- 
--- This is useful to satisfy the "isaacscript/strict-enums" ESLint rule.
-function ____exports.asTrinketType(self, num)
-    return num
-end
-function ____exports.isBoolean(self, variable)
-    return type(variable) == "boolean"
-end
-function ____exports.isFunction(self, variable)
-    return type(variable) == "function"
-end
-function ____exports.isNumber(self, variable)
-    return type(variable) == "number"
-end
---- Helper function to detect if a variable is a boolean, number, or string.
-function ____exports.isPrimitive(self, variable)
-    local variableType = type(variable)
-    return variableType == "boolean" or variableType == "number" or variableType == "string"
-end
-function ____exports.isString(self, variable)
-    return type(variable) == "string"
-end
-function ____exports.isTable(self, variable)
-    return type(variable) == "table"
-end
-function ____exports.isUserdata(self, variable)
-    return type(variable) == "userdata"
-end
-return ____exports
- end,
 ["lua_modules.isaacscript-common.dist.src.functions.table"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__TypeOf = ____lualib.__TS__TypeOf
@@ -17921,6 +18550,8 @@ local isBoolean = ____types.isBoolean
 local isNumber = ____types.isNumber
 local isString = ____types.isString
 local isUserdata = ____types.isUserdata
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- In a `Map`, you can use the `clear` method to delete every element. However, in a `LuaMap`, the
 -- `clear` method does not exist. Use this helper function as a drop-in replacement for this.
 function ____exports.clearTable(self, luaMap)
@@ -17948,9 +18579,7 @@ function ____exports.getBooleansFromTable(self, luaMap, objectName, ...)
     local booleans = {}
     for ____, key in ipairs(keys) do
         local value = luaMap[key]
-        if value == nil then
-            error(((("Failed to find a value for \"" .. key) .. "\" in a table representing a \"") .. objectName) .. "\" object.")
-        end
+        assertDefined(nil, value, ((("Failed to find a value for \"" .. key) .. "\" in a table representing a \"") .. objectName) .. "\" object.")
         if isBoolean(nil, value) then
             booleans[#booleans + 1] = value
         else
@@ -17968,16 +18597,12 @@ function ____exports.getNumbersFromTable(self, luaMap, objectName, ...)
     local numbers = {}
     for ____, key in ipairs(keys) do
         local value = luaMap[key]
-        if value == nil then
-            error(((("Failed to find a value for \"" .. key) .. "\" in a table representing a \"") .. objectName) .. "\" object.")
-        end
+        assertDefined(nil, value, ((("Failed to find a value for \"" .. key) .. "\" in a table representing a \"") .. objectName) .. "\" object.")
         if isNumber(nil, value) then
             numbers[#numbers + 1] = value
         elseif isString(nil, value) then
             local number = tonumber(value)
-            if number == nil then
-                error((((("Failed to convert the \"" .. key) .. "\" value of a table representing a \"") .. objectName) .. "\" object to a number: ") .. value)
-            end
+            assertDefined(nil, number, (((("Failed to convert the \"" .. key) .. "\" value of a table representing a \"") .. objectName) .. "\" object to a number: ") .. value)
             numbers[#numbers + 1] = number
         else
             error((((("Failed to get the number for the \"" .. key) .. "\" value of a table representing a \"") .. objectName) .. "\" object because the type was: ") .. __TS__TypeOf(value))
@@ -17994,9 +18619,7 @@ function ____exports.getStringsFromTable(self, luaMap, objectName, ...)
     local strings = {}
     for ____, key in ipairs(keys) do
         local value = luaMap[key]
-        if value == nil then
-            error(((("Failed to find a value for \"" .. key) .. "\" in a table representing a \"") .. objectName) .. "\" object.")
-        end
+        assertDefined(nil, value, ((("Failed to find a value for \"" .. key) .. "\" in a table representing a \"") .. objectName) .. "\" object.")
         if isString(nil, value) then
             strings[#strings + 1] = value
         else
@@ -18313,58 +18936,6 @@ ____exports.SerializationBrand.OBJECT_WITH_NUMBER_KEYS = "__TSTL_OBJECT_WITH_NUM
 ____exports.SerializationBrand.TSTL_CLASS = "__TSTL_CLASS"
 return ____exports
  end,
-["lua_modules.isaacscript-common.dist.src.core.cachedClasses"] = function(...) 
-local ____exports = {}
---- A cached version of the class returned from the `Game()` constructor.
--- 
--- Use this instead of invoking the constructor again for a miniscule performance increase.
--- 
--- Caching the results of this constructor is safe, but caching other classes (like `Level` or
--- `Room`) is not safe and can lead to the game crashing in certain situations.
-____exports.game = Game()
---- A cached version of the class returned from the `Isaac.GetItemConfig()` constructor.
--- 
--- Use this instead of invoking the constructor again for a miniscule performance increase.
--- 
--- Caching the results of this constructor is safe, but caching other classes (like `Level` or
--- `Room`) is not safe and can lead to the game crashing in certain situations.
-____exports.itemConfig = Isaac.GetItemConfig()
---- A cached version of the class returned from the `MusicManager()` constructor.
--- 
--- Use this instead of invoking the constructor again for a miniscule performance increase.
--- 
--- Caching the results of this constructor is safe, but caching other classes (like `Level` or
--- `Room`) is not safe and can lead to the game crashing in certain situations.
-____exports.musicManager = MusicManager()
---- A cached version of the class returned from the `SFXManager()` constructor.
--- 
--- Use this instead of invoking the constructor again for a miniscule performance increase.
--- 
--- Caching the results of this constructor is safe, but caching other classes (like `Level` or
--- `Room`) is not safe and can lead to the game crashing in certain situations.
-____exports.sfxManager = SFXManager()
---- An object containing all 7 vanilla fonts that are pre-loaded and ready to use.
--- 
--- For more information on the vanilla fonts and to see what they look like, see:
--- https://wofsauge.github.io/IsaacDocs/rep/tutorials/Tutorial-Rendertext.html
-____exports.fonts = {
-    droid = Font(),
-    pfTempestaSevenCondensed = Font(),
-    teamMeatFont10 = Font(),
-    teamMeatFont12 = Font(),
-    teamMeatFont16Bold = Font(),
-    terminus = Font(),
-    upheaval = Font()
-}
-____exports.fonts.droid:Load("font/droid.fnt")
-____exports.fonts.pfTempestaSevenCondensed:Load("font/pftempestasevencondensed.fnt")
-____exports.fonts.teamMeatFont10:Load("font/teammeatfont10.fnt")
-____exports.fonts.teamMeatFont12:Load("font/teammeatfont12.fnt")
-____exports.fonts.teamMeatFont16Bold:Load("font/teammeatfont16bold.fnt")
-____exports.fonts.terminus:Load("font/terminus.fnt")
-____exports.fonts.upheaval:Load("font/upheaval.fnt")
-return ____exports
- end,
 ["lua_modules.isaacscript-common.dist.src.functions.random"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__New = ____lualib.__TS__New
@@ -18468,15 +19039,16 @@ local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArraySort = ____lualib.__TS__ArraySort
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local __TS__ArrayUnshift = ____lualib.__TS__ArrayUnshift
 local __TS__ArraySlice = ____lualib.__TS__ArraySlice
 local __TS__SparseArrayNew = ____lualib.__TS__SparseArrayNew
 local __TS__SparseArrayPush = ____lualib.__TS__SparseArrayPush
 local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
-local __TS__ArrayUnshift = ____lualib.__TS__ArrayUnshift
 local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
 local __TS__ArraySome = ____lualib.__TS__ArraySome
 local __TS__ArrayReduce = ____lualib.__TS__ArrayReduce
 local ____exports = {}
+local addCombinations
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____random = require("lua_modules.isaacscript-common.dist.src.functions.random")
@@ -18489,6 +19061,7 @@ local ____types = require("lua_modules.isaacscript-common.dist.src.functions.typ
 local isNumber = ____types.isNumber
 local isTable = ____types.isTable
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local eRange = ____utils.eRange
 --- Removes all of the specified element(s) from the array. If the specified element(s) are not found
 -- in the array, this function will do nothing.
@@ -18548,15 +19121,39 @@ function ____exports.copyArray(self, oldArray, numElements)
     if numElements == nil then
         return {table.unpack(oldArray)}
     end
-    local newArray = {}
+    local newArrayWithFirstNElements = {}
     do
         local i = 0
         while i < numElements do
-            newArray[#newArray + 1] = oldArray[i + 1]
+            newArrayWithFirstNElements[#newArrayWithFirstNElements + 1] = oldArray[i + 1]
             i = i + 1
         end
     end
-    return newArray
+    return newArrayWithFirstNElements
+end
+function addCombinations(self, n, src, got, all)
+    if n == 0 then
+        if #got > 0 then
+            all[#all + 1] = got
+        end
+        return
+    end
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(src)) do
+        local i = ____value[1]
+        local element = ____value[2]
+        local ____addCombinations_3 = addCombinations
+        local ____temp_1 = n - 1
+        local ____TS__ArraySlice_result_2 = __TS__ArraySlice(src, i + 1)
+        local ____array_0 = __TS__SparseArrayNew(table.unpack(got))
+        __TS__SparseArrayPush(____array_0, element)
+        ____addCombinations_3(
+            nil,
+            ____temp_1,
+            ____TS__ArraySlice_result_2,
+            {__TS__SparseArraySpread(____array_0)},
+            all
+        )
+    end
 end
 --- Helper function to get a random index from the provided array.
 -- 
@@ -18675,7 +19272,7 @@ end
 -- 
 -- This function is variadic, meaning that you can specify N arguments to remove N elements.
 -- 
--- @returns Whether or not any array elements were removed.
+-- @returns Whether any array elements were removed.
 function ____exports.arrayRemoveIndexInPlace(self, array, ...)
     local indexesToRemove = {...}
     local legalIndexes = __TS__ArrayFilter(
@@ -18725,6 +19322,25 @@ end
 function ____exports.emptyArray(self, array)
     __TS__ArraySplice(array, 0, #array)
 end
+--- Helper function to perform a map and a filter at the same time. Similar to `Array.map`, provide a
+-- function that transforms a value, but return `undefined` if the value should be skipped. (Thus,
+-- this function cannot be used in situations where `undefined` can be a valid array element.)
+-- 
+-- This function is useful because the `Array.map` method will always produce an array with the same
+-- amount of elements as the original array.
+-- 
+-- This is named `filterMap` after the Rust function:
+-- https://doc.rust-lang.org/std/iter/struct.FilterMap.html
+function ____exports.filterMap(self, array, func)
+    local newArray = {}
+    for ____, element in ipairs(array) do
+        local newElement = func(nil, element)
+        if newElement ~= nil then
+            newArray[#newArray + 1] = newElement
+        end
+    end
+    return newArray
+end
 --- Helper function to get all possible combinations of the given array. This includes the
 -- combination of an empty array.
 -- 
@@ -18743,7 +19359,7 @@ end
 -- From: https://github.com/firstandthird/combinations/blob/master/index.js
 -- 
 -- @param array The array to get the combinations of.
--- @param includeEmptyArray Whether or not to include an empty array in the combinations.
+-- @param includeEmptyArray Whether to include an empty array in the combinations.
 -- @param min Optional. The minimum number of elements to include in each combination. Default is 1.
 -- @param max Optional. The maximum number of elements to include in each combination. Default is
 -- the length of the array.
@@ -18753,33 +19369,6 @@ function ____exports.getArrayCombinations(self, array, includeEmptyArray, min, m
     end
     if max == nil or max <= 0 then
         max = #array
-    end
-    local addCombinations
-    addCombinations = function(____, n, src, got, all)
-        if n == 0 then
-            if #got > 0 then
-                all[#all + 1] = got
-            end
-            return
-        end
-        do
-            local j = 0
-            while j < #src do
-                local value = src[j + 1]
-                local ____temp_1 = n - 1
-                local ____TS__ArraySlice_result_2 = __TS__ArraySlice(src, j + 1)
-                local ____array_0 = __TS__SparseArrayNew(table.unpack(got))
-                __TS__SparseArrayPush(____array_0, value)
-                addCombinations(
-                    nil,
-                    ____temp_1,
-                    ____TS__ArraySlice_result_2,
-                    {__TS__SparseArraySpread(____array_0)},
-                    all
-                )
-                j = j + 1
-            end
-        end
     end
     local all = {}
     do
@@ -18806,14 +19395,40 @@ end
 --- Helper function to get an array containing the indexes of an array.
 -- 
 -- For example, an array of `["Apple", "Banana"]` would return an array of `[0, 1]`.
+-- 
+-- Note that normally, you would use the `Object.keys` method to get the indexes of an array, but
+-- due to implementation details of TypeScriptToLua, this results in an array of 1 through N
+-- (instead of an array of 0 through N -1).
 function ____exports.getArrayIndexes(self, array)
     return eRange(nil, #array)
 end
---- Helper function to return the last element of an array.
--- 
--- If the array is empty, this will return undefined.
-function ____exports.getLastElement(self, array)
-    return array[#array]
+--- Helper function to get the highest value in an array. Returns undefined if there were no elements
+-- in the array.
+function ____exports.getHighestArrayElement(self, array)
+    if #array == 0 then
+        return nil
+    end
+    local highestValue
+    for ____, element in ipairs(array) do
+        if highestValue == nil or element > highestValue then
+            highestValue = element
+        end
+    end
+    return highestValue
+end
+--- Helper function to get the lowest value in an array. Returns undefined if there were no elements
+-- in the array.
+function ____exports.getLowestArrayElement(self, array)
+    if #array == 0 then
+        return nil
+    end
+    local lowestValue
+    for ____, element in ipairs(array) do
+        if lowestValue == nil or element < lowestValue then
+            lowestValue = element
+        end
+    end
+    return lowestValue
 end
 --- Helper function to get a random element from the provided array.
 -- 
@@ -18831,18 +19446,18 @@ function ____exports.getRandomArrayElement(self, array, seedOrRNG, exceptions)
     if #array == 0 then
         error("Failed to get a random array element since the provided array is empty.")
     end
-    if #exceptions > 0 then
-        array = ____exports.arrayRemove(
-            nil,
-            array,
-            table.unpack(exceptions)
-        )
-    end
-    local randomIndex = ____exports.getRandomArrayIndex(nil, array, seedOrRNG)
-    local randomElement = array[randomIndex + 1]
-    if randomElement == nil then
-        error(("Failed to get a random array element since the random index of " .. tostring(randomIndex)) .. " was not valid.")
-    end
+    local arrayToUse = #exceptions > 0 and ____exports.arrayRemove(
+        nil,
+        array,
+        table.unpack(exceptions)
+    ) or array
+    local randomIndex = ____exports.getRandomArrayIndex(nil, arrayToUse, seedOrRNG)
+    local randomElement = arrayToUse[randomIndex + 1]
+    assertDefined(
+        nil,
+        randomElement,
+        ("Failed to get a random array element since the random index of " .. tostring(randomIndex)) .. " was not valid."
+    )
     return randomElement
 end
 --- Helper function to get a random element from the provided array. Once the random element is
@@ -18870,8 +19485,8 @@ end
 -- - the table has no keys (i.e. an "empty" table)
 -- 
 -- @param object The object to analyze.
--- @param ensureContiguousValues Optional. Whether or not the Lua table has to have all contiguous
--- keys in order to be considered an array. Default is true.
+-- @param ensureContiguousValues Optional. Whether the Lua table has to have all contiguous keys in
+-- order to be considered an array. Default is true.
 function ____exports.isArray(self, object, ensureContiguousValues)
     if ensureContiguousValues == nil then
         ensureContiguousValues = true
@@ -18930,6 +19545,16 @@ function ____exports.isArrayInArray(self, arrayToMatch, parentArray)
         function(____, element) return ____exports.arrayEquals(nil, element, arrayToMatch) end
     )
 end
+--- Helper function to set every element in an array to a specific value.
+function ____exports.setAllArrayElements(self, array, value)
+    do
+        local i = 0
+        while i < #array do
+            array[i + 1] = value
+            i = i + 1
+        end
+    end
+end
 --- Shallow copies and shuffles the array using the Fisher-Yates algorithm. Returns the copied array.
 -- 
 -- From: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -18949,365 +19574,9 @@ end
 function ____exports.sumArray(self, array)
     return __TS__ArrayReduce(
         array,
-        function(____, accumulator, element) return accumulator + element end
+        function(____, accumulator, element) return accumulator + element end,
+        0
     )
-end
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.functions.utils"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ArrayMap = ____lualib.__TS__ArrayMap
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local RenderMode = ____isaac_2Dtypescript_2Ddefinitions.RenderMode
-local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
-local game = ____cachedClasses.game
-local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
-local ReadonlySet = ____ReadonlySet.ReadonlySet
-local ____playerIndex = require("lua_modules.isaacscript-common.dist.src.functions.playerIndex")
-local getAllPlayers = ____playerIndex.getAllPlayers
-local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
-local isFunction = ____types.isFunction
---- Helper function to return an array of integers with the specified range, inclusive on the lower
--- end and exclusive on the high end. (The "e" stands for exclusive.)
--- 
--- - For example, `eRange(1, 3)` will return `[1, 2]`.
--- - For example, `eRange(2)` will return `[0, 1]`.
--- 
--- @param start The integer to start at.
--- @param end Optional. The integer to end at. If not specified, then the start will be 0 and the
--- first argument will be the end.
--- @param increment Optional. The increment to use. Default is 1.
-function ____exports.eRange(self, start, ____end, increment)
-    if increment == nil then
-        increment = 1
-    end
-    if ____end == nil then
-        return ____exports.eRange(nil, 0, start)
-    end
-    local array = {}
-    do
-        local i = start
-        while i < ____end do
-            array[#array + 1] = i
-            i = i + increment
-        end
-    end
-    return array
-end
---- Helper function to log what is happening in functions that recursively move through nested data
--- structures.
-function ____exports.getTraversalDescription(self, key, traversalDescription)
-    if traversalDescription ~= "" then
-        traversalDescription = traversalDescription .. " --> "
-    end
-    traversalDescription = traversalDescription .. tostring(key)
-    return traversalDescription
-end
---- Helper function to return an array of integers with the specified range, inclusive on both ends.
--- (The "i" stands for inclusive.)
--- 
--- - For example, `iRange(1, 3)` will return `[1, 2, 3]`.
--- - For example, `iRange(2)` will return `[0, 1, 2]`.
--- 
--- @param start The integer to start at.
--- @param end Optional. The integer to end at. If not specified, then the start will be 0 and the
--- first argument will be the end.
--- @param increment Optional. The increment to use. Default is 1.
-function ____exports.iRange(self, start, ____end, increment)
-    if increment == nil then
-        increment = 1
-    end
-    if ____end == nil then
-        return ____exports.iRange(nil, 0, start)
-    end
-    local exclusiveEnd = ____end + 1
-    return ____exports.eRange(nil, start, exclusiveEnd, increment)
-end
---- Helper function to check if a variable is within a certain range, inclusive on both ends.
--- 
--- - For example, `inRange(1, 1, 3)` will return `true`.
--- - For example, `inRange(0, 1, 3)` will return `false`.
--- 
--- @param num The number to check.
--- @param start The start of the range to check.
--- @param end The end of the range to check.
-function ____exports.inRange(self, num, start, ____end)
-    return num >= start and num <= ____end
-end
---- Helper function to detect if there is two or more players currently playing.
--- 
--- Specifically, this function looks for unique `ControllerIndex` values across all players.
--- 
--- This function is not safe to use in the `POST_PLAYER_INIT` callback, because the
--- `ControllerIndex` will not be set properly. As a workaround, you can use it in the
--- `POST_PLAYER_INIT_FIRST` callback (or some other callback like `POST_UPDATE`).
-function ____exports.isMultiplayer(self)
-    local players = getAllPlayers(nil)
-    local controllerIndexes = __TS__ArrayMap(
-        players,
-        function(____, player) return player.ControllerIndex end
-    )
-    local controllerIndexesSet = __TS__New(ReadonlySet, controllerIndexes)
-    return controllerIndexesSet.size > 1
-end
---- Helper function to see if the current render callback is rendering a water reflection.
--- 
--- When the player is in a room with water, things will be rendered twice: once for the normal
--- rendering, and once for the reflecting rendering. Thus, any mod code in a render callback will
--- run twice per frame in these situations, which may be unexpected or cause bugs.
--- 
--- This function is typically used to early return from a render function if it returns true.
-function ____exports.isReflectionRender(self)
-    local room = game:GetRoom()
-    local renderMode = room:GetRenderMode()
-    return renderMode == RenderMode.WATER_REFLECT
-end
---- Helper function to check if the player is using Afterbirth+ or Repentance.
--- 
--- This function should always be used over the `REPENTANCE` constant, since the latter is not safe.
--- 
--- Specifically, this function checks for the `Sprite.GetAnimation` method:
--- https://bindingofisaacrebirth.fandom.com/wiki/V1.06.J818#Lua_Changes
-function ____exports.isRepentance(self)
-    local metatable = getmetatable(Sprite)
-    if metatable == nil then
-        error("Failed to get the metatable of the Sprite global table.")
-    end
-    local classTable = metatable.__class
-    if classTable == nil then
-        error("Failed to get the \"__class\" key of the Sprite metatable.")
-    end
-    local getAnimation = classTable.GetAnimation
-    return isFunction(nil, getAnimation)
-end
---- Helper function to repeat code N times. This is faster to type and cleaner than using a for loop.
--- 
--- For example:
--- 
--- ```ts
--- const player = Isaac.GetPlayer();
--- repeat(10, () => {
---   player.AddCollectible(CollectibleType.STEVEN);
--- });
--- ```
--- 
--- The repeated function is passed the index of the iteration, if needed:
--- 
--- ```ts
--- repeat(3, (i) => {
---   print(i); // Prints "0", "1", "2"
--- });
--- ```
-____exports["repeat"] = function(self, n, func)
-    do
-        local i = 0
-        while i < n do
-            func(nil, i)
-            i = i + 1
-        end
-    end
-end
---- Helper function to signify that the enclosing code block is not yet complete. Using this function
--- is similar to writing a "TODO" comment, but it has the benefit of preventing ESLint errors due to
--- unused variables or early returns.
--- 
--- When you see this function, it simply means that the programmer intends to add in more code to
--- this spot later.
--- 
--- This function is variadic, meaning that you can pass as many arguments as you want. (This is
--- useful as a means to prevent unused variables.)
--- 
--- This function does not actually do anything. (It is an "empty" function.)
--- 
--- @allowEmptyVariadic
-function ____exports.todo(self, ...)
-end
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.functions.playerIndex"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
-local __TS__ArrayFind = ____lualib.__TS__ArrayFind
-local ____exports = {}
-local getPlayerIndexCollectibleType, DEFAULT_COLLECTIBLE_TYPE, EXCLUDED_CHARACTERS
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local BabySubType = ____isaac_2Dtypescript_2Ddefinitions.BabySubType
-local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
-local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
-local PlayerVariant = ____isaac_2Dtypescript_2Ddefinitions.PlayerVariant
-local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
-local game = ____cachedClasses.game
-local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
-local ReadonlySet = ____ReadonlySet.ReadonlySet
---- Helper function to get every player with no restrictions, by using `Game.GetNumPlayers` and
--- `Isaac.GetPlayer`.
--- 
--- This function is almost never what you want to use. For most purposes, use the `getPlayers`
--- helper function instead to get a filtered list of players.
-function ____exports.getAllPlayers(self)
-    local numPlayers = game:GetNumPlayers()
-    local players = {}
-    do
-        local i = 0
-        while i < numPlayers do
-            local player = Isaac.GetPlayer(i)
-            players[#players + 1] = player
-            i = i + 1
-        end
-    end
-    return players
-end
---- Mods often have to track variables relating to the player. In naive mods, information will only
--- be stored about the first player. However, in order to be robust, mods must handle up to 4
--- players playing at the same time. This means that information must be stored on a map data
--- structure. Finding a good index for these types of map data structures is difficult:
--- 
--- - We cannot use the index from `Isaac.GetPlayer(i)` since this fails in the case where there are
---   two players and the first player leaves the run.
--- - We cannot use `EntityPlayer.ControllerIndex` as an index because it fails in the case of Jacob
---   & Esau or Tainted Forgotten. It also fails in the case of a player changing their controls
---   mid-run.
--- - We cannot use `EntityPlayer.GetData().index` because it does not persist across saving and
---   continuing.
--- - We cannot use `GetPtrHash()` as an index because it does not persist across exiting and
---   relaunching the game.
--- - We cannot use `EntityPlayer.InitSeed` because it is not consistent with additional players
---   beyond the first.
--- 
--- Instead, we use the `EntityPlayer.GetCollectibleRNG` method with an arbitrary value of Sad Onion
--- (1). This works even if the player does not have any Sad Onions.
--- 
--- Note that by default, this returns the same index for both The Forgotten and The Soul. (Even
--- though they are technically different characters, they share the same inventory and `InitSeed`.)
--- If this is not desired, pass true for the `differentiateForgottenAndSoul` argument, and the RNG
--- of Spoon Bender (3) will be used for The Soul.
--- 
--- Also note that this index does not work in the `POST_PLAYER_INIT` function for players 2 through
--- 4. With that said, in almost all cases, you should be lazy-initializing your data structures in
--- other callbacks, so this should not be an issue.
-function ____exports.getPlayerIndex(self, player, differentiateForgottenAndSoul)
-    if differentiateForgottenAndSoul == nil then
-        differentiateForgottenAndSoul = false
-    end
-    local playerToUse = player
-    local isSubPlayer = player:IsSubPlayer()
-    if isSubPlayer then
-        local subPlayer = player
-        local playerParent = ____exports.getSubPlayerParent(nil, subPlayer)
-        if playerParent ~= nil then
-            playerToUse = playerParent
-        end
-    end
-    local collectibleType = getPlayerIndexCollectibleType(nil, player, differentiateForgottenAndSoul)
-    local collectibleRNG = playerToUse:GetCollectibleRNG(collectibleType)
-    local seed = collectibleRNG:GetSeed()
-    return seed
-end
-function getPlayerIndexCollectibleType(self, player, differentiateForgottenAndSoul)
-    local character = player:GetPlayerType()
-    if character == PlayerType.SOUL then
-        return differentiateForgottenAndSoul and CollectibleType.INNER_EYE or DEFAULT_COLLECTIBLE_TYPE
-    end
-    return DEFAULT_COLLECTIBLE_TYPE
-end
---- This function always excludes players with a non-undefined parent, since they are not real
--- players (e.g. the Strawman Keeper).
--- 
--- If this is not desired, use the `getAllPlayers` helper function instead.
--- 
--- @param performCharacterExclusions Whether or not to exclude characters that are not directly
--- controlled by the player (i.e. Esau & Tainted Soul). Default is
--- false.
-function ____exports.getPlayers(self, performCharacterExclusions)
-    if performCharacterExclusions == nil then
-        performCharacterExclusions = false
-    end
-    local players = ____exports.getAllPlayers(nil)
-    local nonChildPlayers = __TS__ArrayFilter(
-        players,
-        function(____, player) return not ____exports.isChildPlayer(nil, player) end
-    )
-    local nonChildPlayersFiltered = __TS__ArrayFilter(
-        nonChildPlayers,
-        function(____, player)
-            local character = player:GetPlayerType()
-            return not EXCLUDED_CHARACTERS:has(character)
-        end
-    )
-    return performCharacterExclusions and nonChildPlayersFiltered or nonChildPlayers
-end
---- Helper function to get a parent `EntityPlayer` object for a given `EntitySubPlayer` object. This
--- is useful because calling the `EntityPlayer.GetSubPlayer` method on a sub-player object will
--- return undefined.
-function ____exports.getSubPlayerParent(self, subPlayer)
-    local subPlayerPtrHash = GetPtrHash(subPlayer)
-    local players = ____exports.getPlayers(nil)
-    return __TS__ArrayFind(
-        players,
-        function(____, player)
-            local thisPlayerSubPlayer = player:GetSubPlayer()
-            if thisPlayerSubPlayer == nil then
-                return false
-            end
-            local thisPlayerSubPlayerPtrHash = GetPtrHash(thisPlayerSubPlayer)
-            return thisPlayerSubPlayerPtrHash == subPlayerPtrHash
-        end
-    )
-end
---- Helper function to detect if a particular player is a "child" player, meaning that they have a
--- non-undefined `EntityPlayer.Parent` field. (For example, the Strawman Keeper.)
-function ____exports.isChildPlayer(self, player)
-    return player.Parent ~= nil
-end
-DEFAULT_COLLECTIBLE_TYPE = CollectibleType.SAD_ONION
-EXCLUDED_CHARACTERS = __TS__New(ReadonlySet, {PlayerType.ESAU, PlayerType.SOUL_B})
---- Helper function to get all of the other players in the room besides the one provided. (This
--- includes "child" players.)
-function ____exports.getOtherPlayers(self, player)
-    local playerPtrHash = GetPtrHash(player)
-    local players = ____exports.getAllPlayers(nil)
-    return __TS__ArrayFilter(
-        players,
-        function(____, otherPlayer) return GetPtrHash(otherPlayer) ~= playerPtrHash end
-    )
-end
---- Helper function to get the corresponding `EntityPlayer` object that corresponds to a
--- `PlayerIndex`.
-function ____exports.getPlayerFromIndex(self, playerIndex)
-    local players = ____exports.getAllPlayers(nil)
-    return __TS__ArrayFind(
-        players,
-        function(____, player) return ____exports.getPlayerIndex(nil, player) == playerIndex end
-    )
-end
---- Helper function to return the index of this player with respect to the output of the
--- `Isaac.GetPlayer` method.
--- 
--- Note that if you storing information about a player in a data structure, you never want to use
--- this index; use the `getPlayerIndex` function instead.
-function ____exports.getPlayerIndexVanilla(self, playerToFind)
-    local numPlayers = game:GetNumPlayers()
-    local playerToFindHash = GetPtrHash(playerToFind)
-    do
-        local i = 0
-        while i < numPlayers do
-            local player = Isaac.GetPlayer(i)
-            local playerHash = GetPtrHash(player)
-            if playerHash == playerToFindHash then
-                return i
-            end
-            i = i + 1
-        end
-    end
-    return nil
-end
---- Helper function to detect if a particular player is the Found Soul player provided by the
--- trinket.
-function ____exports.isFoundSoul(self, player)
-    return ____exports.isChildPlayer(nil, player) and player.Variant == PlayerVariant.COOP_BABY and player.SubType == BabySubType.FOUND_SOUL
 end
 return ____exports
  end,
@@ -19333,6 +19602,8 @@ local getNumbersFromTable = ____table.getNumbersFromTable
 local tableHasKeys = ____table.tableHasKeys
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isTable = ____types.isTable
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- Helper function to check if something is an instantiated `Vector` object.
 function ____exports.isVector(self, object)
     return isIsaacAPIClassOfType(nil, object, OBJECT_NAME)
@@ -19358,12 +19629,8 @@ function ____exports.deserializeVector(self, vector)
         OBJECT_NAME,
         table.unpack(KEYS)
     ))
-    if x == nil then
-        error(("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: X")
-    end
-    if y == nil then
-        error(("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: Y")
-    end
+    assertDefined(nil, x, ("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: X")
+    assertDefined(nil, y, ("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: Y")
     return Vector(x, y)
 end
 --- Helper function to measure a vector to see if it has a non-zero length using a threshold to
@@ -19504,18 +19771,29 @@ function ____exports.angleToDirection(self, angleDegrees)
     end
     return Direction.RIGHT
 end
+--- Helper function to convert a direction to degrees. For example, `Direction.LEFT` (0) would return
+-- 180 and `Direction.RIGHT` (2) would return 0. (This corresponds to how the
+-- `Vector.GetAngleDegrees` method works.)
 function ____exports.directionToDegrees(self, direction)
     return DIRECTION_TO_DEGREES[direction]
 end
+--- Helper function to convert a direction to a shoot `ButtonAction`. For example, `Direction.LEFT`
+-- (0) would return `ButtonAction.LEFT` (0).
 function ____exports.directionToMoveAction(self, direction)
     return DIRECTION_TO_MOVE_ACTION[direction]
 end
+--- Helper function to convert a direction to a shoot `ButtonAction`. For example, `Direction.LEFT`
+-- (0) would return `ButtonAction.SHOOT_LEFT` (4).
 function ____exports.directionToShootAction(self, direction)
     return DIRECTION_TO_SHOOT_ACTION[direction]
 end
+--- Helper function to convert a direction to a `Vector`. For example, `Direction.LEFT` (0) would
+-- convert to `Vector(-1, 0).
 function ____exports.directionToVector(self, direction)
     return DIRECTION_TO_VECTOR[direction]
 end
+--- Helper function to get the lowercase name of a direction. For example, `Direction.LEFT` (0) would
+-- return "left".
 function ____exports.getDirectionName(self, direction)
     return DIRECTION_NAMES[direction]
 end
@@ -19821,6 +20099,8 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local __TS__ArraySort = ____lualib.__TS__ArraySort
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local __TS__ArrayAt = ____lualib.__TS__ArrayAt
+local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
@@ -19830,8 +20110,10 @@ local getRandomArrayElement = ____array.getRandomArrayElement
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
 local getRandomSeed = ____rng.getRandomSeed
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
+local isNumber = ____types.isNumber
 local isString = ____types.isString
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local iRange = ____utils.iRange
 --- TypeScriptToLua will transpile TypeScript enums to Lua tables that have a double mapping. Thus,
 -- when you iterate over them, you will get both the names of the enums and the values of the enums,
@@ -19928,15 +20210,27 @@ function ____exports.getEnumValues(self, transpiledEnum)
 end
 --- Helper function to get the enum value with the highest value.
 -- 
--- Note that this is not necessarily the enum value that is declared last, since there is no way to
--- infer that at run-time.
+-- Note that this is not necessarily the enum value that is declared last in the code, since there
+-- is no way to infer that at run-time.
+-- 
+-- Throws an error if the provided enum is empty.
 function ____exports.getHighestEnumValue(self, transpiledEnum)
     local enumValues = ____exports.getEnumValues(nil, transpiledEnum)
-    local lastElement = enumValues[#enumValues]
-    if lastElement == nil then
-        error("Failed to get the last value from an enum since the enum was empty.")
-    end
+    local lastElement = __TS__ArrayAt(enumValues, -1)
+    assertDefined(nil, lastElement, "Failed to get the last value from an enum since the enum was empty.")
     return lastElement
+end
+--- Helper function to get the enum value with the lowest value.
+-- 
+-- Note that this is not necessarily the enum value that is declared first in the code, since there
+-- is no way to infer that at run-time.
+-- 
+-- Throws an error if the provided enum is empty.
+function ____exports.getLowestEnumValue(self, transpiledEnum)
+    local enumValues = ____exports.getEnumValues(nil, transpiledEnum)
+    local firstElement = enumValues[1]
+    assertDefined(nil, firstElement, "Failed to get the first value from an enum since the enum was empty.")
+    return firstElement
 end
 --- Helper function to get a random value from the provided enum.
 -- 
@@ -19953,6 +20247,11 @@ function ____exports.getRandomEnumValue(self, transpiledEnum, seedOrRNG, excepti
     end
     local enumValues = ____exports.getEnumValues(nil, transpiledEnum)
     return getRandomArrayElement(nil, enumValues, seedOrRNG, exceptions)
+end
+--- Helper function to validate that a particular value exists inside of an enum.
+function ____exports.isEnumValue(self, value, transpiledEnum)
+    local enumValues = ____exports.getEnumValues(nil, transpiledEnum)
+    return __TS__ArrayIncludes(enumValues, value)
 end
 --- Helper function to check every value of a custom enum for -1. Will throw an run-time error if any
 -- -1 values are found. This is helpful because many methods of the Isaac class return -1 if they
@@ -19981,11 +20280,9 @@ end
 -- This is useful to automate checking large enums for typos.
 function ____exports.validateEnumContiguous(self, transpiledEnumName, transpiledEnum)
     local values = ____exports.getEnumValues(nil, transpiledEnum)
-    local lastValue = values[#values]
-    if lastValue == nil then
-        error("Failed to validate that an enum was contiguous, since the last value was undefined.")
-    end
-    if type(lastValue) ~= "number" then
+    local lastValue = __TS__ArrayAt(values, -1)
+    assertDefined(nil, lastValue, "Failed to validate that an enum was contiguous, since the last value was undefined.")
+    if not isNumber(nil, lastValue) then
         error("Failed to validate that an enum was contiguous, since the last value was not a number.")
     end
     local valuesSet = __TS__New(ReadonlySet, values)
@@ -20340,6 +20637,8 @@ return ____exports
 local ____exports = {}
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isTable = ____types.isTable
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- Helper function to get the constructor from an instantiated TypeScriptToLua class, which is
 -- located on the metatable.
 -- 
@@ -20406,9 +20705,7 @@ end
 -- class.
 function ____exports.newTSTLClass(self, oldClass)
     local constructor = ____exports.getTSTLClassConstructor(nil, oldClass)
-    if constructor == nil then
-        error("Failed to instantiate a new TypeScriptToLua class since the provided old class does not have a metatable/constructor.")
-    end
+    assertDefined(nil, constructor, "Failed to instantiate a new TypeScriptToLua class since the provided old class does not have a metatable/constructor.")
     local newClass = {}
     local newClassMetatable = setmetatable(newClass, constructor.prototype)
     newClassMetatable:____constructor()
@@ -20417,11 +20714,16 @@ end
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.trinkets"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local __TS__ArraySome = ____lualib.__TS__ArraySome
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
 local TrinketSlot = ____isaac_2Dtypescript_2Ddefinitions.TrinketSlot
 local TrinketType = ____isaac_2Dtypescript_2Ddefinitions.TrinketType
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.src.arrays.cachedEnumValues")
+local TRINKET_SLOT_VALUES = ____cachedEnumValues.TRINKET_SLOT_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local itemConfig = ____cachedClasses.itemConfig
 local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
@@ -20580,7 +20882,18 @@ end
 function ____exports.getVanillaTrinketTypeRange(self)
     return iRange(nil, FIRST_TRINKET_TYPE, LAST_VANILLA_TRINKET_TYPE)
 end
---- Returns whether or not the player can hold an additional trinket, beyond what they are currently
+--- Helper function to check to see if the player is holding one or more trinkets.
+function ____exports.hasAnyTrinket(self, player)
+    local playerTrinketTypes = __TS__ArrayMap(
+        TRINKET_SLOT_VALUES,
+        function(____, trinketSlot) return player:GetTrinket(trinketSlot) end
+    )
+    return __TS__ArraySome(
+        playerTrinketTypes,
+        function(____, trinketType) return trinketType ~= TrinketType.NULL end
+    )
+end
+--- Returns whether the player can hold an additional trinket, beyond what they are currently
 -- carrying. This takes into account items that modify the max number of trinkets, like Mom's Purse.
 -- 
 -- If the player is the Tainted Soul, this always returns false, since that character cannot pick up
@@ -20676,6 +20989,8 @@ end
 -- This function will still work identically if PNG file does not exist, but it will cause a
 -- spurious error to appear in the "log.txt" file. If silencing these errors is desired, you can
 -- create a transparent 1 pixel PNG file in your mod's resources folder at `EMPTY_PNG_PATH`.
+-- 
+-- @allowEmptyVariadic
 function ____exports.clearSprite(self, sprite, ...)
     local layerIDs = {...}
     if #layerIDs == 0 then
@@ -20790,6 +21105,8 @@ local getNumbersFromTable = ____table.getNumbersFromTable
 local tableHasKeys = ____table.tableHasKeys
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isTable = ____types.isTable
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- Helper function to check if something is an instantiated `KColor` object.
 function ____exports.isKColor(self, object)
     return isIsaacAPIClassOfType(nil, object, OBJECT_NAME)
@@ -20815,18 +21132,10 @@ function ____exports.deserializeKColor(self, kColor)
         OBJECT_NAME,
         table.unpack(KEYS)
     ))
-    if r == nil then
-        error(("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: Red")
-    end
-    if g == nil then
-        error(("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: Green")
-    end
-    if b == nil then
-        error(("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: Blue")
-    end
-    if a == nil then
-        error(("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: Alpha")
-    end
+    assertDefined(nil, r, ("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: Red")
+    assertDefined(nil, g, ("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: Green")
+    assertDefined(nil, b, ("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: Blue")
+    assertDefined(nil, a, ("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: Alpha")
     return KColor(r, g, b, a)
 end
 --- Helper function to get a random color.
@@ -20895,6 +21204,8 @@ local getNumbersFromTable = ____table.getNumbersFromTable
 local tableHasKeys = ____table.tableHasKeys
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isTable = ____types.isTable
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- Helper function to check if something is an instantiated `Color` object.
 function ____exports.isColor(self, object)
     return isIsaacAPIClassOfType(nil, object, OBJECT_NAME)
@@ -20939,15 +21250,9 @@ function ____exports.deserializeColor(self, color)
         OBJECT_NAME,
         table.unpack(KEYS)
     ))
-    if r == nil then
-        error(("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: R")
-    end
-    if g == nil then
-        error(("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: G")
-    end
-    if b == nil then
-        error(("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: B")
-    end
+    assertDefined(nil, r, ("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: R")
+    assertDefined(nil, g, ("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: G")
+    assertDefined(nil, b, ("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: B")
     return Color(
         r,
         g,
@@ -21007,6 +21312,7 @@ local __TS__ArraySome = ____lualib.__TS__ArraySome
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local __TS__ArrayAt = ____lualib.__TS__ArrayAt
 local __TS__ArrayFind = ____lualib.__TS__ArrayFind
 local __TS__ArrayEvery = ____lualib.__TS__ArrayEvery
 local ____exports = {}
@@ -21018,6 +21324,7 @@ local ControllerIndex = ____isaac_2Dtypescript_2Ddefinitions.ControllerIndex
 local NullItemID = ____isaac_2Dtypescript_2Ddefinitions.NullItemID
 local PlayerForm = ____isaac_2Dtypescript_2Ddefinitions.PlayerForm
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
+local TearFlag = ____isaac_2Dtypescript_2Ddefinitions.TearFlag
 local TrinketType = ____isaac_2Dtypescript_2Ddefinitions.TrinketType
 local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.src.arrays.cachedEnumValues")
 local ACTIVE_SLOT_VALUES = ____cachedEnumValues.ACTIVE_SLOT_VALUES
@@ -21028,13 +21335,14 @@ local itemConfig = ____cachedClasses.itemConfig
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
-local getLastElement = ____array.getLastElement
 local sumArray = ____array.sumArray
 local ____characters = require("lua_modules.isaacscript-common.dist.src.functions.characters")
 local getCharacterName = ____characters.getCharacterName
 local isVanillaCharacter = ____characters.isVanillaCharacter
 local ____collectibles = require("lua_modules.isaacscript-common.dist.src.functions.collectibles")
 local getCollectibleMaxCharges = ____collectibles.getCollectibleMaxCharges
+local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
+local hasFlag = ____flag.hasFlag
 local ____playerIndex = require("lua_modules.isaacscript-common.dist.src.functions.playerIndex")
 local getAllPlayers = ____playerIndex.getAllPlayers
 local getPlayerIndexVanilla = ____playerIndex.getPlayerIndexVanilla
@@ -21042,6 +21350,7 @@ local getPlayers = ____playerIndex.getPlayers
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isNumber = ____types.isNumber
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local ____repeat = ____utils["repeat"]
 --- Helper function to get an array containing the characters of all of the current players.
 function ____exports.getCharacters(self)
@@ -21155,7 +21464,7 @@ end
 -- 
 -- If the player does not have an item currently queued, then this function will be a no-op.
 -- 
--- Returns whether or not an item was actually dequeued.
+-- Returns whether an item was actually dequeued.
 function ____exports.dequeueItem(self, player)
     if player.QueuedItem.Item == nil then
         return false
@@ -21197,9 +21506,7 @@ function ____exports.getClosestPlayer(self, position)
             closestDistance = distance
         end
     end
-    if closestPlayer == nil then
-        error("Failed to find the closest player.")
-    end
+    assertDefined(nil, closestPlayer, "Failed to find the closest player.")
     return closestPlayer
 end
 --- Helper function to get an array of temporary effects for a player. This is helpful so that you
@@ -21224,10 +21531,8 @@ end
 -- method.
 function ____exports.getFinalPlayer(self)
     local players = getPlayers(nil)
-    local lastPlayer = getLastElement(nil, players)
-    if lastPlayer == nil then
-        error("Failed to get the final player since there were 0 players.")
-    end
+    local lastPlayer = __TS__ArrayAt(players, -1)
+    assertDefined(nil, lastPlayer, "Failed to get the final player since there were 0 players.")
     return lastPlayer
 end
 --- Helper function to get the first player with the lowest frame count. Useful to find a freshly
@@ -21242,9 +21547,7 @@ function ____exports.getNewestPlayer(self)
             lowestFrame = player.FrameCount
         end
     end
-    if newestPlayer == nil then
-        error("Failed to find the newest player.")
-    end
+    assertDefined(nil, newestPlayer, "Failed to find the newest player.")
     return newestPlayer
 end
 --- Iterates over all players and checks if any are close enough to the specified position.
@@ -21458,8 +21761,8 @@ function ____exports.hasLostCurse(self, player)
     local effects = player:GetEffects()
     return effects:HasNullEffect(NullItemID.LOST_CURSE)
 end
---- Returns whether or not the player can hold an additional active item, beyond what they are
--- currently carrying. This takes the Schoolbag into account.
+--- Returns whether the player can hold an additional active item, beyond what they are currently
+-- carrying. This takes the Schoolbag into account.
 -- 
 -- If the player is the Tainted Soul, this always returns false, since that character cannot pick up
 -- items. (Only Tainted Forgotten can pick up items.)
@@ -21474,6 +21777,31 @@ function ____exports.hasOpenActiveItemSlot(self, player)
         return activeItemPrimary == CollectibleType.NULL or activeItemSecondary == CollectibleType.NULL
     end
     return activeItemPrimary == CollectibleType.NULL
+end
+--- Helper function to check if a player has piercing tears.
+-- 
+-- Under the hood, this checks the `EntityPlayer.TearFlags` variable.
+function ____exports.hasPiercing(self, player)
+    return hasFlag(nil, player.TearFlags, TearFlag.PIERCING)
+end
+--- Helper function to check if a player has spectral tears.
+-- 
+-- Under the hood, this checks the `EntityPlayer.TearFlags` variable.
+function ____exports.hasSpectral(self, player)
+    return hasFlag(nil, player.TearFlags, TearFlag.SPECTRAL)
+end
+--- Helper function to check to see if a player has one or more trinkets.
+-- 
+-- This function is variadic, meaning that you can supply as many trinket types as you want to check
+-- for. Returns true if the player has any of the supplied trinket types.
+-- 
+-- This function always passes `false` to the `ignoreModifiers` argument.
+function ____exports.hasTrinket(self, player, ...)
+    local trinketTypes = {...}
+    return __TS__ArraySome(
+        trinketTypes,
+        function(____, trinketType) return player:HasTrinket(trinketType) end
+    )
 end
 --- Helper function to check if the active slot of a particular player is empty.
 -- 
@@ -21565,7 +21893,7 @@ function ____exports.removeAllActiveItems(self, player)
         do
             local collectibleType = player:GetActiveItem(activeSlot)
             if collectibleType == CollectibleType.NULL then
-                goto __continue97
+                goto __continue98
             end
             local stillHasCollectible
             repeat
@@ -21575,29 +21903,29 @@ function ____exports.removeAllActiveItems(self, player)
                 end
             until not stillHasCollectible
         end
-        ::__continue97::
+        ::__continue98::
     end
 end
 --- Helper function to remove all of the held trinkets from a player.
 -- 
--- This will not remove any smelted trinkets, unless the player happens to be holding a trinket that
--- they also have smelted. (In that case, both the held and the smelted trinket will be removed.)
+-- This will not remove any smelted trinkets, unless the player happens to also be holding a trinket
+-- that they have smelted. (In that case, both the held and the smelted trinket will be removed.)
 function ____exports.removeAllPlayerTrinkets(self, player)
     for ____, trinketSlot in ipairs(TRINKET_SLOT_VALUES) do
         do
             local trinketType = player:GetTrinket(trinketSlot)
             if trinketType == TrinketType.NULL then
-                goto __continue102
+                goto __continue103
             end
-            local hasTrinket
+            local alreadyHasTrinket
             repeat
                 do
                     player:TryRemoveTrinket(trinketType)
-                    hasTrinket = player:HasTrinket(trinketType)
+                    alreadyHasTrinket = player:HasTrinket(trinketType)
                 end
-            until not hasTrinket
+            until not alreadyHasTrinket
         end
-        ::__continue102::
+        ::__continue103::
     end
 end
 --- Helper function to remove one or more collectibles to a player.
@@ -21669,7 +21997,7 @@ end
 -- @param activeSlot Optional. The slot to set. Default is `ActiveSlot.PRIMARY`.
 -- @param charge Optional. The argument of charges to set. If not specified, the item will be set
 -- with maximum charges.
--- @param keepInPools Optional. Whether or not to remove the item from pools. Default is false.
+-- @param keepInPools Optional. Whether to remove the item from pools. Default is false.
 function ____exports.setActiveItem(self, player, collectibleType, activeSlot, charge, keepInPools)
     if activeSlot == nil then
         activeSlot = ActiveSlot.PRIMARY
@@ -21688,9 +22016,9 @@ function ____exports.setActiveItem(self, player, collectibleType, activeSlot, ch
         itemPool:RemoveCollectible(collectibleType)
     end
     repeat
-        local ____switch124 = activeSlot
-        local ____cond124 = ____switch124 == ActiveSlot.PRIMARY
-        if ____cond124 then
+        local ____switch125 = activeSlot
+        local ____cond125 = ____switch125 == ActiveSlot.PRIMARY
+        if ____cond125 then
             do
                 if primaryCollectibleType ~= CollectibleType.NULL then
                     player:RemoveCollectible(primaryCollectibleType)
@@ -21699,8 +22027,8 @@ function ____exports.setActiveItem(self, player, collectibleType, activeSlot, ch
                 break
             end
         end
-        ____cond124 = ____cond124 or ____switch124 == ActiveSlot.SECONDARY
-        if ____cond124 then
+        ____cond125 = ____cond125 or ____switch125 == ActiveSlot.SECONDARY
+        if ____cond125 then
             do
                 if primaryCollectibleType ~= CollectibleType.NULL then
                     player:RemoveCollectible(primaryCollectibleType)
@@ -21715,16 +22043,16 @@ function ____exports.setActiveItem(self, player, collectibleType, activeSlot, ch
                 break
             end
         end
-        ____cond124 = ____cond124 or ____switch124 == ActiveSlot.POCKET
-        if ____cond124 then
+        ____cond125 = ____cond125 or ____switch125 == ActiveSlot.POCKET
+        if ____cond125 then
             do
                 player:SetPocketActiveItem(collectibleType, activeSlot, keepInPools)
                 player:SetActiveCharge(charge, activeSlot)
                 break
             end
         end
-        ____cond124 = ____cond124 or ____switch124 == ActiveSlot.POCKET_SINGLE_USE
-        if ____cond124 then
+        ____cond125 = ____cond125 or ____switch125 == ActiveSlot.POCKET_SINGLE_USE
+        if ____cond125 then
             do
                 player:SetPocketActiveItem(collectibleType, activeSlot, keepInPools)
                 break
@@ -21737,7 +22065,7 @@ end
 -- The method used in this function was discovered by im_tem.
 -- 
 -- @param player The player to apply or remove the blindfold state from.
--- @param enabled Whether or not to apply or remove the blindfold.
+-- @param enabled Whether to apply or remove the blindfold.
 -- @param modifyCostume Optional. Whether to add or remove the blindfold costume. Default is true.
 function ____exports.setBlindfold(self, player, enabled, modifyCostume)
     if modifyCostume == nil then
@@ -22131,9 +22459,9 @@ function ____exports.isBlindCollectible(self, collectible)
     questionMarkSprite:SetFrame(animation, frame)
     return ____exports.collectibleSpriteEquals(nil, sprite, questionMarkSprite)
 end
---- Returns whether or not the given collectible is a "glitched" item. All items are replaced by
--- glitched items once a player has TMTRAINER. However, glitched items can also "naturally" appear
--- in secret rooms and I AM ERROR rooms if the "Corrupted Data" achievement is unlocked.
+--- Returns whether the given collectible is a "glitched" item. All items are replaced by glitched
+-- items once a player has TMTRAINER. However, glitched items can also "naturally" appear in secret
+-- rooms and I AM ERROR rooms if the "Corrupted Data" achievement is unlocked.
 function ____exports.isGlitchedCollectible(self, collectible)
     return collectible.Variant == PickupVariant.COLLECTIBLE and collectible.SubType > GLITCHED_ITEM_THRESHOLD
 end
@@ -22184,20 +22512,6 @@ function ____exports.newCollectibleSprite(self, collectibleType)
     local defaultAnimation = sprite:GetDefaultAnimation()
     sprite:Play(defaultAnimation, true)
     return sprite
-end
---- Helper function to put a message in the log.txt file to let the Rebirth Item Tracker know that it
--- should remove an item.
--- 
--- The "item tracker" in this function does not refer to the in-game item tracker, but rather to the
--- Python program located at: https://github.com/Rchardon/RebirthItemTracker
--- 
--- This function is useful when you need to add a "fake" collectible to a player. Note that calling
--- this function is not necessary when removing items from players. For example, when you remove a
--- collectible with the `EntityPlayer.RemoveCollectible` method, a proper message is sent to the log
--- the item tracker will automatically remove it.
-function ____exports.removeCollectibleFromItemTracker(self, collectibleType)
-    local collectibleName = ____exports.getCollectibleName(nil, collectibleType)
-    Isaac.DebugString(((("Removing collectible " .. tostring(collectibleType)) .. " (") .. collectibleName) .. ") on player 0 (Player)")
 end
 --- Helper function to remove all pickup delay on a collectible. By default, collectibles have a 20
 -- frame delay before they can be picked up by a player.
@@ -22342,6 +22656,8 @@ local ____tstlClass = require("lua_modules.isaacscript-common.dist.src.functions
 local isTSTLSet = ____tstlClass.isTSTLSet
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isPrimitive = ____types.isPrimitive
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local ____vector = require("lua_modules.isaacscript-common.dist.src.functions.vector")
 local doesVectorHaveLength = ____vector.doesVectorHaveLength
 local isVector = ____vector.isVector
@@ -22422,9 +22738,7 @@ function ____exports.doesEntityExist(self, entityType, variant, subType, ignoreF
 end
 function setPrimitiveEntityFields(self, entity, metatable, entityFields)
     local propGetTable = metatable.__propget
-    if propGetTable == nil then
-        error("Failed to get the \"__propget\" table for an entity.")
-    end
+    assertDefined(nil, propGetTable, "Failed to get the \"__propget\" table for an entity.")
     for key in pairs(propGetTable) do
         local indexKey = key
         local value = entity[indexKey]
@@ -22522,17 +22836,23 @@ function ____exports.getConstituentsFromEntityID(self, entityID)
     end
     local entityTypeString, variantString, subTypeString = table.unpack(parts)
     local entityType = tonumber(entityTypeString)
-    if entityType == nil then
-        error("Failed to convert the entity type to a number: " .. tostring(entityTypeString))
-    end
+    assertDefined(
+        nil,
+        entityType,
+        "Failed to convert the entity type to a number: " .. tostring(entityTypeString)
+    )
     local variant = tonumber(variantString)
-    if variant == nil then
-        error("Failed to convert the entity variant to a number: " .. tostring(variantString))
-    end
+    assertDefined(
+        nil,
+        variant,
+        "Failed to convert the entity variant to a number: " .. tostring(variantString)
+    )
     local subType = tonumber(subTypeString)
-    if subType == nil then
-        error("Failed to convert the entity sub-type to a number: " .. tostring(subTypeString))
-    end
+    assertDefined(
+        nil,
+        subType,
+        "Failed to convert the entity sub-type to a number: " .. tostring(subTypeString)
+    )
     return {entityType, variant, subType}
 end
 --- Helper function to get all of the entities in the room or all of the entities that match a
@@ -22586,18 +22906,14 @@ end
 function ____exports.getEntityFields(self, entity)
     local entityFields = {}
     local metatable = getmetatable(entity)
-    if metatable == nil then
-        error("Failed to get the metatable for an entity.")
-    end
+    assertDefined(nil, metatable, "Failed to get the metatable for an entity.")
     setPrimitiveEntityFields(nil, entity, metatable, entityFields)
     local className = getIsaacAPIClassName(nil, entity)
     if className == "Entity" then
         return entityFields
     end
     local parentTable = metatable.__parent
-    if parentTable == nil then
-        error("Failed to get the \"__parent\" table for an entity.")
-    end
+    assertDefined(nil, parentTable, "Failed to get the \"__parent\" table for an entity.")
     setPrimitiveEntityFields(nil, entity, parentTable, entityFields)
     return entityFields
 end
@@ -23656,7 +23972,7 @@ ____exports.COLLECTIBLE_TYPE_TO_NAME_MAP = __TS__New(ReadonlyMap, {
     {653, "Vade Retro"},
     {654, "False PHD"},
     {655, "Spin to Win"},
-    {656, "Damocles"},
+    {656, "Damocles (Passive)"},
     {657, "Vasculitis"},
     {658, "Giant Cell"},
     {659, "Tropicamide"},
@@ -25671,6 +25987,14 @@ function ____exports.addTearsStat(self, player, tearsStat)
     local newMaxFireDelay = ____exports.getFireDelay(nil, newTearsStat)
     player.MaxFireDelay = newMaxFireDelay
 end
+--- Helper function to check if a tear hit an enemy. A tear is considered to be missed if it hit the
+-- ground, a wall, or a grid entity.
+-- 
+-- Under the hood, this function uses the `Entity.IsDead` method to determine this. (Tears will not
+-- die if they hit an enemy, but they will die if they hit a wall or object.)
+function ____exports.isMissedTear(self, tear)
+    return tear:IsDead()
+end
 --- Helper function to check if a given tear is from a familiar (as opposed to e.g. a player). This
 -- is determined by looking at the parent.
 -- 
@@ -25732,12 +26056,32 @@ local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local CacheFlag = ____isaac_2Dtypescript_2Ddefinitions.CacheFlag
+local ____PlayerStat = require("lua_modules.isaacscript-common.dist.src.enums.PlayerStat")
+local PlayerStat = ____PlayerStat.PlayerStat
 local ____defaultPlayerStatMap = require("lua_modules.isaacscript-common.dist.src.maps.defaultPlayerStatMap")
 local DEFAULT_PLAYER_STAT_MAP = ____defaultPlayerStatMap.DEFAULT_PLAYER_STAT_MAP
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____tears = require("lua_modules.isaacscript-common.dist.src.functions.tears")
 local addTearsStat = ____tears.addTearsStat
+--- Helper function to get all of the stat for a player.
+function ____exports.getPlayerStats(self, player)
+    return {
+        [PlayerStat.DAMAGE] = player.Damage,
+        [PlayerStat.FIRE_DELAY] = player.MaxFireDelay,
+        [PlayerStat.SHOT_SPEED] = player.ShotSpeed,
+        [PlayerStat.TEAR_HEIGHT] = player.TearHeight,
+        [PlayerStat.TEAR_RANGE] = player.TearRange,
+        [PlayerStat.TEAR_FALLING_ACCELERATION] = player.TearFallingAcceleration,
+        [PlayerStat.TEAR_FALLING_SPEED] = player.TearFallingSpeed,
+        [PlayerStat.MOVE_SPEED] = player.MoveSpeed,
+        [PlayerStat.TEAR_FLAG] = player.TearFlags,
+        [PlayerStat.TEAR_COLOR] = player.TearColor,
+        [PlayerStat.FLYING] = player.CanFly,
+        [PlayerStat.LUCK] = player.Luck,
+        [PlayerStat.SIZE] = player.SpriteScale
+    }
+end
 local STAT_CACHE_FLAGS_SET = __TS__New(ReadonlySet, {
     CacheFlag.DAMAGE,
     CacheFlag.FIRE_DELAY,
@@ -25759,7 +26103,7 @@ local STAT_CACHE_FLAGS_SET = __TS__New(ReadonlySet, {
 -- - CacheFlag.RANGE (1 << 3)
 -- - CacheFlag.SPEED (1 << 4)
 -- - CacheFlag.LUCK (1 << 10)
-function ____exports.addStat(self, player, cacheFlag, amount)
+function ____exports.addPlayerStat(self, player, cacheFlag, amount)
     if not STAT_CACHE_FLAGS_SET:has(cacheFlag) then
         error("You cannot add a stat to a player with the cache flag of: " .. tostring(cacheFlag))
     end
@@ -25815,6 +26159,11 @@ end
 -- Note that the default fire delay is represented in the tear stat, not the `MaxFireDelay` value.
 function ____exports.getDefaultPlayerStat(self, cacheFlag)
     return DEFAULT_PLAYER_STAT_MAP:get(cacheFlag)
+end
+--- Helper function to get the stat for a player corresponding to the `StatType`.
+function ____exports.getPlayerStat(self, player, playerStat)
+    local playerStats = ____exports.getPlayerStats(nil, player)
+    return playerStats[playerStat]
 end
 return ____exports
  end,
@@ -25876,6 +26225,13 @@ local inRange = ____utils.inRange
 -- `StageType.REPENTANCE_B`.
 function ____exports.isRepentanceStage(self, stageType)
     return stageType == StageType.REPENTANCE or stageType == StageType.REPENTANCE_B
+end
+--- Helper function to check if the provided stage is one with a story boss. Specifically, this is
+-- Depths 2 (Mom), Womb 2 (Mom's Heart / It Lives), Blue Womb (Hush), Sheol (Satan), Cathedral
+-- (Isaac), Dark Room (Lamb), The Chest (Blue Baby), The Void (Delirium), and Home (Dogma / The
+-- Beast).
+function ____exports.isStageWithStoryBoss(self, stage)
+    return stage == LevelStage.DEPTHS_2 or stage >= LevelStage.WOMB_2
 end
 --- Helper function to check if the current stage type is equal to `StageType.REPENTANCE` or
 -- `StageType.REPENTANCE_B`.
@@ -26005,6 +26361,59 @@ function ____exports.goToStage(self, stage, stageType)
     local command = ("stage " .. tostring(stage)) .. stageTypeLetterSuffix
     Isaac.ExecuteCommand(command)
 end
+--- Returns whether the provided stage and stage type represent a "final floor". This is defined as a
+-- floor that prevents the player from entering the I AM ERROR room on.
+-- 
+-- For example, when using Undefined on The Chest, it has a 50% chance of teleporting the player to
+-- the Secret Room and a 50% chance of teleporting the player to the Super Secret Room, because the
+-- I AM ERROR room is never entered into the list of possibilities.
+function ____exports.isFinalFloor(self, stage, stageType)
+    return stage == LevelStage.DARK_ROOM_CHEST or stage == LevelStage.THE_VOID or stage == LevelStage.HOME or stage == LevelStage.WOMB_2 and ____exports.isRepentanceStage(nil, stageType)
+end
+--- Helper function to check if the provided effective stage is one that has the possibility to grant
+-- a natural Devil Room or Angel Room after killing the boss.
+-- 
+-- Note that in order for this function to work properly, you must provide it with the effective
+-- stage (e.g. from the `getEffectiveStage` helper function) and not the absolute stage (e.g. from
+-- the `Level.GetStage` method).
+function ____exports.isStageWithNaturalDevilRoom(self, effectiveStage)
+    return inRange(nil, effectiveStage, LevelStage.BASEMENT_2, LevelStage.WOMB_2) and effectiveStage ~= LevelStage.BLUE_WOMB
+end
+--- Helper function to check if the provided stage is one that will have a random collectible drop
+-- upon defeating the boss of the floor.
+-- 
+-- This happens on most stages but will not happen on Depths 2, Womb 2, Sheol, Cathedral, Dark Room,
+-- The Chest, and Home (due to the presence of a story boss).
+-- 
+-- Note that even though Delirium does not drop a random boss collectible, The Void is still
+-- considered to be a stage that has a random boss collectible since all of the non-Delirium Boss
+-- Rooms will drop random boss collectibles.
+function ____exports.isStageWithRandomBossCollectible(self, stage)
+    return not ____exports.isStageWithStoryBoss(nil, stage) or stage == LevelStage.THE_VOID
+end
+--- Helper function to check if the provided stage will spawn a locked door to Downpour/Dross after
+-- defeating the boss.
+function ____exports.isStageWithSecretExitToDownpour(self, stage)
+    return stage == LevelStage.BASEMENT_1 or stage == LevelStage.BASEMENT_2
+end
+--- Helper function to check if the provided stage and stage type will spawn a spiked door to
+-- Mausoleum/Gehenna after defeating the boss.
+function ____exports.isStageWithSecretExitToMausoleum(self, stage, stageType)
+    local repentanceStage = ____exports.isRepentanceStage(nil, stageType)
+    return stage == LevelStage.DEPTHS_1 and not repentanceStage or stage == LevelStage.CAVES_2 and repentanceStage
+end
+--- Helper function to check if the provided stage and stage type will spawn a wooden door to
+-- Mines/Ashpit after defeating the boss.
+function ____exports.isStageWithSecretExitToMines(self, stage, stageType)
+    local repentanceStage = ____exports.isRepentanceStage(nil, stageType)
+    return stage == LevelStage.CAVES_1 and not repentanceStage or stage == LevelStage.BASEMENT_2 and repentanceStage
+end
+--- Helper function to check if the current stage is one that would create a trapdoor if We Need to
+-- Go Deeper was used.
+function ____exports.isStageWithShovelTrapdoors(self, stage, stageType)
+    local repentanceStage = ____exports.isRepentanceStage(nil, stageType)
+    return stage < LevelStage.WOMB_2 or stage == LevelStage.WOMB_2 and not repentanceStage
+end
 --- Helper function to check if the player has taken Dad's Note. This sets the game state flag of
 -- `GameStateFlag.BACKWARDS_PATH` and causes floor generation to change.
 function ____exports.onAscent(self)
@@ -26037,8 +26446,8 @@ function ____exports.onEffectiveStage(self, ...)
     local thisEffectiveStage = ____exports.getEffectiveStage(nil)
     return __TS__ArrayIncludes(effectiveStages, thisEffectiveStage)
 end
---- Returns whether or not the player is on the "final floor" of the particular run. The final floor
--- is defined as one that prevents the player from entering the I AM ERROR room on.
+--- Returns whether the player is on the "final floor" of the particular run. The final floor is
+-- defined as one that prevents the player from entering the I AM ERROR room on.
 -- 
 -- For example, when using Undefined on The Chest, it has a 50% chance of teleporting the player to
 -- the Secret Room and a 50% chance of teleporting the player to the Super Secret Room, because the
@@ -26046,9 +26455,10 @@ end
 function ____exports.onFinalFloor(self)
     local level = game:GetLevel()
     local stage = level:GetStage()
-    return stage == LevelStage.DARK_ROOM_CHEST or stage == LevelStage.THE_VOID or stage == LevelStage.HOME or stage == LevelStage.WOMB_2 and ____exports.onRepentanceStage(nil)
+    local stageType = level:GetStageType()
+    return ____exports.isFinalFloor(nil, stage, stageType)
 end
---- Returns whether or not the player is on the first floor of the particular run.
+--- Returns whether the player is on the first floor of the particular run.
 -- 
 -- This is tricky to determine because we have to handle the cases of Downpour/Dross 1 not being the
 -- first floor and The Ascent.
@@ -26097,44 +26507,61 @@ end
 -- Devil Room or Angel Room after killing the boss.
 function ____exports.onStageWithNaturalDevilRoom(self)
     local effectiveStage = ____exports.getEffectiveStage(nil)
-    return inRange(nil, effectiveStage, LevelStage.BASEMENT_2, LevelStage.WOMB_2) and effectiveStage ~= LevelStage.BLUE_WOMB
+    return ____exports.isStageWithNaturalDevilRoom(nil, effectiveStage)
 end
---- After defeating the boss on most stages, a random collectible will spawn from the Boss Room pool.
--- However, this does not happen on Depths 2, Womb 2, and beyond.
+--- Helper function to check if the current stage is one that will have a random collectible drop
+-- upon defeating the boss of the floor.
+-- 
+-- This happens on most stages but will not happen on Depths 2, Womb 2, Sheol, Cathedral, Dark Room,
+-- The Chest, and Home (due to the presence of a story boss).
+-- 
+-- Note that even though Delirium does not drop a random boss collectible, The Void is still
+-- considered to be a stage that has a random boss collectible since all of the non-Delirium Boss
+-- Rooms will drop random boss collectibles.
 function ____exports.onStageWithRandomBossCollectible(self)
     local level = game:GetLevel()
     local stage = level:GetStage()
-    return stage ~= LevelStage.DEPTHS_2 and stage < LevelStage.WOMB_2
+    return ____exports.isStageWithRandomBossCollectible(nil, stage)
 end
 --- Helper function to check if the current stage will spawn a locked door to Downpour/Dross after
 -- defeating the boss.
 function ____exports.onStageWithSecretExitToDownpour(self)
     local level = game:GetLevel()
     local stage = level:GetStage()
-    return stage == LevelStage.BASEMENT_1 or stage == LevelStage.BASEMENT_2
+    return ____exports.isStageWithSecretExitToDownpour(nil, stage)
 end
 --- Helper function to check if the current stage will spawn a spiked door to Mausoleum/Gehenna after
 -- defeating the boss.
 function ____exports.onStageWithSecretExitToMausoleum(self)
     local level = game:GetLevel()
     local stage = level:GetStage()
-    local repentanceStage = ____exports.onRepentanceStage(nil)
-    return stage == LevelStage.DEPTHS_1 and not repentanceStage or stage == LevelStage.CAVES_2 and repentanceStage
+    local stageType = level:GetStageType()
+    return ____exports.isStageWithSecretExitToMausoleum(nil, stage, stageType)
 end
 --- Helper function to check if the current stage will spawn a wooden door to Mines/Ashpit after
 -- defeating the boss.
 function ____exports.onStageWithSecretExitToMines(self)
     local level = game:GetLevel()
     local stage = level:GetStage()
-    local repentanceStage = ____exports.onRepentanceStage(nil)
-    return stage == LevelStage.CAVES_1 and not repentanceStage or stage == LevelStage.BASEMENT_2 and repentanceStage
+    local stageType = level:GetStageType()
+    return ____exports.isStageWithSecretExitToMines(nil, stage, stageType)
 end
 --- Helper function to check if the current stage is one that would create a trapdoor if We Need to
 -- Go Deeper was used.
-function ____exports.onStageWithShovelWorking(self)
+function ____exports.onStageWithShovelTrapdoors(self)
     local level = game:GetLevel()
     local stage = level:GetStage()
-    return stage < LevelStage.WOMB_2 or stage == LevelStage.WOMB_2 and not ____exports.onRepentanceStage(nil)
+    local stageType = level:GetStageType()
+    return ____exports.isStageWithShovelTrapdoors(nil, stage, stageType)
+end
+--- Helper function to check if the current stage is one with a story boss. Specifically, this is
+-- Depths 2 (Mom), Womb 2 (Mom's Heart / It Lives), Blue Womb (Hush), Sheol (Satan), Cathedral
+-- (Isaac), Dark Room (Lamb), The Chest (Blue Baby), The Void (Delirium), and Home (Dogma / The
+-- Beast).
+function ____exports.onStageWithStoryBoss(self)
+    local level = game:GetLevel()
+    local stage = level:GetStage()
+    return ____exports.isStageWithStoryBoss(nil, stage)
 end
 --- Helper function to warp to a new stage/level.
 -- 
@@ -26143,9 +26570,9 @@ end
 -- 
 -- @param stage The stage number to warp to.
 -- @param stageType The stage type to warp to.
--- @param reseed Optional. Whether or not to reseed the floor upon arrival. Default is false. Set
--- this to true if you are warping to the same stage but a different stage type (or
--- else the floor layout will be identical to the old floor).
+-- @param reseed Optional. Whether to reseed the floor upon arrival. Default is false. Set this to
+-- true if you are warping to the same stage but a different stage type (or else the
+-- floor layout will be identical to the old floor).
 function ____exports.setStage(self, stage, stageType, reseed)
     if reseed == nil then
         reseed = false
@@ -26543,6 +26970,8 @@ local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.
 local getEntities = ____entities.getEntities
 local removeEntities = ____entities.removeEntities
 local spawn = ____entities.spawn
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- Helper function to get all of the bombs in the room. (Specifically, this refers to the
 -- `EntityBomb` class, not bomb pickups.)
 -- 
@@ -27067,9 +27496,7 @@ function ____exports.spawnBomb(self, bombVariant, subType, positionOrGridIndex, 
         seedOrRNG
     )
     local bomb = entity:ToBomb()
-    if bomb == nil then
-        error("Failed to spawn a bomb.")
-    end
+    assertDefined(nil, bomb, "Failed to spawn a bomb.")
     return bomb
 end
 --- Helper function to spawn a `EntityType.BOMB` (4) with a specific seed.
@@ -27103,9 +27530,7 @@ function ____exports.spawnEffect(self, effectVariant, subType, positionOrGridInd
         seedOrRNG
     )
     local effect = entity:ToEffect()
-    if effect == nil then
-        error("Failed to spawn an effect.")
-    end
+    assertDefined(nil, effect, "Failed to spawn an effect.")
     return effect
 end
 --- Helper function to spawn a `EntityType.EFFECT` (1000) with a specific seed.
@@ -27142,9 +27567,7 @@ function ____exports.spawnFamiliar(self, familiarVariant, subType, positionOrGri
         seedOrRNG
     )
     local familiar = entity:ToFamiliar()
-    if familiar == nil then
-        error("Failed to spawn a familiar.")
-    end
+    assertDefined(nil, familiar, "Failed to spawn a familiar.")
     return familiar
 end
 --- Helper function to spawn a `EntityType.FAMILIAR` (3) with a specific seed.
@@ -27178,9 +27601,7 @@ function ____exports.spawnKnife(self, knifeVariant, subType, positionOrGridIndex
         seedOrRNG
     )
     local knife = entity:ToKnife()
-    if knife == nil then
-        error("Failed to spawn a knife.")
-    end
+    assertDefined(nil, knife, "Failed to spawn a knife.")
     return knife
 end
 --- Helper function to spawn a `EntityType.KNIFE` (8) with a specific seed.
@@ -27214,9 +27635,7 @@ function ____exports.spawnLaser(self, laserVariant, subType, positionOrGridIndex
         seedOrRNG
     )
     local laser = entity:ToLaser()
-    if laser == nil then
-        error("Failed to spawn a laser.")
-    end
+    assertDefined(nil, laser, "Failed to spawn a laser.")
     return laser
 end
 --- Helper function to spawn a `EntityType.LASER` (7) with a specific seed.
@@ -27253,9 +27672,7 @@ function ____exports.spawnNPC(self, entityType, variant, subType, positionOrGrid
         seedOrRNG
     )
     local npc = entity:ToNPC()
-    if npc == nil then
-        error("Failed to spawn an NPC.")
-    end
+    assertDefined(nil, npc, "Failed to spawn an NPC.")
     return npc
 end
 --- Helper function to spawn an NPC with a specific seed.
@@ -27293,9 +27710,7 @@ function ____exports.spawnPickup(self, pickupVariant, subType, positionOrGridInd
         seedOrRNG
     )
     local pickup = entity:ToPickup()
-    if pickup == nil then
-        error("Failed to spawn a pickup.")
-    end
+    assertDefined(nil, pickup, "Failed to spawn a pickup.")
     return pickup
 end
 --- Helper function to spawn a `EntityType.PICKUP` (5) with a specific seed.
@@ -27329,9 +27744,7 @@ function ____exports.spawnProjectile(self, projectileVariant, subType, positionO
         seedOrRNG
     )
     local projectile = entity:ToProjectile()
-    if projectile == nil then
-        error("Failed to spawn a projectile.")
-    end
+    assertDefined(nil, projectile, "Failed to spawn a projectile.")
     return projectile
 end
 --- Helper function to spawn a `EntityType.PROJECTILE` (9) with a specific seed.
@@ -27396,9 +27809,7 @@ function ____exports.spawnTear(self, tearVariant, subType, positionOrGridIndex, 
         seedOrRNG
     )
     local tear = entity:ToTear()
-    if tear == nil then
-        error("Failed to spawn a tear.")
-    end
+    assertDefined(nil, tear, "Failed to spawn a tear.")
     return tear
 end
 --- Helper function to spawn a `EntityType.EntityType` (2) with a specific seed.
@@ -27873,7 +28284,7 @@ end
 -- - [1, 2, 3]
 -- 
 -- @param set The set to get the combinations of.
--- @param includeEmptyArray Whether or not to include an empty array in the combinations.
+-- @param includeEmptyArray Whether to include an empty array in the combinations.
 function ____exports.getSetCombinations(self, set, includeEmptyArray)
     local values = ____exports.getSortedSetValues(nil, set)
     local combinations = getArrayCombinations(nil, values, includeEmptyArray)
@@ -27929,6 +28340,8 @@ local getIsaacAPIClassName = ____isaacAPIClass.getIsaacAPIClassName
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isTable = ____types.isTable
 local isUserdata = ____types.isUserdata
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 function getSerializedTableType(self, serializedIsaacAPIClass)
     for ____, ____value in ipairs(__TS__ObjectEntries(ISAAC_API_CLASS_TYPE_TO_BRAND)) do
         local copyableIsaacAPIClassType = ____value[1]
@@ -27948,14 +28361,10 @@ function ____exports.copyIsaacAPIClass(self, isaacAPIClass)
         error("Failed to copy an Isaac API class since the provided object was of type: " .. __TS__TypeOf(isaacAPIClass))
     end
     local isaacAPIClassType = getIsaacAPIClassName(nil, isaacAPIClass)
-    if isaacAPIClassType == nil then
-        error("Failed to copy an Isaac API class since it does not have a class type.")
-    end
+    assertDefined(nil, isaacAPIClassType, "Failed to copy an Isaac API class since it does not have a class type.")
     local copyableIsaacAPIClassType = isaacAPIClassType
     local functions = ISAAC_API_CLASS_TYPE_TO_FUNCTIONS[copyableIsaacAPIClassType]
-    if functions == nil then
-        error("Failed to copy an Isaac API class since the associated functions were not found for Isaac API class type: " .. copyableIsaacAPIClassType)
-    end
+    assertDefined(nil, functions, "Failed to copy an Isaac API class since the associated functions were not found for Isaac API class type: " .. copyableIsaacAPIClassType)
     return functions:copy(isaacAPIClass)
 end
 --- Helper function to generically deserialize an Isaac API class without knowing what specific type
@@ -27968,13 +28377,9 @@ function ____exports.deserializeIsaacAPIClass(self, serializedIsaacAPIClass)
         error("Failed to deserialize an Isaac API class since the provided object was of type: " .. __TS__TypeOf(serializedIsaacAPIClass))
     end
     local copyableIsaacAPIClassType = getSerializedTableType(nil, serializedIsaacAPIClass)
-    if copyableIsaacAPIClassType == nil then
-        error("Failed to deserialize an Isaac API class since a valid class type brand was not found.")
-    end
+    assertDefined(nil, copyableIsaacAPIClassType, "Failed to deserialize an Isaac API class since a valid class type brand was not found.")
     local functions = ISAAC_API_CLASS_TYPE_TO_FUNCTIONS[copyableIsaacAPIClassType]
-    if functions == nil then
-        error("Failed to deserialize an Isaac API class since the associated functions were not found for class type: " .. copyableIsaacAPIClassType)
-    end
+    assertDefined(nil, functions, "Failed to deserialize an Isaac API class since the associated functions were not found for class type: " .. copyableIsaacAPIClassType)
     return functions:deserialize(serializedIsaacAPIClass)
 end
 --- Helper function to generically check if a given object is a copyable Isaac API class. (This is
@@ -28016,14 +28421,10 @@ function ____exports.serializeIsaacAPIClass(self, isaacAPIClass)
         error("Failed to serialize an Isaac API class since the provided object was of type: " .. __TS__TypeOf(isaacAPIClass))
     end
     local isaacAPIClassType = getIsaacAPIClassName(nil, isaacAPIClass)
-    if isaacAPIClassType == nil then
-        error("Failed to serialize an Isaac API class since it does not have a class type.")
-    end
+    assertDefined(nil, isaacAPIClassType, "Failed to serialize an Isaac API class since it does not have a class name.")
     local copyableIsaacAPIClassType = isaacAPIClassType
     local functions = ISAAC_API_CLASS_TYPE_TO_FUNCTIONS[copyableIsaacAPIClassType]
-    if functions == nil then
-        error("Failed to serialize an Isaac API class since the associated functions were not found for class type: " .. copyableIsaacAPIClassType)
-    end
+    assertDefined(nil, functions, "Failed to serialize an Isaac API class since the associated functions were not found for class type: " .. copyableIsaacAPIClassType)
     return functions:serialize(isaacAPIClass)
 end
 return ____exports
@@ -28114,6 +28515,8 @@ local getNumbersFromTable = ____table.getNumbersFromTable
 local tableHasKeys = ____table.tableHasKeys
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isTable = ____types.isTable
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- Helper function to check if something is an instantiated `BitSet128` object.
 function ____exports.isBitSet128(self, object)
     return isIsaacAPIClassOfType(nil, object, OBJECT_NAME)
@@ -28141,12 +28544,8 @@ function ____exports.deserializeBitSet128(self, bitSet128)
         OBJECT_NAME,
         table.unpack(KEYS)
     ))
-    if l == nil then
-        error(("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: l")
-    end
-    if h == nil then
-        error(("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: h")
-    end
+    assertDefined(nil, l, ("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: l")
+    assertDefined(nil, h, ("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: h")
     return BitSet128(l, h)
 end
 --- Used to determine is the given table is a serialized `BitSet128` object created by the `deepCopy`
@@ -28215,7 +28614,6 @@ local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local Challenge = ____isaac_2Dtypescript_2Ddefinitions.Challenge
 local Difficulty = ____isaac_2Dtypescript_2Ddefinitions.Difficulty
-local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
 local SlotVariant = ____isaac_2Dtypescript_2Ddefinitions.SlotVariant
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -28223,6 +28621,8 @@ local ____constants = require("lua_modules.isaacscript-common.dist.src.core.cons
 local VectorZero = ____constants.VectorZero
 local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.src.core.constantsFirstLast")
 local FIRST_CHARACTER = ____constantsFirstLast.FIRST_CHARACTER
+local ____characters = require("lua_modules.isaacscript-common.dist.src.functions.characters")
+local getCharacterName = ____characters.getCharacterName
 local ____entitiesSpecific = require("lua_modules.isaacscript-common.dist.src.functions.entitiesSpecific")
 local spawnSlot = ____entitiesSpecific.spawnSlot
 local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
@@ -28240,7 +28640,7 @@ end
 function ____exports.isGreedMode(self)
     return game.Difficulty == Difficulty.GREED or game.Difficulty == Difficulty.GREEDIER
 end
---- Whether or not the player is playing on a set seed (i.e. that they entered in a specific seed by
+--- Whether the player is playing on a set seed (i.e. that they entered in a specific seed by
 -- pressing tab on the character selection screen). When the player resets the game on a set seed,
 -- the game will not switch to a different seed.
 function ____exports.onSetSeed(self)
@@ -28265,13 +28665,17 @@ function ____exports.restart(self, character)
         error(("Restarting as a character of " .. tostring(character)) .. " would crash the game.")
     end
     local command = "restart " .. tostring(character)
-    log((((("Restarting the run as PlayerType." .. PlayerType[character]) .. " (") .. tostring(character)) .. ") with a console command of: ") .. command)
+    local characterName = getCharacterName(nil, character)
+    log((((("Restarting the run as " .. characterName) .. " (") .. tostring(character)) .. ") with a console command of: ") .. command)
     Isaac.ExecuteCommand(command)
 end
 --- Helper function to change the run status to that of an unseeded run with a new random seed.
 -- 
 -- This is useful to revert the behavior where playing on a set and restarting the game will not
 -- take you to a new seed.
+-- 
+-- Under the hood, this function calls the `Seeds.Reset` method and the
+-- `Seeds.Restart(Challenge.NULL)` method.
 function ____exports.setUnseeded(self)
     local seeds = game:GetSeeds()
     seeds:Reset()
@@ -28356,9 +28760,9 @@ local Map = ____lualib.Map
 local __TS__Spread = ____lualib.__TS__Spread
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local __TS__ArrayEvery = ____lualib.__TS__ArrayEvery
 local __TS__StringIncludes = ____lualib.__TS__StringIncludes
 local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
-local __TS__ArrayEvery = ____lualib.__TS__ArrayEvery
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local AngelRoomSubType = ____isaac_2Dtypescript_2Ddefinitions.AngelRoomSubType
@@ -28368,7 +28772,6 @@ local DownpourRoomSubType = ____isaac_2Dtypescript_2Ddefinitions.DownpourRoomSub
 local DungeonSubType = ____isaac_2Dtypescript_2Ddefinitions.DungeonSubType
 local GridRoom = ____isaac_2Dtypescript_2Ddefinitions.GridRoom
 local HomeRoomSubType = ____isaac_2Dtypescript_2Ddefinitions.HomeRoomSubType
-local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
 local RoomDescriptorFlag = ____isaac_2Dtypescript_2Ddefinitions.RoomDescriptorFlag
 local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
 local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
@@ -28407,9 +28810,8 @@ local getRoomData = ____roomData.getRoomData
 local getRoomDescriptor = ____roomData.getRoomDescriptor
 local getRoomDescriptorReadOnly = ____roomData.getRoomDescriptorReadOnly
 local getRoomGridIndex = ____roomData.getRoomGridIndex
-local getRoomName = ____roomData.getRoomName
-local getRoomStageID = ____roomData.getRoomStageID
-local getRoomSubType = ____roomData.getRoomSubType
+local ____roomShape = require("lua_modules.isaacscript-common.dist.src.functions.roomShape")
+local isLRoomShape = ____roomShape.isLRoomShape
 local ____roomTransition = require("lua_modules.isaacscript-common.dist.src.functions.roomTransition")
 local reloadRoom = ____roomTransition.reloadRoom
 local ____stage = require("lua_modules.isaacscript-common.dist.src.functions.stage")
@@ -28417,6 +28819,7 @@ local getGotoCommand = ____stage.getGotoCommand
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local asNumber = ____types.asNumber
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local iRange = ____utils.iRange
 --- Helper function to get a read-only copy of the room descriptor for every room on the level. This
 -- includes off-grid rooms, such as the Devil Room, and extra-dimensional rooms, if they are
@@ -28485,6 +28888,112 @@ function ____exports.getRoomsOutsideGrid(self)
         function(____, readOnlyRoomDescriptor) return getRoomDescriptor(nil, readOnlyRoomDescriptor.SafeGridIndex) end
     )
 end
+--- Helper function to determine if the provided room is equal to `RoomShape.1x2` or `RoomShape.2x1`.
+function ____exports.is2x1Room(self, roomData)
+    return roomData.Shape == RoomShape.SHAPE_1x2 or roomData.Shape == RoomShape.SHAPE_2x1
+end
+function ____exports.isAngelShop(self, roomData)
+    return roomData.Type == RoomType.ANGEL and roomData.Subtype == asNumber(nil, AngelRoomSubType.SHOP)
+end
+function ____exports.isBeastRoom(self, roomData)
+    return roomData.Type == RoomType.DUNGEON and roomData.Subtype == asNumber(nil, DungeonSubType.BEAST_ROOM)
+end
+--- Helper function to check if the provided room is a boss room for a particular boss. This will
+-- only work for bosses that have dedicated boss rooms in the "00.special rooms.stb" file.
+function ____exports.isBossRoomOf(self, roomData, bossID)
+    return roomData.Type == RoomType.BOSS and roomData.StageID == StageID.SPECIAL_ROOMS and roomData.Subtype == asNumber(nil, bossID)
+end
+--- Helper function for determining whether the provided room is a crawl space. Use this function
+-- over comparing to `RoomType.DUNGEON` or `GridRoom.DUNGEON_IDX` since there is a special case of
+-- the player being in a boss fight that takes place in a dungeon.
+function ____exports.isCrawlSpace(self, roomData)
+    return roomData.Type == RoomType.DUNGEON and roomData.Subtype == asNumber(nil, DungeonSubType.NORMAL)
+end
+--- Helper function to detect if the provided room is one of the rooms in the Death Certificate area.
+function ____exports.isDeathCertificateArea(self, roomData)
+    return roomData.StageID == StageID.HOME and (roomData.Subtype == asNumber(nil, HomeRoomSubType.DEATH_CERTIFICATE_ENTRANCE) or roomData.Subtype == asNumber(nil, HomeRoomSubType.DEATH_CERTIFICATE_ITEMS))
+end
+--- Helper function to detect if the provided room is a Treasure Room created when entering with a
+-- Devil's Crown trinket.
+-- 
+-- Under the hood, this checks for `RoomDescriptorFlag.DEVIL_TREASURE`.
+function ____exports.isDevilsCrownTreasureRoom(self, roomDescriptor)
+    return hasFlag(nil, roomDescriptor.Flags, RoomDescriptorFlag.DEVIL_TREASURE)
+end
+--- Helper function to detect if the provided room is a Double Trouble Boss Room.
+-- 
+-- This is performed by checking for the string "Double Trouble" inside of the room name. The
+-- vanilla game uses this convention for every Double Trouble Boss Room. Note that this method might
+-- fail for mods that add extra Double Trouble rooms but do not follow the convention.
+-- 
+-- Internally, the game is coded to detect Double Trouble Boss Rooms by checking for the variant
+-- range of 3700 through 3850. We intentionally do not use this method since it may not work as well
+-- with modded rooms.
+function ____exports.isDoubleTrouble(self, roomData)
+    return roomData.Type == RoomType.BOSS and __TS__StringIncludes(roomData.Name, "Double Trouble")
+end
+--- Helper function to determine if the index of the provided room is equal to `GridRoom.GENESIS`.
+function ____exports.isGenesisRoom(self, roomDescriptor)
+    return roomDescriptor.GridIndex == asNumber(nil, GridRoom.GENESIS)
+end
+--- Helper function to check if the provided room is either the left Home closet (behind the red
+-- door) or the right Home closet (with one random pickup).
+-- 
+-- Home closets have a unique shape that is different from any other room in the game.
+function ____exports.isHomeCloset(self, roomData)
+    return roomData.StageID == StageID.HOME and (roomData.Subtype == asNumber(nil, HomeRoomSubType.CLOSET_LEFT) or roomData.Subtype == asNumber(nil, HomeRoomSubType.CLOSET_RIGHT))
+end
+--- Helper function to determine if the provided room is one of the four L room shapes.
+function ____exports.isLRoom(self, roomData)
+    return isLRoomShape(nil, roomData.Shape)
+end
+--- Helper function to determine if the index of the provided room is equal to `GridRoom.MEGA_SATAN`.
+function ____exports.isMegaSatanRoom(self, roomDescriptor)
+    return roomDescriptor.GridIndex == asNumber(nil, GridRoom.MEGA_SATAN)
+end
+--- Helper function to determine if the provided room is part of the Repentance "escape sequence" in
+-- the Mines/Ashpit.
+function ____exports.isMineShaft(self, roomData)
+    return (roomData.StageID == StageID.MINES or roomData.StageID == StageID.ASHPIT) and MINE_SHAFT_ROOM_SUB_TYPE_SET:has(roomData.Subtype)
+end
+--- Helper function to check if the provided room is a miniboss room for a particular miniboss. This
+-- will only work for mini-bosses that have dedicated boss rooms in the "00.special rooms.stb" file.
+function ____exports.isMinibossRoomOf(self, roomData, minibossID)
+    return roomData.Type == RoomType.MINI_BOSS and roomData.StageID == StageID.SPECIAL_ROOMS and roomData.Subtype == asNumber(nil, minibossID)
+end
+--- Helper function to check if the provided room is a "mirror room" in Downpour or Dross. (These
+-- rooms are marked with a specific sub-type.)
+function ____exports.isMirrorRoom(self, roomData)
+    return roomData.Type == RoomType.DEFAULT and (roomData.StageID == StageID.DOWNPOUR or roomData.StageID == StageID.DROSS) and roomData.Subtype == asNumber(nil, DownpourRoomSubType.MIRROR)
+end
+--- Helper function to check if the provided room matches one of the given room shapes.
+-- 
+-- This function is variadic, which means you can pass as many room shapes as you want to match for.
+function ____exports.isRoomShape(self, roomData, ...)
+    local roomShapes = {...}
+    return __TS__ArrayIncludes(roomShapes, roomData.Shape)
+end
+--- Helper function to check if the provided room matches one of the given room types.
+-- 
+-- This function is variadic, which means you can pass as many room types as you want to match for.
+function ____exports.isRoomType(self, roomData, ...)
+    local roomTypes = {...}
+    return __TS__ArrayIncludes(roomTypes, roomData.Type)
+end
+--- Helper function for checking if the provided room is a secret exit that leads to a Repentance
+-- floor.
+function ____exports.isSecretExit(self, roomDescriptor)
+    return roomDescriptor.GridIndex == asNumber(nil, GridRoom.SECRET_EXIT)
+end
+--- Helper function for checking if the provided room is a secret shop (from the Member Card
+-- collectible).
+-- 
+-- Secret shops are simply copies of normal shops, but with the backdrop of a secret room. In other
+-- words, they will have the same room type, room variant, and room sub-type of a normal shop. Thus,
+-- the only way to detect them is by using the grid index.
+function ____exports.isSecretShop(self, roomDescriptor)
+    return roomDescriptor.GridIndex == asNumber(nil, GridRoom.SECRET_SHOP)
+end
 local SECRET_ROOM_TYPES = __TS__New(ReadonlySet, {RoomType.SECRET, RoomType.SUPER_SECRET, RoomType.ULTRA_SECRET})
 --- Helper function for quickly switching to a new room without playing a particular animation. Use
 -- this helper function over invoking the `Game.ChangeRoom` method directly to ensure that you do
@@ -28492,17 +29001,19 @@ local SECRET_ROOM_TYPES = __TS__New(ReadonlySet, {RoomType.SECRET, RoomType.SUPE
 function ____exports.changeRoom(self, roomGridIndex)
     local level = game:GetLevel()
     local roomData = getRoomData(nil, roomGridIndex)
-    if roomData == nil then
-        error(("Failed to change the room to grid index " .. tostring(roomGridIndex)) .. " because that room does not exist.")
-    end
+    assertDefined(
+        nil,
+        roomData,
+        ("Failed to change the room to grid index " .. tostring(roomGridIndex)) .. " because that room does not exist."
+    )
     level.LeaveDoor = DoorSlot.NO_DOOR_SLOT
     game:ChangeRoom(roomGridIndex)
 end
 --- Helper function to get the number of rooms that are currently on the floor layout. This does not
 -- include off-grid rooms, like the Devil Room.
 function ____exports.getNumRooms(self)
-    local rooms = ____exports.getRoomsInsideGrid(nil)
-    return #rooms
+    local roomsInsideGrid = ____exports.getRoomsInsideGrid(nil)
+    return #roomsInsideGrid
 end
 --- Helper function to get the room data for a specific room type and variant combination. This is
 -- accomplished by using the "goto" console command to load the specified room into the
@@ -28561,7 +29072,7 @@ end
 -- 
 -- Room descriptors without any data are assumed to be non-existent and are not included.
 -- 
--- - If you want just the rooms inside of the grid, use the `getRoomsInGrid` helper function.
+-- - If you want just the rooms inside of the grid, use the `getRoomsInsideGrid` helper function.
 -- - If you want just the rooms outside of the grid, use the `getRoomsOutsideGrid` helper function.
 -- 
 -- @param includeExtraDimensionalRooms Optional. On some floors (e.g. Downpour 2, Mines 2),
@@ -28600,45 +29111,34 @@ end
 --- Helper function to determine if the current room shape is equal to `RoomShape.1x2` or
 -- `RoomShape.2x1`.
 function ____exports.in2x1Room(self)
-    local room = game:GetRoom()
-    local roomShape = room:GetRoomShape()
-    return roomShape == RoomShape.SHAPE_1x2 or roomShape == RoomShape.SHAPE_2x1
+    local roomData = getRoomData(nil)
+    return ____exports.is2x1Room(nil, roomData)
 end
 function ____exports.inAngelShop(self)
-    local room = game:GetRoom()
-    local roomType = room:GetType()
-    local roomSubType = getRoomSubType(nil)
-    return roomType == RoomType.ANGEL and roomSubType == asNumber(nil, AngelRoomSubType.SHOP)
+    local roomData = getRoomData(nil)
+    return ____exports.isAngelShop(nil, roomData)
 end
 function ____exports.inBeastRoom(self)
-    local room = game:GetRoom()
-    local roomType = room:GetType()
-    local roomSubType = getRoomSubType(nil)
-    return roomType == RoomType.DUNGEON and roomSubType == asNumber(nil, DungeonSubType.BEAST_ROOM)
+    local roomData = getRoomData(nil)
+    return ____exports.isBeastRoom(nil, roomData)
 end
 --- Helper function to check if the current room is a boss room for a particular boss. This will only
 -- work for bosses that have dedicated boss rooms in the "00.special rooms.stb" file.
 function ____exports.inBossRoomOf(self, bossID)
-    local room = game:GetRoom()
-    local roomType = room:GetType()
-    local roomStageID = getRoomStageID(nil)
-    local roomSubType = getRoomSubType(nil)
-    return roomType == RoomType.BOSS and roomStageID == StageID.SPECIAL_ROOMS and roomSubType == asNumber(nil, bossID)
+    local roomData = getRoomData(nil)
+    return ____exports.isBossRoomOf(nil, roomData, bossID)
 end
 --- Helper function for determining whether the current room is a crawl space. Use this function over
 -- comparing to `RoomType.DUNGEON` or `GridRoom.DUNGEON_IDX` since there is a special case of the
--- player being in a boss fight that take place in a dungeon.
+-- player being in a boss fight that takes place in a dungeon.
 function ____exports.inCrawlSpace(self)
-    local room = game:GetRoom()
-    local roomType = room:GetType()
-    local roomSubType = getRoomSubType(nil)
-    return roomType == RoomType.DUNGEON and roomSubType == asNumber(nil, DungeonSubType.NORMAL)
+    local roomData = getRoomData(nil)
+    return ____exports.isCrawlSpace(nil, roomData)
 end
 --- Helper function to detect if the current room is one of the rooms in the Death Certificate area.
 function ____exports.inDeathCertificateArea(self)
-    local roomStageID = getRoomStageID(nil)
-    local roomSubType = getRoomSubType(nil)
-    return roomStageID == StageID.HOME and (roomSubType == asNumber(nil, HomeRoomSubType.DEATH_CERTIFICATE_ENTRANCE) or roomSubType == asNumber(nil, HomeRoomSubType.DEATH_CERTIFICATE_ITEMS))
+    local roomData = getRoomData(nil)
+    return ____exports.isDeathCertificateArea(nil, roomData)
 end
 --- Helper function to detect if the current room is a Treasure Room created when entering with a
 -- Devil's Crown trinket.
@@ -28646,83 +29146,81 @@ end
 -- Under the hood, this checks for `RoomDescriptorFlag.DEVIL_TREASURE`.
 function ____exports.inDevilsCrownTreasureRoom(self)
     local roomDescriptor = getRoomDescriptorReadOnly(nil)
-    return hasFlag(nil, roomDescriptor.Flags, RoomDescriptorFlag.DEVIL_TREASURE)
+    return ____exports.isDevilsCrownTreasureRoom(nil, roomDescriptor)
 end
 --- Helper function to detect if the current room is a Double Trouble Boss Room.
 -- 
 -- This is performed by checking for the string "Double Trouble" inside of the room name. The
 -- vanilla game uses this convention for every Double Trouble Boss Room. Note that this method might
 -- fail for mods that add extra Double Trouble rooms but do not follow the convention.
+-- 
+-- Internally, the game is coded to detect Double Trouble Boss Rooms by checking for the variant
+-- range of 3700 through 3850. We intentionally do not use this method since it may not work as well
+-- with modded rooms.
 function ____exports.inDoubleTrouble(self)
-    local room = game:GetRoom()
-    local roomType = room:GetType()
-    local roomName = getRoomName(nil)
-    return roomType == RoomType.BOSS and __TS__StringIncludes(roomName, "Double Trouble")
+    local roomData = getRoomData(nil)
+    return ____exports.isDoubleTrouble(nil, roomData)
 end
+--- Helper function to determine if the current room index is equal to `GridRoom.GENESIS`.
 function ____exports.inGenesisRoom(self)
-    local roomGridIndex = getRoomGridIndex(nil)
-    return roomGridIndex == asNumber(nil, GridRoom.GENESIS)
+    local roomDescriptor = getRoomDescriptorReadOnly(nil)
+    return ____exports.isGenesisRoom(nil, roomDescriptor)
 end
 --- Helper function to check if the current room is either the left Home closet (behind the red door)
 -- or the right Home closet (with one random pickup).
 -- 
 -- Home closets have a unique shape that is different from any other room in the game.
 function ____exports.inHomeCloset(self)
-    local level = game:GetLevel()
-    local stage = level:GetStage()
-    local roomSubType = getRoomSubType(nil)
-    return stage == LevelStage.HOME and (roomSubType == asNumber(nil, HomeRoomSubType.CLOSET_LEFT) or roomSubType == asNumber(nil, HomeRoomSubType.CLOSET_RIGHT))
+    local roomData = getRoomData(nil)
+    return ____exports.isHomeCloset(nil, roomData)
 end
 --- Helper function to determine if the current room shape is one of the four L room shapes.
 function ____exports.inLRoom(self)
-    local room = game:GetRoom()
-    local roomShape = room:GetRoomShape()
-    return roomShape == RoomShape.LTL or roomShape == RoomShape.LTR or roomShape == RoomShape.LBL or roomShape == RoomShape.LBR
+    local roomData = getRoomData(nil)
+    return ____exports.isLRoom(nil, roomData)
 end
 --- Helper function to determine if the current room index is equal to `GridRoom.MEGA_SATAN`.
 function ____exports.inMegaSatanRoom(self)
-    local roomGridIndex = getRoomGridIndex(nil)
-    return roomGridIndex == asNumber(nil, GridRoom.MEGA_SATAN)
+    local roomDescriptor = getRoomDescriptorReadOnly(nil)
+    return ____exports.isMegaSatanRoom(nil, roomDescriptor)
 end
 --- Helper function to determine if the current room is part of the Repentance "escape sequence" in
 -- the Mines/Ashpit.
 function ____exports.inMineShaft(self)
-    local roomStageID = getRoomStageID(nil)
-    local roomSubType = getRoomSubType(nil)
-    return (roomStageID == StageID.MINES or roomStageID == StageID.ASHPIT) and MINE_SHAFT_ROOM_SUB_TYPE_SET:has(roomSubType)
+    local roomData = getRoomData(nil)
+    return ____exports.isMineShaft(nil, roomData)
 end
 --- Helper function to check if the current room is a miniboss room for a particular miniboss. This
 -- will only work for mini-bosses that have dedicated boss rooms in the "00.special rooms.stb" file.
 function ____exports.inMinibossRoomOf(self, minibossID)
-    local room = game:GetRoom()
-    local roomType = room:GetType()
-    local roomStageID = getRoomStageID(nil)
-    local roomSubType = getRoomSubType(nil)
-    return roomType == RoomType.MINI_BOSS and roomStageID == StageID.SPECIAL_ROOMS and roomSubType == asNumber(nil, minibossID)
+    local roomData = getRoomData(nil)
+    return ____exports.isMinibossRoomOf(nil, roomData, minibossID)
 end
 --- Helper function to check if the current room is a "mirror room" in Downpour or Dross. (These
 -- rooms are marked with a specific sub-type.)
 function ____exports.inMirrorRoom(self)
-    local room = game:GetRoom()
-    local roomType = room:GetType()
-    local roomStageID = getRoomStageID(nil)
-    local roomSubType = getRoomSubType(nil)
-    return roomType == RoomType.DEFAULT and (roomStageID == StageID.DOWNPOUR or roomStageID == StageID.DROSS) and roomSubType == asNumber(nil, DownpourRoomSubType.MIRROR)
+    local roomData = getRoomData(nil)
+    return ____exports.isMirrorRoom(nil, roomData)
+end
+--- Helper function to check if the current room shape matches one of the given room shapes.
+-- 
+-- This function is variadic, which means you can pass as many room shapes as you want to match for.
+function ____exports.inRoomShape(self, ...)
+    local roomData = getRoomData(nil)
+    return ____exports.isRoomShape(nil, roomData, ...)
 end
 --- Helper function to check if the current room matches one of the given room types.
 -- 
 -- This function is variadic, which means you can pass as many room types as you want to match for.
 function ____exports.inRoomType(self, ...)
-    local roomTypes = {...}
-    local room = game:GetRoom()
-    local thisRoomType = room:GetType()
-    return __TS__ArrayIncludes(roomTypes, thisRoomType)
+    local roomData = getRoomData(nil)
+    return ____exports.isRoomType(nil, roomData, ...)
 end
 --- Helper function for checking if the current room is a secret exit that leads to a Repentance
 -- floor.
 function ____exports.inSecretExit(self)
-    local roomGridIndex = getRoomGridIndex(nil)
-    return roomGridIndex == asNumber(nil, GridRoom.SECRET_EXIT)
+    local roomDescriptor = getRoomDescriptorReadOnly(nil)
+    return ____exports.isSecretExit(nil, roomDescriptor)
 end
 --- Helper function for checking if the current room is a secret shop (from the Member Card
 -- collectible).
@@ -28731,12 +29229,12 @@ end
 -- words, they will have the same room type, room variant, and room sub-type of a normal shop. Thus,
 -- the only way to detect them is by using the grid index.
 function ____exports.inSecretShop(self)
-    local roomGridIndex = getRoomGridIndex(nil)
-    return roomGridIndex == asNumber(nil, GridRoom.SECRET_SHOP)
+    local roomDescriptor = getRoomDescriptorReadOnly(nil)
+    return ____exports.isSecretShop(nil, roomDescriptor)
 end
---- Helper function to determine whether or not the current room is the starting room of a floor. It
--- only returns true for the starting room of the primary dimension (meaning that being in the
--- starting room of the mirror world does not count).
+--- Helper function to determine whether the current room is the starting room of a floor. It only
+-- returns true for the starting room of the primary dimension (meaning that being in the starting
+-- room of the mirror world does not count).
 function ____exports.inStartingRoom(self)
     local level = game:GetLevel()
     local startingRoomGridIndex = level:GetStartingRoomIndex()
@@ -28750,10 +29248,10 @@ end
 -- @param onlyCheckRoomTypes Optional. A whitelist of room types. If specified, room types not in
 -- the array will be ignored. If not specified, then all rooms will be
 -- checked. Undefined by default.
--- @param includeSecretAndSuperSecretRoom Optional. Whether or not to include the Secret Room and
--- the Super Secret Room. Default is false.
--- @param includeUltraSecretRoom Optional. Whether or not to include the Ultra Secret Room. Default
--- is false.
+-- @param includeSecretAndSuperSecretRoom Optional. Whether to include the Secret Room and the Super
+-- Secret Room. Default is false.
+-- @param includeUltraSecretRoom Optional. Whether to include the Ultra Secret Room. Default is
+-- false.
 -- @allowEmptyVariadic
 function ____exports.isAllRoomsClear(self, onlyCheckRoomTypes, includeSecretAndSuperSecretRoom, includeUltraSecretRoom)
     if includeSecretAndSuperSecretRoom == nil then
@@ -28762,14 +29260,14 @@ function ____exports.isAllRoomsClear(self, onlyCheckRoomTypes, includeSecretAndS
     if includeUltraSecretRoom == nil then
         includeUltraSecretRoom = false
     end
-    local rooms = ____exports.getRoomsInsideGrid(nil)
+    local roomsInsideGrid = ____exports.getRoomsInsideGrid(nil)
     local matchingRooms
     if onlyCheckRoomTypes == nil then
-        matchingRooms = rooms
+        matchingRooms = roomsInsideGrid
     else
         local roomTypeWhitelist = __TS__New(ReadonlySet, onlyCheckRoomTypes)
         matchingRooms = __TS__ArrayFilter(
-            rooms,
+            roomsInsideGrid,
             function(____, roomDescriptor) return roomDescriptor.Data ~= nil and roomTypeWhitelist:has(roomDescriptor.Data.Type) end
         )
     end
@@ -28826,12 +29324,12 @@ function ____exports.setRoomCleared(self)
     for ____, door in ipairs(getDoors(nil)) do
         do
             if isHiddenSecretRoomDoor(nil, door) then
-                goto __continue59
+                goto __continue78
             end
             openDoorFast(nil, door)
             door.ExtraVisible = false
         end
-        ::__continue59::
+        ::__continue78::
     end
     sfxManager:Stop(SoundEffect.DOOR_HEAVY_OPEN)
     game:ShakeScreen(0)
@@ -28856,6 +29354,8 @@ local game = ____cachedClasses.game
 local ____roomData = require("lua_modules.isaacscript-common.dist.src.functions.roomData")
 local getRoomData = ____roomData.getRoomData
 local getRoomGridIndex = ____roomData.getRoomGridIndex
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- Helper function to change the current room. It can be used for both teleportation and "normal"
 -- room transitions, depending on what is passed for the `direction` and `roomTransitionAnim`
 -- arguments.
@@ -28878,9 +29378,11 @@ function ____exports.teleport(self, roomGridIndex, direction, roomTransitionAnim
     end
     local level = game:GetLevel()
     local roomData = getRoomData(nil, roomGridIndex)
-    if roomData == nil then
-        error(("Failed to change the room to grid index " .. tostring(roomGridIndex)) .. " because that room does not exist.")
-    end
+    assertDefined(
+        nil,
+        roomData,
+        ("Failed to change the room to grid index " .. tostring(roomGridIndex)) .. " because that room does not exist."
+    )
     level.LeaveDoor = DoorSlot.NO_DOOR_SLOT
     game:StartRoomTransition(roomGridIndex, direction, roomTransitionAnim)
 end
@@ -28907,9 +29409,17 @@ local ____doors = require("lua_modules.isaacscript-common.dist.src.functions.doo
 local doorSlotFlagToDoorSlot = ____doors.doorSlotFlagToDoorSlot
 local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
 local hasFlag = ____flag.hasFlag
---- Helper function to get the room data for the provided room.
+--- Helper function to get the room data for the current room.
+-- 
+-- You can optionally provide a room grid index as an argument to get the data for that room
+-- instead.
+-- 
+-- (The version of the function without any arguments will not return undefined since the current
+-- room is guaranteed to have data.)
+-- Helper function to get the room data for the current or provided room.
 -- 
 -- @param roomGridIndex Optional. Default is the current room index.
+-- @returns The room data for the room or undefined if the provided room does not have any data.
 function ____exports.getRoomData(self, roomGridIndex)
     local roomDescriptor = ____exports.getRoomDescriptor(nil, roomGridIndex)
     return roomDescriptor.Data
@@ -28936,7 +29446,9 @@ end
 --   the room descriptor. (The safe grid index is defined as the top-left 1x1 section that the room
 --   overlaps with, or the top-right 1x1 section of a `RoomType.SHAPE_LTL` room.)
 -- - If the current room is outside of the grid, it will return the index from the
---   `Level.GetCurrentRoomIndex` method (since `SafeGridIndex` is bugged for these cases).
+--   `Level.GetCurrentRoomIndex` method (since `SafeGridIndex` is bugged for these cases, as
+--   demonstrated by entering a Genesis room and entering `l
+--   print(Game():GetLevel():GetCurrentRoomDesc().SafeGridIndex)` into the console).
 -- 
 -- Use this function instead of the `Level.GetCurrentRoomIndex` method directly because the latter
 -- will return the specific 1x1 quadrant that the player entered the room at. For most situations,
@@ -28981,63 +29493,147 @@ function ____exports.getRoomListIndex(self, roomGridIndex)
     local roomDescriptor = ____exports.getRoomDescriptor(nil, roomGridIndex)
     return roomDescriptor.ListIndex
 end
---- Helper function to get the name of the room as it appears in the STB/XML data.
+--- Helper function to get the name of the current room as it appears in the STB/XML data.
+-- 
+-- You can optionally provide a room grid index as an argument to get the name for that room
+-- instead.
+-- 
+-- (The version of the function without any arguments will not return undefined since the current
+-- room is guaranteed to have data.)
+-- Helper function to get the name of the room as it appears in the STB/XML data.
 -- 
 -- @param roomGridIndex Optional. Default is the current room index.
--- @returns The room name. Returns "Unknown" if the room data was not found.
+-- @returns The room name. Returns undefined if the room data was not found.
 function ____exports.getRoomName(self, roomGridIndex)
-    local roomData = ____exports.getRoomData(nil, roomGridIndex)
-    return roomData == nil and "Unknown" or roomData.Name
-end
---- Helper function to get the name of the room as it appears in the STB/XML data.
--- 
--- @param roomGridIndex Optional. Default is the current room index.
--- @returns The room name. Returns "Unknown"if the room data was not found.
-function ____exports.getRoomShape(self, roomGridIndex)
     local roomData = ____exports.getRoomData(nil, roomGridIndex)
     local ____temp_0
     if roomData == nil then
         ____temp_0 = nil
     else
-        ____temp_0 = roomData.Shape
+        ____temp_0 = roomData.Name
     end
     return ____temp_0
 end
---- Helper function to get the stage ID for a room from the XML/STB data. The room stage ID will
--- correspond to the first number in the filename of the XML/STB file. For example, a Depths room
--- would have a stage ID of 7.
+--- Helper function to get the shape of the current room as it appears in the STB/XML data.
+-- 
+-- You can optionally provide a room grid index as an argument to get the shape for that room
+-- instead.
+-- 
+-- (The version of the function without any arguments will not return undefined since the current
+-- room is guaranteed to have data.)
+-- Helper function to get the shape of the room as it appears in the STB/XML data.
 -- 
 -- @param roomGridIndex Optional. Default is the current room index.
--- @returns The room stage ID. Returns -1 if the room data was not found.
+-- @returns The room shape. Returns undefined if the room data was not found.
+function ____exports.getRoomShape(self, roomGridIndex)
+    local roomData = ____exports.getRoomData(nil, roomGridIndex)
+    local ____temp_1
+    if roomData == nil then
+        ____temp_1 = nil
+    else
+        ____temp_1 = roomData.Shape
+    end
+    return ____temp_1
+end
+--- Helper function to get the stage ID for the current room as it appears in the STB/XML data.
+-- 
+-- The room stage ID will correspond to the first number in the filename of the XML/STB file. For
+-- example, a Depths room would have a stage ID of `StageID.DEPTHS` (7).
+-- 
+-- You can optionally provide a room grid index as an argument to get the stage ID for that room
+-- instead.
+-- 
+-- (The version of the function without any arguments will not return undefined since the current
+-- room is guaranteed to have data.)
+-- Helper function to get the stage ID for a room as it appears in the STB/XML data.
+-- 
+-- The room stage ID will correspond to the first number in the filename of the XML/STB file. For
+-- example, a Depths room would have a stage ID of `StageID.DEPTHS` (7).
+-- 
+-- @param roomGridIndex Optional. Default is the current room index.
+-- @returns The room stage ID. Returns undefined if the room data was not found.
 function ____exports.getRoomStageID(self, roomGridIndex)
     local roomData = ____exports.getRoomData(nil, roomGridIndex)
-    return roomData == nil and -1 or roomData.StageID
+    local ____temp_2
+    if roomData == nil then
+        ____temp_2 = nil
+    else
+        ____temp_2 = roomData.StageID
+    end
+    return ____temp_2
 end
---- Helper function to get the sub-type for a room from the XML/STB data. The room sub-type will
--- correspond to different things depending on what XML/STB file it draws from. For example, in the
--- "00.special rooms.stb" file, an Angel Room with a sub-type of 0 will correspond to a normal Angel
--- Room and a sub-type of 1 will correspond to an Angel Room shop for The Stairway.
+--- Helper function to get the sub-type for the current room as it appears in the STB/XML data.
+-- 
+-- The room sub-type will correspond to different things depending on what XML/STB file it draws
+-- from. For example, in the "00.special rooms.stb" file, an Angel Room with a sub-type of 0 will
+-- correspond to a normal Angel Room and a sub-type of 1 will correspond to an Angel Room shop from
+-- The Stairway.
+-- 
+-- You can optionally provide a room grid index as an argument to get the sub-type for that room
+-- instead.
+-- 
+-- (The version of the function without any arguments will not return undefined since the current
+-- room is guaranteed to have data.)
+-- Helper function to get the sub-type for a room as it appears in the STB/XML data.
+-- 
+-- The room sub-type will correspond to different things depending on what XML/STB file it draws
+-- from. For example, in the "00.special rooms.stb" file, an Angel Room with a sub-type of 0 will
+-- correspond to a normal Angel Room and a sub-type of 1 will correspond to an Angel Room shop from
+-- The Stairway.
 -- 
 -- @param roomGridIndex Optional. Default is the current room index.
--- @returns The room sub-type. Returns -1 if the room data was not found.
+-- @returns The room sub-type. Returns undefined if the room data was not found.
 function ____exports.getRoomSubType(self, roomGridIndex)
     local roomData = ____exports.getRoomData(nil, roomGridIndex)
-    return roomData == nil and -1 or roomData.Subtype
+    local ____temp_3
+    if roomData == nil then
+        ____temp_3 = nil
+    else
+        ____temp_3 = roomData.Subtype
+    end
+    return ____temp_3
 end
---- Helper function for getting the type of the room with the given grid index.
+--- Helper function to get the type for the current room as it appears in the STB/XML data.
 -- 
+-- You can optionally provide a room grid index as an argument to get the type for that room
+-- instead.
+-- 
+-- (The version of the function without any arguments will not return undefined since the current
+-- room is guaranteed to have data.)
+-- Helper function to get the type for a room as it appears in the STB/XML data.
+-- Helper function for getting the type of the room with the given grid index.
+-- 
+-- @param roomGridIndex Optional. Default is the current room index.
+-- @returns The room type. Returns undefined if the room data was not found.
 -- @param roomGridIndex Optional. Default is the current room index.
 -- @returns The room data type. Returns -1 if the room data was not found.
 function ____exports.getRoomType(self, roomGridIndex)
     local roomData = ____exports.getRoomData(nil, roomGridIndex)
-    return roomData == nil and -1 or roomData.Type
+    local ____temp_4
+    if roomData == nil then
+        ____temp_4 = nil
+    else
+        ____temp_4 = roomData.Type
+    end
+    return ____temp_4
 end
---- Helper function to get the variant for a room from the XML/STB data. You can think of a room
--- variant as its identifier. For example, to go to Basement room #123, you would use a console
--- command of `goto d.123` while on the Basement.
+--- Helper function to get the variant for the current room as it appears in the STB/XML data.
+-- 
+-- You can think of a room variant as its identifier. For example, to go to Basement room #123, you
+-- would use a console command of `goto d.123` while on the Basement.
+-- 
+-- You can optionally provide a room grid index as an argument to get the variant for that room
+-- instead.
+-- 
+-- (The version of the function without any arguments will not return undefined since the current
+-- room is guaranteed to have data.)
+-- Helper function to get the variant for a room as it appears in the STB/XML data.
+-- 
+-- You can think of a room variant as its identifier. For example, to go to Basement room #123, you
+-- would use a console command of `goto d.123` while on the Basement.
 -- 
 -- @param roomGridIndex Optional. Default is the current room index.
--- @returns The room variant. Returns -1 if the room data was not found.
+-- @returns The room variant. Returns undefined if the room data was not found.
 function ____exports.getRoomVariant(self, roomGridIndex)
     local roomData = ____exports.getRoomData(nil, roomGridIndex)
     return roomData == nil and -1 or roomData.Variant
@@ -29494,6 +30090,8 @@ local __TS__ArrayUnshift = ____lualib.__TS__ArrayUnshift
 local ____exports = {}
 local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
 local addFlag = ____flag.addFlag
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- Helper function to convert a set of flags to a single `BitFlags` object.
 function ____exports.arrayToBitFlags(self, array)
     local flags = 0
@@ -29509,19 +30107,21 @@ function ____exports.convertBinaryToDecimal(self, bits)
 end
 --- Helper function to convert a number to an array of bits.
 -- 
--- @param number The number to convert.
+-- @param num The number to convert.
 -- @param minLength Optional. Equal to the minimum amount of bits that should be returned. If the
 -- converted number of bits is below this number, 0's will be padded to the left
 -- side until the minimum length is met. Default is undefined (which will not cause
 -- any padding).
-function ____exports.convertDecimalToBinary(self, number, minLength)
+function ____exports.convertDecimalToBinary(self, num, minLength)
     local bits = {}
-    local bitsString = __TS__NumberToString(number, 2)
+    local bitsString = __TS__NumberToString(num, 2)
     for ____, bitString in __TS__Iterator(bitsString) do
         local bit = tonumber(bitString)
-        if bit == nil then
-            error("Failed to convert the following number to binary: " .. tostring(number))
-        end
+        assertDefined(
+            nil,
+            bit,
+            "Failed to convert the following number to binary: " .. tostring(num)
+        )
         bits[#bits + 1] = bit
     end
     if minLength ~= nil then
@@ -29768,539 +30368,6 @@ ____exports.DOOR_SLOT_FLAG_TO_DOOR_SLOT = {
 }
 return ____exports
  end,
-["lua_modules.isaacscript-common.dist.src.functions.positionVelocity"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ArraySome = ____lualib.__TS__ArraySome
-local Map = ____lualib.Map
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local EffectVariant = ____isaac_2Dtypescript_2Ddefinitions.EffectVariant
-local HeavenLightDoorSubType = ____isaac_2Dtypescript_2Ddefinitions.HeavenLightDoorSubType
-local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
-local game = ____cachedClasses.game
-local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
-local DISTANCE_OF_GRID_TILE = ____constants.DISTANCE_OF_GRID_TILE
-local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.entities")
-local getEntities = ____entities.getEntities
-local ____entitiesSpecific = require("lua_modules.isaacscript-common.dist.src.functions.entitiesSpecific")
-local getEffects = ____entitiesSpecific.getEffects
-local ____playerIndex = require("lua_modules.isaacscript-common.dist.src.functions.playerIndex")
-local getPlayers = ____playerIndex.getPlayers
-local ____players = require("lua_modules.isaacscript-common.dist.src.functions.players")
-local getPlayerCloserThan = ____players.getPlayerCloserThan
-local MAX_FIND_FREE_POSITION_ATTEMPTS = 100
-function ____exports.anyEntityCloserThan(self, entities, position, distance)
-    return __TS__ArraySome(
-        entities,
-        function(____, entity) return position:Distance(entity.Position) <= distance end
-    )
-end
---- Iterates over all players and checks if any player is close enough to the specified position.
--- 
--- Note that this function does not consider players with a non-undefined parent, since they are not
--- real players (e.g. the Strawman Keeper).
-function ____exports.anyPlayerCloserThan(self, position, distance)
-    local players = getPlayers(nil)
-    return __TS__ArraySome(
-        players,
-        function(____, player) return player.Position:Distance(position) <= distance end
-    )
-end
---- Helper function to get a room position that is not overlapping with a grid entity, a heaven door,
--- or a player. The `Room.FindFreePickupSpawnPosition` method will return locations that overlap
--- with heaven doors and partially overlap with players, if the thing being spawned is bigger than a
--- tile (like a Blood Donation Machine). Use this function instead if you want to account for those
--- specific situations.
--- 
--- @param startingPosition The position to start searching from. If this position is not overlapping
--- with anything, then it will be returned.
--- @param avoidActiveEntities Optional. Default is false.
--- @param minimumDistance Optional. If specified, will ensure that the randomly generated position
--- is equal to or greater than the distance provided.
-function ____exports.findFreePosition(self, startingPosition, avoidActiveEntities, minimumDistance)
-    if avoidActiveEntities == nil then
-        avoidActiveEntities = false
-    end
-    local room = game:GetRoom()
-    local heavenDoors = getEffects(nil, EffectVariant.HEAVEN_LIGHT_DOOR, HeavenLightDoorSubType.HEAVEN_DOOR)
-    do
-        local initialStep = 0
-        while initialStep < MAX_FIND_FREE_POSITION_ATTEMPTS do
-            do
-                local position = room:FindFreePickupSpawnPosition(startingPosition, initialStep, avoidActiveEntities)
-                local closePlayer = getPlayerCloserThan(nil, position, DISTANCE_OF_GRID_TILE)
-                if closePlayer ~= nil then
-                    goto __continue7
-                end
-                local isCloseHeavenDoor = ____exports.anyEntityCloserThan(nil, heavenDoors, position, DISTANCE_OF_GRID_TILE)
-                if isCloseHeavenDoor then
-                    goto __continue7
-                end
-                if minimumDistance ~= nil then
-                    local distance = startingPosition:Distance(position)
-                    if distance < minimumDistance then
-                        goto __continue7
-                    end
-                end
-                return position
-            end
-            ::__continue7::
-            initialStep = initialStep + 1
-        end
-    end
-    return room:FindFreePickupSpawnPosition(startingPosition)
-end
---- Helper function to get a map containing the positions of every entity in the current room.
--- 
--- This is useful for rewinding entity positions at a later time. Also see `setEntityPositions`.
--- 
--- @param entities Optional. If provided, will only get the positions of the provided entities. Use
--- this with cached entities to avoid invoking the `Isaac.GetRoomEntities` method
--- multiple times.
-function ____exports.getEntityPositions(self, entities)
-    if entities == nil then
-        entities = getEntities(nil)
-    end
-    local entityPositions = __TS__New(Map)
-    for ____, entity in ipairs(entities) do
-        local ptrHash = GetPtrHash(entity)
-        entityPositions:set(ptrHash, entity.Position)
-    end
-    return entityPositions
-end
---- Helper function to get a map containing the velocities of every entity in the current room.
--- 
--- This is useful for rewinding entity velocities at a later time. Also see `setEntityVelocities`.
--- 
--- @param entities Optional. If provided, will only get the velocities of the provided entities. Use
--- this with cached entities to avoid invoking the `Isaac.GetRoomEntities` method
--- multiple times.
-function ____exports.getEntityVelocities(self, entities)
-    if entities == nil then
-        entities = getEntities(nil)
-    end
-    local entityVelocities = __TS__New(Map)
-    for ____, entity in ipairs(entities) do
-        local ptrHash = GetPtrHash(entity)
-        entityVelocities:set(ptrHash, entity.Velocity)
-    end
-    return entityVelocities
-end
---- Helper function to set the position of every entity in the room based on a map of positions. If
--- an entity is found that does not have matching element in the provided map, then that entity will
--- be skipped.
--- 
--- This function is useful for rewinding entity positions at a later time. Also see
--- `getEntityPositions`.
--- 
--- @param entityPositions The map providing the positions for every entity.
--- @param entities Optional. If provided, will only set the positions of the provided entities. Use
--- this with cached entities to avoid invoking the `Isaac.GetRoomEntities` method
--- multiple times.
-function ____exports.setEntityPositions(self, entityPositions, entities)
-    if entities == nil then
-        entities = getEntities(nil)
-    end
-    for ____, entity in ipairs(entities) do
-        local ptrHash = GetPtrHash(entity)
-        local entityPosition = entityPositions:get(ptrHash)
-        if entityPosition ~= nil then
-            entity.Position = entityPosition
-        end
-    end
-end
---- Helper function to set the velocity of every entity in the room based on a map of velocities. If
--- an entity is found that does not have matching element in the provided map, then that entity will
--- be skipped.
--- 
--- This function is useful for rewinding entity velocities at a later time. Also see
--- `getEntityVelocities`.
--- 
--- @param entityVelocities The map providing the velocities for every entity.
--- @param entities Optional. If provided, will only set the velocities of the provided entities. Use
--- this with cached entities to avoid invoking the `Isaac.GetRoomEntities` method
--- multiple times.
-function ____exports.setEntityVelocities(self, entityVelocities, entities)
-    if entities == nil then
-        entities = getEntities(nil)
-    end
-    for ____, entity in ipairs(entities) do
-        local ptrHash = GetPtrHash(entity)
-        local entityVelocity = entityVelocities:get(ptrHash)
-        if entityVelocity ~= nil then
-            entity.Velocity = entityVelocity
-        end
-    end
-end
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.functions.dimensions"] = function(...) 
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local Dimension = ____isaac_2Dtypescript_2Ddefinitions.Dimension
-local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
-local game = ____cachedClasses.game
-local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
-local NUM_DIMENSIONS = ____constants.NUM_DIMENSIONS
-local ____roomData = require("lua_modules.isaacscript-common.dist.src.functions.roomData")
-local getRoomGridIndex = ____roomData.getRoomGridIndex
-local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
-local eRange = ____utils.eRange
---- Helper function to get an array with every valid `Dimension` (not including `Dimension.CURRENT`).
-function ____exports.getAllDimensions(self)
-    return eRange(nil, NUM_DIMENSIONS)
-end
---- Helper function to get the current dimension. Most of the time, this will be `Dimension.MAIN`,
--- but it can change if e.g. the player is in the mirror world of Downpour/Dross.
-function ____exports.getDimension(self)
-    local level = game:GetLevel()
-    local roomGridIndex = getRoomGridIndex(nil)
-    local roomDescription = level:GetRoomByIdx(roomGridIndex, Dimension.CURRENT)
-    local currentRoomHash = GetPtrHash(roomDescription)
-    for ____, dimension in ipairs(____exports.getAllDimensions(nil)) do
-        local dimensionRoomDescription = level:GetRoomByIdx(roomGridIndex, dimension)
-        local dimensionRoomHash = GetPtrHash(dimensionRoomDescription)
-        if dimensionRoomHash == currentRoomHash then
-            return dimension
-        end
-    end
-    error("Failed to get the current dimension.")
-end
-function ____exports.inDimension(self, dimension)
-    return dimension == ____exports.getDimension(nil)
-end
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.sets.mineShaftRoomSubTypesSet"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local MinesRoomSubType = ____isaac_2Dtypescript_2Ddefinitions.MinesRoomSubType
-local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
-local ReadonlySet = ____ReadonlySet.ReadonlySet
-____exports.MINE_SHAFT_ROOM_SUB_TYPE_SET = __TS__New(ReadonlySet, {
-    MinesRoomSubType.MINESHAFT_ENTRANCE,
-    MinesRoomSubType.MINESHAFT_LOBBY,
-    MinesRoomSubType.MINESHAFT_KNIFE_PIECE,
-    MinesRoomSubType.MINESHAFT_ROOM_PRE_CHASE,
-    MinesRoomSubType.MINESHAFT_ROOM_POST_CHASE
-})
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.objects.roomTypeNames"] = function(...) 
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
-____exports.ROOM_TYPE_NAMES = {
-    [RoomType.DEFAULT] = "default room",
-    [RoomType.SHOP] = "shop",
-    [RoomType.ERROR] = "I AM ERROR Room",
-    [RoomType.TREASURE] = "Treasure Room",
-    [RoomType.BOSS] = "Boss Room",
-    [RoomType.MINI_BOSS] = "Miniboss Room",
-    [RoomType.SECRET] = "Secret Room",
-    [RoomType.SUPER_SECRET] = "Super Secret Room",
-    [RoomType.ARCADE] = "Arcade",
-    [RoomType.CURSE] = "Curse Room",
-    [RoomType.CHALLENGE] = "Challenge Room",
-    [RoomType.LIBRARY] = "Library",
-    [RoomType.SACRIFICE] = "Sacrifice Room",
-    [RoomType.DEVIL] = "Devil Room",
-    [RoomType.ANGEL] = "Angel Room",
-    [RoomType.DUNGEON] = "Crawl Space",
-    [RoomType.BOSS_RUSH] = "Boss Rush",
-    [RoomType.CLEAN_BEDROOM] = "Clean Bedroom",
-    [RoomType.DIRTY_BEDROOM] = "Dirty Bedroom",
-    [RoomType.CHEST] = "Chest Room",
-    [RoomType.DICE] = "Dice Room",
-    [RoomType.BLACK_MARKET] = "Black Market",
-    [RoomType.GREED_EXIT] = "Greed Exit Room",
-    [RoomType.PLANETARIUM] = "Planetarium",
-    [RoomType.TELEPORTER] = "Teleporter Room",
-    [RoomType.TELEPORTER_EXIT] = "Teleporter Exit Room",
-    [RoomType.SECRET_EXIT] = "Secret Exit",
-    [RoomType.BLUE] = "Blue Room",
-    [RoomType.ULTRA_SECRET] = "Ultra Secret Room"
-}
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.functions.roomShapeWalls"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
-local __TS__New = ____lualib.__TS__New
-local __TS__SparseArrayNew = ____lualib.__TS__SparseArrayNew
-local __TS__SparseArrayPush = ____lualib.__TS__SparseArrayPush
-local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
-local ____exports = {}
-local getVanillaWallGridIndexSetForRoomShape, getWallGridIndexSetForRectangleRoomShape
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
-local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.src.arrays.cachedEnumValues")
-local ROOM_SHAPE_VALUES = ____cachedEnumValues.ROOM_SHAPE_VALUES
-local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
-local game = ____cachedClasses.game
-local ____CornerType = require("lua_modules.isaacscript-common.dist.src.enums.CornerType")
-local CornerType = ____CornerType.CornerType
-local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
-local ReadonlySet = ____ReadonlySet.ReadonlySet
-local ____gridIndex = require("lua_modules.isaacscript-common.dist.src.functions.gridIndex")
-local getGridIndexesBetween = ____gridIndex.getGridIndexesBetween
-local ____roomShape = require("lua_modules.isaacscript-common.dist.src.functions.roomShape")
-local getRoomShapeCorners = ____roomShape.getRoomShapeCorners
-local isLRoom = ____roomShape.isLRoom
-local ____rooms = require("lua_modules.isaacscript-common.dist.src.functions.rooms")
-local inBossRoomOf = ____rooms.inBossRoomOf
-local inHomeCloset = ____rooms.inHomeCloset
-function getVanillaWallGridIndexSetForRoomShape(self, roomShape)
-    local corners = getRoomShapeCorners(nil, roomShape)
-    local lRoom = isLRoom(nil, roomShape)
-    if lRoom and #corners ~= 6 then
-        error(((("Failed to get the correct amount of corners for: RoomShape." .. RoomShape[roomShape]) .. " (") .. tostring(roomShape)) .. ")")
-    end
-    repeat
-        local ____switch7 = roomShape
-        local ____cond7 = ____switch7 == RoomShape.LTL
-        if ____cond7 then
-            do
-                local topMiddle, topRight, middleLeft, middle, bottomLeft, bottomRight = table.unpack(corners)
-                local ____ReadonlySet_1 = ReadonlySet
-                local ____array_0 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topMiddle.gridIndex, topRight.gridIndex, roomShape)))
-                __TS__SparseArrayPush(
-                    ____array_0,
-                    table.unpack(getGridIndexesBetween(nil, middleLeft.gridIndex, middle.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_0,
-                    table.unpack(getGridIndexesBetween(nil, bottomLeft.gridIndex, bottomRight.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_0,
-                    table.unpack(getGridIndexesBetween(nil, middleLeft.gridIndex, bottomLeft.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_0,
-                    table.unpack(getGridIndexesBetween(nil, topMiddle.gridIndex, middle.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_0,
-                    table.unpack(getGridIndexesBetween(nil, topRight.gridIndex, bottomRight.gridIndex, roomShape))
-                )
-                return __TS__New(
-                    ____ReadonlySet_1,
-                    {__TS__SparseArraySpread(____array_0)}
-                )
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == RoomShape.LTR
-        if ____cond7 then
-            do
-                local topLeft, topMiddle, middle, middleRight, bottomLeft, bottomRight = table.unpack(corners)
-                local ____ReadonlySet_3 = ReadonlySet
-                local ____array_2 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, topMiddle.gridIndex, roomShape)))
-                __TS__SparseArrayPush(
-                    ____array_2,
-                    table.unpack(getGridIndexesBetween(nil, middle.gridIndex, middleRight.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_2,
-                    table.unpack(getGridIndexesBetween(nil, bottomLeft.gridIndex, bottomRight.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_2,
-                    table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, bottomLeft.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_2,
-                    table.unpack(getGridIndexesBetween(nil, topMiddle.gridIndex, middle.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_2,
-                    table.unpack(getGridIndexesBetween(nil, middleRight.gridIndex, bottomRight.gridIndex, roomShape))
-                )
-                return __TS__New(
-                    ____ReadonlySet_3,
-                    {__TS__SparseArraySpread(____array_2)}
-                )
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == RoomShape.LBL
-        if ____cond7 then
-            do
-                local topLeft, topRight, middleLeft, middle, bottomMiddle, bottomRight = table.unpack(corners)
-                local ____ReadonlySet_5 = ReadonlySet
-                local ____array_4 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, topRight.gridIndex, roomShape)))
-                __TS__SparseArrayPush(
-                    ____array_4,
-                    table.unpack(getGridIndexesBetween(nil, middleLeft.gridIndex, middle.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_4,
-                    table.unpack(getGridIndexesBetween(nil, bottomMiddle.gridIndex, bottomRight.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_4,
-                    table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, middleLeft.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_4,
-                    table.unpack(getGridIndexesBetween(nil, middle.gridIndex, bottomMiddle.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_4,
-                    table.unpack(getGridIndexesBetween(nil, topRight.gridIndex, bottomRight.gridIndex, roomShape))
-                )
-                return __TS__New(
-                    ____ReadonlySet_5,
-                    {__TS__SparseArraySpread(____array_4)}
-                )
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == RoomShape.LBR
-        if ____cond7 then
-            do
-                local topLeft, topRight, middle, middleRight, bottomLeft, bottomMiddle = table.unpack(corners)
-                local ____ReadonlySet_7 = ReadonlySet
-                local ____array_6 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, topRight.gridIndex, roomShape)))
-                __TS__SparseArrayPush(
-                    ____array_6,
-                    table.unpack(getGridIndexesBetween(nil, middle.gridIndex, middleRight.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_6,
-                    table.unpack(getGridIndexesBetween(nil, bottomLeft.gridIndex, bottomMiddle.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_6,
-                    table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, bottomLeft.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_6,
-                    table.unpack(getGridIndexesBetween(nil, middle.gridIndex, bottomMiddle.gridIndex, roomShape))
-                )
-                __TS__SparseArrayPush(
-                    ____array_6,
-                    table.unpack(getGridIndexesBetween(nil, topRight.gridIndex, middleRight.gridIndex, roomShape))
-                )
-                return __TS__New(
-                    ____ReadonlySet_7,
-                    {__TS__SparseArraySpread(____array_6)}
-                )
-            end
-        end
-        do
-            do
-                return getWallGridIndexSetForRectangleRoomShape(nil, roomShape, corners)
-            end
-        end
-    until true
-end
-function getWallGridIndexSetForRectangleRoomShape(self, roomShape, corners)
-    if #corners ~= 4 then
-        error("Failed to get the correct amount of corners for rectangular room shape.")
-    end
-    local topLeft, topRight, bottomLeft, bottomRight = table.unpack(corners)
-    local ____ReadonlySet_9 = ReadonlySet
-    local ____array_8 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, topRight.gridIndex, roomShape)))
-    __TS__SparseArrayPush(
-        ____array_8,
-        table.unpack(getGridIndexesBetween(nil, bottomLeft.gridIndex, bottomRight.gridIndex, roomShape))
-    )
-    __TS__SparseArrayPush(
-        ____array_8,
-        table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, bottomLeft.gridIndex, roomShape))
-    )
-    __TS__SparseArrayPush(
-        ____array_8,
-        table.unpack(getGridIndexesBetween(nil, topRight.gridIndex, bottomRight.gridIndex, roomShape))
-    )
-    return __TS__New(
-        ____ReadonlySet_9,
-        {__TS__SparseArraySpread(____array_8)}
-    )
-end
-local ROOM_SHAPE_TO_WALL_GRID_INDEX_SET = (function()
-    local roomShapeToWallGridIndexSet = __TS__New(Map)
-    for ____, roomShape in ipairs(ROOM_SHAPE_VALUES) do
-        local gridIndexSet = getVanillaWallGridIndexSetForRoomShape(nil, roomShape)
-        roomShapeToWallGridIndexSet:set(roomShape, gridIndexSet)
-    end
-    return roomShapeToWallGridIndexSet
-end)(nil)
---- The Home closet is is 9x3, which is different from `RoomShape.IH` (which is 13x3).
-local HOME_CLOSET_CORNERS = {
-    {
-        type = CornerType.TOP_LEFT,
-        gridIndex = 30,
-        position = Vector(60, 220)
-    },
-    {
-        type = CornerType.TOP_RIGHT,
-        gridIndex = 38,
-        position = Vector(340, 220)
-    },
-    {
-        type = CornerType.BOTTOM_LEFT,
-        gridIndex = 90,
-        position = Vector(60, 340)
-    },
-    {
-        type = CornerType.BOTTOM_RIGHT,
-        gridIndex = 98,
-        position = Vector(340, 340)
-    }
-}
-local HOME_CLOSET_CORNERS_SET = getWallGridIndexSetForRectangleRoomShape(nil, RoomShape.IH, HOME_CLOSET_CORNERS)
---- The Mother Boss Room is 15x11, which is different from `RoomShape.SHAPE_1x2` (which is 15x16).
-local MOTHER_ROOM_CORNERS = {
-    {
-        type = CornerType.TOP_LEFT,
-        gridIndex = 0,
-        position = Vector(60, 140)
-    },
-    {
-        type = CornerType.TOP_RIGHT,
-        gridIndex = 14,
-        position = Vector(580, 140)
-    },
-    {
-        type = CornerType.BOTTOM_LEFT,
-        gridIndex = 150,
-        position = Vector(60, 500)
-    },
-    {
-        type = CornerType.BOTTOM_RIGHT,
-        gridIndex = 164,
-        position = Vector(580, 500)
-    }
-}
-local MOTHER_ROOM_CORNERS_SET = getWallGridIndexSetForRectangleRoomShape(nil, RoomShape.SHAPE_1x2, MOTHER_ROOM_CORNERS)
---- Helper function to determine if a given grid index should have a wall generated by the vanilla
--- game. This is useful as a mechanism to distinguish between real walls and custom walls spawned by
--- mods.
--- 
--- This function properly handles the special cases of the Mother boss room and the Home closet
--- rooms, which are both non-standard room shapes.
-function ____exports.isVanillaWallGridIndex(self, gridIndex)
-    local room = game:GetRoom()
-    local roomShape = room:GetRoomShape()
-    local wallGridIndexSet
-    if inHomeCloset(nil) then
-        wallGridIndexSet = HOME_CLOSET_CORNERS_SET
-    elseif inBossRoomOf(nil, BossID.MOTHER) then
-        wallGridIndexSet = MOTHER_ROOM_CORNERS_SET
-    else
-        wallGridIndexSet = ROOM_SHAPE_TO_WALL_GRID_INDEX_SET:get(roomShape)
-    end
-    if wallGridIndexSet == nil then
-        error(((("Failed to find the wall grid index set for: RoomShape." .. RoomShape[roomShape]) .. " (") .. tostring(roomShape)) .. ")")
-    end
-    return wallGridIndexSet:has(gridIndex)
-end
-return ____exports
- end,
 ["lua_modules.isaacscript-common.dist.src.functions.roomShape"] = function(...) 
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -30392,7 +30459,7 @@ end
 function ____exports.getRoomShapeWidth(self, roomShape)
     return ROOM_SHAPE_TO_GRID_WIDTH[roomShape]
 end
-function ____exports.isLRoom(self, roomShape)
+function ____exports.isLRoomShape(self, roomShape)
     return L_ROOM_SHAPES_SET:has(roomShape)
 end
 function ____exports.isNarrowRoom(self, roomShape)
@@ -31015,6 +31082,543 @@ ____exports.ROOM_SHAPE_BOUNDS = {
 }
 return ____exports
  end,
+["lua_modules.isaacscript-common.dist.src.functions.positionVelocity"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArraySome = ____lualib.__TS__ArraySome
+local Map = ____lualib.Map
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local EffectVariant = ____isaac_2Dtypescript_2Ddefinitions.EffectVariant
+local HeavenLightDoorSubType = ____isaac_2Dtypescript_2Ddefinitions.HeavenLightDoorSubType
+local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
+local game = ____cachedClasses.game
+local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
+local DISTANCE_OF_GRID_TILE = ____constants.DISTANCE_OF_GRID_TILE
+local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.entities")
+local getEntities = ____entities.getEntities
+local ____entitiesSpecific = require("lua_modules.isaacscript-common.dist.src.functions.entitiesSpecific")
+local getEffects = ____entitiesSpecific.getEffects
+local ____playerIndex = require("lua_modules.isaacscript-common.dist.src.functions.playerIndex")
+local getPlayers = ____playerIndex.getPlayers
+local ____players = require("lua_modules.isaacscript-common.dist.src.functions.players")
+local getPlayerCloserThan = ____players.getPlayerCloserThan
+local MAX_FIND_FREE_POSITION_ATTEMPTS = 100
+function ____exports.anyEntityCloserThan(self, entities, position, distance)
+    return __TS__ArraySome(
+        entities,
+        function(____, entity) return position:Distance(entity.Position) <= distance end
+    )
+end
+--- Iterates over all players and checks if any player is close enough to the specified position.
+-- 
+-- Note that this function does not consider players with a non-undefined parent, since they are not
+-- real players (e.g. the Strawman Keeper).
+function ____exports.anyPlayerCloserThan(self, position, distance)
+    local players = getPlayers(nil)
+    return __TS__ArraySome(
+        players,
+        function(____, player) return player.Position:Distance(position) <= distance end
+    )
+end
+--- Helper function to get a room position that is not overlapping with a grid entity, a heaven door,
+-- or a player. The `Room.FindFreePickupSpawnPosition` method will return locations that overlap
+-- with heaven doors and partially overlap with players, if the thing being spawned is bigger than a
+-- tile (like a Blood Donation Machine). Use this function instead if you want to account for those
+-- specific situations.
+-- 
+-- @param startingPosition The position to start searching from. If this position is not overlapping
+-- with anything, then it will be returned.
+-- @param avoidActiveEntities Optional. Default is false.
+-- @param minimumDistance Optional. If specified, will ensure that the randomly generated position
+-- is equal to or greater than the distance provided.
+function ____exports.findFreePosition(self, startingPosition, avoidActiveEntities, minimumDistance)
+    if avoidActiveEntities == nil then
+        avoidActiveEntities = false
+    end
+    local room = game:GetRoom()
+    local heavenDoors = getEffects(nil, EffectVariant.HEAVEN_LIGHT_DOOR, HeavenLightDoorSubType.HEAVEN_DOOR)
+    do
+        local initialStep = 0
+        while initialStep < MAX_FIND_FREE_POSITION_ATTEMPTS do
+            do
+                local position = room:FindFreePickupSpawnPosition(startingPosition, initialStep, avoidActiveEntities)
+                local closePlayer = getPlayerCloserThan(nil, position, DISTANCE_OF_GRID_TILE)
+                if closePlayer ~= nil then
+                    goto __continue7
+                end
+                local isCloseHeavenDoor = ____exports.anyEntityCloserThan(nil, heavenDoors, position, DISTANCE_OF_GRID_TILE)
+                if isCloseHeavenDoor then
+                    goto __continue7
+                end
+                if minimumDistance ~= nil then
+                    local distance = startingPosition:Distance(position)
+                    if distance < minimumDistance then
+                        goto __continue7
+                    end
+                end
+                return position
+            end
+            ::__continue7::
+            initialStep = initialStep + 1
+        end
+    end
+    return room:FindFreePickupSpawnPosition(startingPosition)
+end
+--- Helper function to get a map containing the positions of every entity in the current room.
+-- 
+-- This is useful for rewinding entity positions at a later time. Also see `setEntityPositions`.
+-- 
+-- @param entities Optional. If provided, will only get the positions of the provided entities. Use
+-- this with cached entities to avoid invoking the `Isaac.GetRoomEntities` method
+-- multiple times.
+function ____exports.getEntityPositions(self, entities)
+    if entities == nil then
+        entities = getEntities(nil)
+    end
+    local entityPositions = __TS__New(Map)
+    for ____, entity in ipairs(entities) do
+        local ptrHash = GetPtrHash(entity)
+        entityPositions:set(ptrHash, entity.Position)
+    end
+    return entityPositions
+end
+--- Helper function to get a map containing the velocities of every entity in the current room.
+-- 
+-- This is useful for rewinding entity velocities at a later time. Also see `setEntityVelocities`.
+-- 
+-- @param entities Optional. If provided, will only get the velocities of the provided entities. Use
+-- this with cached entities to avoid invoking the `Isaac.GetRoomEntities` method
+-- multiple times.
+function ____exports.getEntityVelocities(self, entities)
+    if entities == nil then
+        entities = getEntities(nil)
+    end
+    local entityVelocities = __TS__New(Map)
+    for ____, entity in ipairs(entities) do
+        local ptrHash = GetPtrHash(entity)
+        entityVelocities:set(ptrHash, entity.Velocity)
+    end
+    return entityVelocities
+end
+--- Helper function to set the position of every entity in the room based on a map of positions. If
+-- an entity is found that does not have matching element in the provided map, then that entity will
+-- be skipped.
+-- 
+-- This function is useful for rewinding entity positions at a later time. Also see
+-- `getEntityPositions`.
+-- 
+-- @param entityPositions The map providing the positions for every entity.
+-- @param entities Optional. If provided, will only set the positions of the provided entities. Use
+-- this with cached entities to avoid invoking the `Isaac.GetRoomEntities` method
+-- multiple times.
+function ____exports.setEntityPositions(self, entityPositions, entities)
+    if entities == nil then
+        entities = getEntities(nil)
+    end
+    for ____, entity in ipairs(entities) do
+        local ptrHash = GetPtrHash(entity)
+        local entityPosition = entityPositions:get(ptrHash)
+        if entityPosition ~= nil then
+            entity.Position = entityPosition
+        end
+    end
+end
+--- Helper function to set the velocity of every entity in the room based on a map of velocities. If
+-- an entity is found that does not have matching element in the provided map, then that entity will
+-- be skipped.
+-- 
+-- This function is useful for rewinding entity velocities at a later time. Also see
+-- `getEntityVelocities`.
+-- 
+-- @param entityVelocities The map providing the velocities for every entity.
+-- @param entities Optional. If provided, will only set the velocities of the provided entities. Use
+-- this with cached entities to avoid invoking the `Isaac.GetRoomEntities` method
+-- multiple times.
+function ____exports.setEntityVelocities(self, entityVelocities, entities)
+    if entities == nil then
+        entities = getEntities(nil)
+    end
+    for ____, entity in ipairs(entities) do
+        local ptrHash = GetPtrHash(entity)
+        local entityVelocity = entityVelocities:get(ptrHash)
+        if entityVelocity ~= nil then
+            entity.Velocity = entityVelocity
+        end
+    end
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.functions.dimensions"] = function(...) 
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local Dimension = ____isaac_2Dtypescript_2Ddefinitions.Dimension
+local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
+local game = ____cachedClasses.game
+local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
+local NUM_DIMENSIONS = ____constants.NUM_DIMENSIONS
+local ____roomData = require("lua_modules.isaacscript-common.dist.src.functions.roomData")
+local getRoomGridIndex = ____roomData.getRoomGridIndex
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local eRange = ____utils.eRange
+--- Helper function to get an array with every valid `Dimension` (not including `Dimension.CURRENT`).
+function ____exports.getAllDimensions(self)
+    return eRange(nil, NUM_DIMENSIONS)
+end
+--- Helper function to get the current dimension. Most of the time, this will be `Dimension.MAIN`,
+-- but it can change if e.g. the player is in the mirror world of Downpour/Dross.
+function ____exports.getDimension(self)
+    local level = game:GetLevel()
+    local roomGridIndex = getRoomGridIndex(nil)
+    local roomDescription = level:GetRoomByIdx(roomGridIndex, Dimension.CURRENT)
+    local currentRoomHash = GetPtrHash(roomDescription)
+    for ____, dimension in ipairs(____exports.getAllDimensions(nil)) do
+        local dimensionRoomDescription = level:GetRoomByIdx(roomGridIndex, dimension)
+        local dimensionRoomHash = GetPtrHash(dimensionRoomDescription)
+        if dimensionRoomHash == currentRoomHash then
+            return dimension
+        end
+    end
+    error("Failed to get the current dimension.")
+end
+function ____exports.inDimension(self, dimension)
+    return dimension == ____exports.getDimension(nil)
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.sets.mineShaftRoomSubTypesSet"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local MinesRoomSubType = ____isaac_2Dtypescript_2Ddefinitions.MinesRoomSubType
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.MINE_SHAFT_ROOM_SUB_TYPE_SET = __TS__New(ReadonlySet, {
+    MinesRoomSubType.MINESHAFT_ENTRANCE,
+    MinesRoomSubType.MINESHAFT_LOBBY,
+    MinesRoomSubType.MINESHAFT_KNIFE_PIECE,
+    MinesRoomSubType.MINESHAFT_ROOM_PRE_CHASE,
+    MinesRoomSubType.MINESHAFT_ROOM_POST_CHASE
+})
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.objects.roomTypeNames"] = function(...) 
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
+____exports.ROOM_TYPE_NAMES = {
+    [RoomType.DEFAULT] = "default room",
+    [RoomType.SHOP] = "shop",
+    [RoomType.ERROR] = "I AM ERROR Room",
+    [RoomType.TREASURE] = "Treasure Room",
+    [RoomType.BOSS] = "Boss Room",
+    [RoomType.MINI_BOSS] = "Miniboss Room",
+    [RoomType.SECRET] = "Secret Room",
+    [RoomType.SUPER_SECRET] = "Super Secret Room",
+    [RoomType.ARCADE] = "Arcade",
+    [RoomType.CURSE] = "Curse Room",
+    [RoomType.CHALLENGE] = "Challenge Room",
+    [RoomType.LIBRARY] = "Library",
+    [RoomType.SACRIFICE] = "Sacrifice Room",
+    [RoomType.DEVIL] = "Devil Room",
+    [RoomType.ANGEL] = "Angel Room",
+    [RoomType.DUNGEON] = "Crawl Space",
+    [RoomType.BOSS_RUSH] = "Boss Rush",
+    [RoomType.CLEAN_BEDROOM] = "Clean Bedroom",
+    [RoomType.DIRTY_BEDROOM] = "Dirty Bedroom",
+    [RoomType.CHEST] = "Chest Room",
+    [RoomType.DICE] = "Dice Room",
+    [RoomType.BLACK_MARKET] = "Black Market",
+    [RoomType.GREED_EXIT] = "Greed Exit Room",
+    [RoomType.PLANETARIUM] = "Planetarium",
+    [RoomType.TELEPORTER] = "Teleporter Room",
+    [RoomType.TELEPORTER_EXIT] = "Teleporter Exit Room",
+    [RoomType.SECRET_EXIT] = "Secret Exit",
+    [RoomType.BLUE] = "Blue Room",
+    [RoomType.ULTRA_SECRET] = "Ultra Secret Room"
+}
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.functions.roomShapeWalls"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local Map = ____lualib.Map
+local __TS__New = ____lualib.__TS__New
+local __TS__SparseArrayNew = ____lualib.__TS__SparseArrayNew
+local __TS__SparseArrayPush = ____lualib.__TS__SparseArrayPush
+local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
+local ____exports = {}
+local getVanillaWallGridIndexSetForRoomShape, getWallGridIndexSetForRectangleRoomShape
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
+local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.src.arrays.cachedEnumValues")
+local ROOM_SHAPE_VALUES = ____cachedEnumValues.ROOM_SHAPE_VALUES
+local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
+local game = ____cachedClasses.game
+local ____CornerType = require("lua_modules.isaacscript-common.dist.src.enums.CornerType")
+local CornerType = ____CornerType.CornerType
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+local ____gridIndex = require("lua_modules.isaacscript-common.dist.src.functions.gridIndex")
+local getGridIndexesBetween = ____gridIndex.getGridIndexesBetween
+local ____roomShape = require("lua_modules.isaacscript-common.dist.src.functions.roomShape")
+local getRoomShapeCorners = ____roomShape.getRoomShapeCorners
+local isLRoomShape = ____roomShape.isLRoomShape
+local ____rooms = require("lua_modules.isaacscript-common.dist.src.functions.rooms")
+local inBossRoomOf = ____rooms.inBossRoomOf
+local inHomeCloset = ____rooms.inHomeCloset
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
+function getVanillaWallGridIndexSetForRoomShape(self, roomShape)
+    local corners = getRoomShapeCorners(nil, roomShape)
+    local lRoom = isLRoomShape(nil, roomShape)
+    if lRoom and #corners ~= 6 then
+        error(((("Failed to get the correct amount of corners for: RoomShape." .. RoomShape[roomShape]) .. " (") .. tostring(roomShape)) .. ")")
+    end
+    repeat
+        local ____switch7 = roomShape
+        local ____cond7 = ____switch7 == RoomShape.LTL
+        if ____cond7 then
+            do
+                local topMiddle, topRight, middleLeft, middle, bottomLeft, bottomRight = table.unpack(corners)
+                local ____ReadonlySet_1 = ReadonlySet
+                local ____array_0 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topMiddle.gridIndex, topRight.gridIndex, roomShape)))
+                __TS__SparseArrayPush(
+                    ____array_0,
+                    table.unpack(getGridIndexesBetween(nil, middleLeft.gridIndex, middle.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_0,
+                    table.unpack(getGridIndexesBetween(nil, bottomLeft.gridIndex, bottomRight.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_0,
+                    table.unpack(getGridIndexesBetween(nil, middleLeft.gridIndex, bottomLeft.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_0,
+                    table.unpack(getGridIndexesBetween(nil, topMiddle.gridIndex, middle.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_0,
+                    table.unpack(getGridIndexesBetween(nil, topRight.gridIndex, bottomRight.gridIndex, roomShape))
+                )
+                return __TS__New(
+                    ____ReadonlySet_1,
+                    {__TS__SparseArraySpread(____array_0)}
+                )
+            end
+        end
+        ____cond7 = ____cond7 or ____switch7 == RoomShape.LTR
+        if ____cond7 then
+            do
+                local topLeft, topMiddle, middle, middleRight, bottomLeft, bottomRight = table.unpack(corners)
+                local ____ReadonlySet_3 = ReadonlySet
+                local ____array_2 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, topMiddle.gridIndex, roomShape)))
+                __TS__SparseArrayPush(
+                    ____array_2,
+                    table.unpack(getGridIndexesBetween(nil, middle.gridIndex, middleRight.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_2,
+                    table.unpack(getGridIndexesBetween(nil, bottomLeft.gridIndex, bottomRight.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_2,
+                    table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, bottomLeft.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_2,
+                    table.unpack(getGridIndexesBetween(nil, topMiddle.gridIndex, middle.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_2,
+                    table.unpack(getGridIndexesBetween(nil, middleRight.gridIndex, bottomRight.gridIndex, roomShape))
+                )
+                return __TS__New(
+                    ____ReadonlySet_3,
+                    {__TS__SparseArraySpread(____array_2)}
+                )
+            end
+        end
+        ____cond7 = ____cond7 or ____switch7 == RoomShape.LBL
+        if ____cond7 then
+            do
+                local topLeft, topRight, middleLeft, middle, bottomMiddle, bottomRight = table.unpack(corners)
+                local ____ReadonlySet_5 = ReadonlySet
+                local ____array_4 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, topRight.gridIndex, roomShape)))
+                __TS__SparseArrayPush(
+                    ____array_4,
+                    table.unpack(getGridIndexesBetween(nil, middleLeft.gridIndex, middle.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_4,
+                    table.unpack(getGridIndexesBetween(nil, bottomMiddle.gridIndex, bottomRight.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_4,
+                    table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, middleLeft.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_4,
+                    table.unpack(getGridIndexesBetween(nil, middle.gridIndex, bottomMiddle.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_4,
+                    table.unpack(getGridIndexesBetween(nil, topRight.gridIndex, bottomRight.gridIndex, roomShape))
+                )
+                return __TS__New(
+                    ____ReadonlySet_5,
+                    {__TS__SparseArraySpread(____array_4)}
+                )
+            end
+        end
+        ____cond7 = ____cond7 or ____switch7 == RoomShape.LBR
+        if ____cond7 then
+            do
+                local topLeft, topRight, middle, middleRight, bottomLeft, bottomMiddle = table.unpack(corners)
+                local ____ReadonlySet_7 = ReadonlySet
+                local ____array_6 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, topRight.gridIndex, roomShape)))
+                __TS__SparseArrayPush(
+                    ____array_6,
+                    table.unpack(getGridIndexesBetween(nil, middle.gridIndex, middleRight.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_6,
+                    table.unpack(getGridIndexesBetween(nil, bottomLeft.gridIndex, bottomMiddle.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_6,
+                    table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, bottomLeft.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_6,
+                    table.unpack(getGridIndexesBetween(nil, middle.gridIndex, bottomMiddle.gridIndex, roomShape))
+                )
+                __TS__SparseArrayPush(
+                    ____array_6,
+                    table.unpack(getGridIndexesBetween(nil, topRight.gridIndex, middleRight.gridIndex, roomShape))
+                )
+                return __TS__New(
+                    ____ReadonlySet_7,
+                    {__TS__SparseArraySpread(____array_6)}
+                )
+            end
+        end
+        do
+            do
+                return getWallGridIndexSetForRectangleRoomShape(nil, roomShape, corners)
+            end
+        end
+    until true
+end
+function getWallGridIndexSetForRectangleRoomShape(self, roomShape, corners)
+    if #corners ~= 4 then
+        error("Failed to get the correct amount of corners for rectangular room shape.")
+    end
+    local topLeft, topRight, bottomLeft, bottomRight = table.unpack(corners)
+    local ____ReadonlySet_9 = ReadonlySet
+    local ____array_8 = __TS__SparseArrayNew(table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, topRight.gridIndex, roomShape)))
+    __TS__SparseArrayPush(
+        ____array_8,
+        table.unpack(getGridIndexesBetween(nil, bottomLeft.gridIndex, bottomRight.gridIndex, roomShape))
+    )
+    __TS__SparseArrayPush(
+        ____array_8,
+        table.unpack(getGridIndexesBetween(nil, topLeft.gridIndex, bottomLeft.gridIndex, roomShape))
+    )
+    __TS__SparseArrayPush(
+        ____array_8,
+        table.unpack(getGridIndexesBetween(nil, topRight.gridIndex, bottomRight.gridIndex, roomShape))
+    )
+    return __TS__New(
+        ____ReadonlySet_9,
+        {__TS__SparseArraySpread(____array_8)}
+    )
+end
+local ROOM_SHAPE_TO_WALL_GRID_INDEX_SET = (function()
+    local roomShapeToWallGridIndexSet = __TS__New(Map)
+    for ____, roomShape in ipairs(ROOM_SHAPE_VALUES) do
+        local gridIndexSet = getVanillaWallGridIndexSetForRoomShape(nil, roomShape)
+        roomShapeToWallGridIndexSet:set(roomShape, gridIndexSet)
+    end
+    return roomShapeToWallGridIndexSet
+end)(nil)
+--- The Home closet is is 9x3, which is different from `RoomShape.IH` (which is 13x3).
+local HOME_CLOSET_CORNERS = {
+    {
+        type = CornerType.TOP_LEFT,
+        gridIndex = 30,
+        position = Vector(60, 220)
+    },
+    {
+        type = CornerType.TOP_RIGHT,
+        gridIndex = 38,
+        position = Vector(340, 220)
+    },
+    {
+        type = CornerType.BOTTOM_LEFT,
+        gridIndex = 90,
+        position = Vector(60, 340)
+    },
+    {
+        type = CornerType.BOTTOM_RIGHT,
+        gridIndex = 98,
+        position = Vector(340, 340)
+    }
+}
+local HOME_CLOSET_CORNERS_SET = getWallGridIndexSetForRectangleRoomShape(nil, RoomShape.IH, HOME_CLOSET_CORNERS)
+--- The Mother Boss Room is 15x11, which is different from `RoomShape.SHAPE_1x2` (which is 15x16).
+local MOTHER_ROOM_CORNERS = {
+    {
+        type = CornerType.TOP_LEFT,
+        gridIndex = 0,
+        position = Vector(60, 140)
+    },
+    {
+        type = CornerType.TOP_RIGHT,
+        gridIndex = 14,
+        position = Vector(580, 140)
+    },
+    {
+        type = CornerType.BOTTOM_LEFT,
+        gridIndex = 150,
+        position = Vector(60, 500)
+    },
+    {
+        type = CornerType.BOTTOM_RIGHT,
+        gridIndex = 164,
+        position = Vector(580, 500)
+    }
+}
+local MOTHER_ROOM_CORNERS_SET = getWallGridIndexSetForRectangleRoomShape(nil, RoomShape.SHAPE_1x2, MOTHER_ROOM_CORNERS)
+--- Helper function to determine if a given grid index should have a wall generated by the vanilla
+-- game. This is useful as a mechanism to distinguish between real walls and custom walls spawned by
+-- mods.
+-- 
+-- This function properly handles the special cases of the Mother boss room and the Home closet
+-- rooms, which are both non-standard room shapes.
+function ____exports.isVanillaWallGridIndex(self, gridIndex)
+    local room = game:GetRoom()
+    local roomShape = room:GetRoomShape()
+    local wallGridIndexSet
+    if inHomeCloset(nil) then
+        wallGridIndexSet = HOME_CLOSET_CORNERS_SET
+    elseif inBossRoomOf(nil, BossID.MOTHER) then
+        wallGridIndexSet = MOTHER_ROOM_CORNERS_SET
+    else
+        wallGridIndexSet = ROOM_SHAPE_TO_WALL_GRID_INDEX_SET:get(roomShape)
+        assertDefined(
+            nil,
+            wallGridIndexSet,
+            ((("Failed to find the wall grid index set for: RoomShape." .. RoomShape[roomShape]) .. " (") .. tostring(roomShape)) .. ")"
+        )
+    end
+    return wallGridIndexSet:has(gridIndex)
+end
+return ____exports
+ end,
 ["lua_modules.isaacscript-common.dist.src.functions.gridIndex"] = function(...) 
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -31060,7 +31664,7 @@ local ____roomShape = require("lua_modules.isaacscript-common.dist.src.functions
 local getRoomShapeBottomRightPosition = ____roomShape.getRoomShapeBottomRightPosition
 local getRoomShapeTopLeftPosition = ____roomShape.getRoomShapeTopLeftPosition
 local getRoomShapeWidth = ____roomShape.getRoomShapeWidth
-local isLRoom = ____roomShape.isLRoom
+local isLRoomShape = ____roomShape.isLRoomShape
 --- Helper function to convert a grid position `Vector` to a world position `Vector`.
 -- 
 -- For example, the coordinates of (0, 0) are equal to `Vector(80, 160)`.
@@ -31106,13 +31710,13 @@ end
 -- 
 -- In this context, the grid position of the top-left wall is "Vector(-1, -1)".
 function ____exports.isValidGridPosition(self, gridPosition, roomShape)
-    local ____isLRoom_result_0
-    if isLRoom(nil, roomShape) then
-        ____isLRoom_result_0 = isValidGridPositionLRoom(nil, gridPosition, roomShape)
+    local ____isLRoomShape_result_0
+    if isLRoomShape(nil, roomShape) then
+        ____isLRoomShape_result_0 = isValidGridPositionLRoom(nil, gridPosition, roomShape)
     else
-        ____isLRoom_result_0 = isValidGridPositionNormal(nil, gridPosition, roomShape)
+        ____isLRoomShape_result_0 = isValidGridPositionNormal(nil, gridPosition, roomShape)
     end
-    return ____isLRoom_result_0
+    return ____isLRoomShape_result_0
 end
 --- Helper function to convert a world position `Vector` to a grid position `Vector`.
 -- 
@@ -31140,14 +31744,14 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local Direction = ____isaac_2Dtypescript_2Ddefinitions.Direction
 local ____direction = require("lua_modules.isaacscript-common.dist.src.functions.direction")
 local directionToVector = ____direction.directionToVector
---- Helper function to normalize an integer.
+--- Helper function to normalize a number, ensuring that it is within a certain range.
 -- 
--- - If `x` is less than `min`, then it will be clamped to `min`.
--- - If `x` is greater than `max`, then it will be clamped to `max`.
-function ____exports.clamp(self, x, min, max)
+-- - If `num` is less than `min`, then it will be clamped to `min`.
+-- - If `num` is greater than `max`, then it will be clamped to `max`.
+function ____exports.clamp(self, num, min, max)
     return math.max(
         min,
-        math.min(x, max)
+        math.min(num, max)
     )
 end
 function ____exports.getAngleDifference(self, angle1, angle2)
@@ -31544,7 +32148,7 @@ end
 -- @param cap Optional. If specified, will only remove the given amount of sacks.
 -- @returns The sacks that were removed.
 function ____exports.removeAllSacks(self, sackSubType, cap)
-    return removeAllPickups(nil, PickupVariant.TRINKET, sackSubType, cap)
+    return removeAllPickups(nil, PickupVariant.SACK, sackSubType, cap)
 end
 --- Helper function to remove all of the trinkets in the room.
 -- 
@@ -31842,6 +32446,8 @@ local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local PoopGridEntityVariant = ____isaac_2Dtypescript_2Ddefinitions.PoopGridEntityVariant
 local StatueVariant = ____isaac_2Dtypescript_2Ddefinitions.StatueVariant
 local TrapdoorVariant = ____isaac_2Dtypescript_2Ddefinitions.TrapdoorVariant
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.src.arrays.cachedEnumValues")
+local GRID_ENTITY_XML_TYPE_VALUES = ____cachedEnumValues.GRID_ENTITY_XML_TYPE_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local game = ____cachedClasses.game
 local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
@@ -31854,6 +32460,8 @@ local GRID_ENTITY_XML_MAP = ____gridEntityXMLMap.GRID_ENTITY_XML_MAP
 local ____roomShapeToTopLeftWallGridIndexMap = require("lua_modules.isaacscript-common.dist.src.maps.roomShapeToTopLeftWallGridIndexMap")
 local DEFAULT_TOP_LEFT_WALL_GRID_INDEX = ____roomShapeToTopLeftWallGridIndexMap.DEFAULT_TOP_LEFT_WALL_GRID_INDEX
 local ROOM_SHAPE_TO_TOP_LEFT_WALL_GRID_INDEX_MAP = ____roomShapeToTopLeftWallGridIndexMap.ROOM_SHAPE_TO_TOP_LEFT_WALL_GRID_INDEX_MAP
+local ____poopGridEntityXMLTypesSet = require("lua_modules.isaacscript-common.dist.src.sets.poopGridEntityXMLTypesSet")
+local POOP_GRID_ENTITY_XML_TYPES_SET = ____poopGridEntityXMLTypesSet.POOP_GRID_ENTITY_XML_TYPES_SET
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.entities")
@@ -31868,6 +32476,7 @@ local ____types = require("lua_modules.isaacscript-common.dist.src.functions.typ
 local asNumber = ____types.asNumber
 local isNumber = ____types.isNumber
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local eRange = ____utils.eRange
 local iRange = ____utils.iRange
 local ____vector = require("lua_modules.isaacscript-common.dist.src.functions.vector")
@@ -31896,10 +32505,12 @@ end
 function ____exports.getGridEntityCollisionPoints(self, gridEntity)
     local topLeft = Vector(gridEntity.Position.X - DISTANCE_OF_GRID_TILE / 2, gridEntity.Position.Y - DISTANCE_OF_GRID_TILE / 2)
     local bottomRight = Vector(gridEntity.Position.X + DISTANCE_OF_GRID_TILE / 2, gridEntity.Position.Y + DISTANCE_OF_GRID_TILE / 2)
-    return {topLeft, bottomRight}
+    return {topLeft = topLeft, bottomRight = bottomRight}
 end
 --- Helper function to get the grid index of the top left wall. (This will depend on what the current
 -- room shape is.)
+-- 
+-- This function can be useful in certain situations to determine if the room is currently loaded.
 function ____exports.getTopLeftWallGridIndex(self)
     local room = game:GetRoom()
     local roomShape = room:GetRoomShape()
@@ -31913,20 +32524,20 @@ end
 -- (`EffectVariant.DEVIL` (6) or `EffectVariant.ANGEL` (9), respectively.)
 -- 
 -- @param gridEntityOrGridIndex The grid entity or grid index to remove.
--- @param updateRoom Whether or not to update the room after the grid entity is removed. This is
--- generally a good idea because if the room is not updated, you will be unable to
--- spawn another grid entity on the same tile until a frame has passed. However,
--- doing this is expensive, since it involves a call to `Isaac.GetRoomEntities`,
--- so set this to false if you need to run this function multiple times.
+-- @param updateRoom Whether to update the room after the grid entity is removed. This is generally
+-- a good idea because if the room is not updated, you will be unable to spawn
+-- another grid entity on the same tile until a frame has passed. However, doing
+-- this is expensive, since it involves a call to `Isaac.GetRoomEntities`, so set
+-- this to false if you need to run this function multiple times.
 function ____exports.removeGridEntity(self, gridEntityOrGridIndex, updateRoom)
     local room = game:GetRoom()
-    local ____isNumber_result_0
+    local ____isNumber_result_2
     if isNumber(nil, gridEntityOrGridIndex) then
-        ____isNumber_result_0 = room:GetGridEntity(gridEntityOrGridIndex)
+        ____isNumber_result_2 = room:GetGridEntity(gridEntityOrGridIndex)
     else
-        ____isNumber_result_0 = gridEntityOrGridIndex
+        ____isNumber_result_2 = gridEntityOrGridIndex
     end
-    local gridEntity = ____isNumber_result_0
+    local gridEntity = ____isNumber_result_2
     if gridEntity == nil then
         return
     end
@@ -31956,13 +32567,13 @@ end
 -- - allows you to specify the grid index or the position
 function ____exports.spawnGridEntityWithVariant(self, gridEntityType, variant, gridIndexOrPosition)
     local room = game:GetRoom()
-    local ____isVector_result_1
+    local ____isVector_result_3
     if isVector(nil, gridIndexOrPosition) then
-        ____isVector_result_1 = room:GetGridEntityFromPos(gridIndexOrPosition)
+        ____isVector_result_3 = room:GetGridEntityFromPos(gridIndexOrPosition)
     else
-        ____isVector_result_1 = room:GetGridEntity(gridIndexOrPosition)
+        ____isVector_result_3 = room:GetGridEntity(gridIndexOrPosition)
     end
-    local existingGridEntity = ____isVector_result_1
+    local existingGridEntity = ____isVector_result_3
     if existingGridEntity ~= nil then
         ____exports.removeGridEntity(nil, existingGridEntity, true)
     end
@@ -31981,6 +32592,9 @@ function ____exports.spawnGridEntityWithVariant(self, gridEntityType, variant, g
     end
     return gridEntity
 end
+--- For some specific grid entities, the variant defined in the XML is what is used by the actual
+-- game (which is not the case for e.g. poops).
+local GRID_ENTITY_TYPES_THAT_KEEP_GRID_ENTITY_XML_VARIANT = __TS__New(ReadonlySet, {GridEntityType.SPIKES_ON_OFF, GridEntityType.PRESSURE_PLATE, GridEntityType.TELEPORTER})
 local BREAKABLE_GRID_ENTITY_TYPES_BY_EXPLOSIONS = __TS__New(ReadonlySet, {
     GridEntityType.ROCK,
     GridEntityType.ROCK_TINTED,
@@ -31998,23 +32612,23 @@ local BREAKABLE_GRID_ENTITY_TYPES_VARIANTS_BY_EXPLOSIONS = __TS__New(
     ReadonlySet,
     {(tostring(GridEntityType.STATUE) .. ".") .. tostring(StatueVariant.ANGEL)}
 )
+local GRID_ENTITY_XML_TYPES_SET = __TS__New(ReadonlySet, GRID_ENTITY_XML_TYPE_VALUES)
 --- Helper function to convert the grid entity type found in a room XML file to the corresponding
--- grid entity type and variant normally used by the game. For example, a rock is represented as
--- 1000.0 in a room XML file, but `GridEntityType.ROCK` is equal to 2.
+-- grid entity type and variant normally used by the game. For example, `GridEntityXMLType.ROCK` is
+-- 1000 (in a room XML file), but `GridEntityType.ROCK` is equal to 2 (in-game).
 function ____exports.convertXMLGridEntityType(self, gridEntityXMLType, gridEntityXMLVariant)
     local gridEntityArray = GRID_ENTITY_XML_MAP:get(gridEntityXMLType)
-    if gridEntityArray == nil then
-        error("Failed to find an entry in the grid entity map for XML entity type: " .. tostring(gridEntityXMLType))
-    end
+    assertDefined(
+        nil,
+        gridEntityArray,
+        "Failed to find an entry in the grid entity map for XML entity type: " .. tostring(gridEntityXMLType)
+    )
     local gridEntityType = gridEntityArray[1]
-    local variant = gridEntityArray[2]
-    if gridEntityType == GridEntityType.SPIKES_ON_OFF or gridEntityType == GridEntityType.PRESSURE_PLATE or gridEntityType == GridEntityType.TELEPORTER then
-        variant = gridEntityXMLVariant
-    end
+    local variant = GRID_ENTITY_TYPES_THAT_KEEP_GRID_ENTITY_XML_VARIANT:has(gridEntityType) and gridEntityXMLVariant or gridEntityArray[2]
     return {gridEntityType, variant}
 end
 --- Helper function to check if one or more of a specific kind of grid entity is present in the
--- current room. It uses the `countEntities` helper function to determine this.
+-- current room.
 -- 
 -- @param gridEntityType The grid entity type to match.
 -- @param variant Optional. Default is -1, which matches every variant.
@@ -32040,10 +32654,15 @@ end
 --- Gets the entities that have a hitbox that overlaps with any part of the square that the grid
 -- entity is on.
 -- 
--- Note that this function will not work properly in the `POST_NEW_ROOM` callback, since entities do
+-- This function is useful because the vanilla collision callbacks do not work with grid entities.
+-- This is used by `POST_GRID_ENTITY_COLLISION` custom callback.
+-- 
+-- Note that this function will not work properly in the `POST_NEW_ROOM` callback since entities do
 -- not have collision yet in that callback.
 function ____exports.getCollidingEntitiesWithGridEntity(self, gridEntity)
-    local topLeft, bottomRight = table.unpack(____exports.getGridEntityCollisionPoints(nil, gridEntity))
+    local ____exports_getGridEntityCollisionPoints_result_0 = ____exports.getGridEntityCollisionPoints(nil, gridEntity)
+    local topLeft = ____exports_getGridEntityCollisionPoints_result_0.topLeft
+    local bottomRight = ____exports_getGridEntityCollisionPoints_result_0.bottomRight
     local closeEntities = Isaac.FindInRadius(gridEntity.Position, DISTANCE_OF_GRID_TILE * 2)
     return __TS__ArrayFilter(
         closeEntities,
@@ -32064,13 +32683,17 @@ function ____exports.getConstituentsFromGridEntityID(self, gridEntityID)
     end
     local gridEntityTypeString, variantString = table.unpack(parts)
     local gridEntityType = tonumber(gridEntityTypeString)
-    if gridEntityType == nil then
-        error("Failed to convert the grid entity type to a number: " .. tostring(gridEntityTypeString))
-    end
+    assertDefined(
+        nil,
+        gridEntityType,
+        "Failed to convert the grid entity type to a number: " .. tostring(gridEntityTypeString)
+    )
     local variant = tonumber(variantString)
-    if variant == nil then
-        error("Failed to convert the grid entity variant to a number: " .. tostring(variantString))
-    end
+    assertDefined(
+        nil,
+        variant,
+        "Failed to convert the grid entity variant to a number: " .. tostring(variantString)
+    )
     return {gridEntityType, variant}
 end
 --- Helper function to get every grid entity in the current room.
@@ -32149,10 +32772,12 @@ function ____exports.getGridEntitiesInRadius(self, targetPosition, radius)
                 local gridIndex = room:GetGridIndex(position)
                 local gridEntity = room:GetGridEntityFromPos(position)
                 if gridEntity == nil or registeredGridIndexes:has(gridIndex) then
-                    goto __continue27
+                    goto __continue23
                 end
                 registeredGridIndexes:add(gridIndex)
-                local topLeft, bottomRight = table.unpack(____exports.getGridEntityCollisionPoints(nil, gridEntity))
+                local ____exports_getGridEntityCollisionPoints_result_1 = ____exports.getGridEntityCollisionPoints(nil, gridEntity)
+                local topLeft = ____exports_getGridEntityCollisionPoints_result_1.topLeft
+                local bottomRight = ____exports_getGridEntityCollisionPoints_result_1.bottomRight
                 if isCircleIntersectingRectangle(
                     nil,
                     targetPosition,
@@ -32163,7 +32788,7 @@ function ____exports.getGridEntitiesInRadius(self, targetPosition, radius)
                     gridEntities[#gridEntities + 1] = gridEntity
                 end
             end
-            ::__continue27::
+            ::__continue23::
         end
     end
     return gridEntities
@@ -32206,6 +32831,10 @@ function ____exports.getMatchingGridEntities(self, gridEntityType, variant)
         function(____, gridEntity) return gridEntity:GetVariant() == variant end
     )
 end
+--- Helper function to get the grid entities on the surrounding tiles from the provided grid entity.
+-- 
+-- For example, if a rock was surrounded by rocks on all sides, this would return an array of 8
+-- rocks (e.g. top-left + top + top-right + left + right + bottom-left + bottom + right).
 function ____exports.getSurroundingGridEntities(self, gridEntity)
     local room = game:GetRoom()
     local gridWidth = room:GetGridWidth()
@@ -32229,32 +32858,46 @@ function ____exports.getSurroundingGridEntities(self, gridEntity)
     end
     return surroundingGridEntities
 end
+--- Helper function to get the top left wall in the current room.
+-- 
+-- This function can be useful in certain situations to determine if the room is currently loaded.
 function ____exports.getTopLeftWall(self)
     local room = game:GetRoom()
     local topLeftWallGridIndex = ____exports.getTopLeftWallGridIndex(nil)
     return room:GetGridEntity(topLeftWallGridIndex)
 end
---- Helper function to see if the provided gridEntity is in its respective broken state. See the
--- `GRID_ENTITY_TYPE_TO_BROKEN_STATE_MAP` constant for more details.
+--- Helper function to detect if a particular grid entity would "break" if it was touched by an
+-- explosion.
 -- 
--- Note that in the case of `GridEntityType.LOCK` (11), the state will turn to being broken before
--- the actual collision for the entity is removed.
+-- For example, rocks and pots are breakable by explosions, but blocks are not.
 function ____exports.isGridEntityBreakableByExplosion(self, gridEntity)
     local gridEntityType = gridEntity:GetType()
     local variant = gridEntity:GetVariant()
     local gridEntityTypeVariant = (tostring(gridEntityType) .. ".") .. tostring(variant)
     return BREAKABLE_GRID_ENTITY_TYPES_BY_EXPLOSIONS:has(gridEntityType) or BREAKABLE_GRID_ENTITY_TYPES_VARIANTS_BY_EXPLOSIONS:has(gridEntityTypeVariant)
 end
---- Helper function to detect whether a given Void Portal is one that randomly spawns after a boss is
--- defeated or is one that naturally spawns in the room after Hush. (This is determined by looking
--- at the VarData of the entity.)
+--- Helper function to see if the provided grid entity is in its respective broken state. See the
+-- `GRID_ENTITY_TYPE_TO_BROKEN_STATE_MAP` constant for more details.
+-- 
+-- Note that in the case of `GridEntityType.LOCK` (11), the state will turn to being broken before
+-- the actual collision for the entity is removed.
 function ____exports.isGridEntityBroken(self, gridEntity)
     local gridEntityType = gridEntity:GetType()
     local brokenState = GRID_ENTITY_TYPE_TO_BROKEN_STATE_MAP:get(gridEntityType)
     return gridEntity.State == brokenState
 end
---- Helper function to determine if all of the pressure plates in the current room are pushed.
--- Returns true if there are no pressure plates in the room.
+--- Helper function to see if an arbitrary number is a valid `GridEntityXMLType`. This is useful in
+-- the `PRE_ROOM_ENTITY_SPAWN` callback for narrowing the type of the first argument.
+function ____exports.isGridEntityXMLType(self, num)
+    return GRID_ENTITY_XML_TYPES_SET:has(num)
+end
+--- Helper function to see if a `GridEntityXMLType` is some kind of poop.
+function ____exports.isPoopGridEntityXMLType(self, gridEntityXMLType)
+    return POOP_GRID_ENTITY_XML_TYPES_SET:has(gridEntityXMLType)
+end
+--- Helper function to detect whether a given Void Portal is one that randomly spawns after a boss is
+-- defeated or is one that naturally spawns in the room after Hush. (This is determined by looking
+-- at the `VarData` of the entity.)
 function ____exports.isPostBossVoidPortal(self, gridEntity)
     local saveState = gridEntity:GetSaveState()
     return saveState.VarData == 1
@@ -32335,7 +32978,7 @@ end
 --- Helper function to remove all of the grid entities in the supplied array.
 -- 
 -- @param gridEntities The array of grid entities to remove.
--- @param updateRoom Whether or not to update the room after the grid entities are removed. This is
+-- @param updateRoom Whether to update the room after the grid entities are removed. This is
 -- generally a good idea because if the room is not updated, you will be unable to
 -- spawn another grid entity on the same tile until a frame has passed. However,
 -- doing this is expensive, since it involves a call to `Isaac.GetRoomEntities`,
@@ -32370,16 +33013,25 @@ function ____exports.setGridEntityInvisible(self, gridEntity)
 end
 --- Helper function to spawn a giant poop. This is performed by spawning each of the four quadrant
 -- grid entities in the appropriate positions.
+-- 
+-- @returns Whether spawning the four quadrants was successful.
 function ____exports.spawnGiantPoop(self, topLeftGridIndex)
     local room = game:GetRoom()
     local gridWidth = room:GetGridWidth()
     local topRightGridIndex = topLeftGridIndex + 1
     local bottomLeftGridIndex = topLeftGridIndex + gridWidth
     local bottomRightGridIndex = bottomLeftGridIndex + 1
-    ____exports.spawnGridEntityWithVariant(nil, GridEntityType.POOP, PoopGridEntityVariant.GIGA_TOP_LEFT, topLeftGridIndex)
-    ____exports.spawnGridEntityWithVariant(nil, GridEntityType.POOP, PoopGridEntityVariant.GIGA_TOP_RIGHT, topRightGridIndex)
-    ____exports.spawnGridEntityWithVariant(nil, GridEntityType.POOP, PoopGridEntityVariant.GIGA_BOTTOM_LEFT, bottomLeftGridIndex)
-    ____exports.spawnGridEntityWithVariant(nil, GridEntityType.POOP, PoopGridEntityVariant.GIGA_BOTTOM_RIGHT, bottomRightGridIndex)
+    for ____, gridIndex in ipairs({topLeftGridIndex, topRightGridIndex, bottomLeftGridIndex, bottomRightGridIndex}) do
+        local gridEntity = room:GetGridEntity(gridIndex)
+        if gridEntity ~= nil then
+            return false
+        end
+    end
+    local topLeft = ____exports.spawnGridEntityWithVariant(nil, GridEntityType.POOP, PoopGridEntityVariant.GIANT_TOP_LEFT, topLeftGridIndex)
+    local topRight = ____exports.spawnGridEntityWithVariant(nil, GridEntityType.POOP, PoopGridEntityVariant.GIANT_TOP_RIGHT, topRightGridIndex)
+    local bottomLeft = ____exports.spawnGridEntityWithVariant(nil, GridEntityType.POOP, PoopGridEntityVariant.GIANT_BOTTOM_LEFT, bottomLeftGridIndex)
+    local bottomRight = ____exports.spawnGridEntityWithVariant(nil, GridEntityType.POOP, PoopGridEntityVariant.GIANT_BOTTOM_RIGHT, bottomRightGridIndex)
+    return topLeft ~= nil and topLeft:GetType() == GridEntityType.POOP and topLeft:GetVariant() == PoopGridEntityVariant.GIANT_TOP_LEFT and topRight ~= nil and topRight:GetType() == GridEntityType.POOP and topRight:GetVariant() == PoopGridEntityVariant.GIANT_TOP_RIGHT and bottomLeft ~= nil and bottomLeft:GetType() == GridEntityType.POOP and bottomLeft:GetVariant() == PoopGridEntityVariant.GIANT_BOTTOM_LEFT and bottomRight ~= nil and bottomRight:GetType() == GridEntityType.POOP and bottomRight:GetVariant() == PoopGridEntityVariant.GIANT_BOTTOM_RIGHT
 end
 --- Helper function to spawn a grid entity.
 -- 
@@ -32405,6 +33057,27 @@ function ____exports.spawnVoidPortal(self, gridIndex)
     sprite:Load("gfx/grid/voidtrapdoor.anm2", true)
     return voidPortal
 end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.sets.poopGridEntityXMLTypesSet"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local GridEntityXMLType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityXMLType
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.POOP_GRID_ENTITY_XML_TYPES_SET = __TS__New(ReadonlySet, {
+    GridEntityXMLType.POOP_RED,
+    GridEntityXMLType.POOP_RAINBOW,
+    GridEntityXMLType.POOP_CORNY,
+    GridEntityXMLType.POOP_GOLDEN,
+    GridEntityXMLType.POOP_BLACK,
+    GridEntityXMLType.POOP_WHITE,
+    GridEntityXMLType.POOP_GIGA,
+    GridEntityXMLType.POOP,
+    GridEntityXMLType.POOP_CHARMING
+})
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.maps.roomShapeToTopLeftWallGridIndexMap"] = function(...) 
@@ -32458,7 +33131,7 @@ ____exports.GRID_ENTITY_XML_MAP = __TS__New(ReadonlyMap, {
     {GridEntityXMLType.TNT, {GridEntityType.TNT, 0}},
     {GridEntityXMLType.POOP_RED, {GridEntityType.POOP, PoopGridEntityVariant.RED}},
     {GridEntityXMLType.POOP_RAINBOW, {GridEntityType.POOP, PoopGridEntityVariant.RAINBOW}},
-    {GridEntityXMLType.POOP_CORN, {GridEntityType.POOP, PoopGridEntityVariant.CORN}},
+    {GridEntityXMLType.POOP_CORNY, {GridEntityType.POOP, PoopGridEntityVariant.CORNY}},
     {GridEntityXMLType.POOP_GOLDEN, {GridEntityType.POOP, PoopGridEntityVariant.GOLDEN}},
     {GridEntityXMLType.POOP_BLACK, {GridEntityType.POOP, PoopGridEntityVariant.BLACK}},
     {GridEntityXMLType.POOP_WHITE, {GridEntityType.POOP, PoopGridEntityVariant.WHITE}},
@@ -32497,6 +33170,7 @@ local SpiderWebState = ____isaac_2Dtypescript_2Ddefinitions.SpiderWebState
 local TNTState = ____isaac_2Dtypescript_2Ddefinitions.TNTState
 local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
 local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
+--- Not every grid entity can be broken. Thus use a map to represent this.
 ____exports.GRID_ENTITY_TYPE_TO_BROKEN_STATE_MAP = __TS__New(ReadonlyMap, {
     {GridEntityType.ROCK, RockState.BROKEN},
     {GridEntityType.ROCK_TINTED, RockState.BROKEN},
@@ -32701,9 +33375,9 @@ function ____exports.isDamageToPlayerFatal(self, player, amount, source, lastDam
     end
     return true
 end
---- Assuming that we are on the frame of fatal damage, this function returns whether or not
--- Mysterious Paper would rotate to Missing Poster on the frame that the "Game Over" screen would
--- appear (which would subsequently save the player from fatal damage).
+--- Assuming that we are on the frame of fatal damage, this function returns whether Mysterious Paper
+-- would rotate to Missing Poster on the frame that the "Game Over" screen would appear (which would
+-- subsequently save the player from fatal damage).
 -- 
 -- Mysterious Paper rotates between the 4 items on every frame, in order. The formula for whether
 -- Mysterious Paper be Missing Power is: `gameFrameCount % 4 === 3`
@@ -33008,7 +33682,7 @@ function ____exports.canPickEternalHearts(self, player)
     local heartLimit = player:GetHeartLimit()
     return eternalHearts == 0 or maxHearts ~= heartLimit
 end
---- Returns whether or not all of the player's soul-heart-type hearts are black hearts.
+--- Returns whether all of the player's soul-heart-type hearts are black hearts.
 -- 
 -- Note that this function does not consider red heart containers.
 -- 
@@ -33024,7 +33698,7 @@ function ____exports.doesPlayerHaveAllBlackHearts(self, player)
     local blackHearts = ____exports.getPlayerBlackHearts(nil, player)
     return blackHearts > 0 and soulHearts == 0
 end
---- Returns whether or not all of the player's soul-heart-type hearts are soul hearts.
+--- Returns whether all of the player's soul-heart-type hearts are soul hearts.
 -- 
 -- Note that this function does not consider red heart containers.
 -- 
@@ -33228,8 +33902,8 @@ end
 -- 
 -- If Tainted Magdalene has Birthright, she will gained an additional non-temporary heart container.
 -- 
--- This function does not validate whether or not the provided player is Tainted Magdalene; that
--- should be accomplished before invoking this function.
+-- This function does not validate whether the provided player is Tainted Magdalene; that should be
+-- accomplished before invoking this function.
 function ____exports.getTaintedMagdaleneNonTemporaryMaxHearts(self, player)
     local maxHearts = player:GetMaxHearts()
     local hasBirthright = player:HasCollectible(CollectibleType.BIRTHRIGHT)
@@ -33252,6 +33926,8 @@ function ____exports.newPlayerHealth(self)
         soulHeartTypes = {}
     }
 end
+--- Helper function to remove all of a player's black hearts and add the corresponding amount of soul
+-- hearts.
 function ____exports.playerConvertBlackHeartsToSoulHearts(self, player)
     local playerHealth = ____exports.getPlayerHealth(nil, player)
     ____exports.removeAllPlayerHealth(nil, player)
@@ -33261,6 +33937,8 @@ function ____exports.playerConvertBlackHeartsToSoulHearts(self, player)
     )
     ____exports.setPlayerHealth(nil, player, playerHealth)
 end
+--- Helper function to remove all of a player's soul hearts and add the corresponding amount of black
+-- hearts.
 function ____exports.playerConvertSoulHeartsToBlackHearts(self, player)
     local playerHealth = ____exports.getPlayerHealth(nil, player)
     ____exports.removeAllPlayerHealth(nil, player)
@@ -33465,7 +34143,7 @@ function ____exports.getTotalCharge(self, player, activeSlot)
 end
 --- Helper function to play the appropriate sound effect for a player after getting one or more
 -- charges on their active item. (There is a different sound depending on whether the item is fully
--- charged or not.)
+-- charged.)
 -- 
 -- @param player The player to play the sound effect for.
 -- @param activeSlot Optional. The slot that was just charged. Default is `ActiveSlot.PRIMARY`.
@@ -33570,6 +34248,58 @@ function ____exports.isActiveSlotDoubleCharged(self, player, activeSlot)
 end
 return ____exports
  end,
+["lua_modules.isaacscript-common.dist.src.functions.render"] = function(...) 
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local RenderMode = ____isaac_2Dtypescript_2Ddefinitions.RenderMode
+local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
+local game = ____cachedClasses.game
+--- Helper function to see if the current render callback is rendering a water reflection.
+-- 
+-- When the player is in a room with water, things will be rendered twice: once for the normal
+-- rendering, and once for the reflecting rendering. Thus, any mod code in a render callback will
+-- run twice per frame in these situations, which may be unexpected or cause bugs.
+-- 
+-- This function is typically used to early return from a render function if it returns true.
+function ____exports.isReflectionRender(self)
+    local room = game:GetRoom()
+    local renderMode = room:GetRenderMode()
+    return renderMode == RenderMode.WATER_REFLECT
+end
+function ____exports.renderScaledTextOnEntity(self, entity, text, scaleX, scaleY)
+    if ____exports.isReflectionRender(nil) then
+        return
+    end
+    local position = Isaac.WorldToScreen(entity.Position)
+    Isaac.RenderScaledText(
+        text,
+        position.X,
+        position.Y,
+        scaleX,
+        scaleY,
+        1,
+        1,
+        1,
+        1
+    )
+end
+function ____exports.renderTextOnEntity(self, entity, text)
+    if ____exports.isReflectionRender(nil) then
+        return
+    end
+    local position = Isaac.WorldToScreen(entity.Position)
+    Isaac.RenderText(
+        text,
+        position.X,
+        position.Y,
+        1,
+        1,
+        1,
+        1
+    )
+end
+return ____exports
+ end,
 ["lua_modules.isaacscript-common.dist.src.functions.projectiles"] = function(...) 
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -33662,6 +34392,8 @@ local getPressurePlates = ____gridEntitiesSpecific.getPressurePlates
 -- order for the room to be cleared. This function ignores other types of pressure plates, such as
 -- the ones that you press to get a reward, the ones that you press to start a Greed Mode wave, and
 -- so on.
+-- 
+-- Returns true if there are no pressure plates in the room.
 function ____exports.isAllPressurePlatesPushed(self)
     local room = game:GetRoom()
     local hasPressurePlates = room:HasTriggerPressurePlates()
@@ -33693,6 +34425,8 @@ local removeGridEntities = ____gridEntities.removeGridEntities
 local spawnGridEntityWithVariant = ____gridEntities.spawnGridEntityWithVariant
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local asNumber = ____types.asNumber
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- Helper function to spawn a `GridEntityType.CRAWL_SPACE` (18) with a specific variant.
 function ____exports.spawnCrawlSpaceWithVariant(self, crawlSpaceVariant, gridIndexOrPosition)
     return spawnGridEntityWithVariant(nil, GridEntityType.CRAWL_SPACE, crawlSpaceVariant, gridIndexOrPosition)
@@ -33701,84 +34435,70 @@ end
 function ____exports.spawnDoorWithVariant(self, doorVariant, gridIndexOrPosition)
     local gridEntity = spawnGridEntityWithVariant(nil, GridEntityType.DOOR, doorVariant, gridIndexOrPosition)
     if gridEntity == nil then
-        return gridEntity
+        return nil
     end
     local door = gridEntity:ToDoor()
-    if door == nil then
-        error("Failed to spawn a door.")
-    end
+    assertDefined(nil, door, "Failed to spawn a door.")
     return door
 end
 --- Helper function to spawn a `GridEntityType.PIT` (7) with a specific variant.
 function ____exports.spawnPitWithVariant(self, pitVariant, gridIndexOrPosition)
     local gridEntity = spawnGridEntityWithVariant(nil, GridEntityType.PIT, pitVariant, gridIndexOrPosition)
     if gridEntity == nil then
-        return gridEntity
+        return nil
     end
     local pit = gridEntity:ToPit()
-    if pit == nil then
-        error("Failed to spawn a pit.")
-    end
+    assertDefined(nil, pit, "Failed to spawn a pit.")
     return pit
 end
 --- Helper function to spawn a `GridEntityType.POOP` (14) with a specific variant.
 function ____exports.spawnPoopWithVariant(self, poopVariant, gridIndexOrPosition)
     local gridEntity = spawnGridEntityWithVariant(nil, GridEntityType.POOP, poopVariant, gridIndexOrPosition)
     if gridEntity == nil then
-        return gridEntity
+        return nil
     end
     local poop = gridEntity:ToPoop()
-    if poop == nil then
-        error("Failed to spawn a poop.")
-    end
+    assertDefined(nil, poop, "Failed to spawn a poop.")
     return poop
 end
 --- Helper function to spawn a `GridEntityType.PRESSURE_PLATE` (20) with a specific variant.
 function ____exports.spawnPressurePlateWithVariant(self, pressurePlateVariant, gridIndexOrPosition)
     local gridEntity = spawnGridEntityWithVariant(nil, GridEntityType.PRESSURE_PLATE, pressurePlateVariant, gridIndexOrPosition)
     if gridEntity == nil then
-        return gridEntity
+        return nil
     end
     local pressurePlate = gridEntity:ToPressurePlate()
-    if pressurePlate == nil then
-        error("Failed to spawn a pressure plate.")
-    end
+    assertDefined(nil, pressurePlate, "Failed to spawn a pressure plate.")
     return pressurePlate
 end
 --- Helper function to spawn a `GridEntityType.ROCK` (2) with a specific variant.
 function ____exports.spawnRockWithVariant(self, rockVariant, gridIndexOrPosition)
     local gridEntity = spawnGridEntityWithVariant(nil, GridEntityType.ROCK, rockVariant, gridIndexOrPosition)
     if gridEntity == nil then
-        return gridEntity
+        return nil
     end
     local rock = gridEntity:ToRock()
-    if rock == nil then
-        error("Failed to spawn a rock.")
-    end
+    assertDefined(nil, rock, "Failed to spawn a rock.")
     return rock
 end
 --- Helper function to spawn a `GridEntityType.SPIKES` (8) with a specific variant.
 function ____exports.spawnSpikesWithVariant(self, variant, gridIndexOrPosition)
     local gridEntity = spawnGridEntityWithVariant(nil, GridEntityType.SPIKES, variant, gridIndexOrPosition)
     if gridEntity == nil then
-        return gridEntity
+        return nil
     end
     local spikes = gridEntity:ToSpikes()
-    if spikes == nil then
-        error("Failed to spawn spikes.")
-    end
+    assertDefined(nil, spikes, "Failed to spawn spikes.")
     return spikes
 end
 --- Helper function to spawn a `GridEntityType.TNT` (12) with a specific variant.
 function ____exports.spawnTNTWithVariant(self, variant, gridIndexOrPosition)
     local gridEntity = spawnGridEntityWithVariant(nil, GridEntityType.TNT, variant, gridIndexOrPosition)
     if gridEntity == nil then
-        return gridEntity
+        return nil
     end
     local tnt = gridEntity:ToTNT()
-    if tnt == nil then
-        error("Failed to spawn TNT.")
-    end
+    assertDefined(nil, tnt, "Failed to spawn TNT.")
     return tnt
 end
 --- Helper function to spawn a `GridEntityType.TELEPORTER` (23) with a specific variant.
@@ -33947,7 +34667,7 @@ end
 -- 
 -- @param crawlSpaceVariant Optional. If specified, will only remove the crawl spaces that match
 -- this variant. Default is -1, which matches every variant.
--- @param updateRoom Optional. Whether or not to update the room after the crawl spaces are removed.
+-- @param updateRoom Optional. Whether to update the room after the crawl spaces are removed.
 -- Default is false. For more information, see the description of the
 -- `removeGridEntities` helper function.
 -- @param cap Optional. If specified, will only remove the given amount of crawl spaces.
@@ -33966,8 +34686,8 @@ end
 -- 
 -- @param pitVariant Optional. If specified, will only remove the pits that match this variant.
 -- Default is -1, which matches every variant.
--- @param updateRoom Optional. Whether or not to update the room after the pits are removed. Default
--- is false. For more information, see the description of the `removeGridEntities`
+-- @param updateRoom Optional. Whether to update the room after the pits are removed. Default is
+-- false. For more information, see the description of the `removeGridEntities`
 -- helper function.
 -- @param cap Optional. If specified, will only remove the given amount of pits.
 -- @returns The pits that were removed.
@@ -33988,9 +34708,9 @@ end
 -- 
 -- @param poopVariant Optional. If specified, will only remove the poops that match this variant.
 -- Default is -1, which matches every variant.
--- @param updateRoom Optional. Whether or not to update the room after the poops are removed.
--- Default is false. For more information, see the description of the
--- `removeGridEntities` helper function.
+-- @param updateRoom Optional. Whether to update the room after the poops are removed. Default is
+-- false. For more information, see the description of the `removeGridEntities`
+-- helper function.
 -- @param cap Optional. If specified, will only remove the given amount of poops.
 -- @returns The poops that were removed.
 function ____exports.removeAllPoops(self, poopVariant, updateRoom, cap)
@@ -34007,8 +34727,8 @@ end
 -- 
 -- @param pressurePlateVariant Optional. If specified, will only remove the pressure plates that
 -- match this variant. Default is -1, which matches every variant.
--- @param updateRoom Optional. Whether or not to update the room after the pressure plates are
--- removed. Default is false. For more information, see the description of the
+-- @param updateRoom Optional. Whether to update the room after the pressure plates are removed.
+-- Default is false. For more information, see the description of the
 -- `removeGridEntities` helper function.
 -- @param cap Optional. If specified, will only remove the given amount of pressure plates.
 -- @returns The pressure plates that were removed.
@@ -34028,9 +34748,9 @@ end
 -- Default is -1, which matches every variant. Note that this is not the same thing
 -- as the `RockVariant` enum, since that only applies to `GridEntityType.ROCK`, and
 -- other types of grid entities can be the `GridEntityRock` class.
--- @param updateRoom Optional. Whether or not to update the room after the rocks are removed.
--- Default is false. For more information, see the description of the
--- `removeGridEntities` helper function.
+-- @param updateRoom Optional. Whether to update the room after the rocks are removed. Default is
+-- false. For more information, see the description of the `removeGridEntities`
+-- helper function.
 -- @param cap Optional. If specified, will only remove the given amount of rocks.
 -- @returns The rocks that were removed.
 function ____exports.removeAllRocks(self, variant, updateRoom, cap)
@@ -34047,9 +34767,9 @@ end
 -- 
 -- @param variant Optional. If specified, will only remove the spikes that match this variant.
 -- Default is -1, which matches every variant.
--- @param updateRoom Optional. Whether or not to update the room after the spikes are removed.
--- Default is false. For more information, see the description of the
--- `removeGridEntities` helper function.
+-- @param updateRoom Optional. Whether to update the room after the spikes are removed. Default is
+-- false. For more information, see the description of the `removeGridEntities`
+-- helper function.
 -- @param cap Optional. If specified, will only remove the given amount of spikes.
 -- @returns The spikes that were removed.
 function ____exports.removeAllSpikes(self, variant, updateRoom, cap)
@@ -34066,8 +34786,8 @@ end
 -- 
 -- @param variant Optional. If specified, will only remove the TNTs that match this variant. Default
 -- is -1, which matches every variant.
--- @param updateRoom Optional. Whether or not to update the room after the TNTs are removed. Default
--- is false. For more information, see the description of the `removeGridEntities`
+-- @param updateRoom Optional. Whether to update the room after the TNTs are removed. Default is
+-- false. For more information, see the description of the `removeGridEntities`
 -- helper function.
 -- @param cap Optional. If specified, will only remove the given amount of TNTs.
 -- @returns The TNTs that were removed.
@@ -34085,9 +34805,9 @@ end
 -- 
 -- @param variant Optional. If specified, will only remove the teleporters that match this variant.
 -- Default is -1, which matches every variant.
--- @param updateRoom Optional. Whether or not to update the room after the teleporters are removed.
--- Default is false. For more information, see the description of the
--- `removeGridEntities` helper function.
+-- @param updateRoom Optional. Whether to update the room after the teleporters are removed. Default
+-- is false. For more information, see the description of the `removeGridEntities`
+-- helper function.
 -- @param cap Optional. If specified, will only remove the given amount of teleporters.
 -- @returns The teleporters that were removed.
 function ____exports.removeAllTeleporters(self, variant, updateRoom, cap)
@@ -34104,9 +34824,9 @@ end
 -- 
 -- @param trapdoorVariant Optional. If specified, will only remove the trapdoors that match this
 -- variant. Default is -1, which matches every variant.
--- @param updateRoom Optional. Whether or not to update the room after the trapdoors are removed.
--- Default is false. For more information, see the description of the
--- `removeGridEntities` helper function.
+-- @param updateRoom Optional. Whether to update the room after the trapdoors are removed. Default
+-- is false. For more information, see the description of the `removeGridEntities`
+-- helper function.
 -- @param cap Optional. If specified, will only remove the given amount of trapdoors.
 -- @returns The trapdoors that were removed.
 function ____exports.removeAllTrapdoors(self, trapdoorVariant, updateRoom, cap)
@@ -34261,9 +34981,9 @@ function ____exports.getFirstPill(self, player)
         function(____, pocketItem) return pocketItem.type == PocketItemType.PILL end
     )
 end
---- Returns whether or not the player can hold an additional pocket item, beyond what they are
--- currently carrying. This takes into account items that modify the max number of pocket items,
--- like Starter Deck.
+--- Returns whether the player can hold an additional pocket item, beyond what they are currently
+-- carrying. This takes into account items that modify the max number of pocket items, like Starter
+-- Deck.
 -- 
 -- If the player is the Tainted Soul, this always returns false, since that character cannot pick up
 -- items. (Only Tainted Forgotten can pick up items.)
@@ -34277,8 +34997,8 @@ function ____exports.hasOpenPocketItemSlot(self, player)
         function(____, pocketItem) return pocketItem.type == PocketItemType.EMPTY end
     )
 end
---- Helper function to determine whether or not the player's "active" pocket item slot is set to
--- their pocket active item.
+--- Helper function to determine whether the player's "active" pocket item slot is set to their
+-- pocket active item.
 function ____exports.isFirstSlotPocketActiveItem(self, player)
     local pocketItems = ____exports.getPocketItems(nil, player)
     local firstPocketItem = pocketItems[1]
@@ -34328,35 +35048,6 @@ ____exports.PocketItemType.UNDETERMINABLE = 5
 ____exports.PocketItemType[____exports.PocketItemType.UNDETERMINABLE] = "UNDETERMINABLE"
 return ____exports
  end,
-["lua_modules.isaacscript-common.dist.src.functions.playerStats"] = function(...) 
-local ____exports = {}
-local ____PlayerStat = require("lua_modules.isaacscript-common.dist.src.enums.PlayerStat")
-local PlayerStat = ____PlayerStat.PlayerStat
---- Helper function to get all of the stat for a player.
-function ____exports.getPlayerStats(self, player)
-    return {
-        [PlayerStat.DAMAGE] = player.Damage,
-        [PlayerStat.FIRE_DELAY] = player.MaxFireDelay,
-        [PlayerStat.SHOT_SPEED] = player.ShotSpeed,
-        [PlayerStat.TEAR_HEIGHT] = player.TearHeight,
-        [PlayerStat.TEAR_RANGE] = player.TearRange,
-        [PlayerStat.TEAR_FALLING_ACCELERATION] = player.TearFallingAcceleration,
-        [PlayerStat.TEAR_FALLING_SPEED] = player.TearFallingSpeed,
-        [PlayerStat.MOVE_SPEED] = player.MoveSpeed,
-        [PlayerStat.TEAR_FLAG] = player.TearFlags,
-        [PlayerStat.TEAR_COLOR] = player.TearColor,
-        [PlayerStat.FLYING] = player.CanFly,
-        [PlayerStat.LUCK] = player.Luck,
-        [PlayerStat.SIZE] = player.SpriteScale
-    }
-end
---- Helper function to get the stat for a player corresponding to the `StatType`.
-function ____exports.getPlayerStat(self, player, playerStat)
-    local playerStats = ____exports.getPlayerStats(nil, player)
-    return playerStats[playerStat]
-end
-return ____exports
- end,
 ["lua_modules.isaacscript-common.dist.src.functions.playerDataStructures"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local Map = ____lualib.Map
@@ -34402,6 +35093,8 @@ end
 --   player.MoveSpeed = defaultMapGetPlayer(v.run.playersSpeedBoost, player);
 -- }
 -- ```
+-- 
+-- @allowEmptyVariadic
 function ____exports.defaultMapGetPlayer(self, map, player, ...)
     local playerIndex = getPlayerIndex(nil, player)
     return map:getAndSetDefault(playerIndex, ...)
@@ -34814,8 +35507,8 @@ function ____exports.getPillColorFromEffect(self, pillEffect)
 end
 --- Helper function to get a pill effect class from a PillEffect enum value. In this context, the
 -- class is equal to the numerical prefix in the "class" tag in the "pocketitems.xml" file. Use the
--- `getPillEffectType` helper function to determine whether or not the pill effect is positive,
--- negative, or neutral.
+-- `getPillEffectType` helper function to determine whether the pill effect is positive, negative,
+-- or neutral.
 -- 
 -- Due to limitations in the API, this function will not work properly for modded pill effects, and
 -- will always return `DEFAULT_PILL_EFFECT_CLASS` in those cases.
@@ -35126,6 +35819,10 @@ local ____pickupVariants = require("lua_modules.isaacscript-common.dist.src.func
 local isHeart = ____pickupVariants.isHeart
 local ____pickupsSpecific = require("lua_modules.isaacscript-common.dist.src.functions.pickupsSpecific")
 local getHearts = ____pickupsSpecific.getHearts
+--- Helper function to test if the provided pickup variant matches one of the various chest variants.
+function ____exports.isChestVariant(self, pickupVariant)
+    return CHEST_PICKUP_VARIANTS:has(pickupVariant)
+end
 --- Helper function to get the corresponding coin amount from a `CoinSubType`. Returns 1 for modded
 -- sub-types.
 function ____exports.getCoinValue(self, coinSubType)
@@ -35142,11 +35839,16 @@ function ____exports.getRedHearts(self)
 end
 --- Helper function to test if the provided pickup matches one of the various chest variants.
 function ____exports.isChest(self, pickup)
-    return CHEST_PICKUP_VARIANTS:has(pickup.Variant)
+    return ____exports.isChestVariant(nil, pickup.Variant)
 end
---- Helper function to test if the provided pickup matches one of the various red heart sub types.
+--- Helper function to test if the provided pickup matches one of the various red heart sub-types.
 function ____exports.isRedHeart(self, pickup)
     return isHeart(nil, pickup) and RED_HEART_SUB_TYPES_SET:has(pickup.SubType)
+end
+--- Helper function to test if the provided heart sub-type matches one of the various red heart
+-- sub-types.
+function ____exports.isRedHeartSubType(self, heartSubType)
+    return RED_HEART_SUB_TYPES_SET:has(heartSubType)
 end
 --- Helper function to remove all of the red heart pickup entities in the room.
 -- 
@@ -35562,8 +36264,8 @@ end
 -- `getNextStageTypeUsingHistory` helper function instead (from the stage history feature). Handling
 -- this requires stateful tracking as the player progresses through the run.
 -- 
--- @param upwards Whether or not the player should go up to Cathedral in the case of being on Womb
--- 2. Default is false.
+-- @param upwards Whether the player should go up to Cathedral in the case of being on Womb 2.
+-- Default is false.
 function ____exports.getNextStageType(self, upwards)
     if upwards == nil then
         upwards = false
@@ -35613,6 +36315,849 @@ function ____exports.getNextStageType(self, upwards)
 end
 return ____exports
  end,
+["lua_modules.isaacscript-common.dist.src.functions.newArray"] = function(...) 
+local ____exports = {}
+local ____deepCopy = require("lua_modules.isaacscript-common.dist.src.functions.deepCopy")
+local deepCopy = ____deepCopy.deepCopy
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local ____repeat = ____utils["repeat"]
+--- Initializes an array with all of the elements containing the specified default value.
+-- 
+-- The provided default value will be copied with the `deepCopy` function before adding it to the
+-- new array. Thus, you can initialize an array of arrays, or an array of maps, and so on. (If the
+-- `deepCopy` function was not used, then all of the array elements would just be references to the
+-- same underlying data structure.)
+-- 
+-- For example:
+-- 
+-- ```ts
+-- const arrayWithZeroes = newArray(0, 10); // Has 10 elements of 0.
+-- const arrayWithArrays = newArray([0], 20); // Has 20 elements of an array with a 0 in it.
+-- ```
+function ____exports.newArray(self, defaultValue, size)
+    local array = {}
+    ____repeat(
+        nil,
+        size,
+        function()
+            local copy = deepCopy(nil, defaultValue)
+            array[#array + 1] = copy
+        end
+    )
+    return array
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.functions.deepCopy"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local Map = ____lualib.Map
+local Set = ____lualib.Set
+local __TS__Iterator = ____lualib.__TS__Iterator
+local __TS__ArraySort = ____lualib.__TS__ArraySort
+local __TS__ArraySome = ____lualib.__TS__ArraySome
+local ____exports = {}
+local deepCopyTable, deepCopyDefaultMap, getNewDefaultMap, deepCopyMap, deepCopySet, deepCopyTSTLClass, deepCopyArray, deepCopyNormalLuaTable, getCopiedEntries, checkMetatable, deepCopyUserdata
+local ____DefaultMap = require("lua_modules.isaacscript-common.dist.src.classes.DefaultMap")
+local DefaultMap = ____DefaultMap.DefaultMap
+local ____constants = require("lua_modules.isaacscript-common.dist.src.classes.features.other.saveDataManager.constants")
+local SAVE_DATA_MANAGER_DEBUG = ____constants.SAVE_DATA_MANAGER_DEBUG
+local ____SerializationBrand = require("lua_modules.isaacscript-common.dist.src.enums.private.SerializationBrand")
+local SerializationBrand = ____SerializationBrand.SerializationBrand
+local ____SerializationType = require("lua_modules.isaacscript-common.dist.src.enums.SerializationType")
+local SerializationType = ____SerializationType.SerializationType
+local ____serialization = require("lua_modules.isaacscript-common.dist.src.serialization")
+local isSerializationBrand = ____serialization.isSerializationBrand
+local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
+local isArray = ____array.isArray
+local ____isaacAPIClass = require("lua_modules.isaacscript-common.dist.src.functions.isaacAPIClass")
+local getIsaacAPIClassName = ____isaacAPIClass.getIsaacAPIClassName
+local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
+local log = ____log.log
+local ____serialization = require("lua_modules.isaacscript-common.dist.src.functions.serialization")
+local copyIsaacAPIClass = ____serialization.copyIsaacAPIClass
+local deserializeIsaacAPIClass = ____serialization.deserializeIsaacAPIClass
+local isCopyableIsaacAPIClass = ____serialization.isCopyableIsaacAPIClass
+local isSerializedIsaacAPIClass = ____serialization.isSerializedIsaacAPIClass
+local serializeIsaacAPIClass = ____serialization.serializeIsaacAPIClass
+local ____sort = require("lua_modules.isaacscript-common.dist.src.functions.sort")
+local sortTwoDimensionalArray = ____sort.sortTwoDimensionalArray
+local ____tstlClass = require("lua_modules.isaacscript-common.dist.src.functions.tstlClass")
+local getTSTLClassName = ____tstlClass.getTSTLClassName
+local isDefaultMap = ____tstlClass.isDefaultMap
+local isTSTLMap = ____tstlClass.isTSTLMap
+local isTSTLSet = ____tstlClass.isTSTLSet
+local newTSTLClass = ____tstlClass.newTSTLClass
+local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
+local asString = ____types.asString
+local isNumber = ____types.isNumber
+local isPrimitive = ____types.isPrimitive
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
+local getTraversalDescription = ____utils.getTraversalDescription
+--- `deepCopy` is a semi-generic deep cloner. It will recursively copy all of the values so that none
+-- of the nested references remain.
+-- 
+-- `deepCopy` is used by the IsaacScript save data manager to make a backup of your variables, so
+-- that it can restore them to the default values at the beginning of a new room, floor, or run.
+-- 
+-- `deepCopy` supports the following object types:
+-- 
+-- - Primitives (i.e. strings, numbers, and booleans)
+-- - Basic TSTL objects (which are the same thing as Lua tables)
+-- - TSTL `Map`
+-- - TSTL `Set`
+-- - TSTL classes
+-- - `DefaultMap`
+-- - Isaac `BitSet128` objects
+-- - Isaac `Color` objects
+-- - Isaac `KColor` objects
+-- - Isaac `RNG` objects
+-- - Isaac `Vector` objects
+-- 
+-- It does not support:
+-- - objects with values of `null` (since that transpiles to `nil`)
+-- - other Isaac API objects such as `EntityPtr` (that have a type of "userdata")
+-- 
+-- @param value The primitive or object to copy.
+-- @param serializationType Optional. Has 3 possible values. Can copy objects as-is, or can
+-- serialize objects to Lua tables, or can deserialize Lua tables to
+-- objects. Default is `SerializationType.NONE`.
+-- @param traversalDescription Optional. Used to track the current key that we are operating on for
+-- debugging purposes. Default is an empty string.
+-- @param classConstructors Optional. A Lua table that maps the name of a user-defined TSTL class to
+-- its corresponding constructor. If the `deepCopy` function finds any
+-- user-defined TSTL classes when recursively iterating through the given
+-- object, it will use this map to instantiate a new class. Default is an
+-- empty Lua table.
+-- @param insideMap Optional. Tracks whether the deep copy function is in the process of recursively
+-- copying a TSTL Map. Default is false.
+function ____exports.deepCopy(self, value, serializationType, traversalDescription, classConstructors, insideMap)
+    if serializationType == nil then
+        serializationType = SerializationType.NONE
+    end
+    if traversalDescription == nil then
+        traversalDescription = ""
+    end
+    if classConstructors == nil then
+        classConstructors = {}
+    end
+    if insideMap == nil then
+        insideMap = false
+    end
+    if SAVE_DATA_MANAGER_DEBUG then
+        local logString = "deepCopy is operating on: " .. traversalDescription
+        if serializationType == SerializationType.SERIALIZE then
+            logString = logString .. " (serializing)"
+        elseif serializationType == SerializationType.DESERIALIZE then
+            logString = logString .. " (deserializing)"
+        end
+        logString = logString .. ": " .. tostring(value)
+        log(logString)
+    end
+    local valueType = type(value)
+    repeat
+        local ____switch6 = valueType
+        local ____cond6 = ____switch6 == "nil" or ____switch6 == "boolean" or ____switch6 == "number" or ____switch6 == "string"
+        if ____cond6 then
+            do
+                return value
+            end
+        end
+        ____cond6 = ____cond6 or (____switch6 == "function" or ____switch6 == "thread")
+        if ____cond6 then
+            do
+                if serializationType == SerializationType.SERIALIZE then
+                    error((("The deep copy function does not support serialization of \"" .. traversalDescription) .. "\", since it is type: ") .. valueType)
+                end
+                if serializationType == SerializationType.DESERIALIZE then
+                    error((("The deep copy function does not support deserialization of \"" .. traversalDescription) .. "\", since it is type: ") .. valueType)
+                end
+                return value
+            end
+        end
+        ____cond6 = ____cond6 or ____switch6 == "table"
+        if ____cond6 then
+            do
+                local luaMap = value
+                return deepCopyTable(
+                    nil,
+                    luaMap,
+                    serializationType,
+                    traversalDescription,
+                    classConstructors,
+                    insideMap
+                )
+            end
+        end
+        ____cond6 = ____cond6 or ____switch6 == "userdata"
+        if ____cond6 then
+            do
+                return deepCopyUserdata(nil, value, serializationType, traversalDescription)
+            end
+        end
+    until true
+end
+function deepCopyTable(self, luaMap, serializationType, traversalDescription, classConstructors, insideMap)
+    if isDefaultMap(nil, luaMap) or luaMap[SerializationBrand.DEFAULT_MAP] ~= nil then
+        return deepCopyDefaultMap(
+            nil,
+            luaMap,
+            serializationType,
+            traversalDescription,
+            classConstructors,
+            insideMap
+        )
+    end
+    if isTSTLMap(nil, luaMap) or luaMap[SerializationBrand.MAP] ~= nil then
+        return deepCopyMap(
+            nil,
+            luaMap,
+            serializationType,
+            traversalDescription,
+            classConstructors,
+            insideMap
+        )
+    end
+    if isTSTLSet(nil, luaMap) or luaMap[SerializationBrand.SET] ~= nil then
+        return deepCopySet(
+            nil,
+            luaMap,
+            serializationType,
+            traversalDescription,
+            classConstructors,
+            insideMap
+        )
+    end
+    local className = getTSTLClassName(nil, luaMap)
+    if className == "WeakMap" then
+        error("The deep copy function does not support copying the \"WeakMap\" class for: " .. traversalDescription)
+    end
+    if className == "WeakSet" then
+        error("The deep copy function does not support copying the \"WeakSet\" class for: " .. traversalDescription)
+    end
+    if className ~= nil or luaMap[SerializationBrand.TSTL_CLASS] ~= nil then
+        return deepCopyTSTLClass(
+            nil,
+            luaMap,
+            serializationType,
+            traversalDescription,
+            classConstructors,
+            insideMap
+        )
+    end
+    checkMetatable(nil, luaMap, traversalDescription)
+    if isSerializedIsaacAPIClass(nil, luaMap) and serializationType == SerializationType.DESERIALIZE then
+        return deserializeIsaacAPIClass(nil, luaMap)
+    end
+    if isArray(nil, luaMap) then
+        return deepCopyArray(
+            nil,
+            luaMap,
+            serializationType,
+            traversalDescription,
+            classConstructors,
+            insideMap
+        )
+    end
+    return deepCopyNormalLuaTable(
+        nil,
+        luaMap,
+        serializationType,
+        traversalDescription,
+        classConstructors,
+        insideMap
+    )
+end
+function deepCopyDefaultMap(self, defaultMap, serializationType, traversalDescription, classConstructors, insideMap)
+    if SAVE_DATA_MANAGER_DEBUG then
+        log("deepCopy is copying a DefaultMap.")
+    end
+    local ____isDefaultMap_result_0
+    if isDefaultMap(nil, defaultMap) then
+        ____isDefaultMap_result_0 = defaultMap:getConstructorArg()
+    else
+        ____isDefaultMap_result_0 = nil
+    end
+    local constructorArg = ____isDefaultMap_result_0
+    if serializationType == SerializationType.SERIALIZE and not isPrimitive(nil, constructorArg) then
+        if insideMap then
+            error("Failed to deep copy a DefaultMap because it was instantiated with a factory function and was also inside of an array, map, or set. For more information, see: https://isaacscript.github.io/main/gotchas#failed-to-deep-copy-a-defaultmap")
+        else
+            return deepCopyMap(
+                nil,
+                defaultMap,
+                serializationType,
+                traversalDescription,
+                classConstructors,
+                insideMap
+            )
+        end
+    end
+    local newDefaultMap = getNewDefaultMap(
+        nil,
+        defaultMap,
+        serializationType,
+        traversalDescription,
+        constructorArg
+    )
+    insideMap = true
+    local ____getCopiedEntries_result_1 = getCopiedEntries(
+        nil,
+        defaultMap,
+        serializationType,
+        traversalDescription,
+        classConstructors,
+        insideMap
+    )
+    local entries = ____getCopiedEntries_result_1.entries
+    local convertedNumberKeysToStrings = ____getCopiedEntries_result_1.convertedNumberKeysToStrings
+    if convertedNumberKeysToStrings then
+        if isDefaultMap(nil, newDefaultMap) then
+            newDefaultMap:set(SerializationBrand.OBJECT_WITH_NUMBER_KEYS, "")
+        else
+            newDefaultMap[SerializationBrand.OBJECT_WITH_NUMBER_KEYS] = ""
+        end
+    end
+    for ____, ____value in ipairs(entries) do
+        local key = ____value[1]
+        local value = ____value[2]
+        if isDefaultMap(nil, newDefaultMap) then
+            newDefaultMap:set(key, value)
+        else
+            newDefaultMap[key] = value
+        end
+    end
+    insideMap = false
+    return newDefaultMap
+end
+function getNewDefaultMap(self, defaultMap, serializationType, traversalDescription, constructorArg)
+    repeat
+        local ____switch35 = serializationType
+        local ____cond35 = ____switch35 == SerializationType.NONE
+        if ____cond35 then
+            do
+                return __TS__New(DefaultMap, constructorArg)
+            end
+        end
+        ____cond35 = ____cond35 or ____switch35 == SerializationType.SERIALIZE
+        if ____cond35 then
+            do
+                local newDefaultMap = {}
+                newDefaultMap[SerializationBrand.DEFAULT_MAP] = ""
+                newDefaultMap[SerializationBrand.DEFAULT_MAP_VALUE] = constructorArg
+                return newDefaultMap
+            end
+        end
+        ____cond35 = ____cond35 or ____switch35 == SerializationType.DESERIALIZE
+        if ____cond35 then
+            do
+                if isDefaultMap(nil, defaultMap) then
+                    error(("Failed to deserialize a default map of \"" .. traversalDescription) .. "\", since it was not a Lua table.")
+                end
+                local defaultMapValue = defaultMap[SerializationBrand.DEFAULT_MAP_VALUE]
+                assertDefined(nil, defaultMapValue, (("Failed to deserialize a default map of \"" .. traversalDescription) .. "\", since there was no serialization brand of: ") .. SerializationBrand.DEFAULT_MAP_VALUE)
+                return __TS__New(DefaultMap, defaultMapValue)
+            end
+        end
+    until true
+end
+function deepCopyMap(self, map, serializationType, traversalDescription, classConstructors, insideMap)
+    if SAVE_DATA_MANAGER_DEBUG then
+        log("deepCopy is copying a Map.")
+    end
+    local newMap
+    if serializationType == SerializationType.SERIALIZE then
+        newMap = {}
+        newMap[SerializationBrand.MAP] = ""
+    else
+        newMap = __TS__New(Map)
+    end
+    insideMap = true
+    local ____getCopiedEntries_result_2 = getCopiedEntries(
+        nil,
+        map,
+        serializationType,
+        traversalDescription,
+        classConstructors,
+        insideMap
+    )
+    local entries = ____getCopiedEntries_result_2.entries
+    local convertedNumberKeysToStrings = ____getCopiedEntries_result_2.convertedNumberKeysToStrings
+    if convertedNumberKeysToStrings then
+        if isTSTLMap(nil, newMap) then
+            newMap:set(SerializationBrand.OBJECT_WITH_NUMBER_KEYS, "")
+        else
+            newMap[SerializationBrand.OBJECT_WITH_NUMBER_KEYS] = ""
+        end
+    end
+    for ____, ____value in ipairs(entries) do
+        local key = ____value[1]
+        local value = ____value[2]
+        if isTSTLMap(nil, newMap) then
+            newMap:set(key, value)
+        else
+            newMap[key] = value
+        end
+    end
+    insideMap = false
+    return newMap
+end
+function deepCopySet(self, set, serializationType, traversalDescription, classConstructors, insideMap)
+    if SAVE_DATA_MANAGER_DEBUG then
+        log("deepCopy is copying a Set.")
+    end
+    local newSet
+    if serializationType == SerializationType.SERIALIZE then
+        newSet = {}
+        newSet[SerializationBrand.SET] = ""
+    else
+        newSet = __TS__New(Set)
+    end
+    local ____getCopiedEntries_result_3 = getCopiedEntries(
+        nil,
+        set,
+        serializationType,
+        traversalDescription,
+        classConstructors,
+        insideMap
+    )
+    local entries = ____getCopiedEntries_result_3.entries
+    local convertedNumberKeysToStrings = ____getCopiedEntries_result_3.convertedNumberKeysToStrings
+    if convertedNumberKeysToStrings then
+        if isTSTLSet(nil, newSet) then
+            error("The deep copy function cannot convert number keys to strings for a Set.")
+        else
+            newSet[SerializationBrand.OBJECT_WITH_NUMBER_KEYS] = ""
+        end
+    end
+    for ____, ____value in ipairs(entries) do
+        local key = ____value[1]
+        if isTSTLSet(nil, newSet) then
+            newSet:add(key)
+        else
+            newSet[key] = ""
+        end
+    end
+    return newSet
+end
+function deepCopyTSTLClass(self, tstlClass, serializationType, traversalDescription, classConstructors, insideMap)
+    if SAVE_DATA_MANAGER_DEBUG then
+        log("deepCopy is copying a TSTL class.")
+    end
+    local newClass
+    repeat
+        local ____switch64 = serializationType
+        local ____cond64 = ____switch64 == SerializationType.NONE
+        if ____cond64 then
+            do
+                newClass = newTSTLClass(nil, tstlClass)
+                break
+            end
+        end
+        ____cond64 = ____cond64 or ____switch64 == SerializationType.SERIALIZE
+        if ____cond64 then
+            do
+                newClass = {}
+                local tstlClassName = getTSTLClassName(nil, tstlClass)
+                if tstlClassName ~= nil then
+                    newClass[SerializationBrand.TSTL_CLASS] = tstlClassName
+                end
+                break
+            end
+        end
+        ____cond64 = ____cond64 or ____switch64 == SerializationType.DESERIALIZE
+        if ____cond64 then
+            do
+                local tstlClassName = tstlClass[SerializationBrand.TSTL_CLASS]
+                assertDefined(nil, tstlClassName, "Failed to deserialize a TSTL class since the brand did not contain the class name.")
+                local classConstructor = classConstructors[tstlClassName]
+                assertDefined(nil, classConstructor, ("Failed to deserialize a TSTL class since there was no constructor registered for a class name of \"" .. tstlClassName) .. "\". If this mod is using the save data manager, it must register the class constructor with the \"saveDataManagerRegisterClass\" method.")
+                newClass = __TS__New(classConstructor)
+                break
+            end
+        end
+    until true
+    local ____getCopiedEntries_result_4 = getCopiedEntries(
+        nil,
+        tstlClass,
+        serializationType,
+        traversalDescription,
+        classConstructors,
+        insideMap
+    )
+    local entries = ____getCopiedEntries_result_4.entries
+    local convertedNumberKeysToStrings = ____getCopiedEntries_result_4.convertedNumberKeysToStrings
+    if convertedNumberKeysToStrings then
+        newClass[SerializationBrand.OBJECT_WITH_NUMBER_KEYS] = ""
+    end
+    for ____, ____value in ipairs(entries) do
+        local key = ____value[1]
+        local value = ____value[2]
+        newClass[key] = value
+    end
+    return newClass
+end
+function deepCopyArray(self, array, serializationType, traversalDescription, classConstructors, insideMap)
+    if SAVE_DATA_MANAGER_DEBUG then
+        log("deepCopy is copying an array.")
+    end
+    local newArray = {}
+    for ____, value in ipairs(array) do
+        local newValue = ____exports.deepCopy(
+            nil,
+            value,
+            serializationType,
+            traversalDescription,
+            classConstructors,
+            insideMap
+        )
+        newArray[#newArray + 1] = newValue
+    end
+    return newArray
+end
+function deepCopyNormalLuaTable(self, luaMap, serializationType, traversalDescription, classConstructors, insideMap)
+    if SAVE_DATA_MANAGER_DEBUG then
+        log("deepCopy is copying a normal Lua table.")
+    end
+    local newTable = {}
+    local ____getCopiedEntries_result_5 = getCopiedEntries(
+        nil,
+        luaMap,
+        serializationType,
+        traversalDescription,
+        classConstructors,
+        insideMap
+    )
+    local entries = ____getCopiedEntries_result_5.entries
+    local convertedNumberKeysToStrings = ____getCopiedEntries_result_5.convertedNumberKeysToStrings
+    if convertedNumberKeysToStrings then
+        newTable[SerializationBrand.OBJECT_WITH_NUMBER_KEYS] = ""
+    end
+    for ____, ____value in ipairs(entries) do
+        local key = ____value[1]
+        local value = ____value[2]
+        newTable[key] = value
+    end
+    return newTable
+end
+function getCopiedEntries(self, object, serializationType, traversalDescription, classConstructors, insideMap)
+    local entries = {}
+    if isTSTLMap(nil, object) or isTSTLSet(nil, object) or isDefaultMap(nil, object) then
+        for ____, ____value in __TS__Iterator(object:entries()) do
+            local key = ____value[1]
+            local value = ____value[2]
+            entries[#entries + 1] = {key, value}
+        end
+    else
+        for key, value in pairs(object) do
+            entries[#entries + 1] = {key, value}
+        end
+    end
+    if SAVE_DATA_MANAGER_DEBUG then
+        __TS__ArraySort(entries, sortTwoDimensionalArray)
+    end
+    local convertStringKeysToNumbers = serializationType == SerializationType.DESERIALIZE and __TS__ArraySome(
+        entries,
+        function(____, ____bindingPattern0)
+            local key
+            key = ____bindingPattern0[1]
+            return key == asString(nil, SerializationBrand.OBJECT_WITH_NUMBER_KEYS)
+        end
+    )
+    local hasNumberKeys = __TS__ArraySome(
+        entries,
+        function(____, ____bindingPattern0)
+            local key
+            key = ____bindingPattern0[1]
+            return isNumber(nil, key)
+        end
+    )
+    local convertNumberKeysToStrings = serializationType == SerializationType.SERIALIZE and hasNumberKeys
+    local copiedEntries = {}
+    for ____, ____value in ipairs(entries) do
+        local key = ____value[1]
+        local value = ____value[2]
+        do
+            if isSerializationBrand(nil, key) then
+                goto __continue90
+            end
+            traversalDescription = getTraversalDescription(nil, key, traversalDescription)
+            local newValue = ____exports.deepCopy(
+                nil,
+                value,
+                serializationType,
+                traversalDescription,
+                classConstructors,
+                insideMap
+            )
+            local keyToUse = key
+            if convertStringKeysToNumbers then
+                local numberKey = tonumber(key)
+                if numberKey ~= nil then
+                    keyToUse = numberKey
+                end
+            end
+            if convertNumberKeysToStrings then
+                keyToUse = tostring(key)
+            end
+            copiedEntries[#copiedEntries + 1] = {keyToUse, newValue}
+        end
+        ::__continue90::
+    end
+    return {entries = copiedEntries, convertedNumberKeysToStrings = convertNumberKeysToStrings}
+end
+function checkMetatable(self, luaMap, traversalDescription)
+    local metatable = getmetatable(luaMap)
+    if metatable == nil then
+        return
+    end
+    local tableDescription = traversalDescription == "" and "the table to copy" or ("\"" .. traversalDescription) .. "\""
+    error(("The deepCopy function detected that " .. tableDescription) .. " has a metatable. Copying tables with metatables is not supported, unless they are explicitly handled by the save data manager. (e.g. TypeScriptToLua Maps, TypeScriptToLua Sets, etc.)")
+end
+function deepCopyUserdata(self, value, serializationType, traversalDescription)
+    if not isCopyableIsaacAPIClass(nil, value) then
+        local className = getIsaacAPIClassName(nil, value) or "Unknown"
+        error((("The deep copy function does not support serializing \"" .. traversalDescription) .. "\", since it is an Isaac API class of type: ") .. className)
+    end
+    repeat
+        local ____switch100 = serializationType
+        local ____cond100 = ____switch100 == SerializationType.NONE
+        if ____cond100 then
+            do
+                return copyIsaacAPIClass(nil, value)
+            end
+        end
+        ____cond100 = ____cond100 or ____switch100 == SerializationType.SERIALIZE
+        if ____cond100 then
+            do
+                return serializeIsaacAPIClass(nil, value)
+            end
+        end
+        ____cond100 = ____cond100 or ____switch100 == SerializationType.DESERIALIZE
+        if ____cond100 then
+            do
+                error(("The deep copy function can not deserialize \"" .. traversalDescription) .. "\", since it is userdata.")
+            end
+            break
+        end
+    until true
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.serialization"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.src.arrays.cachedEnumValues")
+local SERIALIZATION_BRAND_VALUES = ____cachedEnumValues.SERIALIZATION_BRAND_VALUES
+local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
+local isString = ____types.isString
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+local SERIALIZATION_BRAND_SET = __TS__New(ReadonlySet, SERIALIZATION_BRAND_VALUES)
+--- Helper function to check if a key of a table in the "save#.dat" file is a serialization brand
+-- inserted by the save data manager (i.e. the `deepCopy` function).
+-- 
+-- This is separated from the other serialization functions because end-users would not normally be
+-- iterating through a serialized object directly.
+function ____exports.isSerializationBrand(self, key)
+    if not isString(nil, key) then
+        return false
+    end
+    return SERIALIZATION_BRAND_SET:has(key)
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.enums.SerializationType"] = function(...) 
+local ____exports = {}
+--- This is used with the `deepCopy` and `merge` functions.
+____exports.SerializationType = {}
+____exports.SerializationType.NONE = 0
+____exports.SerializationType[____exports.SerializationType.NONE] = "NONE"
+____exports.SerializationType.SERIALIZE = 1
+____exports.SerializationType[____exports.SerializationType.SERIALIZE] = "SERIALIZE"
+____exports.SerializationType.DESERIALIZE = 2
+____exports.SerializationType[____exports.SerializationType.DESERIALIZE] = "DESERIALIZE"
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.classes.features.other.saveDataManager.constants"] = function(...) 
+local ____exports = {}
+____exports.SAVE_DATA_MANAGER_DEBUG = false
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.classes.DefaultMap"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local Map = ____lualib.Map
+local __TS__ClassExtends = ____lualib.__TS__ClassExtends
+local __TS__TypeOf = ____lualib.__TS__TypeOf
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
+local isFunction = ____types.isFunction
+local isPrimitive = ____types.isPrimitive
+--- `DefaultMap` is a data structure that makes working with default values easier. It extends a
+-- `Map` and adds additional methods.
+-- 
+-- It is a common pattern to look up a value in a `Map`, and then, if the value does not exist, set
+-- a default value for the key, and then return the default value. `DefaultMap` abstracts this
+-- operation away by providing the `getAndSetDefault` method.
+-- 
+-- Using a `DefaultMap` is nice because it makes code more declarative, since you specify what the
+-- default value is alongside the types of the keys/values.
+-- 
+-- When instantiating a new `DefaultMap`, you must specify default value as the first argument. (The
+-- default value is the initial value that will be assigned to every new entry in the
+-- `getAndSetDefault` method.) For example:
+-- 
+-- ```ts
+-- // Initializes a new empty DefaultMap with a default value of "foo".
+-- const defaultMapWithString = new DefaultMap<string, string>("foo");
+-- 
+-- const value = defaultMapWithString.getAndSetDefault("bar");
+-- // value is now "foo" and an entry for "bar" is now set.
+-- ```
+-- 
+-- Sometimes, instead of having a static initial value for every entry in the map, you will want a
+-- dynamic initial value that is contingent upon the key or some other variable. In these cases, you
+-- can instead specify that the `DefaultMap` should run a function that will return the initial
+-- value. (This is referred to as a "factory function".) For example:
+-- 
+-- ```ts
+-- // Initializes a new empty DefaultMap with a default value based on "someGlobalVariable".
+-- const factoryFunction = () => someGlobalVariable ? 0 : 1;
+-- const defaultMapWithFactoryFunction = new DefaultMap<string, string>(factoryFunction);
+-- ```
+-- 
+-- Note that in TypeScript and Lua, booleans, numbers, and strings are "passed by value". This means
+-- that when the `DefaultMap` creates a new entry, if the default value is one of these 3 types, the
+-- values will be copied. On the other hand, arrays and maps and other complex data structures are
+-- "passed by reference". This means that when the `DefaultMap` creates a new entry, if the default
+-- value is an array, then it would not be copied. Instead, the same shared array would be assigned
+-- to every entry. Thus, to solve this problem, any variable that is passed by reference must be
+-- created using a factory function to ensure that each copy is unique. For example:
+-- 
+-- ```ts
+-- // Initializes a new empty DefaultMap with a default value of a new empty array.
+-- const factoryFunction = () => [];
+-- const defaultMapWithArray = new DefaultMap<string, string[]>(factoryFunction);
+-- ```
+-- 
+-- In the previous two examples, the factory functions did not have any arguments. But you can also
+-- specify a factory function that takes one or more arguments:
+-- 
+-- ```ts
+-- const factoryFunction = (arg: boolean) => arg ? 0 : 1;
+-- const defaultMapWithArg = new DefaultMap<string, string, [arg: boolean]>(factoryFunction);
+-- ```
+-- 
+-- Similar to a normal `Map`, you can also include an initializer list in the constructor as the
+-- second argument:
+-- 
+-- ```ts
+-- // Initializes a DefaultMap with a default value of "foo" and some initial values.
+-- const defaultMapWithInitialValues = new DefaultMap<string, string>("foo", [
+--   ["a1", "a2"],
+--   ["b1", "b2"],
+-- ], );
+-- ```
+-- 
+-- Finally, note that `DefaultMap` has the following additional utility methods:
+-- 
+-- - `getAndSetDefault` - The method that is called inside the overridden `get` method. In most
+--   cases, you can use the overridden `get` method instead of calling this function directly.
+--   However, if a factory function was provided during instantiation, and the factory function has
+--   one or more arguments, then you must call this method instead (and provide the corresponding
+--   arguments).
+-- - `getDefaultValue` - Returns the default value to be used for a new key. (If a factory function
+--   was provided during instantiation, this will execute the factory function.)
+-- - `getConstructorArg` - Helper method for cloning the map. Returns either the default value or
+--   the reference to the factory function.
+____exports.DefaultMap = __TS__Class()
+local DefaultMap = ____exports.DefaultMap
+DefaultMap.name = "DefaultMap"
+__TS__ClassExtends(DefaultMap, Map)
+function DefaultMap.prototype.____constructor(self, defaultValueOrFactoryFunction, initializerArray)
+    local argIsPrimitive = isPrimitive(nil, defaultValueOrFactoryFunction)
+    local argIsFunction = isFunction(nil, defaultValueOrFactoryFunction)
+    if not argIsPrimitive and not argIsFunction then
+        error(("Failed to instantiate a DefaultMap since the provided default value was of type \"" .. __TS__TypeOf(defaultValueOrFactoryFunction)) .. "\". This error usually means that you are trying to use an array (or some other non-primitive data structure that is passed by reference) as the default value. Instead, return the data structure in a factory function, like \"() => []\". See the DefaultMap documentation for more details.")
+    end
+    Map.prototype.____constructor(self, initializerArray)
+    if argIsFunction then
+        self.defaultValue = nil
+        self.defaultValueFactory = defaultValueOrFactoryFunction
+    else
+        self.defaultValue = defaultValueOrFactoryFunction
+        self.defaultValueFactory = nil
+    end
+end
+function DefaultMap.prototype.getAndSetDefault(self, key, ...)
+    local value = Map.prototype.get(self, key)
+    if value ~= nil then
+        return value
+    end
+    local defaultValue = self:getDefaultValue(...)
+    self:set(key, defaultValue)
+    return defaultValue
+end
+function DefaultMap.prototype.getDefaultValue(self, ...)
+    if self.defaultValue ~= nil then
+        return self.defaultValue
+    end
+    if self.defaultValueFactory ~= nil then
+        return self:defaultValueFactory(...)
+    end
+    error("A DefaultMap was incorrectly instantiated.")
+end
+function DefaultMap.prototype.getConstructorArg(self)
+    if self.defaultValue ~= nil then
+        return self.defaultValue
+    end
+    if self.defaultValueFactory ~= nil then
+        return self.defaultValueFactory
+    end
+    error("A DefaultMap was incorrectly instantiated.")
+end
+local function test(self)
+    local myDefaultMapBoolean = __TS__New(____exports.DefaultMap, false)
+    local myDefaultMapBooleanFactory = __TS__New(
+        ____exports.DefaultMap,
+        function() return false end
+    )
+    local myDefaultMapBooleanWithoutParams = __TS__New(____exports.DefaultMap, false)
+    local myDefaultMapNumber = __TS__New(____exports.DefaultMap, 123)
+    local myDefaultMapNumberFactory = __TS__New(
+        ____exports.DefaultMap,
+        function() return 123 end
+    )
+    local myDefaultMapNumberWithoutParams = __TS__New(____exports.DefaultMap, 123)
+    local myDefaultMapString = __TS__New(____exports.DefaultMap, "foo")
+    local myDefaultMapStringFactory = __TS__New(
+        ____exports.DefaultMap,
+        function() return "foo" end
+    )
+    local myDefaultMapStringWithoutParams = __TS__New(____exports.DefaultMap, "foo")
+    local myDefaultMapArray = __TS__New(
+        ____exports.DefaultMap,
+        function() return {} end
+    )
+    local myDefaultMapArrayWithoutParams = __TS__New(
+        ____exports.DefaultMap,
+        function() return {} end
+    )
+    local myDefaultMapMap = __TS__New(
+        ____exports.DefaultMap,
+        function() return __TS__New(Map) end
+    )
+    local myDefaultMapMapWithoutParams = __TS__New(
+        ____exports.DefaultMap,
+        function() return __TS__New(Map) end
+    )
+end
+return ____exports
+ end,
 ["lua_modules.isaacscript-common.dist.src.functions.modFeatures"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__New = ____lualib.__TS__New
@@ -35626,16 +37171,16 @@ local ____exports = {}
 -- For example:
 -- 
 -- ```ts
--- const features = [
+-- const MOD_FEATURES = [
 --   MyFeature1,
 --   MyFeature2,
 --   MyFeature3,
 -- ] as const;
--- initModFeatures(mod, modFeatures);
+-- initModFeatures(mod, MOD_FEATURES);
 -- ```
 -- 
 -- @returns An array of the instantiated features in the same order that the constructors were
--- passed in.
+-- passed in. (In most cases, you probably won't need the returned array.)
 function ____exports.initModFeatures(self, mod, modFeatures)
     local instantiatedModFeatures = {}
     for ____, modFeature in ipairs(modFeatures) do
@@ -35664,14 +37209,17 @@ local getRoomDescriptor = ____roomData.getRoomDescriptor
 local getRoomGridIndex = ____roomData.getRoomGridIndex
 local ____rooms = require("lua_modules.isaacscript-common.dist.src.functions.rooms")
 local getRoomsInsideGrid = ____rooms.getRoomsInsideGrid
---- Helper function to get a particular room's minimap display flags (e.g. whether or not it is
--- visible and so on).
+local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
+local isNumber = ____types.isNumber
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
+--- Helper function to get a particular room's minimap display flags (e.g. whether it is visible and
+-- so on).
 -- 
--- This function automatically accounts for whether or not MinimapAPI is being used.
+-- This function automatically accounts for if MinimapAPI is being used.
 -- 
 -- @param roomGridIndex Optional. Default is the current room index.
--- @param minimapAPI Optional. Whether or not MinimapAPI should be used, if present. Default is
--- true.
+-- @param minimapAPI Optional. If MinimapAPI should be used, if present. Default is true.
 function ____exports.getRoomDisplayFlags(self, roomGridIndex, minimapAPI)
     if minimapAPI == nil then
         minimapAPI = true
@@ -35684,9 +37232,11 @@ function ____exports.getRoomDisplayFlags(self, roomGridIndex, minimapAPI)
         return roomDescriptor.DisplayFlags
     end
     local minimapAPIRoomDescriptor = MinimapAPI:GetRoomByIdx(roomGridIndex)
-    if minimapAPIRoomDescriptor == nil then
-        error("Failed to get the MinimapAPI room descriptor for the room at grid index: " .. tostring(roomGridIndex))
-    end
+    assertDefined(
+        nil,
+        minimapAPIRoomDescriptor,
+        "Failed to get the MinimapAPI room descriptor for the room at grid index: " .. tostring(roomGridIndex)
+    )
     return minimapAPIRoomDescriptor:GetDisplayFlags()
 end
 --- Helper function to set the minimap `DisplayFlag` value for every room on the floor at once.
@@ -35694,7 +37244,7 @@ end
 -- This function automatically calls the `Level.UpdateVisibility` after setting the flags so that
 -- the changes will be immediately visible.
 -- 
--- This function automatically accounts for whether or not MinimapAPI is being used.
+-- This function automatically accounts for if MinimapAPI is being used.
 function ____exports.setAllDisplayFlags(self, displayFlags)
     for ____, room in ipairs(getRoomsInsideGrid(nil)) do
         ____exports.setRoomDisplayFlags(nil, room.SafeGridIndex, displayFlags, false)
@@ -35704,10 +37254,10 @@ function ____exports.setAllDisplayFlags(self, displayFlags)
         level:UpdateVisibility()
     end
 end
---- Helper function to set a particular room's minimap display flags (e.g. whether or not it is
--- visible and so on).
+--- Helper function to set a particular room's minimap display flags (e.g. whether it is visible and
+-- so on).
 -- 
--- This function automatically accounts for whether or not MinimapAPI is being used.
+-- This function automatically accounts for if MinimapAPI is being used.
 -- 
 -- @param roomGridIndex Set to undefined to use the current room index.
 -- @param displayFlags The bit flags value to set. (See the `DisplayFlag` enum.)
@@ -35731,16 +37281,18 @@ function ____exports.setRoomDisplayFlags(self, roomGridIndex, displayFlags, upda
         end
     else
         local minimapAPIRoomDescriptor = MinimapAPI:GetRoomByIdx(roomGridIndex)
-        if minimapAPIRoomDescriptor == nil then
-            error("Failed to get the MinimapAPI room descriptor for the room at grid index: " .. tostring(roomGridIndex))
-        end
+        assertDefined(
+            nil,
+            minimapAPIRoomDescriptor,
+            "Failed to get the MinimapAPI room descriptor for the room at grid index: " .. tostring(roomGridIndex)
+        )
         minimapAPIRoomDescriptor:SetDisplayFlags(displayFlags)
     end
 end
 --- Helper function to add a `DisplayFlag` to a particular room's minimap display flags (e.g. whether
--- or not it is visible and so on).
+-- it is visible and so on).
 -- 
--- This function automatically accounts for whether or not MinimapAPI is being used.
+-- This function automatically accounts for if MinimapAPI is being used.
 -- 
 -- @param roomGridIndex Set to undefined to use the current room index.
 -- @param displayFlag The `DisplayFlag` to set. (See the `DisplayFlag` enum.)
@@ -35756,7 +37308,7 @@ function ____exports.addRoomDisplayFlag(self, roomGridIndex, displayFlag, update
 end
 --- Helper function to set the value of `DisplayFlag` for every room on the floor to 0.
 -- 
--- This function automatically accounts for whether or not MinimapAPI is being used.
+-- This function automatically accounts for if MinimapAPI is being used.
 -- 
 -- This function automatically calls the `Level.UpdateVisibility` after setting the flags so that
 -- the changes will be immediately visible.
@@ -35765,7 +37317,7 @@ function ____exports.clearFloorDisplayFlags(self)
 end
 --- Helper function to set the value of `DisplayFlag` for a room 0.
 -- 
--- This function automatically accounts for whether or not MinimapAPI is being used.
+-- This function automatically accounts for if MinimapAPI is being used.
 -- 
 -- This function automatically calls the `Level.UpdateVisibility` after setting the flags so that
 -- the changes will be immediately visible.
@@ -35779,10 +37331,9 @@ end
 --- Helper function to get the minimap `DisplayFlag` value for every room on the floor. Returns a map
 -- that is indexed by the room's safe grid index.
 -- 
--- This function automatically accounts for whether or not MinimapAPI is being used.
+-- This function automatically accounts for if MinimapAPI is being used.
 -- 
--- @param minimapAPI Optional. Whether or not MinimapAPI should be used, if present. Default is
--- true.
+-- @param minimapAPI Optional. If MinimapAPI should be used, if present. Default is true.
 function ____exports.getFloorDisplayFlags(self, minimapAPI)
     if minimapAPI == nil then
         minimapAPI = true
@@ -35801,26 +37352,28 @@ end
 -- This is because if the player enters into the room or walks into an adjacent room, the room will
 -- reappear on the minimap.
 -- 
--- This function automatically accounts for whether or not MinimapAPI is being used.
+-- This function automatically accounts for if MinimapAPI is being used.
 function ____exports.hideRoomOnMinimap(self, roomGridIndex)
     ____exports.clearRoomDisplayFlags(nil, roomGridIndex)
     if MinimapAPI ~= nil then
         local minimapAPIRoomDescriptor = MinimapAPI:GetRoomByIdx(roomGridIndex)
-        if minimapAPIRoomDescriptor == nil then
-            error("Failed to get the MinimapAPI room descriptor for the room at grid index: " .. tostring(roomGridIndex))
-        end
+        assertDefined(
+            nil,
+            minimapAPIRoomDescriptor,
+            "Failed to get the MinimapAPI room descriptor for the room at grid index: " .. tostring(roomGridIndex)
+        )
         minimapAPIRoomDescriptor.Hidden = true
     end
 end
 --- Helper function to check if a given room is visible on the minimap.
 -- 
--- @param roomGridIndex The room to check.
--- @param minimapAPI Optional. Whether or not MinimapAPI should be used, if present. Default is
--- true.
-function ____exports.isRoomVisible(self, roomGridIndex, minimapAPI)
+-- @param roomGridIndexOrRoomDescriptor The room to check.
+-- @param minimapAPI Optional. Whether MinimapAPI should be used, if present. Default is true.
+function ____exports.isRoomVisible(self, roomGridIndexOrRoomDescriptor, minimapAPI)
     if minimapAPI == nil then
         minimapAPI = true
     end
+    local roomGridIndex = isNumber(nil, roomGridIndexOrRoomDescriptor) and roomGridIndexOrRoomDescriptor or roomGridIndexOrRoomDescriptor.SafeGridIndex
     local roomDisplayFlags = ____exports.getRoomDisplayFlags(nil, roomGridIndex, minimapAPI)
     return roomDisplayFlags ~= DisplayFlagZero
 end
@@ -35829,7 +37382,7 @@ end
 -- This function automatically calls the `Level.UpdateVisibility` after setting the flags so that
 -- the changes will be immediately visible.
 -- 
--- This function automatically accounts for whether or not MinimapAPI is being used.
+-- This function automatically accounts for if MinimapAPI is being used.
 -- 
 -- @param displayFlagsMap A map of the display flags that is indexed by the room's safe grid index.
 function ____exports.setFloorDisplayFlags(self, displayFlagsMap)
@@ -36317,824 +37870,6 @@ function mergeSerializedTable(self, oldTable, newTable, traversalDescription, cl
 end
 return ____exports
  end,
-["lua_modules.isaacscript-common.dist.src.functions.deepCopy"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local Map = ____lualib.Map
-local Set = ____lualib.Set
-local __TS__Iterator = ____lualib.__TS__Iterator
-local __TS__ArraySort = ____lualib.__TS__ArraySort
-local __TS__ArraySome = ____lualib.__TS__ArraySome
-local ____exports = {}
-local deepCopyTable, deepCopyDefaultMap, getNewDefaultMap, deepCopyMap, deepCopySet, deepCopyTSTLClass, deepCopyArray, deepCopyNormalLuaTable, getCopiedEntries, checkMetatable, deepCopyUserdata
-local ____DefaultMap = require("lua_modules.isaacscript-common.dist.src.classes.DefaultMap")
-local DefaultMap = ____DefaultMap.DefaultMap
-local ____constants = require("lua_modules.isaacscript-common.dist.src.classes.features.other.saveDataManager.constants")
-local SAVE_DATA_MANAGER_DEBUG = ____constants.SAVE_DATA_MANAGER_DEBUG
-local ____SerializationBrand = require("lua_modules.isaacscript-common.dist.src.enums.private.SerializationBrand")
-local SerializationBrand = ____SerializationBrand.SerializationBrand
-local ____SerializationType = require("lua_modules.isaacscript-common.dist.src.enums.SerializationType")
-local SerializationType = ____SerializationType.SerializationType
-local ____serialization = require("lua_modules.isaacscript-common.dist.src.serialization")
-local isSerializationBrand = ____serialization.isSerializationBrand
-local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
-local isArray = ____array.isArray
-local ____isaacAPIClass = require("lua_modules.isaacscript-common.dist.src.functions.isaacAPIClass")
-local getIsaacAPIClassName = ____isaacAPIClass.getIsaacAPIClassName
-local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
-local log = ____log.log
-local ____serialization = require("lua_modules.isaacscript-common.dist.src.functions.serialization")
-local copyIsaacAPIClass = ____serialization.copyIsaacAPIClass
-local deserializeIsaacAPIClass = ____serialization.deserializeIsaacAPIClass
-local isCopyableIsaacAPIClass = ____serialization.isCopyableIsaacAPIClass
-local isSerializedIsaacAPIClass = ____serialization.isSerializedIsaacAPIClass
-local serializeIsaacAPIClass = ____serialization.serializeIsaacAPIClass
-local ____sort = require("lua_modules.isaacscript-common.dist.src.functions.sort")
-local sortTwoDimensionalArray = ____sort.sortTwoDimensionalArray
-local ____tstlClass = require("lua_modules.isaacscript-common.dist.src.functions.tstlClass")
-local getTSTLClassName = ____tstlClass.getTSTLClassName
-local isDefaultMap = ____tstlClass.isDefaultMap
-local isTSTLMap = ____tstlClass.isTSTLMap
-local isTSTLSet = ____tstlClass.isTSTLSet
-local newTSTLClass = ____tstlClass.newTSTLClass
-local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
-local asString = ____types.asString
-local isNumber = ____types.isNumber
-local isPrimitive = ____types.isPrimitive
-local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
-local getTraversalDescription = ____utils.getTraversalDescription
---- `deepCopy` is a semi-generic deep cloner. It will recursively copy all of the values so that none
--- of the nested references remain.
--- 
--- `deepCopy` is used by the IsaacScript save data manager to make a backup of your variables, so
--- that it can restore them to the default values at the beginning of a new room, floor, or run.
--- 
--- `deepCopy` supports the following object types:
--- 
--- - Primitives (i.e. strings, numbers, and booleans)
--- - Basic TSTL objects (which are the same thing as Lua tables)
--- - TSTL `Map`
--- - TSTL `Set`
--- - TSTL classes
--- - `DefaultMap`
--- - Isaac `BitSet128` objects
--- - Isaac `Color` objects
--- - Isaac `KColor` objects
--- - Isaac `RNG` objects
--- - Isaac `Vector` objects
--- 
--- It does not support:
--- - objects with values of `null` (since that transpiles to `nil`)
--- - other Isaac API objects such as `EntityPtr` (that have a type of "userdata")
--- 
--- @param value The primitive or object to copy.
--- @param serializationType Optional. Has 3 possible values. Can copy objects as-is, or can
--- serialize objects to Lua tables, or can deserialize Lua tables to
--- objects. Default is `SerializationType.NONE`.
--- @param traversalDescription Optional. Used to track the current key that we are operating on for
--- debugging purposes. Default is an empty string.
--- @param classConstructors Optional. A Lua table that maps the name of a user-defined TSTL class to
--- its corresponding constructor. If the `deepCopy` function finds any
--- user-defined TSTL classes when recursively iterating through the given
--- object, it will use this map to instantiate a new class. Default is an
--- empty Lua table.
--- @param insideMap Optional. Tracks whether or not the deep copy function is in the process of
--- recursively copying a TSTL Map. Default is false.
-function ____exports.deepCopy(self, value, serializationType, traversalDescription, classConstructors, insideMap)
-    if serializationType == nil then
-        serializationType = SerializationType.NONE
-    end
-    if traversalDescription == nil then
-        traversalDescription = ""
-    end
-    if classConstructors == nil then
-        classConstructors = {}
-    end
-    if insideMap == nil then
-        insideMap = false
-    end
-    if SAVE_DATA_MANAGER_DEBUG then
-        local logString = "deepCopy is operating on: " .. traversalDescription
-        if serializationType == SerializationType.SERIALIZE then
-            logString = logString .. " (serializing)"
-        elseif serializationType == SerializationType.DESERIALIZE then
-            logString = logString .. " (deserializing)"
-        end
-        logString = logString .. ": " .. tostring(value)
-        log(logString)
-    end
-    local valueType = type(value)
-    repeat
-        local ____switch6 = valueType
-        local ____cond6 = ____switch6 == "nil" or ____switch6 == "boolean" or ____switch6 == "number" or ____switch6 == "string"
-        if ____cond6 then
-            do
-                return value
-            end
-        end
-        ____cond6 = ____cond6 or (____switch6 == "function" or ____switch6 == "thread")
-        if ____cond6 then
-            do
-                if serializationType == SerializationType.SERIALIZE then
-                    error((("The deep copy function does not support serialization of \"" .. traversalDescription) .. "\", since it is type: ") .. valueType)
-                end
-                if serializationType == SerializationType.DESERIALIZE then
-                    error((("The deep copy function does not support deserialization of \"" .. traversalDescription) .. "\", since it is type: ") .. valueType)
-                end
-                return value
-            end
-        end
-        ____cond6 = ____cond6 or ____switch6 == "table"
-        if ____cond6 then
-            do
-                local luaMap = value
-                return deepCopyTable(
-                    nil,
-                    luaMap,
-                    serializationType,
-                    traversalDescription,
-                    classConstructors,
-                    insideMap
-                )
-            end
-        end
-        ____cond6 = ____cond6 or ____switch6 == "userdata"
-        if ____cond6 then
-            do
-                return deepCopyUserdata(nil, value, serializationType, traversalDescription)
-            end
-        end
-    until true
-end
-function deepCopyTable(self, luaMap, serializationType, traversalDescription, classConstructors, insideMap)
-    if isDefaultMap(nil, luaMap) or luaMap[SerializationBrand.DEFAULT_MAP] ~= nil then
-        return deepCopyDefaultMap(
-            nil,
-            luaMap,
-            serializationType,
-            traversalDescription,
-            classConstructors,
-            insideMap
-        )
-    end
-    if isTSTLMap(nil, luaMap) or luaMap[SerializationBrand.MAP] ~= nil then
-        return deepCopyMap(
-            nil,
-            luaMap,
-            serializationType,
-            traversalDescription,
-            classConstructors,
-            insideMap
-        )
-    end
-    if isTSTLSet(nil, luaMap) or luaMap[SerializationBrand.SET] ~= nil then
-        return deepCopySet(
-            nil,
-            luaMap,
-            serializationType,
-            traversalDescription,
-            classConstructors,
-            insideMap
-        )
-    end
-    local className = getTSTLClassName(nil, luaMap)
-    if className == "WeakMap" then
-        error("The deep copy function does not support copying the \"WeakMap\" class for: " .. traversalDescription)
-    end
-    if className == "WeakSet" then
-        error("The deep copy function does not support copying the \"WeakSet\" class for: " .. traversalDescription)
-    end
-    if className ~= nil or luaMap[SerializationBrand.TSTL_CLASS] ~= nil then
-        return deepCopyTSTLClass(
-            nil,
-            luaMap,
-            serializationType,
-            traversalDescription,
-            classConstructors,
-            insideMap
-        )
-    end
-    checkMetatable(nil, luaMap, traversalDescription)
-    if isSerializedIsaacAPIClass(nil, luaMap) and serializationType == SerializationType.DESERIALIZE then
-        return deserializeIsaacAPIClass(nil, luaMap)
-    end
-    if isArray(nil, luaMap) then
-        return deepCopyArray(
-            nil,
-            luaMap,
-            serializationType,
-            traversalDescription,
-            classConstructors,
-            insideMap
-        )
-    end
-    return deepCopyNormalLuaTable(
-        nil,
-        luaMap,
-        serializationType,
-        traversalDescription,
-        classConstructors,
-        insideMap
-    )
-end
-function deepCopyDefaultMap(self, defaultMap, serializationType, traversalDescription, classConstructors, insideMap)
-    if SAVE_DATA_MANAGER_DEBUG then
-        log("deepCopy is copying a DefaultMap.")
-    end
-    local ____isDefaultMap_result_0
-    if isDefaultMap(nil, defaultMap) then
-        ____isDefaultMap_result_0 = defaultMap:getConstructorArg()
-    else
-        ____isDefaultMap_result_0 = nil
-    end
-    local constructorArg = ____isDefaultMap_result_0
-    if serializationType == SerializationType.SERIALIZE and not isPrimitive(nil, constructorArg) then
-        if insideMap then
-            error("Failed to deep copy a DefaultMap because it was instantiated with a factory function and was also inside of an array, map, or set. For more information, see: https://isaacscript.github.io/main/gotchas#failed-to-deep-copy-a-defaultmap")
-        else
-            return deepCopyMap(
-                nil,
-                defaultMap,
-                serializationType,
-                traversalDescription,
-                classConstructors,
-                insideMap
-            )
-        end
-    end
-    local newDefaultMap = getNewDefaultMap(
-        nil,
-        defaultMap,
-        serializationType,
-        traversalDescription,
-        constructorArg
-    )
-    insideMap = true
-    local ____getCopiedEntries_result_1 = getCopiedEntries(
-        nil,
-        defaultMap,
-        serializationType,
-        traversalDescription,
-        classConstructors,
-        insideMap
-    )
-    local entries = ____getCopiedEntries_result_1.entries
-    local convertedNumberKeysToStrings = ____getCopiedEntries_result_1.convertedNumberKeysToStrings
-    if convertedNumberKeysToStrings then
-        if isDefaultMap(nil, newDefaultMap) then
-            newDefaultMap:set(SerializationBrand.OBJECT_WITH_NUMBER_KEYS, "")
-        else
-            newDefaultMap[SerializationBrand.OBJECT_WITH_NUMBER_KEYS] = ""
-        end
-    end
-    for ____, ____value in ipairs(entries) do
-        local key = ____value[1]
-        local value = ____value[2]
-        if isDefaultMap(nil, newDefaultMap) then
-            newDefaultMap:set(key, value)
-        else
-            newDefaultMap[key] = value
-        end
-    end
-    insideMap = false
-    return newDefaultMap
-end
-function getNewDefaultMap(self, defaultMap, serializationType, traversalDescription, constructorArg)
-    repeat
-        local ____switch35 = serializationType
-        local ____cond35 = ____switch35 == SerializationType.NONE
-        if ____cond35 then
-            do
-                return __TS__New(DefaultMap, constructorArg)
-            end
-        end
-        ____cond35 = ____cond35 or ____switch35 == SerializationType.SERIALIZE
-        if ____cond35 then
-            do
-                local newDefaultMap = {}
-                newDefaultMap[SerializationBrand.DEFAULT_MAP] = ""
-                newDefaultMap[SerializationBrand.DEFAULT_MAP_VALUE] = constructorArg
-                return newDefaultMap
-            end
-        end
-        ____cond35 = ____cond35 or ____switch35 == SerializationType.DESERIALIZE
-        if ____cond35 then
-            do
-                if isDefaultMap(nil, defaultMap) then
-                    error(("Failed to deserialize a default map of \"" .. traversalDescription) .. "\", since it was not a Lua table.")
-                end
-                local defaultMapValue = defaultMap[SerializationBrand.DEFAULT_MAP_VALUE]
-                if defaultMapValue == nil then
-                    error((("Failed to deserialize a default map of \"" .. traversalDescription) .. "\", since there was no serialization brand of: ") .. SerializationBrand.DEFAULT_MAP_VALUE)
-                end
-                return __TS__New(DefaultMap, defaultMapValue)
-            end
-        end
-    until true
-end
-function deepCopyMap(self, map, serializationType, traversalDescription, classConstructors, insideMap)
-    if SAVE_DATA_MANAGER_DEBUG then
-        log("deepCopy is copying a Map.")
-    end
-    local newMap
-    if serializationType == SerializationType.SERIALIZE then
-        newMap = {}
-        newMap[SerializationBrand.MAP] = ""
-    else
-        newMap = __TS__New(Map)
-    end
-    insideMap = true
-    local ____getCopiedEntries_result_2 = getCopiedEntries(
-        nil,
-        map,
-        serializationType,
-        traversalDescription,
-        classConstructors,
-        insideMap
-    )
-    local entries = ____getCopiedEntries_result_2.entries
-    local convertedNumberKeysToStrings = ____getCopiedEntries_result_2.convertedNumberKeysToStrings
-    if convertedNumberKeysToStrings then
-        if isTSTLMap(nil, newMap) then
-            newMap:set(SerializationBrand.OBJECT_WITH_NUMBER_KEYS, "")
-        else
-            newMap[SerializationBrand.OBJECT_WITH_NUMBER_KEYS] = ""
-        end
-    end
-    for ____, ____value in ipairs(entries) do
-        local key = ____value[1]
-        local value = ____value[2]
-        if isTSTLMap(nil, newMap) then
-            newMap:set(key, value)
-        else
-            newMap[key] = value
-        end
-    end
-    insideMap = false
-    return newMap
-end
-function deepCopySet(self, set, serializationType, traversalDescription, classConstructors, insideMap)
-    if SAVE_DATA_MANAGER_DEBUG then
-        log("deepCopy is copying a Set.")
-    end
-    local newSet
-    if serializationType == SerializationType.SERIALIZE then
-        newSet = {}
-        newSet[SerializationBrand.SET] = ""
-    else
-        newSet = __TS__New(Set)
-    end
-    local ____getCopiedEntries_result_3 = getCopiedEntries(
-        nil,
-        set,
-        serializationType,
-        traversalDescription,
-        classConstructors,
-        insideMap
-    )
-    local entries = ____getCopiedEntries_result_3.entries
-    local convertedNumberKeysToStrings = ____getCopiedEntries_result_3.convertedNumberKeysToStrings
-    if convertedNumberKeysToStrings then
-        if isTSTLSet(nil, newSet) then
-            error("The deep copy function cannot convert number keys to strings for a Set.")
-        else
-            newSet[SerializationBrand.OBJECT_WITH_NUMBER_KEYS] = ""
-        end
-    end
-    for ____, ____value in ipairs(entries) do
-        local key = ____value[1]
-        if isTSTLSet(nil, newSet) then
-            newSet:add(key)
-        else
-            newSet[key] = ""
-        end
-    end
-    return newSet
-end
-function deepCopyTSTLClass(self, tstlClass, serializationType, traversalDescription, classConstructors, insideMap)
-    if SAVE_DATA_MANAGER_DEBUG then
-        log("deepCopy is copying a TSTL class.")
-    end
-    local newClass
-    repeat
-        local ____switch65 = serializationType
-        local ____cond65 = ____switch65 == SerializationType.NONE
-        if ____cond65 then
-            do
-                newClass = newTSTLClass(nil, tstlClass)
-                break
-            end
-        end
-        ____cond65 = ____cond65 or ____switch65 == SerializationType.SERIALIZE
-        if ____cond65 then
-            do
-                newClass = {}
-                local tstlClassName = getTSTLClassName(nil, tstlClass)
-                if tstlClassName ~= nil then
-                    newClass[SerializationBrand.TSTL_CLASS] = tstlClassName
-                end
-                break
-            end
-        end
-        ____cond65 = ____cond65 or ____switch65 == SerializationType.DESERIALIZE
-        if ____cond65 then
-            do
-                local tstlClassName = tstlClass[SerializationBrand.TSTL_CLASS]
-                if tstlClassName == nil then
-                    error("Failed to deserialize a TSTL class since the brand did not contain the class name.")
-                end
-                local classConstructor = classConstructors[tstlClassName]
-                if classConstructor == nil then
-                    error(("Failed to deserialize a TSTL class since there was no constructor registered for a class name of \"" .. tstlClassName) .. "\". If this mod is using the save data manager, it must register the class constructor with the \"saveDataManagerRegisterClass\" method.")
-                end
-                newClass = __TS__New(classConstructor)
-            end
-            break
-        end
-    until true
-    local ____getCopiedEntries_result_4 = getCopiedEntries(
-        nil,
-        tstlClass,
-        serializationType,
-        traversalDescription,
-        classConstructors,
-        insideMap
-    )
-    local entries = ____getCopiedEntries_result_4.entries
-    local convertedNumberKeysToStrings = ____getCopiedEntries_result_4.convertedNumberKeysToStrings
-    if convertedNumberKeysToStrings then
-        newClass[SerializationBrand.OBJECT_WITH_NUMBER_KEYS] = ""
-    end
-    for ____, ____value in ipairs(entries) do
-        local key = ____value[1]
-        local value = ____value[2]
-        newClass[key] = value
-    end
-    return newClass
-end
-function deepCopyArray(self, array, serializationType, traversalDescription, classConstructors, insideMap)
-    if SAVE_DATA_MANAGER_DEBUG then
-        log("deepCopy is copying an array.")
-    end
-    local newArray = {}
-    for ____, value in ipairs(array) do
-        local newValue = ____exports.deepCopy(
-            nil,
-            value,
-            serializationType,
-            traversalDescription,
-            classConstructors,
-            insideMap
-        )
-        newArray[#newArray + 1] = newValue
-    end
-    return newArray
-end
-function deepCopyNormalLuaTable(self, luaMap, serializationType, traversalDescription, classConstructors, insideMap)
-    if SAVE_DATA_MANAGER_DEBUG then
-        log("deepCopy is copying a normal Lua table.")
-    end
-    local newTable = {}
-    local ____getCopiedEntries_result_5 = getCopiedEntries(
-        nil,
-        luaMap,
-        serializationType,
-        traversalDescription,
-        classConstructors,
-        insideMap
-    )
-    local entries = ____getCopiedEntries_result_5.entries
-    local convertedNumberKeysToStrings = ____getCopiedEntries_result_5.convertedNumberKeysToStrings
-    if convertedNumberKeysToStrings then
-        newTable[SerializationBrand.OBJECT_WITH_NUMBER_KEYS] = ""
-    end
-    for ____, ____value in ipairs(entries) do
-        local key = ____value[1]
-        local value = ____value[2]
-        newTable[key] = value
-    end
-    return newTable
-end
-function getCopiedEntries(self, object, serializationType, traversalDescription, classConstructors, insideMap)
-    local entries = {}
-    if isTSTLMap(nil, object) or isTSTLSet(nil, object) or isDefaultMap(nil, object) then
-        for ____, ____value in __TS__Iterator(object:entries()) do
-            local key = ____value[1]
-            local value = ____value[2]
-            entries[#entries + 1] = {key, value}
-        end
-    else
-        for key, value in pairs(object) do
-            entries[#entries + 1] = {key, value}
-        end
-    end
-    if SAVE_DATA_MANAGER_DEBUG then
-        __TS__ArraySort(entries, sortTwoDimensionalArray)
-    end
-    local convertStringKeysToNumbers = serializationType == SerializationType.DESERIALIZE and __TS__ArraySome(
-        entries,
-        function(____, ____bindingPattern0)
-            local key
-            key = ____bindingPattern0[1]
-            return key == asString(nil, SerializationBrand.OBJECT_WITH_NUMBER_KEYS)
-        end
-    )
-    local hasNumberKeys = __TS__ArraySome(
-        entries,
-        function(____, ____bindingPattern0)
-            local key
-            key = ____bindingPattern0[1]
-            return isNumber(nil, key)
-        end
-    )
-    local convertNumberKeysToStrings = serializationType == SerializationType.SERIALIZE and hasNumberKeys
-    local copiedEntries = {}
-    for ____, ____value in ipairs(entries) do
-        local key = ____value[1]
-        local value = ____value[2]
-        do
-            if isSerializationBrand(nil, key) then
-                goto __continue93
-            end
-            traversalDescription = getTraversalDescription(nil, key, traversalDescription)
-            local newValue = ____exports.deepCopy(
-                nil,
-                value,
-                serializationType,
-                traversalDescription,
-                classConstructors,
-                insideMap
-            )
-            local keyToUse = key
-            if convertStringKeysToNumbers then
-                local numberKey = tonumber(key)
-                if numberKey ~= nil then
-                    keyToUse = numberKey
-                end
-            end
-            if convertNumberKeysToStrings then
-                keyToUse = tostring(key)
-            end
-            copiedEntries[#copiedEntries + 1] = {keyToUse, newValue}
-        end
-        ::__continue93::
-    end
-    return {entries = copiedEntries, convertedNumberKeysToStrings = convertNumberKeysToStrings}
-end
-function checkMetatable(self, luaMap, traversalDescription)
-    local metatable = getmetatable(luaMap)
-    if metatable == nil then
-        return
-    end
-    local tableDescription = traversalDescription == "" and "the table to copy" or ("\"" .. traversalDescription) .. "\""
-    error(("The deepCopy function detected that " .. tableDescription) .. " has a metatable. Copying tables with metatables is not supported, unless they are explicitly handled by the save data manager. (e.g. TypeScriptToLua Maps, TypeScriptToLua Sets, etc.)")
-end
-function deepCopyUserdata(self, value, serializationType, traversalDescription)
-    local classType = getIsaacAPIClassName(nil, value)
-    if classType == nil then
-        error("The deep copy function was not able to derive the Isaac API class type for: " .. traversalDescription)
-    end
-    if not isCopyableIsaacAPIClass(nil, value) then
-        error((("The deep copy function does not support serializing \"" .. traversalDescription) .. "\", since it is an Isaac API class of type: ") .. classType)
-    end
-    repeat
-        local ____switch104 = serializationType
-        local ____cond104 = ____switch104 == SerializationType.NONE
-        if ____cond104 then
-            do
-                return copyIsaacAPIClass(nil, value)
-            end
-        end
-        ____cond104 = ____cond104 or ____switch104 == SerializationType.SERIALIZE
-        if ____cond104 then
-            do
-                return serializeIsaacAPIClass(nil, value)
-            end
-        end
-        ____cond104 = ____cond104 or ____switch104 == SerializationType.DESERIALIZE
-        if ____cond104 then
-            do
-                error(("The deep copy function can not deserialize \"" .. traversalDescription) .. "\", since it is userdata.")
-            end
-            break
-        end
-    until true
-end
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.serialization"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.src.arrays.cachedEnumValues")
-local SERIALIZATION_BRAND_VALUES = ____cachedEnumValues.SERIALIZATION_BRAND_VALUES
-local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
-local isString = ____types.isString
-local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
-local ReadonlySet = ____ReadonlySet.ReadonlySet
-local SERIALIZATION_BRAND_SET = __TS__New(ReadonlySet, SERIALIZATION_BRAND_VALUES)
---- Helper function to check if a key of a table in the "save#.dat" file is a serialization brand
--- inserted by the save data manager (i.e. the `deepCopy` function).
--- 
--- This is separated from the other serialization functions because end-users would not normally be
--- iterating through a serialized object directly.
-function ____exports.isSerializationBrand(self, key)
-    if not isString(nil, key) then
-        return false
-    end
-    return SERIALIZATION_BRAND_SET:has(key)
-end
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.enums.SerializationType"] = function(...) 
-local ____exports = {}
---- This is used with the `deepCopy` and `merge` functions.
-____exports.SerializationType = {}
-____exports.SerializationType.NONE = 0
-____exports.SerializationType[____exports.SerializationType.NONE] = "NONE"
-____exports.SerializationType.SERIALIZE = 1
-____exports.SerializationType[____exports.SerializationType.SERIALIZE] = "SERIALIZE"
-____exports.SerializationType.DESERIALIZE = 2
-____exports.SerializationType[____exports.SerializationType.DESERIALIZE] = "DESERIALIZE"
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.classes.features.other.saveDataManager.constants"] = function(...) 
-local ____exports = {}
-____exports.SAVE_DATA_MANAGER_DEBUG = false
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.classes.DefaultMap"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local Map = ____lualib.Map
-local __TS__ClassExtends = ____lualib.__TS__ClassExtends
-local __TS__TypeOf = ____lualib.__TS__TypeOf
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
-local isFunction = ____types.isFunction
-local isPrimitive = ____types.isPrimitive
---- `DefaultMap` is a data structure that makes working with default values easier. It extends a
--- `Map` and adds additional methods.
--- 
--- It is a common pattern to look up a value in a `Map`, and then, if the value does not exist, set
--- a default value for the key, and then return the default value. `DefaultMap` abstracts this
--- operation away by providing the `getAndSetDefault` method.
--- 
--- Using a `DefaultMap` is nice because it makes code more declarative, since you specify what the
--- default value is alongside the types of the keys/values.
--- 
--- When instantiating a new `DefaultMap`, you must specify default value as the first argument. (The
--- default value is the initial value that will be assigned to every new entry in the
--- `getAndSetDefault` method.) For example:
--- 
--- ```ts
--- // Initializes a new empty DefaultMap with a default value of "foo".
--- const defaultMapWithString = new DefaultMap<string, string>("foo");
--- 
--- const value = defaultMapWithString.getAndSetDefault("bar");
--- // value is now "foo" and an entry for "bar" is now set.
--- ```
--- 
--- Sometimes, instead of having a static initial value for every entry in the map, you will want a
--- dynamic initial value that is contingent upon the key or some other variable. In these cases, you
--- can instead specify that the `DefaultMap` should run a function that will return the initial
--- value. (This is referred to as a "factory function".) For example:
--- 
--- ```ts
--- // Initializes a new empty DefaultMap with a default value based on "someGlobalVariable".
--- const factoryFunction = () => someGlobalVariable ? 0 : 1;
--- const defaultMapWithFactoryFunction = new DefaultMap<string, string>(factoryFunction);
--- ```
--- 
--- Note that in TypeScript and Lua, booleans, numbers, and strings are "passed by value". This means
--- that when the `DefaultMap` creates a new entry, if the default value is one of these 3 types, the
--- values will be copied. On the other hand, arrays and maps and other complex data structures are
--- "passed by reference". This means that when the `DefaultMap` creates a new entry, if the default
--- value is an array, then it would not be copied. Instead, the same shared array would be assigned
--- to every entry. Thus, to solve this problem, any variable that is passed by reference must be
--- created using a factory function to ensure that each copy is unique. For example:
--- 
--- ```ts
--- // Initializes a new empty DefaultMap with a default value of a new empty array.
--- const factoryFunction = () => [];
--- const defaultMapWithArray = new DefaultMap<string, string[]>(factoryFunction);
--- ```
--- 
--- In the previous two examples, the factory functions did not have any arguments. But you can also
--- specify a factory function that takes one or more arguments:
--- 
--- ```ts
--- const factoryFunction = (arg: boolean) => arg ? 0 : 1;
--- const defaultMapWithArg = new DefaultMap<string, string, [arg: boolean]>(factoryFunction);
--- ```
--- 
--- Similar to a normal `Map`, you can also include an initializer list in the constructor as the
--- second argument:
--- 
--- ```ts
--- // Initializes a DefaultMap with a default value of "foo" and some initial values.
--- const defaultMapWithInitialValues = new DefaultMap<string, string>("foo", [
---   ["a1", "a2"],
---   ["b1", "b2"],
--- ], );
--- ```
--- 
--- Finally, note that `DefaultMap` has the following additional utility methods:
--- 
--- - `getAndSetDefault` - The method that is called inside the overridden `get` method. In most
---   cases, you can use the overridden `get` method instead of calling this function directly.
---   However, if a factory function was provided during instantiation, and the factory function has
---   one or more arguments, then you must call this method instead (and provide the corresponding
---   arguments).
--- - `getDefaultValue` - Returns the default value to be used for a new key. (If a factory function
---   was provided during instantiation, this will execute the factory function.)
--- - `getConstructorArg` - Helper method for cloning the map. Returns either the default value or
---   the reference to the factory function.
-____exports.DefaultMap = __TS__Class()
-local DefaultMap = ____exports.DefaultMap
-DefaultMap.name = "DefaultMap"
-__TS__ClassExtends(DefaultMap, Map)
-function DefaultMap.prototype.____constructor(self, defaultValueOrFactoryFunction, initializerArray)
-    local argIsPrimitive = isPrimitive(nil, defaultValueOrFactoryFunction)
-    local argIsFunction = isFunction(nil, defaultValueOrFactoryFunction)
-    if not argIsPrimitive and not argIsFunction then
-        error(("Failed to instantiate a DefaultMap since the provided default value was of type \"" .. __TS__TypeOf(defaultValueOrFactoryFunction)) .. "\". This error usually means that you are trying to use an array (or some other non-primitive data structure that is passed by reference) as the default value. Instead, return the data structure in a factory function, like \"() => []\". See the DefaultMap documentation for more details.")
-    end
-    Map.prototype.____constructor(self, initializerArray)
-    if argIsFunction then
-        self.defaultValue = nil
-        self.defaultValueFactory = defaultValueOrFactoryFunction
-    else
-        self.defaultValue = defaultValueOrFactoryFunction
-        self.defaultValueFactory = nil
-    end
-end
-function DefaultMap.prototype.getAndSetDefault(self, key, ...)
-    local value = Map.prototype.get(self, key)
-    if value ~= nil then
-        return value
-    end
-    local defaultValue = self:getDefaultValue(...)
-    self:set(key, defaultValue)
-    return defaultValue
-end
-function DefaultMap.prototype.getDefaultValue(self, ...)
-    if self.defaultValue ~= nil then
-        return self.defaultValue
-    end
-    if self.defaultValueFactory ~= nil then
-        return self:defaultValueFactory(...)
-    end
-    error("A DefaultMap was incorrectly instantiated.")
-end
-function DefaultMap.prototype.getConstructorArg(self)
-    if self.defaultValue ~= nil then
-        return self.defaultValue
-    end
-    if self.defaultValueFactory ~= nil then
-        return self.defaultValueFactory
-    end
-    error("A DefaultMap was incorrectly instantiated.")
-end
-local function test(self)
-    local myDefaultMapBoolean = __TS__New(____exports.DefaultMap, false)
-    local myDefaultMapBooleanFactory = __TS__New(
-        ____exports.DefaultMap,
-        function() return false end
-    )
-    local myDefaultMapBooleanWithoutParams = __TS__New(____exports.DefaultMap, false)
-    local myDefaultMapNumber = __TS__New(____exports.DefaultMap, 123)
-    local myDefaultMapNumberFactory = __TS__New(
-        ____exports.DefaultMap,
-        function() return 123 end
-    )
-    local myDefaultMapNumberWithoutParams = __TS__New(____exports.DefaultMap, 123)
-    local myDefaultMapString = __TS__New(____exports.DefaultMap, "foo")
-    local myDefaultMapStringFactory = __TS__New(
-        ____exports.DefaultMap,
-        function() return "foo" end
-    )
-    local myDefaultMapStringWithoutParams = __TS__New(____exports.DefaultMap, "foo")
-    local myDefaultMapArray = __TS__New(
-        ____exports.DefaultMap,
-        function() return {} end
-    )
-    local myDefaultMapArrayWithoutParams = __TS__New(
-        ____exports.DefaultMap,
-        function() return {} end
-    )
-    local myDefaultMapMap = __TS__New(
-        ____exports.DefaultMap,
-        function() return __TS__New(Map) end
-    )
-    local myDefaultMapMapWithoutParams = __TS__New(
-        ____exports.DefaultMap,
-        function() return __TS__New(Map) end
-    )
-end
-return ____exports
- end,
 ["lua_modules.isaacscript-common.dist.src.functions.map"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local Map = ____lualib.Map
@@ -37146,6 +37881,8 @@ local ____array = require("lua_modules.isaacscript-common.dist.src.functions.arr
 local sumArray = ____array.sumArray
 local ____string = require("lua_modules.isaacscript-common.dist.src.functions.string")
 local getPartialMatch = ____string.getPartialMatch
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- Helper function to set a value for a `DefaultMap` that corresponds to an entity, assuming that
 -- the map uses `PtrHash` as an index.
 function ____exports.mapSetHash(self, map, entity, value)
@@ -37200,9 +37937,7 @@ function ____exports.getMapPartialMatch(self, searchText, map)
         return nil
     end
     local value = map:get(matchingKey)
-    if value == nil then
-        error("Failed to get the map value corresponding to the partial match of: " .. matchingKey)
-    end
+    assertDefined(nil, value, "Failed to get the map value corresponding to the partial match of: " .. matchingKey)
     return {matchingKey, value}
 end
 --- Helper function to get a copy of a map with the keys and the values reversed.
@@ -37377,16 +38112,16 @@ function ____exports.logColor(color, name)
     log((((((((((((((("Logging " .. name) .. ": R") .. tostring(color.R)) .. ", G") .. tostring(color.G)) .. ", B") .. tostring(color.B)) .. ", A") .. tostring(color.A)) .. ", RO") .. tostring(color.RO)) .. ", BO") .. tostring(color.BO)) .. ", GO") .. tostring(color.GO))
 end
 --- Helper function to log every damage flag that is turned on. Useful when debugging.
-function ____exports.logDamageFlags(flags)
-    ____exports.logFlags(flags, DamageFlag, "damage")
+function ____exports.logDamageFlags(damageFlags)
+    ____exports.logFlags(damageFlags, DamageFlag, "damage")
 end
 --- Helper function to log every display flag that is turned on. Useful when debugging.
-function ____exports.logDisplayFlags(flags)
-    ____exports.logFlags(flags, DisplayFlag, "display")
+function ____exports.logDisplayFlags(displayFlags)
+    ____exports.logFlags(displayFlags, DisplayFlag, "display")
 end
 --- Helper function to log every entity flag that is turned on. Useful when debugging.
-function ____exports.logEntityFlags(flags)
-    ____exports.logFlags(flags, EntityFlag, "entity")
+function ____exports.logEntityFlags(entityFlags)
+    ____exports.logFlags(entityFlags, EntityFlag, "entity")
 end
 function ____exports.logEntityID(entity)
     local entityID = getEntityID(nil, entity)
@@ -37456,7 +38191,7 @@ function ____exports.logMap(map, name)
         log("Tried to log a TSTL map, but the given object was not a TSTL map.")
         return
     end
-    local suffix = name == nil and (" \"" .. tostring(name)) .. "\"" or ""
+    local suffix = name == nil and "" or (" \"" .. name) .. "\""
     log(("Logging a TSTL map" .. suffix) .. ":")
     local mapKeys = {__TS__Spread(map:keys())}
     __TS__ArraySort(mapKeys)
@@ -37516,8 +38251,8 @@ function ____exports.logPlayerHealth(player)
     log("  ]")
 end
 --- Helper function for logging every projectile flag that is turned on. Useful when debugging.
-function ____exports.logProjectileFlags(flags)
-    ____exports.logFlags(flags, ProjectileFlag, "projectile")
+function ____exports.logProjectileFlags(projectileFlags)
+    ____exports.logFlags(projectileFlags, ProjectileFlag, "projectile")
 end
 --- Helper function for logging information about the current room.
 function ____exports.logRoom()
@@ -37527,13 +38262,9 @@ function ____exports.logRoom()
     local roomListIndex = getRoomListIndex(nil)
     local roomData = getRoomData(nil)
     log("Logging room information:")
-    if roomData == nil then
-        log("- Room data is undefined.")
-    else
-        log("- Room stage ID: " .. tostring(roomData.StageID))
-        log((((("- Type/variant/sub-type: " .. tostring(roomData.Type)) .. ".") .. tostring(roomData.Variant)) .. ".") .. tostring(roomData.Subtype))
-        log("- Name: " .. roomData.Name)
-    end
+    log("- Room stage ID: " .. tostring(roomData.StageID))
+    log((((("- Type/variant/sub-type: " .. tostring(roomData.Type)) .. ".") .. tostring(roomData.Variant)) .. ".") .. tostring(roomData.Subtype))
+    log("- Name: " .. roomData.Name)
     local roomGridIndexName = GridRoom[roomGridIndex]
     if roomGridIndexName == nil then
         log("- Grid index: " .. tostring(roomGridIndex))
@@ -37571,7 +38302,7 @@ function ____exports.logSet(set, name)
         log("Tried to log a TSTL set, but the given object was not a TSTL set.")
         return
     end
-    local suffix = name == nil and (" \"" .. tostring(name)) .. "\"" or ""
+    local suffix = name == nil and "" or (" \"" .. name) .. "\""
     log(("Logging a TSTL set" .. suffix) .. ":")
     local setValues = getSortedSetValues(nil, set)
     for ____, value in ipairs(setValues) do
@@ -37722,12 +38453,12 @@ function ____exports.logTableShallow(luaTable)
     )
 end
 --- Helper function for log every tear flag that is turned on. Useful when debugging.
-function ____exports.logTearFlags(flags)
-    ____exports.logFlags(flags, TearFlag, "tear")
+function ____exports.logTearFlags(tearFlags)
+    ____exports.logFlags(tearFlags, TearFlag, "tear")
 end
 --- Helper function for printing out every use flag that is turned on. Useful when debugging.
-function ____exports.logUseFlags(flags)
-    ____exports.logFlags(flags, UseFlag, "use")
+function ____exports.logUseFlags(useFlags)
+    ____exports.logFlags(useFlags, UseFlag, "use")
 end
 --- Helper function to enumerate all of the properties of a "userdata" object (i.e. an object from
 -- the Isaac API).
@@ -37857,6 +38588,7 @@ function getEntityLogLine(entity, num)
     msg = msg .. ("  - Child: " .. tostring(entity.Child)) .. "\n"
     msg = msg .. ("  - SpawnerEntity: " .. tostring(entity.SpawnerEntity)) .. "\n"
     msg = msg .. ((("  - SpawnerType / SpawnerVariant: " .. tostring(entity.SpawnerType)) .. ".") .. tostring(entity.SpawnerVariant)) .. "\n"
+    msg = msg .. ("  - FrameCount: " .. tostring(entity.FrameCount)) .. "\n"
     if npc ~= nil then
         msg = msg .. ("  - CanShutDoors: " .. tostring(npc.CanShutDoors)) .. "\n"
     end
@@ -37963,7 +38695,7 @@ function ____exports.logAllEntities(includeBackgroundEffects, entityTypeFilter)
 end
 --- Helper function for printing out every grid entity (or filtered grid entity) in the current room.
 -- 
--- @param includeWalls Optional. Whether or not to log the walls. Default is false.
+-- @param includeWalls Optional. Whether oto log the walls. Default is false.
 -- @param gridEntityTypeFilter Optional. If specified, will only log the given `GridEntityType`.
 -- Default is undefined.
 function ____exports.logAllGridEntities(includeWalls, gridEntityTypeFilter)
@@ -38046,9 +38778,7 @@ local ____exports = {}
 local ADJACENT_ROOM_GRID_INDEX_DELTAS
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local DisplayFlag = ____isaac_2Dtypescript_2Ddefinitions.DisplayFlag
-local DownpourRoomSubType = ____isaac_2Dtypescript_2Ddefinitions.DownpourRoomSubType
 local LevelStateFlag = ____isaac_2Dtypescript_2Ddefinitions.LevelStateFlag
-local MinesRoomSubType = ____isaac_2Dtypescript_2Ddefinitions.MinesRoomSubType
 local RoomDescriptorFlag = ____isaac_2Dtypescript_2Ddefinitions.RoomDescriptorFlag
 local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
@@ -38084,9 +38814,9 @@ local getGridIndexDelta = ____roomShape.getGridIndexDelta
 local ____rooms = require("lua_modules.isaacscript-common.dist.src.functions.rooms")
 local getRooms = ____rooms.getRooms
 local getRoomsInsideGrid = ____rooms.getRoomsInsideGrid
+local isMineShaft = ____rooms.isMineShaft
+local isMirrorRoom = ____rooms.isMirrorRoom
 local isSecretRoomType = ____rooms.isSecretRoomType
-local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
-local asNumber = ____types.asNumber
 --- Helper function to get only the adjacent room grid indexes that exist (i.e. have room data).
 -- 
 -- This is just a filtering of the results of the `getAdjacentExistingRoomGridIndexes` function. See
@@ -38126,12 +38856,17 @@ function ____exports.getAdjacentRoomGridIndexes(self, roomGridIndex)
     )
 end
 --- Helper function to iterate through the possible doors for a room and see if any of them would be
--- a valid spot to insert a brand new room on the floor. (Any potential new rooms cannot be
--- connected to any other existing rooms on the floor.)
+-- a valid spot to insert a brand new room on the floor.
 -- 
 -- @param roomGridIndex Optional. Default is the current room index.
+-- @param ensureDeadEnd Optional. Whether to only include doors that lead to a valid dead end
+-- attached to a normal room. If false, the function will include all doors
+-- that would have a red door.
 -- @returns A array of tuples of `DoorSlot` and room grid index.
-function ____exports.getNewRoomCandidatesBesideRoom(self, roomGridIndex)
+function ____exports.getNewRoomCandidatesBesideRoom(self, roomGridIndex, ensureDeadEnd)
+    if ensureDeadEnd == nil then
+        ensureDeadEnd = true
+    end
     local roomDescriptor = getRoomDescriptor(nil, roomGridIndex)
     if not ____exports.isRoomInsideGrid(nil, roomDescriptor.SafeGridIndex) then
         return {}
@@ -38150,7 +38885,7 @@ function ____exports.getNewRoomCandidatesBesideRoom(self, roomGridIndex)
             if not hasFlag(nil, roomData.Doors, doorSlotFlag) then
                 goto __continue17
             end
-            if not ____exports.isDeadEnd(nil, adjacentRoomGridIndex) then
+            if ensureDeadEnd and not ____exports.isDeadEnd(nil, adjacentRoomGridIndex) then
                 goto __continue17
             end
             roomCandidates[#roomCandidates + 1] = {doorSlot = doorSlot, roomGridIndex = adjacentRoomGridIndex}
@@ -38159,20 +38894,26 @@ function ____exports.getNewRoomCandidatesBesideRoom(self, roomGridIndex)
     end
     return roomCandidates
 end
---- Helper function to search through all of the rooms on the floor for a spot to insert a brand new
--- room.
+--- Helper function to get all of the spots on the floor to insert a brand new room.
 -- 
+-- @param ensureDeadEnd Optional. Whether to only include spots that are a valid dead end attached
+-- to a normal room. If false, the function will include all valid spots that
+-- have a red door.
 -- @returns A array of tuples containing the adjacent room grid index, the `DoorSlot`, and the new
 -- room grid index.
-function ____exports.getNewRoomCandidatesForLevel(self)
-    local rooms = getRoomsInsideGrid(nil)
+function ____exports.getNewRoomCandidatesForLevel(self, ensureDeadEnd)
+    if ensureDeadEnd == nil then
+        ensureDeadEnd = true
+    end
+    local roomsInsideGrid = getRoomsInsideGrid(nil)
     local normalRooms = __TS__ArrayFilter(
-        rooms,
-        function(____, room) return room.Data ~= nil and room.Data.Type == RoomType.DEFAULT and room.Data.Subtype ~= asNumber(nil, DownpourRoomSubType.MIRROR) and room.Data.Subtype ~= asNumber(nil, MinesRoomSubType.MINESHAFT_ENTRANCE) end
+        roomsInsideGrid,
+        function(____, room) return room.Data ~= nil and room.Data.Type == RoomType.DEFAULT and not isMirrorRoom(nil, room.Data) and not isMineShaft(nil, room.Data) end
     )
+    local roomsToLookThrough = ensureDeadEnd and normalRooms or roomsInsideGrid
     local newRoomCandidates = {}
-    for ____, room in ipairs(normalRooms) do
-        local newRoomCandidatesBesideRoom = ____exports.getNewRoomCandidatesBesideRoom(nil, room.SafeGridIndex)
+    for ____, room in ipairs(roomsToLookThrough) do
+        local newRoomCandidatesBesideRoom = ____exports.getNewRoomCandidatesBesideRoom(nil, room.SafeGridIndex, ensureDeadEnd)
         for ____, ____value in ipairs(newRoomCandidatesBesideRoom) do
             local doorSlot = ____value.doorSlot
             local roomGridIndex = ____value.roomGridIndex
@@ -38312,13 +39053,19 @@ end
 -- 
 -- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
 -- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- @param ensureDeadEnd Optional. Whether to pick a valid dead end attached to a normal room. If
+-- false, the function will randomly pick from any valid location that would
+-- have a red door.
 -- @returns Either a tuple of adjacent room grid index, `DoorSlot`, and new room grid index, or
 -- undefined.
-function ____exports.getNewRoomCandidate(self, seedOrRNG)
+function ____exports.getNewRoomCandidate(self, seedOrRNG, ensureDeadEnd)
     if seedOrRNG == nil then
         seedOrRNG = getRandomSeed(nil)
     end
-    local newRoomCandidatesForLevel = ____exports.getNewRoomCandidatesForLevel(nil)
+    if ensureDeadEnd == nil then
+        ensureDeadEnd = true
+    end
+    local newRoomCandidatesForLevel = ____exports.getNewRoomCandidatesForLevel(nil, ensureDeadEnd)
     if #newRoomCandidatesForLevel == 0 then
         return nil
     end
@@ -38346,16 +39093,16 @@ end
 --- Helper function to get an array of all of the room descriptors for rooms that match the specified
 -- room type.
 -- 
--- This function only searches through rooms in the current dimension.
+-- This function only searches through rooms in the current dimension and rooms inside the grid.
 -- 
 -- This function is variadic, meaning that you can specify N arguments to get the combined room
 -- descriptors for N room types.
 function ____exports.getRoomDescriptorsForType(self, ...)
     local roomTypes = {...}
     local roomTypesSet = __TS__New(Set, roomTypes)
-    local rooms = getRoomsInsideGrid(nil)
+    local roomsInsideGrid = getRoomsInsideGrid(nil)
     return __TS__ArrayFilter(
-        rooms,
+        roomsInsideGrid,
         function(____, roomDescriptor) return roomDescriptor.Data ~= nil and roomTypesSet:has(roomDescriptor.Data.Type) end
     )
 end
@@ -38401,28 +39148,33 @@ function ____exports.isRedKeyRoom(self, roomGridIndex)
     local roomDescriptor = getRoomDescriptor(nil, roomGridIndex)
     return hasFlag(nil, roomDescriptor.Flags, RoomDescriptorFlag.RED_ROOM)
 end
---- Helper function to generate a new room on the floor at a valid dead end attached to a normal
--- room.
+--- Helper function to generate a new room on the floor.
 -- 
 -- Under the hood, this function uses the `Level.MakeRedRoomDoor` method to create the room.
--- 
--- The newly created room will have data corresponding to the game's randomly generated red room. If
--- you want to modify this, use the `setRoomData` helper function.
 -- 
 -- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
 -- `RNG.Next` method will be called. Default is `Level.GetDungeonPlacementSeed`.
 -- Note that the RNG is only used to select the random location to put the room on
 -- the floor; it does not influence the randomly chosen room contents. (That is
 -- performed by the game and can not be manipulated prior to its generation.)
+-- @param ensureDeadEnd Optional. Whether to place the room at a valid dead end attached to a normal
+-- room. If false, it will randomly appear at any valid location that would
+-- have a red door.
+-- @param customRoomData Optional. By default, the newly created room will have data corresponding
+-- to the game's randomly generated red room. If you provide this function
+-- with room data, it will be used to override the vanilla data.
 -- @returns The room grid index of the new room or undefined if the floor had no valid dead ends to
 -- place a room.
-function ____exports.newRoom(self, seedOrRNG)
+function ____exports.newRoom(self, seedOrRNG, ensureDeadEnd, customRoomData)
+    if ensureDeadEnd == nil then
+        ensureDeadEnd = true
+    end
     local level = game:GetLevel()
     if seedOrRNG == nil then
         seedOrRNG = level:GetDungeonPlacementSeed()
     end
     local rng = isRNG(nil, seedOrRNG) and seedOrRNG or newRNG(nil, seedOrRNG)
-    local newRoomCandidate = ____exports.getNewRoomCandidate(nil, rng)
+    local newRoomCandidate = ____exports.getNewRoomCandidate(nil, rng, ensureDeadEnd)
     if newRoomCandidate == nil then
         return nil
     end
@@ -38432,6 +39184,9 @@ function ____exports.newRoom(self, seedOrRNG)
     level:MakeRedRoomDoor(adjacentRoomGridIndex, doorSlot)
     local roomDescriptor = getRoomDescriptor(nil, newRoomGridIndex)
     roomDescriptor.Flags = removeFlag(nil, roomDescriptor.Flags, RoomDescriptorFlag.RED_ROOM)
+    if customRoomData ~= nil then
+        roomDescriptor.Data = customRoomData
+    end
     local roomData = roomDescriptor.Data
     if roomData ~= nil then
         local hasFullMap = level:GetStateFlag(LevelStateFlag.FULL_MAP_EFFECT)
@@ -38472,18 +39227,27 @@ end
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.level"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local Set = ____lualib.Set
+local __TS__New = ____lualib.__TS__New
+local __TS__ArraySome = ____lualib.__TS__ArraySome
 local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
+local StageID = ____isaac_2Dtypescript_2Ddefinitions.StageID
 local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.src.arrays.cachedEnumValues")
 local DOOR_SLOT_VALUES = ____cachedEnumValues.DOOR_SLOT_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local game = ____cachedClasses.game
+local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
+local filterMap = ____array.filterMap
 local ____levelGrid = require("lua_modules.isaacscript-common.dist.src.functions.levelGrid")
 local getRoomDescriptorsForType = ____levelGrid.getRoomDescriptorsForType
 local isDoorSlotValidAtGridIndexForRedRoom = ____levelGrid.isDoorSlotValidAtGridIndexForRedRoom
 local ____rooms = require("lua_modules.isaacscript-common.dist.src.functions.rooms")
 local getNumRooms = ____rooms.getNumRooms
 local getRoomsInsideGrid = ____rooms.getRoomsInsideGrid
---- Helper function to fill every possible square with a red room.
+--- Helper function to fill every possible level grid square with a red room.
 function ____exports.fillLevelWithRedRooms(self)
     local level = game:GetLevel()
     local numRoomsInGrid
@@ -38500,6 +39264,32 @@ function ____exports.fillLevelWithRedRooms(self)
             end
         end
     until not (numRoomsInGrid ~= getNumRooms(nil))
+end
+--- Helper function to get the boss IDs of all of the Boss Rooms on this floor. (This is equivalent
+-- to the sub-type of the room data.)
+-- 
+-- Note that this will only look at Boss Rooms inside of the grid, so e.g. Reverse Emperor card
+-- rooms will not count.
+function ____exports.getLevelBossIDs(self)
+    local roomsInsideGrid = getRoomsInsideGrid(nil)
+    return filterMap(
+        nil,
+        roomsInsideGrid,
+        function(____, roomDescriptor) return roomDescriptor.Data ~= nil and roomDescriptor.Data.Type == RoomType.BOSS and roomDescriptor.Data.StageID == StageID.SPECIAL_ROOMS and roomDescriptor.Data.Subtype or nil end
+    )
+end
+--- Helper function to check if the current floor has a Boss Room that matches the boss ID provided.
+-- 
+-- This function is variadic, meaning that you can pass as many boss IDs as you want to check for.
+-- It will return true if one or more of the boss IDs are matched.
+function ____exports.levelHasBossID(self, ...)
+    local bossIDs = {...}
+    local levelBossIDs = ____exports.getLevelBossIDs(nil)
+    local levelBossIDsSet = __TS__New(Set, levelBossIDs)
+    return __TS__ArraySome(
+        bossIDs,
+        function(____, bossID) return levelBossIDsSet:has(bossID) end
+    )
 end
 --- Helper function to check to see if the current floor has one or more of a specific room type in
 -- it.
@@ -38550,11 +39340,14 @@ local ____exports = {}
 local getTotalWeightOfJSONObject, getJSONObjectWithChosenWeight
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local DoorSlotFlagZero = ____isaac_2Dtypescript_2Ddefinitions.DoorSlotFlagZero
+local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
 local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
 local sumArray = ____array.sumArray
 local ____doors = require("lua_modules.isaacscript-common.dist.src.functions.doors")
 local doorSlotToDoorSlotFlag = ____doors.doorSlotToDoorSlotFlag
 local getRoomShapeDoorSlot = ____doors.getRoomShapeDoorSlot
+local ____enums = require("lua_modules.isaacscript-common.dist.src.functions.enums")
+local isEnumValue = ____enums.isEnumValue
 local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
 local addFlag = ____flag.addFlag
 local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
@@ -38563,15 +39356,19 @@ local ____random = require("lua_modules.isaacscript-common.dist.src.functions.ra
 local getRandomFloat = ____random.getRandomFloat
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
 local getRandomSeed = ____rng.getRandomSeed
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 function getTotalWeightOfJSONObject(self, jsonOjectArray)
     local weights = __TS__ArrayMap(
         jsonOjectArray,
         function(____, jsonObject)
             local weightString = jsonObject["$"].weight
             local weight = tonumber(weightString)
-            if weight == nil then
-                error(("Failed to parse the weight of a JSON object: " .. tostring(weightString)) .. ".")
-            end
+            assertDefined(
+                nil,
+                weight,
+                ("Failed to parse the weight of a JSON object: " .. tostring(weightString)) .. "."
+            )
             return weight
         end
     )
@@ -38582,9 +39379,11 @@ function getJSONObjectWithChosenWeight(self, jsonOjectArray, chosenWeight)
     for ____, jsonObject in ipairs(jsonOjectArray) do
         local weightString = jsonObject["$"].weight
         local weight = tonumber(weightString)
-        if weight == nil then
-            error("Failed to parse the weight of a JSON object: " .. tostring(weightString))
-        end
+        assertDefined(
+            nil,
+            weight,
+            "Failed to parse the weight of a JSON object: " .. tostring(weightString)
+        )
         weightAccumulator = weightAccumulator + weight
         if weightAccumulator >= chosenWeight then
             return jsonObject
@@ -38598,11 +39397,11 @@ end
 -- (A JSON room is an XML file converted to JSON so that it can be directly imported into your mod.)
 function ____exports.getJSONRoomDoorSlotFlags(self, jsonRoom)
     local roomShapeString = jsonRoom["$"].shape
-    local roomShapeNumber = tonumber(roomShapeString)
-    if roomShapeNumber == nil then
-        error("Failed to parse the \"shape\" field of a JSON room: " .. roomShapeString)
+    local roomShape = tonumber(roomShapeString)
+    assertDefined(nil, roomShape, "Failed to parse the \"shape\" field of a JSON room: " .. roomShapeString)
+    if not isEnumValue(nil, roomShape, RoomShape) then
+        error("Failed to parse the \"shape\" field of a JSON room since it was an invalid number: " .. tostring(roomShape))
     end
-    local roomShape = roomShapeNumber
     local doorSlotFlags = DoorSlotFlagZero
     for ____, door in ipairs(jsonRoom.door) do
         do
@@ -38615,18 +39414,16 @@ function ____exports.getJSONRoomDoorSlotFlags(self, jsonRoom)
             end
             local xString = door["$"].x
             local x = tonumber(xString)
-            if x == nil then
-                error("Failed to parse the \"x\" field of a JSON room door: " .. xString)
-            end
+            assertDefined(nil, x, "Failed to parse the \"x\" field of a JSON room door: " .. xString)
             local yString = door["$"].y
             local y = tonumber(yString)
-            if y == nil then
-                error("Failed to parse the \"y\" field of a JSON room door: " .. yString)
-            end
+            assertDefined(nil, y, "Failed to parse the \"y\" field of a JSON room door: " .. yString)
             local doorSlot = getRoomShapeDoorSlot(nil, roomShape, x, y)
-            if doorSlot == nil then
-                error(((("Failed to retrieve the door slot for a JSON room door at coordinates: [" .. tostring(x)) .. ", ") .. tostring(y)) .. "]")
-            end
+            assertDefined(
+                nil,
+                doorSlot,
+                ((("Failed to retrieve the door slot for a JSON room door at coordinates: [" .. tostring(x)) .. ", ") .. tostring(y)) .. "]"
+            )
             local doorSlotFlag = doorSlotToDoorSlotFlag(nil, doorSlot)
             doorSlotFlags = addFlag(nil, doorSlotFlags, doorSlotFlag)
         end
@@ -38704,9 +39501,11 @@ function ____exports.getRandomJSONEntity(self, jsonEntities, seedOrRNG, verbose)
         log("Randomly chose weight for JSON entity: " .. tostring(chosenWeight))
     end
     local randomJSONEntity = getJSONObjectWithChosenWeight(nil, jsonEntities, chosenWeight)
-    if randomJSONEntity == nil then
-        error("Failed to get a JSON entity with chosen weight: " .. tostring(chosenWeight))
-    end
+    assertDefined(
+        nil,
+        randomJSONEntity,
+        "Failed to get a JSON entity with chosen weight: " .. tostring(chosenWeight)
+    )
     return randomJSONEntity
 end
 --- Helper function to get a random JSON room from an array of JSON rooms.
@@ -38738,9 +39537,11 @@ function ____exports.getRandomJSONRoom(self, jsonRooms, seedOrRNG, verbose)
         log("Randomly chose weight for JSON room: " .. tostring(chosenWeight))
     end
     local randomJSONRoom = getJSONObjectWithChosenWeight(nil, jsonRooms, chosenWeight)
-    if randomJSONRoom == nil then
-        error("Failed to get a JSON room with chosen weight: " .. tostring(chosenWeight))
-    end
+    assertDefined(
+        nil,
+        randomJSONRoom,
+        "Failed to get a JSON room with chosen weight: " .. tostring(chosenWeight)
+    )
     return randomJSONRoom
 end
 return ____exports
@@ -39281,6 +40082,7 @@ return ____exports
 ["lua_modules.isaacscript-common.dist.src.functions.input"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__New = ____lualib.__TS__New
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArraySome = ____lualib.__TS__ArraySome
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -39296,7 +40098,7 @@ local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.R
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____string = require("lua_modules.isaacscript-common.dist.src.functions.string")
 local trimPrefix = ____string.trimPrefix
-local MODIFIER_KEYS = {
+____exports.MODIFIER_KEYS = {
     Keyboard.LEFT_SHIFT,
     Keyboard.LEFT_CONTROL,
     Keyboard.LEFT_ALT,
@@ -39306,10 +40108,10 @@ local MODIFIER_KEYS = {
     Keyboard.RIGHT_ALT,
     Keyboard.RIGHT_SUPER
 }
-local MOVEMENT_ACTIONS = {ButtonAction.LEFT, ButtonAction.RIGHT, ButtonAction.UP, ButtonAction.DOWN}
-____exports.MOVEMENT_ACTIONS_SET = __TS__New(ReadonlySet, MOVEMENT_ACTIONS)
-local SHOOTING_ACTIONS = {ButtonAction.SHOOT_LEFT, ButtonAction.SHOOT_RIGHT, ButtonAction.SHOOT_UP, ButtonAction.SHOOT_DOWN}
-____exports.SHOOTING_ACTIONS_SET = __TS__New(ReadonlySet, SHOOTING_ACTIONS)
+____exports.MOVEMENT_ACTIONS = {ButtonAction.LEFT, ButtonAction.RIGHT, ButtonAction.UP, ButtonAction.DOWN}
+____exports.MOVEMENT_ACTIONS_SET = __TS__New(ReadonlySet, ____exports.MOVEMENT_ACTIONS)
+____exports.SHOOTING_ACTIONS = {ButtonAction.SHOOT_LEFT, ButtonAction.SHOOT_RIGHT, ButtonAction.SHOOT_UP, ButtonAction.SHOOT_DOWN}
+____exports.SHOOTING_ACTIONS_SET = __TS__New(ReadonlySet, ____exports.SHOOTING_ACTIONS)
 --- Helper function to get the enum name for the specified `Controller` value. Note that this will
 -- trim off the "BUTTON_" prefix.
 -- 
@@ -39321,11 +40123,23 @@ function ____exports.controllerToString(self, controller)
     end
     return trimPrefix(nil, key, "BUTTON_")
 end
-function ____exports.getMoveActions(self)
-    return ____exports.MOVEMENT_ACTIONS_SET
+--- Helper function to get the movement actions that the specified `ControllerIndex` is currently
+-- pressing down. This returns an array because a player can be holding down more than one movement
+-- key at a time.
+function ____exports.getMoveActions(self, controllerIndex)
+    return __TS__ArrayFilter(
+        ____exports.MOVEMENT_ACTIONS,
+        function(____, buttonAction) return Input.IsActionPressed(buttonAction, controllerIndex) end
+    )
 end
-function ____exports.getShootActions(self)
-    return ____exports.SHOOTING_ACTIONS_SET
+--- Helper function to get the shooting actions that the specified `ControllerIndex` is currently
+-- pressing down. This returns an array because a player can be holding down more than one shooting
+-- key at a time.
+function ____exports.getShootActions(self, controllerIndex)
+    return __TS__ArrayFilter(
+        ____exports.SHOOTING_ACTIONS,
+        function(____, buttonAction) return Input.IsActionPressed(buttonAction, controllerIndex) end
+    )
 end
 --- Helper function to check if a player is pressing a specific button (i.e. holding it down).
 -- 
@@ -39400,7 +40214,7 @@ end
 function ____exports.isModifierKeyPressed(self)
     return ____exports.isKeyboardPressed(
         nil,
-        table.unpack(MODIFIER_KEYS)
+        table.unpack(____exports.MODIFIER_KEYS)
     )
 end
 function ____exports.isMoveAction(self, buttonAction)
@@ -39410,12 +40224,12 @@ function ____exports.isMoveActionPressed(self, controllerIndex)
     return ____exports.isActionPressed(
         nil,
         controllerIndex,
-        table.unpack(MOVEMENT_ACTIONS)
+        table.unpack(____exports.MOVEMENT_ACTIONS)
     )
 end
 function ____exports.isMoveActionPressedOnAnyInput(self)
     return __TS__ArraySome(
-        MOVEMENT_ACTIONS,
+        ____exports.MOVEMENT_ACTIONS,
         function(____, moveAction) return ____exports.isActionPressedOnAnyInput(nil, moveAction) end
     )
 end
@@ -39423,12 +40237,12 @@ function ____exports.isMoveActionTriggered(self, controllerIndex)
     return ____exports.isActionTriggered(
         nil,
         controllerIndex,
-        table.unpack(MOVEMENT_ACTIONS)
+        table.unpack(____exports.MOVEMENT_ACTIONS)
     )
 end
 function ____exports.isMoveActionTriggeredOnAnyInput(self)
     return __TS__ArraySome(
-        MOVEMENT_ACTIONS,
+        ____exports.MOVEMENT_ACTIONS,
         function(____, moveAction) return ____exports.isActionTriggeredOnAnyInput(nil, moveAction) end
     )
 end
@@ -39439,12 +40253,12 @@ function ____exports.isShootActionPressed(self, controllerIndex)
     return ____exports.isActionPressed(
         nil,
         controllerIndex,
-        table.unpack(SHOOTING_ACTIONS)
+        table.unpack(____exports.SHOOTING_ACTIONS)
     )
 end
 function ____exports.isShootActionPressedOnAnyInput(self)
     return __TS__ArraySome(
-        SHOOTING_ACTIONS,
+        ____exports.SHOOTING_ACTIONS,
         function(____, shootAction) return ____exports.isActionPressedOnAnyInput(nil, shootAction) end
     )
 end
@@ -39452,12 +40266,12 @@ function ____exports.isShootActionTriggered(self, controllerIndex)
     return ____exports.isActionTriggered(
         nil,
         controllerIndex,
-        table.unpack(SHOOTING_ACTIONS)
+        table.unpack(____exports.SHOOTING_ACTIONS)
     )
 end
 function ____exports.isShootActionTriggeredOnAnyInput(self)
     return __TS__ArraySome(
-        SHOOTING_ACTIONS,
+        ____exports.SHOOTING_ACTIONS,
         function(____, shootAction) return ____exports.isActionTriggeredOnAnyInput(nil, shootAction) end
     )
 end
@@ -39553,39 +40367,6 @@ ____exports.KEYBOARD_TO_STRING = __TS__New(ReadonlyMap, {
 })
 return ____exports
  end,
-["lua_modules.isaacscript-common.dist.src.functions.initArray"] = function(...) 
-local ____exports = {}
-local ____deepCopy = require("lua_modules.isaacscript-common.dist.src.functions.deepCopy")
-local deepCopy = ____deepCopy.deepCopy
-local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
-local ____repeat = ____utils["repeat"]
---- Initializes an array with all of the elements containing the specified default value.
--- 
--- The provided default value will be copied with the `deepCopy` function before adding it to the
--- new array. Thus, you can initialize an array of arrays, or an array of maps, and so on. (If the
--- `deepCopy` function was not used, then all of the array elements would just be references to the
--- same underlying data structure.)
--- 
--- For example:
--- 
--- ```ts
--- const arrayWithZeroes = initArray(0, 10); // Has 10 elements of 0.
--- const arrayWithArrays = initArray([0], 20); // Has 20 elements of an array with a 0 in it.
--- ```
-function ____exports.initArray(self, defaultValue, size)
-    local array = {}
-    ____repeat(
-        nil,
-        size,
-        function()
-            local copy = deepCopy(nil, defaultValue)
-            array[#array + 1] = copy
-        end
-    )
-    return array
-end
-return ____exports
- end,
 ["lua_modules.isaacscript-common.dist.src.functions.hex"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__StringReplace = ____lualib.__TS__StringReplace
@@ -39597,27 +40378,27 @@ function hexToRGB(self, hexString)
     hexString = __TS__StringReplace(hexString, "#", "")
     if #hexString ~= HEX_STRING_LENGTH then
         logError("Hex strings must be of length: " .. tostring(HEX_STRING_LENGTH))
-        return {0, 0, 0}
+        return {r = 0, g = 0, b = 0}
     end
     local rString = string.sub(hexString, 1, 2)
     local r = tonumber("0x" .. rString)
     if r == nil then
         logError(("Failed to convert `0x" .. rString) .. "` to a number.")
-        return {0, 0, 0}
+        return {r = 0, g = 0, b = 0}
     end
     local gString = string.sub(hexString, 3, 4)
     local g = tonumber("0x" .. gString)
     if g == nil then
         logError(("Failed to convert `0x" .. gString) .. "` to a number.")
-        return {0, 0, 0}
+        return {r = 0, g = 0, b = 0}
     end
     local bString = string.sub(hexString, 5, 6)
     local b = tonumber("0x" .. bString)
     if b == nil then
         logError(("Failed to convert `0x" .. bString) .. "` to a number.")
-        return {0, 0, 0}
+        return {r = 0, g = 0, b = 0}
     end
-    return {r, g, b}
+    return {r = r, g = g, b = b}
 end
 HEX_STRING_LENGTH = 6
 --- Converts a hex string like "#33aa33" to a KColor object.
@@ -39628,7 +40409,10 @@ function ____exports.hexToColor(self, hexString, alpha)
     if alpha == nil then
         alpha = 1
     end
-    local r, g, b = table.unpack(hexToRGB(nil, hexString))
+    local ____hexToRGB_result_0 = hexToRGB(nil, hexString)
+    local r = ____hexToRGB_result_0.r
+    local g = ____hexToRGB_result_0.g
+    local b = ____hexToRGB_result_0.b
     local base = 255
     return Color(r / base, g / base, b / base, alpha)
 end
@@ -39640,7 +40424,10 @@ function ____exports.hexToKColor(self, hexString, alpha)
     if alpha == nil then
         alpha = 1
     end
-    local r, g, b = table.unpack(hexToRGB(nil, hexString))
+    local ____hexToRGB_result_1 = hexToRGB(nil, hexString)
+    local r = ____hexToRGB_result_1.r
+    local g = ____hexToRGB_result_1.g
+    local b = ____hexToRGB_result_1.b
     local base = 255
     return KColor(r / base, g / base, b / base, alpha)
 end
@@ -39851,7 +40638,7 @@ local RACING_PLUS_SANDBOX_ADDED_GLOBALS = __TS__New(ReadonlySet, {"sandboxTraceb
 --- Helper function to get a set containing all of the global variable names that are contained
 -- within the Isaac environment by default.
 -- 
--- Returns a slightly different set depending on whether the "--luadebug" flag is enabled or not.
+-- Returns a slightly different set depending on whether the "--luadebug" flag is enabled.
 function ____exports.getDefaultGlobals(self)
     local defaultGlobals = copySet(nil, DEFAULT_GLOBALS)
     if isLuaDebugEnabled(nil) then
@@ -39876,6 +40663,7 @@ function ____exports.getNewGlobals(self)
     __TS__ArraySort(newGlobals, sortTwoDimensionalArray)
     return newGlobals
 end
+--- Helper function to log any added global variables in the Isaac Lua environment.
 function ____exports.logNewGlobals(self)
     local newGlobals = ____exports.getNewGlobals(nil)
     log("List of added global variables in the Isaac environment:")
@@ -39903,6 +40691,9 @@ function ____exports.setLogFunctionsGlobal(self)
         end
     end
 end
+--- Sets the `traceback` and `getTraceback` functions to be global functions.
+-- 
+-- This is useful when editing Lua files when troubleshooting.
 function ____exports.setTracebackFunctionsGlobal(self)
     local globals = _G
     globals.getTraceback = getTraceback
@@ -39922,7 +40713,7 @@ local log = ____log.log
 -- documented here: https://wofsauge.github.io/IsaacDocs/rep/Globals.html
 -- 
 -- This function uses the `package` global variable as a proxy to determine if the "--luadebug" flag
--- is enabled or not.
+-- is enabled.
 -- 
 -- Note that this function will return false if the Racing+ sandbox is enabled, even if the
 -- "--luadebug" flag is really turned on. If checking for this case is needed, check for the
@@ -39933,7 +40724,7 @@ end
 --- Helper function to get the current time for benchmarking / profiling purposes.
 -- 
 -- The return value will either be in seconds or milliseconds, depending on if the "--luadebug" flag
--- is turned on or not.
+-- is turned on.
 -- 
 -- If the "--luadebug" flag is present, then this function will use the `socket.gettime` method,
 -- which returns the epoch timestamp in seconds (e.g. "1640320492.5779"). This is preferable over
@@ -39985,6 +40776,42 @@ end
 function ____exports.traceback()
     local tracebackOutput = ____exports.getTraceback()
     log(tracebackOutput)
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.functions.external"] = function(...) 
+local ____exports = {}
+local ____collectibles = require("lua_modules.isaacscript-common.dist.src.functions.collectibles")
+local getCollectibleName = ____collectibles.getCollectibleName
+local REBIRTH_ITEM_TRACKER_WRITE_TO_FILE_COMMAND = "REBIRTH_ITEM_TRACKER_WRITE_TO_FILE"
+--- Helper function to let the Rebirth Item Tracker know that it should write the submitted text
+-- string to a file. This is useful for capturing text in programs like Open Broadcaster Software
+-- (OBS).
+-- 
+-- The "item tracker" in this function does not refer to the in-game item tracker, but rather to the
+-- Python program located at: https://github.com/Rchardon/RebirthItemTracker
+function ____exports.rebirthItemTrackerWriteToFile(self, msg)
+    Isaac.DebugString((REBIRTH_ITEM_TRACKER_WRITE_TO_FILE_COMMAND .. " ") .. msg)
+end
+--- Helper function to put a message in the log.txt file to let the Rebirth Item Tracker know that it
+-- should remove an item.
+-- 
+-- The "item tracker" in this function does not refer to the in-game item tracker, but rather to the
+-- Python program located at: https://github.com/Rchardon/RebirthItemTracker
+-- 
+-- This function is useful when you need to add a "fake" collectible to a player. Note that calling
+-- this function is not necessary when removing items from players. For example, when you remove a
+-- collectible with the `EntityPlayer.RemoveCollectible` method, a proper message is sent to the log
+-- the item tracker will automatically remove it.
+-- 
+-- This function is variadic, meaning that you can pass as many collectible types as you want to
+-- remove.
+function ____exports.removeCollectibleFromItemTracker(self, ...)
+    local collectibleTypes = {...}
+    for ____, collectibleType in ipairs(collectibleTypes) do
+        local collectibleName = getCollectibleName(nil, collectibleType)
+        Isaac.DebugString(((("Removing collectible " .. tostring(collectibleType)) .. " (") .. collectibleName) .. ") on player 0 (Player)")
+    end
 end
 return ____exports
  end,
@@ -40670,6 +41497,7 @@ local getTSTLClassName = ____tstlClass.getTSTLClassName
 --- A decorator function that signifies that the decorated class method should be automatically
 -- registered with `Mod.AddPriorityCallback`.
 -- 
+-- @allowEmptyVariadic
 -- @ignore
 function ____exports.PriorityCallback(self, modCallback, priority, ...)
     local optionalArgs = {...}
@@ -40692,6 +41520,7 @@ end
 --- A decorator function that signifies that the decorated class method should be automatically
 -- registered with `ModUpgraded.AddCallbackCustom`.
 -- 
+-- @allowEmptyVariadic
 -- @ignore
 function ____exports.PriorityCallbackCustom(self, modCallbackCustom, priority, ...)
     local optionalArgs = {...}
@@ -40714,6 +41543,7 @@ end
 --- A decorator function that signifies that the decorated class method should be automatically
 -- registered with `Mod.AddCallback`.
 -- 
+-- @allowEmptyVariadic
 -- @ignore
 function ____exports.Callback(self, modCallback, ...)
     return ____exports.PriorityCallback(nil, modCallback, CallbackPriority.DEFAULT, ...)
@@ -40721,6 +41551,7 @@ end
 --- A decorator function that signifies that the decorated class method should be automatically
 -- registered with `ModUpgraded.AddCallbackCustom`.
 -- 
+-- @allowEmptyVariadic
 -- @ignore
 function ____exports.CallbackCustom(self, modCallbackCustom, ...)
     return ____exports.PriorityCallbackCustom(nil, modCallbackCustom, CallbackPriority.DEFAULT, ...)
@@ -40741,8 +41572,10 @@ local getTSTLClassConstructor = ____tstlClass.getTSTLClassConstructor
 local getTSTLClassName = ____tstlClass.getTSTLClassName
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isFunction = ____types.isFunction
-local isNumber = ____types.isNumber
+local isInteger = ____types.isInteger
 local isTable = ____types.isTable
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 function initDecoratedCallbacks(self, modFeature, constructor, tstlClassName, vanilla, init)
     local modFeatureConstructor = constructor
     local callbackTuplesKey = vanilla and ____exports.MOD_FEATURE_CALLBACKS_KEY or ____exports.MOD_FEATURE_CUSTOM_CALLBACKS_KEY
@@ -40758,11 +41591,11 @@ function initDecoratedCallbacks(self, modFeature, constructor, tstlClassName, va
             error((("Failed to initialize/uninitialize the decorated callbacks on a mod feature since one of the callback arguments on the key of \"" .. callbackTuplesKey) .. "\" was not an array and was instead of type: ") .. type(callbackTuple))
         end
         local modCallback = callbackTuple[1]
-        if not isNumber(nil, modCallback) then
+        if not isInteger(nil, modCallback) then
             error("Failed to get the callback number from the callback tuple for class: " .. tstlClassName)
         end
         local priority = callbackTuple[2]
-        if not isNumber(nil, priority) then
+        if not isInteger(nil, priority) then
             error("Failed to get the callback priority from the callback tuple for class: " .. tstlClassName)
         end
         local callback = callbackTuple[3]
@@ -40873,9 +41706,7 @@ function initSaveDataManager(self, modFeature, tstlClassName, init)
     local mod = modFeature.mod
     local saveDataManagerMethodName = init and "saveDataManager" or "saveDataManagerRemove"
     local saveDataManagerMethod = mod[saveDataManagerMethodName]
-    if saveDataManagerMethod == nil then
-        error("Failed to initialize a mod feature class due to having a \"v\" object and not having the save data manager initialized. You must pass \"ISCFeature.SAVE_DATA_MANAGER\" to the \"upgradeMod\" function.")
-    end
+    assertDefined(nil, saveDataManagerMethod, "Failed to initialize a mod feature class due to having a \"v\" object and not having the save data manager initialized. You must pass \"ISCFeature.SAVE_DATA_MANAGER\" to the \"upgradeMod\" function.")
     if type(saveDataManagerMethod) ~= "function" then
         error(("The \"" .. saveDataManagerMethodName) .. "\" property of the \"ModUpgraded\" object was not a function.")
     end
@@ -40893,24 +41724,22 @@ WRAPPED_CUSTOM_CALLBACK_METHODS_KEY = "__wrappedCustomCallbacksMethods"
 -- mod features from this class in order to enable the `@Callback` and `@CustomCallback` decorators
 -- that automatically subscribe to callbacks.
 -- 
--- When instantiating a mod feature class, you must pass your upgraded mod as the first argument to
--- the constructor.
+-- It is recommended that you use the `initModFeatures` helper function to instantiate all of your
+-- mod classes (instead of instantiating them yourself). This is so that any attached `v` objects
+-- are properly registered with the save data manager; see below.
 -- 
--- If your feature has variables that are managed by the save data manager, you need to explicitly
--- register them with the save data manager yourself in your class constructor. (It can't be
--- automatically done because parent classes don't have access to child class properties.)
+-- If you are manually instantiating a mod feature yourself, then:
 -- 
--- In almost all cases, you will want the callback functions to be immediately subscribed after
--- instantiating the class. However, if this is not the case, you can pass `false` as the optional
--- second argument to the constructor.
+-- - You must pass your upgraded mod as the first argument to the constructor.
+-- - In almost all cases, you will want the callback functions to be immediately subscribed after
+--   instantiating the class. However, if this is not the case, you can pass `false` as the optional
+--   second argument to the constructor.
 -- 
 -- If your mod feature has a property called `v`, it will be assumed that these are variables that
--- should be managed by the save data manager. Subsequently, they will automatically be registered
--- with the save data manager upon initialization. Unfortunately, due to technical limitations with
--- classes, this registration will only occur if you initialize the class with the `init` boolean
--- argument set to false, and then explicitly call the `ModFeature.init` method yourself after the
--- class is constructed. (This is because the parent class does not have access to the child's
--- properties upon first construction.)
+-- should be managed by the save data manager. Unfortunately, due to technical limitations with
+-- classes, this registration will only occur if you initialize the class with the `initModFeatures`
+-- helper function. (This is because the parent class does not have access to the child's properties
+-- upon first construction.)
 ____exports.ModFeature = __TS__Class()
 local ModFeature = ____exports.ModFeature
 ModFeature.name = "ModFeature"
@@ -40934,13 +41763,9 @@ function ModFeature.prototype.init(self, init)
     end
     self.initialized = init
     local constructor = getTSTLClassConstructor(nil, self)
-    if constructor == nil then
-        error("Failed to get the TSTL class constructor for a mod feature.")
-    end
+    assertDefined(nil, constructor, "Failed to get the TSTL class constructor for a mod feature.")
     local tstlClassName = getTSTLClassName(nil, self)
-    if tstlClassName == nil then
-        error("Failed to get the TSTL class name for a mod feature.")
-    end
+    assertDefined(nil, tstlClassName, "Failed to get the TSTL class name for a mod feature.")
     initDecoratedCallbacks(
         nil,
         self,
@@ -41194,6 +42019,7 @@ return ____exports
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ItemConfigCardType = ____isaac_2Dtypescript_2Ddefinitions.ItemConfigCardType
+local UseFlag = ____isaac_2Dtypescript_2Ddefinitions.UseFlag
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local itemConfig = ____cachedClasses.itemConfig
 local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.src.core.constantsFirstLast")
@@ -41207,6 +42033,8 @@ local CARD_NAMES = ____cardNames.CARD_NAMES
 local DEFAULT_CARD_NAME = ____cardNames.DEFAULT_CARD_NAME
 local ____itemConfigCardTypesForCardsSet = require("lua_modules.isaacscript-common.dist.src.sets.itemConfigCardTypesForCardsSet")
 local ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET = ____itemConfigCardTypesForCardsSet.ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET
+local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
+local addFlag = ____flag.addFlag
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
 local iRange = ____utils.iRange
 --- Returns true for any vanilla card or rune.
@@ -41271,7 +42099,7 @@ function ____exports.isCard(self, cardType)
     end
     return ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET:has(itemConfigCardType)
 end
---- Returns whether or not the given card type matches the specified item config card type.
+--- Returns whether the given card type matches the specified item config card type.
 function ____exports.isCardType(self, cardType, itemConfigCardType)
     return itemConfigCardType == ____exports.getItemConfigCardType(nil, cardType)
 end
@@ -41302,6 +42130,12 @@ end
 --- Returns true for cards that have `CardType.TAROT`.
 function ____exports.isTarotCard(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.TAROT)
+end
+--- Helper function to use a card without showing an animation and without the announcer voice
+-- playing.
+function ____exports.useCardTemp(self, player, cardType)
+    local useFlags = addFlag(nil, UseFlag.NO_ANIMATION, UseFlag.NO_ANNOUNCER_VOICE)
+    player:UseCard(cardType, useFlags)
 end
 return ____exports
  end,
@@ -41847,6 +42681,8 @@ local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.
 local parseEntityTypeVariantString = ____entities.parseEntityTypeVariantString
 local ____set = require("lua_modules.isaacscript-common.dist.src.functions.set")
 local copySet = ____set.copySet
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
 local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
@@ -41858,9 +42694,7 @@ function getAllBossesExcludingStoryBossesSet(self)
     local allBosses = {__TS__Spread(____exports.ALL_BOSSES_SET:values())}
     for ____, entityTypeVariantString in ipairs(allBosses) do
         local tuple = parseEntityTypeVariantString(nil, entityTypeVariantString)
-        if tuple == nil then
-            error("Failed to parse a boss tuple when constructing the story boss set.")
-        end
+        assertDefined(nil, tuple, "Failed to parse a boss tuple when constructing the story boss set.")
         local entityType, _variant = table.unpack(tuple)
         if STORY_BOSSES_SET:has(entityType) then
             allBossesExcludingStoryBossesSet:delete(entityTypeVariantString)
@@ -43194,6 +44028,8 @@ local log = ____log.log
 local ____tstlClass = require("lua_modules.isaacscript-common.dist.src.functions.tstlClass")
 local getTSTLClassConstructor = ____tstlClass.getTSTLClassConstructor
 local getTSTLClassName = ____tstlClass.getTSTLClassName
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 function getExportedMethodsFromFeature(self, featureClass)
     local constructor = getTSTLClassConstructor(nil, featureClass)
     local exportedMethodNames = constructor[EXPORTED_METHOD_NAMES_KEY]
@@ -43312,9 +44148,7 @@ function ModUpgraded.prototype.logUsedFeatures(self)
                 goto __continue19
             end
             local modCallbackCustom = tonumber(modCallbackCustomString)
-            if modCallbackCustom == nil then
-                error("Failed to convert an index on the callbacks object to a number.")
-            end
+            assertDefined(nil, modCallbackCustom, "Failed to convert an index on the callbacks object to a number.")
             log(((("- ModCallbackCustom." .. tostring(ModCallbackCustom[modCallbackCustom])) .. " (") .. tostring(modCallbackCustom)) .. ")")
         end
         ::__continue19::
@@ -43324,15 +44158,13 @@ function ModUpgraded.prototype.logUsedFeatures(self)
         local featureClass = ____value[2]
         do
             if featureClass.numConsumers == 0 then
-                goto __continue23
+                goto __continue22
             end
             local iscFeature = tonumber(iscFeatureString)
-            if iscFeature == nil then
-                error("Failed to convert an index on the features object to a number.")
-            end
+            assertDefined(nil, iscFeature, "Failed to convert an index on the features object to a number.")
             log(((("- ISCFeature." .. tostring(ISCFeature[iscFeature])) .. " (") .. tostring(iscFeature)) .. ")")
         end
-        ::__continue23::
+        ::__continue22::
     end
 end
 function ModUpgraded.prototype.initFeature(self, feature)
@@ -43379,9 +44211,7 @@ function ModUpgraded.prototype.initFeature(self, feature)
     end
     if feature.v ~= nil then
         local className = getTSTLClassName(nil, feature)
-        if className == nil then
-            error("Failed to get the name of a feature.")
-        end
+        assertDefined(nil, className, "Failed to get the name of a feature.")
         local saveDataManagerClass = self.features[ISCFeature.SAVE_DATA_MANAGER]
         saveDataManagerClass:saveDataManager(className, feature.v, feature.vConditionalFunc)
     end
@@ -43420,9 +44250,7 @@ function ModUpgraded.prototype.uninitFeature(self, feature)
     end
     if feature.v ~= nil then
         local className = getTSTLClassName(nil, feature)
-        if className == nil then
-            error("Failed to get the name of a feature.")
-        end
+        assertDefined(nil, className, "Failed to get the name of a feature.")
         local saveDataManagerClass = self.features[ISCFeature.SAVE_DATA_MANAGER]
         saveDataManagerClass:saveDataManagerRemove(className)
     end
@@ -44628,6 +45456,8 @@ local isTSTLClass = ____tstlClass.isTSTLClass
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isString = ____types.isString
 local isTable = ____types.isTable
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
@@ -44706,9 +45536,7 @@ end
 function SaveDataManager.prototype.saveDataManager(self, key, v, conditionalFunc)
     if isTSTLClass(nil, key) then
         local className = getTSTLClassName(nil, key)
-        if className == nil then
-            error("Failed to get the class name for the submitted class (as part of the \"key\" parameter) when registering new data with the save data manager.")
-        end
+        assertDefined(nil, className, "Failed to get the class name for the submitted class (as part of the \"key\" parameter) when registering new data with the save data manager.")
         key = className
     end
     if not isString(nil, key) then
@@ -44760,9 +45588,7 @@ function SaveDataManager.prototype.saveDataManagerRegisterClass(self, ...)
     local tstlClasses = {...}
     for ____, tstlClass in ipairs(tstlClasses) do
         local name = tstlClass.name
-        if name == nil then
-            error("Failed to register a class with the save data manager due to not being able to derive the name of the class.")
-        end
+        assertDefined(nil, name, "Failed to register a class with the save data manager due to not being able to derive the name of the class.")
         self.classConstructors[name] = tstlClass
     end
 end
@@ -44785,9 +45611,7 @@ function SaveDataManager.prototype.saveDataManagerReset(self, key, childObjectKe
         error("The save data manager requires that keys are strings. You tried to use a key of type: " .. __TS__TypeOf(key))
     end
     local saveData = self.saveDataMap[key]
-    if saveData == nil then
-        error("The save data manager is not managing save data for a key of: " .. key)
-    end
+    assertDefined(nil, saveData, "The save data manager is not managing save data for a key of: " .. key)
     restoreDefaultForFeatureKey(
         nil,
         self.saveDataDefaultsMap,
@@ -44856,7 +45680,7 @@ function ____exports.saveToDisk(self, mod, saveDataMap, saveDataConditionalFuncM
     local allSaveData = getAllSaveDataToWriteToDisk(nil, saveDataMap, saveDataConditionalFuncMap)
     local jsonString = jsonEncode(nil, allSaveData)
     mod:SaveData(jsonString)
-    log("The save data manager wrote data to the \"save#.dat\" file.")
+    log("The save data manager wrote data to the \"save#.dat\" file for mod: " .. mod.Name)
 end
 return ____exports
  end,
@@ -44912,7 +45736,7 @@ function ____exports.restoreDefaultForFeatureKey(self, saveDataDefaultsMap, subs
     end
     local childTableDefaults = saveDataDefaults[saveDataKey]
     if childTableDefaults == nil then
-        logError(((("Failed to find the default copy of the child table \"" .. saveDataKey) .. "\" for subscriber \"") .. subscriberName) .. "\". This error usually means that your save data is out of date. You can try purging all of your save data by deleting the following directory: C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\data")
+        logError(((("Failed to find the default copy of the child table \"" .. saveDataKey) .. "\" for subscriber \"") .. subscriberName) .. "\". This error usually means that your mod-specific save data is out of date. You can try purging all of your mod-specific save data by deleting the following directory: C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\data")
         return
     end
     local childTableDefaultsCopy = deepCopy(nil, childTableDefaults, SerializationType.NONE, (subscriberName .. " --> ") .. saveDataKey)
@@ -45008,12 +45832,17 @@ function ____exports.loadFromDisk(self, mod, oldSaveData, classConstructors)
         end,
         SAVE_DATA_MANAGER_DEBUG
     )
-    log("The save data manager loaded data from the \"save#.dat\" file.")
+    log("The save data manager loaded data from the \"save#.dat\" file for mod: " .. mod.Name)
 end
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.features.other.saveDataManager.glowingHourGlass"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__SparseArrayNew = ____lualib.__TS__SparseArrayNew
+local __TS__SparseArrayPush = ____lualib.__TS__SparseArrayPush
+local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
 local ____exports = {}
+local getKeysToBackup, GLOWING_HOUR_GLASS_BACKUP_KEYS, REWIND_WITH_GLOWING_HOUR_GLASS_KEY
 local ____SaveDataKey = require("lua_modules.isaacscript-common.dist.src.enums.SaveDataKey")
 local SaveDataKey = ____SaveDataKey.SaveDataKey
 local ____SerializationType = require("lua_modules.isaacscript-common.dist.src.enums.SerializationType")
@@ -45026,10 +45855,21 @@ local ____table = require("lua_modules.isaacscript-common.dist.src.functions.tab
 local iterateTableInOrder = ____table.iterateTableInOrder
 local ____constants = require("lua_modules.isaacscript-common.dist.src.classes.features.other.saveDataManager.constants")
 local SAVE_DATA_MANAGER_DEBUG = ____constants.SAVE_DATA_MANAGER_DEBUG
---- When the Glowing Hourglass is used, certain save data keys will automatically be restored to a
--- backup.
-local GLOWING_HOUR_GLASS_BACKUP_KEYS = {SaveDataKey.RUN, SaveDataKey.LEVEL}
+function getKeysToBackup(self, saveData)
+    local shouldBackupPersistentObject = saveData.persistent ~= nil and saveData.persistent[REWIND_WITH_GLOWING_HOUR_GLASS_KEY] ~= nil
+    local ____shouldBackupPersistentObject_1
+    if shouldBackupPersistentObject then
+        local ____array_0 = __TS__SparseArrayNew(table.unpack(GLOWING_HOUR_GLASS_BACKUP_KEYS))
+        __TS__SparseArrayPush(____array_0, SaveDataKey.PERSISTENT)
+        ____shouldBackupPersistentObject_1 = {__TS__SparseArraySpread(____array_0)}
+    else
+        ____shouldBackupPersistentObject_1 = GLOWING_HOUR_GLASS_BACKUP_KEYS
+    end
+    return ____shouldBackupPersistentObject_1
+end
+GLOWING_HOUR_GLASS_BACKUP_KEYS = {SaveDataKey.RUN, SaveDataKey.LEVEL}
 local IGNORE_GLOWING_HOUR_GLASS_KEY = "__ignoreGlowingHourGlass"
+REWIND_WITH_GLOWING_HOUR_GLASS_KEY = "__rewindWithGlowingHourGlass"
 function ____exports.makeGlowingHourGlassBackup(self, saveDataMap, saveDataConditionalFuncMap, saveDataGlowingHourGlassMap)
     iterateTableInOrder(
         nil,
@@ -45042,7 +45882,7 @@ function ____exports.makeGlowingHourGlassBackup(self, saveDataMap, saveDataCondi
                     return
                 end
             end
-            for ____, saveDataKey in ipairs(GLOWING_HOUR_GLASS_BACKUP_KEYS) do
+            for ____, saveDataKey in ipairs(getKeysToBackup(nil, saveData)) do
                 do
                     local childTable = saveData[saveDataKey]
                     if childTable == nil then
@@ -45078,7 +45918,7 @@ function ____exports.restoreGlowingHourGlassBackup(self, saveDataMap, saveDataCo
                     return
                 end
             end
-            for ____, saveDataKey in ipairs(GLOWING_HOUR_GLASS_BACKUP_KEYS) do
+            for ____, saveDataKey in ipairs(getKeysToBackup(nil, saveData)) do
                 do
                     local childTable = saveData[saveDataKey]
                     if childTable == nil then
@@ -45344,6 +46184,7 @@ local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__DecorateLegacy = ____lualib.__TS__DecorateLegacy
+local __TS__ArrayAt = ____lualib.__TS__ArrayAt
 local ____exports = {}
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -45351,8 +46192,6 @@ local ____decorators = require("lua_modules.isaacscript-common.dist.src.decorato
 local Exported = ____decorators.Exported
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
-local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
-local getLastElement = ____array.getLastElement
 local ____dimensions = require("lua_modules.isaacscript-common.dist.src.functions.dimensions")
 local getDimension = ____dimensions.getDimension
 local ____roomData = require("lua_modules.isaacscript-common.dist.src.functions.roomData")
@@ -45421,7 +46260,7 @@ function RoomHistory.prototype.getRoomHistory(self)
 end
 __TS__DecorateLegacy({Exported}, RoomHistory.prototype, "getRoomHistory", true)
 function RoomHistory.prototype.getPreviousRoomDescription(self)
-    local previousRoomDescription = v.run.roomHistory[#v.run.roomHistory - 2 + 1]
+    local previousRoomDescription = __TS__ArrayAt(v.run.roomHistory, -2)
     if previousRoomDescription ~= nil then
         return previousRoomDescription
     end
@@ -45433,7 +46272,7 @@ function RoomHistory.prototype.getPreviousRoomDescription(self)
 end
 __TS__DecorateLegacy({Exported}, RoomHistory.prototype, "getPreviousRoomDescription", true)
 function RoomHistory.prototype.getLatestRoomDescription(self)
-    return getLastElement(nil, v.run.roomHistory)
+    return __TS__ArrayAt(v.run.roomHistory, -1)
 end
 __TS__DecorateLegacy({Exported}, RoomHistory.prototype, "getLatestRoomDescription", true)
 function RoomHistory.prototype.inFirstRoom(self)
@@ -45907,6 +46746,7 @@ local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__DecorateLegacy = ____lualib.__TS__DecorateLegacy
+local __TS__ArrayAt = ____lualib.__TS__ArrayAt
 local ____exports = {}
 local ____decorators = require("lua_modules.isaacscript-common.dist.src.decorators")
 local Exported = ____decorators.Exported
@@ -45915,7 +46755,6 @@ local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
 local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
 local arrayRemoveInPlace = ____array.arrayRemoveInPlace
 local copyArray = ____array.copyArray
-local getLastElement = ____array.getLastElement
 local ____collectibles = require("lua_modules.isaacscript-common.dist.src.functions.collectibles")
 local isActiveCollectible = ____collectibles.isActiveCollectible
 local ____playerDataStructures = require("lua_modules.isaacscript-common.dist.src.functions.playerDataStructures")
@@ -45961,7 +46800,7 @@ end
 __TS__DecorateLegacy({Exported}, PlayerInventory.prototype, "getPlayerInventory", true)
 function PlayerInventory.prototype.getPlayerLastPassiveCollectible(self, player)
     local inventory = self:getPlayerInventory(player, false)
-    return getLastElement(nil, inventory)
+    return __TS__ArrayAt(inventory, -1)
 end
 __TS__DecorateLegacy({Exported}, PlayerInventory.prototype, "getPlayerLastPassiveCollectible", true)
 return ____exports
@@ -46354,6 +47193,8 @@ local ____players = require("lua_modules.isaacscript-common.dist.src.functions.p
 local useActiveItemTemp = ____players.useActiveItemTemp
 local ____tstlClass = require("lua_modules.isaacscript-common.dist.src.functions.tstlClass")
 local getTSTLClassName = ____tstlClass.getTSTLClassName
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
@@ -46451,9 +47292,7 @@ function Pause.prototype.pause(self)
     local firstPlayer = Isaac.GetPlayer()
     useActiveItemTemp(nil, firstPlayer, CollectibleType.PAUSE)
     local tstlClassName = getTSTLClassName(nil, self)
-    if tstlClassName == nil then
-        error("Failed to get the class name for the pause feature.")
-    end
+    assertDefined(nil, tstlClassName, "Failed to get the class name for the pause feature.")
     local whitelist = __TS__New(ReadonlySet, {ButtonAction.MENU_CONFIRM, ButtonAction.CONSOLE})
     self.disableInputs:disableAllInputsExceptFor(tstlClassName, whitelist)
     for ____, player in ipairs(getAllPlayers(nil)) do
@@ -46471,9 +47310,7 @@ function Pause.prototype.unpause(self)
     v.run.isPseudoPaused = false
     v.run.shouldUnpause = true
     local tstlClassName = getTSTLClassName(nil, self)
-    if tstlClassName == nil then
-        error("Failed to find get the class name for the pause feature.")
-    end
+    assertDefined(nil, tstlClassName, "Failed to find get the class name for the pause feature.")
     self.disableInputs:enableAllInputs(tstlClassName)
     for ____, player in ipairs(getAllPlayers(nil)) do
         player.ControlsEnabled = true
@@ -46599,6 +47436,7 @@ local ____trinkets = require("lua_modules.isaacscript-common.dist.src.functions.
 local getVanillaTrinketTypeRange = ____trinkets.getVanillaTrinketTypeRange
 local trinketHasCacheFlag = ____trinkets.trinketHasCacheFlag
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local ____repeat = ____utils["repeat"]
 local ____itemConfigCardTypesForCardsSet = require("lua_modules.isaacscript-common.dist.src.sets.itemConfigCardTypesForCardsSet")
 local ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET = ____itemConfigCardTypesForCardsSet.ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET
@@ -46892,9 +47730,11 @@ function ModdedElementSets.prototype.lazyInitCardTypes(self)
         local itemConfigCardType = getItemConfigCardType(nil, cardType)
         if itemConfigCardType ~= nil then
             local cardTypeSet = self.itemConfigCardTypeToCardTypeMap:get(itemConfigCardType)
-            if cardTypeSet == nil then
-                error("Failed to get the card set for item config card type: " .. tostring(itemConfigCardType))
-            end
+            assertDefined(
+                nil,
+                cardTypeSet,
+                "Failed to get the card set for item config card type: " .. tostring(itemConfigCardType)
+            )
             cardTypeSet:add(cardType)
             if ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET:has(itemConfigCardType) then
                 self.cardSet:add(cardType)
@@ -46920,9 +47760,11 @@ function ModdedElementSets.prototype.getCardTypesOfType(self, ...)
     local matchingCardTypes = __TS__New(Set)
     for ____, itemConfigCardType in ipairs(itemConfigCardTypes) do
         local cardTypeSet = self.itemConfigCardTypeToCardTypeMap:get(itemConfigCardType)
-        if cardTypeSet == nil then
-            error("Failed to get the card type set for item config type: " .. tostring(itemConfigCardType))
-        end
+        assertDefined(
+            nil,
+            cardTypeSet,
+            "Failed to get the card type set for item config type: " .. tostring(itemConfigCardType)
+        )
         for ____, cardType in __TS__Iterator(cardTypeSet) do
             matchingCardTypes:add(cardType)
         end
@@ -46942,9 +47784,11 @@ end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectibleSet", true)
 function ModdedElementSets.prototype.getCollectiblesForTransformation(self, playerForm)
     local itemConfigTag = TRANSFORMATION_TO_TAG_MAP:get(playerForm)
-    if itemConfigTag == nil then
-        error(("Failed to get the collectible types for the transformation of " .. tostring(playerForm)) .. " because that transformation is not based on collectibles.")
-    end
+    assertDefined(
+        nil,
+        itemConfigTag,
+        ("Failed to get the collectible types for the transformation of " .. tostring(playerForm)) .. " because that transformation is not based on collectibles."
+    )
     return self:getCollectiblesWithTag(itemConfigTag)
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectiblesForTransformation", true)
@@ -46960,9 +47804,11 @@ __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectiblesWi
 function ModdedElementSets.prototype.getCollectiblesWithTag(self, itemConfigTag)
     self:lazyInitTagToCollectibleTypesMap()
     local collectibleTypes = self.tagToCollectibleTypesMap:get(itemConfigTag)
-    if collectibleTypes == nil then
-        error(("The item config tag of " .. tostring(itemConfigTag)) .. " is not a valid value of the \"ItemConfigTag\" enum.")
-    end
+    assertDefined(
+        nil,
+        collectibleTypes,
+        ("The item config tag of " .. tostring(itemConfigTag)) .. " is not a valid value of the \"ItemConfigTag\" enum."
+    )
     return collectibleTypes
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectiblesWithTag", true)
@@ -47111,6 +47957,7 @@ function ModdedElementSets.prototype.getRandomCard(self, seedOrRNG, exceptions)
     if exceptions == nil then
         exceptions = {}
     end
+    self:lazyInitCardTypes()
     return getRandomSetElement(nil, self.cardSet, seedOrRNG, exceptions)
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomCard", true)
@@ -47529,7 +48376,7 @@ function removeItemsAndTrinketsThatAffectItemPools(self)
         end
         mapSetPlayer(nil, removedTrinketsMap, player, removedTrinkets)
     end
-    return {removedItemsMap, removedTrinketsMap}
+    return {removedItemsMap = removedItemsMap, removedTrinketsMap = removedTrinketsMap}
 end
 function restoreItemsAndTrinketsThatAffectItemPools(self, removedItemsMap, removedTrinketsMap)
     for ____, player in ipairs(getAllPlayers(nil)) do
@@ -47580,7 +48427,9 @@ function ItemPoolDetection.prototype.isCollectibleInItemPool(self, collectibleTy
             player:ChangePlayerType(PlayerType.ISAAC)
         end
     end
-    local removedItemsMap, removedTrinketsMap = table.unpack(removeItemsAndTrinketsThatAffectItemPools(nil))
+    local ____removeItemsAndTrinketsThatAffectItemPools_result_0 = removeItemsAndTrinketsThatAffectItemPools(nil)
+    local removedItemsMap = ____removeItemsAndTrinketsThatAffectItemPools_result_0.removedItemsMap
+    local removedTrinketsMap = ____removeItemsAndTrinketsThatAffectItemPools_result_0.removedTrinketsMap
     local itemPool = game:GetItemPool()
     itemPool:ResetRoomBlacklist()
     for ____, collectibleTypeInSet in ipairs(self.moddedElementSets:getCollectibleArray()) do
@@ -47815,11 +48664,22 @@ local addFlag = ____flag.addFlag
 local bitFlags = ____flag.bitFlags
 local ____map = require("lua_modules.isaacscript-common.dist.src.functions.map")
 local getMapPartialMatch = ____map.getMapPartialMatch
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local commands = require("lua_modules.isaacscript-common.dist.src.classes.features.other.extraConsoleCommands.commands")
 local ____v = require("lua_modules.isaacscript-common.dist.src.classes.features.other.extraConsoleCommands.v")
 local v = ____v.v
+--- When you enable this feature, many custom commands will be added to the in-game console. See the
+-- [dedicated command list](ExtraConsoleCommandsList) for more information about them.
+-- 
+-- Note that in order to avoid conflicts, if two or more mods enable this feature, then the first
+-- loaded one will control all of the command logic. When this occurs, a global variable of
+-- `__ISAACSCRIPT_COMMON_EXTRA_CONSOLE_COMMANDS_FEATURE` will be created and will automatically be
+-- used by the non-main instances. For this reason, if you use multiple mods with
+-- `isaacscript-common` and a custom command from the standard library is not working properly, then
+-- you might need to get another mod author to update their version of `isaacscript-common`.
 ____exports.ExtraConsoleCommands = __TS__Class()
 local ExtraConsoleCommands = ____exports.ExtraConsoleCommands
 ExtraConsoleCommands.name = "ExtraConsoleCommands"
@@ -47911,6 +48771,11 @@ function ExtraConsoleCommands.prototype.____constructor(self)
         end
         return nil
     end
+    self.isMainFeature = __ISAACSCRIPT_COMMON_EXTRA_CONSOLE_COMMANDS_FEATURE == nil
+    if not self.isMainFeature then
+        return
+    end
+    __ISAACSCRIPT_COMMON_EXTRA_CONSOLE_COMMANDS_FEATURE = self
     self.callbacksUsed = {
         {ModCallback.POST_UPDATE, self.postUpdate},
         {ModCallback.EVALUATE_CACHE, self.evaluateCacheDamage, {CacheFlag.DAMAGE}},
@@ -47929,6 +48794,11 @@ function ExtraConsoleCommands.prototype.____constructor(self)
     end
 end
 function ExtraConsoleCommands.prototype.addConsoleCommand(self, commandName, commandFunction)
+    if not self.isMainFeature then
+        assertDefined(nil, __ISAACSCRIPT_COMMON_EXTRA_CONSOLE_COMMANDS_FEATURE, "Failed to find the non-main isaacscript-common extra console commands feature in the global variable.")
+        __ISAACSCRIPT_COMMON_EXTRA_CONSOLE_COMMANDS_FEATURE:addConsoleCommand(commandName, commandFunction)
+        return
+    end
     if isVanillaConsoleCommand(nil, commandName) then
         error(("Failed to add a new console command of \"" .. commandName) .. "\" because that name already belongs to a vanilla command. You must pick a non-colliding name.")
     end
@@ -47939,12 +48809,21 @@ function ExtraConsoleCommands.prototype.addConsoleCommand(self, commandName, com
 end
 __TS__DecorateLegacy({Exported}, ExtraConsoleCommands.prototype, "addConsoleCommand", true)
 function ExtraConsoleCommands.prototype.removeConsoleCommand(self, commandName)
+    if not self.isMainFeature then
+        assertDefined(nil, __ISAACSCRIPT_COMMON_EXTRA_CONSOLE_COMMANDS_FEATURE, "Failed to find the non-main isaacscript-common extra console commands feature in the global variable.")
+        __ISAACSCRIPT_COMMON_EXTRA_CONSOLE_COMMANDS_FEATURE:removeConsoleCommand(commandName)
+        return
+    end
     if not self.commandFunctionMap:has(commandName) then
-        error(("Failed to remove the console command of \"" .. commandName) .. "\", since it does not already exist in the map.")
+        error(("Failed to remove the console command of \"" .. commandName) .. "\", since it does not already exist in the command map.")
     end
     self.commandFunctionMap:delete(commandName)
 end
 __TS__DecorateLegacy({Exported}, ExtraConsoleCommands.prototype, "removeConsoleCommand", true)
+function ExtraConsoleCommands.prototype.removeAllConsoleCommands(self)
+    self.commandFunctionMap:clear()
+end
+__TS__DecorateLegacy({Exported}, ExtraConsoleCommands.prototype, "removeAllConsoleCommands", true)
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.features.other.extraConsoleCommands.v"] = function(...) 
@@ -48175,6 +49054,121 @@ function ____exports.sound(self, params)
         return
     end
     sfxManager:Play(soundEffect)
+end
+--- Spawns a collectible in the center of the room. You must specify the collectible name or the
+-- number corresponding to the collectible type.
+-- 
+-- For example, all of the following commands would spawn Spoon Bender:
+-- 
+-- ```text
+-- spawnCollectible spoon bender
+-- spawnCollectible spoon
+-- spawnCollectible spo
+-- spawnCollectible 3
+-- ```
+function ____exports.spawnCollectible(self, params)
+    if params == "" then
+        print("You must specify the collectible name or the number corresponding to the collectible type.")
+        return
+    end
+    local collectibleTypeNumber = tonumber(params)
+    local collectibleType
+    if collectibleTypeNumber == nil then
+        local match = getMapPartialMatch(nil, params, COLLECTIBLE_NAME_TO_TYPE_MAP)
+        if match == nil then
+            print("Unknown collectible: " .. params)
+            return
+        end
+        collectibleType = match[2]
+    else
+        collectibleType = asCollectibleType(nil, collectibleTypeNumber)
+    end
+    local roomClass = game:GetRoom()
+    local centerPos = roomClass:GetCenterPos()
+    spawnCollectibleUnsafe(nil, collectibleType, centerPos)
+end
+--- The same thing as the `spawnTrinket` command but spawns a golden version of the specified
+-- trinket.
+function ____exports.spawnGoldenTrinket(self, params)
+    ____exports.spawnTrinket(nil, params, true)
+end
+--- Spawns a trinket in the center of the room. You must specify the trinket name or the number
+-- corresponding to the trinket type.
+-- 
+-- For example, all of the following commands would spawn the Wiggle Worm trinket:
+-- 
+-- ```text
+-- spawnTrinket wiggle worm
+-- spawnTrinket wiggle
+-- spawnTrinket wig
+-- spawnTrinket 10
+-- ```
+-- 
+-- Also see the `spawnGoldenTrinket` command.
+function ____exports.spawnTrinket(self, params, golden)
+    if golden == nil then
+        golden = false
+    end
+    if params == "" then
+        print("You must specify the name or number corresponding to the trinket type.")
+        return
+    end
+    local trinketTypeNumber = tonumber(params)
+    local trinketType
+    if trinketTypeNumber == nil then
+        local match = getMapPartialMatch(nil, params, TRINKET_NAME_TO_TYPE_MAP)
+        if match == nil then
+            print("Unknown trinket: " .. params)
+            return
+        end
+        trinketType = match[2]
+    else
+        trinketType = asTrinketType(nil, trinketTypeNumber)
+    end
+    local roomClass = game:GetRoom()
+    local centerPos = roomClass:GetCenterPos()
+    local goldenTrinketType = getGoldenTrinketType(nil, trinketType)
+    local trinketTypeToSpawn = golden and goldenTrinketType or trinketType
+    spawnTrinketFunction(nil, trinketTypeToSpawn, centerPos)
+end
+--- Spawns a trinket at a specific grid tile location. You must specify the number corresponding to
+-- the trinket type and the number corresponding to the grid tile location.
+-- 
+-- For example, this would spawn Wiggle Worm in the top-left corner of a 1x1 room:
+-- 
+-- ```text
+-- spawnTrinketAt 10 16
+-- ```
+-- 
+-- (You can use the "grid" command to toggle displaying the numerical grid indexes corresponding to
+-- a grid tile.)
+function ____exports.spawnTrinketAt(self, params, golden)
+    if golden == nil then
+        golden = false
+    end
+    if params == "" then
+        print("You must specify the number corresponding to the trinket type and the number corresponding to the grid tile location.")
+        return
+    end
+    local args = __TS__StringSplit(params, " ")
+    if #args ~= 2 then
+        print("You must specify the number corresponding to the trinket type and the number corresponding to the grid tile location.")
+        return
+    end
+    local trinketTypeNumber = tonumber(args[1])
+    if trinketTypeNumber == nil or trinketTypeNumber < 0 then
+        print("Failed to parse the trinket type of: " .. tostring(args[1]))
+        return
+    end
+    local gridIndex = tonumber(args[2])
+    if gridIndex == nil or gridIndex < 0 then
+        print("Failed to parse the grid index of: " .. tostring(args[2]))
+        return
+    end
+    local trinketType = asTrinketType(nil, trinketTypeNumber)
+    local goldenTrinketType = getGoldenTrinketType(nil, trinketType)
+    local trinketTypeToSpawn = golden and goldenTrinketType or trinketType
+    spawnTrinketFunction(nil, trinketTypeToSpawn, gridIndex)
 end
 --- Warps to the starting room of the floor.
 function ____exports.startingRoom(self)
@@ -48456,6 +49450,10 @@ function ____exports.coins(self, params)
     local player = Isaac.GetPlayer()
     player:AddCoins(numCoins)
 end
+--- Alias for the "spawnCollectible" command.
+function ____exports.collectible(self, params)
+    ____exports.spawnCollectible(nil, params)
+end
 --- Creates a crawl space next to the player.
 function ____exports.crawlSpace(self)
     spawnTrapdoorOrCrawlSpace(nil, false)
@@ -48511,7 +49509,7 @@ end
 function ____exports.dirtyBedroom(self)
     warpToRoomType(nil, RoomType.DIRTY_BEDROOM)
 end
---- Toggles whether or not curses can appear.
+--- Toggles whether curses can appear.
 function ____exports.disableCurses(self)
     v.persistent.disableCurses = not v.persistent.disableCurses
     printEnabled(nil, not v.persistent.disableCurses, "curses")
@@ -48632,6 +49630,14 @@ end
 --- Alias for the "goldenKey" command.
 function ____exports.goldKey(self)
     ____exports.goldenKey(nil)
+end
+--- Alias for the "spawnGoldenTrinket" command.
+function ____exports.goldTrinket(self, params)
+    ____exports.spawnGoldenTrinket(nil, params)
+end
+--- Alias for the "spawnGoldenTrinket" command.
+function ____exports.goldenTrinket(self, params)
+    ____exports.spawnGoldenTrinket(nil, params)
 end
 --- Alias for the "debug 11" command. Useful for seeing the coordinates and grid index of each tile
 -- in the room.
@@ -49097,70 +50103,48 @@ function ____exports.spam(self)
     v.persistent.spamBloodRights = not v.persistent.spamBloodRights
     printEnabled(nil, v.persistent.spamBloodRights, "spamming Blood Rights")
 end
-function ____exports.spawnCollectible(self, params)
+--- Spawns a collectible at a specific grid tile location. You must specify the number corresponding
+-- to the collectible type and the number corresponding to the grid tile location.
+-- 
+-- For example, this would spawn Spoon Bender in the top-left corner of a 1x1 room:
+-- 
+-- ```text
+-- spawnCollectibleAt 3 16
+-- ```
+-- 
+-- (You can use the "grid" command to toggle displaying the numerical grid indexes corresponding to
+-- a grid tile.)
+function ____exports.spawnCollectibleAt(self, params)
     if params == "" then
-        print("You must specify the name or number corresponding to the collectible type.")
+        print("You must specify the number corresponding to the collectible type and the number corresponding to the grid tile location.")
         return
     end
-    local collectibleTypeNumber = tonumber(params)
-    local collectibleType
-    if collectibleTypeNumber == nil then
-        local match = getMapPartialMatch(nil, params, COLLECTIBLE_NAME_TO_TYPE_MAP)
-        if match == nil then
-            print("Unknown collectible: " .. params)
-            return
-        end
-        collectibleType = match[2]
-    else
-        collectibleType = asCollectibleType(nil, collectibleTypeNumber)
+    local args = __TS__StringSplit(params, " ")
+    if #args ~= 2 then
+        print("You must specify the number corresponding to the collectible type and the number corresponding to the grid tile location.")
+        return
     end
-    local roomClass = game:GetRoom()
-    local centerPos = roomClass:GetCenterPos()
-    spawnCollectibleUnsafe(nil, collectibleType, centerPos)
+    local collectibleTypeNumber = tonumber(args[1])
+    if collectibleTypeNumber == nil or collectibleTypeNumber < 0 then
+        print("Failed to parse the collectible type of: " .. tostring(args[1]))
+        return
+    end
+    local gridIndex = tonumber(args[2])
+    if gridIndex == nil or gridIndex < 0 then
+        print("Failed to parse the grid index of: " .. tostring(args[2]))
+        return
+    end
+    local collectibleType = asCollectibleType(nil, collectibleTypeNumber)
+    spawnCollectibleUnsafe(nil, collectibleType, gridIndex)
 end
---- Spawns a golden version of the specified trinket type.
-function ____exports.spawnGoldenTrinket(self, params)
-    if params == "" then
-        print("You must specify the name or number corresponding to the trinket type.")
-        return
-    end
-    local trinketTypeNumber = tonumber(params)
-    local trinketType
-    if trinketTypeNumber == nil then
-        local match = getMapPartialMatch(nil, params, TRINKET_NAME_TO_TYPE_MAP)
-        if match == nil then
-            print("Unknown trinket: " .. params)
-            return
-        end
-        trinketType = match[2]
-    else
-        trinketType = asTrinketType(nil, trinketTypeNumber)
-    end
-    local roomClass = game:GetRoom()
-    local centerPos = roomClass:GetCenterPos()
-    local goldenTrinketType = getGoldenTrinketType(nil, trinketType)
-    spawnTrinketFunction(nil, goldenTrinketType, centerPos)
+--- Alias for the `spawnGoldenTrinket` command.
+function ____exports.spawnGoldTrinket(self, params)
+    ____exports.spawnGoldenTrinket(nil, params)
 end
-function ____exports.spawnTrinket(self, params)
-    if params == "" then
-        print("You must specify the name or number corresponding to the trinket type.")
-        return
-    end
-    local trinketTypeNumber = tonumber(params)
-    local trinketType
-    if trinketTypeNumber == nil then
-        local match = getMapPartialMatch(nil, params, TRINKET_NAME_TO_TYPE_MAP)
-        if match == nil then
-            print("Unknown trinket: " .. params)
-            return
-        end
-        trinketType = match[2]
-    else
-        trinketType = asTrinketType(nil, trinketTypeNumber)
-    end
-    local roomClass = game:GetRoom()
-    local centerPos = roomClass:GetCenterPos()
-    spawnTrinketFunction(nil, trinketType, centerPos)
+--- The same thing as the `spawnTrinketAt` command but spawns a golden version of the specified
+-- trinket.
+function ____exports.spawnGoldenTrinketAt(self, params)
+    ____exports.spawnTrinketAt(nil, params, true)
 end
 --- Toggles a set movement speed and flight for the player. You can provide an optional argument to
 -- this command in order to set the speed to a specific amount. Default is 2.0 (which is the maximum
@@ -49226,6 +50210,10 @@ end
 --- Warps to the first Treasure Room on the floor.
 function ____exports.treasureRoom(self)
     warpToRoomType(nil, RoomType.TREASURE)
+end
+--- Alias for the "spawnTrinket" command.
+function ____exports.trinket(self, params)
+    ____exports.spawnTrinket(nil, params)
 end
 --- Warps to the first Ultra Secret Room on the floor.
 function ____exports.ultraSecretRoom(self)
@@ -49488,10 +50476,10 @@ local Exported = ____decorators.Exported
 local ____playerDataStructures = require("lua_modules.isaacscript-common.dist.src.functions.playerDataStructures")
 local mapGetPlayer = ____playerDataStructures.mapGetPlayer
 local mapSetPlayer = ____playerDataStructures.mapSetPlayer
-local ____playerStats = require("lua_modules.isaacscript-common.dist.src.functions.playerStats")
-local getPlayerStats = ____playerStats.getPlayerStats
 local ____players = require("lua_modules.isaacscript-common.dist.src.functions.players")
 local isEden = ____players.isEden
+local ____stats = require("lua_modules.isaacscript-common.dist.src.functions.stats")
+local getPlayerStats = ____stats.getPlayerStats
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local v = {run = {edenPlayerStats = __TS__New(Map)}}
@@ -49544,8 +50532,8 @@ local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____decorators = require("lua_modules.isaacscript-common.dist.src.decorators")
 local Exported = ____decorators.Exported
 local ____input = require("lua_modules.isaacscript-common.dist.src.functions.input")
-local getMoveActions = ____input.getMoveActions
-local getShootActions = ____input.getShootActions
+local MOVEMENT_ACTIONS_SET = ____input.MOVEMENT_ACTIONS_SET
+local SHOOTING_ACTIONS_SET = ____input.SHOOTING_ACTIONS_SET
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
@@ -49627,13 +50615,11 @@ function DisableInputs.prototype.disableAllInputsExceptFor(self, key, whitelist)
 end
 __TS__DecorateLegacy({Exported}, DisableInputs.prototype, "disableAllInputsExceptFor", true)
 function DisableInputs.prototype.disableMovementInputs(self, key)
-    local moveActions = getMoveActions(nil)
-    self:enableAllInputsExceptFor(key, moveActions)
+    self:enableAllInputsExceptFor(key, MOVEMENT_ACTIONS_SET)
 end
 __TS__DecorateLegacy({Exported}, DisableInputs.prototype, "disableMovementInputs", true)
 function DisableInputs.prototype.disableShootingInputs(self, key)
-    local shootActions = getShootActions(nil)
-    self:enableAllInputsExceptFor(key, shootActions)
+    self:enableAllInputsExceptFor(key, SHOOTING_ACTIONS_SET)
 end
 __TS__DecorateLegacy({Exported}, DisableInputs.prototype, "disableShootingInputs", true)
 return ____exports
@@ -49745,6 +50731,8 @@ local setRoomUncleared = ____rooms.setRoomUncleared
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local asCollectibleType = ____types.asCollectibleType
 local asNumber = ____types.asNumber
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
@@ -49898,30 +50886,28 @@ function DeployJSONRoom.prototype.spawnAllEntities(self, jsonRoom, rng, verbose)
     for ____, jsonSpawn in ipairs(jsonRoom.spawn) do
         local xString = jsonSpawn["$"].x
         local x = tonumber(xString)
-        if x == nil then
-            error("Failed to convert the following x coordinate to a number (for a spawn): " .. xString)
-        end
+        assertDefined(nil, x, "Failed to convert the following x coordinate to a number (for a spawn): " .. xString)
         local yString = jsonSpawn["$"].y
         local y = tonumber(yString)
-        if y == nil then
-            error("Failed to convert the following y coordinate to a number (for a spawn): " .. yString)
-        end
+        assertDefined(nil, y, "Failed to convert the following y coordinate to a number (for a spawn): " .. yString)
         local jsonEntity = getRandomJSONEntity(nil, jsonSpawn.entity)
         local entityTypeString = jsonEntity["$"].type
         local entityTypeNumber = tonumber(entityTypeString)
-        if entityTypeNumber == nil then
-            error("Failed to convert the entity type to a number: " .. entityTypeString)
-        end
+        assertDefined(nil, entityTypeNumber, "Failed to convert the entity type to a number: " .. entityTypeString)
         local variantString = jsonEntity["$"].variant
         local variant = tonumber(variantString)
-        if variant == nil then
-            error("Failed to convert the entity variant to a number: " .. tostring(variant))
-        end
+        assertDefined(
+            nil,
+            variant,
+            "Failed to convert the entity variant to a number: " .. tostring(variant)
+        )
         local subTypeString = jsonEntity["$"].subtype
         local subType = tonumber(subTypeString)
-        if subType == nil then
-            error("Failed to convert the entity sub-type to a number: " .. tostring(subType))
-        end
+        assertDefined(
+            nil,
+            subType,
+            "Failed to convert the entity sub-type to a number: " .. tostring(subType)
+        )
         local isGridEntity = GRID_ENTITY_XML_TYPE_SET:has(entityTypeNumber)
         if isGridEntity then
             local gridEntityXMLType = entityTypeNumber
@@ -50263,11 +51249,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultGridEntityDisplayCallback = ____utils.defaultGridEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayTNT = __TS__Class()
 local DebugDisplayTNT = ____exports.DebugDisplayTNT
 DebugDisplayTNT.name = "DebugDisplayTNT"
@@ -50289,28 +51276,11 @@ local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.
 local getEntityID = ____entities.getEntityID
 local ____gridEntities = require("lua_modules.isaacscript-common.dist.src.functions.gridEntities")
 local getGridEntityID = ____gridEntities.getGridEntityID
-local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
-local isReflectionRender = ____utils.isReflectionRender
 function ____exports.defaultEntityDisplayCallback(self, entity)
     return getEntityID(nil, entity)
 end
 function ____exports.defaultGridEntityDisplayCallback(self, gridEntity)
     return getGridEntityID(nil, gridEntity)
-end
-function ____exports.renderTextOnEntity(self, entity, text)
-    if isReflectionRender(nil) then
-        return
-    end
-    local position = Isaac.WorldToScreen(entity.Position)
-    Isaac.RenderText(
-        text,
-        position.X,
-        position.Y,
-        1,
-        1,
-        1,
-        1
-    )
 end
 return ____exports
  end,
@@ -50321,11 +51291,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultEntityDisplayCallback = ____utils.defaultEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayTear = __TS__Class()
 local DebugDisplayTear = ____exports.DebugDisplayTear
 DebugDisplayTear.name = "DebugDisplayTear"
@@ -50348,11 +51319,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultGridEntityDisplayCallback = ____utils.defaultGridEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplaySpikes = __TS__Class()
 local DebugDisplaySpikes = ____exports.DebugDisplaySpikes
 DebugDisplaySpikes.name = "DebugDisplaySpikes"
@@ -50375,11 +51347,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultEntityDisplayCallback = ____utils.defaultEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplaySlot = __TS__Class()
 local DebugDisplaySlot = ____exports.DebugDisplaySlot
 DebugDisplaySlot.name = "DebugDisplaySlot"
@@ -50402,11 +51375,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultGridEntityDisplayCallback = ____utils.defaultGridEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayRock = __TS__Class()
 local DebugDisplayRock = ____exports.DebugDisplayRock
 DebugDisplayRock.name = "DebugDisplayRock"
@@ -50429,11 +51403,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultEntityDisplayCallback = ____utils.defaultEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayProjectile = __TS__Class()
 local DebugDisplayProjectile = ____exports.DebugDisplayProjectile
 DebugDisplayProjectile.name = "DebugDisplayProjectile"
@@ -50456,11 +51431,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultGridEntityDisplayCallback = ____utils.defaultGridEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayPressurePlate = __TS__Class()
 local DebugDisplayPressurePlate = ____exports.DebugDisplayPressurePlate
 DebugDisplayPressurePlate.name = "DebugDisplayPressurePlate"
@@ -50483,11 +51459,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultGridEntityDisplayCallback = ____utils.defaultGridEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayPoop = __TS__Class()
 local DebugDisplayPoop = ____exports.DebugDisplayPoop
 DebugDisplayPoop.name = "DebugDisplayPoop"
@@ -50510,11 +51487,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultEntityDisplayCallback = ____utils.defaultEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayPlayer = __TS__Class()
 local DebugDisplayPlayer = ____exports.DebugDisplayPlayer
 DebugDisplayPlayer.name = "DebugDisplayPlayer"
@@ -50537,11 +51515,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultGridEntityDisplayCallback = ____utils.defaultGridEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayPit = __TS__Class()
 local DebugDisplayPit = ____exports.DebugDisplayPit
 DebugDisplayPit.name = "DebugDisplayPit"
@@ -50564,11 +51543,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultEntityDisplayCallback = ____utils.defaultEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayPickup = __TS__Class()
 local DebugDisplayPickup = ____exports.DebugDisplayPickup
 DebugDisplayPickup.name = "DebugDisplayPickup"
@@ -50591,11 +51571,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultEntityDisplayCallback = ____utils.defaultEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayNPC = __TS__Class()
 local DebugDisplayNPC = ____exports.DebugDisplayNPC
 DebugDisplayNPC.name = "DebugDisplayNPC"
@@ -50618,11 +51599,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultEntityDisplayCallback = ____utils.defaultEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayLaser = __TS__Class()
 local DebugDisplayLaser = ____exports.DebugDisplayLaser
 DebugDisplayLaser.name = "DebugDisplayLaser"
@@ -50645,11 +51627,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultEntityDisplayCallback = ____utils.defaultEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayKnife = __TS__Class()
 local DebugDisplayKnife = ____exports.DebugDisplayKnife
 DebugDisplayKnife.name = "DebugDisplayKnife"
@@ -50672,11 +51655,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultEntityDisplayCallback = ____utils.defaultEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayFamiliar = __TS__Class()
 local DebugDisplayFamiliar = ____exports.DebugDisplayFamiliar
 DebugDisplayFamiliar.name = "DebugDisplayFamiliar"
@@ -50699,11 +51683,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultEntityDisplayCallback = ____utils.defaultEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayEffect = __TS__Class()
 local DebugDisplayEffect = ____exports.DebugDisplayEffect
 DebugDisplayEffect.name = "DebugDisplayEffect"
@@ -50726,11 +51711,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultGridEntityDisplayCallback = ____utils.defaultGridEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayDoor = __TS__Class()
 local DebugDisplayDoor = ____exports.DebugDisplayDoor
 DebugDisplayDoor.name = "DebugDisplayDoor"
@@ -50753,11 +51739,12 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____render = require("lua_modules.isaacscript-common.dist.src.functions.render")
+local renderTextOnEntity = ____render.renderTextOnEntity
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____utils = require("lua_modules.isaacscript-common.dist.src.classes.features.other.debugDisplay.utils")
 local defaultEntityDisplayCallback = ____utils.defaultEntityDisplayCallback
-local renderTextOnEntity = ____utils.renderTextOnEntity
 ____exports.DebugDisplayBomb = __TS__Class()
 local DebugDisplayBomb = ____exports.DebugDisplayBomb
 DebugDisplayBomb.name = "DebugDisplayBomb"
@@ -50837,6 +51824,8 @@ local ____stage = require("lua_modules.isaacscript-common.dist.src.functions.sta
 local setStage = ____stage.setStage
 local ____tstlClass = require("lua_modules.isaacscript-common.dist.src.functions.tstlClass")
 local getTSTLClassName = ____tstlClass.getTSTLClassName
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local ____vector = require("lua_modules.isaacscript-common.dist.src.functions.vector")
 local isVector = ____vector.isVector
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
@@ -51053,9 +52042,7 @@ function CustomTrapdoors.prototype.checkAllPlayersLayingDownComplete(self)
     v.run.state = StageTravelState.NONE
     self:logStateChanged()
     local tstlClassName = getTSTLClassName(nil, self)
-    if tstlClassName == nil then
-        error("Failed to find get the class name for the custom trapdoor feature.")
-    end
+    assertDefined(nil, tstlClassName, "Failed to find get the class name for the custom trapdoor feature.")
     self.disableInputs:enableAllInputs(tstlClassName)
 end
 function CustomTrapdoors.prototype.drawBlackSprite(self)
@@ -51104,14 +52091,14 @@ function CustomTrapdoors.prototype.checkCustomTrapdoorPlayerTouched(self, gridEn
         do
             local player = playerEntity:ToPlayer()
             if player == nil then
-                goto __continue43
+                goto __continue42
             end
             if not self.ponyDetection:isPlayerUsingPony(player) and not isChildPlayer(nil, player) and canPlayerInteractWithTrapdoor(nil, player) then
                 self:playerTouchedCustomTrapdoor(gridEntity, trapdoorDescription, player)
                 return
             end
         end
-        ::__continue43::
+        ::__continue42::
     end
 end
 function CustomTrapdoors.prototype.playerTouchedCustomTrapdoor(self, gridEntity, trapdoorDescription, player)
@@ -51119,9 +52106,7 @@ function CustomTrapdoors.prototype.playerTouchedCustomTrapdoor(self, gridEntity,
     v.run.customTrapdoorActivated = trapdoorDescription
     self:logStateChanged()
     local tstlClassName = getTSTLClassName(nil, self)
-    if tstlClassName == nil then
-        error("Failed to find get the class name for the custom trapdoor feature.")
-    end
+    assertDefined(nil, tstlClassName, "Failed to find get the class name for the custom trapdoor feature.")
     local whitelist = __TS__New(ReadonlySet, {ButtonAction.CONSOLE})
     self.disableInputs:disableAllInputsExceptFor(tstlClassName, whitelist)
     setPlayerAttributes(nil, player, gridEntity.Position)
@@ -51329,6 +52314,7 @@ local __TS__DecorateLegacy = ____lualib.__TS__DecorateLegacy
 local ____exports = {}
 local getRoomTypeMap
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
 local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local LevelCurse = ____isaac_2Dtypescript_2Ddefinitions.LevelCurse
 local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
@@ -51370,6 +52356,8 @@ local ____stage = require("lua_modules.isaacscript-common.dist.src.functions.sta
 local setStage = ____stage.setStage
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local asNumber = ____types.asNumber
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local ____backdrop = require("lua_modules.isaacscript-common.dist.src.classes.features.other.customStages.backdrop")
@@ -51436,10 +52424,9 @@ function CustomStages.prototype.____constructor(self, customGridEntities, custom
     self.v = v
     self.customStagesMap = __TS__New(Map)
     self.customStageCachedRoomData = __TS__New(Map)
+    self.usingRedKey = false
     self.goToCustomStage = function(____, destinationName, destinationStage, _destinationStageType)
-        if destinationName == nil then
-            error("Failed to go to a custom stage since the custom trapdoors feature did not pass a destination name to the logic function.")
-        end
+        assertDefined(nil, destinationName, "Failed to go to a custom stage since the custom trapdoors feature did not pass a destination name to the logic function.")
         local firstFloor = destinationStage == LevelStage.BASEMENT_1
         self:setCustomStage(destinationName, firstFloor)
     end
@@ -51459,6 +52446,19 @@ function CustomStages.prototype.____constructor(self, customGridEntities, custom
             end
         end
     end
+    self.postUseItemRedKey = function()
+        local customStage = v.run.currentCustomStage
+        if customStage == nil then
+            return nil
+        end
+        if not self.usingRedKey then
+            return
+        end
+        self.usingRedKey = false
+        local level = game:GetLevel()
+        level:SetStage(CUSTOM_FLOOR_STAGE, CUSTOM_FLOOR_STAGE_TYPE)
+        return nil
+    end
     self.postCurseEval = function(____, curses)
         local customStage = v.run.currentCustomStage
         if customStage == nil then
@@ -51475,6 +52475,18 @@ function CustomStages.prototype.____constructor(self, customGridEntities, custom
             return
         end
         streakTextGetShaderParams(nil, customStage, shaderName)
+        return nil
+    end
+    self.preUseItemRedKey = function()
+        local customStage = v.run.currentCustomStage
+        if customStage == nil then
+            return nil
+        end
+        self.usingRedKey = true
+        local level = game:GetLevel()
+        local stage = customStage.baseStage or DEFAULT_BASE_STAGE
+        local stageType = customStage.baseStageType or DEFAULT_BASE_STAGE_TYPE
+        level:SetStage(stage, stageType)
         return nil
     end
     self.postGridEntityBrokenRockAlt = function(____, gridEntity)
@@ -51537,7 +52549,13 @@ function CustomStages.prototype.____constructor(self, customGridEntities, custom
         ISCFeature.PAUSE,
         ISCFeature.RUN_IN_N_FRAMES
     }
-    self.callbacksUsed = {{ModCallback.POST_RENDER, self.postRender}, {ModCallback.POST_CURSE_EVAL, self.postCurseEval}, {ModCallback.GET_SHADER_PARAMS, self.getShaderParams}}
+    self.callbacksUsed = {
+        {ModCallback.POST_RENDER, self.postRender},
+        {ModCallback.POST_USE_ITEM, self.postUseItemRedKey, {CollectibleType.RED_KEY}},
+        {ModCallback.POST_CURSE_EVAL, self.postCurseEval},
+        {ModCallback.GET_SHADER_PARAMS, self.getShaderParams},
+        {ModCallback.PRE_USE_ITEM, self.preUseItemRedKey, {CollectibleType.RED_KEY}}
+    }
     self.customCallbacksUsed = {{ModCallbackCustom.POST_GRID_ENTITY_BROKEN, self.postGridEntityBrokenRockAlt, {GridEntityType.ROCK_ALT}}, {ModCallbackCustom.POST_GRID_ENTITY_INIT, self.postGridEntityInit}, {ModCallbackCustom.POST_NEW_ROOM_REORDERED, self.postNewRoomReordered}}
     self.customGridEntities = customGridEntities
     self.customTrapdoors = customTrapdoors
@@ -51571,10 +52589,10 @@ function CustomStages.prototype.setStageRoomsData(self, customStage, rng, verbos
     for ____, room in ipairs(getRoomsInsideGrid(nil)) do
         do
             if room.SafeGridIndex == startingRoomGridIndex then
-                goto __continue31
+                goto __continue35
             end
             if room.Data == nil then
-                goto __continue31
+                goto __continue35
             end
             local roomType = room.Data.Type
             local roomShapeMap = customStage.roomTypeMap:get(roomType)
@@ -51582,13 +52600,13 @@ function CustomStages.prototype.setStageRoomsData(self, customStage, rng, verbos
                 if roomType == RoomType.DEFAULT then
                     logError((((("Failed to find any custom rooms for RoomType." .. RoomType[roomType]) .. " (") .. tostring(roomType)) .. ") for custom stage: ") .. customStage.name)
                 end
-                goto __continue31
+                goto __continue35
             end
             local roomShape = room.Data.Shape
             local roomDoorSlotFlagMap = roomShapeMap:get(roomShape)
             if roomDoorSlotFlagMap == nil then
                 logError((((((((("Failed to find any custom rooms for RoomType." .. RoomType[roomType]) .. " (") .. tostring(roomType)) .. ") + RoomShape.") .. RoomShape[roomShape]) .. " (") .. tostring(roomShape)) .. ") for custom stage: ") .. customStage.name)
-                goto __continue31
+                goto __continue35
             end
             local doorSlotFlags = room.Data.Doors
             local roomsMetadata = roomDoorSlotFlagMap:get(doorSlotFlags)
@@ -51598,13 +52616,13 @@ function CustomStages.prototype.setStageRoomsData(self, customStage, rng, verbos
                 roomsMetadata = roomDoorSlotFlagMap:get(allDoorSlotFlags)
                 if roomsMetadata == nil then
                     logError((((((((("Failed to find any custom rooms for RoomType." .. RoomType[roomType]) .. " (") .. tostring(roomType)) .. ") + RoomShape.") .. RoomShape[roomShape]) .. " (") .. tostring(roomShape)) .. ") + all doors enabled for custom stage: ") .. customStage.name)
-                    goto __continue31
+                    goto __continue35
                 end
             end
             local randomRoom
             if roomType == RoomType.BOSS then
                 if customStage.bossPool == nil then
-                    goto __continue31
+                    goto __continue35
                 end
                 randomRoom = getRandomBossRoomFromPool(
                     nil,
@@ -51627,13 +52645,13 @@ function CustomStages.prototype.setStageRoomsData(self, customStage, rng, verbos
                 )
                 if newRoomData == nil then
                     logError((("Failed to get the room data for room variant " .. tostring(randomRoom.variant)) .. " for custom stage: ") .. customStage.name)
-                    goto __continue31
+                    goto __continue35
                 end
                 self.customStageCachedRoomData:set(randomRoom.variant, newRoomData)
             end
             room.Data = newRoomData
         end
-        ::__continue31::
+        ::__continue35::
     end
 end
 function CustomStages.prototype.setCustomStage(self, name, firstFloor, streakText, verbose)
@@ -51647,9 +52665,7 @@ function CustomStages.prototype.setCustomStage(self, name, firstFloor, streakTex
         verbose = false
     end
     local customStage = self.customStagesMap:get(name)
-    if customStage == nil then
-        error(("Failed to set the custom stage of \"" .. name) .. "\" because it was not found in the custom stages map. (Try restarting IsaacScript / recompiling the mod / restarting the game, and try again. If that does not work, you probably forgot to define it in your \"tsconfig.json\" file.) See the website for more details on how to set up custom stages.")
-    end
+    assertDefined(nil, customStage, ("Failed to set the custom stage of \"" .. name) .. "\" because it was not found in the custom stages map. (Try restarting IsaacScript / recompiling the mod / restarting the game, and try again. If that does not work, you probably forgot to define it in your \"tsconfig.json\" file.) See the website for more details on how to set up custom stages.")
     local level = game:GetLevel()
     local stage = level:GetStage()
     local seeds = game:GetSeeds()
@@ -53018,12 +54034,13 @@ local spawnEffectWithSeed = ____entitiesSpecific.spawnEffectWithSeed
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
 local newRNG = ____rng.newRNG
 local ____roomShape = require("lua_modules.isaacscript-common.dist.src.functions.roomShape")
-local isLRoom = ____roomShape.isLRoom
+local isLRoomShape = ____roomShape.isLRoomShape
 local isNarrowRoom = ____roomShape.isNarrowRoom
 local ____string = require("lua_modules.isaacscript-common.dist.src.functions.string")
 local removeCharactersBefore = ____string.removeCharactersBefore
 local trimPrefix = ____string.trimPrefix
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local eRange = ____utils.eRange
 local iRange = ____utils.iRange
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
@@ -53052,10 +54069,8 @@ function spawnWallEntity(self, customStage, rng, isExtraWall)
     sprite:Load(ISAACSCRIPT_CUSTOM_STAGE_GFX_PATH .. "/wall-backdrop.anm2", false)
     local wallLayersArray = isExtraWall and ROOM_SHAPE_WALL_EXTRA_ANM2_LAYERS or ROOM_SHAPE_WALL_ANM2_LAYERS
     local numWallLayers = wallLayersArray[roomShape]
-    if numWallLayers == nil then
-        error("Failed to get the layers when creating the backdrop for custom stage: " .. customStage.name)
-    end
-    if isLRoom(nil, roomShape) then
+    assertDefined(nil, numWallLayers, "Failed to get the layers when creating the backdrop for custom stage: " .. customStage.name)
+    if isLRoomShape(nil, roomShape) then
         local cornerPNGPath = getBackdropPNGPath(nil, customStage, BackdropKind.CORNER, rng)
         sprite:ReplaceSpritesheet(0, cornerPNGPath)
     end
@@ -53098,11 +54113,11 @@ function spawnFloorEntity(self, customStage, rng)
     sprite:Load(ISAACSCRIPT_CUSTOM_STAGE_GFX_PATH .. "/floor-backdrop.anm2", false)
     local numFloorLayers = getNumFloorLayers(nil, roomShape)
     if numFloorLayers ~= nil then
-        for ____, layerID in ipairs(eRange(nil, 0, numFloorLayers)) do
+        for ____, layerID in ipairs(eRange(nil, numFloorLayers)) do
             local wallPNGPath = getBackdropPNGPath(nil, customStage, BackdropKind.WALL, rng)
             sprite:ReplaceSpritesheet(layerID, wallPNGPath)
         end
-    elseif isLRoom(nil, roomShape) then
+    elseif isLRoomShape(nil, roomShape) then
         for ____, layerID in ipairs(L_FLOOR_ANM2_LAYERS) do
             local LFloorPNGPath = getBackdropPNGPath(nil, customStage, BackdropKind.L_FLOOR, rng)
             sprite:ReplaceSpritesheet(layerID, LFloorPNGPath)
@@ -53124,21 +54139,21 @@ function spawnFloorEntity(self, customStage, rng)
 end
 function getNumFloorLayers(self, roomShape)
     repeat
-        local ____switch23 = roomShape
-        local ____cond23 = ____switch23 == RoomShape.SHAPE_1x1
-        if ____cond23 then
+        local ____switch22 = roomShape
+        local ____cond22 = ____switch22 == RoomShape.SHAPE_1x1
+        if ____cond22 then
             do
                 return 4
             end
         end
-        ____cond23 = ____cond23 or (____switch23 == RoomShape.SHAPE_1x2 or ____switch23 == RoomShape.SHAPE_2x1)
-        if ____cond23 then
+        ____cond22 = ____cond22 or (____switch22 == RoomShape.SHAPE_1x2 or ____switch22 == RoomShape.SHAPE_2x1)
+        if ____cond22 then
             do
                 return 8
             end
         end
-        ____cond23 = ____cond23 or ____switch23 == RoomShape.SHAPE_2x2
-        if ____cond23 then
+        ____cond22 = ____cond22 or ____switch22 == RoomShape.SHAPE_2x2
+        if ____cond22 then
             do
                 return 16
             end
@@ -53307,6 +54322,8 @@ local ____map = require("lua_modules.isaacscript-common.dist.src.functions.map")
 local copyMap = ____map.copyMap
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
 local getRandomSeed = ____rng.getRandomSeed
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local ____weighted = require("lua_modules.isaacscript-common.dist.src.functions.weighted")
 local getRandomIndexFromWeightedArray = ____weighted.getRandomIndexFromWeightedArray
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
@@ -53343,17 +54360,21 @@ function CustomItemPools.prototype.getCustomItemPoolCollectible(self, itemPoolTy
         defaultItem = CollectibleType.NULL
     end
     local customItemPool = v.run.customItemPools:get(itemPoolTypeCustom)
-    if customItemPool == nil then
-        error("Failed to find the custom item pool of: " .. tostring(itemPoolTypeCustom))
-    end
+    assertDefined(
+        nil,
+        customItemPool,
+        "Failed to find the custom item pool of: " .. tostring(itemPoolTypeCustom)
+    )
     if #customItemPool == 0 then
         return defaultItem
     end
     local randomIndex = getRandomIndexFromWeightedArray(nil, customItemPool, seedOrRNG)
     local tuple = customItemPool[randomIndex + 1]
-    if tuple == nil then
-        error("Failed to get an element from a custom item pool using a random index of: " .. tostring(randomIndex))
-    end
+    assertDefined(
+        nil,
+        tuple,
+        "Failed to get an element from a custom item pool using a random index of: " .. tostring(randomIndex)
+    )
     if decrease then
         arrayRemoveIndexInPlace(nil, customItemPool, randomIndex)
     end
@@ -53516,7 +54537,7 @@ local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____decorators = require("lua_modules.isaacscript-common.dist.src.decorators")
 local Exported = ____decorators.Exported
 local ____stats = require("lua_modules.isaacscript-common.dist.src.functions.stats")
-local addStat = ____stats.addStat
+local addPlayerStat = ____stats.addPlayerStat
 local getDefaultPlayerStat = ____stats.getDefaultPlayerStat
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
@@ -53540,7 +54561,7 @@ function CharacterStats.prototype.____constructor(self)
             return
         end
         local delta = stat - defaultStat
-        addStat(nil, player, cacheFlag, delta)
+        addPlayerStat(nil, player, cacheFlag, delta)
     end
     self.callbacksUsed = {{ModCallback.EVALUATE_CACHE, self.evaluateCache}}
 end
@@ -53627,7 +54648,7 @@ function CharacterHealthConversion.prototype.____constructor(self)
         local character = player:GetPlayerType()
         local conversionHeartSubType = self.characterHealthReplacementMap:get(character)
         if conversionHeartSubType == nil then
-            return
+            return nil
         end
         convertRedHeartContainers(nil, player, conversionHeartSubType)
         removeRedHearts(nil, player)
@@ -54685,8 +55706,8 @@ local ____ISCFeature = require("lua_modules.isaacscript-common.dist.src.enums.IS
 local ISCFeature = ____ISCFeature.ISCFeature
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
-local ____collectibles = require("lua_modules.isaacscript-common.dist.src.functions.collectibles")
-local removeCollectibleFromItemTracker = ____collectibles.removeCollectibleFromItemTracker
+local ____external = require("lua_modules.isaacscript-common.dist.src.functions.external")
+local removeCollectibleFromItemTracker = ____external.removeCollectibleFromItemTracker
 local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
 local log = ____log.log
 local ____logMisc = require("lua_modules.isaacscript-common.dist.src.functions.logMisc")
@@ -54842,6 +55863,8 @@ local ____roomData = require("lua_modules.isaacscript-common.dist.src.functions.
 local getRoomListIndex = ____roomData.getRoomListIndex
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isNumber = ____types.isNumber
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 local ____vector = require("lua_modules.isaacscript-common.dist.src.functions.vector")
 local isVector = ____vector.isVector
 local ____DefaultMap = require("lua_modules.isaacscript-common.dist.src.classes.DefaultMap")
@@ -54935,9 +55958,7 @@ function CustomGridEntities.prototype.spawnCustomGridEntity(self, gridEntityType
     local roomListIndex = getRoomListIndex(nil)
     local gridIndex = isVector(nil, gridIndexOrPosition) and room:GetGridIndex(gridIndexOrPosition) or gridIndexOrPosition
     local customGridEntity = spawnGridEntityWithVariant(nil, baseGridEntityType, baseGridEntityVariant, gridIndexOrPosition)
-    if customGridEntity == nil then
-        error("Failed to spawn a custom grid entity.")
-    end
+    assertDefined(nil, customGridEntity, "Failed to spawn a custom grid entity.")
     if gridCollisionClass ~= nil then
         customGridEntity.CollisionClass = gridCollisionClass
     end
@@ -56584,8 +57605,8 @@ local v = {run = {
 }}
 --- The vanilla `POST_USE_PILL` callback does not pass the `PillColor` of the used pill. We can
 -- resolve pill effect to pill color by using the `ItemPool.GetPillEffect` method. However, this
--- does not tell us whether or not the pill used was a horse pill. Thus, we must keep track of the
--- pills that the player is holding on every frame to account for this.
+-- does not tell us whether the pill used was a horse pill. Thus, we must keep track of the pills
+-- that the player is holding on every frame to account for this.
 -- 
 -- In some cases, pills can be used without a corresponding pocket item slot, like in the case of
 -- the reverse Temperance card. In this case, we fall back to looking up the color using the
@@ -58017,8 +59038,8 @@ local colorEquals = ____color.colorEquals
 local isColor = ____color.isColor
 local ____playerIndex = require("lua_modules.isaacscript-common.dist.src.functions.playerIndex")
 local getPlayerIndex = ____playerIndex.getPlayerIndex
-local ____playerStats = require("lua_modules.isaacscript-common.dist.src.functions.playerStats")
-local getPlayerStat = ____playerStats.getPlayerStat
+local ____stats = require("lua_modules.isaacscript-common.dist.src.functions.stats")
+local getPlayerStat = ____stats.getPlayerStat
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isBoolean = ____types.isBoolean
 local isNumber = ____types.isNumber
@@ -58281,8 +59302,6 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local ____shouldFire = require("lua_modules.isaacscript-common.dist.src.shouldFire")
-local shouldFirePickup = ____shouldFire.shouldFirePickup
 local ____CustomCallback = require("lua_modules.isaacscript-common.dist.src.classes.private.CustomCallback")
 local CustomCallback = ____CustomCallback.CustomCallback
 ____exports.PostPickupSelectionFilter = __TS__Class()
@@ -58291,7 +59310,11 @@ PostPickupSelectionFilter.name = "PostPickupSelectionFilter"
 __TS__ClassExtends(PostPickupSelectionFilter, CustomCallback)
 function PostPickupSelectionFilter.prototype.____constructor(self)
     CustomCallback.prototype.____constructor(self)
-    self.shouldFire = shouldFirePickup
+    self.shouldFire = function(____, fireArgs, optionalArgs)
+        local _pickup, pickupVariant, subType = table.unpack(fireArgs)
+        local callbackPickupVariant, callbackPickupSubType = table.unpack(optionalArgs)
+        return (callbackPickupVariant == nil or callbackPickupVariant == pickupVariant) and (callbackPickupSubType == nil or callbackPickupSubType == subType)
+    end
     self.postPickupSelection = function(____, pickup, variant, subType) return self:fire(pickup, variant, subType) end
     self.callbacksUsed = {{ModCallback.POST_PICKUP_SELECTION, self.postPickupSelection}}
 end
@@ -58577,14 +59600,14 @@ function PostNewRoomEarly.prototype.isNewRoom(self)
     if topLeftWall == nil then
         topLeftWall = spawnGridEntity(nil, GridEntityType.WALL, topLeftWallGridIndex)
         if topLeftWall == nil then
-            logError("Failed to spawn a new wall (1) for the POST_NEW_ROOM_EARLY callback.")
+            logError("Failed to spawn a new wall for the POST_NEW_ROOM_EARLY callback (on the first try).")
             return false
         end
     end
     if topLeftWall2 == nil then
         topLeftWall2 = spawnGridEntity(nil, GridEntityType.WALL, rightOfTopWallGridIndex)
         if topLeftWall2 == nil then
-            logError("Failed to spawn a new wall (2) for the POST_NEW_ROOM_EARLY callback.")
+            logError("Failed to spawn a new wall for the POST_NEW_ROOM_EARLY callback (on the second try).")
             return false
         end
     end
