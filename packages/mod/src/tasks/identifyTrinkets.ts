@@ -2,6 +2,7 @@ import { Task } from "common";
 import type { TrinketType } from "isaac-typescript-definitions";
 import { SoundEffect } from "isaac-typescript-definitions";
 import {
+  VANILLA_TRINKET_TYPES,
   emptyArray,
   game,
   getRandomArrayElement,
@@ -15,7 +16,6 @@ import { resetAllButtons } from "../features/buttonSubroutines";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import { g } from "../globals";
-import { mod } from "../mod";
 import { initGlowingItemSprite } from "../sprite";
 import { drawFontText, movePlayerToGridIndex } from "../utils";
 
@@ -76,12 +76,10 @@ function setupRound() {
 }
 
 function getRandomTrinkets(): TrinketType[] {
-  const trinketArray = mod.getTrinketArray();
-
   const randomTrinkets: TrinketType[] = [];
   repeat(NUM_RANDOM_TRINKETS, () => {
     const randomTrinket = getRandomArrayElement(
-      trinketArray,
+      VANILLA_TRINKET_TYPES,
       undefined,
       randomTrinkets,
     );

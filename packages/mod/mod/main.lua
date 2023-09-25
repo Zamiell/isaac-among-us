@@ -1109,6 +1109,9 @@ end
 local Error, RangeError, ReferenceError, SyntaxError, TypeError, URIError
 do
     local function getErrorStack(self, constructor)
+        if debug == nil then
+            return nil
+        end
         local level = 1
         while true do
             local info = debug.getinfo(level, "f")
@@ -1490,6 +1493,62 @@ local function __TS__NumberIsNaN(value)
     return value ~= value
 end
 
+local function __TS__StringSubstring(self, start, ____end)
+    if ____end ~= ____end then
+        ____end = 0
+    end
+    if ____end ~= nil and start > ____end then
+        start, ____end = ____end, start
+    end
+    if start >= 0 then
+        start = start + 1
+    else
+        start = 1
+    end
+    if ____end ~= nil and ____end < 0 then
+        ____end = 0
+    end
+    return string.sub(self, start, ____end)
+end
+
+local __TS__ParseInt
+do
+    local parseIntBasePattern = "0123456789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTvVwWxXyYzZ"
+    function __TS__ParseInt(numberString, base)
+        if base == nil then
+            base = 10
+            local hexMatch = __TS__Match(numberString, "^%s*-?0[xX]")
+            if hexMatch ~= nil then
+                base = 16
+                numberString = (__TS__Match(hexMatch, "-")) and "-" .. __TS__StringSubstring(numberString, #hexMatch) or __TS__StringSubstring(numberString, #hexMatch)
+            end
+        end
+        if base < 2 or base > 36 then
+            return 0 / 0
+        end
+        local allowedDigits = base <= 10 and __TS__StringSubstring(parseIntBasePattern, 0, base) or __TS__StringSubstring(parseIntBasePattern, 0, 10 + 2 * (base - 10))
+        local pattern = ("^%s*(-?[" .. allowedDigits) .. "]*)"
+        local number = tonumber((__TS__Match(numberString, pattern)), base)
+        if number == nil then
+            return 0 / 0
+        end
+        if number >= 0 then
+            return math.floor(number)
+        else
+            return math.ceil(number)
+        end
+    end
+end
+
+local function __TS__ParseFloat(numberString)
+    local infinityMatch = __TS__Match(numberString, "^%s*(-?Infinity)")
+    if infinityMatch ~= nil then
+        return __TS__StringAccess(infinityMatch, 0) == "-" and -math.huge or math.huge
+    end
+    local number = tonumber((__TS__Match(numberString, "^%s*(-?%d+%.?%d*)")))
+    return number or 0 / 0
+end
+
 local __TS__NumberToString
 do
     local radixChars = "0123456789abcdefghijklmnopqrstuvwxyz"
@@ -1662,62 +1721,6 @@ local function __TS__ObjectValues(obj)
         result[len] = obj[key]
     end
     return result
-end
-
-local function __TS__ParseFloat(numberString)
-    local infinityMatch = __TS__Match(numberString, "^%s*(-?Infinity)")
-    if infinityMatch ~= nil then
-        return __TS__StringAccess(infinityMatch, 0) == "-" and -math.huge or math.huge
-    end
-    local number = tonumber((__TS__Match(numberString, "^%s*(-?%d+%.?%d*)")))
-    return number or 0 / 0
-end
-
-local function __TS__StringSubstring(self, start, ____end)
-    if ____end ~= ____end then
-        ____end = 0
-    end
-    if ____end ~= nil and start > ____end then
-        start, ____end = ____end, start
-    end
-    if start >= 0 then
-        start = start + 1
-    else
-        start = 1
-    end
-    if ____end ~= nil and ____end < 0 then
-        ____end = 0
-    end
-    return string.sub(self, start, ____end)
-end
-
-local __TS__ParseInt
-do
-    local parseIntBasePattern = "0123456789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTvVwWxXyYzZ"
-    function __TS__ParseInt(numberString, base)
-        if base == nil then
-            base = 10
-            local hexMatch = __TS__Match(numberString, "^%s*-?0[xX]")
-            if hexMatch ~= nil then
-                base = 16
-                numberString = (__TS__Match(hexMatch, "-")) and "-" .. __TS__StringSubstring(numberString, #hexMatch) or __TS__StringSubstring(numberString, #hexMatch)
-            end
-        end
-        if base < 2 or base > 36 then
-            return 0 / 0
-        end
-        local allowedDigits = base <= 10 and __TS__StringSubstring(parseIntBasePattern, 0, base) or __TS__StringSubstring(parseIntBasePattern, 0, 10 + 2 * (base - 10))
-        local pattern = ("^%s*(-?[" .. allowedDigits) .. "]*)"
-        local number = tonumber((__TS__Match(numberString, pattern)), base)
-        if number == nil then
-            return 0 / 0
-        end
-        if number >= 0 then
-            return math.floor(number)
-        else
-            return math.ceil(number)
-        end
-    end
 end
 
 local function __TS__PromiseAll(iterable)
@@ -2587,6 +2590,8 @@ return {
   __TS__Number = __TS__Number,
   __TS__NumberIsFinite = __TS__NumberIsFinite,
   __TS__NumberIsNaN = __TS__NumberIsNaN,
+  __TS__ParseInt = __TS__ParseInt,
+  __TS__ParseFloat = __TS__ParseFloat,
   __TS__NumberToString = __TS__NumberToString,
   __TS__NumberToFixed = __TS__NumberToFixed,
   __TS__ObjectAssign = __TS__ObjectAssign,
@@ -3498,72 +3503,223 @@ do
 end
 return ____exports
  end,
-["packages.mod.src.interfaces.ChatMessage"] = function(...) 
+["packages.mod.src.enums.EffectVariantCustom"] = function(...) 
+local ____exports = {}
+____exports.EffectVariantCustom = {
+    STAGE_API_DOOR = Isaac.GetEntityVariantByName("StageAPIDoor"),
+    VENT = Isaac.GetEntityVariantByName("Vent"),
+    BUTTON = Isaac.GetEntityVariantByName("Button"),
+    MULTIPLAYER_PLAYER = Isaac.GetEntityVariantByName("Multiplayer Player")
+}
+return ____exports
+ end,
+["packages.mod.src.enums.SoundEffectCustom"] = function(...) 
+local ____exports = {}
+____exports.SoundEffectCustom = {
+    DEAD_BODY_REPORT = Isaac.GetSoundIdByName("Dead Body Report"),
+    EMERGENCY_MEETING = Isaac.GetSoundIdByName("Emergency Meeting"),
+    KILL = Isaac.GetSoundIdByName("Kill"),
+    PLAYER_JOINED = Isaac.GetSoundIdByName("Player Joined"),
+    PLAYER_LEFT = Isaac.GetSoundIdByName("Player Left"),
+    ROLE_REVEAL = Isaac.GetSoundIdByName("Role Reveal"),
+    TASK_COMPLETE = Isaac.GetSoundIdByName("Task Complete"),
+    VICTORY = Isaac.GetSoundIdByName("Victory")
+}
+return ____exports
+ end,
+["packages.mod.src.enums.CutsceneState"] = function(...) 
+local ____exports = {}
+____exports.CutsceneState = {}
+____exports.CutsceneState.DISABLED = 0
+____exports.CutsceneState[____exports.CutsceneState.DISABLED] = "DISABLED"
+____exports.CutsceneState.FADING_TO_BLACK = 1
+____exports.CutsceneState[____exports.CutsceneState.FADING_TO_BLACK] = "FADING_TO_BLACK"
+____exports.CutsceneState.TEXT_FADING_IN = 2
+____exports.CutsceneState[____exports.CutsceneState.TEXT_FADING_IN] = "TEXT_FADING_IN"
+____exports.CutsceneState.TEXT = 3
+____exports.CutsceneState[____exports.CutsceneState.TEXT] = "TEXT"
+____exports.CutsceneState.TEXT_FADING_OUT = 4
+____exports.CutsceneState[____exports.CutsceneState.TEXT_FADING_OUT] = "TEXT_FADING_OUT"
+____exports.CutsceneState.FADING_TO_GAME = 5
+____exports.CutsceneState[____exports.CutsceneState.FADING_TO_GAME] = "FADING_TO_GAME"
+return ____exports
+ end,
+["packages.mod.src.enums.EndMeetingState"] = function(...) 
+local ____exports = {}
+____exports.EndMeetingState = {}
+____exports.EndMeetingState.DISABLED = 0
+____exports.EndMeetingState[____exports.EndMeetingState.DISABLED] = "DISABLED"
+____exports.EndMeetingState.FADING_TO_BLACK = 1
+____exports.EndMeetingState[____exports.EndMeetingState.FADING_TO_BLACK] = "FADING_TO_BLACK"
+____exports.EndMeetingState.TEXT_FADING_IN = 2
+____exports.EndMeetingState[____exports.EndMeetingState.TEXT_FADING_IN] = "TEXT_FADING_IN"
+____exports.EndMeetingState.TEXT = 3
+____exports.EndMeetingState[____exports.EndMeetingState.TEXT] = "TEXT"
+____exports.EndMeetingState.TEXT_FADING_OUT = 4
+____exports.EndMeetingState[____exports.EndMeetingState.TEXT_FADING_OUT] = "TEXT_FADING_OUT"
+____exports.EndMeetingState.FADING_TO_GAME = 5
+____exports.EndMeetingState[____exports.EndMeetingState.FADING_TO_GAME] = "FADING_TO_GAME"
+return ____exports
+ end,
+["packages.mod.src.enums.StartMeetingState"] = function(...) 
+local ____exports = {}
+____exports.StartMeetingState = {}
+____exports.StartMeetingState.DISABLED = 0
+____exports.StartMeetingState[____exports.StartMeetingState.DISABLED] = "DISABLED"
+____exports.StartMeetingState.ALERT_STRIP = 1
+____exports.StartMeetingState[____exports.StartMeetingState.ALERT_STRIP] = "ALERT_STRIP"
+____exports.StartMeetingState.FADING_TO_BLACK_WITH_ALERT_STRIP = 2
+____exports.StartMeetingState[____exports.StartMeetingState.FADING_TO_BLACK_WITH_ALERT_STRIP] = "FADING_TO_BLACK_WITH_ALERT_STRIP"
+____exports.StartMeetingState.FADING_TO_GAME = 3
+____exports.StartMeetingState[____exports.StartMeetingState.FADING_TO_GAME] = "FADING_TO_GAME"
+return ____exports
+ end,
+["packages.mod.src.enums.VentState"] = function(...) 
+local ____exports = {}
+____exports.VentState = {}
+____exports.VentState.NONE = 0
+____exports.VentState[____exports.VentState.NONE] = "NONE"
+____exports.VentState.JUMPING_IN = 1
+____exports.VentState[____exports.VentState.JUMPING_IN] = "JUMPING_IN"
+____exports.VentState.IN_VENT = 2
+____exports.VentState[____exports.VentState.IN_VENT] = "IN_VENT"
+____exports.VentState.JUMPING_OUT = 3
+____exports.VentState[____exports.VentState.JUMPING_OUT] = "JUMPING_OUT"
+return ____exports
+ end,
+["packages.mod.src.interfaces.PlayerData"] = function(...) 
 local ____exports = {}
 return ____exports
  end,
-["packages.mod.src.constants"] = function(...) 
+["packages.mod.src.classes.AmongUsGame"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local Map = ____lualib.Map
+local __TS__New = ____lualib.__TS__New
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local __TS__ArrayFind = ____lualib.__TS__ArrayFind
+local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
+local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
+local __TS__Iterator = ____lualib.__TS__Iterator
+local __TS__ObjectEntries = ____lualib.__TS__ObjectEntries
 local ____exports = {}
-____exports.MOD_NAME = "Among Us"
---- The version is updated automatically by a pre-publish script.
-____exports.VERSION = "0.0.1"
-local USE_LOCAL_NETWORK = false
-____exports.REMOTE_HOSTNAME = USE_LOCAL_NETWORK and "192.168.1.10" or "isaacracing.net"
-return ____exports
- end,
-["packages.mod.src.network.sandbox"] = function(...) 
-local ____exports = {}
+local ____common = require("packages.common.src.index")
+local MeetingResolution = ____common.MeetingResolution
+local PlayerTypeAllowed = ____common.PlayerTypeAllowed
+local Role = ____common.Role
+local Task = ____common.Task
+local TaskType = ____common.TaskType
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local log = ____isaacscript_2Dcommon.log
-local ____constants = require("packages.mod.src.constants")
-local REMOTE_HOSTNAME = ____constants.REMOTE_HOSTNAME
-local sandbox = nil
-function ____exports.getClientFromSandbox(self, port, useTCP)
-    if sandbox == nil then
-        return nil
-    end
-    return sandbox.connect(REMOTE_HOSTNAME, port, useTCP)
+local logTable = ____isaacscript_2Dcommon.logTable
+local ____CutsceneState = require("packages.mod.src.enums.CutsceneState")
+local CutsceneState = ____CutsceneState.CutsceneState
+local ____EndMeetingState = require("packages.mod.src.enums.EndMeetingState")
+local EndMeetingState = ____EndMeetingState.EndMeetingState
+local ____StartMeetingState = require("packages.mod.src.enums.StartMeetingState")
+local StartMeetingState = ____StartMeetingState.StartMeetingState
+local ____VentState = require("packages.mod.src.enums.VentState")
+local VentState = ____VentState.VentState
+____exports.AmongUsGame = __TS__Class()
+local AmongUsGame = ____exports.AmongUsGame
+AmongUsGame.name = "AmongUsGame"
+function AmongUsGame.prototype.____constructor(self, id, name, ownerUserID, character)
+    self.started = false
+    self.imposterUserIDs = {}
+    self.meeting = nil
+    self.players = {}
+    self.bodies = {}
+    self.emergencyButtonOnCooldown = true
+    self.playerMap = __TS__New(Map)
+    self.character = PlayerTypeAllowed.ISAAC
+    self.role = Role.CREW
+    self.usedEmergencyMeeting = false
+    self.ventState = VentState.NONE
+    self.ourTasks = {[TaskType.SHORT] = {}, [TaskType.LONG] = {}, [TaskType.COMMON] = {}}
+    self.currentTask = nil
+    self.startTaskTime = 0
+    self.endTaskTime = 0
+    self.taskReturnRoomName = ""
+    self.taskReturnGridIndex = 0
+    self.startGameCutscene = {state = CutsceneState.DISABLED, startRenderFrame = nil}
+    self.startMeeting = {state = StartMeetingState.DISABLED, startRenderFrame = nil}
+    self.endMeeting = {state = EndMeetingState.DISABLED, startRenderFrame = nil, meetingResolution = MeetingResolution.EJECT, userIDEjected = nil}
+    self.id = id
+    self.name = name
+    self.ownerUserID = ownerUserID
+    self.character = character
 end
---- Helper function to call `os.date()`.
-function ____exports.getFormattedTime(self)
-    local format = "%X"
-    if sandbox ~= nil then
-        return sandbox.getDate(format)
-    end
-    return os.date(format)
+function AmongUsGame.prototype.getNumAlivePlayers(self)
+    local alivePlayers = __TS__ArrayFilter(
+        self.players,
+        function(____, player) return player.alive end
+    )
+    return #alivePlayers
 end
---- Helper function to call `socket.gettime()`.
-function ____exports.getSocketTime(self)
-    if sandbox == nil then
-        error("The sandbox is not initialized.")
-    end
-    return sandbox.getTime()
+function AmongUsGame.prototype.getPlayerFromUserID(self, userID)
+    return __TS__ArrayFind(
+        self.players,
+        function(____, player) return player.userID == userID end
+    )
 end
-function ____exports.isSandboxEnabled(self)
-    return sandbox ~= nil
+function AmongUsGame.prototype.getPlayerFromUsername(self, username)
+    return __TS__ArrayFind(
+        self.players,
+        function(____, player) return player.username == username end
+    )
 end
---- Racing+ installs a sandbox that prevents mods from doing unsafe things. If the sandbox is in
--- place, then the require call in the "init()" function will fail even though the "--luadebug" flag
--- is enabled.
--- 
--- This function is similar to the Racing+ "init()" function in "socketClient.ts".
-function ____exports.tryInitRacingPlusSandbox(self)
-    local ok, requiredSandbox = pcall(require, "sandbox")
-    if not ok then
-        return
+function AmongUsGame.prototype.getPlayerIndexFromUserID(self, userID)
+    local player = self:getPlayerFromUserID(userID)
+    local ____temp_0
+    if player == nil then
+        ____temp_0 = nil
+    else
+        ____temp_0 = player.index
     end
-    sandbox = requiredSandbox
-    if SandboxTraceback == nil then
-        sandbox = nil
-        log("Detected the sandbox environment, but it was not initialized correctly. (The invocation in the \"main.lua\" file is probably missing.)")
-        return
+    return ____temp_0
+end
+function AmongUsGame.prototype.getPlayerCharacter(self, userID)
+    local player = self:getPlayerFromUserID(userID)
+    local ____temp_1
+    if player == nil then
+        ____temp_1 = nil
+    else
+        ____temp_1 = player.character
     end
-    if not sandbox.isSocketInitialized() then
-        sandbox = nil
-        log("Detected the sandbox environment, but the socket library failed to load. (The \"--luadebug\" flag is probably turned off.)")
-        return
+    return ____temp_1
+end
+function AmongUsGame.prototype.getPlayerUsername(self, userID)
+    local player = self:getPlayerFromUserID(userID)
+    local ____temp_2
+    if player == nil then
+        ____temp_2 = nil
+    else
+        ____temp_2 = player.username
     end
-    log("Detected the sandbox environment.")
+    return ____temp_2
+end
+function AmongUsGame.prototype.isImposter(self, userID)
+    local player = self:getPlayerFromUserID(userID)
+    return player ~= nil and __TS__ArrayIncludes(self.imposterUserIDs, player.userID)
+end
+function AmongUsGame.prototype.logBodies(self)
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(self.bodies)) do
+        local i = ____value[1]
+        local body = ____value[2]
+        log(("Body " .. tostring(i)) .. ":")
+        logTable(body)
+    end
+end
+function AmongUsGame.prototype.logOurTasks(self)
+    log("Our tasks:")
+    for ____, ____value in ipairs(__TS__ObjectEntries(self.ourTasks)) do
+        local taskType = ____value[1]
+        local tasks = ____value[2]
+        log("- " .. taskType)
+        for ____, task in ipairs(tasks) do
+            log(((("  - Task." .. Task[task]) .. " (") .. tostring(task)) .. ")")
+        end
+    end
 end
 return ____exports
  end,
@@ -3611,6 +3767,14 @@ do
 end
 do
     local ____export = require("lua_modules.isaacscript-common.dist.src.core.constantsFirstLast")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+do
+    local ____export = require("lua_modules.isaacscript-common.dist.src.core.constantsVanilla")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
             ____exports[____exportKey] = ____exportValue
@@ -11472,8 +11636,8 @@ ____exports.BossID.RAGLICH = 98
 ____exports.BossID[____exports.BossID.RAGLICH] = "RAGLICH"
 ____exports.BossID.DOGMA = 99
 ____exports.BossID[____exports.BossID.DOGMA] = "DOGMA"
-____exports.BossID.BEAST = 100
-____exports.BossID[____exports.BossID.BEAST] = "BEAST"
+____exports.BossID.THE_BEAST = 100
+____exports.BossID[____exports.BossID.THE_BEAST] = "THE_BEAST"
 ____exports.BossID.HORNY_BOYS = 101
 ____exports.BossID[____exports.BossID.HORNY_BOYS] = "HORNY_BOYS"
 ____exports.BossID.CLUTCH = 102
@@ -18832,6 +18996,8 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.string"] = function(...) 
 local ____lualib = require("lualib_bundle")
+local __TS__Spread = ____lualib.__TS__Spread
+local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
 local __TS__ArraySort = ____lualib.__TS__ArraySort
 local __TS__StringReplaceAll = ____lualib.__TS__StringReplaceAll
 local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
@@ -18839,18 +19005,14 @@ local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__StringSlice = ____lualib.__TS__StringSlice
 local __TS__StringEndsWith = ____lualib.__TS__StringEndsWith
 local ____exports = {}
-function ____exports.capitalizeFirstLetter(self, ____string)
-    if ____string == "" then
-        return ____string
-    end
-    local firstCharacter = string.sub(____string, 1, 1)
-    local capitalizedFirstLetter = string.upper(firstCharacter)
-    local restOfString = string.sub(____string, 2)
-    return capitalizedFirstLetter .. restOfString
-end
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local assertDefined = ____utils.assertDefined
 --- Helper function to get the closest value from an array of strings based on partial search text.
--- For the purposes of this function, both search text and the array are converted to lowercase
--- before attempting to find a match.
+-- 
+-- Note that:
+-- - Spaces are automatically removed from the search text.
+-- - Both the search text and the strings to search through are converted to lowercase before
+--   attempting to find a match.
 -- 
 -- For example:
 -- 
@@ -18875,6 +19037,77 @@ function ____exports.getPartialMatch(self, searchText, array)
     )
     __TS__ArraySort(matchingElements)
     return matchingElements[1]
+end
+function ____exports.capitalizeFirstLetter(self, ____string)
+    if ____string == "" then
+        return ____string
+    end
+    local firstCharacter = string.sub(____string, 1, 1)
+    local capitalizedFirstLetter = string.upper(firstCharacter)
+    local restOfString = string.sub(____string, 2)
+    return capitalizedFirstLetter .. restOfString
+end
+--- Helper function to get the closest key from a map based on partial search text. (It only searches
+-- through the keys, not the values.)
+-- 
+-- Note that:
+-- - Spaces are automatically removed from the search text.
+-- - Both the search text and the strings to search through are converted to lowercase before
+--   attempting to find a match.
+-- 
+-- For example:
+-- 
+-- ```ts
+-- const map = new <string, number>Map([
+--   ["foo", 123],
+--   ["bar", 456],
+-- ]);
+-- const searchText = "f";
+-- const match = getMapPartialMatch(map, searchText); // match is now equal to ["foo", 123]
+-- ```
+-- 
+-- @returns If a match was found, returns a tuple of the map key and value. If a match was not
+-- found, returns undefined.
+function ____exports.getMapPartialMatch(self, searchText, map)
+    local keys = {__TS__Spread(map:keys())}
+    local matchingKey = ____exports.getPartialMatch(nil, searchText, keys)
+    if matchingKey == nil then
+        return nil
+    end
+    local value = map:get(matchingKey)
+    assertDefined(nil, value, "Failed to get the map value corresponding to the partial match of: " .. matchingKey)
+    return {matchingKey, value}
+end
+--- Helper function to get the closest key from an object based on partial search text. (It only
+-- searches through the keys, not the values.)
+-- 
+-- Note that:
+-- - Spaces are automatically removed from the search text.
+-- - Both the search text and the strings to search through are converted to lowercase before
+--   attempting to find a match.
+-- 
+-- For example:
+-- 
+-- ```ts
+-- const object = {
+--   foo: 123,
+--   bar: 456,
+-- };
+-- const searchText = "f";
+-- const match = getObjectPartialMatch(object, searchText); // match is now equal to ["foo", 123]
+-- ```
+-- 
+-- @returns If a match was found, returns a tuple of the map key and value. If a match was not
+-- found, returns undefined.
+function ____exports.getObjectPartialMatch(self, searchText, object)
+    local keys = __TS__ObjectKeys(object)
+    local matchingKey = ____exports.getPartialMatch(nil, searchText, keys)
+    if matchingKey == nil then
+        return nil
+    end
+    local value = object[matchingKey]
+    assertDefined(nil, value, "Failed to get the object value corresponding to the partial match of: " .. matchingKey)
+    return {matchingKey, value}
 end
 function ____exports.removeAllCharacters(self, ____string, character)
     return __TS__StringReplaceAll(____string, character, "")
@@ -19856,6 +20089,7 @@ local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
 local Dimension = ____isaac_2Dtypescript_2Ddefinitions.Dimension
 local DisplayFlag = ____isaac_2Dtypescript_2Ddefinitions.DisplayFlag
 local ItemPoolType = ____isaac_2Dtypescript_2Ddefinitions.ItemPoolType
+local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
 local TrinketSlot = ____isaac_2Dtypescript_2Ddefinitions.TrinketSlot
 local ____enums = require("lua_modules.isaacscript-common.dist.src.functions.enums")
 local getEnumLength = ____enums.getEnumLength
@@ -19867,6 +20101,8 @@ local newReadonlyKColor = ____readOnly.newReadonlyKColor
 local newReadonlyVector = ____readOnly.newReadonlyVector
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local asCollectibleType = ____types.asCollectibleType
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local eRange = ____utils.eRange
 local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.src.core.constantsFirstLast")
 local NUM_NORMAL_PILL_COLORS = ____constantsFirstLast.NUM_NORMAL_PILL_COLORS
 --- The combination of the following flags:
@@ -19902,10 +20138,57 @@ ____exports.EMPTY_PNG_PATH = "gfx/none.png"
 -- 
 -- This is equal to 4294967295.
 ____exports.FIRST_GLITCHED_COLLECTIBLE_TYPE = asCollectibleType(nil, (1 << 32) - 1)
+--- An array containing every flying character. This includes non-main characters such as The Soul.
+____exports.FLYING_CHARACTERS = {
+    PlayerType.AZAZEL,
+    PlayerType.LOST,
+    PlayerType.SOUL,
+    PlayerType.LOST_B,
+    PlayerType.JACOB_2_B,
+    PlayerType.SOUL_B
+}
 --- Game frames are what is returned by the `Game.GetFrameCount` method.
 ____exports.GAME_FRAMES_PER_SECOND = 30
 --- Game frames are what is returned by the `Game.GetFrameCount` method.
 ____exports.GAME_FRAMES_PER_MINUTE = ____exports.GAME_FRAMES_PER_SECOND * 60
+--- An array containing every character that is selectable from the main menu (and has achievements
+-- related to completing the various bosses and so on).
+____exports.MAIN_CHARACTERS = {
+    PlayerType.ISAAC,
+    PlayerType.MAGDALENE,
+    PlayerType.CAIN,
+    PlayerType.JUDAS,
+    PlayerType.BLUE_BABY,
+    PlayerType.EVE,
+    PlayerType.SAMSON,
+    PlayerType.AZAZEL,
+    PlayerType.LAZARUS,
+    PlayerType.EDEN,
+    PlayerType.LOST,
+    PlayerType.LILITH,
+    PlayerType.KEEPER,
+    PlayerType.APOLLYON,
+    PlayerType.FORGOTTEN,
+    PlayerType.BETHANY,
+    PlayerType.JACOB,
+    PlayerType.ISAAC_B,
+    PlayerType.MAGDALENE_B,
+    PlayerType.CAIN_B,
+    PlayerType.JUDAS_B,
+    PlayerType.BLUE_BABY_B,
+    PlayerType.EVE_B,
+    PlayerType.SAMSON_B,
+    PlayerType.AZAZEL_B,
+    PlayerType.LAZARUS_B,
+    PlayerType.EDEN_B,
+    PlayerType.LOST_B,
+    PlayerType.LILITH_B,
+    PlayerType.KEEPER_B,
+    PlayerType.APOLLYON_B,
+    PlayerType.FORGOTTEN_B,
+    PlayerType.BETHANY_B,
+    PlayerType.JACOB_B
+}
 --- Render frames are what is returned by the `Isaac.GetFrameCount` method.
 ____exports.RENDER_FRAMES_PER_SECOND = 60
 --- Render frames are what is returned by the `Isaac.GetFrameCount` method.
@@ -19973,10 +20256,15 @@ ____exports.NEW_FLOOR_STARTING_POSITION_GREED_MODE = newReadonlyVector(nil, 320,
 ____exports.NEW_RUN_PLAYER_STARTING_POSITION = newReadonlyVector(nil, 320, 380)
 --- Corresponds to the maximum value for `EntityPlayer.SamsonBerserkCharge`.
 ____exports.MAX_TAINTED_SAMSON_BERSERK_CHARGE = 100000
+--- The number of dimensions, not including `Dimension.CURRENT`. (This is derived from the
+-- `Dimension` enum.)
 ____exports.NUM_DIMENSIONS = getEnumLength(nil, Dimension) - 1
+--- An array containing every valid `Dimension`, not including `Dimension.CURRENT`. (This is derived
+-- from the `NUM_DIMENSIONS` constant.)
+____exports.DIMENSIONS = eRange(nil, ____exports.NUM_DIMENSIONS)
 --- The pill pool for each run is comprised of one effect for each unique pill color (minus gold and
 -- horse pills.)
-____exports.NUM_PILLS_IN_POOL = NUM_NORMAL_PILL_COLORS
+____exports.NUM_PILL_COLORS_IN_POOL = NUM_NORMAL_PILL_COLORS
 ____exports.ONE_BY_ONE_ROOM_GRID_SIZE = 135
 ____exports.SECOND_IN_MILLISECONDS = 1000
 ____exports.MINUTE_IN_MILLISECONDS = 60 * ____exports.SECOND_IN_MILLISECONDS
@@ -20030,6 +20318,7 @@ return ____exports
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local CardType = ____isaac_2Dtypescript_2Ddefinitions.CardType
+local Challenge = ____isaac_2Dtypescript_2Ddefinitions.Challenge
 local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
 local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
 local PillColor = ____isaac_2Dtypescript_2Ddefinitions.PillColor
@@ -20093,6 +20382,8 @@ ____exports.FIRST_ROOM_TYPE = RoomType.DEFAULT
 ____exports.LAST_ROOM_TYPE = getHighestEnumValue(nil, RoomType)
 ____exports.FIRST_STAGE = LevelStage.BASEMENT_1
 ____exports.LAST_STAGE = getHighestEnumValue(nil, LevelStage)
+--- Calculated from the `Challenge` enum. `Challenge.NULL` is not included.
+____exports.NUM_VANILLA_CHALLENGES = getEnumLength(nil, Challenge) - 1
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.enums"] = function(...) 
@@ -20551,7 +20842,8 @@ function ____exports.getHeartRowLength(self, player)
     local maxHearts = player:GetMaxHearts()
     local soulHearts = player:GetSoulHearts()
     local boneHearts = player:GetBoneHearts()
-    local combinedHearts = maxHearts + soulHearts + boneHearts * 2
+    local brokenHearts = player:GetBrokenHearts()
+    local combinedHearts = maxHearts + soulHearts + boneHearts * 2 + brokenHearts * 2
     local heartRowLength = combinedHearts / 2
     return math.min(heartRowLength, 6)
 end
@@ -20729,7 +21021,6 @@ local itemConfig = ____cachedClasses.itemConfig
 local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
 local BLIND_ITEM_PNG_PATH = ____constants.BLIND_ITEM_PNG_PATH
 local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.src.core.constantsFirstLast")
-local FIRST_TRINKET_TYPE = ____constantsFirstLast.FIRST_TRINKET_TYPE
 local LAST_VANILLA_TRINKET_TYPE = ____constantsFirstLast.LAST_VANILLA_TRINKET_TYPE
 local ____MysteriousPaperEffect = require("lua_modules.isaacscript-common.dist.src.enums.MysteriousPaperEffect")
 local MysteriousPaperEffect = ____MysteriousPaperEffect.MysteriousPaperEffect
@@ -20753,8 +21044,6 @@ local ____sprites = require("lua_modules.isaacscript-common.dist.src.functions.s
 local clearSprite = ____sprites.clearSprite
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local asNumber = ____types.asNumber
-local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
-local iRange = ____utils.iRange
 function ____exports.isVanillaTrinketType(self, trinketType)
     return trinketType <= LAST_VANILLA_TRINKET_TYPE
 end
@@ -20872,15 +21161,6 @@ function ____exports.getTrinketName(self, trinketType)
         return itemConfigItem.Name
     end
     return DEFAULT_TRINKET_NAME
-end
---- Helper function to get an array that represents the range from the first trinket type to the last
--- vanilla trinket type. This will include integers that do not represent any valid trinket types.
--- 
--- This function is only useful when building collectible type objects. For most purposes, you
--- should use the `getVanillaTrinketArray` or `getVanillaTrinketSet` helper functions instead (which
--- are part of `ISCFeature.MODDED_ELEMENT_SETS`).
-function ____exports.getVanillaTrinketTypeRange(self)
-    return iRange(nil, FIRST_TRINKET_TYPE, LAST_VANILLA_TRINKET_TYPE)
 end
 --- Helper function to check to see if the player is holding one or more trinkets.
 function ____exports.hasAnyTrinket(self, player)
@@ -21414,6 +21694,28 @@ function ____exports.anyPlayerHasCollectible(self, collectibleType, ignoreModifi
         function(____, player) return player:HasCollectible(collectibleType, ignoreModifiers) end
     )
 end
+--- Helper function to check to see if any player has a temporary collectible effect.
+function ____exports.anyPlayerHasCollectibleEffect(self, collectibleType)
+    local players = getAllPlayers(nil)
+    return __TS__ArraySome(
+        players,
+        function(____, player)
+            local effects = player:GetEffects()
+            return effects:HasCollectibleEffect(collectibleType)
+        end
+    )
+end
+--- Helper function to check to see if any player has a temporary null effect.
+function ____exports.anyPlayerHasNullEffect(self, nullItemID)
+    local players = getAllPlayers(nil)
+    return __TS__ArraySome(
+        players,
+        function(____, player)
+            local effects = player:GetEffects()
+            return effects:HasNullEffect(nullItemID)
+        end
+    )
+end
 --- Helper function to check to see if any player has a particular trinket.
 -- 
 -- @param trinketType The trinket type to check for.
@@ -21424,6 +21726,17 @@ function ____exports.anyPlayerHasTrinket(self, trinketType, ignoreModifiers)
     return __TS__ArraySome(
         players,
         function(____, player) return player:HasTrinket(trinketType, ignoreModifiers) end
+    )
+end
+--- Helper function to check to see if any player has a temporary trinket effect.
+function ____exports.anyPlayerHasTrinketEffect(self, trinketType)
+    local players = getAllPlayers(nil)
+    return __TS__ArraySome(
+        players,
+        function(____, player)
+            local effects = player:GetEffects()
+            return effects:HasTrinketEffect(trinketType)
+        end
     )
 end
 --- Helper function to check to see if any player is holding up an item (from e.g. an active item
@@ -21893,7 +22206,7 @@ function ____exports.removeAllActiveItems(self, player)
         do
             local collectibleType = player:GetActiveItem(activeSlot)
             if collectibleType == CollectibleType.NULL then
-                goto __continue98
+                goto __continue104
             end
             local stillHasCollectible
             repeat
@@ -21903,7 +22216,7 @@ function ____exports.removeAllActiveItems(self, player)
                 end
             until not stillHasCollectible
         end
-        ::__continue98::
+        ::__continue104::
     end
 end
 --- Helper function to remove all of the held trinkets from a player.
@@ -21915,7 +22228,7 @@ function ____exports.removeAllPlayerTrinkets(self, player)
         do
             local trinketType = player:GetTrinket(trinketSlot)
             if trinketType == TrinketType.NULL then
-                goto __continue103
+                goto __continue109
             end
             local alreadyHasTrinket
             repeat
@@ -21925,7 +22238,7 @@ function ____exports.removeAllPlayerTrinkets(self, player)
                 end
             until not alreadyHasTrinket
         end
-        ::__continue103::
+        ::__continue109::
     end
 end
 --- Helper function to remove one or more collectibles to a player.
@@ -22016,9 +22329,9 @@ function ____exports.setActiveItem(self, player, collectibleType, activeSlot, ch
         itemPool:RemoveCollectible(collectibleType)
     end
     repeat
-        local ____switch125 = activeSlot
-        local ____cond125 = ____switch125 == ActiveSlot.PRIMARY
-        if ____cond125 then
+        local ____switch131 = activeSlot
+        local ____cond131 = ____switch131 == ActiveSlot.PRIMARY
+        if ____cond131 then
             do
                 if primaryCollectibleType ~= CollectibleType.NULL then
                     player:RemoveCollectible(primaryCollectibleType)
@@ -22027,8 +22340,8 @@ function ____exports.setActiveItem(self, player, collectibleType, activeSlot, ch
                 break
             end
         end
-        ____cond125 = ____cond125 or ____switch125 == ActiveSlot.SECONDARY
-        if ____cond125 then
+        ____cond131 = ____cond131 or ____switch131 == ActiveSlot.SECONDARY
+        if ____cond131 then
             do
                 if primaryCollectibleType ~= CollectibleType.NULL then
                     player:RemoveCollectible(primaryCollectibleType)
@@ -22043,16 +22356,16 @@ function ____exports.setActiveItem(self, player, collectibleType, activeSlot, ch
                 break
             end
         end
-        ____cond125 = ____cond125 or ____switch125 == ActiveSlot.POCKET
-        if ____cond125 then
+        ____cond131 = ____cond131 or ____switch131 == ActiveSlot.POCKET
+        if ____cond131 then
             do
                 player:SetPocketActiveItem(collectibleType, activeSlot, keepInPools)
                 player:SetActiveCharge(charge, activeSlot)
                 break
             end
         end
-        ____cond125 = ____cond125 or ____switch125 == ActiveSlot.POCKET_SINGLE_USE
-        if ____cond125 then
+        ____cond131 = ____cond131 or ____switch131 == ActiveSlot.POCKET_SINGLE_USE
+        if ____cond131 then
             do
                 player:SetPocketActiveItem(collectibleType, activeSlot, keepInPools)
                 break
@@ -22123,7 +22436,6 @@ local ____constants = require("lua_modules.isaacscript-common.dist.src.core.cons
 local BLIND_ITEM_PNG_PATH = ____constants.BLIND_ITEM_PNG_PATH
 local DEFAULT_ITEM_POOL_TYPE = ____constants.DEFAULT_ITEM_POOL_TYPE
 local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.src.core.constantsFirstLast")
-local FIRST_COLLECTIBLE_TYPE = ____constantsFirstLast.FIRST_COLLECTIBLE_TYPE
 local LAST_VANILLA_COLLECTIBLE_TYPE = ____constantsFirstLast.LAST_VANILLA_COLLECTIBLE_TYPE
 local ____collectibleDescriptionMap = require("lua_modules.isaacscript-common.dist.src.maps.collectibleDescriptionMap")
 local COLLECTIBLE_DESCRIPTION_MAP = ____collectibleDescriptionMap.COLLECTIBLE_DESCRIPTION_MAP
@@ -22143,9 +22455,7 @@ local ____sprites = require("lua_modules.isaacscript-common.dist.src.functions.s
 local clearSprite = ____sprites.clearSprite
 local spriteEquals = ____sprites.spriteEquals
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
-local isNumber = ____types.isNumber
-local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
-local iRange = ____utils.iRange
+local isInteger = ____types.isInteger
 function initQuestionMarkSprite(self)
     local sprite = Sprite()
     sprite:Load("gfx/005.100_collectible.anm2", false)
@@ -22220,9 +22530,8 @@ function ____exports.setCollectibleSubType(self, collectible, newCollectibleType
     )
 end
 function getCollectibleTypeFromArg(self, collectibleOrCollectibleType, functionName)
-    if isNumber(nil, collectibleOrCollectibleType) then
-        local collectibleType = collectibleOrCollectibleType
-        return collectibleType
+    if isInteger(nil, collectibleOrCollectibleType) then
+        return collectibleOrCollectibleType
     end
     local collectible = collectibleOrCollectibleType
     if not isCollectible(nil, collectible) then
@@ -22423,16 +22732,6 @@ function ____exports.getCollectibleTags(self, collectibleOrCollectibleType)
     local collectibleType = getCollectibleTypeFromArg(nil, collectibleOrCollectibleType, "getCollectibleTags")
     local itemConfigItem = itemConfig:GetCollectible(collectibleType)
     return itemConfigItem == nil and ItemConfigTagZero or itemConfigItem.Tags
-end
---- Helper function to get an array that represents the range from the first collectible type to the
--- last vanilla collectible type. This will include integers that do not represent any valid
--- collectible types.
--- 
--- This function is only useful when building collectible type objects. For most purposes, you
--- should use the `getVanillaCollectibleArray` or `getVanillaCollectibleSet` helper functions
--- instead (which are part of `ISCFeature.MODDED_ELEMENT_SETS`).
-function ____exports.getVanillaCollectibleTypeRange(self)
-    return iRange(nil, FIRST_COLLECTIBLE_TYPE, LAST_VANILLA_COLLECTIBLE_TYPE)
 end
 --- Returns true if the item type in the item config is equal to `ItemType.ITEM_ACTIVE`.
 function ____exports.isActiveCollectible(self, collectibleType)
@@ -24790,6 +25089,9 @@ local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
+local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
+local FLYING_CHARACTERS = ____constants.FLYING_CHARACTERS
+local MAIN_CHARACTERS = ____constants.MAIN_CHARACTERS
 local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.src.core.constantsFirstLast")
 local LAST_VANILLA_CHARACTER = ____constantsFirstLast.LAST_VANILLA_CHARACTER
 local ____characterDamageMultipliers = require("lua_modules.isaacscript-common.dist.src.objects.characterDamageMultipliers")
@@ -24818,14 +25120,8 @@ end
 function ____exports.isVanillaCharacter(self, character)
     return character <= LAST_VANILLA_CHARACTER
 end
-local FLYING_CHARACTERS = __TS__New(ReadonlySet, {
-    PlayerType.AZAZEL,
-    PlayerType.LOST,
-    PlayerType.SOUL,
-    PlayerType.LOST_B,
-    PlayerType.JACOB_2_B,
-    PlayerType.SOUL_B
-})
+local FLYING_CHARACTERS_SET = __TS__New(ReadonlySet, FLYING_CHARACTERS)
+local MAIN_CHARACTERS_SET = __TS__New(ReadonlySet, MAIN_CHARACTERS)
 --- Helper function to determine if the given character can have red heart containers. Returns true
 -- for characters like Isaac, Magdalene, or Cain. Returns true for Keeper and Tainted Keeper, even
 -- though coin containers are not technically the same as red heart containers. Returns false for
@@ -24911,9 +25207,13 @@ end
 function ____exports.getCharacterStartingCollectibles(self, character)
     return CHARACTER_STARTING_COLLECTIBLES[character]
 end
-function ____exports.isFlyingCharacter(self, player)
-    local character = player:GetPlayerType()
-    return FLYING_CHARACTERS:has(character)
+function ____exports.isFlyingCharacter(self, character)
+    return FLYING_CHARACTERS_SET:has(character)
+end
+--- Helper function to check if the provided character is one of the characters that are selectable
+-- from the main menu (and have achievements related to completing the various bosses and so on).
+function ____exports.isMainCharacter(self, character)
+    return MAIN_CHARACTERS_SET:has(character)
 end
 return ____exports
  end,
@@ -27835,14 +28135,18 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local ItemConfigTag = ____isaac_2Dtypescript_2Ddefinitions.ItemConfigTag
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local itemConfig = ____cachedClasses.itemConfig
-function ____exports.collectibleHasTag(self, collectibleType, tag)
+local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
+local isInteger = ____types.isInteger
+function ____exports.collectibleHasTag(self, collectibleOrCollectibleType, tag)
+    local collectibleType = isInteger(nil, collectibleOrCollectibleType) and collectibleOrCollectibleType or collectibleOrCollectibleType.SubType
     local itemConfigItem = itemConfig:GetCollectible(collectibleType)
     if itemConfigItem == nil then
         return false
     end
     return itemConfigItem:HasTags(tag)
 end
-function ____exports.isQuestCollectible(self, collectibleType)
+function ____exports.isQuestCollectible(self, collectibleOrCollectibleType)
+    local collectibleType = isInteger(nil, collectibleOrCollectibleType) and collectibleOrCollectibleType or collectibleOrCollectibleType.SubType
     return ____exports.collectibleHasTag(nil, collectibleType, ItemConfigTag.QUEST)
 end
 return ____exports
@@ -28643,6 +28947,9 @@ end
 --- Whether the player is playing on a set seed (i.e. that they entered in a specific seed by
 -- pressing tab on the character selection screen). When the player resets the game on a set seed,
 -- the game will not switch to a different seed.
+-- 
+-- Under the hood, this checks if the current challenge is `Challenge.NULL` and the
+-- `Seeds.IsCustomRun` method.
 function ____exports.onSetSeed(self)
     local seeds = game:GetSeeds()
     local customRun = seeds:IsCustomRun()
@@ -28781,6 +29088,7 @@ local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.
 local game = ____cachedClasses.game
 local sfxManager = ____cachedClasses.sfxManager
 local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
+local DIMENSIONS = ____constants.DIMENSIONS
 local MAX_LEVEL_GRID_INDEX = ____constants.MAX_LEVEL_GRID_INDEX
 local ____roomTypeNames = require("lua_modules.isaacscript-common.dist.src.objects.roomTypeNames")
 local ROOM_TYPE_NAMES = ____roomTypeNames.ROOM_TYPE_NAMES
@@ -28789,7 +29097,6 @@ local MINE_SHAFT_ROOM_SUB_TYPE_SET = ____mineShaftRoomSubTypesSet.MINE_SHAFT_ROO
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____dimensions = require("lua_modules.isaacscript-common.dist.src.functions.dimensions")
-local getAllDimensions = ____dimensions.getAllDimensions
 local inDimension = ____dimensions.inDimension
 local ____doors = require("lua_modules.isaacscript-common.dist.src.functions.doors")
 local closeAllDoors = ____doors.closeAllDoors
@@ -28859,7 +29166,7 @@ function ____exports.getRoomsInsideGrid(self, includeExtraDimensionalRooms)
         includeExtraDimensionalRooms = false
     end
     local level = game:GetLevel()
-    local dimensions = includeExtraDimensionalRooms and getAllDimensions(nil) or ({Dimension.CURRENT})
+    local dimensions = includeExtraDimensionalRooms and DIMENSIONS or ({Dimension.CURRENT})
     --- We use a map instead of an array because room shapes occupy more than one room grid index.
     local roomDescriptorMap = __TS__New(Map)
     for ____, dimension in ipairs(dimensions) do
@@ -28895,6 +29202,9 @@ end
 function ____exports.isAngelShop(self, roomData)
     return roomData.Type == RoomType.ANGEL and roomData.Subtype == asNumber(nil, AngelRoomSubType.SHOP)
 end
+--- Helper function to check to see if the provided room is a boss room for The Beast.
+-- 
+-- Under the hood, this checks the room type and sub-type.
 function ____exports.isBeastRoom(self, roomData)
     return roomData.Type == RoomType.DUNGEON and roomData.Subtype == asNumber(nil, DungeonSubType.BEAST_ROOM)
 end
@@ -29118,6 +29428,9 @@ function ____exports.inAngelShop(self)
     local roomData = getRoomData(nil)
     return ____exports.isAngelShop(nil, roomData)
 end
+--- Helper function to check to see if the current room is a boss room for The Beast.
+-- 
+-- Under the hood, this checks the room type and sub-type.
 function ____exports.inBeastRoom(self)
     local roomData = getRoomData(nil)
     return ____exports.isBeastRoom(nil, roomData)
@@ -29756,8 +30069,16 @@ function ____exports.getDoors(self, ...)
     end
     return doors
 end
+--- Helper function to check if the provided door is the one that leads to the off-grid room that
+-- contains the hole to the Blue Womb. (In vanilla, the door will only appear in the It Lives Boss
+-- Room.)
 function ____exports.isBlueWombDoor(self, door)
     return door.TargetRoomIndex == asNumber(nil, GridRoom.BLUE_WOMB)
+end
+--- Helper function to check if the provided door is the one that leads to the Mega Satan Boss Room.
+-- (In vanilla, the door will only appear in the starting room of The Chest / Dark Room.)
+function ____exports.isMegaSatanDoor(self, door)
+    return door.TargetRoomIndex == asNumber(nil, GridRoom.MEGA_SATAN)
 end
 --- Helper function to check if the provided door leads to the "secret exit" off-grid room that takes
 -- you to the Repentance floor.
@@ -29774,6 +30095,11 @@ function ____exports.isSecretRoomDoor(self, door)
     local sprite = door:GetSprite()
     local fileName = sprite:GetFilename()
     return string.lower(fileName) == "gfx/grid/door_08_holeinwall.anm2"
+end
+--- Helper function to check if the provided door is the one that leads to the off-grid room that
+-- contains the portal to The Void. (In vanilla, the door will only appear in the Hush Boss Room.)
+function ____exports.isVoidDoor(self, door)
+    return door.TargetRoomIndex == asNumber(nil, GridRoom.THE_VOID)
 end
 --- Helper function to remove a single door.
 function ____exports.removeDoor(self, door)
@@ -29839,7 +30165,7 @@ function ____exports.getAngelRoomDoor(self)
     return ____temp_0
 end
 --- Helper function to get the door that leads to the off-grid room that contains the hole to the
--- Blue Womb.
+-- Blue Womb. (In vanilla, the door will only appear in the It Lives Boss Room.)
 -- 
 -- Returns undefined if the room has no Blue Womb doors.
 function ____exports.getBlueWombDoor(self)
@@ -29905,11 +30231,22 @@ function ____exports.getDoorsToRoomIndex(self, ...)
         function(____, door) return roomGridIndexesSet:has(door.TargetRoomIndex) end
     )
 end
+--- Helper function to get the door that leads to the Mega Satan Boss Room. (In vanilla, the door
+-- will only appear in the starting room of The Chest / Dark Room.)
+-- 
+-- Returns undefined if the room has no Mega Satan doors.
+function ____exports.getMegaSatanDoor(self)
+    local doors = ____exports.getDoors(nil)
+    return __TS__ArrayFind(
+        doors,
+        function(____, door) return ____exports.isMegaSatanDoor(nil, door) end
+    )
+end
 function ____exports.getOppositeDoorSlot(self, doorSlot)
     return OPPOSITE_DOOR_SLOTS[doorSlot]
 end
 --- Helper function to get the door that leads to the "secret exit" off-grid room that takes you to
--- the Repentance floor.
+-- the Repentance floor or to the version of Depths 2 that has Dad's Key.
 -- 
 -- Returns undefined if the room has no Repentance doors.
 function ____exports.getRepentanceDoor(self)
@@ -29946,6 +30283,17 @@ function ____exports.getUnusedDoorSlots(self)
     return __TS__ArrayFilter(
         DOOR_SLOT_VALUES,
         function(____, doorSlot) return doorSlot ~= DoorSlot.NO_DOOR_SLOT and room:IsDoorSlotAllowed(doorSlot) and room:GetDoor(doorSlot) == nil end
+    )
+end
+--- Helper function to get the door that leads to the off-grid room that contains the portal to The
+-- Void. (In vanilla, the door will only appear in the Hush Boss Room.)
+-- 
+-- Returns undefined if the room has no Void doors.
+function ____exports.getVoidDoor(self)
+    local doors = ____exports.getDoors(nil)
+    return __TS__ArrayFind(
+        doors,
+        function(____, door) return ____exports.isVoidDoor(nil, door) end
     )
 end
 --- Helper function to check if the current room has one or more doors that lead to the given room
@@ -31256,15 +31604,9 @@ local Dimension = ____isaac_2Dtypescript_2Ddefinitions.Dimension
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local game = ____cachedClasses.game
 local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
-local NUM_DIMENSIONS = ____constants.NUM_DIMENSIONS
+local DIMENSIONS = ____constants.DIMENSIONS
 local ____roomData = require("lua_modules.isaacscript-common.dist.src.functions.roomData")
 local getRoomGridIndex = ____roomData.getRoomGridIndex
-local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
-local eRange = ____utils.eRange
---- Helper function to get an array with every valid `Dimension` (not including `Dimension.CURRENT`).
-function ____exports.getAllDimensions(self)
-    return eRange(nil, NUM_DIMENSIONS)
-end
 --- Helper function to get the current dimension. Most of the time, this will be `Dimension.MAIN`,
 -- but it can change if e.g. the player is in the mirror world of Downpour/Dross.
 function ____exports.getDimension(self)
@@ -31272,7 +31614,7 @@ function ____exports.getDimension(self)
     local roomGridIndex = getRoomGridIndex(nil)
     local roomDescription = level:GetRoomByIdx(roomGridIndex, Dimension.CURRENT)
     local currentRoomHash = GetPtrHash(roomDescription)
-    for ____, dimension in ipairs(____exports.getAllDimensions(nil)) do
+    for ____, dimension in ipairs(DIMENSIONS) do
         local dimensionRoomDescription = level:GetRoomByIdx(roomGridIndex, dimension)
         local dimensionRoomHash = GetPtrHash(dimensionRoomDescription)
         if dimensionRoomHash == currentRoomHash then
@@ -32474,7 +32816,7 @@ local ____rooms = require("lua_modules.isaacscript-common.dist.src.functions.roo
 local roomUpdateSafe = ____rooms.roomUpdateSafe
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local asNumber = ____types.asNumber
-local isNumber = ____types.isNumber
+local isInteger = ____types.isInteger
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
 local assertDefined = ____utils.assertDefined
 local eRange = ____utils.eRange
@@ -32531,20 +32873,20 @@ end
 -- this to false if you need to run this function multiple times.
 function ____exports.removeGridEntity(self, gridEntityOrGridIndex, updateRoom)
     local room = game:GetRoom()
-    local ____isNumber_result_2
-    if isNumber(nil, gridEntityOrGridIndex) then
-        ____isNumber_result_2 = room:GetGridEntity(gridEntityOrGridIndex)
+    local ____isInteger_result_2
+    if isInteger(nil, gridEntityOrGridIndex) then
+        ____isInteger_result_2 = room:GetGridEntity(gridEntityOrGridIndex)
     else
-        ____isNumber_result_2 = gridEntityOrGridIndex
+        ____isInteger_result_2 = gridEntityOrGridIndex
     end
-    local gridEntity = ____isNumber_result_2
+    local gridEntity = ____isInteger_result_2
     if gridEntity == nil then
         return
     end
     local gridEntityType = gridEntity:GetType()
     local variant = gridEntity:GetVariant()
     local position = gridEntity.Position
-    local gridIndex = isNumber(nil, gridEntityOrGridIndex) and gridEntityOrGridIndex or gridEntityOrGridIndex:GetGridIndex()
+    local gridIndex = isInteger(nil, gridEntityOrGridIndex) and gridEntityOrGridIndex or gridEntityOrGridIndex:GetGridIndex()
     room:RemoveGridEntity(gridIndex, 0, false)
     if updateRoom then
         roomUpdateSafe(nil)
@@ -32896,11 +33238,14 @@ function ____exports.isPoopGridEntityXMLType(self, gridEntityXMLType)
     return POOP_GRID_ENTITY_XML_TYPES_SET:has(gridEntityXMLType)
 end
 --- Helper function to detect whether a given Void Portal is one that randomly spawns after a boss is
--- defeated or is one that naturally spawns in the room after Hush. (This is determined by looking
--- at the `VarData` of the entity.)
+-- defeated or is one that naturally spawns in the room after Hush.
+-- 
+-- Under the hood, this is determined by looking at the `VarData` of the entity:
+-- - The `VarData` of Void Portals that are spawned after bosses will be equal to 1.
+-- - The `VarData` of the Void Portal in the room after Hush is equal to 0.
 function ____exports.isPostBossVoidPortal(self, gridEntity)
     local saveState = gridEntity:GetSaveState()
-    return saveState.VarData == 1
+    return saveState.Type == GridEntityType.TRAPDOOR and saveState.Variant == TrapdoorVariant.VOID_PORTAL and saveState.VarData == 1
 end
 --- Helper function to all grid entities in the room except for ones matching the grid entity types
 -- provided.
@@ -35407,7 +35752,6 @@ local itemConfig = ____cachedClasses.itemConfig
 local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.src.core.constantsFirstLast")
 local FIRST_HORSE_PILL_COLOR = ____constantsFirstLast.FIRST_HORSE_PILL_COLOR
 local FIRST_PILL_COLOR = ____constantsFirstLast.FIRST_PILL_COLOR
-local FIRST_PILL_EFFECT = ____constantsFirstLast.FIRST_PILL_EFFECT
 local LAST_HORSE_PILL_COLOR = ____constantsFirstLast.LAST_HORSE_PILL_COLOR
 local LAST_NORMAL_PILL_COLOR = ____constantsFirstLast.LAST_NORMAL_PILL_COLOR
 local LAST_VANILLA_PILL_EFFECT = ____constantsFirstLast.LAST_VANILLA_PILL_EFFECT
@@ -35541,10 +35885,11 @@ function ____exports.getPillEffectType(self, pillEffect)
     local pillEffectClass = PILL_EFFECT_TYPES[pillEffect]
     return pillEffectClass or DEFAULT_PILL_EFFECT_TYPE
 end
---- Helper function to get an array with every vanilla pill effect.
-function ____exports.getVanillaPillEffects(self)
-    return iRange(nil, FIRST_PILL_EFFECT, LAST_VANILLA_PILL_EFFECT)
+--- Helper function to see if the given pill color is either a gold pill or a horse gold pill.
+function ____exports.isGoldPill(self, pillColor)
+    return pillColor == PillColor.GOLD or pillColor == PillColor.HORSE_GOLD
 end
+--- Helper function to see if the given pill color is a horse pill.
 function ____exports.isHorsePill(self, pillColor)
     return asNumber(nil, pillColor) > HORSE_PILL_ADJUSTMENT
 end
@@ -37210,7 +37555,7 @@ local getRoomGridIndex = ____roomData.getRoomGridIndex
 local ____rooms = require("lua_modules.isaacscript-common.dist.src.functions.rooms")
 local getRoomsInsideGrid = ____rooms.getRoomsInsideGrid
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
-local isNumber = ____types.isNumber
+local isInteger = ____types.isInteger
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
 local assertDefined = ____utils.assertDefined
 --- Helper function to get a particular room's minimap display flags (e.g. whether it is visible and
@@ -37373,7 +37718,7 @@ function ____exports.isRoomVisible(self, roomGridIndexOrRoomDescriptor, minimapA
     if minimapAPI == nil then
         minimapAPI = true
     end
-    local roomGridIndex = isNumber(nil, roomGridIndexOrRoomDescriptor) and roomGridIndexOrRoomDescriptor or roomGridIndexOrRoomDescriptor.SafeGridIndex
+    local roomGridIndex = isInteger(nil, roomGridIndexOrRoomDescriptor) and roomGridIndexOrRoomDescriptor or roomGridIndexOrRoomDescriptor.SafeGridIndex
     local roomDisplayFlags = ____exports.getRoomDisplayFlags(nil, roomGridIndex, minimapAPI)
     return roomDisplayFlags ~= DisplayFlagZero
 end
@@ -37879,10 +38224,6 @@ local __TS__Spread = ____lualib.__TS__Spread
 local ____exports = {}
 local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
 local sumArray = ____array.sumArray
-local ____string = require("lua_modules.isaacscript-common.dist.src.functions.string")
-local getPartialMatch = ____string.getPartialMatch
-local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
-local assertDefined = ____utils.assertDefined
 --- Helper function to set a value for a `DefaultMap` that corresponds to an entity, assuming that
 -- the map uses `PtrHash` as an index.
 function ____exports.mapSetHash(self, map, entity, value)
@@ -37912,33 +38253,6 @@ end
 -- `mapSetHash` helper function.
 function ____exports.defaultMapSetHash(self, map, entity, value)
     ____exports.mapSetHash(nil, map, entity, value)
-end
---- Helper function to get the closest value from a map based on partial search text. For the
--- purposes of this function, both search text and map keys are converted to lowercase before
--- attempting to find a match.
--- 
--- For example:
--- 
--- ```ts
--- const map = new <string, number>Map([
---   ["foo", 123],
---   ["bar", 456],
--- ]);
--- const searchText = "f";
--- const match = getMapPartialMatch(map, searchText); // match is now equal to ["foo", 123]
--- ```
--- 
--- @returns If a match was found, returns a tuple of the map key and value. If a match was not
--- found, returns undefined.
-function ____exports.getMapPartialMatch(self, searchText, map)
-    local keys = {__TS__Spread(map:keys())}
-    local matchingKey = getPartialMatch(nil, searchText, keys)
-    if matchingKey == nil then
-        return nil
-    end
-    local value = map:get(matchingKey)
-    assertDefined(nil, value, "Failed to get the map value corresponding to the partial match of: " .. matchingKey)
-    return {matchingKey, value}
 end
 --- Helper function to get a copy of a map with the keys and the values reversed.
 -- 
@@ -39005,6 +39319,15 @@ function ____exports.isDeadEnd(self, roomGridIndex)
     local adjacentExistingRoomGridIndexes = ____exports.getAdjacentExistingRoomGridIndexes(nil, roomGridIndex)
     return #adjacentExistingRoomGridIndexes == 1
 end
+--- Helper function to detect if the provided room was created by the Red Key item.
+-- 
+-- Under the hood, this checks for the `RoomDescriptorFlag.FLAG_RED_ROOM` flag.
+-- 
+-- @param roomGridIndex Optional. Default is the current room index.
+function ____exports.isRedKeyRoom(self, roomGridIndex)
+    local roomDescriptor = getRoomDescriptor(nil, roomGridIndex)
+    return hasFlag(nil, roomDescriptor.Flags, RoomDescriptorFlag.RED_ROOM)
+end
 --- Helper function to determine if a given room grid index is inside of the normal 13x13 level grid.
 -- 
 -- For example, Devil Rooms and the Mega Satan room are not considered to be inside the grid.
@@ -39120,6 +39443,13 @@ function ____exports.getRoomGridIndexesForType(self, ...)
         function(____, roomDescriptor) return roomDescriptor.SafeGridIndex end
     )
 end
+--- Helper function to detect if the current room was created by the Red Key item.
+-- 
+-- Under the hood, this checks for the `RoomDescriptorFlag.FLAG_RED_ROOM` flag.
+function ____exports.inRedKeyRoom(self)
+    local gridIndex = getRoomGridIndex(nil)
+    return ____exports.isRedKeyRoom(nil, gridIndex)
+end
 function ____exports.isDoorSlotValidAtGridIndex(self, doorSlot, roomGridIndex)
     local allowedDoors = getRoomAllowedDoors(nil, roomGridIndex)
     return allowedDoors:has(doorSlot)
@@ -39139,14 +39469,6 @@ function ____exports.isDoorSlotValidAtGridIndexForRedRoom(self, doorSlot, roomGr
     end
     local redRoomGridIndex = roomGridIndex + delta
     return not ____exports.roomExists(nil, redRoomGridIndex) and ____exports.isRoomInsideGrid(nil, redRoomGridIndex)
-end
---- Helper function to detect if the provided room was created by the Red Key item. Under the hood,
--- this checks for the `RoomDescriptorFlag.FLAG_RED_ROOM` flag.
--- 
--- @param roomGridIndex Optional. Default is the current room index.
-function ____exports.isRedKeyRoom(self, roomGridIndex)
-    local roomDescriptor = getRoomDescriptor(nil, roomGridIndex)
-    return hasFlag(nil, roomDescriptor.Flags, RoomDescriptorFlag.RED_ROOM)
 end
 --- Helper function to generate a new room on the floor.
 -- 
@@ -40857,7 +41179,7 @@ function emptyRoomEntities(self)
         ::__continue4::
     end
 end
---- Helper function to remove all grid entities from a room except for doors, and walls.
+--- Helper function to remove all grid entities from a room except for doors and walls.
 function ____exports.emptyRoomGridEntities(self)
     local removedOneOrMoreGridEntities = false
     for ____, gridEntity in ipairs(getGridEntities(nil)) do
@@ -42023,7 +42345,6 @@ local UseFlag = ____isaac_2Dtypescript_2Ddefinitions.UseFlag
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local itemConfig = ____cachedClasses.itemConfig
 local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.src.core.constantsFirstLast")
-local FIRST_CARD_TYPE = ____constantsFirstLast.FIRST_CARD_TYPE
 local LAST_VANILLA_CARD_TYPE = ____constantsFirstLast.LAST_VANILLA_CARD_TYPE
 local ____cardDescriptions = require("lua_modules.isaacscript-common.dist.src.objects.cardDescriptions")
 local CARD_DESCRIPTIONS = ____cardDescriptions.CARD_DESCRIPTIONS
@@ -42035,8 +42356,6 @@ local ____itemConfigCardTypesForCardsSet = require("lua_modules.isaacscript-comm
 local ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET = ____itemConfigCardTypesForCardsSet.ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET
 local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
 local addFlag = ____flag.addFlag
-local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
-local iRange = ____utils.iRange
 --- Returns true for any vanilla card or rune.
 function ____exports.isVanillaCardType(self, cardType)
     return cardType <= LAST_VANILLA_CARD_TYPE
@@ -42080,13 +42399,6 @@ function ____exports.getItemConfigCardType(self, cardType)
     end
     return itemConfigCard.CardType
 end
---- Helper function to get an array with every valid vanilla card sub-type.
--- 
--- Note that unlike collectibles and trinkets, there are no gaps in the card types, so this is a
--- simple range from the first card type to the last vanilla card type.
-function ____exports.getVanillaCardTypes(self)
-    return iRange(nil, FIRST_CARD_TYPE, LAST_VANILLA_CARD_TYPE)
-end
 --- Returns true for cards that have the following card type:
 -- - CardType.TAROT
 -- - CardType.SUIT
@@ -42115,19 +42427,19 @@ end
 function ____exports.isReverseTarotCard(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.TAROT_REVERSE)
 end
---- Returns true for cards that have `CardType.RUNE`.
+--- Returns true for cards that have `ItemConfigCardType.RUNE`.
 function ____exports.isRune(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.RUNE)
 end
---- Returns true for cards that have `CardType.SPECIAL`.
+--- Returns true for cards that have `ItemConfigCardType.SPECIAL`.
 function ____exports.isSpecialCard(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.SPECIAL)
 end
---- Returns true for cards that have `CardType.SUIT`.
+--- Returns true for cards that have `ItemConfigCardType.SUIT`.
 function ____exports.isSuitCard(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.SUIT)
 end
---- Returns true for cards that have `CardType.TAROT`.
+--- Returns true for cards that have `ItemConfigCardType.TAROT`.
 function ____exports.isTarotCard(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.TAROT)
 end
@@ -43864,6 +44176,9 @@ function initOptionalFeatures(self, mod, features)
         for ____, ____value in ipairs(exportedMethodTuples) do
             local funcName = ____value[1]
             local func = ____value[2]
+            if modRecord[funcName] ~= nil then
+                error(("Failed to upgrade the mod since two or more features share the name function name of \"" .. funcName) .. "\". This should never happen, so report this error to the library authors.")
+            end
             modRecord[funcName] = func
         end
     end
@@ -47408,18 +47723,21 @@ local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.
 local itemConfig = ____cachedClasses.itemConfig
 local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
 local FIRST_GLITCHED_COLLECTIBLE_TYPE = ____constants.FIRST_GLITCHED_COLLECTIBLE_TYPE
+local ____constantsVanilla = require("lua_modules.isaacscript-common.dist.src.core.constantsVanilla")
+local VANILLA_CARD_TYPES = ____constantsVanilla.VANILLA_CARD_TYPES
+local VANILLA_COLLECTIBLE_TYPES = ____constantsVanilla.VANILLA_COLLECTIBLE_TYPES
+local VANILLA_PILL_EFFECTS = ____constantsVanilla.VANILLA_PILL_EFFECTS
+local VANILLA_TRINKET_TYPES = ____constantsVanilla.VANILLA_TRINKET_TYPES
 local ____decorators = require("lua_modules.isaacscript-common.dist.src.decorators")
 local Exported = ____decorators.Exported
 local ____ISCFeature = require("lua_modules.isaacscript-common.dist.src.enums.ISCFeature")
 local ISCFeature = ____ISCFeature.ISCFeature
 local ____cards = require("lua_modules.isaacscript-common.dist.src.functions.cards")
 local getItemConfigCardType = ____cards.getItemConfigCardType
-local getVanillaCardTypes = ____cards.getVanillaCardTypes
 local ____collectibleTag = require("lua_modules.isaacscript-common.dist.src.functions.collectibleTag")
 local collectibleHasTag = ____collectibleTag.collectibleHasTag
 local ____collectibles = require("lua_modules.isaacscript-common.dist.src.functions.collectibles")
 local collectibleHasCacheFlag = ____collectibles.collectibleHasCacheFlag
-local getVanillaCollectibleTypeRange = ____collectibles.getVanillaCollectibleTypeRange
 local isActiveCollectible = ____collectibles.isActiveCollectible
 local isHiddenCollectible = ____collectibles.isHiddenCollectible
 local isPassiveCollectible = ____collectibles.isPassiveCollectible
@@ -47433,10 +47751,15 @@ local deleteSetsFromSet = ____set.deleteSetsFromSet
 local getRandomSetElement = ____set.getRandomSetElement
 local getSortedSetValues = ____set.getSortedSetValues
 local ____trinkets = require("lua_modules.isaacscript-common.dist.src.functions.trinkets")
-local getVanillaTrinketTypeRange = ____trinkets.getVanillaTrinketTypeRange
 local trinketHasCacheFlag = ____trinkets.trinketHasCacheFlag
+local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
+local asCardType = ____types.asCardType
+local asCollectibleType = ____types.asCollectibleType
+local asPillEffect = ____types.asPillEffect
+local asTrinketType = ____types.asTrinketType
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
 local assertDefined = ____utils.assertDefined
+local iRange = ____utils.iRange
 local ____repeat = ____utils["repeat"]
 local ____itemConfigCardTypesForCardsSet = require("lua_modules.isaacscript-common.dist.src.sets.itemConfigCardTypesForCardsSet")
 local ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET = ____itemConfigCardTypesForCardsSet.ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET
@@ -47461,36 +47784,41 @@ local TRANSFORMATION_TO_TAG_MAP = __TS__New(ReadonlyMap, {
     {PlayerForm.BOOKWORM, ItemConfigTag.BOOK},
     {PlayerForm.SPIDER_BABY, ItemConfigTag.SPIDER}
 })
+--- A feature that lazy-inits and caches various arrays and sets that include both vanilla and modded
+-- elements. This is useful for performance purposes (so that we do not have to reconstruct the
+-- arrays/sets multiple times).
+-- 
+-- The modded arrays/sets are created using the functions from
+-- `ISCFeature.MODDED_ELEMENT_DETECTION`.
 ____exports.ModdedElementSets = __TS__Class()
 local ModdedElementSets = ____exports.ModdedElementSets
 ModdedElementSets.name = "ModdedElementSets"
 __TS__ClassExtends(ModdedElementSets, Feature)
 function ModdedElementSets.prototype.____constructor(self, moddedElementDetection)
     Feature.prototype.____constructor(self)
+    self.arraysInitialized = false
     self.allCollectibleTypesArray = {}
     self.allCollectibleTypesSet = __TS__New(Set)
-    self.vanillaCollectibleTypesArray = {}
-    self.vanillaCollectibleTypesSet = __TS__New(Set)
     self.moddedCollectibleTypesArray = {}
     self.moddedCollectibleTypesSet = __TS__New(Set)
     self.allTrinketTypesArray = {}
     self.allTrinketTypesSet = __TS__New(Set)
-    self.vanillaTrinketTypesArray = {}
-    self.vanillaTrinketTypesSet = __TS__New(Set)
     self.moddedTrinketTypesArray = {}
     self.moddedTrinketTypesSet = __TS__New(Set)
     self.allCardTypesArray = {}
     self.allCardTypesSet = __TS__New(Set)
-    self.vanillaCardTypesArray = {}
-    self.vanillaCardTypesSet = __TS__New(Set)
     self.moddedCardTypesArray = {}
     self.moddedCardTypesSet = __TS__New(Set)
-    self.tagToCollectibleTypesMap = __TS__New(Map)
+    self.allPillEffectsArray = {}
+    self.allPillEffectsSet = __TS__New(Set)
+    self.moddedPillEffectsArray = {}
+    self.moddedPillEffectsSet = __TS__New(Set)
     self.cacheFlagToCollectibleTypesMap = __TS__New(Map)
     self.cacheFlagToTrinketTypesMap = __TS__New(Map)
     self.flyingCollectibleTypesSet = __TS__New(Set)
     self.permanentFlyingCollectibleTypesSet = __TS__New(Set)
     self.flyingTrinketTypesSet = __TS__New(Set)
+    self.tagToCollectibleTypesMap = __TS__New(Map)
     self.edenActiveCollectibleTypesSet = __TS__New(Set)
     self.edenPassiveCollectibleTypesSet = __TS__New(Set)
     self.itemConfigCardTypeToCardTypeMap = __TS__New(Map)
@@ -47498,132 +47826,135 @@ function ModdedElementSets.prototype.____constructor(self, moddedElementDetectio
     self.featuresUsed = {ISCFeature.MODDED_ELEMENT_DETECTION}
     self.moddedElementDetection = moddedElementDetection
 end
-function ModdedElementSets.prototype.lazyInitVanillaCollectibleTypes(self)
-    if #self.vanillaCollectibleTypesArray > 0 then
+function ModdedElementSets.prototype.lazyInit(self)
+    if self.arraysInitialized then
         return
     end
-    local vanillaCollectibleTypeRange = getVanillaCollectibleTypeRange(nil)
-    for ____, collectibleType in ipairs(vanillaCollectibleTypeRange) do
-        local itemConfigItem = itemConfig:GetCollectible(collectibleType)
-        if itemConfigItem ~= nil then
-            local ____self_vanillaCollectibleTypesArray_0 = self.vanillaCollectibleTypesArray
-            ____self_vanillaCollectibleTypesArray_0[#____self_vanillaCollectibleTypesArray_0 + 1] = collectibleType
-            self.vanillaCollectibleTypesSet:add(collectibleType)
-        end
-    end
+    self.arraysInitialized = true
+    self:lazyInitModdedCollectibleTypes()
+    self:lazyInitModdedTrinketTypes()
+    self:lazyInitModdedCardTypes()
+    self:lazyInitModdedPillEffects()
+    self:lazyInitTagToCollectibleTypesMap()
+    self:lazyInitCacheFlagToCollectibleTypesMap()
+    self:lazyInitCacheFlagToTrinketTypesMap()
+    self:lazyInitFlyingCollectibleTypesSet()
+    self:lazyInitFlyingTrinketTypesSet()
+    self:lazyInitEdenCollectibleTypesSet()
+    self:lazyInitCardTypes()
 end
 function ModdedElementSets.prototype.lazyInitModdedCollectibleTypes(self)
-    if #self.moddedCollectibleTypesArray > 0 then
-        return
-    end
-    self:lazyInitVanillaCollectibleTypes()
-    for ____, collectibleType in ipairs(self.vanillaCollectibleTypesArray) do
-        local ____self_allCollectibleTypesArray_1 = self.allCollectibleTypesArray
-        ____self_allCollectibleTypesArray_1[#____self_allCollectibleTypesArray_1 + 1] = collectibleType
+    for ____, collectibleType in ipairs(VANILLA_COLLECTIBLE_TYPES) do
+        local ____self_allCollectibleTypesArray_0 = self.allCollectibleTypesArray
+        ____self_allCollectibleTypesArray_0[#____self_allCollectibleTypesArray_0 + 1] = collectibleType
         self.allCollectibleTypesSet:add(collectibleType)
     end
-    local moddedCollectibleTypes = self.moddedElementDetection:getModdedCollectibleTypes()
-    for ____, collectibleType in ipairs(moddedCollectibleTypes) do
+    local firstModdedCollectibleType = self.moddedElementDetection:getFirstModdedCollectibleType()
+    if firstModdedCollectibleType == nil then
+        return
+    end
+    local lastCollectibleType = self.moddedElementDetection:getLastCollectibleType()
+    local moddedCollectibleTypes = iRange(nil, firstModdedCollectibleType, lastCollectibleType)
+    for ____, collectibleTypeInt in ipairs(moddedCollectibleTypes) do
+        local collectibleType = asCollectibleType(nil, collectibleTypeInt)
         local itemConfigItem = itemConfig:GetCollectible(collectibleType)
         if itemConfigItem ~= nil then
-            local ____self_moddedCollectibleTypesArray_2 = self.moddedCollectibleTypesArray
-            ____self_moddedCollectibleTypesArray_2[#____self_moddedCollectibleTypesArray_2 + 1] = collectibleType
+            local ____self_moddedCollectibleTypesArray_1 = self.moddedCollectibleTypesArray
+            ____self_moddedCollectibleTypesArray_1[#____self_moddedCollectibleTypesArray_1 + 1] = collectibleType
             self.moddedCollectibleTypesSet:add(collectibleType)
-            local ____self_allCollectibleTypesArray_3 = self.allCollectibleTypesArray
-            ____self_allCollectibleTypesArray_3[#____self_allCollectibleTypesArray_3 + 1] = collectibleType
+            local ____self_allCollectibleTypesArray_2 = self.allCollectibleTypesArray
+            ____self_allCollectibleTypesArray_2[#____self_allCollectibleTypesArray_2 + 1] = collectibleType
             self.allCollectibleTypesSet:add(collectibleType)
         end
     end
 end
-function ModdedElementSets.prototype.lazyInitVanillaTrinketTypes(self)
-    if #self.vanillaTrinketTypesArray > 0 then
-        return
-    end
-    local vanillaTrinketTypeRange = getVanillaTrinketTypeRange(nil)
-    for ____, trinketType in ipairs(vanillaTrinketTypeRange) do
-        local itemConfigItem = itemConfig:GetTrinket(trinketType)
-        if itemConfigItem ~= nil then
-            local ____self_vanillaTrinketTypesArray_4 = self.vanillaTrinketTypesArray
-            ____self_vanillaTrinketTypesArray_4[#____self_vanillaTrinketTypesArray_4 + 1] = trinketType
-            self.vanillaTrinketTypesSet:add(trinketType)
-        end
-    end
-end
 function ModdedElementSets.prototype.lazyInitModdedTrinketTypes(self)
-    if #self.moddedTrinketTypesArray > 0 then
-        return
-    end
-    self:lazyInitVanillaTrinketTypes()
-    for ____, trinketType in ipairs(self.vanillaTrinketTypesArray) do
-        local ____self_allTrinketTypesArray_5 = self.allTrinketTypesArray
-        ____self_allTrinketTypesArray_5[#____self_allTrinketTypesArray_5 + 1] = trinketType
+    for ____, trinketType in ipairs(VANILLA_TRINKET_TYPES) do
+        local ____self_allTrinketTypesArray_3 = self.allTrinketTypesArray
+        ____self_allTrinketTypesArray_3[#____self_allTrinketTypesArray_3 + 1] = trinketType
         self.allTrinketTypesSet:add(trinketType)
     end
-    local moddedTrinketTypes = self.moddedElementDetection:getModdedTrinketTypes()
-    for ____, trinketType in ipairs(moddedTrinketTypes) do
+    local firstModdedTrinketType = self.moddedElementDetection:getFirstModdedTrinketType()
+    if firstModdedTrinketType == nil then
+        return
+    end
+    local lastTrinketType = self.moddedElementDetection:getLastTrinketType()
+    local moddedTrinketTypes = iRange(nil, firstModdedTrinketType, lastTrinketType)
+    for ____, trinketTypeInt in ipairs(moddedTrinketTypes) do
+        local trinketType = asTrinketType(nil, trinketTypeInt)
         local itemConfigItem = itemConfig:GetTrinket(trinketType)
         if itemConfigItem ~= nil then
-            local ____self_moddedTrinketTypesArray_6 = self.moddedTrinketTypesArray
-            ____self_moddedTrinketTypesArray_6[#____self_moddedTrinketTypesArray_6 + 1] = trinketType
+            local ____self_moddedTrinketTypesArray_4 = self.moddedTrinketTypesArray
+            ____self_moddedTrinketTypesArray_4[#____self_moddedTrinketTypesArray_4 + 1] = trinketType
             self.moddedTrinketTypesSet:add(trinketType)
-            local ____self_allTrinketTypesArray_7 = self.allTrinketTypesArray
-            ____self_allTrinketTypesArray_7[#____self_allTrinketTypesArray_7 + 1] = trinketType
+            local ____self_allTrinketTypesArray_5 = self.allTrinketTypesArray
+            ____self_allTrinketTypesArray_5[#____self_allTrinketTypesArray_5 + 1] = trinketType
             self.allTrinketTypesSet:add(trinketType)
         end
     end
 end
-function ModdedElementSets.prototype.lazyInitVanillaCardTypes(self)
-    if #self.vanillaCardTypesArray > 0 then
-        return
-    end
-    local vanillaCardTypes = getVanillaCardTypes(nil)
-    for ____, cardType in ipairs(vanillaCardTypes) do
-        local itemConfigCard = itemConfig:GetCard(cardType)
-        if itemConfigCard ~= nil then
-            local ____self_vanillaCardTypesArray_8 = self.vanillaCardTypesArray
-            ____self_vanillaCardTypesArray_8[#____self_vanillaCardTypesArray_8 + 1] = cardType
-            self.vanillaCardTypesSet:add(cardType)
-        end
-    end
-end
 function ModdedElementSets.prototype.lazyInitModdedCardTypes(self)
-    if #self.moddedCardTypesArray > 0 then
-        return
-    end
-    self:lazyInitVanillaCardTypes()
-    for ____, cardType in ipairs(self.vanillaCardTypesArray) do
-        local ____self_allCardTypesArray_9 = self.allCardTypesArray
-        ____self_allCardTypesArray_9[#____self_allCardTypesArray_9 + 1] = cardType
+    for ____, cardType in ipairs(VANILLA_CARD_TYPES) do
+        local ____self_allCardTypesArray_6 = self.allCardTypesArray
+        ____self_allCardTypesArray_6[#____self_allCardTypesArray_6 + 1] = cardType
         self.allCardTypesSet:add(cardType)
     end
-    local moddedCardTypes = self.moddedElementDetection:getModdedCardTypes()
-    for ____, cardType in ipairs(moddedCardTypes) do
+    local firstModdedCardType = self.moddedElementDetection:getFirstModdedCardType()
+    if firstModdedCardType == nil then
+        return
+    end
+    local lastCardType = self.moddedElementDetection:getLastCardType()
+    local moddedCardTypes = iRange(nil, firstModdedCardType, lastCardType)
+    for ____, cardTypeInt in ipairs(moddedCardTypes) do
+        local cardType = asCardType(nil, cardTypeInt)
         local itemConfigCard = itemConfig:GetCard(cardType)
         if itemConfigCard ~= nil then
-            local ____self_moddedCardTypesArray_10 = self.moddedCardTypesArray
-            ____self_moddedCardTypesArray_10[#____self_moddedCardTypesArray_10 + 1] = cardType
+            local ____self_moddedCardTypesArray_7 = self.moddedCardTypesArray
+            ____self_moddedCardTypesArray_7[#____self_moddedCardTypesArray_7 + 1] = cardType
             self.moddedCardTypesSet:add(cardType)
-            local ____self_allCardTypesArray_11 = self.allCardTypesArray
-            ____self_allCardTypesArray_11[#____self_allCardTypesArray_11 + 1] = cardType
+            local ____self_allCardTypesArray_8 = self.allCardTypesArray
+            ____self_allCardTypesArray_8[#____self_allCardTypesArray_8 + 1] = cardType
             self.allCardTypesSet:add(cardType)
         end
     end
 end
-function ModdedElementSets.prototype.lazyInitTagToCollectibleTypesMap(self)
-    if self.tagToCollectibleTypesMap.size > 0 then
+function ModdedElementSets.prototype.lazyInitModdedPillEffects(self)
+    for ____, pillEffect in ipairs(VANILLA_PILL_EFFECTS) do
+        local ____self_allPillEffectsArray_9 = self.allPillEffectsArray
+        ____self_allPillEffectsArray_9[#____self_allPillEffectsArray_9 + 1] = pillEffect
+        self.allPillEffectsSet:add(pillEffect)
+    end
+    local firstModdedPillEffect = self.moddedElementDetection:getFirstModdedPillEffect()
+    if firstModdedPillEffect == nil then
         return
     end
+    local lastPillEffect = self.moddedElementDetection:getLastPillEffect()
+    local moddedPillEffects = iRange(nil, firstModdedPillEffect, lastPillEffect)
+    for ____, pillEffectInt in ipairs(moddedPillEffects) do
+        local pillEffect = asPillEffect(nil, pillEffectInt)
+        local itemConfigPillEffect = itemConfig:GetPillEffect(pillEffect)
+        if itemConfigPillEffect ~= nil then
+            local ____self_moddedPillEffectsArray_10 = self.moddedPillEffectsArray
+            ____self_moddedPillEffectsArray_10[#____self_moddedPillEffectsArray_10 + 1] = pillEffect
+            self.moddedPillEffectsSet:add(pillEffect)
+            local ____self_allPillEffectsArray_11 = self.allPillEffectsArray
+            ____self_allPillEffectsArray_11[#____self_allPillEffectsArray_11 + 1] = pillEffect
+            self.allPillEffectsSet:add(pillEffect)
+        end
+    end
+end
+function ModdedElementSets.prototype.lazyInitTagToCollectibleTypesMap(self)
     for ____, itemConfigTag in ipairs(ITEM_CONFIG_TAG_VALUES) do
         self.tagToCollectibleTypesMap:set(
             itemConfigTag,
             __TS__New(Set)
         )
     end
-    for ____, collectibleType in ipairs(self:getCollectibleArray()) do
+    for ____, collectibleType in ipairs(self:getCollectibleTypes()) do
         for ____, itemConfigTag in ipairs(ITEM_CONFIG_TAG_VALUES) do
             do
                 if not collectibleHasTag(nil, collectibleType, itemConfigTag) then
-                    goto __continue44
+                    goto __continue37
                 end
                 local collectibleTypesSet = self.tagToCollectibleTypesMap:get(itemConfigTag)
                 if collectibleTypesSet == nil then
@@ -47632,17 +47963,14 @@ function ModdedElementSets.prototype.lazyInitTagToCollectibleTypesMap(self)
                 end
                 collectibleTypesSet:add(collectibleType)
             end
-            ::__continue44::
+            ::__continue37::
         end
     end
 end
 function ModdedElementSets.prototype.lazyInitCacheFlagToCollectibleTypesMap(self)
-    if self.cacheFlagToCollectibleTypesMap.size > 0 then
-        return
-    end
     for ____, cacheFlag in ipairs(CACHE_FLAG_VALUES) do
         local collectiblesSet = __TS__New(Set)
-        for ____, collectibleType in ipairs(self:getCollectibleArray()) do
+        for ____, collectibleType in ipairs(self:getCollectibleTypes()) do
             if collectibleHasCacheFlag(nil, collectibleType, cacheFlag) then
                 collectiblesSet:add(collectibleType)
             end
@@ -47651,12 +47979,9 @@ function ModdedElementSets.prototype.lazyInitCacheFlagToCollectibleTypesMap(self
     end
 end
 function ModdedElementSets.prototype.lazyInitCacheFlagToTrinketTypesMap(self)
-    if self.cacheFlagToTrinketTypesMap.size > 0 then
-        return
-    end
     for ____, cacheFlag in ipairs(CACHE_FLAG_VALUES) do
         local trinketsSet = __TS__New(Set)
-        for ____, trinketType in ipairs(self.moddedElementDetection:getTrinketTypes()) do
+        for ____, trinketType in ipairs(self:getTrinketTypes()) do
             if trinketHasCacheFlag(nil, trinketType, cacheFlag) then
                 trinketsSet:add(trinketType)
             end
@@ -47665,14 +47990,11 @@ function ModdedElementSets.prototype.lazyInitCacheFlagToTrinketTypesMap(self)
     end
 end
 function ModdedElementSets.prototype.lazyInitFlyingCollectibleTypesSet(self)
-    if self.flyingCollectibleTypesSet.size > 0 then
-        return
-    end
     self.flyingCollectibleTypesSet = copySet(
         nil,
-        self:getCollectiblesWithCacheFlag(CacheFlag.FLYING)
+        self:getCollectibleTypesWithCacheFlag(CacheFlag.FLYING)
     )
-    local collectiblesWithAllCacheFlag = self:getCollectiblesWithCacheFlag(CacheFlag.ALL)
+    local collectiblesWithAllCacheFlag = self:getCollectibleTypesWithCacheFlag(CacheFlag.ALL)
     deleteSetsFromSet(nil, self.flyingCollectibleTypesSet, collectiblesWithAllCacheFlag)
     local permanentFlyingCollectibleTypes = copySet(nil, self.flyingCollectibleTypesSet)
     for ____, collectibleType in ipairs(CONDITIONAL_FLYING_COLLECTIBLE_TYPES) do
@@ -47683,28 +48005,22 @@ function ModdedElementSets.prototype.lazyInitFlyingCollectibleTypesSet(self)
     end
 end
 function ModdedElementSets.prototype.lazyInitFlyingTrinketTypesSet(self)
-    if self.flyingTrinketTypesSet.size > 0 then
-        return
-    end
     self.flyingTrinketTypesSet = copySet(
         nil,
-        self:getTrinketsWithCacheFlag(CacheFlag.FLYING)
+        self:getTrinketsTypesWithCacheFlag(CacheFlag.FLYING)
     )
     local trinketsWithAllCacheFlag = copySet(
         nil,
-        self:getTrinketsWithCacheFlag(CacheFlag.ALL)
+        self:getTrinketsTypesWithCacheFlag(CacheFlag.ALL)
     )
     trinketsWithAllCacheFlag:delete(TrinketType.AZAZELS_STUMP)
     deleteSetsFromSet(nil, self.flyingTrinketTypesSet, trinketsWithAllCacheFlag)
 end
 function ModdedElementSets.prototype.lazyInitEdenCollectibleTypesSet(self)
-    if self.edenActiveCollectibleTypesSet.size > 0 then
-        return
-    end
-    for ____, collectibleType in ipairs(self:getCollectibleArray()) do
+    for ____, collectibleType in ipairs(self:getCollectibleTypes()) do
         do
             if isHiddenCollectible(nil, collectibleType) or collectibleHasTag(nil, collectibleType, ItemConfigTag.NO_EDEN) then
-                goto __continue73
+                goto __continue61
             end
             if isActiveCollectible(nil, collectibleType) then
                 self.edenActiveCollectibleTypesSet:add(collectibleType)
@@ -47713,20 +48029,17 @@ function ModdedElementSets.prototype.lazyInitEdenCollectibleTypesSet(self)
                 self.edenPassiveCollectibleTypesSet:add(collectibleType)
             end
         end
-        ::__continue73::
+        ::__continue61::
     end
 end
 function ModdedElementSets.prototype.lazyInitCardTypes(self)
-    if self.itemConfigCardTypeToCardTypeMap.size > 0 then
-        return
-    end
     for ____, itemConfigCardType in ipairs(ITEM_CONFIG_CARD_TYPE_VALUES) do
         self.itemConfigCardTypeToCardTypeMap:set(
             itemConfigCardType,
             __TS__New(Set)
         )
     end
-    for ____, cardType in ipairs(self:getCardArray()) do
+    for ____, cardType in ipairs(self:getCardTypes()) do
         local itemConfigCardType = getItemConfigCardType(nil, cardType)
         if itemConfigCardType ~= nil then
             local cardTypeSet = self.itemConfigCardTypeToCardTypeMap:get(itemConfigCardType)
@@ -47742,128 +48055,28 @@ function ModdedElementSets.prototype.lazyInitCardTypes(self)
         end
     end
 end
-function ModdedElementSets.prototype.getCardArray(self)
-    self:lazyInitModdedCardTypes()
-    return self.allCardTypesArray
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCardArray", true)
-function ModdedElementSets.prototype.getCardSet(self)
-    self:lazyInitModdedCardTypes()
-    return self.allCardTypesSet
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCardSet", true)
-function ModdedElementSets.prototype.getCardTypesOfType(self, ...)
-    local itemConfigCardTypes = {...}
-    if self.itemConfigCardTypeToCardTypeMap.size == 0 then
-        self:lazyInitCardTypes()
-    end
-    local matchingCardTypes = __TS__New(Set)
-    for ____, itemConfigCardType in ipairs(itemConfigCardTypes) do
-        local cardTypeSet = self.itemConfigCardTypeToCardTypeMap:get(itemConfigCardType)
-        assertDefined(
-            nil,
-            cardTypeSet,
-            "Failed to get the card type set for item config type: " .. tostring(itemConfigCardType)
-        )
-        for ____, cardType in __TS__Iterator(cardTypeSet) do
-            matchingCardTypes:add(cardType)
-        end
-    end
-    return matchingCardTypes
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCardTypesOfType", true)
-function ModdedElementSets.prototype.getCollectibleArray(self)
-    self:lazyInitModdedCollectibleTypes()
+function ModdedElementSets.prototype.getCollectibleTypes(self)
+    self:lazyInit()
     return self.allCollectibleTypesArray
 end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectibleArray", true)
-function ModdedElementSets.prototype.getCollectibleSet(self)
-    self:lazyInitModdedCollectibleTypes()
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectibleTypes", true)
+function ModdedElementSets.prototype.getCollectibleTypeSet(self)
+    self:lazyInit()
     return self.allCollectibleTypesSet
 end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectibleSet", true)
-function ModdedElementSets.prototype.getCollectiblesForTransformation(self, playerForm)
-    local itemConfigTag = TRANSFORMATION_TO_TAG_MAP:get(playerForm)
-    assertDefined(
-        nil,
-        itemConfigTag,
-        ("Failed to get the collectible types for the transformation of " .. tostring(playerForm)) .. " because that transformation is not based on collectibles."
-    )
-    return self:getCollectiblesWithTag(itemConfigTag)
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectiblesForTransformation", true)
-function ModdedElementSets.prototype.getCollectiblesWithCacheFlag(self, cacheFlag)
-    self:lazyInitCacheFlagToCollectibleTypesMap()
-    local collectiblesSet = self.cacheFlagToCollectibleTypesMap:get(cacheFlag)
-    if collectiblesSet == nil then
-        return __TS__New(ReadonlySet)
-    end
-    return collectiblesSet
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectiblesWithCacheFlag", true)
-function ModdedElementSets.prototype.getCollectiblesWithTag(self, itemConfigTag)
-    self:lazyInitTagToCollectibleTypesMap()
-    local collectibleTypes = self.tagToCollectibleTypesMap:get(itemConfigTag)
-    assertDefined(
-        nil,
-        collectibleTypes,
-        ("The item config tag of " .. tostring(itemConfigTag)) .. " is not a valid value of the \"ItemConfigTag\" enum."
-    )
-    return collectibleTypes
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectiblesWithTag", true)
-function ModdedElementSets.prototype.getEdenActiveCollectibles(self)
-    self:lazyInitEdenCollectibleTypesSet()
-    return self.edenActiveCollectibleTypesSet
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getEdenActiveCollectibles", true)
-function ModdedElementSets.prototype.getEdenPassiveCollectibles(self)
-    self:lazyInitEdenCollectibleTypesSet()
-    return self.edenPassiveCollectibleTypesSet
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getEdenPassiveCollectibles", true)
-function ModdedElementSets.prototype.getFlyingCollectibles(self, includeConditionalItems)
-    self:lazyInitFlyingCollectibleTypesSet()
-    return includeConditionalItems and self.flyingCollectibleTypesSet or self.permanentFlyingCollectibleTypesSet
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getFlyingCollectibles", true)
-function ModdedElementSets.prototype.getFlyingTrinkets(self)
-    self:lazyInitFlyingTrinketTypesSet()
-    return self.flyingTrinketTypesSet
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getFlyingTrinkets", true)
-function ModdedElementSets.prototype.getModdedCardArray(self)
-    self:lazyInitModdedCardTypes()
-    return self.moddedCardTypesArray
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedCardArray", true)
-function ModdedElementSets.prototype.getModdedCardSet(self)
-    self:lazyInitModdedCardTypes()
-    return self.moddedCardTypesSet
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedCardSet", true)
-function ModdedElementSets.prototype.getModdedCollectibleArray(self)
-    self:lazyInitModdedCollectibleTypes()
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectibleTypeSet", true)
+function ModdedElementSets.prototype.getModdedCollectibleTypes(self)
+    self:lazyInit()
     return self.moddedCollectibleTypesArray
 end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedCollectibleArray", true)
-function ModdedElementSets.prototype.getModdedCollectibleSet(self)
-    self:lazyInitModdedCollectibleTypes()
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedCollectibleTypes", true)
+function ModdedElementSets.prototype.getModdedCollectibleTypesSet(self)
+    self:lazyInit()
     return self.moddedCollectibleTypesSet
 end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedCollectibleSet", true)
-function ModdedElementSets.prototype.getModdedTrinketArray(self)
-    self:lazyInitModdedTrinketTypes()
-    return self.moddedTrinketTypesArray
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedTrinketArray", true)
-function ModdedElementSets.prototype.getModdedTrinketSet(self)
-    self:lazyInitModdedTrinketTypes()
-    return self.moddedTrinketTypesSet
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedTrinketSet", true)
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedCollectibleTypesSet", true)
 function ModdedElementSets.prototype.getPlayerCollectibleMap(self, player)
-    local collectibleArray = self:getCollectibleArray()
+    local collectibleArray = self:getCollectibleTypes()
     local collectibleMap = __TS__New(Map)
     for ____, collectibleType in ipairs(collectibleArray) do
         local numCollectibles = player:GetCollectibleNum(collectibleType, true)
@@ -47890,8 +48103,86 @@ function ModdedElementSets.prototype.getPlayerCollectibleMap(self, player)
     return collectibleMap
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getPlayerCollectibleMap", true)
+function ModdedElementSets.prototype.getTrinketTypes(self)
+    self:lazyInit()
+    return self.allTrinketTypesArray
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getTrinketTypes", true)
+function ModdedElementSets.prototype.getTrinketTypesSet(self)
+    self:lazyInit()
+    return self.allTrinketTypesSet
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getTrinketTypesSet", true)
+function ModdedElementSets.prototype.getModdedTrinketTypes(self)
+    self:lazyInit()
+    return self.moddedTrinketTypesArray
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedTrinketTypes", true)
+function ModdedElementSets.prototype.getModdedTrinketTypesSet(self)
+    self:lazyInit()
+    return self.moddedTrinketTypesSet
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedTrinketTypesSet", true)
+function ModdedElementSets.prototype.getCardTypes(self)
+    self:lazyInit()
+    return self.allCardTypesArray
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCardTypes", true)
+function ModdedElementSets.prototype.getCardTypesSet(self)
+    self:lazyInit()
+    return self.allCardTypesSet
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCardTypesSet", true)
+function ModdedElementSets.prototype.getModdedCardTypes(self)
+    self:lazyInit()
+    return self.moddedCardTypesArray
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedCardTypes", true)
+function ModdedElementSets.prototype.getModdedCardTypesSet(self)
+    self:lazyInit()
+    return self.moddedCardTypesSet
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedCardTypesSet", true)
+function ModdedElementSets.prototype.getPillEffects(self)
+    self:lazyInit()
+    return self.allPillEffectsArray
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getPillEffects", true)
+function ModdedElementSets.prototype.getPillEffectsSet(self)
+    self:lazyInit()
+    return self.allPillEffectsSet
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getPillEffectsSet", true)
+function ModdedElementSets.prototype.getModdedPillEffects(self)
+    self:lazyInit()
+    return self.moddedPillEffectsArray
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedPillEffects", true)
+function ModdedElementSets.prototype.getModdedPillEffectsSet(self)
+    self:lazyInit()
+    return self.moddedPillEffectsSet
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getModdedPillEffectsSet", true)
+function ModdedElementSets.prototype.getCollectibleTypesWithCacheFlag(self, cacheFlag)
+    self:lazyInit()
+    local collectiblesSet = self.cacheFlagToCollectibleTypesMap:get(cacheFlag)
+    if collectiblesSet == nil then
+        return __TS__New(ReadonlySet)
+    end
+    return collectiblesSet
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectibleTypesWithCacheFlag", true)
+function ModdedElementSets.prototype.getTrinketsTypesWithCacheFlag(self, cacheFlag)
+    self:lazyInit()
+    local trinketsSet = self.cacheFlagToTrinketTypesMap:get(cacheFlag)
+    if trinketsSet == nil then
+        return __TS__New(ReadonlySet)
+    end
+    return trinketsSet
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getTrinketsTypesWithCacheFlag", true)
 function ModdedElementSets.prototype.getPlayerCollectiblesWithCacheFlag(self, player, cacheFlag)
-    local collectiblesWithCacheFlag = self:getCollectiblesWithCacheFlag(cacheFlag)
+    local collectiblesWithCacheFlag = self:getCollectibleTypesWithCacheFlag(cacheFlag)
     local playerCollectibles = {}
     for ____, collectibleType in ipairs(getSortedSetValues(nil, collectiblesWithCacheFlag)) do
         local numCollectibles = player:GetCollectibleNum(collectibleType, true)
@@ -47906,10 +48197,43 @@ function ModdedElementSets.prototype.getPlayerCollectiblesWithCacheFlag(self, pl
     return playerCollectibles
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getPlayerCollectiblesWithCacheFlag", true)
+function ModdedElementSets.prototype.getPlayerTrinketsWithCacheFlag(self, player, cacheFlag)
+    local trinketTypesWithCacheFlag = self:getTrinketsTypesWithCacheFlag(cacheFlag)
+    local playerTrinkets = __TS__New(Map)
+    for ____, trinketType in __TS__Iterator(trinketTypesWithCacheFlag) do
+        local trinketMultiplier = player:GetTrinketMultiplier(trinketType)
+        if trinketMultiplier > 0 then
+            playerTrinkets:set(trinketType, trinketMultiplier)
+        end
+    end
+    return playerTrinkets
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getPlayerTrinketsWithCacheFlag", true)
+function ModdedElementSets.prototype.getFlyingCollectibleTypes(self, includeConditionalItems)
+    self:lazyInit()
+    return includeConditionalItems and self.flyingCollectibleTypesSet or self.permanentFlyingCollectibleTypesSet
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getFlyingCollectibleTypes", true)
+function ModdedElementSets.prototype.getFlyingTrinketTypes(self)
+    self:lazyInit()
+    return self.flyingTrinketTypesSet
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getFlyingTrinketTypes", true)
+function ModdedElementSets.prototype.getCollectibleTypesWithTag(self, itemConfigTag)
+    self:lazyInit()
+    local collectibleTypes = self.tagToCollectibleTypesMap:get(itemConfigTag)
+    assertDefined(
+        nil,
+        collectibleTypes,
+        ("The item config tag of " .. tostring(itemConfigTag)) .. " is not a valid value of the \"ItemConfigTag\" enum."
+    )
+    return collectibleTypes
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectibleTypesWithTag", true)
 function ModdedElementSets.prototype.getPlayerCollectiblesWithTag(self, player, itemConfigTag)
-    local collectiblesWithTag = self:getCollectiblesWithTag(itemConfigTag)
+    local collectibleTypesWithTag = self:getCollectibleTypesWithTag(itemConfigTag)
     local playerCollectibles = {}
-    for ____, collectibleType in ipairs(getSortedSetValues(nil, collectiblesWithTag)) do
+    for ____, collectibleType in ipairs(getSortedSetValues(nil, collectibleTypesWithTag)) do
         local numCollectibles = player:GetCollectibleNum(collectibleType, true)
         ____repeat(
             nil,
@@ -47922,8 +48246,18 @@ function ModdedElementSets.prototype.getPlayerCollectiblesWithTag(self, player, 
     return playerCollectibles
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getPlayerCollectiblesWithTag", true)
+function ModdedElementSets.prototype.getCollectibleTypesForTransformation(self, playerForm)
+    local itemConfigTag = TRANSFORMATION_TO_TAG_MAP:get(playerForm)
+    assertDefined(
+        nil,
+        itemConfigTag,
+        ("Failed to get the collectible types for the transformation of " .. tostring(playerForm)) .. " because that transformation is not based on collectibles."
+    )
+    return self:getCollectibleTypesWithTag(itemConfigTag)
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectibleTypesForTransformation", true)
 function ModdedElementSets.prototype.getPlayerCollectiblesForTransformation(self, player, playerForm)
-    local collectibleForTransformation = self:getCollectiblesForTransformation(playerForm)
+    local collectibleForTransformation = self:getCollectibleTypesForTransformation(playerForm)
     local playerCollectibles = {}
     for ____, collectibleType in ipairs(getSortedSetValues(nil, collectibleForTransformation)) do
         local numCollectibles = player:GetCollectibleNum(collectibleType, true)
@@ -47938,29 +48272,56 @@ function ModdedElementSets.prototype.getPlayerCollectiblesForTransformation(self
     return playerCollectibles
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getPlayerCollectiblesForTransformation", true)
-function ModdedElementSets.prototype.getPlayerTrinketsWithCacheFlag(self, player, cacheFlag)
-    local trinketsWithCacheFlag = self:getTrinketsWithCacheFlag(cacheFlag)
-    local playerTrinkets = __TS__New(Map)
-    for ____, trinketType in __TS__Iterator(trinketsWithCacheFlag) do
-        local trinketMultiplier = player:GetTrinketMultiplier(trinketType)
-        if trinketMultiplier > 0 then
-            playerTrinkets:set(trinketType, trinketMultiplier)
-        end
-    end
-    return playerTrinkets
+function ModdedElementSets.prototype.getEdenActiveCollectibleTypes(self)
+    self:lazyInit()
+    return self.edenActiveCollectibleTypesSet
 end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getPlayerTrinketsWithCacheFlag", true)
-function ModdedElementSets.prototype.getRandomCard(self, seedOrRNG, exceptions)
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getEdenActiveCollectibleTypes", true)
+function ModdedElementSets.prototype.getEdenPassiveCollectibleTypes(self)
+    self:lazyInit()
+    return self.edenPassiveCollectibleTypesSet
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getEdenPassiveCollectibleTypes", true)
+function ModdedElementSets.prototype.getRandomEdenActiveCollectibleType(self, seedOrRNG, exceptions)
     if seedOrRNG == nil then
         seedOrRNG = getRandomSeed(nil)
     end
     if exceptions == nil then
         exceptions = {}
     end
-    self:lazyInitCardTypes()
-    return getRandomSetElement(nil, self.cardSet, seedOrRNG, exceptions)
+    self:lazyInit()
+    return getRandomSetElement(nil, self.edenPassiveCollectibleTypesSet, seedOrRNG, exceptions)
 end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomCard", true)
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomEdenActiveCollectibleType", true)
+function ModdedElementSets.prototype.getRandomEdenPassiveCollectibleType(self, seedOrRNG, exceptions)
+    if seedOrRNG == nil then
+        seedOrRNG = getRandomSeed(nil)
+    end
+    if exceptions == nil then
+        exceptions = {}
+    end
+    self:lazyInit()
+    return getRandomSetElement(nil, self.edenPassiveCollectibleTypesSet, seedOrRNG, exceptions)
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomEdenPassiveCollectibleType", true)
+function ModdedElementSets.prototype.getCardTypesOfType(self, ...)
+    local itemConfigCardTypes = {...}
+    self:lazyInit()
+    local matchingCardTypes = __TS__New(Set)
+    for ____, itemConfigCardType in ipairs(itemConfigCardTypes) do
+        local cardTypeSet = self.itemConfigCardTypeToCardTypeMap:get(itemConfigCardType)
+        assertDefined(
+            nil,
+            cardTypeSet,
+            "Failed to get the card type set for item config type: " .. tostring(itemConfigCardType)
+        )
+        for ____, cardType in __TS__Iterator(cardTypeSet) do
+            matchingCardTypes:add(cardType)
+        end
+    end
+    return matchingCardTypes
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCardTypesOfType", true)
 function ModdedElementSets.prototype.getRandomCardTypeOfType(self, itemConfigCardType, seedOrRNG, exceptions)
     if seedOrRNG == nil then
         seedOrRNG = getRandomSeed(nil)
@@ -47972,6 +48333,17 @@ function ModdedElementSets.prototype.getRandomCardTypeOfType(self, itemConfigCar
     return getRandomSetElement(nil, cardTypeSet, seedOrRNG, exceptions)
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomCardTypeOfType", true)
+function ModdedElementSets.prototype.getRandomCard(self, seedOrRNG, exceptions)
+    if seedOrRNG == nil then
+        seedOrRNG = getRandomSeed(nil)
+    end
+    if exceptions == nil then
+        exceptions = {}
+    end
+    self:lazyInit()
+    return getRandomSetElement(nil, self.cardSet, seedOrRNG, exceptions)
+end
+__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomCard", true)
 function ModdedElementSets.prototype.getRandomRune(self, seedOrRNG, exceptions)
     if seedOrRNG == nil then
         seedOrRNG = getRandomSeed(nil)
@@ -47984,77 +48356,123 @@ function ModdedElementSets.prototype.getRandomRune(self, seedOrRNG, exceptions)
     return getRandomSetElement(nil, runesSet, seedOrRNG, exceptions)
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomRune", true)
-function ModdedElementSets.prototype.getRandomEdenActiveCollectible(self, seedOrRNG, exceptions)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.core.constantsVanilla"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
+local asCardType = ____types.asCardType
+local asCollectibleType = ____types.asCollectibleType
+local asPillEffect = ____types.asPillEffect
+local asTrinketType = ____types.asTrinketType
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local iRange = ____utils.iRange
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
+local itemConfig = ____cachedClasses.itemConfig
+local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.src.core.constantsFirstLast")
+local FIRST_CARD_TYPE = ____constantsFirstLast.FIRST_CARD_TYPE
+local FIRST_COLLECTIBLE_TYPE = ____constantsFirstLast.FIRST_COLLECTIBLE_TYPE
+local FIRST_PILL_EFFECT = ____constantsFirstLast.FIRST_PILL_EFFECT
+local FIRST_TRINKET_TYPE = ____constantsFirstLast.FIRST_TRINKET_TYPE
+local LAST_VANILLA_CARD_TYPE = ____constantsFirstLast.LAST_VANILLA_CARD_TYPE
+local LAST_VANILLA_COLLECTIBLE_TYPE = ____constantsFirstLast.LAST_VANILLA_COLLECTIBLE_TYPE
+local LAST_VANILLA_PILL_EFFECT = ____constantsFirstLast.LAST_VANILLA_PILL_EFFECT
+local LAST_VANILLA_TRINKET_TYPE = ____constantsFirstLast.LAST_VANILLA_TRINKET_TYPE
+--- An array that represents the range from the first vanilla collectible type to the last vanilla
+-- collectible type. This will include integers that do not represent any valid collectible types.
+-- 
+-- This function is only useful when building collectible type objects. For most purposes, you
+-- should use the `VANILLA_COLLECTIBLE_TYPES` or `VANILLA_COLLECTIBLE_TYPES_SET` constants instead.
+____exports.VANILLA_COLLECTIBLE_TYPE_RANGE = iRange(nil, FIRST_COLLECTIBLE_TYPE, LAST_VANILLA_COLLECTIBLE_TYPE)
+--- An array that contains every valid vanilla collectible type, as verified by the
+-- `ItemConfig.GetCollectible` method. Vanilla collectible types are not contiguous, so every valid
+-- must be verified. (There are several gaps, e.g. 666.)
+-- 
+-- If you need to do O(1) lookups, use the `VANILLA_COLLECTIBLE_TYPES_SET` constant instead.
+____exports.VANILLA_COLLECTIBLE_TYPES = __TS__ArrayFilter(
+    ____exports.VANILLA_COLLECTIBLE_TYPE_RANGE,
+    function(____, potentialCollectibleType)
+        local collectibleType = asCollectibleType(nil, potentialCollectibleType)
+        local itemConfigItem = itemConfig:GetCollectible(collectibleType)
+        return itemConfigItem ~= nil
     end
-    if exceptions == nil then
-        exceptions = {}
+)
+--- A set that contains every valid vanilla collectible type, as verified by the
+-- `ItemConfig.GetCollectible` method. Vanilla collectible types are not contiguous, so every valid
+-- must be verified. (There are several gaps, e.g. 666.)
+____exports.VANILLA_COLLECTIBLE_TYPES_SET = __TS__New(ReadonlySet, ____exports.VANILLA_COLLECTIBLE_TYPES)
+--- An array that represents the range from the first vanilla trinket type to the last vanilla
+-- trinket type. This will include integers that do not represent any valid trinket types.
+-- 
+-- This function is only useful when building trinket type objects. For most purposes, you should
+-- use the `VANILLA_TRINKET_TYPES` or `VANILLA_TRINKET_TYPES_SET` constants instead.
+____exports.VANILLA_TRINKET_TYPE_RANGE = iRange(nil, FIRST_TRINKET_TYPE, LAST_VANILLA_TRINKET_TYPE)
+--- An array that contains every valid vanilla trinket type, as verified by the
+-- `ItemConfig.GetTrinket` method. Vanilla trinket types are not contiguous, so every valid must be
+-- verified. (The only gap is 47 for `POLAROID_OBSOLETE`.)
+-- 
+-- If you need to do O(1) lookups, use the `VANILLA_TRINKET_TYPES_SET` constant instead.
+____exports.VANILLA_TRINKET_TYPES = __TS__ArrayFilter(
+    ____exports.VANILLA_TRINKET_TYPE_RANGE,
+    function(____, potentialTrinketType)
+        local trinketType = asTrinketType(nil, potentialTrinketType)
+        local itemConfigTrinket = itemConfig:GetTrinket(trinketType)
+        return itemConfigTrinket ~= nil
     end
-    self:lazyInitEdenCollectibleTypesSet()
-    return getRandomSetElement(nil, self.edenPassiveCollectibleTypesSet, seedOrRNG, exceptions)
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomEdenActiveCollectible", true)
-function ModdedElementSets.prototype.getRandomEdenPassiveCollectible(self, seedOrRNG, exceptions)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
+)
+--- A set that contains every valid vanilla trinket type, as verified by the `ItemConfig.GetTrinket`
+-- method. Vanilla trinket types are not contiguous, so every valid must be verified. (The only gap
+-- is 47 for `POLAROID_OBSOLETE`.)
+____exports.VANILLA_TRINKET_TYPES_SET = __TS__New(ReadonlySet, ____exports.VANILLA_TRINKET_TYPES)
+--- An array that represents the range from the first vanilla card type to the last vanilla card
+-- type.
+-- 
+-- This function is only useful when building card type objects. For most purposes, you should use
+-- the `VANILLA_CARD_TYPES` or `VANILLA_CARD_TYPES_SET` constants instead.
+____exports.VANILLA_CARD_TYPE_RANGE = iRange(nil, FIRST_CARD_TYPE, LAST_VANILLA_CARD_TYPE)
+--- An array that contains every valid vanilla card type, as verified by the `ItemConfig.GetCard`
+-- method. Vanilla card types are contiguous, but we validate every entry to double check.
+-- 
+-- If you need to do O(1) lookups, use the `VANILLA_CARD_TYPES_SET` constant instead.
+____exports.VANILLA_CARD_TYPES = __TS__ArrayFilter(
+    ____exports.VANILLA_CARD_TYPE_RANGE,
+    function(____, potentialCardType)
+        local cardType = asCardType(nil, potentialCardType)
+        local itemConfigCard = itemConfig:GetCard(cardType)
+        return itemConfigCard ~= nil
     end
-    if exceptions == nil then
-        exceptions = {}
+)
+--- A set that contains every valid vanilla card type, as verified by the `ItemConfig.GetCard`
+-- method. Vanilla card types are contiguous, but we validate every entry to double check.
+____exports.VANILLA_CARD_TYPES_SET = __TS__New(ReadonlySet, ____exports.VANILLA_CARD_TYPES)
+--- An array that represents the range from the first vanilla pill effect to the last vanilla pill
+-- effect.
+-- 
+-- This function is only useful when building pill effect objects. For most purposes, you should use
+-- the `VANILLA_PILL_EFFECTS` or `VANILLA_PILL_EFFECTS_SET` constants instead.
+____exports.VANILLA_PILL_EFFECT_RANGE = iRange(nil, FIRST_PILL_EFFECT, LAST_VANILLA_PILL_EFFECT)
+--- An array that contains every valid vanilla pill effect, as verified by the
+-- `ItemConfig.GetPillEffect` method. Vanilla pill effects are contiguous, but we validate every
+-- entry to double check.
+-- 
+-- If you need to do O(1) lookups, use the `VANILLA_PILL_EFFECT_SET` constant instead.
+____exports.VANILLA_PILL_EFFECTS = __TS__ArrayFilter(
+    ____exports.VANILLA_PILL_EFFECT_RANGE,
+    function(____, potentialPillEffect)
+        local pillEffect = asPillEffect(nil, potentialPillEffect)
+        local itemConfigPillEffect = itemConfig:GetPillEffect(pillEffect)
+        return itemConfigPillEffect ~= nil
     end
-    self:lazyInitEdenCollectibleTypesSet()
-    return getRandomSetElement(nil, self.edenPassiveCollectibleTypesSet, seedOrRNG, exceptions)
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomEdenPassiveCollectible", true)
-function ModdedElementSets.prototype.getTrinketArray(self)
-    self:lazyInitModdedTrinketTypes()
-    return self.allTrinketTypesArray
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getTrinketArray", true)
-function ModdedElementSets.prototype.getTrinketSet(self)
-    self:lazyInitModdedTrinketTypes()
-    return self.allTrinketTypesSet
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getTrinketSet", true)
-function ModdedElementSets.prototype.getTrinketsWithCacheFlag(self, cacheFlag)
-    self:lazyInitCacheFlagToTrinketTypesMap()
-    local trinketsSet = self.cacheFlagToTrinketTypesMap:get(cacheFlag)
-    if trinketsSet == nil then
-        return __TS__New(ReadonlySet)
-    end
-    return trinketsSet
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getTrinketsWithCacheFlag", true)
-function ModdedElementSets.prototype.getVanillaCardArray(self)
-    self:lazyInitVanillaCardTypes()
-    return self.vanillaCardTypesArray
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getVanillaCardArray", true)
-function ModdedElementSets.prototype.getVanillaCardSet(self)
-    self:lazyInitVanillaCardTypes()
-    return self.vanillaCardTypesSet
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getVanillaCardSet", true)
-function ModdedElementSets.prototype.getVanillaCollectibleArray(self)
-    self:lazyInitVanillaCollectibleTypes()
-    return self.vanillaCollectibleTypesArray
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getVanillaCollectibleArray", true)
-function ModdedElementSets.prototype.getVanillaCollectibleSet(self)
-    self:lazyInitVanillaCollectibleTypes()
-    return self.vanillaCollectibleTypesSet
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getVanillaCollectibleSet", true)
-function ModdedElementSets.prototype.getVanillaTrinketArray(self)
-    self:lazyInitVanillaTrinketTypes()
-    return self.vanillaTrinketTypesArray
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getVanillaTrinketArray", true)
-function ModdedElementSets.prototype.getVanillaTrinketSet(self)
-    self:lazyInitVanillaTrinketTypes()
-    return self.vanillaTrinketTypesSet
-end
-__TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getVanillaTrinketSet", true)
+)
+--- A set that contains every valid vanilla pill effect, as verified by the
+-- `ItemConfig.GetPillEffect` method. Vanilla pill effects are contiguous, but we validate every
+-- entry to double check.
+____exports.VANILLA_PILL_EFFECTS_SET = __TS__New(ReadonlySet, ____exports.VANILLA_PILL_EFFECTS)
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.features.other.ModdedElementDetection"] = function(...) 
@@ -48068,9 +48486,6 @@ local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local itemConfig = ____cachedClasses.itemConfig
 local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.src.core.constantsFirstLast")
-local FIRST_CARD_TYPE = ____constantsFirstLast.FIRST_CARD_TYPE
-local FIRST_PILL_EFFECT = ____constantsFirstLast.FIRST_PILL_EFFECT
-local FIRST_TRINKET_TYPE = ____constantsFirstLast.FIRST_TRINKET_TYPE
 local LAST_VANILLA_CARD_TYPE = ____constantsFirstLast.LAST_VANILLA_CARD_TYPE
 local LAST_VANILLA_COLLECTIBLE_TYPE = ____constantsFirstLast.LAST_VANILLA_COLLECTIBLE_TYPE
 local LAST_VANILLA_PILL_EFFECT = ____constantsFirstLast.LAST_VANILLA_PILL_EFFECT
@@ -48087,8 +48502,6 @@ local asCollectibleType = ____types.asCollectibleType
 local asNumber = ____types.asNumber
 local asPillEffect = ____types.asPillEffect
 local asTrinketType = ____types.asTrinketType
-local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
-local iRange = ____utils.iRange
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 --- Mods can add extra things to the game (e.g. collectibles, trinkets, and so on). Since mods load
@@ -48106,7 +48519,7 @@ __TS__ClassExtends(ModdedElementDetection, Feature)
 function ModdedElementDetection.prototype.____constructor(self)
     Feature.prototype.____constructor(self)
     self.atLeastOneCallbackFired = false
-    self.postPlayerInit = function(____, _player)
+    self.postPlayerInit = function()
         self.atLeastOneCallbackFired = true
     end
     self.callbacksUsed = {{ModCallback.POST_PLAYER_INIT, self.postPlayerInit}}
@@ -48137,16 +48550,6 @@ function ModdedElementDetection.prototype.getLastCollectibleType(self)
     return itemConfig:GetCollectibles().Size - 1
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getLastCollectibleType", true)
-function ModdedElementDetection.prototype.getModdedCollectibleTypes(self)
-    self:errorIfNoCallbacksFired("collectible")
-    local firstModdedCollectibleType = self:getFirstModdedCollectibleType()
-    if firstModdedCollectibleType == nil then
-        return {}
-    end
-    local lastCollectibleType = self:getLastCollectibleType()
-    return iRange(nil, firstModdedCollectibleType, lastCollectibleType)
-end
-__TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getModdedCollectibleTypes", true)
 function ModdedElementDetection.prototype.getNumCollectibleTypes(self)
     self:errorIfNoCallbacksFired("collectible")
     local numModdedCollectibleTypes = self:getNumModdedCollectibleTypes()
@@ -48177,43 +48580,21 @@ end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getFirstModdedTrinketType", true)
 function ModdedElementDetection.prototype.getLastTrinketType(self)
     self:errorIfNoCallbacksFired("trinket")
-    local numTrinketTypes = self:getNumTrinketTypes()
-    return asTrinketType(nil, numTrinketTypes)
+    return itemConfig:GetTrinkets().Size - 1
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getLastTrinketType", true)
-function ModdedElementDetection.prototype.getModdedTrinketTypes(self)
-    self:errorIfNoCallbacksFired("trinket")
-    local firstModdedTrinketType = self:getFirstModdedTrinketType()
-    if firstModdedTrinketType == nil then
-        return {}
-    end
-    local lastTrinketType = self:getLastTrinketType()
-    return iRange(nil, firstModdedTrinketType, lastTrinketType)
-end
-__TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getModdedTrinketTypes", true)
 function ModdedElementDetection.prototype.getNumTrinketTypes(self)
     self:errorIfNoCallbacksFired("trinket")
-    return itemConfig:GetTrinkets().Size - 1
+    local numModdedTrinketTypes = self:getNumModdedTrinketTypes()
+    return NUM_VANILLA_TRINKET_TYPES + numModdedTrinketTypes
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getNumTrinketTypes", true)
 function ModdedElementDetection.prototype.getNumModdedTrinketTypes(self)
     self:errorIfNoCallbacksFired("trinket")
-    local numTrinketTypes = self:getNumTrinketTypes()
-    return numTrinketTypes - NUM_VANILLA_TRINKET_TYPES
+    local lastTrinketType = self:getLastTrinketType()
+    return lastTrinketType - LAST_VANILLA_TRINKET_TYPE
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getNumModdedTrinketTypes", true)
-function ModdedElementDetection.prototype.getTrinketTypes(self)
-    self:errorIfNoCallbacksFired("trinket")
-    local lastTrinketType = self:getLastTrinketType()
-    return iRange(nil, FIRST_TRINKET_TYPE, lastTrinketType)
-end
-__TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getTrinketTypes", true)
-function ModdedElementDetection.prototype.getAllCardTypes(self)
-    self:errorIfNoCallbacksFired("card")
-    local lastCardType = self:getLastCardType()
-    return iRange(nil, FIRST_CARD_TYPE, lastCardType)
-end
-__TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getAllCardTypes", true)
 function ModdedElementDetection.prototype.getFirstModdedCardType(self)
     self:errorIfNoCallbacksFired("card")
     local firstModdedCardType = asCardType(
@@ -48236,16 +48617,6 @@ function ModdedElementDetection.prototype.getLastCardType(self)
     return asCardType(nil, numCards)
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getLastCardType", true)
-function ModdedElementDetection.prototype.getModdedCardTypes(self)
-    self:errorIfNoCallbacksFired("card")
-    local firstModdedCardType = self:getFirstModdedCardType()
-    if firstModdedCardType == nil then
-        return {}
-    end
-    local lastCardType = self:getLastCardType()
-    return iRange(nil, firstModdedCardType, lastCardType)
-end
-__TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getModdedCardTypes", true)
 function ModdedElementDetection.prototype.getNumCardTypes(self)
     self:errorIfNoCallbacksFired("card")
     return itemConfig:GetCards().Size - 1
@@ -48257,12 +48628,6 @@ function ModdedElementDetection.prototype.getNumModdedCardTypes(self)
     return numCardTypes - NUM_VANILLA_CARD_TYPES
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getNumModdedCardTypes", true)
-function ModdedElementDetection.prototype.getAllPillEffects(self)
-    self:errorIfNoCallbacksFired("pill")
-    local lastPillEffect = self:getLastPillEffect()
-    return iRange(nil, FIRST_PILL_EFFECT, lastPillEffect)
-end
-__TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getAllPillEffects", true)
 function ModdedElementDetection.prototype.getFirstModdedPillEffect(self)
     self:errorIfNoCallbacksFired("pill")
     local firstModdedPillEffect = asPillEffect(
@@ -48285,16 +48650,6 @@ function ModdedElementDetection.prototype.getLastPillEffect(self)
     return asPillEffect(nil, numPillEffects)
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getLastPillEffect", true)
-function ModdedElementDetection.prototype.getModdedPillEffects(self)
-    self:errorIfNoCallbacksFired("pill")
-    local firstModdedPillEffect = self:getFirstModdedPillEffect()
-    if firstModdedPillEffect == nil then
-        return {}
-    end
-    local lastPillEffect = self:getLastPillEffect()
-    return iRange(nil, firstModdedPillEffect, lastPillEffect)
-end
-__TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getModdedPillEffects", true)
 function ModdedElementDetection.prototype.getNumPillEffects(self)
     self:errorIfNoCallbacksFired("pill")
     return itemConfig:GetPillEffects().Size
@@ -48407,7 +48762,7 @@ function ItemPoolDetection.prototype.____constructor(self, moddedElementSets)
     self.moddedElementSets = moddedElementSets
 end
 function ItemPoolDetection.prototype.getCollectiblesInItemPool(self, itemPoolType)
-    local collectibleArray = self.moddedElementSets:getCollectibleArray()
+    local collectibleArray = self.moddedElementSets:getCollectibleTypes()
     return __TS__ArrayFilter(
         collectibleArray,
         function(____, collectibleType) return self:isCollectibleInItemPool(collectibleType, itemPoolType) end
@@ -48432,7 +48787,7 @@ function ItemPoolDetection.prototype.isCollectibleInItemPool(self, collectibleTy
     local removedTrinketsMap = ____removeItemsAndTrinketsThatAffectItemPools_result_0.removedTrinketsMap
     local itemPool = game:GetItemPool()
     itemPool:ResetRoomBlacklist()
-    for ____, collectibleTypeInSet in ipairs(self.moddedElementSets:getCollectibleArray()) do
+    for ____, collectibleTypeInSet in ipairs(self.moddedElementSets:getCollectibleTypes()) do
         if collectibleTypeInSet ~= collectibleType then
             itemPool:AddRoomBlacklist(collectibleTypeInSet)
         end
@@ -48516,13 +48871,13 @@ function FlyingDetection.prototype.____constructor(self, moddedElementSets)
 end
 function FlyingDetection.prototype.hasFlyingTemporaryEffect(self, player)
     local effects = player:GetEffects()
-    local flyingCollectibles = self.moddedElementSets:getFlyingCollectibles(true)
+    local flyingCollectibles = self.moddedElementSets:getFlyingCollectibleTypes(true)
     for ____, collectibleType in __TS__Iterator(flyingCollectibles) do
         if effects:HasCollectibleEffect(collectibleType) then
             return true
         end
     end
-    local flyingTrinkets = self.moddedElementSets:getFlyingTrinkets()
+    local flyingTrinkets = self.moddedElementSets:getFlyingTrinketTypes()
     for ____, trinketType in __TS__Iterator(flyingTrinkets) do
         if effects:HasTrinketEffect(trinketType) then
             return true
@@ -48662,8 +49017,8 @@ local isVanillaConsoleCommand = ____console.isVanillaConsoleCommand
 local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
 local addFlag = ____flag.addFlag
 local bitFlags = ____flag.bitFlags
-local ____map = require("lua_modules.isaacscript-common.dist.src.functions.map")
-local getMapPartialMatch = ____map.getMapPartialMatch
+local ____string = require("lua_modules.isaacscript-common.dist.src.functions.string")
+local getMapPartialMatch = ____string.getMapPartialMatch
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
 local assertDefined = ____utils.assertDefined
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
@@ -48921,8 +49276,6 @@ local logPlayerEffects = ____logMisc.logPlayerEffects
 local logRoom = ____logMisc.logRoom
 local logSeedEffects = ____logMisc.logSeedEffects
 local logSounds = ____logMisc.logSounds
-local ____map = require("lua_modules.isaacscript-common.dist.src.functions.map")
-local getMapPartialMatch = ____map.getMapPartialMatch
 local ____mergeTests = require("lua_modules.isaacscript-common.dist.src.functions.mergeTests")
 local runMergeTests = ____mergeTests.runMergeTests
 local ____pickupsSpecific = require("lua_modules.isaacscript-common.dist.src.functions.pickupsSpecific")
@@ -48952,6 +49305,8 @@ local ____spawnCollectible = require("lua_modules.isaacscript-common.dist.src.fu
 local spawnCollectibleUnsafe = ____spawnCollectible.spawnCollectibleUnsafe
 local ____stage = require("lua_modules.isaacscript-common.dist.src.functions.stage")
 local setStage = ____stage.setStage
+local ____string = require("lua_modules.isaacscript-common.dist.src.functions.string")
+local getMapPartialMatch = ____string.getMapPartialMatch
 local ____trinkets = require("lua_modules.isaacscript-common.dist.src.functions.trinkets")
 local getGoldenTrinketType = ____trinkets.getGoldenTrinketType
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
@@ -53307,7 +53662,7 @@ ____exports.BOSS_PORTRAIT_PNG_FILE_NAMES = {
     [BossID.TURDLET] = "portrait_turdlet.png",
     [BossID.RAGLICH] = "portrait_raglich.png",
     [BossID.DOGMA] = "portrait_dogma.png",
-    [BossID.BEAST] = "portrait_dogma.png",
+    [BossID.THE_BEAST] = "portrait_dogma.png",
     [BossID.HORNY_BOYS] = "portrait_hornyboys.png",
     [BossID.CLUTCH] = "portrait_clutch.png"
 }
@@ -53417,7 +53772,7 @@ ____exports.BOSS_NAME_PNG_FILE_NAMES = {
     [BossID.TURDLET] = "bossname_turdlet.png",
     [BossID.RAGLICH] = "bossname_raglich.png",
     [BossID.DOGMA] = "bossname_dogma.png",
-    [BossID.BEAST] = "bossname_dogma.png",
+    [BossID.THE_BEAST] = "bossname_dogma.png",
     [BossID.HORNY_BOYS] = "bossname_hornyboys.png",
     [BossID.CLUTCH] = "bossname_clutch.png"
 }
@@ -55862,7 +56217,7 @@ local getPlayerFromPtr = ____players.getPlayerFromPtr
 local ____roomData = require("lua_modules.isaacscript-common.dist.src.functions.roomData")
 local getRoomListIndex = ____roomData.getRoomListIndex
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
-local isNumber = ____types.isNumber
+local isInteger = ____types.isInteger
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
 local assertDefined = ____utils.assertDefined
 local ____vector = require("lua_modules.isaacscript-common.dist.src.functions.vector")
@@ -56039,7 +56394,7 @@ function CustomGridEntities.prototype.getCustomGridEntityType(self, gridEntityOr
     if not self.initialized then
         return nil
     end
-    local gridIndex = isNumber(nil, gridEntityOrGridIndex) and gridEntityOrGridIndex or gridEntityOrGridIndex:GetGridIndex()
+    local gridIndex = isInteger(nil, gridEntityOrGridIndex) and gridEntityOrGridIndex or gridEntityOrGridIndex:GetGridIndex()
     local roomListIndex = getRoomListIndex(nil)
     local roomCustomGridEntities = v.level.customGridEntities:get(roomListIndex)
     if roomCustomGridEntities == nil then
@@ -56960,7 +57315,6 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
-local __TS__Spread = ____lualib.__TS__Spread
 local __TS__ArrayFindIndex = ____lualib.__TS__ArrayFindIndex
 local __TS__ArraySplice = ____lualib.__TS__ArraySplice
 local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
@@ -56992,7 +57346,13 @@ function CustomCallback.prototype.____constructor(self, ...)
             if self:shouldFire(fireArgs, optionalArgs) then
                 local value = callbackFunc(
                     nil,
-                    __TS__Spread(fireArgs)
+                    fireArgs[1],
+                    fireArgs[2],
+                    fireArgs[3],
+                    fireArgs[4],
+                    fireArgs[5],
+                    fireArgs[6],
+                    fireArgs[7]
                 )
                 if value ~= nil then
                     return value
@@ -61687,7 +62047,7 @@ __TS__ClassExtends(InputActionFilter, CustomCallback)
 function InputActionFilter.prototype.____constructor(self)
     CustomCallback.prototype.____constructor(self)
     self.shouldFire = function(____, fireArgs, optionalArgs)
-        local _, inputHook, buttonAction = table.unpack(fireArgs)
+        local _entity, inputHook, buttonAction = table.unpack(fireArgs)
         local callbackInputHook, callbackButtonAction = table.unpack(optionalArgs)
         return (callbackInputHook == nil or callbackInputHook == inputHook) and (callbackButtonAction == nil or callbackButtonAction == buttonAction)
     end
@@ -61761,380 +62121,6 @@ function EntityTakeDmgFilter.prototype.____constructor(self)
 end
 return ____exports
  end,
-["packages.mod.src.chat"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ArrayUnshift = ____lualib.__TS__ArrayUnshift
-local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
-local __TS__Iterator = ____lualib.__TS__Iterator
-local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local log = ____isaacscript_2Dcommon.log
-local logTable = ____isaacscript_2Dcommon.logTable
-local ____sandbox = require("packages.mod.src.network.sandbox")
-local getFormattedTime = ____sandbox.getFormattedTime
-local chatMessages = {}
-function ____exports.addChat(self, data, ____local)
-    if ____local == nil then
-        ____local = false
-    end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local chatMessage = {
-        time = getFormattedTime(nil),
-        username = data.from,
-        msg = data.msg,
-        renderFrameReceived = renderFrameCount,
-        ["local"] = ____local
-    }
-    __TS__ArrayUnshift(chatMessages, chatMessage)
-end
-function ____exports.addLocalChat(self, msg)
-    local data = {gameID = -1, from = "", msg = msg}
-    ____exports.addChat(nil, data, true)
-    log(msg)
-end
-function ____exports.getAllChat(self)
-    return {table.unpack(chatMessages)}
-end
-function ____exports.logAllChatMessages(self)
-    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(chatMessages)) do
-        local i = ____value[1]
-        local chatMessage = ____value[2]
-        log(("Chat message " .. tostring(i)) .. ":")
-        logTable(chatMessage)
-    end
-end
-return ____exports
- end,
-["packages.mod.src.enums.BlackSpriteState"] = function(...) 
-local ____exports = {}
-____exports.BlackSpriteState = {}
-____exports.BlackSpriteState.DISABLED = 0
-____exports.BlackSpriteState[____exports.BlackSpriteState.DISABLED] = "DISABLED"
-____exports.BlackSpriteState.FADING_TO_BLACK = 1
-____exports.BlackSpriteState[____exports.BlackSpriteState.FADING_TO_BLACK] = "FADING_TO_BLACK"
-____exports.BlackSpriteState.SOLID = 2
-____exports.BlackSpriteState[____exports.BlackSpriteState.SOLID] = "SOLID"
-____exports.BlackSpriteState.FADING_TO_GAME = 3
-____exports.BlackSpriteState[____exports.BlackSpriteState.FADING_TO_GAME] = "FADING_TO_GAME"
-return ____exports
- end,
-["packages.mod.src.sprite"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__StringPadStart = ____lualib.__TS__StringPadStart
-local ____exports = {}
-local getFileNum
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local asNumber = ____isaacscript_2Dcommon.asNumber
-local LAST_VANILLA_COLLECTIBLE_TYPE = ____isaacscript_2Dcommon.LAST_VANILLA_COLLECTIBLE_TYPE
-function getFileNum(self, itemID)
-    local defaultReturn = "NEW"
-    if itemID < 1 then
-        return defaultReturn
-    end
-    if itemID >= asNumber(nil, CollectibleType.SAD_ONION) and itemID <= asNumber(nil, LAST_VANILLA_COLLECTIBLE_TYPE) then
-        return __TS__StringPadStart(
-            tostring(itemID),
-            3,
-            "0"
-        )
-    end
-    if itemID > asNumber(nil, LAST_VANILLA_COLLECTIBLE_TYPE) and itemID < 2001 then
-        return defaultReturn
-    end
-    if itemID >= 2001 and itemID <= 2189 then
-        return tostring(itemID)
-    end
-    if itemID > 2189 and itemID < 32769 then
-        return defaultReturn
-    end
-    if itemID >= 32769 and itemID <= 32957 then
-        return tostring(itemID)
-    end
-    return defaultReturn
-end
-local GLOWING_IMAGE_TRINKET_OFFSET = 2000
-function ____exports.initSprite(self, anm2Path, pngPath)
-    local sprite = Sprite()
-    if pngPath == nil then
-        sprite:Load(anm2Path, true)
-    else
-        sprite:Load(anm2Path, false)
-        sprite:ReplaceSpritesheet(0, pngPath)
-        sprite:LoadGraphics()
-    end
-    sprite:SetFrame("Default", 0)
-    return sprite
-end
---- Can be a collectible or a trinket.
-function ____exports.initGlowingItemSprite(self, collectibleOrTrinketType, trinket)
-    if trinket == nil then
-        trinket = false
-    end
-    if trinket then
-        collectibleOrTrinketType = collectibleOrTrinketType + GLOWING_IMAGE_TRINKET_OFFSET
-    end
-    local fileNum = getFileNum(nil, collectibleOrTrinketType)
-    return ____exports.initSprite(nil, "gfx/glowing_item.anm2", ("gfx/items-glowing/collectibles_" .. fileNum) .. ".png")
-end
-function ____exports.setSpriteOpacity(self, sprite, opacity)
-    sprite.Color = Color(
-        1,
-        1,
-        1,
-        opacity,
-        0,
-        0,
-        0
-    )
-end
-return ____exports
- end,
-["packages.mod.src.features.blackSprite"] = function(...) 
-local ____exports = {}
-local drawBlackSprite, getBlackSpriteOpacity, sprite, state, startRenderFrame
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local VectorZero = ____isaacscript_2Dcommon.VectorZero
-local ____BlackSpriteState = require("packages.mod.src.enums.BlackSpriteState")
-local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
-local ____sprite = require("packages.mod.src.sprite")
-local initSprite = ____sprite.initSprite
-local setSpriteOpacity = ____sprite.setSpriteOpacity
-function drawBlackSprite(self)
-    if state == BlackSpriteState.DISABLED then
-        return
-    end
-    local opacity = getBlackSpriteOpacity(nil)
-    setSpriteOpacity(nil, sprite, opacity)
-    sprite:RenderLayer(0, VectorZero)
-end
-function getBlackSpriteOpacity(self)
-    if state == BlackSpriteState.SOLID or startRenderFrame == nil then
-        return 1
-    end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local renderFramesPassed = renderFrameCount - startRenderFrame
-    local opacity = renderFramesPassed / ____exports.FADE_TO_BLACK_FRAMES
-    if state == BlackSpriteState.FADING_TO_BLACK then
-        return opacity
-    end
-    if state == BlackSpriteState.FADING_TO_GAME then
-        return 1 - opacity
-    end
-    return 1
-end
-____exports.FADE_TO_BLACK_FRAMES = 90
-sprite = initSprite(nil, "gfx/black.anm2")
-sprite.Scale = Vector(5000, 5000)
-state = BlackSpriteState.DISABLED
-startRenderFrame = nil
-function ____exports.postRender(self)
-    drawBlackSprite(nil)
-end
-function ____exports.setBlackSpriteState(self, newState)
-    local renderFrameCount = Isaac.GetFrameCount()
-    state = newState
-    startRenderFrame = renderFrameCount
-end
-return ____exports
- end,
-["packages.mod.src.enums.CutsceneState"] = function(...) 
-local ____exports = {}
-____exports.CutsceneState = {}
-____exports.CutsceneState.DISABLED = 0
-____exports.CutsceneState[____exports.CutsceneState.DISABLED] = "DISABLED"
-____exports.CutsceneState.FADING_TO_BLACK = 1
-____exports.CutsceneState[____exports.CutsceneState.FADING_TO_BLACK] = "FADING_TO_BLACK"
-____exports.CutsceneState.TEXT_FADING_IN = 2
-____exports.CutsceneState[____exports.CutsceneState.TEXT_FADING_IN] = "TEXT_FADING_IN"
-____exports.CutsceneState.TEXT = 3
-____exports.CutsceneState[____exports.CutsceneState.TEXT] = "TEXT"
-____exports.CutsceneState.TEXT_FADING_OUT = 4
-____exports.CutsceneState[____exports.CutsceneState.TEXT_FADING_OUT] = "TEXT_FADING_OUT"
-____exports.CutsceneState.FADING_TO_GAME = 5
-____exports.CutsceneState[____exports.CutsceneState.FADING_TO_GAME] = "FADING_TO_GAME"
-return ____exports
- end,
-["packages.mod.src.enums.EndMeetingState"] = function(...) 
-local ____exports = {}
-____exports.EndMeetingState = {}
-____exports.EndMeetingState.DISABLED = 0
-____exports.EndMeetingState[____exports.EndMeetingState.DISABLED] = "DISABLED"
-____exports.EndMeetingState.FADING_TO_BLACK = 1
-____exports.EndMeetingState[____exports.EndMeetingState.FADING_TO_BLACK] = "FADING_TO_BLACK"
-____exports.EndMeetingState.TEXT_FADING_IN = 2
-____exports.EndMeetingState[____exports.EndMeetingState.TEXT_FADING_IN] = "TEXT_FADING_IN"
-____exports.EndMeetingState.TEXT = 3
-____exports.EndMeetingState[____exports.EndMeetingState.TEXT] = "TEXT"
-____exports.EndMeetingState.TEXT_FADING_OUT = 4
-____exports.EndMeetingState[____exports.EndMeetingState.TEXT_FADING_OUT] = "TEXT_FADING_OUT"
-____exports.EndMeetingState.FADING_TO_GAME = 5
-____exports.EndMeetingState[____exports.EndMeetingState.FADING_TO_GAME] = "FADING_TO_GAME"
-return ____exports
- end,
-["packages.mod.src.enums.StartMeetingState"] = function(...) 
-local ____exports = {}
-____exports.StartMeetingState = {}
-____exports.StartMeetingState.DISABLED = 0
-____exports.StartMeetingState[____exports.StartMeetingState.DISABLED] = "DISABLED"
-____exports.StartMeetingState.ALERT_STRIP = 1
-____exports.StartMeetingState[____exports.StartMeetingState.ALERT_STRIP] = "ALERT_STRIP"
-____exports.StartMeetingState.FADING_TO_BLACK_WITH_ALERT_STRIP = 2
-____exports.StartMeetingState[____exports.StartMeetingState.FADING_TO_BLACK_WITH_ALERT_STRIP] = "FADING_TO_BLACK_WITH_ALERT_STRIP"
-____exports.StartMeetingState.FADING_TO_GAME = 3
-____exports.StartMeetingState[____exports.StartMeetingState.FADING_TO_GAME] = "FADING_TO_GAME"
-return ____exports
- end,
-["packages.mod.src.enums.VentState"] = function(...) 
-local ____exports = {}
-____exports.VentState = {}
-____exports.VentState.NONE = 0
-____exports.VentState[____exports.VentState.NONE] = "NONE"
-____exports.VentState.JUMPING_IN = 1
-____exports.VentState[____exports.VentState.JUMPING_IN] = "JUMPING_IN"
-____exports.VentState.IN_VENT = 2
-____exports.VentState[____exports.VentState.IN_VENT] = "IN_VENT"
-____exports.VentState.JUMPING_OUT = 3
-____exports.VentState[____exports.VentState.JUMPING_OUT] = "JUMPING_OUT"
-return ____exports
- end,
-["packages.mod.src.interfaces.PlayerData"] = function(...) 
-local ____exports = {}
-return ____exports
- end,
-["packages.mod.src.classes.AmongUsGame"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local Map = ____lualib.Map
-local __TS__New = ____lualib.__TS__New
-local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
-local __TS__ArrayFind = ____lualib.__TS__ArrayFind
-local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
-local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
-local __TS__Iterator = ____lualib.__TS__Iterator
-local __TS__ObjectEntries = ____lualib.__TS__ObjectEntries
-local ____exports = {}
-local ____common = require("packages.common.src.index")
-local MeetingResolution = ____common.MeetingResolution
-local PlayerTypeAllowed = ____common.PlayerTypeAllowed
-local Role = ____common.Role
-local Task = ____common.Task
-local TaskType = ____common.TaskType
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local log = ____isaacscript_2Dcommon.log
-local logTable = ____isaacscript_2Dcommon.logTable
-local ____CutsceneState = require("packages.mod.src.enums.CutsceneState")
-local CutsceneState = ____CutsceneState.CutsceneState
-local ____EndMeetingState = require("packages.mod.src.enums.EndMeetingState")
-local EndMeetingState = ____EndMeetingState.EndMeetingState
-local ____StartMeetingState = require("packages.mod.src.enums.StartMeetingState")
-local StartMeetingState = ____StartMeetingState.StartMeetingState
-local ____VentState = require("packages.mod.src.enums.VentState")
-local VentState = ____VentState.VentState
-____exports.AmongUsGame = __TS__Class()
-local AmongUsGame = ____exports.AmongUsGame
-AmongUsGame.name = "AmongUsGame"
-function AmongUsGame.prototype.____constructor(self, id, name, ownerUserID, character)
-    self.started = false
-    self.imposterUserIDs = {}
-    self.meeting = nil
-    self.players = {}
-    self.bodies = {}
-    self.emergencyButtonOnCooldown = true
-    self.playerMap = __TS__New(Map)
-    self.character = PlayerTypeAllowed.ISAAC
-    self.role = Role.CREW
-    self.usedEmergencyMeeting = false
-    self.ventState = VentState.NONE
-    self.ourTasks = {[TaskType.SHORT] = {}, [TaskType.LONG] = {}, [TaskType.COMMON] = {}}
-    self.currentTask = nil
-    self.startTaskTime = 0
-    self.endTaskTime = 0
-    self.taskReturnRoomName = ""
-    self.taskReturnGridIndex = 0
-    self.startGameCutscene = {state = CutsceneState.DISABLED, startRenderFrame = nil}
-    self.startMeeting = {state = StartMeetingState.DISABLED, startRenderFrame = nil}
-    self.endMeeting = {state = EndMeetingState.DISABLED, startRenderFrame = nil, meetingResolution = MeetingResolution.EJECT, userIDEjected = nil}
-    self.id = id
-    self.name = name
-    self.ownerUserID = ownerUserID
-    self.character = character
-end
-function AmongUsGame.prototype.getNumAlivePlayers(self)
-    local alivePlayers = __TS__ArrayFilter(
-        self.players,
-        function(____, player) return player.alive end
-    )
-    return #alivePlayers
-end
-function AmongUsGame.prototype.getPlayerFromUserID(self, userID)
-    return __TS__ArrayFind(
-        self.players,
-        function(____, player) return player.userID == userID end
-    )
-end
-function AmongUsGame.prototype.getPlayerFromUsername(self, username)
-    return __TS__ArrayFind(
-        self.players,
-        function(____, player) return player.username == username end
-    )
-end
-function AmongUsGame.prototype.getPlayerIndexFromUserID(self, userID)
-    local player = self:getPlayerFromUserID(userID)
-    local ____temp_0
-    if player == nil then
-        ____temp_0 = nil
-    else
-        ____temp_0 = player.index
-    end
-    return ____temp_0
-end
-function AmongUsGame.prototype.getPlayerCharacter(self, userID)
-    local player = self:getPlayerFromUserID(userID)
-    local ____temp_1
-    if player == nil then
-        ____temp_1 = nil
-    else
-        ____temp_1 = player.character
-    end
-    return ____temp_1
-end
-function AmongUsGame.prototype.getPlayerUsername(self, userID)
-    local player = self:getPlayerFromUserID(userID)
-    local ____temp_2
-    if player == nil then
-        ____temp_2 = nil
-    else
-        ____temp_2 = player.username
-    end
-    return ____temp_2
-end
-function AmongUsGame.prototype.isImposter(self, userID)
-    local player = self:getPlayerFromUserID(userID)
-    return player ~= nil and __TS__ArrayIncludes(self.imposterUserIDs, player.userID)
-end
-function AmongUsGame.prototype.logBodies(self)
-    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(self.bodies)) do
-        local i = ____value[1]
-        local body = ____value[2]
-        log(("Body " .. tostring(i)) .. ":")
-        logTable(body)
-    end
-end
-function AmongUsGame.prototype.logOurTasks(self)
-    log("Our tasks:")
-    for ____, ____value in ipairs(__TS__ObjectEntries(self.ourTasks)) do
-        local taskType = ____value[1]
-        local tasks = ____value[2]
-        log("- " .. taskType)
-        for ____, task in ipairs(tasks) do
-            log(((("  - Task." .. Task[task]) .. " (") .. tostring(task)) .. ")")
-        end
-    end
-end
-return ____exports
- end,
 ["packages.mod.src.classes.Globals"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
@@ -62165,183 +62151,80 @@ local Globals = ____Globals.Globals
 ____exports.g = __TS__New(Globals)
 return ____exports
  end,
-["packages.mod.src.network.socketClient"] = function(...) 
+["packages.mod.src.minimapAPI"] = function(...) 
 local ____exports = {}
-local getClient, SOCKET_CONNECT_TIMEOUT_SECONDS, SOCKET_CLIENT_RETURN_SUCCESS, socket
-local ____common = require("packages.common.src.index")
-local TCP_PORT = ____common.TCP_PORT
-local UDP_PORT = ____common.UDP_PORT
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local DisplayFlag = ____isaac_2Dtypescript_2Ddefinitions.DisplayFlag
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local log = ____isaacscript_2Dcommon.log
-local restart = ____isaacscript_2Dcommon.restart
-local ____chat = require("packages.mod.src.chat")
-local addLocalChat = ____chat.addLocalChat
-local ____constants = require("packages.mod.src.constants")
-local REMOTE_HOSTNAME = ____constants.REMOTE_HOSTNAME
-local ____BlackSpriteState = require("packages.mod.src.enums.BlackSpriteState")
-local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
-local ____blackSprite = require("packages.mod.src.features.blackSprite")
-local setBlackSpriteState = ____blackSprite.setBlackSpriteState
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____sandbox = require("packages.mod.src.network.sandbox")
-local getClientFromSandbox = ____sandbox.getClientFromSandbox
-local getSocketTime = ____sandbox.getSocketTime
-local isSandboxEnabled = ____sandbox.isSandboxEnabled
-local tryInitRacingPlusSandbox = ____sandbox.tryInitRacingPlusSandbox
-function getClient(self, port, useTCP)
-    if useTCP == nil then
-        useTCP = true
+local addFlag = ____isaacscript_2Dcommon.addFlag
+function ____exports.setMinimapAPIEnabled(self, enabled)
+    if MinimapAPI == nil then
+        return
     end
-    if isSandboxEnabled(nil) then
-        return getClientFromSandbox(nil, port, useTCP)
+    MinimapAPI.OverrideConfig.Disable = not enabled
+end
+local TASK_ROOM_MINIMAP_ID = 22
+function ____exports.enableMinimapAPI(self)
+    ____exports.setMinimapAPIEnabled(nil, true)
+end
+function ____exports.disableMinimapAPI(self)
+    ____exports.setMinimapAPIEnabled(nil, false)
+end
+function ____exports.setMapToFullVisibility(self)
+    if MinimapAPI == nil then
+        return
     end
-    if socket == nil then
-        return nil
-    end
-    local protocol = useTCP and "TCP" or "UDP"
-    local url = (((protocol .. "://") .. REMOTE_HOSTNAME) .. ":") .. tostring(port)
-    local socketClient
-    repeat
-        local ____switch11 = protocol
-        local ____cond11 = ____switch11 == "TCP"
-        if ____cond11 then
-            do
-                socketClient = socket.tcp()
-                socketClient:settimeout(SOCKET_CONNECT_TIMEOUT_SECONDS)
-                local err, errMsg = socketClient:connect(REMOTE_HOSTNAME, port)
-                if err ~= SOCKET_CLIENT_RETURN_SUCCESS then
-                    log((("Error: Failed to connect on \"" .. url) .. "\": ") .. errMsg)
-                    return nil
-                end
-                break
-            end
+    local minimapAPILevel = MinimapAPI:GetLevel()
+    for ____, room in ipairs(minimapAPILevel) do
+        if room.ID ~= TASK_ROOM_MINIMAP_ID then
+            room.Visited = true
+            room.Clear = true
+            room.DisplayFlags = addFlag(nil, DisplayFlag.VISIBLE, DisplayFlag.SHOW_ICON)
         end
-        ____cond11 = ____cond11 or ____switch11 == "UDP"
-        if ____cond11 then
-            do
-                socketClient = socket.udp()
-                socketClient:setpeername(REMOTE_HOSTNAME, port)
-                break
-            end
+    end
+end
+function ____exports.setMinimapAPIRoomIcon(self, mapID, icon)
+    if MinimapAPI == nil then
+        return
+    end
+    local minimapAPILevel = MinimapAPI:GetLevel()
+    for ____, room in ipairs(minimapAPILevel) do
+        if room.ID == mapID then
+            room.ItemIcons = {icon}
+            return
         end
-    until true
-    socketClient:settimeout(0)
-    log("Connected to: " .. url)
-    return socketClient
-end
-SOCKET_CONNECT_TIMEOUT_SECONDS = 1
-SOCKET_CLIENT_RETURN_SUCCESS = 1
-socket = nil
-local clientTCP = nil
-local clientUDP = nil
-function ____exports.init(self)
-    local ok, requiredSocket = pcall(require, "socket")
-    if ok then
-        socket = requiredSocket
-    else
-        tryInitRacingPlusSandbox(nil)
     end
-end
-function ____exports.connect(self)
-    clientTCP = getClient(nil, TCP_PORT, true) or nil
-    if clientTCP == nil then
-        return false
-    end
-    clientUDP = getClient(nil, UDP_PORT, false) or nil
-    if clientUDP == nil then
-        return false
-    end
-    return true
-end
-function ____exports.disconnect(self)
-    if clientTCP ~= nil then
-        clientTCP:close()
-    end
-    clientTCP = nil
-    if clientUDP ~= nil then
-        clientUDP:close()
-    end
-    clientUDP = nil
-    g.game = nil
-    g.loggedIn = false
-    g.userID = nil
-    g.username = nil
-    addLocalChat(nil, "Disconnected!")
-    restart(nil)
-    setBlackSpriteState(nil, BlackSpriteState.DISABLED)
-end
-function ____exports.send(self, packedMsg, useTCP)
-    local ____useTCP_0
-    if useTCP then
-        ____useTCP_0 = clientTCP
-    else
-        ____useTCP_0 = clientUDP
-    end
-    local client = ____useTCP_0
-    local protocol = useTCP and "TCP" or "UDP"
-    if client == nil then
-        return {errMsg = protocol .. " client is not initialized"}
-    end
-    local sentBytes, errMsg = client:send(packedMsg)
-    return {sentBytes = sentBytes, errMsg = errMsg}
-end
-function ____exports.receive(self, useTCP)
-    local ____useTCP_1
-    if useTCP then
-        ____useTCP_1 = clientTCP
-    else
-        ____useTCP_1 = clientUDP
-    end
-    local client = ____useTCP_1
-    local protocol = useTCP and "TCP" or "UDP"
-    if client == nil then
-        return {errMsg = protocol .. " client is not initialized"}
-    end
-    local data, errMsg = client:receive()
-    return {data = data, errMsg = errMsg}
-end
-function ____exports.isConnected(self)
-    return clientTCP ~= nil and clientUDP ~= nil
-end
-function ____exports.isLuaDebugEnabled(self)
-    return socket ~= nil or isSandboxEnabled(nil)
-end
---- Returns the epoch timestamp in seconds, with four decimal places of precision (e.g.
--- `1640320492.5779`).
-function ____exports.getTime(self)
-    if isSandboxEnabled(nil) then
-        return getSocketTime(nil)
-    end
-    if socket == nil then
-        error("The socket library was not initialized.")
-    end
-    return socket.gettime()
 end
 return ____exports
  end,
-["packages.mod.src.chatCommands.connect"] = function(...) 
+["packages.mod.src.constants"] = function(...) 
 local ____exports = {}
-local ____chat = require("packages.mod.src.chat")
-local addLocalChat = ____chat.addLocalChat
+____exports.MOD_NAME = "Among Us"
+--- The version is updated automatically by a pre-publish script.
+____exports.VERSION = "0.0.1"
+local USE_LOCAL_NETWORK = false
+____exports.REMOTE_HOSTNAME = USE_LOCAL_NETWORK and "192.168.1.10" or "isaacracing.net"
+return ____exports
+ end,
+["packages.mod.src.mod"] = function(...) 
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local ISCFeature = ____isaacscript_2Dcommon.ISCFeature
+local upgradeMod = ____isaacscript_2Dcommon.upgradeMod
 local ____constants = require("packages.mod.src.constants")
 local MOD_NAME = ____constants.MOD_NAME
-local socketClient = require("packages.mod.src.network.socketClient")
-function ____exports.connectChatCommand(self, autoLogin)
-    if socketClient:isConnected() then
-        addLocalChat(nil, ("You are already connected to the " .. MOD_NAME) .. " server.")
-        return
-    end
-    if not socketClient:connect() then
-        addLocalChat(nil, ("Failed to connect to the " .. MOD_NAME) .. " server. (Either your internet is down or the server is down.)")
-        return
-    end
-    if not autoLogin then
-        addLocalChat(nil, "Connected!")
-        addLocalChat(nil, "Next, select your username with the \"/username\" command.")
-        addLocalChat(nil, "For example: \"/username Alice\"")
-    end
-end
+local ISC_FEATURES_FOR_THIS_MOD = {
+    ISCFeature.CUSTOM_HOTKEYS,
+    ISCFeature.DISABLE_INPUTS,
+    ISCFeature.EXTRA_CONSOLE_COMMANDS,
+    ISCFeature.GAME_REORDERED_CALLBACKS,
+    ISCFeature.RUN_IN_N_FRAMES,
+    ISCFeature.MODDED_ELEMENT_DETECTION,
+    ISCFeature.MODDED_ELEMENT_SETS,
+    ISCFeature.SAVE_DATA_MANAGER
+}
+local modVanilla = RegisterMod(MOD_NAME, 1)
+____exports.mod = upgradeMod(nil, modVanilla, ISC_FEATURES_FOR_THIS_MOD)
 return ____exports
  end,
 ["packages.mod.src.network.udpData"] = function(...) 
@@ -62687,6 +62570,399 @@ end
 
 return struct
  end,
+["packages.mod.src.interfaces.ChatMessage"] = function(...) 
+local ____exports = {}
+return ____exports
+ end,
+["packages.mod.src.network.sandbox"] = function(...) 
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local log = ____isaacscript_2Dcommon.log
+local ____constants = require("packages.mod.src.constants")
+local REMOTE_HOSTNAME = ____constants.REMOTE_HOSTNAME
+local sandbox = nil
+function ____exports.getClientFromSandbox(self, port, useTCP)
+    if sandbox == nil then
+        return nil
+    end
+    return sandbox.connect(REMOTE_HOSTNAME, port, useTCP)
+end
+--- Helper function to call `os.date()`.
+function ____exports.getFormattedTime(self)
+    local format = "%X"
+    if sandbox ~= nil then
+        return sandbox.getDate(format)
+    end
+    return os.date(format)
+end
+--- Helper function to call `socket.gettime()`.
+function ____exports.getSocketTime(self)
+    if sandbox == nil then
+        error("The sandbox is not initialized.")
+    end
+    return sandbox.getTime()
+end
+function ____exports.isSandboxEnabled(self)
+    return sandbox ~= nil
+end
+--- Racing+ installs a sandbox that prevents mods from doing unsafe things. If the sandbox is in
+-- place, then the require call in the "init()" function will fail even though the "--luadebug" flag
+-- is enabled.
+-- 
+-- This function is similar to the Racing+ "init()" function in "socketClient.ts".
+function ____exports.tryInitRacingPlusSandbox(self)
+    local ok, requiredSandbox = pcall(require, "sandbox")
+    if not ok then
+        return
+    end
+    sandbox = requiredSandbox
+    if SandboxTraceback == nil then
+        sandbox = nil
+        log("Detected the sandbox environment, but it was not initialized correctly. (The invocation in the \"main.lua\" file is probably missing.)")
+        return
+    end
+    if not sandbox.isSocketInitialized() then
+        sandbox = nil
+        log("Detected the sandbox environment, but the socket library failed to load. (The \"--luadebug\" flag is probably turned off.)")
+        return
+    end
+    log("Detected the sandbox environment.")
+end
+return ____exports
+ end,
+["packages.mod.src.chat"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayUnshift = ____lualib.__TS__ArrayUnshift
+local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
+local __TS__Iterator = ____lualib.__TS__Iterator
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local log = ____isaacscript_2Dcommon.log
+local logTable = ____isaacscript_2Dcommon.logTable
+local ____sandbox = require("packages.mod.src.network.sandbox")
+local getFormattedTime = ____sandbox.getFormattedTime
+local chatMessages = {}
+function ____exports.addChat(self, data, ____local)
+    if ____local == nil then
+        ____local = false
+    end
+    local renderFrameCount = Isaac.GetFrameCount()
+    local chatMessage = {
+        time = getFormattedTime(nil),
+        username = data.from,
+        msg = data.msg,
+        renderFrameReceived = renderFrameCount,
+        ["local"] = ____local
+    }
+    __TS__ArrayUnshift(chatMessages, chatMessage)
+end
+function ____exports.addLocalChat(self, msg)
+    local data = {gameID = -1, from = "", msg = msg}
+    ____exports.addChat(nil, data, true)
+    log(msg)
+end
+function ____exports.getAllChat(self)
+    return {table.unpack(chatMessages)}
+end
+function ____exports.logAllChatMessages(self)
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(chatMessages)) do
+        local i = ____value[1]
+        local chatMessage = ____value[2]
+        log(("Chat message " .. tostring(i)) .. ":")
+        logTable(chatMessage)
+    end
+end
+return ____exports
+ end,
+["packages.mod.src.enums.BlackSpriteState"] = function(...) 
+local ____exports = {}
+____exports.BlackSpriteState = {}
+____exports.BlackSpriteState.DISABLED = 0
+____exports.BlackSpriteState[____exports.BlackSpriteState.DISABLED] = "DISABLED"
+____exports.BlackSpriteState.FADING_TO_BLACK = 1
+____exports.BlackSpriteState[____exports.BlackSpriteState.FADING_TO_BLACK] = "FADING_TO_BLACK"
+____exports.BlackSpriteState.SOLID = 2
+____exports.BlackSpriteState[____exports.BlackSpriteState.SOLID] = "SOLID"
+____exports.BlackSpriteState.FADING_TO_GAME = 3
+____exports.BlackSpriteState[____exports.BlackSpriteState.FADING_TO_GAME] = "FADING_TO_GAME"
+return ____exports
+ end,
+["packages.mod.src.sprite"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__StringPadStart = ____lualib.__TS__StringPadStart
+local ____exports = {}
+local getFileNum
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local asNumber = ____isaacscript_2Dcommon.asNumber
+local LAST_VANILLA_COLLECTIBLE_TYPE = ____isaacscript_2Dcommon.LAST_VANILLA_COLLECTIBLE_TYPE
+function getFileNum(self, itemID)
+    local defaultReturn = "NEW"
+    if itemID < 1 then
+        return defaultReturn
+    end
+    if itemID >= asNumber(nil, CollectibleType.SAD_ONION) and itemID <= asNumber(nil, LAST_VANILLA_COLLECTIBLE_TYPE) then
+        return __TS__StringPadStart(
+            tostring(itemID),
+            3,
+            "0"
+        )
+    end
+    if itemID > asNumber(nil, LAST_VANILLA_COLLECTIBLE_TYPE) and itemID < 2001 then
+        return defaultReturn
+    end
+    if itemID >= 2001 and itemID <= 2189 then
+        return tostring(itemID)
+    end
+    if itemID > 2189 and itemID < 32769 then
+        return defaultReturn
+    end
+    if itemID >= 32769 and itemID <= 32957 then
+        return tostring(itemID)
+    end
+    return defaultReturn
+end
+local GLOWING_IMAGE_TRINKET_OFFSET = 2000
+function ____exports.initSprite(self, anm2Path, pngPath)
+    local sprite = Sprite()
+    if pngPath == nil then
+        sprite:Load(anm2Path, true)
+    else
+        sprite:Load(anm2Path, false)
+        sprite:ReplaceSpritesheet(0, pngPath)
+        sprite:LoadGraphics()
+    end
+    sprite:SetFrame("Default", 0)
+    return sprite
+end
+--- Can be a collectible or a trinket.
+function ____exports.initGlowingItemSprite(self, collectibleOrTrinketType, trinket)
+    if trinket == nil then
+        trinket = false
+    end
+    if trinket then
+        collectibleOrTrinketType = collectibleOrTrinketType + GLOWING_IMAGE_TRINKET_OFFSET
+    end
+    local fileNum = getFileNum(nil, collectibleOrTrinketType)
+    return ____exports.initSprite(nil, "gfx/glowing_item.anm2", ("gfx/items-glowing/collectibles_" .. fileNum) .. ".png")
+end
+function ____exports.setSpriteOpacity(self, sprite, opacity)
+    sprite.Color = Color(
+        1,
+        1,
+        1,
+        opacity,
+        0,
+        0,
+        0
+    )
+end
+return ____exports
+ end,
+["packages.mod.src.features.blackSprite"] = function(...) 
+local ____exports = {}
+local drawBlackSprite, getBlackSpriteOpacity, sprite, state, startRenderFrame
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local VectorZero = ____isaacscript_2Dcommon.VectorZero
+local ____BlackSpriteState = require("packages.mod.src.enums.BlackSpriteState")
+local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
+local ____sprite = require("packages.mod.src.sprite")
+local initSprite = ____sprite.initSprite
+local setSpriteOpacity = ____sprite.setSpriteOpacity
+function drawBlackSprite(self)
+    if state == BlackSpriteState.DISABLED then
+        return
+    end
+    local opacity = getBlackSpriteOpacity(nil)
+    setSpriteOpacity(nil, sprite, opacity)
+    sprite:RenderLayer(0, VectorZero)
+end
+function getBlackSpriteOpacity(self)
+    if state == BlackSpriteState.SOLID or startRenderFrame == nil then
+        return 1
+    end
+    local renderFrameCount = Isaac.GetFrameCount()
+    local renderFramesPassed = renderFrameCount - startRenderFrame
+    local opacity = renderFramesPassed / ____exports.FADE_TO_BLACK_FRAMES
+    if state == BlackSpriteState.FADING_TO_BLACK then
+        return opacity
+    end
+    if state == BlackSpriteState.FADING_TO_GAME then
+        return 1 - opacity
+    end
+    return 1
+end
+____exports.FADE_TO_BLACK_FRAMES = 90
+sprite = initSprite(nil, "gfx/black.anm2")
+sprite.Scale = Vector(5000, 5000)
+state = BlackSpriteState.DISABLED
+startRenderFrame = nil
+function ____exports.postRender(self)
+    drawBlackSprite(nil)
+end
+function ____exports.setBlackSpriteState(self, newState)
+    local renderFrameCount = Isaac.GetFrameCount()
+    state = newState
+    startRenderFrame = renderFrameCount
+end
+return ____exports
+ end,
+["packages.mod.src.network.socketClient"] = function(...) 
+local ____exports = {}
+local getClient, SOCKET_CONNECT_TIMEOUT_SECONDS, SOCKET_CLIENT_RETURN_SUCCESS, socket
+local ____common = require("packages.common.src.index")
+local TCP_PORT = ____common.TCP_PORT
+local UDP_PORT = ____common.UDP_PORT
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local log = ____isaacscript_2Dcommon.log
+local restart = ____isaacscript_2Dcommon.restart
+local ____chat = require("packages.mod.src.chat")
+local addLocalChat = ____chat.addLocalChat
+local ____constants = require("packages.mod.src.constants")
+local REMOTE_HOSTNAME = ____constants.REMOTE_HOSTNAME
+local ____BlackSpriteState = require("packages.mod.src.enums.BlackSpriteState")
+local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
+local ____blackSprite = require("packages.mod.src.features.blackSprite")
+local setBlackSpriteState = ____blackSprite.setBlackSpriteState
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____sandbox = require("packages.mod.src.network.sandbox")
+local getClientFromSandbox = ____sandbox.getClientFromSandbox
+local getSocketTime = ____sandbox.getSocketTime
+local isSandboxEnabled = ____sandbox.isSandboxEnabled
+local tryInitRacingPlusSandbox = ____sandbox.tryInitRacingPlusSandbox
+function getClient(self, port, useTCP)
+    if useTCP == nil then
+        useTCP = true
+    end
+    if isSandboxEnabled(nil) then
+        return getClientFromSandbox(nil, port, useTCP)
+    end
+    if socket == nil then
+        return nil
+    end
+    local protocol = useTCP and "TCP" or "UDP"
+    local url = (((protocol .. "://") .. REMOTE_HOSTNAME) .. ":") .. tostring(port)
+    local socketClient
+    repeat
+        local ____switch11 = protocol
+        local ____cond11 = ____switch11 == "TCP"
+        if ____cond11 then
+            do
+                socketClient = socket.tcp()
+                socketClient:settimeout(SOCKET_CONNECT_TIMEOUT_SECONDS)
+                local err, errMsg = socketClient:connect(REMOTE_HOSTNAME, port)
+                if err ~= SOCKET_CLIENT_RETURN_SUCCESS then
+                    log((("Error: Failed to connect on \"" .. url) .. "\": ") .. errMsg)
+                    return nil
+                end
+                break
+            end
+        end
+        ____cond11 = ____cond11 or ____switch11 == "UDP"
+        if ____cond11 then
+            do
+                socketClient = socket.udp()
+                socketClient:setpeername(REMOTE_HOSTNAME, port)
+                break
+            end
+        end
+    until true
+    socketClient:settimeout(0)
+    log("Connected to: " .. url)
+    return socketClient
+end
+SOCKET_CONNECT_TIMEOUT_SECONDS = 1
+SOCKET_CLIENT_RETURN_SUCCESS = 1
+socket = nil
+local clientTCP = nil
+local clientUDP = nil
+function ____exports.init(self)
+    local ok, requiredSocket = pcall(require, "socket")
+    if ok then
+        socket = requiredSocket
+    else
+        tryInitRacingPlusSandbox(nil)
+    end
+end
+function ____exports.connect(self)
+    clientTCP = getClient(nil, TCP_PORT, true) or nil
+    if clientTCP == nil then
+        return false
+    end
+    clientUDP = getClient(nil, UDP_PORT, false) or nil
+    if clientUDP == nil then
+        return false
+    end
+    return true
+end
+function ____exports.disconnect(self)
+    if clientTCP ~= nil then
+        clientTCP:close()
+    end
+    clientTCP = nil
+    if clientUDP ~= nil then
+        clientUDP:close()
+    end
+    clientUDP = nil
+    g.game = nil
+    g.loggedIn = false
+    g.userID = nil
+    g.username = nil
+    addLocalChat(nil, "Disconnected!")
+    restart(nil)
+    setBlackSpriteState(nil, BlackSpriteState.DISABLED)
+end
+function ____exports.send(self, packedMsg, useTCP)
+    local ____useTCP_0
+    if useTCP then
+        ____useTCP_0 = clientTCP
+    else
+        ____useTCP_0 = clientUDP
+    end
+    local client = ____useTCP_0
+    local protocol = useTCP and "TCP" or "UDP"
+    if client == nil then
+        return {errMsg = protocol .. " client is not initialized"}
+    end
+    local sentBytes, errMsg = client:send(packedMsg)
+    return {sentBytes = sentBytes, errMsg = errMsg}
+end
+function ____exports.receive(self, useTCP)
+    local ____useTCP_1
+    if useTCP then
+        ____useTCP_1 = clientTCP
+    else
+        ____useTCP_1 = clientUDP
+    end
+    local client = ____useTCP_1
+    local protocol = useTCP and "TCP" or "UDP"
+    if client == nil then
+        return {errMsg = protocol .. " client is not initialized"}
+    end
+    local data, errMsg = client:receive()
+    return {data = data, errMsg = errMsg}
+end
+function ____exports.isConnected(self)
+    return clientTCP ~= nil and clientUDP ~= nil
+end
+function ____exports.isLuaDebugEnabled(self)
+    return socket ~= nil or isSandboxEnabled(nil)
+end
+--- Returns the epoch timestamp in seconds, with four decimal places of precision (e.g.
+-- `1640320492.5779`).
+function ____exports.getTime(self)
+    if isSandboxEnabled(nil) then
+        return getSocketTime(nil)
+    end
+    if socket == nil then
+        error("The socket library was not initialized.")
+    end
+    return socket.gettime()
+end
+return ____exports
+ end,
 ["packages.mod.src.network.send"] = function(...) 
 local ____exports = {}
 local ____common = require("packages.common.src.index")
@@ -62724,156 +63000,6 @@ function ____exports.sendUDP(self, data)
         socketClient:disconnect()
     end
 end
-return ____exports
- end,
-["packages.mod.src.chatCommands.password"] = function(...) 
-local ____exports = {}
-local ____common = require("packages.common.src.index")
-local SocketCommandModToServer = ____common.SocketCommandModToServer
-local ____chat = require("packages.mod.src.chat")
-local addLocalChat = ____chat.addLocalChat
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____send = require("packages.mod.src.network.send")
-local sendTCP = ____send.sendTCP
-function ____exports.passwordChatCommand(self, args)
-    if #args == 0 then
-        addLocalChat(nil, "You must provide a password. (e.g. \"/password hunter2\")")
-        return
-    end
-    local ____g_0 = g
-    local username = ____g_0.username
-    if username == nil then
-        addLocalChat(nil, "You must specify a username first with the \"/username\" command. (e.g. \"/username Alice\")")
-        return
-    end
-    local password = table.concat(args, " ")
-    sendTCP(nil, SocketCommandModToServer.LOGIN, {username = username, password = password})
-end
-return ____exports
- end,
-["packages.mod.src.chatCommands.username"] = function(...) 
-local ____exports = {}
-local ____common = require("packages.common.src.index")
-local SocketCommandModToServer = ____common.SocketCommandModToServer
-local ____chat = require("packages.mod.src.chat")
-local addLocalChat = ____chat.addLocalChat
-local ____send = require("packages.mod.src.network.send")
-local sendTCP = ____send.sendTCP
-function ____exports.usernameChatCommand(self, args)
-    if #args == 0 then
-        addLocalChat(nil, "You must provide a username. (e.g. \"/username Alice\")")
-        return
-    end
-    if #args ~= 1 then
-        local username = table.concat(args, " ")
-        addLocalChat(nil, ("The username of \"" .. username) .. "\" is invalid; usernames cannot contain spaces.")
-        return
-    end
-    local username = args[1]
-    local match = {string.match(username, "%W")}
-    if #match > 0 then
-        addLocalChat(nil, ("The username of \"" .. username) .. "\" is invalid; username must only contain English letters and numbers.")
-        return
-    end
-    sendTCP(nil, SocketCommandModToServer.CHECK_USERNAME, {username = username})
-end
-return ____exports
- end,
-["packages.mod.src.players"] = function(...) 
-local ____exports = {}
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function ____exports.getOurPlayer(self)
-    if g.game == nil then
-        return nil
-    end
-    if g.userID == nil then
-        return nil
-    end
-    local player = g.game:getPlayerFromUserID(g.userID)
-    if player == nil then
-        return nil
-    end
-    return player
-end
-function ____exports.getOurPlayerIndex(self)
-    local ourPlayer = ____exports.getOurPlayer(nil)
-    local ____temp_0
-    if ourPlayer == nil then
-        ____temp_0 = nil
-    else
-        ____temp_0 = ourPlayer.index
-    end
-    return ____temp_0
-end
-return ____exports
- end,
-["packages.mod.src.minimapAPI"] = function(...) 
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local DisplayFlag = ____isaac_2Dtypescript_2Ddefinitions.DisplayFlag
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local addFlag = ____isaacscript_2Dcommon.addFlag
-function ____exports.setMinimapAPIEnabled(self, enabled)
-    if MinimapAPI == nil then
-        return
-    end
-    MinimapAPI.OverrideConfig.Disable = not enabled
-end
-local TASK_ROOM_MINIMAP_ID = 22
-function ____exports.enableMinimapAPI(self)
-    ____exports.setMinimapAPIEnabled(nil, true)
-end
-function ____exports.disableMinimapAPI(self)
-    ____exports.setMinimapAPIEnabled(nil, false)
-end
-function ____exports.setMapToFullVisibility(self)
-    if MinimapAPI == nil then
-        return
-    end
-    local minimapAPILevel = MinimapAPI:GetLevel()
-    for ____, room in ipairs(minimapAPILevel) do
-        if room.ID ~= TASK_ROOM_MINIMAP_ID then
-            room.Visited = true
-            room.Clear = true
-            room.DisplayFlags = addFlag(nil, DisplayFlag.VISIBLE, DisplayFlag.SHOW_ICON)
-        end
-    end
-end
-function ____exports.setMinimapAPIRoomIcon(self, mapID, icon)
-    if MinimapAPI == nil then
-        return
-    end
-    local minimapAPILevel = MinimapAPI:GetLevel()
-    for ____, room in ipairs(minimapAPILevel) do
-        if room.ID == mapID then
-            room.ItemIcons = {icon}
-            return
-        end
-    end
-end
-return ____exports
- end,
-["packages.mod.src.mod"] = function(...) 
-local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local ISCFeature = ____isaacscript_2Dcommon.ISCFeature
-local upgradeMod = ____isaacscript_2Dcommon.upgradeMod
-local ____constants = require("packages.mod.src.constants")
-local MOD_NAME = ____constants.MOD_NAME
-local ISC_FEATURES_FOR_THIS_MOD = {
-    ISCFeature.CUSTOM_HOTKEYS,
-    ISCFeature.DISABLE_INPUTS,
-    ISCFeature.EXTRA_CONSOLE_COMMANDS,
-    ISCFeature.GAME_REORDERED_CALLBACKS,
-    ISCFeature.RUN_IN_N_FRAMES,
-    ISCFeature.MODDED_ELEMENT_DETECTION,
-    ISCFeature.MODDED_ELEMENT_SETS,
-    ISCFeature.SAVE_DATA_MANAGER
-}
-local modVanilla = RegisterMod(MOD_NAME, 1)
-____exports.mod = upgradeMod(nil, modVanilla, ISC_FEATURES_FOR_THIS_MOD)
 return ____exports
  end,
 ["packages.mod.src.features.disableMultiplayer"] = function(...) 
@@ -63943,291 +64069,325 @@ function ____exports.loadBackdrops(self)
 end
 return ____exports
  end,
-["packages.mod.src.chatCommandFunctions"] = function(...) 
+["packages.mod.src.features.taskSubroutines"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
-local __TS__New = ____lualib.__TS__New
+local __TS__ObjectValues = ____lualib.__TS__ObjectValues
 local ____exports = {}
+local muteSoundEffects, removeAllNPCs, removeAllGridEntities
 local ____common = require("packages.common.src.index")
-local NOT_VOTED_YET = ____common.NOT_VOTED_YET
-local SabotageType = ____common.SabotageType
 local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local logTable = ____isaacscript_2Dcommon.logTable
-local ____chat = require("packages.mod.src.chat")
-local addLocalChat = ____chat.addLocalChat
-local ____connect = require("packages.mod.src.chatCommands.connect")
-local connectChatCommand = ____connect.connectChatCommand
-local ____password = require("packages.mod.src.chatCommands.password")
-local passwordChatCommand = ____password.passwordChatCommand
-local ____username = require("packages.mod.src.chatCommands.username")
-local usernameChatCommand = ____username.usernameChatCommand
+local arrayRemoveInPlace = ____isaacscript_2Dcommon.arrayRemoveInPlace
+local game = ____isaacscript_2Dcommon.game
+local getNPCs = ____isaacscript_2Dcommon.getNPCs
+local isVanillaWallGridIndex = ____isaacscript_2Dcommon.isVanillaWallGridIndex
+local log = ____isaacscript_2Dcommon.log
+local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
+local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
+local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
+local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
+local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.g
+local ____minimapAPI = require("packages.mod.src.minimapAPI")
+local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
 local ____send = require("packages.mod.src.network.send")
 local sendTCP = ____send.sendTCP
-local socketClient = require("packages.mod.src.network.socketClient")
-local ____players = require("packages.mod.src.players")
-local getOurPlayer = ____players.getOurPlayer
+local ____setupPlayersAndUI = require("packages.mod.src.setupPlayersAndUI")
+local setupPlayerAndUI = ____setupPlayersAndUI.setupPlayerAndUI
 local ____stageAPI = require("packages.mod.src.stageAPI")
-local getSkeldRoom = ____stageAPI.getSkeldRoom
+local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
 local ____utils = require("packages.mod.src.utils")
-local amOwner = ____utils.amOwner
-____exports.chatCommandFunctionMap = __TS__New(Map)
-____exports.chatCommandFunctionMap:set(
-    "connect",
-    function()
-        connectChatCommand(nil, false)
+local removeGridEntity = ____utils.removeGridEntity
+function muteSoundEffects(self)
+    for ____, soundEffect in ipairs({SoundEffect.THUMBS_UP, SoundEffect.DEATH_BURST_SMALL, SoundEffect.BOSS_1_EXPLOSIONS, SoundEffect.ROCK_CRUMBLE}) do
+        sfxManager:Stop(soundEffect)
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "create",
-    function(____, args)
-        if #args == 0 then
-            addLocalChat(nil, "You must provide a game name. (e.g. \"/create Alice-game\")")
-            return
-        end
-        if #args > 2 then
-            addLocalChat(nil, "The format of the \"create\" command is: /create [name] [password]")
-            return
-        end
-        local name = args[1]
-        local password = args[2] or ""
-        sendTCP(nil, SocketCommandModToServer.CREATE, {name = name, password = password})
+end
+function ____exports.taskLeave(self)
+    if g.game == nil or g.game.currentTask == nil then
+        return
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "credits",
-    function(____, _args)
-        addLocalChat(nil, "The Among Us Mod was made by Zamiel. It makes use of DeadInfinity's StageAPI library, Sentinel's collision library, and Somdudewillson's stage backdrops; special thanks goes to them. Thanks also goes to JSG, im_tem, Wofsauge, and AgentCucco for providing technical assistance.")
+    g.game.currentTask = nil
+    g.game.endTaskTime = Isaac.GetTime()
+    local elapsedTime = g.game.endTaskTime - g.game.startTaskTime
+    log("Task took: " .. tostring(elapsedTime))
+    setupPlayerAndUI(nil)
+    enableMinimapAPI(nil)
+    ____exports.clearRoomEntities(nil)
+    goToStageAPIRoom(nil, g.game.taskReturnRoomName, g.game.taskReturnGridIndex)
+end
+function ____exports.clearRoomEntities(self)
+    removeAllMatchingEntities(nil, EntityType.BOMB)
+    removeAllMatchingEntities(nil, EntityType.PICKUP)
+    removeAllMatchingEntities(nil, EntityType.EFFECT, EffectVariantCustom.BUTTON)
+    removeAllNPCs(nil)
+    removeAllGridEntities(nil)
+end
+function removeAllNPCs(self)
+    local npcs = getNPCs(nil)
+    for ____, npc in ipairs(npcs) do
+        npc:Remove()
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "debug",
-    function(____, _args)
-        if g.game == nil then
-            addLocalChat(nil, "You must be in a game to do that.")
-            return
+end
+function removeAllGridEntities(self)
+    local room = game:GetRoom()
+    local gridSize = room:GetGridSize()
+    do
+        local gridIndex = 0
+        while gridIndex < gridSize do
+            do
+                if isVanillaWallGridIndex(nil, gridIndex) then
+                    goto __continue17
+                end
+                local gridEntity = room:GetGridEntity(gridIndex)
+                if gridEntity ~= nil then
+                    removeGridEntity(nil, gridEntity)
+                end
+            end
+            ::__continue17::
+            gridIndex = gridIndex + 1
         end
-        sendTCP(nil, SocketCommandModToServer.DEBUG, {gameID = g.game.id})
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "disconnect",
-    function(____, _args)
-        socketClient:disconnect()
+end
+function ____exports.taskComplete(self)
+    if g.game == nil or g.game.currentTask == nil then
+        return
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "echo",
-    function(____, args)
-        local text = table.concat(args, " ")
-        addLocalChat(nil, text)
+    local task = g.game.currentTask
+    muteSoundEffects(nil)
+    mod:runNextGameFrame(function()
+        muteSoundEffects(nil)
+    end)
+    sfxManager:Play(SoundEffectCustom.TASK_COMPLETE)
+    sendTCP(nil, SocketCommandModToServer.TASK_COMPLETE, {gameID = g.game.id, task = task})
+    for ____, tasks in ipairs(__TS__ObjectValues(g.game.ourTasks)) do
+        arrayRemoveInPlace(nil, tasks, task)
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "gameList",
-    function(____, _args)
-        sendTCP(nil, SocketCommandModToServer.GAME_LIST, {})
+    ____exports.taskLeave(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.callbacks.entityTakeDmg"] = function(...) 
+local ____exports = {}
+local entityTakeDmgPlayer, gameFrameReturningFromTask
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local game = ____isaacscript_2Dcommon.game
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
+local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
+local taskLeave = ____taskSubroutines.taskLeave
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
+function entityTakeDmgPlayer(self, tookDamage, _damageAmount, _damageFlags, _damageSource, _damageCountdownFrames)
+    local gameFrameCount = game:GetFrameCount()
+    if gameFrameCount == gameFrameReturningFromTask then
+        return false
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "help",
-    function(____, _args)
-        if g.loggedIn then
-            addLocalChat(nil, "To create a game, use the \"/create [name] [password]\" command. (Using a password is optional.)")
-            addLocalChat(nil, "To join a game, use the \"/join [name] [password]\" command. (Using a password is optional.)")
-            addLocalChat(nil, "To see a list of existing games, use the \"/gameList\" command.")
-        else
-            addLocalChat(nil, "To connect to the server, use the \"/connect\" command.")
-        end
-        addLocalChat(nil, "Hint: You can use tab to auto-complete commands.")
-        g.welcomeNotificationEnabled = false
+    if g.game == nil or g.game.currentTask == nil then
+        return nil
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "join",
-    function(____, args)
-        if #args == 0 then
-            addLocalChat(nil, "You must provide a game name. (e.g. \"/join Alice's game\")")
-            return
-        end
-        if #args > 2 then
-            addLocalChat(nil, "The format of the \"join\" command is: /join [name] [password]")
-            return
-        end
-        if g.game ~= nil then
-            addLocalChat(nil, "You are already in a game, so you cannot join a new one.")
-            return
-        end
-        local name = args[1]
-        local password = args[2] or ""
-        sendTCP(nil, SocketCommandModToServer.JOIN, {name = name, password = password, created = false})
+    local player = tookDamage:ToPlayer()
+    if player == nil then
+        return nil
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "killMe",
-    function(____, _args)
-        if g.game == nil or g.userID == nil then
-            return
-        end
-        local room = getSkeldRoom(nil)
-        if room == nil then
-            return
-        end
-        local player = Isaac.GetPlayer()
-        sendTCP(nil, SocketCommandModToServer.KILL_ME, {
-            gameID = g.game.id,
-            userIDKilled = g.userID,
-            room = room,
-            x = player.Position.X,
-            y = player.Position.Y
-        })
+    sfxManager:Play(SoundEffect.THUMBS_DOWN)
+    gameFrameReturningFromTask = gameFrameCount
+    taskLeave(nil)
+    return false
+end
+gameFrameReturningFromTask = nil
+function ____exports.init(self)
+    mod:AddCallback(ModCallback.ENTITY_TAKE_DMG, entityTakeDmgPlayer, EntityType.PLAYER)
+end
+return ____exports
+ end,
+["packages.mod.src.callbacks.evaluateCache"] = function(...) 
+local ____exports = {}
+local speed
+local ____common = require("packages.common.src.index")
+local IS_DEV = ____common.IS_DEV
+local Task = ____common.Task
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local CacheFlag = ____isaac_2Dtypescript_2Ddefinitions.CacheFlag
+local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
+function speed(self, player)
+    if g.game == nil then
+        return
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "leave",
-    function(____, _args)
-        if g.game == nil then
-            addLocalChat(nil, "You are not in a game, so you cannot leave.")
-            return
-        end
-        sendTCP(nil, SocketCommandModToServer.LEAVE, {gameID = g.game.id})
+    player.MoveSpeed = 0.75
+    if g.game.currentTask == Task.SHORT_FIX_WIRES or g.game.currentTask == Task.LONG_MAKE_PENTAGRAM then
+        player.MoveSpeed = 2
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "lights",
-    function(____, _args)
-        if g.game == nil then
-            return
-        end
-        sendTCP(nil, SocketCommandModToServer.SABOTAGE, {gameID = g.game.id, sabotageType = SabotageType.FIX_LIGHTS})
+    if g.game.currentTask == Task.LONG_DODGE_STONE_SHOOTERS then
+        player.MoveSpeed = 1
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "log",
-    function(____, _args)
-        logTable(g.game)
+    if IS_DEV then
+        player.MoveSpeed = 2
     end
-)
-____exports.chatCommandFunctionMap:set("password", passwordChatCommand)
-____exports.chatCommandFunctionMap:set(
-    "revive",
-    function(____, _args)
-        if g.game == nil then
-            return
-        end
-        sendTCP(nil, SocketCommandModToServer.REVIVE, {gameID = g.game.id})
+end
+function ____exports.init(self)
+    mod:AddCallback(ModCallback.EVALUATE_CACHE, speed, CacheFlag.SPEED)
+end
+return ____exports
+ end,
+["packages.mod.src.callbacks.inputAction"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local main, disablePreRunMovement, disableCutsceneInputs, shouldDisableCutsceneInputs, disableVanillaConsole, disableReset, MOVEMENT_BUTTONS
+local ____common = require("packages.common.src.index")
+local IS_DEV = ____common.IS_DEV
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local ButtonAction = ____isaac_2Dtypescript_2Ddefinitions.ButtonAction
+local InputHook = ____isaac_2Dtypescript_2Ddefinitions.InputHook
+local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local ReadonlySet = ____isaacscript_2Dcommon.ReadonlySet
+local game = ____isaacscript_2Dcommon.game
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
+local ____utils = require("packages.mod.src.utils")
+local inCutscene = ____utils.inCutscene
+local inEndMeeting = ____utils.inEndMeeting
+function main(self, _entity, inputHook, buttonAction)
+    if g.game == nil then
+        return nil
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "start",
-    function(____, _args)
-        if g.game == nil then
-            addLocalChat(nil, "You are not in a game, so you cannot start it.")
-            return
-        end
-        if not amOwner(nil) then
-            addLocalChat(nil, "You are not the owner of this game, so you cannot start it.")
-            return
-        end
-        sendTCP(nil, SocketCommandModToServer.START, {gameID = g.game.id})
+    local returnValue
+    returnValue = disablePreRunMovement(nil, inputHook, buttonAction)
+    if returnValue ~= nil then
+        return returnValue
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "terminate",
-    function(____, _args)
-        if g.game == nil then
-            addLocalChat(nil, "You are not in a game, so you cannot terminate it.")
-            return
-        end
-        if not amOwner(nil) then
-            addLocalChat(nil, "You are not the owner of this game, so you cannot terminate it.")
-            return
-        end
-        sendTCP(nil, SocketCommandModToServer.TERMINATE, {gameID = g.game.id})
+    returnValue = disableCutsceneInputs(nil, inputHook, buttonAction)
+    if returnValue ~= nil then
+        return returnValue
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "userID",
-    function(____, _args)
-        addLocalChat(
-            nil,
-            "Your user ID is: " .. tostring(g.userID)
-        )
+    returnValue = disableVanillaConsole(nil, inputHook, buttonAction)
+    if returnValue ~= nil then
+        return returnValue
     end
-)
-____exports.chatCommandFunctionMap:set("username", usernameChatCommand)
-____exports.chatCommandFunctionMap:set(
-    "vote",
-    function(____, args)
-        local nameVotedFor = args[1]
-        if nameVotedFor == nil then
-            addLocalChat(nil, "You must provide a player name. (e.g. \"/vote Alice\")")
-            return
-        end
-        if g.game == nil then
-            addLocalChat(nil, "You can only perform that command in a game.")
-            return
-        end
-        if g.game.meeting == nil then
-            addLocalChat(nil, "You can only perform that command in a meeting.")
-            return
-        end
-        if g.userID == nil then
-            return
-        end
-        local ourPlayer = getOurPlayer(nil)
-        if ourPlayer == nil then
-            error("Failed to get our player description for the \"vote\" command.")
-        end
-        if not ourPlayer.alive then
-            addLocalChat(nil, "You can only perform that command when you are alive.")
-            return
-        end
-        local ourPreviousVote = g.game.meeting.votes[ourPlayer.index + 1]
-        if ourPreviousVote ~= NOT_VOTED_YET then
-            addLocalChat(nil, "You have already voted.")
-            return
-        end
-        local playerVotedFor = g.game:getPlayerFromUsername(nameVotedFor)
-        if playerVotedFor == nil then
-            addLocalChat(nil, ("The player of \"" .. nameVotedFor) .. "\" is not in this game.")
-            return
-        end
-        sendTCP(nil, SocketCommandModToServer.VOTE, {gameID = g.game.id, userIDVotedFor = playerVotedFor.userID, skip = false})
+    returnValue = disableReset(nil, inputHook, buttonAction)
+    if returnValue ~= nil then
+        return returnValue
     end
-)
-____exports.chatCommandFunctionMap:set(
-    "voteSkip",
-    function(____, _args)
-        if g.game == nil then
-            addLocalChat(nil, "You can only perform that command in a game.")
-            return
-        end
-        if g.game.meeting == nil then
-            addLocalChat(nil, "You can only perform that command in a meeting.")
-            return
-        end
-        if g.userID == nil then
-            return
-        end
-        local ourPlayer = getOurPlayer(nil)
-        if ourPlayer == nil then
-            error("Failed to get our player description for the \"voteskip\" command.")
-        end
-        if not ourPlayer.alive then
-            addLocalChat(nil, "You can only perform that command when you are alive.")
-            return
-        end
-        local ourPreviousVote = g.game.meeting.votes[ourPlayer.index + 1]
-        if ourPreviousVote ~= NOT_VOTED_YET then
-            addLocalChat(nil, "You have already voted.")
-            return
-        end
-        sendTCP(nil, SocketCommandModToServer.VOTE, {gameID = g.game.id, userIDVotedFor = 0, skip = true})
+    return nil
+end
+function disablePreRunMovement(self, inputHook, buttonAction)
+    local gameFrameCount = game:GetFrameCount()
+    if gameFrameCount > 0 then
+        return nil
     end
-)
+    if MOVEMENT_BUTTONS:has(buttonAction) then
+        return inputHook == InputHook.GET_ACTION_VALUE and 0 or false
+    end
+    return nil
+end
+function disableCutsceneInputs(self, inputHook, buttonAction)
+    if buttonAction == ButtonAction.CONSOLE then
+        return nil
+    end
+    if shouldDisableCutsceneInputs(nil) then
+        return inputHook == InputHook.GET_ACTION_VALUE and 0 or false
+    end
+    return nil
+end
+function shouldDisableCutsceneInputs(self)
+    if g.game == nil then
+        return false
+    end
+    return inCutscene(nil) or g.game.meeting ~= nil or inEndMeeting(nil)
+end
+function disableVanillaConsole(self, inputHook, buttonAction)
+    if IS_DEV then
+        return nil
+    end
+    if buttonAction == ButtonAction.CONSOLE then
+        return inputHook == InputHook.GET_ACTION_VALUE and 0 or false
+    end
+    return nil
+end
+function disableReset(self, inputHook, buttonAction)
+    if IS_DEV then
+        return nil
+    end
+    if buttonAction == ButtonAction.RESTART then
+        return inputHook == InputHook.GET_ACTION_VALUE and 0 or false
+    end
+    return nil
+end
+MOVEMENT_BUTTONS = __TS__New(ReadonlySet, {ButtonAction.LEFT, ButtonAction.RIGHT, ButtonAction.UP, ButtonAction.DOWN})
+function ____exports.init(self)
+    mod:AddCallback(ModCallback.INPUT_ACTION, main)
+end
+return ____exports
+ end,
+["packages.mod.src.callbacks.postCurseEval"] = function(...) 
+local ____exports = {}
+local main
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local LevelCurse = ____isaac_2Dtypescript_2Ddefinitions.LevelCurse
+local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local bitFlags = ____isaacscript_2Dcommon.bitFlags
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
+function main(self)
+    return bitFlags(nil, LevelCurse.NONE)
+end
+function ____exports.init(self)
+    mod:AddCallback(ModCallback.POST_CURSE_EVAL, main)
+end
+return ____exports
+ end,
+["packages.mod.src.enums.ButtonSubType"] = function(...) 
+local ____exports = {}
+____exports.ButtonSubType = {}
+____exports.ButtonSubType.GO_TO_TASK = 0
+____exports.ButtonSubType[____exports.ButtonSubType.GO_TO_TASK] = "GO_TO_TASK"
+____exports.ButtonSubType.EMERGENCY = 1
+____exports.ButtonSubType[____exports.ButtonSubType.EMERGENCY] = "EMERGENCY"
+____exports.ButtonSubType.CAMERA = 2
+____exports.ButtonSubType[____exports.ButtonSubType.CAMERA] = "CAMERA"
+____exports.ButtonSubType.LIGHTS = 3
+____exports.ButtonSubType[____exports.ButtonSubType.LIGHTS] = "LIGHTS"
+____exports.ButtonSubType.COMMS = 4
+____exports.ButtonSubType[____exports.ButtonSubType.COMMS] = "COMMS"
+____exports.ButtonSubType.O2 = 5
+____exports.ButtonSubType[____exports.ButtonSubType.O2] = "O2"
+____exports.ButtonSubType.TASK_1 = 6
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_1] = "TASK_1"
+____exports.ButtonSubType.TASK_2 = 7
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_2] = "TASK_2"
+____exports.ButtonSubType.TASK_3 = 8
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_3] = "TASK_3"
+____exports.ButtonSubType.TASK_4 = 9
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_4] = "TASK_4"
+____exports.ButtonSubType.TASK_5 = 10
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_5] = "TASK_5"
+____exports.ButtonSubType.TASK_6 = 11
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_6] = "TASK_6"
+____exports.ButtonSubType.TASK_7 = 12
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_7] = "TASK_7"
+____exports.ButtonSubType.TASK_8 = 13
+____exports.ButtonSubType[____exports.ButtonSubType.TASK_8] = "TASK_8"
 return ____exports
  end,
 ["packages.mod.src.collisionObjects"] = function(...) 
@@ -64697,58 +64857,6 @@ end
 
 return exports
  end,
-["packages.mod.src.commands.chat"] = function(...) 
-local ____exports = {}
-local ____chat = require("packages.mod.src.chat")
-local addChat = ____chat.addChat
-function ____exports.commandChat(self, data)
-    addChat(nil, data)
-end
-return ____exports
- end,
-["packages.mod.src.enums.ButtonSubType"] = function(...) 
-local ____exports = {}
-____exports.ButtonSubType = {}
-____exports.ButtonSubType.GO_TO_TASK = 0
-____exports.ButtonSubType[____exports.ButtonSubType.GO_TO_TASK] = "GO_TO_TASK"
-____exports.ButtonSubType.EMERGENCY = 1
-____exports.ButtonSubType[____exports.ButtonSubType.EMERGENCY] = "EMERGENCY"
-____exports.ButtonSubType.CAMERA = 2
-____exports.ButtonSubType[____exports.ButtonSubType.CAMERA] = "CAMERA"
-____exports.ButtonSubType.LIGHTS = 3
-____exports.ButtonSubType[____exports.ButtonSubType.LIGHTS] = "LIGHTS"
-____exports.ButtonSubType.COMMS = 4
-____exports.ButtonSubType[____exports.ButtonSubType.COMMS] = "COMMS"
-____exports.ButtonSubType.O2 = 5
-____exports.ButtonSubType[____exports.ButtonSubType.O2] = "O2"
-____exports.ButtonSubType.TASK_1 = 6
-____exports.ButtonSubType[____exports.ButtonSubType.TASK_1] = "TASK_1"
-____exports.ButtonSubType.TASK_2 = 7
-____exports.ButtonSubType[____exports.ButtonSubType.TASK_2] = "TASK_2"
-____exports.ButtonSubType.TASK_3 = 8
-____exports.ButtonSubType[____exports.ButtonSubType.TASK_3] = "TASK_3"
-____exports.ButtonSubType.TASK_4 = 9
-____exports.ButtonSubType[____exports.ButtonSubType.TASK_4] = "TASK_4"
-____exports.ButtonSubType.TASK_5 = 10
-____exports.ButtonSubType[____exports.ButtonSubType.TASK_5] = "TASK_5"
-____exports.ButtonSubType.TASK_6 = 11
-____exports.ButtonSubType[____exports.ButtonSubType.TASK_6] = "TASK_6"
-____exports.ButtonSubType.TASK_7 = 12
-____exports.ButtonSubType[____exports.ButtonSubType.TASK_7] = "TASK_7"
-____exports.ButtonSubType.TASK_8 = 13
-____exports.ButtonSubType[____exports.ButtonSubType.TASK_8] = "TASK_8"
-return ____exports
- end,
-["packages.mod.src.enums.EffectVariantCustom"] = function(...) 
-local ____exports = {}
-____exports.EffectVariantCustom = {
-    STAGE_API_DOOR = Isaac.GetEntityVariantByName("StageAPIDoor"),
-    VENT = Isaac.GetEntityVariantByName("Vent"),
-    BUTTON = Isaac.GetEntityVariantByName("Button"),
-    MULTIPLAYER_PLAYER = Isaac.GetEntityVariantByName("Multiplayer Player")
-}
-return ____exports
- end,
 ["packages.mod.src.features.buttonSubroutines"] = function(...) 
 local ____exports = {}
 local EMERGENCY_BUTTON_ANIMATION_SUFFIX, SPECIAL_BUTTON_ANIMATION_SUFFIX
@@ -64930,462 +65038,2070 @@ function ____exports.spawnTaskButton(self, gridIndex, num)
 end
 return ____exports
  end,
-["packages.mod.src.features.emergencyButton"] = function(...) 
+["packages.mod.src.features.teleporter"] = function(...) 
 local ____exports = {}
-local shouldEmergencyButtonBeEnabled
-local ____common = require("packages.common.src.index")
-local SkeldRoom = ____common.SkeldRoom
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local getPlayerCloserThan = ____isaacscript_2Dcommon.getPlayerCloserThan
+local log = ____isaacscript_2Dcommon.log
+local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
+local taskLeave = ____taskSubroutines.taskLeave
+local TELEPORTER_ACTIVATION_DISTANCE = 20
+function ____exports.spawnTeleporter(self, gridIndex)
+    spawnGridEntity(nil, GridEntityType.TELEPORTER, gridIndex)
+end
+function ____exports.postGridEntityUpdateTeleporter(self, gridEntity)
+    if g.game == nil or g.game.currentTask == nil then
+        return
+    end
+    local playerTouching = getPlayerCloserThan(nil, gridEntity.Position, TELEPORTER_ACTIVATION_DISTANCE)
+    if playerTouching == nil then
+        return
+    end
+    log("Player touched teleporter.")
+    taskLeave(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.tasks.buttonsBehindKeyBlocks"] = function(...) 
+local ____exports = {}
+local spawnKeys
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local Direction = ____isaac_2Dtypescript_2Ddefinitions.Direction
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
+local KeySubType = ____isaac_2Dtypescript_2Ddefinitions.KeySubType
+local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
+local ____collisionObjects = require("packages.mod.src.collisionObjects")
+local addCollision = ____collisionObjects.addCollision
+local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____buttonSubroutines = require("packages.mod.src.features.buttonSubroutines")
+local allButtonsPressed = ____buttonSubroutines.allButtonsPressed
+local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local ____teleporter = require("packages.mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
+local ____spawnObjects = require("packages.mod.src.spawnObjects")
+local spawnFakeBlockLine = ____spawnObjects.spawnFakeBlockLine
+local ____utils = require("packages.mod.src.utils")
+local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
+local spawnEntity = ____utils.spawnEntity
+function spawnKeys(self, gridIndex)
+    local entity = spawnEntity(
+        nil,
+        EntityType.PICKUP,
+        PickupVariant.KEY,
+        KeySubType.DOUBLE_PACK,
+        gridIndex
+    )
+    local sprite = entity:GetSprite()
+    sprite:SetLastFrame()
+end
+function ____exports.buttonsBehindKeyBlocks(self)
+    local leftGridIndex = 62
+    movePlayerToGridIndex(nil, leftGridIndex)
+    local topRightGridIndex = 42
+    spawnTeleporter(nil, topRightGridIndex)
+    spawnKeys(nil, 35)
+    spawnKeys(nil, 36)
+    spawnKeys(nil, 37)
+    spawnKeys(nil, 38)
+    spawnKeys(nil, 39)
+    spawnTaskButton(nil, 110, 1)
+    spawnTaskButton(nil, 112, 1)
+    spawnTaskButton(nil, 114, 1)
+    spawnFakeBlockLine(nil, 64, 4, Direction.DOWN)
+    mod:runNextGameFrame(function()
+        addCollision(nil, 64, 109)
+    end)
+    spawnFakeBlockLine(nil, 66, 4, Direction.DOWN)
+    mod:runNextGameFrame(function()
+        addCollision(nil, 66, 111)
+    end)
+    spawnFakeBlockLine(nil, 68, 4, Direction.DOWN)
+    mod:runNextGameFrame(function()
+        addCollision(nil, 68, 113)
+    end)
+    spawnFakeBlockLine(nil, 70, 4, Direction.DOWN)
+    mod:runNextGameFrame(function()
+        addCollision(nil, 70, 115)
+    end)
+    spawnGridEntity(nil, GridEntityType.LOCK, 65)
+    spawnGridEntity(nil, GridEntityType.LOCK, 80)
+    spawnGridEntity(nil, GridEntityType.LOCK, 95)
+    spawnGridEntity(nil, GridEntityType.LOCK, 67)
+    spawnGridEntity(nil, GridEntityType.LOCK, 82)
+    spawnGridEntity(nil, GridEntityType.LOCK, 97)
+    spawnGridEntity(nil, GridEntityType.LOCK, 69)
+    spawnGridEntity(nil, GridEntityType.LOCK, 84)
+    spawnGridEntity(nil, GridEntityType.LOCK, 99)
+end
+function ____exports.buttonsBehindKeyBlocksButtonPressed(self)
+    if allButtonsPressed(nil) then
+        taskComplete(nil)
+    end
+end
+return ____exports
+ end,
+["packages.mod.src.tasks.fixWires"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ObjectValues = ____lualib.__TS__ObjectValues
+local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
+local __TS__ObjectEntries = ____lualib.__TS__ObjectEntries
+local ____exports = {}
+local resetLineSprites, leftSideButtonPressed, rightSideButtonPressed, resetLeftButtons, WireColor, buttonColorActive, colorsComplete, lineSprites
+local ____common = require("packages.common.src.index")
+local Task = ____common.Task
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local emptyArray = ____isaacscript_2Dcommon.emptyArray
+local game = ____isaacscript_2Dcommon.game
 local getEffects = ____isaacscript_2Dcommon.getEffects
-local removeAllEffects = ____isaacscript_2Dcommon.removeAllEffects
+local getEnumValues = ____isaacscript_2Dcommon.getEnumValues
+local newReadonlyColor = ____isaacscript_2Dcommon.newReadonlyColor
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
+local shuffleArray = ____isaacscript_2Dcommon.shuffleArray
 local ____ButtonSubType = require("packages.mod.src.enums.ButtonSubType")
 local ButtonSubType = ____ButtonSubType.ButtonSubType
 local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
 local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____players = require("packages.mod.src.players")
-local getOurPlayer = ____players.getOurPlayer
-local ____stageAPI = require("packages.mod.src.stageAPI")
-local getSkeldRoom = ____stageAPI.getSkeldRoom
+local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
+local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
 local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
-local setButtonState = ____buttonSpawn.setButtonState
-local spawnButton = ____buttonSpawn.spawnButton
-function shouldEmergencyButtonBeEnabled(self)
-    if g.game == nil then
-        return false
-    end
-    local ourPlayer = getOurPlayer(nil)
-    if ourPlayer == nil then
-        return false
-    end
-    return ourPlayer.alive and not g.game.usedEmergencyMeeting and not g.game.emergencyButtonOnCooldown
-end
-local EMERGENCY_BUTTON_GRID_INDEX = 265
-function ____exports.spawnEmergencyButton(self)
-    if g.game == nil then
-        return
-    end
-    spawnButton(
-        nil,
-        ButtonSubType.EMERGENCY,
-        EMERGENCY_BUTTON_GRID_INDEX,
-        shouldEmergencyButtonBeEnabled(nil)
-    )
-end
-function ____exports.removeEmergencyButton(self)
-    removeAllEffects(nil, EffectVariantCustom.BUTTON, ButtonSubType.EMERGENCY)
-end
-function ____exports.setEmergencyButtonState(self)
-    if g.game == nil then
-        return
-    end
-    local skeldRoom = getSkeldRoom(nil)
-    if skeldRoom ~= SkeldRoom.CAFETERIA then
-        return
-    end
-    local emergencyButtons = getEffects(nil, EffectVariantCustom.BUTTON, ButtonSubType.EMERGENCY)
-    local emergencyButton = emergencyButtons[1]
-    if emergencyButton == nil then
-        return
-    end
-    local enabled = shouldEmergencyButtonBeEnabled(nil)
-    setButtonState(nil, emergencyButton, enabled)
-end
-return ____exports
- end,
-["packages.mod.src.commands.emergencyButtonCooldown"] = function(...) 
-local ____exports = {}
-local ____emergencyButton = require("packages.mod.src.features.emergencyButton")
-local setEmergencyButtonState = ____emergencyButton.setEmergencyButtonState
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____buttonSubroutines = require("packages.mod.src.features.buttonSubroutines")
+local resetButton = ____buttonSubroutines.resetButton
+local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local taskLeave = ____taskSubroutines.taskLeave
+local ____teleporter = require("packages.mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.g
-function ____exports.commandEmergencyButtonCooldown(self, data)
-    if g.game == nil then
+local ____utils = require("packages.mod.src.utils")
+local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
+local spawnEntity = ____utils.spawnEntity
+function resetLineSprites(self)
+    for ____, spriteDescription in ipairs(__TS__ObjectValues(lineSprites)) do
+        spriteDescription.startPosition = nil
+        spriteDescription.endPosition = nil
+        spriteDescription.finished = false
+    end
+end
+function leftSideButtonPressed(self, color, button)
+    resetLeftButtons(nil, color)
+    buttonColorActive = color
+    local spriteDescription = lineSprites[buttonColorActive]
+    spriteDescription.startPosition = Isaac.WorldToRenderPosition(button.Position)
+end
+function rightSideButtonPressed(self, color)
+    if color ~= buttonColorActive then
+        sfxManager:Play(SoundEffect.THUMBS_DOWN)
+        taskLeave(nil)
         return
     end
-    g.game.emergencyButtonOnCooldown = data.cooldown
-    setEmergencyButtonState(nil)
+    local spriteDescription = lineSprites[buttonColorActive]
+    spriteDescription.finished = true
+    colorsComplete[#colorsComplete + 1] = buttonColorActive
+    buttonColorActive = nil
+    local allColors = getEnumValues(nil, WireColor)
+    if #colorsComplete == #allColors then
+        taskComplete(nil)
+    end
 end
-return ____exports
- end,
-["packages.mod.src.enums.SoundEffectCustom"] = function(...) 
-local ____exports = {}
-____exports.SoundEffectCustom = {
-    DEAD_BODY_REPORT = Isaac.GetSoundIdByName("Dead Body Report"),
-    EMERGENCY_MEETING = Isaac.GetSoundIdByName("Emergency Meeting"),
-    KILL = Isaac.GetSoundIdByName("Kill"),
-    PLAYER_JOINED = Isaac.GetSoundIdByName("Player Joined"),
-    PLAYER_LEFT = Isaac.GetSoundIdByName("Player Left"),
-    ROLE_REVEAL = Isaac.GetSoundIdByName("Role Reveal"),
-    TASK_COMPLETE = Isaac.GetSoundIdByName("Task Complete"),
-    VICTORY = Isaac.GetSoundIdByName("Victory")
+function resetLeftButtons(self, exceptColor)
+    local leftButtons = getEffects(nil, EffectVariantCustom.BUTTON, ButtonSubType.TASK_1)
+    for ____, button in ipairs(leftButtons) do
+        local data = button:GetData()
+        local color = data.color
+        if color ~= exceptColor and not __TS__ArrayIncludes(colorsComplete, color) then
+            resetButton(nil, button)
+        end
+    end
+end
+local THIS_TASK = Task.SHORT_FIX_WIRES
+local NUM_BUTTONS = 4
+local WIRE_SIGN_OFFSET = Vector(-28, 0)
+WireColor = {}
+WireColor.YELLOW = 0
+WireColor[WireColor.YELLOW] = "YELLOW"
+WireColor.BLUE = 1
+WireColor[WireColor.BLUE] = "BLUE"
+WireColor.RED = 2
+WireColor[WireColor.RED] = "RED"
+WireColor.MAGENTA = 3
+WireColor[WireColor.MAGENTA] = "MAGENTA"
+local WIRE_COLORS = {
+    [WireColor.YELLOW] = newReadonlyColor(nil, 1, 1, 0),
+    [WireColor.BLUE] = newReadonlyColor(nil, 0, 0, 1),
+    [WireColor.RED] = newReadonlyColor(nil, 1, 0, 0),
+    [WireColor.MAGENTA] = newReadonlyColor(nil, 1, 0, 1)
 }
+buttonColorActive = nil
+colorsComplete = {}
+lineSprites = {
+    [WireColor.YELLOW] = {
+        startPosition = nil,
+        endPosition = nil,
+        sprite = Sprite(),
+        finished = false
+    },
+    [WireColor.BLUE] = {
+        startPosition = nil,
+        endPosition = nil,
+        sprite = Sprite(),
+        finished = false
+    },
+    [WireColor.RED] = {
+        startPosition = nil,
+        endPosition = nil,
+        sprite = Sprite(),
+        finished = false
+    },
+    [WireColor.MAGENTA] = {
+        startPosition = nil,
+        endPosition = nil,
+        sprite = Sprite(),
+        finished = false
+    }
+}
+for ____, spriteDescription in ipairs(__TS__ObjectValues(lineSprites)) do
+    local sprite = spriteDescription.sprite
+    sprite:Load("gfx/electrical/line.anm2", true)
+    sprite:SetFrame("Default", 0)
+end
+function ____exports.fixWires(self)
+    local room = game:GetRoom()
+    local gridWidth = room:GetGridWidth()
+    local centerGridIndex = 52
+    movePlayerToGridIndex(nil, centerGridIndex)
+    local bottomGridIndex = 97
+    spawnTeleporter(nil, bottomGridIndex)
+    local topLeftGridIndex = 16
+    do
+        local i = 0
+        while i < NUM_BUTTONS do
+            local gridIndex = topLeftGridIndex + i * gridWidth * 2
+            local button = spawnTaskButton(nil, gridIndex, 1)
+            local data = button:GetData()
+            data.color = i
+            local sign = spawnEntity(
+                nil,
+                EntityTypeCustom.WIRE_SIGN,
+                0,
+                0,
+                gridIndex
+            )
+            local sprite = sign:GetSprite()
+            sprite.Offset = WIRE_SIGN_OFFSET
+            sprite:SetFrame(i)
+            i = i + 1
+        end
+    end
+    local topRightGridIndex = 28
+    local wireColors = getEnumValues(nil, WireColor)
+    local randomWireColors = shuffleArray(nil, wireColors)
+    do
+        local i = 0
+        while i < NUM_BUTTONS do
+            local color = randomWireColors[i + 1]
+            if color == nil then
+                error("Failed to get the random wire color for index: " .. tostring(i))
+            end
+            local gridIndex = topRightGridIndex + i * gridWidth * 2
+            local button = spawnTaskButton(nil, gridIndex, 2)
+            local data = button:GetData()
+            data.color = color
+            local sign = spawnEntity(
+                nil,
+                EntityTypeCustom.WIRE_SIGN,
+                0,
+                0,
+                gridIndex
+            )
+            local sprite = sign:GetSprite()
+            sprite.Offset = WIRE_SIGN_OFFSET * -1
+            sprite:SetFrame(color)
+            i = i + 1
+        end
+    end
+    buttonColorActive = nil
+    emptyArray(nil, colorsComplete)
+    resetLineSprites(nil)
+end
+function ____exports.fixWiresButtonPressed(self, button, num)
+    local data = button:GetData()
+    local color = data.color
+    if num == 1 then
+        leftSideButtonPressed(nil, color, button)
+    else
+        rightSideButtonPressed(nil, color)
+    end
+end
+function ____exports.postRender(self)
+    if g.game == nil or g.game.currentTask ~= THIS_TASK then
+        return
+    end
+    local player = Isaac.GetPlayer()
+    if buttonColorActive ~= nil then
+        local spriteDescription = lineSprites[buttonColorActive]
+        spriteDescription.endPosition = Isaac.WorldToRenderPosition(player.Position)
+    end
+    for ____, ____value in ipairs(__TS__ObjectEntries(lineSprites)) do
+        local colorString = ____value[1]
+        local spriteDescription = ____value[2]
+        do
+            local color = colorString
+            local ____spriteDescription_0 = spriteDescription
+            local startPosition = ____spriteDescription_0.startPosition
+            local endPosition = ____spriteDescription_0.endPosition
+            local sprite = ____spriteDescription_0.sprite
+            local finished = ____spriteDescription_0.finished
+            if startPosition == nil or endPosition == nil then
+                goto __continue25
+            end
+            if color ~= buttonColorActive and not finished then
+                goto __continue25
+            end
+            local combinedVector = endPosition - startPosition
+            sprite.Rotation = combinedVector:GetAngleDegrees()
+            sprite.Scale = Vector(
+                combinedVector:Length(),
+                1
+            )
+            sprite.Color = WIRE_COLORS[color]
+            sprite:Render(startPosition)
+        end
+        ::__continue25::
+    end
+end
 return ____exports
  end,
-["packages.mod.src.features.endGameCutscene"] = function(...) 
+["packages.mod.src.tasks.identifyCollectibles"] = function(...) 
 local ____exports = {}
-local postRenderFadingToBlack, postRenderTextFadingIn, postRenderText, postRenderTextFadingOut, postRenderFadingToGame, drawText, getTextOpacity, drawItem, hasFadeFinished, setState, setSprite, ITEM_SPRITE_OFFSET, itemSprite
+local spawnButtons, setupRound, getRandomCollectibles, correctSelection, incorrectSelection, drawItemSprites, drawItemText, NUM_ROUNDS, NUM_RANDOM_COLLECTIBLES, BUTTON_SPACING, BUTTON_1_GRID_INDEX, ROW_LENGTH, TEXT_GRID_INDEX, collectibleSprites, currentRound, currentCollectible, correctCollectibleIndex
 local ____common = require("packages.common.src.index")
-local Role = ____common.Role
+local Task = ____common.Task
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
+local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local getCollectibleGfxFilename = ____isaacscript_2Dcommon.getCollectibleGfxFilename
-local getScreenCenterPos = ____isaacscript_2Dcommon.getScreenCenterPos
-local log = ____isaacscript_2Dcommon.log
-local restart = ____isaacscript_2Dcommon.restart
+local VANILLA_COLLECTIBLE_TYPES = ____isaacscript_2Dcommon.VANILLA_COLLECTIBLE_TYPES
+local emptyArray = ____isaacscript_2Dcommon.emptyArray
+local game = ____isaacscript_2Dcommon.game
+local getCollectibleName = ____isaacscript_2Dcommon.getCollectibleName
+local getRandomArrayElement = ____isaacscript_2Dcommon.getRandomArrayElement
+local getRandomArrayIndex = ____isaacscript_2Dcommon.getRandomArrayIndex
+local ____repeat = ____isaacscript_2Dcommon["repeat"]
 local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local VectorZero = ____isaacscript_2Dcommon.VectorZero
-local ____BlackSpriteState = require("packages.mod.src.enums.BlackSpriteState")
-local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
-local ____CutsceneState = require("packages.mod.src.enums.CutsceneState")
-local CutsceneState = ____CutsceneState.CutsceneState
-local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
-local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
+local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____buttonSubroutines = require("packages.mod.src.features.buttonSubroutines")
+local resetAllButtons = ____buttonSubroutines.resetAllButtons
+local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local taskLeave = ____taskSubroutines.taskLeave
+local ____teleporter = require("packages.mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.g
-local ____minimapAPI = require("packages.mod.src.minimapAPI")
-local disableMinimapAPI = ____minimapAPI.disableMinimapAPI
 local ____sprite = require("packages.mod.src.sprite")
-local setSpriteOpacity = ____sprite.setSpriteOpacity
+local initGlowingItemSprite = ____sprite.initGlowingItemSprite
 local ____utils = require("packages.mod.src.utils")
 local drawFontText = ____utils.drawFontText
-local getRoleName = ____utils.getRoleName
-local ____blackSprite = require("packages.mod.src.features.blackSprite")
-local FADE_TO_BLACK_FRAMES = ____blackSprite.FADE_TO_BLACK_FRAMES
-local setBlackSpriteState = ____blackSprite.setBlackSpriteState
-function postRenderFadingToBlack(self)
-    if hasFadeFinished(nil) then
-        setState(nil, CutsceneState.TEXT_FADING_IN)
-        setBlackSpriteState(nil, BlackSpriteState.SOLID)
+local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
+function spawnButtons(self)
+    local gridIndex = BUTTON_1_GRID_INDEX
+    do
+        local i = 0
+        while i < NUM_RANDOM_COLLECTIBLES do
+            spawnTaskButton(nil, gridIndex, i + 1)
+            gridIndex = gridIndex + BUTTON_SPACING
+            i = i + 1
+        end
     end
 end
-function postRenderTextFadingIn(self)
-    drawText(nil)
-    if hasFadeFinished(nil) then
-        setState(nil, CutsceneState.TEXT)
+function setupRound(self)
+    local startGridIndex = 97
+    movePlayerToGridIndex(nil, startGridIndex)
+    local randomCollectibles = getRandomCollectibles(nil)
+    emptyArray(nil, collectibleSprites)
+    for ____, randomCollectible in ipairs(randomCollectibles) do
+        local sprite = initGlowingItemSprite(nil, randomCollectible)
+        collectibleSprites[#collectibleSprites + 1] = sprite
+    end
+    local randomIndex = getRandomArrayIndex(nil, randomCollectibles)
+    local randomCollectible = randomCollectibles[randomIndex + 1]
+    correctCollectibleIndex = randomIndex
+    currentCollectible = getCollectibleName(nil, randomCollectible)
+    resetAllButtons(nil)
+end
+function getRandomCollectibles(self)
+    local randomCollectibles = {}
+    ____repeat(
+        nil,
+        NUM_RANDOM_COLLECTIBLES,
+        function()
+            local randomCollectible = getRandomArrayElement(nil, VANILLA_COLLECTIBLE_TYPES, nil, randomCollectibles)
+            randomCollectibles[#randomCollectibles + 1] = randomCollectible
+        end
+    )
+    return randomCollectibles
+end
+function correctSelection(self)
+    sfxManager:Play(SoundEffect.THUMBS_UP, 0.5)
+    currentRound = currentRound + 1
+    if currentRound >= NUM_ROUNDS then
+        taskComplete(nil)
+    else
+        setupRound(nil)
     end
 end
-function postRenderText(self)
-    drawText(nil)
-    if hasFadeFinished(nil) then
-        setState(nil, CutsceneState.TEXT_FADING_OUT)
-        g.game = nil
-        restart(nil)
+function incorrectSelection(self)
+    sfxManager:Play(SoundEffect.THUMBS_DOWN)
+    taskLeave(nil)
+end
+function drawItemSprites(self)
+    local room = game:GetRoom()
+    local buttonGridIndex = BUTTON_1_GRID_INDEX
+    do
+        local i = 0
+        while i < NUM_RANDOM_COLLECTIBLES do
+            local spriteGridIndex = buttonGridIndex - ROW_LENGTH
+            local gamePosition = room:GetGridPosition(spriteGridIndex)
+            local position = Isaac.WorldToRenderPosition(gamePosition)
+            local sprite = collectibleSprites[i + 1]
+            if sprite ~= nil then
+                sprite:RenderLayer(0, position)
+            end
+            buttonGridIndex = buttonGridIndex + BUTTON_SPACING
+            i = i + 1
+        end
     end
 end
-function postRenderTextFadingOut(self)
-    drawText(nil)
-    if hasFadeFinished(nil) then
-        setState(nil, CutsceneState.FADING_TO_GAME)
-        setBlackSpriteState(nil, BlackSpriteState.FADING_TO_GAME)
+function drawItemText(self)
+    local room = game:GetRoom()
+    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
+    local position = Isaac.WorldToRenderPosition(worldPosition)
+    local text = "Find: " .. currentCollectible
+    drawFontText(nil, text, position)
+end
+local THIS_TASK = Task.SHORT_IDENTIFY_COLLECTIBLES
+NUM_ROUNDS = 5
+local STARTING_ROUND = 1
+NUM_RANDOM_COLLECTIBLES = 5
+BUTTON_SPACING = 2
+BUTTON_1_GRID_INDEX = 48
+ROW_LENGTH = 15
+TEXT_GRID_INDEX = 86
+collectibleSprites = {}
+currentRound = STARTING_ROUND
+currentCollectible = ""
+correctCollectibleIndex = 0
+function ____exports.identifyCollectibles(self)
+    local bottomLeftGridIndex = 92
+    spawnTeleporter(nil, bottomLeftGridIndex)
+    spawnButtons(nil)
+    currentRound = STARTING_ROUND
+    setupRound(nil)
+end
+function ____exports.identifyCollectibleButtonPressed(self, num)
+    if num == correctCollectibleIndex + 1 then
+        correctSelection(nil)
+    else
+        incorrectSelection(nil)
     end
 end
-function postRenderFadingToGame(self)
-    if hasFadeFinished(nil) then
-        setState(nil, CutsceneState.DISABLED)
-        local player = Isaac.GetPlayer()
-        player.ControlsEnabled = true
-    end
-end
-function drawText(self)
-    local centerPos = getScreenCenterPos(nil)
-    local offsetFromCenter = Vector(0, 50)
-    local topCenterPos = centerPos - offsetFromCenter
-    local offsetFromBetweenLine = Vector(0, 10)
-    local opacity = getTextOpacity(nil)
-    drawFontText(nil, "Victory for:", topCenterPos - offsetFromBetweenLine, opacity)
-    local roleName = getRoleName(nil, g.endGame.winningRole, true)
-    drawFontText(nil, roleName, topCenterPos + offsetFromBetweenLine, opacity)
-    drawItem(nil, topCenterPos, opacity)
-    local bottomCenterPos = centerPos + offsetFromCenter
-    drawFontText(nil, "The imposters were:", bottomCenterPos - offsetFromBetweenLine, opacity)
-    drawFontText(nil, g.endGame.imposterNames, bottomCenterPos + offsetFromBetweenLine, opacity)
-end
-function getTextOpacity(self)
-    if g.endGame.state == CutsceneState.TEXT or g.endGame.startRenderFrame == nil then
-        return 1
-    end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local renderFramesPassed = renderFrameCount - g.endGame.startRenderFrame
-    local opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES
-    if g.endGame.state == CutsceneState.TEXT_FADING_IN then
-        return opacity
-    end
-    if g.endGame.state == CutsceneState.TEXT_FADING_OUT then
-        return 1 - opacity
-    end
-    return 1
-end
-function drawItem(self, textPosition, opacity)
-    local position = textPosition + ITEM_SPRITE_OFFSET
-    setSpriteOpacity(nil, itemSprite, opacity)
-    itemSprite:RenderLayer(0, position)
-end
-function hasFadeFinished(self)
-    if g.endGame.startRenderFrame == nil then
-        return false
-    end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local renderFramesPassed = renderFrameCount - g.endGame.startRenderFrame
-    return renderFramesPassed >= FADE_TO_BLACK_FRAMES
-end
-function setState(self, state)
-    local renderFrameCount = Isaac.GetFrameCount()
-    g.endGame.state = state
-    g.endGame.startRenderFrame = renderFrameCount
-    log(((("Changed end game cutscene state: " .. CutsceneState[state]) .. " (") .. tostring(state)) .. ")")
-end
-function setSprite(self, role)
-    local collectibleType = role == Role.CREW and CollectibleType.NOTCHED_AXE or CollectibleType.MOMS_KNIFE
-    local gfxFileName = getCollectibleGfxFilename(nil, collectibleType)
-    itemSprite:ReplaceSpritesheet(0, gfxFileName)
-    itemSprite:LoadGraphics()
-end
-ITEM_SPRITE_OFFSET = Vector(0, -30)
-itemSprite = Sprite()
-itemSprite:Load("gfx/item.anm2", false)
-itemSprite:SetFrame("Default", 0)
 function ____exports.postRender(self)
+    if g.game == nil or g.game.currentTask ~= THIS_TASK then
+        return
+    end
+    drawItemSprites(nil)
+    drawItemText(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.tasks.identifyPickupsInOrder"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
+local __TS__Iterator = ____lualib.__TS__Iterator
+local ____exports = {}
+local setupRound, drawPickupText, drawPickupSprites, spawnButtons, correctSelection, nextRound, incorrectSelection, NUM_ROUNDS, PLAYER_START_GRID_INDEX, TEXT_GRID_INDEX, TEXT_SHOW_FRAMES, BUTTON_GRID_INDEXES, ROW_LENGTH, SPRITE_OFFSET, PickupType, pickupDescriptions, currentRound, showingPickupIndex, showingPickupRenderFrame, pickupSprites, currentPickupOrder, currentChoosingIndex
+local ____common = require("packages.common.src.index")
+local Task = ____common.Task
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local GAME_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.GAME_FRAMES_PER_SECOND
+local emptyArray = ____isaacscript_2Dcommon.emptyArray
+local game = ____isaacscript_2Dcommon.game
+local getEnumValues = ____isaacscript_2Dcommon.getEnumValues
+local getRandomEnumValue = ____isaacscript_2Dcommon.getRandomEnumValue
+local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
+local ____repeat = ____isaacscript_2Dcommon["repeat"]
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
+local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
+local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
+local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local taskLeave = ____taskSubroutines.taskLeave
+local ____teleporter = require("packages.mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
+local ____utils = require("packages.mod.src.utils")
+local drawFontText = ____utils.drawFontText
+local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
+function setupRound(self)
+    movePlayerToGridIndex(nil, PLAYER_START_GRID_INDEX)
+    removeAllMatchingEntities(nil, EntityType.EFFECT, EffectVariantCustom.BUTTON)
+    emptyArray(nil, currentPickupOrder)
+    ____repeat(
+        nil,
+        currentRound,
+        function()
+            local randomPickupType = getRandomEnumValue(nil, PickupType, nil, currentPickupOrder)
+            currentPickupOrder[#currentPickupOrder + 1] = randomPickupType
+        end
+    )
+    showingPickupIndex = 0
+    mod:runInNGameFrames(
+        function()
+            showingPickupRenderFrame = Isaac.GetFrameCount()
+        end,
+        GAME_FRAMES_PER_SECOND / 2
+    )
+end
+function drawPickupText(self)
+    if showingPickupIndex == nil or showingPickupRenderFrame == nil then
+        return
+    end
+    local renderFrameCount = Isaac.GetFrameCount()
+    if renderFrameCount >= showingPickupRenderFrame + TEXT_SHOW_FRAMES then
+        showingPickupIndex = showingPickupIndex + 1
+        showingPickupRenderFrame = renderFrameCount
+        if showingPickupIndex >= #currentPickupOrder then
+            showingPickupIndex = nil
+            showingPickupRenderFrame = nil
+            currentChoosingIndex = 0
+            spawnButtons(nil)
+            return
+        end
+    end
+    local room = game:GetRoom()
+    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
+    local position = Isaac.WorldToRenderPosition(worldPosition)
+    local pickupType = currentPickupOrder[showingPickupIndex + 1]
+    local pickupDescription = pickupDescriptions[pickupType]
+    local text = pickupDescription.name
+    drawFontText(nil, text, position)
+end
+function drawPickupSprites(self)
+    if showingPickupIndex ~= nil or showingPickupRenderFrame ~= nil then
+        return
+    end
+    local room = game:GetRoom()
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(BUTTON_GRID_INDEXES)) do
+        local i = ____value[1]
+        local buttonGridIndex = ____value[2]
+        local spriteGridIndex = buttonGridIndex - ROW_LENGTH
+        local gamePosition = room:GetGridPosition(spriteGridIndex)
+        local renderPosition = Isaac.WorldToRenderPosition(gamePosition)
+        local position = renderPosition + SPRITE_OFFSET
+        local sprite = pickupSprites[i + 1]
+        if sprite ~= nil then
+            sprite:RenderLayer(0, position)
+        end
+    end
+end
+function spawnButtons(self)
+    local pickupTypes = getEnumValues(nil, PickupType)
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(pickupTypes)) do
+        local i = ____value[1]
+        local pickupType = ____value[2]
+        local gridIndex = BUTTON_GRID_INDEXES[i + 1]
+        if gridIndex == nil then
+            error("Failed to find the button grid index corresponding to pickup index: " .. tostring(i))
+        end
+        local button = spawnTaskButton(nil, gridIndex, 1)
+        local data = button:GetData()
+        data.pickupType = pickupType
+    end
+end
+function correctSelection(self)
+    sfxManager:Play(SoundEffect.THUMBS_UP, 0.5)
+    currentChoosingIndex = currentChoosingIndex + 1
+    if currentChoosingIndex >= #currentPickupOrder then
+        nextRound(nil)
+    else
+        movePlayerToGridIndex(nil, PLAYER_START_GRID_INDEX)
+    end
+end
+function nextRound(self)
+    currentRound = currentRound + 1
+    if currentRound >= NUM_ROUNDS then
+        taskComplete(nil)
+    else
+        setupRound(nil)
+    end
+end
+function incorrectSelection(self)
+    sfxManager:Play(SoundEffect.THUMBS_DOWN)
+    taskLeave(nil)
+end
+local THIS_TASK = Task.LONG_IDENTIFY_PICKUPS_IN_ORDER
+local STARTING_ROUND = 1
+NUM_ROUNDS = 6
+PLAYER_START_GRID_INDEX = 82
+TEXT_GRID_INDEX = 37
+TEXT_SHOW_FRAMES = 30
+BUTTON_GRID_INDEXES = {
+    32,
+    62,
+    92,
+    42,
+    72,
+    102,
+    35,
+    37,
+    39
+}
+ROW_LENGTH = 15
+SPRITE_OFFSET = Vector(0, 10)
+PickupType = {}
+PickupType.HEART = 0
+PickupType[PickupType.HEART] = "HEART"
+PickupType.COIN = 1
+PickupType[PickupType.COIN] = "COIN"
+PickupType.BOMB = 2
+PickupType[PickupType.BOMB] = "BOMB"
+PickupType.KEY = 3
+PickupType[PickupType.KEY] = "KEY"
+PickupType.PILL = 4
+PickupType[PickupType.PILL] = "PILL"
+PickupType.CARD = 5
+PickupType[PickupType.CARD] = "CARD"
+PickupType.CHEST = 6
+PickupType[PickupType.CHEST] = "CHEST"
+PickupType.SACK = 7
+PickupType[PickupType.SACK] = "SACK"
+PickupType.BATTERY = 8
+PickupType[PickupType.BATTERY] = "BATTERY"
+pickupDescriptions = {
+    [PickupType.HEART] = {name = "Heart", gfx = "gfx/005.011_heart.anm2"},
+    [PickupType.COIN] = {name = "Coin", gfx = "gfx/005.021_penny.anm2"},
+    [PickupType.BOMB] = {name = "Bomb", gfx = "gfx/005.041_bomb.anm2"},
+    [PickupType.KEY] = {name = "Key", gfx = "gfx/005.031_key.anm2"},
+    [PickupType.PILL] = {name = "Pill", gfx = "gfx/005.071_pill blue-blue.anm2"},
+    [PickupType.CARD] = {name = "Card", gfx = "gfx/005.301_tarot card.anm2"},
+    [PickupType.CHEST] = {name = "Chest", gfx = "gfx/005.050_chest.anm2"},
+    [PickupType.SACK] = {name = "Sack", gfx = "gfx/005.069_grabbag.anm2"},
+    [PickupType.BATTERY] = {name = "Battery", gfx = "gfx/005.090_littlebattery.anm2"}
+}
+currentRound = STARTING_ROUND
+showingPickupIndex = nil
+showingPickupRenderFrame = nil
+pickupSprites = {}
+currentPickupOrder = {}
+currentChoosingIndex = 0
+do
+    local i = 0
+    while i < #getEnumValues(nil, PickupType) do
+        local pickupDescription = pickupDescriptions[i]
+        local sprite = Sprite()
+        sprite:Load(pickupDescription.gfx, true)
+        sprite:SetFrame("Idle", 0)
+        pickupSprites[#pickupSprites + 1] = sprite
+        i = i + 1
+    end
+end
+function ____exports.identifyPickupsInOrder(self)
+    local bottomGridIndex = 112
+    spawnTeleporter(nil, bottomGridIndex)
+    currentRound = STARTING_ROUND
+    setupRound(nil)
+end
+function ____exports.postRender(self)
+    if g.game == nil or g.game.currentTask ~= THIS_TASK then
+        return
+    end
+    drawPickupText(nil)
+    drawPickupSprites(nil)
+end
+function ____exports.identifyPickupsInOrderButtonPressed(self, button)
+    local data = button:GetData()
+    local pickupType = data.pickupType
+    if pickupType == nil then
+        return
+    end
+    local correctPickupType = currentPickupOrder[currentChoosingIndex + 1]
+    if correctPickupType == pickupType then
+        correctSelection(nil)
+    else
+        incorrectSelection(nil)
+    end
+end
+return ____exports
+ end,
+["packages.mod.src.tasks.identifyTrinkets"] = function(...) 
+local ____exports = {}
+local spawnButtons, setupRound, getRandomTrinkets, correctSelection, incorrectSelection, drawTrinketSprites, drawTrinketText, NUM_ROUNDS, NUM_RANDOM_TRINKETS, BUTTON_SPACING, BUTTON_1_GRID_INDEX, ROW_LENGTH, TEXT_GRID_INDEX, trinketSprites, currentTrinket, currentRound, correctTrinketIndex
+local ____common = require("packages.common.src.index")
+local Task = ____common.Task
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local VANILLA_TRINKET_TYPES = ____isaacscript_2Dcommon.VANILLA_TRINKET_TYPES
+local emptyArray = ____isaacscript_2Dcommon.emptyArray
+local game = ____isaacscript_2Dcommon.game
+local getRandomArrayElement = ____isaacscript_2Dcommon.getRandomArrayElement
+local getRandomArrayIndex = ____isaacscript_2Dcommon.getRandomArrayIndex
+local getTrinketName = ____isaacscript_2Dcommon.getTrinketName
+local ____repeat = ____isaacscript_2Dcommon["repeat"]
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
+local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____buttonSubroutines = require("packages.mod.src.features.buttonSubroutines")
+local resetAllButtons = ____buttonSubroutines.resetAllButtons
+local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local taskLeave = ____taskSubroutines.taskLeave
+local ____teleporter = require("packages.mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____sprite = require("packages.mod.src.sprite")
+local initGlowingItemSprite = ____sprite.initGlowingItemSprite
+local ____utils = require("packages.mod.src.utils")
+local drawFontText = ____utils.drawFontText
+local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
+function spawnButtons(self)
+    local gridIndex = BUTTON_1_GRID_INDEX
+    do
+        local i = 0
+        while i < NUM_RANDOM_TRINKETS do
+            spawnTaskButton(nil, gridIndex, i + 1)
+            gridIndex = gridIndex + BUTTON_SPACING
+            i = i + 1
+        end
+    end
+end
+function setupRound(self)
+    local startGridIndex = 97
+    movePlayerToGridIndex(nil, startGridIndex)
+    local randomTrinkets = getRandomTrinkets(nil)
+    emptyArray(nil, trinketSprites)
+    for ____, randomTrinket in ipairs(randomTrinkets) do
+        local sprite = initGlowingItemSprite(nil, randomTrinket, true)
+        trinketSprites[#trinketSprites + 1] = sprite
+    end
+    local randomIndex = getRandomArrayIndex(nil, randomTrinkets)
+    local randomTrinket = randomTrinkets[randomIndex + 1]
+    correctTrinketIndex = randomIndex
+    currentTrinket = getTrinketName(nil, randomTrinket)
+    resetAllButtons(nil)
+end
+function getRandomTrinkets(self)
+    local randomTrinkets = {}
+    ____repeat(
+        nil,
+        NUM_RANDOM_TRINKETS,
+        function()
+            local randomTrinket = getRandomArrayElement(nil, VANILLA_TRINKET_TYPES, nil, randomTrinkets)
+            randomTrinkets[#randomTrinkets + 1] = randomTrinket
+        end
+    )
+    return randomTrinkets
+end
+function correctSelection(self)
+    sfxManager:Play(SoundEffect.THUMBS_UP, 0.5)
+    currentRound = currentRound + 1
+    if currentRound >= NUM_ROUNDS then
+        taskComplete(nil)
+    else
+        setupRound(nil)
+    end
+end
+function incorrectSelection(self)
+    sfxManager:Play(SoundEffect.THUMBS_DOWN)
+    taskLeave(nil)
+end
+function drawTrinketSprites(self)
+    local room = game:GetRoom()
+    local buttonGridIndex = BUTTON_1_GRID_INDEX
+    do
+        local i = 0
+        while i < NUM_RANDOM_TRINKETS do
+            local spriteGridIndex = buttonGridIndex - ROW_LENGTH
+            local gamePosition = room:GetGridPosition(spriteGridIndex)
+            local position = Isaac.WorldToRenderPosition(gamePosition)
+            local sprite = trinketSprites[i + 1]
+            if sprite ~= nil then
+                sprite:RenderLayer(0, position)
+            end
+            buttonGridIndex = buttonGridIndex + BUTTON_SPACING
+            i = i + 1
+        end
+    end
+end
+function drawTrinketText(self)
+    local room = game:GetRoom()
+    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
+    local position = Isaac.WorldToRenderPosition(worldPosition)
+    local text = "Find: " .. currentTrinket
+    drawFontText(nil, text, position)
+end
+local THIS_TASK = Task.SHORT_IDENTIFY_TRINKETS
+NUM_ROUNDS = 5
+local STARTING_ROUND = 1
+NUM_RANDOM_TRINKETS = 5
+BUTTON_SPACING = 2
+BUTTON_1_GRID_INDEX = 48
+ROW_LENGTH = 15
+TEXT_GRID_INDEX = 86
+trinketSprites = {}
+currentTrinket = ""
+currentRound = STARTING_ROUND
+correctTrinketIndex = 0
+function ____exports.identifyTrinkets(self)
+    local bottomLeftGridIndex = 92
+    spawnTeleporter(nil, bottomLeftGridIndex)
+    spawnButtons(nil)
+    currentRound = STARTING_ROUND
+    setupRound(nil)
+end
+function ____exports.identifyTrinketButtonPressed(self, num)
+    if num == correctTrinketIndex + 1 then
+        correctSelection(nil)
+    else
+        incorrectSelection(nil)
+    end
+end
+function ____exports.postRender(self)
+    if g.game == nil or g.game.currentTask ~= THIS_TASK then
+        return
+    end
+    drawTrinketSprites(nil)
+    drawTrinketText(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.tasks.pressButtonsWithGrudge"] = function(...) 
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____buttonSubroutines = require("packages.mod.src.features.buttonSubroutines")
+local allButtonsPressed = ____buttonSubroutines.allButtonsPressed
+local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local ____teleporter = require("packages.mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____utils = require("packages.mod.src.utils")
+local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
+local spawnEntity = ____utils.spawnEntity
+function ____exports.pressButtonsWithGrudge(self)
+    local centerGridIndex = 67
+    movePlayerToGridIndex(nil, centerGridIndex)
+    local bottomLeftGridIndex = 73
+    spawnTeleporter(nil, bottomLeftGridIndex)
+    local cornerGridIndexes = {16, 28, 106, 118}
+    for ____, gridIndex in ipairs(cornerGridIndexes) do
+        spawnEntity(
+            nil,
+            EntityType.GRUDGE,
+            0,
+            0,
+            gridIndex
+        )
+    end
+    local buttonGridIndexes = {
+        19,
+        25,
+        109,
+        115,
+        61,
+        43,
+        103
+    }
+    for ____, gridIndex in ipairs(buttonGridIndexes) do
+        spawnTaskButton(nil, gridIndex, 1)
+    end
+end
+function ____exports.pressButtonsWithGrudgeButtonPressed(self)
+    if allButtonsPressed(nil) then
+        taskComplete(nil)
+    end
+end
+return ____exports
+ end,
+["packages.mod.src.tasks.pushButtonsInOrder"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
+local __TS__Iterator = ____lualib.__TS__Iterator
+local ____exports = {}
+local setNewButtonOrder, spawnButtons, BUTTON_GRID_INDEXES, buttonOrder, nextButtonToPress
+local ____common = require("packages.common.src.index")
+local Task = ____common.Task
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local emptyArray = ____isaacscript_2Dcommon.emptyArray
+local game = ____isaacscript_2Dcommon.game
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
+local shuffleArrayInPlace = ____isaacscript_2Dcommon.shuffleArrayInPlace
+local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
+local spawnTaskButton = ____buttonSpawn.spawnTaskButton
+local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local taskLeave = ____taskSubroutines.taskLeave
+local ____teleporter = require("packages.mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____utils = require("packages.mod.src.utils")
+local drawFontText = ____utils.drawFontText
+local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
+function setNewButtonOrder(self)
+    emptyArray(nil, buttonOrder)
+    do
+        local i = 0
+        while i < #BUTTON_GRID_INDEXES do
+            buttonOrder[#buttonOrder + 1] = i
+            i = i + 1
+        end
+    end
+    shuffleArrayInPlace(nil, buttonOrder)
+    nextButtonToPress = 0
+end
+function spawnButtons(self)
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(BUTTON_GRID_INDEXES)) do
+        local i = ____value[1]
+        local buttonGridIndex = ____value[2]
+        local button = spawnTaskButton(nil, buttonGridIndex, 1)
+        local data = button:GetData()
+        data.num = buttonOrder[i + 1]
+    end
+end
+local THIS_TASK = Task.SHORT_PUSH_BUTTONS_IN_ORDER
+BUTTON_GRID_INDEXES = {
+    32,
+    35,
+    39,
+    42,
+    62,
+    65,
+    69,
+    72,
+    92,
+    102
+}
+buttonOrder = {}
+nextButtonToPress = 0
+function ____exports.pushButtonsInOrder(self)
+    local centerGridIndex = 67
+    movePlayerToGridIndex(nil, centerGridIndex)
+    local bottomGridIndex = 112
+    spawnTeleporter(nil, bottomGridIndex)
+    setNewButtonOrder(nil)
+    spawnButtons(nil)
+end
+function ____exports.pushButtonsInOrderButtonPressed(self, button)
+    local data = button:GetData()
+    local num = data.num
+    if num == nil then
+        return
+    end
+    if num ~= nextButtonToPress then
+        sfxManager:Play(SoundEffect.THUMBS_DOWN)
+        taskLeave(nil)
+        return
+    end
+    nextButtonToPress = nextButtonToPress + 1
+    if nextButtonToPress >= #buttonOrder then
+        taskComplete(nil)
+    end
+end
+function ____exports.postRender(self)
+    if g.game == nil or g.game.currentTask ~= THIS_TASK then
+        return
+    end
+    local room = game:GetRoom()
+    local gridWidth = room:GetGridWidth()
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(BUTTON_GRID_INDEXES)) do
+        local i = ____value[1]
+        local buttonGridIndex = ____value[2]
+        local textGridIndex = buttonGridIndex - gridWidth
+        local worldPosition = room:GetGridPosition(textGridIndex)
+        local position = Isaac.WorldToRenderPosition(worldPosition)
+        local num = buttonOrder[i + 1]
+        if num ~= nil then
+            local nextNum = num + 1
+            local text = tostring(nextNum)
+            drawFontText(nil, text, position)
+        end
+    end
+end
+return ____exports
+ end,
+["packages.mod.src.features.buttons"] = function(...) 
+local ____exports = {}
+local checkIfButtonIsPressed, buttonPressed, buttonPressedGoToTask, buttonPressedEmergency, buttonPressedTask, BUTTON_ACTIVATION_DISTANCE
+local ____common = require("packages.common.src.index")
+local FAKE_TASK = ____common.FAKE_TASK
+local MeetingType = ____common.MeetingType
+local Role = ____common.Role
+local SocketCommandModToServer = ____common.SocketCommandModToServer
+local Task = ____common.Task
+local TASK_DESCRIPTIONS = ____common.TASK_DESCRIPTIONS
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local PressurePlateState = ____isaac_2Dtypescript_2Ddefinitions.PressurePlateState
+local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local asNumber = ____isaacscript_2Dcommon.asNumber
+local getPlayerCloserThan = ____isaacscript_2Dcommon.getPlayerCloserThan
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
+local ____ButtonSubType = require("packages.mod.src.enums.ButtonSubType")
+local ButtonSubType = ____ButtonSubType.ButtonSubType
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____send = require("packages.mod.src.network.send")
+local sendTCP = ____send.sendTCP
+local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
+local getSkeldRoomName = ____skeldRoomMap.getSkeldRoomName
+local ____stageAPI = require("packages.mod.src.stageAPI")
+local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
+local ____buttonsBehindKeyBlocks = require("packages.mod.src.tasks.buttonsBehindKeyBlocks")
+local buttonsBehindKeyBlocksButtonPressed = ____buttonsBehindKeyBlocks.buttonsBehindKeyBlocksButtonPressed
+local ____fixWires = require("packages.mod.src.tasks.fixWires")
+local fixWiresButtonPressed = ____fixWires.fixWiresButtonPressed
+local ____identifyCollectibles = require("packages.mod.src.tasks.identifyCollectibles")
+local identifyCollectibleButtonPressed = ____identifyCollectibles.identifyCollectibleButtonPressed
+local ____identifyPickupsInOrder = require("packages.mod.src.tasks.identifyPickupsInOrder")
+local identifyPickupsInOrderButtonPressed = ____identifyPickupsInOrder.identifyPickupsInOrderButtonPressed
+local ____identifyTrinkets = require("packages.mod.src.tasks.identifyTrinkets")
+local identifyTrinketButtonPressed = ____identifyTrinkets.identifyTrinketButtonPressed
+local ____pressButtonsWithGrudge = require("packages.mod.src.tasks.pressButtonsWithGrudge")
+local pressButtonsWithGrudgeButtonPressed = ____pressButtonsWithGrudge.pressButtonsWithGrudgeButtonPressed
+local ____pushButtonsInOrder = require("packages.mod.src.tasks.pushButtonsInOrder")
+local pushButtonsInOrderButtonPressed = ____pushButtonsInOrder.pushButtonsInOrderButtonPressed
+local ____buttonSubroutines = require("packages.mod.src.features.buttonSubroutines")
+local getButtonAnimationSuffix = ____buttonSubroutines.getButtonAnimationSuffix
+local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+function checkIfButtonIsPressed(self, effect)
+    if effect.State == asNumber(nil, PressurePlateState.PRESSURE_PLATE_PRESSED) then
+        return
+    end
+    local player = getPlayerCloserThan(nil, effect.Position, BUTTON_ACTIVATION_DISTANCE)
+    if player == nil then
+        return
+    end
+    effect.State = PressurePlateState.PRESSURE_PLATE_PRESSED
+    local sprite = effect:GetSprite()
+    local animationSuffix = getButtonAnimationSuffix(nil, effect.SubType)
+    local animation = "Switched" .. animationSuffix
+    sprite:Play(animation, true)
+    sfxManager:Play(SoundEffect.BUTTON_PRESS)
+    buttonPressed(nil, effect)
+end
+function buttonPressed(self, button)
+    local buttonSubType = button.SubType
     repeat
-        local ____switch3 = g.endGame.state
-        local ____cond3 = ____switch3 == CutsceneState.DISABLED
-        if ____cond3 then
+        local ____switch7 = buttonSubType
+        local ____cond7 = ____switch7 == ButtonSubType.GO_TO_TASK
+        if ____cond7 then
+            do
+                buttonPressedGoToTask(nil, button)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.EMERGENCY
+        if ____cond7 then
+            do
+                buttonPressedEmergency(nil)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.CAMERA
+        if ____cond7 then
             do
                 break
             end
         end
-        ____cond3 = ____cond3 or ____switch3 == CutsceneState.FADING_TO_BLACK
-        if ____cond3 then
+        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.LIGHTS
+        if ____cond7 then
             do
-                postRenderFadingToBlack(nil)
                 break
             end
         end
-        ____cond3 = ____cond3 or ____switch3 == CutsceneState.TEXT_FADING_IN
-        if ____cond3 then
+        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.COMMS
+        if ____cond7 then
             do
-                postRenderTextFadingIn(nil)
-                return
-            end
-        end
-        ____cond3 = ____cond3 or ____switch3 == CutsceneState.TEXT
-        if ____cond3 then
-            do
-                postRenderText(nil)
                 break
             end
         end
-        ____cond3 = ____cond3 or ____switch3 == CutsceneState.TEXT_FADING_OUT
-        if ____cond3 then
+        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.O2
+        if ____cond7 then
             do
-                postRenderTextFadingOut(nil)
                 break
             end
         end
-        ____cond3 = ____cond3 or ____switch3 == CutsceneState.FADING_TO_GAME
-        if ____cond3 then
+        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_1
+        if ____cond7 then
             do
-                postRenderFadingToGame(nil)
+                buttonPressedTask(nil, button, 1)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_2
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 2)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_3
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 3)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_4
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 4)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_5
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 5)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_6
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 6)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_7
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 7)
+                break
+            end
+        end
+        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_8
+        if ____cond7 then
+            do
+                buttonPressedTask(nil, button, 8)
                 break
             end
         end
     until true
 end
-function ____exports.startEndGameCutscene(self)
-    setState(nil, CutsceneState.FADING_TO_BLACK)
-    setBlackSpriteState(nil, BlackSpriteState.FADING_TO_BLACK)
-    setSprite(nil, g.endGame.winningRole)
-    disableMinimapAPI(nil)
-    local player = Isaac.GetPlayer()
-    player.Velocity = VectorZero
-    player.ControlsEnabled = false
-    sfxManager:Play(SoundEffectCustom.VICTORY)
-end
-return ____exports
- end,
-["packages.mod.src.commands.endGame"] = function(...) 
-local ____exports = {}
-local getImposterNames
-local ____endGameCutscene = require("packages.mod.src.features.endGameCutscene")
-local startEndGameCutscene = ____endGameCutscene.startEndGameCutscene
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function getImposterNames(self, game, imposterUserIDs)
-    local names = {}
-    for ____, userID in ipairs(imposterUserIDs) do
-        local player = game:getPlayerFromUserID(userID)
-        if player ~= nil then
-            names[#names + 1] = player.username
-        end
-    end
-    return table.concat(names, ", ")
-end
-function ____exports.commandEndGame(self, data)
+function buttonPressedGoToTask(self, effect)
     if g.game == nil then
         return
     end
-    g.endGame.winningRole = data.winningRole
-    g.endGame.imposterNames = getImposterNames(nil, g.game, data.imposterUserIDs)
-    startEndGameCutscene(nil)
+    local data = effect:GetData()
+    local task = data.task
+    if task == nil then
+        error("Failed to read the task from a task button.")
+    end
+    local taskDescription = TASK_DESCRIPTIONS[task]
+    g.game.currentTask = g.game.role == Role.IMPOSTER and FAKE_TASK or task
+    g.game.taskReturnRoomName = getSkeldRoomName(nil, taskDescription.room)
+    g.game.taskReturnGridIndex = taskDescription.returnGridIndex
+    goToStageAPIRoom(nil, "Task")
+end
+function buttonPressedEmergency(self)
+    if g.game == nil then
+        return
+    end
+    sendTCP(nil, SocketCommandModToServer.MEETING, {meetingType = MeetingType.EMERGENCY, gameID = g.game.id, userIDKilled = 0})
+end
+function buttonPressedTask(self, button, num)
+    if g.game == nil or g.game.currentTask == nil then
+        return
+    end
+    repeat
+        local ____switch29 = g.game.currentTask
+        local ____cond29 = ____switch29 == Task.SHORT_IDENTIFY_COLLECTIBLES
+        if ____cond29 then
+            do
+                identifyCollectibleButtonPressed(nil, num)
+                break
+            end
+        end
+        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_IDENTIFY_TRINKETS
+        if ____cond29 then
+            do
+                identifyTrinketButtonPressed(nil, num)
+                break
+            end
+        end
+        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_PRESS_BUTTONS_WITH_GRUDGE
+        if ____cond29 then
+            do
+                pressButtonsWithGrudgeButtonPressed(nil)
+                break
+            end
+        end
+        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_FIX_WIRES
+        if ____cond29 then
+            do
+                fixWiresButtonPressed(nil, button, num)
+                break
+            end
+        end
+        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES
+        if ____cond29 then
+            do
+                taskComplete(nil)
+                break
+            end
+        end
+        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS
+        if ____cond29 then
+            do
+                taskComplete(nil)
+                break
+            end
+        end
+        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_WALK_BETWEEN_SLIDES
+        if ____cond29 then
+            do
+                taskComplete(nil)
+                break
+            end
+        end
+        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_DODGE_RETRACTING_SPIKES
+        if ____cond29 then
+            do
+                taskComplete(nil)
+                break
+            end
+        end
+        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_BUTTONS_BEHIND_KEY_BLOCKS
+        if ____cond29 then
+            do
+                buttonsBehindKeyBlocksButtonPressed(nil)
+                break
+            end
+        end
+        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_PUSH_BUTTONS_IN_ORDER
+        if ____cond29 then
+            do
+                pushButtonsInOrderButtonPressed(nil, button)
+                break
+            end
+        end
+        ____cond29 = ____cond29 or ____switch29 == Task.LONG_IDENTIFY_PICKUPS_IN_ORDER
+        if ____cond29 then
+            do
+                identifyPickupsInOrderButtonPressed(nil, button)
+                break
+            end
+        end
+        ____cond29 = ____cond29 or ____switch29 == Task.LONG_DODGE_STONE_SHOOTERS
+        if ____cond29 then
+            do
+                taskComplete(nil)
+                break
+            end
+        end
+        do
+            do
+                break
+            end
+        end
+    until true
+end
+BUTTON_ACTIVATION_DISTANCE = 20
+function ____exports.postEffectUpdateButton(self, effect)
+    checkIfButtonIsPressed(nil, effect)
 end
 return ____exports
  end,
-["packages.mod.src.features.autoLogin"] = function(...) 
+["packages.mod.src.tasks.makePentagram"] = function(...) 
+local ____exports = {}
+local getText
+local ____common = require("packages.common.src.index")
+local Task = ____common.Task
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
+local EffectVariant = ____isaac_2Dtypescript_2Ddefinitions.EffectVariant
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local VectorZero = ____isaacscript_2Dcommon.VectorZero
+local game = ____isaacscript_2Dcommon.game
+local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local ____teleporter = require("packages.mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____utils = require("packages.mod.src.utils")
+local drawFontText = ____utils.drawFontText
+local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
+local updatePlayerStats = ____utils.updatePlayerStats
+function getText(self)
+    local numPentagrams = Isaac.CountEntities(nil, EntityType.EFFECT, EffectVariant.PENTAGRAM_BLACK_POWDER)
+    if numPentagrams == 0 then
+        return "Make a pentagram."
+    end
+    return "Not big enough!"
+end
+local THIS_TASK = Task.LONG_MAKE_PENTAGRAM
+local REQUIRED_PENTAGRAM_SIZE = 250
+local TEXT_GRID_INDEX = 93
+function ____exports.makePentagram(self)
+    local room = game:GetRoom()
+    local centerPos = room:GetCenterPos()
+    local startGridIndex = 100
+    movePlayerToGridIndex(nil, startGridIndex)
+    updatePlayerStats(nil)
+    local topRightGridIndex = 42
+    spawnTeleporter(nil, topRightGridIndex)
+    Isaac.Spawn(
+        EntityType.PICKUP,
+        PickupVariant.COLLECTIBLE,
+        CollectibleType.BLACK_POWDER,
+        centerPos,
+        VectorZero,
+        nil
+    )
+end
+function ____exports.postRender(self)
+    if g.game == nil or g.game.currentTask ~= THIS_TASK then
+        return
+    end
+    local room = game:GetRoom()
+    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
+    local position = Isaac.WorldToRenderPosition(worldPosition)
+    local text = getText(nil)
+    drawFontText(nil, text, position)
+end
+function ____exports.postEffectUpdatePentagramBlackPowder(self, effect)
+    if g.game == nil or g.game.currentTask ~= THIS_TASK then
+        return
+    end
+    if effect.Scale > REQUIRED_PENTAGRAM_SIZE then
+        taskComplete(nil)
+    end
+end
+return ____exports
+ end,
+["packages.mod.src.callbacks.postEffectUpdate"] = function(...) 
+local ____exports = {}
+local pentagramBlackPowder, postEffectUpdateButton
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local EffectVariant = ____isaac_2Dtypescript_2Ddefinitions.EffectVariant
+local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
+local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
+local buttons = require("packages.mod.src.features.buttons")
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
+local makePentagram = require("packages.mod.src.tasks.makePentagram")
+function pentagramBlackPowder(self, effect)
+    makePentagram:postEffectUpdatePentagramBlackPowder(effect)
+end
+function postEffectUpdateButton(self, effect)
+    buttons:postEffectUpdateButton(effect)
+end
+function ____exports.init(self)
+    mod:AddCallback(ModCallback.POST_EFFECT_UPDATE, pentagramBlackPowder, EffectVariant.PENTAGRAM_BLACK_POWDER)
+    mod:AddCallback(ModCallback.POST_EFFECT_UPDATE, postEffectUpdateButton, EffectVariantCustom.BUTTON)
+end
+return ____exports
+ end,
+["packages.mod.src.tasks.killWorms"] = function(...) 
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local Task = ____common.Task
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local countEntities = ____isaacscript_2Dcommon.countEntities
+local game = ____isaacscript_2Dcommon.game
+local VectorZero = ____isaacscript_2Dcommon.VectorZero
+local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local ____teleporter = require("packages.mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____utils = require("packages.mod.src.utils")
+local enableShooting = ____utils.enableShooting
+local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
+local THIS_TASK = Task.LONG_KILL_WORMS
+local TYPE_OF_ENEMY = EntityType.ROUND_WORM
+function ____exports.killWorms(self)
+    local room = game:GetRoom()
+    local centerGridIndex = 67
+    movePlayerToGridIndex(nil, centerGridIndex)
+    enableShooting(nil)
+    local rightGridIndex = 73
+    spawnTeleporter(nil, rightGridIndex)
+    local wormGridIndexes = {
+        32,
+        37,
+        42,
+        92,
+        97,
+        102,
+        62,
+        72
+    }
+    for ____, gridIndex in ipairs(wormGridIndexes) do
+        local position = room:GetGridPosition(gridIndex)
+        Isaac.Spawn(
+            TYPE_OF_ENEMY,
+            0,
+            0,
+            position,
+            VectorZero,
+            nil
+        )
+    end
+end
+function ____exports.postEntityKill(self)
+    if g.game == nil or g.game.currentTask ~= THIS_TASK then
+        return
+    end
+    local numAliveEnemies = countEntities(nil, TYPE_OF_ENEMY) - 1
+    if numAliveEnemies == 0 then
+        taskComplete(nil)
+    end
+end
+return ____exports
+ end,
+["packages.mod.src.callbacks.postEntityKill"] = function(...) 
+local ____exports = {}
+local main
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
+local killWorms = require("packages.mod.src.tasks.killWorms")
+function main(self, _entity)
+    killWorms:postEntityKill()
+end
+function ____exports.init(self)
+    mod:AddCallback(ModCallback.POST_ENTITY_KILL, main)
+end
+return ____exports
+ end,
+["packages.mod.src.callbacks.postNPCRender"] = function(...) 
+local ____exports = {}
+local keepStationary
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local VectorZero = ____isaacscript_2Dcommon.VectorZero
+local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
+local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
+function keepStationary(self, npc)
+    if npc.Type >= EntityType.EFFECT then
+        return
+    end
+    local data = npc:GetData()
+    if data.position == nil then
+        data.position = npc.Position
+    end
+    npc.Position = data.position
+    npc.Velocity = VectorZero
+end
+function ____exports.init(self)
+    mod:AddCallback(ModCallback.POST_NPC_RENDER, keepStationary, EntityTypeCustom.BOX)
+    mod:AddCallback(ModCallback.POST_NPC_RENDER, keepStationary, EntityTypeCustom.TABLE)
+    mod:AddCallback(ModCallback.POST_NPC_RENDER, keepStationary, EntityTypeCustom.ADMIN_TABLE)
+end
+return ____exports
+ end,
+["packages.mod.src.tasks.loadSlotMachines"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local __TS__ArraySome = ____lualib.__TS__ArraySome
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local spawnDoubleCoin, isAnySlotActive, SLOT_ACTIVE_ANIMATIONS
+local ____common = require("packages.common.src.index")
+local Task = ____common.Task
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local CoinSubType = ____isaac_2Dtypescript_2Ddefinitions.CoinSubType
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
+local SlotVariant = ____isaac_2Dtypescript_2Ddefinitions.SlotVariant
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local ReadonlySet = ____isaacscript_2Dcommon.ReadonlySet
+local getSlots = ____isaacscript_2Dcommon.getSlots
+local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
+local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
+local taskComplete = ____taskSubroutines.taskComplete
+local ____teleporter = require("packages.mod.src.features.teleporter")
+local spawnTeleporter = ____teleporter.spawnTeleporter
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____utils = require("packages.mod.src.utils")
+local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
+local spawnEntity = ____utils.spawnEntity
+function spawnDoubleCoin(self, gridIndex)
+    local entity = spawnEntity(
+        nil,
+        EntityType.PICKUP,
+        PickupVariant.COIN,
+        CoinSubType.DOUBLE_PACK,
+        gridIndex
+    )
+    local sprite = entity:GetSprite()
+    sprite:SetLastFrame()
+end
+function isAnySlotActive(self)
+    for ____, slot in ipairs(getSlots(nil)) do
+        local sprite = slot:GetSprite()
+        local animation = sprite:GetAnimation()
+        if SLOT_ACTIVE_ANIMATIONS:has(animation) then
+            return true
+        end
+    end
+    return false
+end
+local THIS_TASK = Task.LONG_LOAD_SLOT_MACHINES
+local NUM_SLOT_MACHINES = 4
+local SLOT_MACHINE_SPACING = 2
+SLOT_ACTIVE_ANIMATIONS = __TS__New(ReadonlySet, {"Initiate", "Wiggle", "WiggleEnd"})
+function ____exports.loadSlotMachines(self)
+    local topRightGridIndex = 42
+    movePlayerToGridIndex(nil, topRightGridIndex)
+    local bottomRightGridIndex = 102
+    spawnTeleporter(nil, bottomRightGridIndex)
+    local startingGridIndex = 49
+    do
+        local i = 0
+        while i < NUM_SLOT_MACHINES do
+            local gridIndex = startingGridIndex + i * SLOT_MACHINE_SPACING
+            spawnEntity(
+                nil,
+                EntityType.SLOT,
+                SlotVariant.SLOT_MACHINE,
+                0,
+                gridIndex
+            )
+            i = i + 1
+        end
+    end
+    local coinGridIndexes = {
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85
+    }
+    for ____, gridIndex in ipairs(coinGridIndexes) do
+        spawnDoubleCoin(nil, gridIndex)
+    end
+end
+function ____exports.postUpdate(self)
+    if g.game == nil or g.game.currentTask ~= THIS_TASK then
+        return
+    end
+    removeAllMatchingEntities(nil, EntityType.PICKUP, PickupVariant.COLLECTIBLE)
+    local player = Isaac.GetPlayer()
+    local numCoinsInInventory = player:GetNumCoins()
+    local numCoinsInRoom = Isaac.CountEntities(nil, EntityType.PICKUP, PickupVariant.COIN)
+    if numCoinsInInventory == 0 and numCoinsInRoom == 0 and not isAnySlotActive(nil) then
+        taskComplete(nil)
+    end
+end
+function ____exports.postPickupInitPill(self, pickup)
+    if g.game == nil or g.game.currentTask ~= THIS_TASK then
+        return
+    end
+    pickup:Remove()
+end
+return ____exports
+ end,
+["packages.mod.src.callbacks.postPickupInit"] = function(...) 
+local ____exports = {}
+local pill
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
+local loadSlotMachines = require("packages.mod.src.tasks.loadSlotMachines")
+function pill(self, pickup)
+    loadSlotMachines:postPickupInitPill(pickup)
+end
+function ____exports.init(self)
+    mod:AddCallback(ModCallback.POST_PICKUP_INIT, pill, PickupVariant.PILL)
+end
+return ____exports
+ end,
+["packages.mod.src.callbacks.postPlayerInit"] = function(...) 
+local ____exports = {}
+local main
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
+local disableMultiplayer = require("packages.mod.src.features.disableMultiplayer")
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
+function main(self, player)
+    disableMultiplayer:postPlayerInit(player)
+end
+function ____exports.init(self)
+    mod:AddCallback(ModCallback.POST_PLAYER_INIT, main)
+end
+return ____exports
+ end,
+["packages.mod.src.features.connectedIcon"] = function(...) 
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
+local socketClient = require("packages.mod.src.network.socketClient")
+local CONNECTED_ICON_OFFSET = Vector(-33, -30)
+____exports.OTHER_UI_BUTTON_OFFSET = CONNECTED_ICON_OFFSET + Vector(5, -30)
+local connectedSprite = Sprite()
+connectedSprite:Load("gfx/wifi.anm2", true)
+connectedSprite:SetFrame("Default", 0)
+function ____exports.postRender(self)
+    if not socketClient:isConnected() then
+        return
+    end
+    local bottomRightPos = getScreenBottomRightPos(nil)
+    local position = bottomRightPos + CONNECTED_ICON_OFFSET
+    connectedSprite:RenderLayer(0, position)
+end
+return ____exports
+ end,
+["packages.mod.src.players"] = function(...) 
+local ____exports = {}
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function ____exports.getOurPlayer(self)
+    if g.game == nil then
+        return nil
+    end
+    if g.userID == nil then
+        return nil
+    end
+    local player = g.game:getPlayerFromUserID(g.userID)
+    if player == nil then
+        return nil
+    end
+    return player
+end
+function ____exports.getOurPlayerIndex(self)
+    local ourPlayer = ____exports.getOurPlayer(nil)
+    local ____temp_0
+    if ourPlayer == nil then
+        ____temp_0 = nil
+    else
+        ____temp_0 = ourPlayer.index
+    end
+    return ____temp_0
+end
+return ____exports
+ end,
+["packages.mod.src.chatCommands.connect"] = function(...) 
+local ____exports = {}
+local ____chat = require("packages.mod.src.chat")
+local addLocalChat = ____chat.addLocalChat
+local ____constants = require("packages.mod.src.constants")
+local MOD_NAME = ____constants.MOD_NAME
+local socketClient = require("packages.mod.src.network.socketClient")
+function ____exports.connectChatCommand(self, autoLogin)
+    if socketClient:isConnected() then
+        addLocalChat(nil, ("You are already connected to the " .. MOD_NAME) .. " server.")
+        return
+    end
+    if not socketClient:connect() then
+        addLocalChat(nil, ("Failed to connect to the " .. MOD_NAME) .. " server. (Either your internet is down or the server is down.)")
+        return
+    end
+    if not autoLogin then
+        addLocalChat(nil, "Connected!")
+        addLocalChat(nil, "Next, select your username with the \"/username\" command.")
+        addLocalChat(nil, "For example: \"/username Alice\"")
+    end
+end
+return ____exports
+ end,
+["packages.mod.src.chatCommands.password"] = function(...) 
 local ____exports = {}
 local ____common = require("packages.common.src.index")
 local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____chat = require("packages.mod.src.chat")
+local addLocalChat = ____chat.addLocalChat
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____send = require("packages.mod.src.network.send")
+local sendTCP = ____send.sendTCP
+function ____exports.passwordChatCommand(self, args)
+    if #args == 0 then
+        addLocalChat(nil, "You must provide a password. (e.g. \"/password hunter2\")")
+        return
+    end
+    local ____g_0 = g
+    local username = ____g_0.username
+    if username == nil then
+        addLocalChat(nil, "You must specify a username first with the \"/username\" command. (e.g. \"/username Alice\")")
+        return
+    end
+    local password = table.concat(args, " ")
+    sendTCP(nil, SocketCommandModToServer.LOGIN, {username = username, password = password})
+end
+return ____exports
+ end,
+["packages.mod.src.chatCommands.username"] = function(...) 
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____chat = require("packages.mod.src.chat")
+local addLocalChat = ____chat.addLocalChat
+local ____send = require("packages.mod.src.network.send")
+local sendTCP = ____send.sendTCP
+function ____exports.usernameChatCommand(self, args)
+    if #args == 0 then
+        addLocalChat(nil, "You must provide a username. (e.g. \"/username Alice\")")
+        return
+    end
+    if #args ~= 1 then
+        local username = table.concat(args, " ")
+        addLocalChat(nil, ("The username of \"" .. username) .. "\" is invalid; usernames cannot contain spaces.")
+        return
+    end
+    local username = args[1]
+    local match = {string.match(username, "%W")}
+    if #match > 0 then
+        addLocalChat(nil, ("The username of \"" .. username) .. "\" is invalid; username must only contain English letters and numbers.")
+        return
+    end
+    sendTCP(nil, SocketCommandModToServer.CHECK_USERNAME, {username = username})
+end
+return ____exports
+ end,
+["packages.mod.src.chatCommandFunctions"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local Map = ____lualib.Map
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local NOT_VOTED_YET = ____common.NOT_VOTED_YET
+local SabotageType = ____common.SabotageType
+local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local logTable = ____isaacscript_2Dcommon.logTable
+local ____chat = require("packages.mod.src.chat")
+local addLocalChat = ____chat.addLocalChat
 local ____connect = require("packages.mod.src.chatCommands.connect")
 local connectChatCommand = ____connect.connectChatCommand
+local ____password = require("packages.mod.src.chatCommands.password")
+local passwordChatCommand = ____password.passwordChatCommand
+local ____username = require("packages.mod.src.chatCommands.username")
+local usernameChatCommand = ____username.usernameChatCommand
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.g
 local ____send = require("packages.mod.src.network.send")
 local sendTCP = ____send.sendTCP
 local socketClient = require("packages.mod.src.network.socketClient")
-local DEBUG_FIRST_MOD = true
-local DEBUG_USERNAME = DEBUG_FIRST_MOD and "Test1" or "Test2"
-local DEBUG_PASSWORD = "test"
-local DEBUG_GAME_NAME = "testGame"
-local autoLogin = false
-function ____exports.startAutoLogin(self)
-    autoLogin = true
-    if not socketClient:isConnected() then
-        connectChatCommand(nil, true)
+local ____players = require("packages.mod.src.players")
+local getOurPlayer = ____players.getOurPlayer
+local ____stageAPI = require("packages.mod.src.stageAPI")
+local getSkeldRoom = ____stageAPI.getSkeldRoom
+local ____utils = require("packages.mod.src.utils")
+local amOwner = ____utils.amOwner
+____exports.chatCommandFunctionMap = __TS__New(Map)
+____exports.chatCommandFunctionMap:set(
+    "connect",
+    function()
+        connectChatCommand(nil, false)
     end
-    if g.loggedIn then
+)
+____exports.chatCommandFunctionMap:set(
+    "create",
+    function(____, args)
+        if #args == 0 then
+            addLocalChat(nil, "You must provide a game name. (e.g. \"/create Alice-game\")")
+            return
+        end
+        if #args > 2 then
+            addLocalChat(nil, "The format of the \"create\" command is: /create [name] [password]")
+            return
+        end
+        local name = args[1]
+        local password = args[2] or ""
+        sendTCP(nil, SocketCommandModToServer.CREATE, {name = name, password = password})
+    end
+)
+____exports.chatCommandFunctionMap:set(
+    "credits",
+    function(____, _args)
+        addLocalChat(nil, "The Among Us Mod was made by Zamiel. It makes use of DeadInfinity's StageAPI library, Sentinel's collision library, and Somdudewillson's stage backdrops; special thanks goes to them. Thanks also goes to JSG, im_tem, Wofsauge, and AgentCucco for providing technical assistance.")
+    end
+)
+____exports.chatCommandFunctionMap:set(
+    "debug",
+    function(____, _args)
+        if g.game == nil then
+            addLocalChat(nil, "You must be in a game to do that.")
+            return
+        end
+        sendTCP(nil, SocketCommandModToServer.DEBUG, {gameID = g.game.id})
+    end
+)
+____exports.chatCommandFunctionMap:set(
+    "disconnect",
+    function(____, _args)
+        socketClient:disconnect()
+    end
+)
+____exports.chatCommandFunctionMap:set(
+    "echo",
+    function(____, args)
+        local text = table.concat(args, " ")
+        addLocalChat(nil, text)
+    end
+)
+____exports.chatCommandFunctionMap:set(
+    "gameList",
+    function(____, _args)
         sendTCP(nil, SocketCommandModToServer.GAME_LIST, {})
-    else
-        sendTCP(nil, SocketCommandModToServer.LOGIN, {username = DEBUG_USERNAME, password = DEBUG_PASSWORD})
     end
-end
-function ____exports.onGameList(self, gameList)
-    if not autoLogin or g.game ~= nil then
-        return
+)
+____exports.chatCommandFunctionMap:set(
+    "help",
+    function(____, _args)
+        if g.loggedIn then
+            addLocalChat(nil, "To create a game, use the \"/create [name] [password]\" command. (Using a password is optional.)")
+            addLocalChat(nil, "To join a game, use the \"/join [name] [password]\" command. (Using a password is optional.)")
+            addLocalChat(nil, "To see a list of existing games, use the \"/gameList\" command.")
+        else
+            addLocalChat(nil, "To connect to the server, use the \"/connect\" command.")
+        end
+        addLocalChat(nil, "Hint: You can use tab to auto-complete commands.")
+        g.welcomeNotificationEnabled = false
     end
-    local testGameExists = __TS__ArraySome(
-        gameList,
-        function(____, gameListDescription) return gameListDescription.name == DEBUG_GAME_NAME end
-    )
-    if testGameExists then
-        sendTCP(nil, SocketCommandModToServer.JOIN, {name = DEBUG_GAME_NAME, password = "", created = false})
-    else
-        sendTCP(nil, SocketCommandModToServer.CREATE, {name = DEBUG_GAME_NAME, password = ""})
+)
+____exports.chatCommandFunctionMap:set(
+    "join",
+    function(____, args)
+        if #args == 0 then
+            addLocalChat(nil, "You must provide a game name. (e.g. \"/join Alice's game\")")
+            return
+        end
+        if #args > 2 then
+            addLocalChat(nil, "The format of the \"join\" command is: /join [name] [password]")
+            return
+        end
+        if g.game ~= nil then
+            addLocalChat(nil, "You are already in a game, so you cannot join a new one.")
+            return
+        end
+        local name = args[1]
+        local password = args[2] or ""
+        sendTCP(nil, SocketCommandModToServer.JOIN, {name = name, password = password, created = false})
     end
-end
-function ____exports.onPlayerJoined(self, userID)
-    if not autoLogin or userID == g.userID then
-        return
+)
+____exports.chatCommandFunctionMap:set(
+    "killMe",
+    function(____, _args)
+        if g.game == nil or g.userID == nil then
+            return
+        end
+        local room = getSkeldRoom(nil)
+        if room == nil then
+            return
+        end
+        local player = Isaac.GetPlayer()
+        sendTCP(nil, SocketCommandModToServer.KILL_ME, {
+            gameID = g.game.id,
+            userIDKilled = g.userID,
+            room = room,
+            x = player.Position.X,
+            y = player.Position.Y
+        })
     end
-    autoLogin = false
-    if g.game ~= nil and g.game.ownerUserID == g.userID and #g.game.players >= 2 then
+)
+____exports.chatCommandFunctionMap:set(
+    "leave",
+    function(____, _args)
+        if g.game == nil then
+            addLocalChat(nil, "You are not in a game, so you cannot leave.")
+            return
+        end
+        sendTCP(nil, SocketCommandModToServer.LEAVE, {gameID = g.game.id})
+    end
+)
+____exports.chatCommandFunctionMap:set(
+    "lights",
+    function(____, _args)
+        if g.game == nil then
+            return
+        end
+        sendTCP(nil, SocketCommandModToServer.SABOTAGE, {gameID = g.game.id, sabotageType = SabotageType.FIX_LIGHTS})
+    end
+)
+____exports.chatCommandFunctionMap:set(
+    "log",
+    function(____, _args)
+        logTable(g.game)
+    end
+)
+____exports.chatCommandFunctionMap:set("password", passwordChatCommand)
+____exports.chatCommandFunctionMap:set(
+    "revive",
+    function(____, _args)
+        if g.game == nil then
+            return
+        end
+        sendTCP(nil, SocketCommandModToServer.REVIVE, {gameID = g.game.id})
+    end
+)
+____exports.chatCommandFunctionMap:set(
+    "start",
+    function(____, _args)
+        if g.game == nil then
+            addLocalChat(nil, "You are not in a game, so you cannot start it.")
+            return
+        end
+        if not amOwner(nil) then
+            addLocalChat(nil, "You are not the owner of this game, so you cannot start it.")
+            return
+        end
         sendTCP(nil, SocketCommandModToServer.START, {gameID = g.game.id})
     end
-end
+)
+____exports.chatCommandFunctionMap:set(
+    "terminate",
+    function(____, _args)
+        if g.game == nil then
+            addLocalChat(nil, "You are not in a game, so you cannot terminate it.")
+            return
+        end
+        if not amOwner(nil) then
+            addLocalChat(nil, "You are not the owner of this game, so you cannot terminate it.")
+            return
+        end
+        sendTCP(nil, SocketCommandModToServer.TERMINATE, {gameID = g.game.id})
+    end
+)
+____exports.chatCommandFunctionMap:set(
+    "userID",
+    function(____, _args)
+        addLocalChat(
+            nil,
+            "Your user ID is: " .. tostring(g.userID)
+        )
+    end
+)
+____exports.chatCommandFunctionMap:set("username", usernameChatCommand)
+____exports.chatCommandFunctionMap:set(
+    "vote",
+    function(____, args)
+        local nameVotedFor = args[1]
+        if nameVotedFor == nil then
+            addLocalChat(nil, "You must provide a player name. (e.g. \"/vote Alice\")")
+            return
+        end
+        if g.game == nil then
+            addLocalChat(nil, "You can only perform that command in a game.")
+            return
+        end
+        if g.game.meeting == nil then
+            addLocalChat(nil, "You can only perform that command in a meeting.")
+            return
+        end
+        if g.userID == nil then
+            return
+        end
+        local ourPlayer = getOurPlayer(nil)
+        if ourPlayer == nil then
+            error("Failed to get our player description for the \"vote\" command.")
+        end
+        if not ourPlayer.alive then
+            addLocalChat(nil, "You can only perform that command when you are alive.")
+            return
+        end
+        local ourPreviousVote = g.game.meeting.votes[ourPlayer.index + 1]
+        if ourPreviousVote ~= NOT_VOTED_YET then
+            addLocalChat(nil, "You have already voted.")
+            return
+        end
+        local playerVotedFor = g.game:getPlayerFromUsername(nameVotedFor)
+        if playerVotedFor == nil then
+            addLocalChat(nil, ("The player of \"" .. nameVotedFor) .. "\" is not in this game.")
+            return
+        end
+        sendTCP(nil, SocketCommandModToServer.VOTE, {gameID = g.game.id, userIDVotedFor = playerVotedFor.userID, skip = false})
+    end
+)
+____exports.chatCommandFunctionMap:set(
+    "voteSkip",
+    function(____, _args)
+        if g.game == nil then
+            addLocalChat(nil, "You can only perform that command in a game.")
+            return
+        end
+        if g.game.meeting == nil then
+            addLocalChat(nil, "You can only perform that command in a meeting.")
+            return
+        end
+        if g.userID == nil then
+            return
+        end
+        local ourPlayer = getOurPlayer(nil)
+        if ourPlayer == nil then
+            error("Failed to get our player description for the \"voteskip\" command.")
+        end
+        if not ourPlayer.alive then
+            addLocalChat(nil, "You can only perform that command when you are alive.")
+            return
+        end
+        local ourPreviousVote = g.game.meeting.votes[ourPlayer.index + 1]
+        if ourPreviousVote ~= NOT_VOTED_YET then
+            addLocalChat(nil, "You have already voted.")
+            return
+        end
+        sendTCP(nil, SocketCommandModToServer.VOTE, {gameID = g.game.id, userIDVotedFor = 0, skip = true})
+    end
+)
 return ____exports
  end,
-["packages.mod.src.debug"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
-local __TS__Iterator = ____lualib.__TS__Iterator
+["packages.mod.src.enums.HexColors"] = function(...) 
 local ____exports = {}
-local ____common = require("packages.common.src.index")
-local IS_DEV = ____common.IS_DEV
-local SkeldRoom = ____common.SkeldRoom
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local getPartialMatch = ____isaacscript_2Dcommon.getPartialMatch
-local logError = ____isaacscript_2Dcommon.logError
-local ____autoLogin = require("packages.mod.src.features.autoLogin")
-local startAutoLogin = ____autoLogin.startAutoLogin
-local ____endGameCutscene = require("packages.mod.src.features.endGameCutscene")
-local startEndGameCutscene = ____endGameCutscene.startEndGameCutscene
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local getSkeldRoomName = ____skeldRoomMap.getSkeldRoomName
-local getSkeldRoomNames = ____skeldRoomMap.getSkeldRoomNames
-local ____stageAPI = require("packages.mod.src.stageAPI")
-local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
-local TEST_PLAYERS = {
-    {"antizoubilamaka", 1},
-    {"Hispa", 2},
-    {"Gamonymous", 3},
-    {"MoucheronQuipet", 5},
-    {"leo_ze_tron", 6},
-    {"AshD0wn", 8},
-    {"Slash_SP", 9},
-    {"StoneAgeMarcus", 13},
-    {"thereisnofuture", 18},
-    {"Dea1h", 19},
-    {"Fawkeyes", 21},
-    {"toooschi", 22},
-    {"CrafterLynx", 23},
-    {"Adrayon", 24}
-}
---- From the "d" console command.
-function ____exports.debugFunction1(self)
-    startEndGameCutscene(nil)
-end
---- From the "d2" console command.
-function ____exports.debugFunction2(self)
-end
---- Bound to F1.
-function ____exports.hotkeyFunction1(self)
-    startAutoLogin(nil)
-end
---- Bound to F2.
-function ____exports.hotkeyFunction2(self)
-end
-function ____exports.injectTestPlayers(self)
-    if g.game == nil or #g.game.players ~= 1 or not IS_DEV then
-        return
-    end
-    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(TEST_PLAYERS)) do
-        local i = ____value[1]
-        local username = ____value[2][1]
-        local character = ____value[2][2]
-        local alive = true
-        if i == 1 or i == 3 or i == 8 or i == 10 or i == 13 then
-            alive = false
-        end
-        local ____g_game_players_0 = g.game.players
-        ____g_game_players_0[#____g_game_players_0 + 1] = {
-            index = #g.game.players,
-            userID = 100 + i,
-            username = username,
-            connected = true,
-            character = character,
-            alive = alive,
-            room = SkeldRoom.CAFETERIA,
-            usedEmergencyMeeting = false
-        }
-    end
-end
-function ____exports.warp(self, params)
-    local roomName
-    local num = tonumber(params)
-    if num == nil then
-        local roomNames = getSkeldRoomNames(nil)
-        local partialMatch = getPartialMatch(nil, params, roomNames)
-        if partialMatch == nil then
-            logError("Failed to find the room name corresponding to: " .. params)
-            return
-        end
-        roomName = partialMatch
-    else
-        local room = num
-        local potentialRoomName = getSkeldRoomName(nil, room)
-        if potentialRoomName == nil then
-            logError("Failed to find the room name for room ID: " .. tostring(room))
-            return
-        end
-        roomName = potentialRoomName
-    end
-    goToStageAPIRoom(nil, roomName)
-    logError("Warped to room: " .. roomName)
-end
+____exports.HexColors = {}
+____exports.HexColors.WHITE = "±ffffff"
+____exports.HexColors.YELLOW = "±ffff00"
+____exports.HexColors.GREEN = "±33aa33"
+____exports.COLOR_BYTE = "±"
 return ____exports
  end,
 ["packages.mod.src.fonts"] = function(...) 
@@ -65396,15 +67112,6 @@ ____exports.fonts = {
 }
 ____exports.fonts.droid:Load("font/droid.fnt")
 ____exports.fonts.pf:Load("font/pftempestasevencondensed.fnt")
-return ____exports
- end,
-["packages.mod.src.enums.HexColors"] = function(...) 
-local ____exports = {}
-____exports.HexColors = {}
-____exports.HexColors.WHITE = "±ffffff"
-____exports.HexColors.YELLOW = "±ffff00"
-____exports.HexColors.GREEN = "±33aa33"
-____exports.COLOR_BYTE = "±"
 return ____exports
  end,
 ["packages.mod.src.features.drawText"] = function(...) 
@@ -65798,6 +67505,1048 @@ function ____exports.isConsoleOpen(self)
 end
 return ____exports
  end,
+["packages.mod.src.features.actionSubroutines"] = function(...) 
+local ____exports = {}
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____utils = require("packages.mod.src.utils")
+local inCutscene = ____utils.inCutscene
+local inEndMeeting = ____utils.inEndMeeting
+local ____console = require("packages.mod.src.features.console")
+local isConsoleOpen = ____console.isConsoleOpen
+function ____exports.shouldShowActionButton(self)
+    return g.game ~= nil and g.game.started and g.game.meeting == nil and not inCutscene(nil) and not inEndMeeting(nil) and not isConsoleOpen(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.features.kill"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__Spread = ____lualib.__TS__Spread
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local ____exports = {}
+local isCrewMemberClose, getClosestAliveCrewMember, KILL_DISTANCE
+local ____common = require("packages.common.src.index")
+local Role = ____common.Role
+local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____VentState = require("packages.mod.src.enums.VentState")
+local VentState = ____VentState.VentState
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____send = require("packages.mod.src.network.send")
+local sendTCP = ____send.sendTCP
+local ____players = require("packages.mod.src.players")
+local getOurPlayer = ____players.getOurPlayer
+local ____stageAPI = require("packages.mod.src.stageAPI")
+local getSkeldRoom = ____stageAPI.getSkeldRoom
+local ____actionSubroutines = require("packages.mod.src.features.actionSubroutines")
+local shouldShowActionButton = ____actionSubroutines.shouldShowActionButton
+function isCrewMemberClose(self)
+    local player = Isaac.GetPlayer()
+    local closestAliveCrewMember = getClosestAliveCrewMember(nil)
+    if closestAliveCrewMember == nil then
+        return false
+    end
+    local crewMemberPosition = Vector(closestAliveCrewMember.x, closestAliveCrewMember.y)
+    local distance = player.Position:Distance(crewMemberPosition)
+    return distance <= KILL_DISTANCE
+end
+function getClosestAliveCrewMember(self)
+    if g.game == nil then
+        return nil
+    end
+    local player = Isaac.GetPlayer()
+    local room = getSkeldRoom(nil)
+    local otherPlayersData = {__TS__Spread(g.game.playerMap:values())}
+    local aliveCrewMembersInRoom = __TS__ArrayFilter(
+        otherPlayersData,
+        function(____, otherPlayerData)
+            if g.game == nil then
+                return false
+            end
+            local playerDescription = g.game:getPlayerFromUserID(otherPlayerData.userID)
+            return playerDescription ~= nil and playerDescription.alive and not g.game:isImposter(playerDescription.userID) and otherPlayerData.room == room
+        end
+    )
+    local closestCrewMember
+    local closestDistance = math.huge
+    for ____, otherPlayerData in ipairs(aliveCrewMembersInRoom) do
+        local otherPlayerPosition = Vector(otherPlayerData.x, otherPlayerData.y)
+        local distance = otherPlayerPosition:Distance(player.Position)
+        if distance < closestDistance then
+            closestCrewMember = otherPlayerData
+            closestDistance = distance
+        end
+    end
+    return closestCrewMember
+end
+KILL_DISTANCE = 60
+function ____exports.ableToKillAPlayer(self)
+    local ourPlayer = getOurPlayer(nil)
+    return g.game ~= nil and g.game.role == Role.IMPOSTER and g.game.ventState == VentState.NONE and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isCrewMemberClose(nil)
+end
+function ____exports.kill(self)
+    if g.game == nil then
+        return
+    end
+    local closestAliveCrewMember = getClosestAliveCrewMember(nil)
+    if closestAliveCrewMember == nil then
+        return
+    end
+    sendTCP(nil, SocketCommandModToServer.KILL, {
+        gameID = g.game.id,
+        userIDKilled = closestAliveCrewMember.userID,
+        room = closestAliveCrewMember.room,
+        x = closestAliveCrewMember.x,
+        y = closestAliveCrewMember.y
+    })
+end
+return ____exports
+ end,
+["packages.mod.src.features.report"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local ____exports = {}
+local isDeadBodyClose, getClosestDeadBody, REPORT_DISTANCE
+local ____common = require("packages.common.src.index")
+local MeetingType = ____common.MeetingType
+local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____VentState = require("packages.mod.src.enums.VentState")
+local VentState = ____VentState.VentState
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____send = require("packages.mod.src.network.send")
+local sendTCP = ____send.sendTCP
+local ____players = require("packages.mod.src.players")
+local getOurPlayer = ____players.getOurPlayer
+local ____stageAPI = require("packages.mod.src.stageAPI")
+local getSkeldRoom = ____stageAPI.getSkeldRoom
+local ____actionSubroutines = require("packages.mod.src.features.actionSubroutines")
+local shouldShowActionButton = ____actionSubroutines.shouldShowActionButton
+function isDeadBodyClose(self)
+    local player = Isaac.GetPlayer()
+    local closestDeadBody = getClosestDeadBody(nil)
+    if closestDeadBody == nil then
+        return false
+    end
+    local bodyPosition = Vector(closestDeadBody.x, closestDeadBody.y)
+    local distance = player.Position:Distance(bodyPosition)
+    return distance <= REPORT_DISTANCE
+end
+function getClosestDeadBody(self)
+    if g.game == nil then
+        return nil
+    end
+    local player = Isaac.GetPlayer()
+    local room = getSkeldRoom(nil)
+    local bodiesInThisRoom = __TS__ArrayFilter(
+        g.game.bodies,
+        function(____, body) return body.room == room end
+    )
+    if #bodiesInThisRoom == 0 then
+        return nil
+    end
+    local closestBody
+    local closestDistance = math.huge
+    for ____, body in ipairs(bodiesInThisRoom) do
+        local position = Vector(body.x, body.y)
+        local distance = player.Position:Distance(position)
+        if distance < closestDistance then
+            closestBody = body
+            closestDistance = distance
+        end
+    end
+    return closestBody
+end
+REPORT_DISTANCE = 60
+function ____exports.ableToReportDeadBody(self)
+    local ourPlayer = getOurPlayer(nil)
+    return g.game ~= nil and g.game.ventState == VentState.NONE and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isDeadBodyClose(nil)
+end
+function ____exports.reportDeadBody(self)
+    if g.game == nil then
+        return
+    end
+    local closestBody = getClosestDeadBody(nil)
+    if closestBody == nil then
+        return
+    end
+    sendTCP(nil, SocketCommandModToServer.MEETING, {gameID = g.game.id, userIDKilled = closestBody.userID, meetingType = MeetingType.REPORT_BODY})
+end
+return ____exports
+ end,
+["packages.mod.src.enums.Vent"] = function(...) 
+local ____exports = {}
+--- Also see the `VENT_DESCRIPTIONS` object.
+____exports.Vent = {}
+____exports.Vent.UPPER_ENGINE = 0
+____exports.Vent[____exports.Vent.UPPER_ENGINE] = "UPPER_ENGINE"
+____exports.Vent.REACTOR_TOP = 1
+____exports.Vent[____exports.Vent.REACTOR_TOP] = "REACTOR_TOP"
+____exports.Vent.WEAPONS = 2
+____exports.Vent[____exports.Vent.WEAPONS] = "WEAPONS"
+____exports.Vent.NAVIGATION_TOP = 3
+____exports.Vent[____exports.Vent.NAVIGATION_TOP] = "NAVIGATION_TOP"
+____exports.Vent.CAFETERIA = 4
+____exports.Vent[____exports.Vent.CAFETERIA] = "CAFETERIA"
+____exports.Vent.NAVIGATION_HALL = 5
+____exports.Vent[____exports.Vent.NAVIGATION_HALL] = "NAVIGATION_HALL"
+____exports.Vent.ADMIN = 6
+____exports.Vent[____exports.Vent.ADMIN] = "ADMIN"
+____exports.Vent.MEDBAY = 7
+____exports.Vent[____exports.Vent.MEDBAY] = "MEDBAY"
+____exports.Vent.ELECTRICAL = 8
+____exports.Vent[____exports.Vent.ELECTRICAL] = "ELECTRICAL"
+____exports.Vent.SECURITY = 9
+____exports.Vent[____exports.Vent.SECURITY] = "SECURITY"
+____exports.Vent.NAVIGATION_BOTTOM = 10
+____exports.Vent[____exports.Vent.NAVIGATION_BOTTOM] = "NAVIGATION_BOTTOM"
+____exports.Vent.SHIELDS = 11
+____exports.Vent[____exports.Vent.SHIELDS] = "SHIELDS"
+____exports.Vent.REACTOR_BOTTOM = 12
+____exports.Vent[____exports.Vent.REACTOR_BOTTOM] = "REACTOR_BOTTOM"
+____exports.Vent.LOWER_ENGINE = 13
+____exports.Vent[____exports.Vent.LOWER_ENGINE] = "LOWER_ENGINE"
+return ____exports
+ end,
+["packages.mod.src.interfaces.VentDescription"] = function(...) 
+local ____exports = {}
+return ____exports
+ end,
+["packages.mod.src.objects.ventDescriptions"] = function(...) 
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local SkeldRoom = ____common.SkeldRoom
+local ____Vent = require("packages.mod.src.enums.Vent")
+local Vent = ____Vent.Vent
+____exports.VENT_DESCRIPTIONS = {
+    [Vent.UPPER_ENGINE] = {room = SkeldRoom.UPPER_ENGINE, gridIndex = 68, destination = Vent.REACTOR_TOP},
+    [Vent.REACTOR_TOP] = {room = SkeldRoom.REACTOR, gridIndex = 31, destination = Vent.UPPER_ENGINE},
+    [Vent.WEAPONS] = {room = SkeldRoom.WEAPONS, gridIndex = 81, destination = Vent.NAVIGATION_TOP},
+    [Vent.NAVIGATION_TOP] = {room = SkeldRoom.NAVIGATION, gridIndex = 16, destination = Vent.WEAPONS},
+    [Vent.CAFETERIA] = {room = SkeldRoom.CAFETERIA, gridIndex = 334, destination = Vent.NAVIGATION_HALL},
+    [Vent.NAVIGATION_HALL] = {room = SkeldRoom.NAVIGATION_HALL, gridIndex = 46, destination = Vent.ADMIN},
+    [Vent.ADMIN] = {room = SkeldRoom.ADMIN, gridIndex = 106, destination = Vent.CAFETERIA},
+    [Vent.MEDBAY] = {room = SkeldRoom.MEDBAY, gridIndex = 114, destination = Vent.ELECTRICAL},
+    [Vent.ELECTRICAL] = {room = SkeldRoom.ELECTRICAL, gridIndex = 16, destination = Vent.SECURITY},
+    [Vent.SECURITY] = {room = SkeldRoom.SECURITY, gridIndex = 27, destination = Vent.MEDBAY},
+    [Vent.NAVIGATION_BOTTOM] = {room = SkeldRoom.NAVIGATION, gridIndex = 106, destination = Vent.SHIELDS},
+    [Vent.SHIELDS] = {room = SkeldRoom.SHIELDS, gridIndex = 99, destination = Vent.NAVIGATION_BOTTOM},
+    [Vent.REACTOR_BOTTOM] = {room = SkeldRoom.REACTOR, gridIndex = 76, destination = Vent.LOWER_ENGINE},
+    [Vent.LOWER_ENGINE] = {room = SkeldRoom.LOWER_ENGINE, gridIndex = 114, destination = Vent.REACTOR_BOTTOM}
+}
+return ____exports
+ end,
+["packages.mod.src.features.vents"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ObjectValues = ____lualib.__TS__ObjectValues
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local ____exports = {}
+local getVentsForThisRoom, spawnVent, isVentClose, getClosestVent, drawInstructions, checkJumpIn, checkJumpOut, getVentDescription, VENT_DISTANCE, TEXT_GRID_INDEX
+local ____common = require("packages.common.src.index")
+local Role = ____common.Role
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local game = ____isaacscript_2Dcommon.game
+local getEffects = ____isaacscript_2Dcommon.getEffects
+local getLastFrameOfAnimation = ____isaacscript_2Dcommon.getLastFrameOfAnimation
+local VectorZero = ____isaacscript_2Dcommon.VectorZero
+local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
+local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
+local ____VentState = require("packages.mod.src.enums.VentState")
+local VentState = ____VentState.VentState
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____ventDescriptions = require("packages.mod.src.objects.ventDescriptions")
+local VENT_DESCRIPTIONS = ____ventDescriptions.VENT_DESCRIPTIONS
+local ____players = require("packages.mod.src.players")
+local getOurPlayer = ____players.getOurPlayer
+local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
+local getSkeldRoomName = ____skeldRoomMap.getSkeldRoomName
+local ____stageAPI = require("packages.mod.src.stageAPI")
+local getSkeldRoom = ____stageAPI.getSkeldRoom
+local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
+local ____utils = require("packages.mod.src.utils")
+local drawFontText = ____utils.drawFontText
+local spawnEntity = ____utils.spawnEntity
+local ____actionSubroutines = require("packages.mod.src.features.actionSubroutines")
+local shouldShowActionButton = ____actionSubroutines.shouldShowActionButton
+function getVentsForThisRoom(self)
+    local room = getSkeldRoom(nil)
+    if room == nil then
+        return {}
+    end
+    local ventDescriptions = __TS__ObjectValues(VENT_DESCRIPTIONS)
+    return __TS__ArrayFilter(
+        ventDescriptions,
+        function(____, ventDescription) return ventDescription.room == room end
+    )
+end
+function spawnVent(self, ventDescription)
+    local vent = spawnEntity(
+        nil,
+        EntityType.EFFECT,
+        EffectVariantCustom.VENT,
+        0,
+        ventDescription.gridIndex
+    )
+    local data = vent:GetData()
+    data.destination = ventDescription.destination
+end
+function isVentClose(self)
+    local player = Isaac.GetPlayer()
+    local closestVent = getClosestVent(nil)
+    if closestVent == nil then
+        return false
+    end
+    local distance = player.Position:Distance(closestVent.Position)
+    return distance <= VENT_DISTANCE
+end
+function getClosestVent(self)
+    if g.game == nil then
+        return nil
+    end
+    local player = Isaac.GetPlayer()
+    local vents = getEffects(nil, EffectVariantCustom.VENT)
+    local closestVent
+    local closestDistance = math.huge
+    for ____, vent in ipairs(vents) do
+        local distance = player.Position:Distance(vent.Position)
+        if distance < closestDistance then
+            closestVent = vent
+            closestDistance = distance
+        end
+    end
+    return closestVent
+end
+function drawInstructions(self)
+    if g.game == nil or g.game.ventState ~= VentState.IN_VENT then
+        return
+    end
+    local room = game:GetRoom()
+    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
+    local position = Isaac.WorldToRenderPosition(worldPosition)
+    local modifiedPosition = position + Vector(0, 160)
+    local text = "Press [card] to switch rooms. Press [bomb] to leave."
+    drawFontText(nil, text, modifiedPosition)
+end
+function checkJumpIn(self, player)
+    if g.game == nil then
+        return
+    end
+    local sprite = player:GetSprite()
+    if not sprite:IsPlaying("Trapdoor") then
+        return
+    end
+    local frame = sprite:GetFrame()
+    local lastFrame = getLastFrameOfAnimation(nil, sprite)
+    if frame ~= lastFrame then
+        return
+    end
+    player:StopExtraAnimation()
+    player.Visible = false
+    g.game.ventState = VentState.IN_VENT
+end
+function checkJumpOut(self, player)
+    if g.game == nil then
+        return
+    end
+    local sprite = player:GetSprite()
+    if not sprite:IsPlaying("Jump") then
+        return
+    end
+    local frame = sprite:GetFrame()
+    local lastFrame = getLastFrameOfAnimation(nil, sprite)
+    if frame ~= lastFrame then
+        return
+    end
+    player:StopExtraAnimation()
+    player.ControlsEnabled = true
+    g.game.ventState = VentState.NONE
+end
+function getVentDescription(self, vent)
+    return VENT_DESCRIPTIONS[vent]
+end
+VENT_DISTANCE = 60
+TEXT_GRID_INDEX = 7
+function ____exports.spawnVents(self)
+    local vents = getVentsForThisRoom(nil)
+    for ____, ventDescription in ipairs(vents) do
+        spawnVent(nil, ventDescription)
+    end
+end
+function ____exports.ableToVent(self)
+    local ourPlayer = getOurPlayer(nil)
+    return g.game ~= nil and g.game.role == Role.IMPOSTER and g.game.ventState == VentState.NONE and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isVentClose(nil)
+end
+function ____exports.jumpInVent(self)
+    if g.game == nil then
+        return
+    end
+    local closestVent = getClosestVent(nil)
+    if closestVent == nil then
+        return
+    end
+    local player = Isaac.GetPlayer()
+    player.Position = closestVent.Position
+    player.Velocity = VectorZero
+    player:PlayExtraAnimation("Trapdoor")
+    player.ControlsEnabled = false
+    g.game.ventState = VentState.JUMPING_IN
+end
+function ____exports.jumpOutVent(self)
+    if g.game == nil then
+        return
+    end
+    local closestVent = getClosestVent(nil)
+    if closestVent == nil then
+        return
+    end
+    local player = Isaac.GetPlayer()
+    player.Position = closestVent.Position
+    player:PlayExtraAnimation("Jump")
+    player.Visible = true
+    g.game.ventState = VentState.JUMPING_OUT
+end
+function ____exports.postRender(self)
+    drawInstructions(nil)
+    local player = Isaac.GetPlayer()
+    checkJumpIn(nil, player)
+    checkJumpOut(nil, player)
+end
+function ____exports.ventSwitchRoom(self)
+    local closestVent = getClosestVent(nil)
+    if closestVent == nil then
+        return
+    end
+    local data = closestVent:GetData()
+    local destination = data.destination
+    if destination == nil then
+        return
+    end
+    local ventDescription = getVentDescription(nil, destination)
+    if ventDescription == nil then
+        return
+    end
+    local roomName = getSkeldRoomName(nil, ventDescription.room)
+    goToStageAPIRoom(nil, roomName, ventDescription.gridIndex)
+end
+return ____exports
+ end,
+["packages.mod.src.features.actionUI"] = function(...) 
+local ____exports = {}
+local drawSprite
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
+local todo = ____isaacscript_2Dcommon.todo
+local ____sprite = require("packages.mod.src.sprite")
+local initSprite = ____sprite.initSprite
+local ____connectedIcon = require("packages.mod.src.features.connectedIcon")
+local OTHER_UI_BUTTON_OFFSET = ____connectedIcon.OTHER_UI_BUTTON_OFFSET
+local ____kill = require("packages.mod.src.features.kill")
+local ableToKillAPlayer = ____kill.ableToKillAPlayer
+local ____report = require("packages.mod.src.features.report")
+local ableToReportDeadBody = ____report.ableToReportDeadBody
+local ____vents = require("packages.mod.src.features.vents")
+local ableToVent = ____vents.ableToVent
+function drawSprite(self, sprite)
+    local bottomRightPos = getScreenBottomRightPos(nil)
+    local position = bottomRightPos + OTHER_UI_BUTTON_OFFSET
+    sprite:RenderLayer(0, position)
+end
+local sprites = {
+    kill = initSprite(nil, "gfx/ui/kill.anm2"),
+    report = initSprite(nil, "gfx/ui/report.anm2"),
+    vent = initSprite(nil, "gfx/ui/vent.anm2")
+}
+function ____exports.postRender(self)
+    if ableToKillAPlayer(nil) then
+        drawSprite(nil, sprites.kill)
+        return
+    end
+    if ableToVent(nil) then
+        drawSprite(nil, sprites.vent)
+        return
+    end
+    if ableToReportDeadBody(nil) then
+        drawSprite(nil, sprites.report)
+        return
+    end
+    todo(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.features.chatCallbacks"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__StringSplit = ____lualib.__TS__StringSplit
+local ____exports = {}
+local drawChat, wordWrap, CHAT_POSITION, CHAT_POSITION_LEFT, MAX_TEXT_WIDTH, WIDTH_OF_SPACE, LINE_LENGTH, MAX_CHAT_MESSAGES, RENDER_FRAMES_FOR_CHAT_TO_SHOW
+local ____chat = require("packages.mod.src.chat")
+local getAllChat = ____chat.getAllChat
+local ____HexColors = require("packages.mod.src.enums.HexColors")
+local HexColors = ____HexColors.HexColors
+local ____fonts = require("packages.mod.src.fonts")
+local fonts = ____fonts.fonts
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____utils = require("packages.mod.src.utils")
+local getScreenPosition = ____utils.getScreenPosition
+local ____console = require("packages.mod.src.features.console")
+local CONSOLE_POSITION = ____console.CONSOLE_POSITION
+local CONSOLE_POSITION_LEFT = ____console.CONSOLE_POSITION_LEFT
+local isConsoleOpen = ____console.isConsoleOpen
+local SPACING_FROM_LEFT_EDGE = ____console.SPACING_FROM_LEFT_EDGE
+local ____drawText = require("packages.mod.src.features.drawText")
+local DEFAULT_OPACITY = ____drawText.DEFAULT_OPACITY
+local drawText = ____drawText.drawText
+function drawChat(self)
+    local renderFrameCount = Isaac.GetFrameCount()
+    local consoleOpen = isConsoleOpen(nil)
+    local alpha = DEFAULT_OPACITY
+    local ____opt_0 = g.game
+    local x = (____opt_0 and ____opt_0.meeting) == nil and CHAT_POSITION.X or CHAT_POSITION_LEFT.X
+    local y = CHAT_POSITION.Y
+    local numMessagesDrawn = 0
+    for ____, chatMessage in ipairs(getAllChat(nil)) do
+        local modifiedAlpha = chatMessage["local"] and DEFAULT_OPACITY or alpha
+        local renderFramesElapsed = renderFrameCount - chatMessage.renderFrameReceived
+        if not consoleOpen and renderFramesElapsed > RENDER_FRAMES_FOR_CHAT_TO_SHOW then
+            local renderFramesOverThreshold = renderFramesElapsed - RENDER_FRAMES_FOR_CHAT_TO_SHOW
+            modifiedAlpha = modifiedAlpha - renderFramesOverThreshold / (RENDER_FRAMES_FOR_CHAT_TO_SHOW * 2)
+        end
+        if modifiedAlpha <= 0 then
+            break
+        end
+        local text = ""
+        if chatMessage.time ~= "" and not chatMessage["local"] then
+            text = text .. ("[" .. chatMessage.time) .. "] "
+        end
+        if chatMessage.username ~= "" then
+            text = text .. ((((HexColors.GREEN .. "<") .. chatMessage.username) .. ">") .. HexColors.WHITE) .. " "
+        end
+        text = text .. chatMessage.msg
+        local lines = wordWrap(nil, text)
+        y = y - (#lines - 1) * LINE_LENGTH
+        for ____, line in ipairs(lines) do
+            drawText(
+                nil,
+                line,
+                Vector(x, y),
+                modifiedAlpha
+            )
+            y = y + LINE_LENGTH
+        end
+        y = y - (#lines + 1) * LINE_LENGTH
+        numMessagesDrawn = numMessagesDrawn + 1
+        if numMessagesDrawn > MAX_CHAT_MESSAGES then
+            break
+        end
+    end
+end
+function wordWrap(self, line)
+    local spaceLeft = MAX_TEXT_WIDTH
+    local words = __TS__StringSplit(line, " ")
+    do
+        local i = 0
+        while i < #words do
+            local word = words[i + 1]
+            local wordWidth = fonts.pf:GetStringWidth(word)
+            if wordWidth + WIDTH_OF_SPACE > spaceLeft then
+                words[i + 1] = "\n" .. word
+                spaceLeft = MAX_TEXT_WIDTH - wordWidth
+            else
+                spaceLeft = spaceLeft - (wordWidth + WIDTH_OF_SPACE)
+            end
+            i = i + 1
+        end
+    end
+    return __TS__StringSplit(
+        table.concat(words, " "),
+        "\n"
+    )
+end
+local CHAT_POSITION_VERTICAL_OFFSET = Vector(0, -15)
+CHAT_POSITION = CONSOLE_POSITION + CHAT_POSITION_VERTICAL_OFFSET
+CHAT_POSITION_LEFT = CONSOLE_POSITION_LEFT + CHAT_POSITION_VERTICAL_OFFSET
+local rightSideTextCutoffX = getScreenPosition(nil, 1 - SPACING_FROM_LEFT_EDGE, 0).X
+MAX_TEXT_WIDTH = rightSideTextCutoffX - CHAT_POSITION.X
+WIDTH_OF_SPACE = fonts.pf:GetStringWidth(" ")
+LINE_LENGTH = 13
+MAX_CHAT_MESSAGES = 10
+RENDER_FRAMES_FOR_CHAT_TO_SHOW = 120
+function ____exports.postRender(self)
+    drawChat(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.features.drawMeeting"] = function(...) 
+local ____exports = {}
+local drawTimeLeftText, getMeetingPhaseSecondsRemaining, drawVoteHelpText, TIME_LEFT_POS, VOTE_HELP_POS, LINE_SPACING
+local ____common = require("packages.common.src.index")
+local MeetingPhase = ____common.MeetingPhase
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____socketClient = require("packages.mod.src.network.socketClient")
+local getTime = ____socketClient.getTime
+local ____utils = require("packages.mod.src.utils")
+local drawFontText = ____utils.drawFontText
+local getScreenPosition = ____utils.getScreenPosition
+local inEndMeeting = ____utils.inEndMeeting
+local inStartMeeting = ____utils.inStartMeeting
+local ____console = require("packages.mod.src.features.console")
+local isConsoleOpen = ____console.isConsoleOpen
+function drawTimeLeftText(self)
+    if g.game == nil or g.game.meeting == nil then
+        return
+    end
+    local line1Pos = TIME_LEFT_POS
+    drawFontText(nil, "Time until", line1Pos)
+    local line2Pos = line1Pos + LINE_SPACING
+    local verb = g.game.meeting.meetingPhase == MeetingPhase.PRE_VOTING and "starts" or "ends"
+    drawFontText(nil, ("voting " .. verb) .. ":", line2Pos)
+    local line3Pos = line2Pos + Vector(0, 25)
+    local secondsRemaining = getMeetingPhaseSecondsRemaining(nil, g.game.meeting)
+    drawFontText(
+        nil,
+        tostring(secondsRemaining) .. " seconds",
+        line3Pos
+    )
+end
+function getMeetingPhaseSecondsRemaining(self, meeting)
+    local endMeetingTime = meeting.timePhaseStarted + meeting.phaseLengthSeconds
+    local now = getTime(nil)
+    local secondsRemaining = endMeetingTime - now
+    if secondsRemaining < 0 then
+        secondsRemaining = 0
+    end
+    return math.ceil(secondsRemaining)
+end
+function drawVoteHelpText(self)
+    if g.game == nil or g.game.meeting == nil or g.game.meeting.meetingPhase ~= MeetingPhase.VOTING then
+        return
+    end
+    local line1Pos = VOTE_HELP_POS
+    drawFontText(nil, "Vote with the", line1Pos)
+    local line2Pos = line1Pos + LINE_SPACING
+    drawFontText(nil, "/vote or /voteskip", line2Pos)
+    local line3Pos = line2Pos + LINE_SPACING
+    drawFontText(nil, "commands.", line3Pos)
+end
+local TEXT_X = 0.85
+TIME_LEFT_POS = getScreenPosition(nil, TEXT_X, 0.45)
+VOTE_HELP_POS = getScreenPosition(nil, TEXT_X, 0.15)
+LINE_SPACING = Vector(0, 15)
+function ____exports.postRender(self)
+    if g.game == nil or g.game.meeting == nil or inStartMeeting(nil) or inEndMeeting(nil) or isConsoleOpen(nil) then
+        return
+    end
+    drawTimeLeftText(nil)
+    drawVoteHelpText(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.features.autoLogin"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArraySome = ____lualib.__TS__ArraySome
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____connect = require("packages.mod.src.chatCommands.connect")
+local connectChatCommand = ____connect.connectChatCommand
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____send = require("packages.mod.src.network.send")
+local sendTCP = ____send.sendTCP
+local socketClient = require("packages.mod.src.network.socketClient")
+local DEBUG_FIRST_MOD = true
+local DEBUG_USERNAME = DEBUG_FIRST_MOD and "Test1" or "Test2"
+local DEBUG_PASSWORD = "test"
+local DEBUG_GAME_NAME = "testGame"
+local autoLogin = false
+function ____exports.startAutoLogin(self)
+    autoLogin = true
+    if not socketClient:isConnected() then
+        connectChatCommand(nil, true)
+    end
+    if g.loggedIn then
+        sendTCP(nil, SocketCommandModToServer.GAME_LIST, {})
+    else
+        sendTCP(nil, SocketCommandModToServer.LOGIN, {username = DEBUG_USERNAME, password = DEBUG_PASSWORD})
+    end
+end
+function ____exports.onGameList(self, gameList)
+    if not autoLogin or g.game ~= nil then
+        return
+    end
+    local testGameExists = __TS__ArraySome(
+        gameList,
+        function(____, gameListDescription) return gameListDescription.name == DEBUG_GAME_NAME end
+    )
+    if testGameExists then
+        sendTCP(nil, SocketCommandModToServer.JOIN, {name = DEBUG_GAME_NAME, password = "", created = false})
+    else
+        sendTCP(nil, SocketCommandModToServer.CREATE, {name = DEBUG_GAME_NAME, password = ""})
+    end
+end
+function ____exports.onPlayerJoined(self, userID)
+    if not autoLogin or userID == g.userID then
+        return
+    end
+    autoLogin = false
+    if g.game ~= nil and g.game.ownerUserID == g.userID and #g.game.players >= 2 then
+        sendTCP(nil, SocketCommandModToServer.START, {gameID = g.game.id})
+    end
+end
+return ____exports
+ end,
+["packages.mod.src.features.endGameCutscene"] = function(...) 
+local ____exports = {}
+local postRenderFadingToBlack, postRenderTextFadingIn, postRenderText, postRenderTextFadingOut, postRenderFadingToGame, drawText, getTextOpacity, drawItem, hasFadeFinished, setState, setSprite, ITEM_SPRITE_OFFSET, itemSprite
+local ____common = require("packages.common.src.index")
+local Role = ____common.Role
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local getCollectibleGfxFilename = ____isaacscript_2Dcommon.getCollectibleGfxFilename
+local getScreenCenterPos = ____isaacscript_2Dcommon.getScreenCenterPos
+local log = ____isaacscript_2Dcommon.log
+local restart = ____isaacscript_2Dcommon.restart
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
+local VectorZero = ____isaacscript_2Dcommon.VectorZero
+local ____BlackSpriteState = require("packages.mod.src.enums.BlackSpriteState")
+local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
+local ____CutsceneState = require("packages.mod.src.enums.CutsceneState")
+local CutsceneState = ____CutsceneState.CutsceneState
+local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
+local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____minimapAPI = require("packages.mod.src.minimapAPI")
+local disableMinimapAPI = ____minimapAPI.disableMinimapAPI
+local ____sprite = require("packages.mod.src.sprite")
+local setSpriteOpacity = ____sprite.setSpriteOpacity
+local ____utils = require("packages.mod.src.utils")
+local drawFontText = ____utils.drawFontText
+local getRoleName = ____utils.getRoleName
+local ____blackSprite = require("packages.mod.src.features.blackSprite")
+local FADE_TO_BLACK_FRAMES = ____blackSprite.FADE_TO_BLACK_FRAMES
+local setBlackSpriteState = ____blackSprite.setBlackSpriteState
+function postRenderFadingToBlack(self)
+    if hasFadeFinished(nil) then
+        setState(nil, CutsceneState.TEXT_FADING_IN)
+        setBlackSpriteState(nil, BlackSpriteState.SOLID)
+    end
+end
+function postRenderTextFadingIn(self)
+    drawText(nil)
+    if hasFadeFinished(nil) then
+        setState(nil, CutsceneState.TEXT)
+    end
+end
+function postRenderText(self)
+    drawText(nil)
+    if hasFadeFinished(nil) then
+        setState(nil, CutsceneState.TEXT_FADING_OUT)
+        g.game = nil
+        restart(nil)
+    end
+end
+function postRenderTextFadingOut(self)
+    drawText(nil)
+    if hasFadeFinished(nil) then
+        setState(nil, CutsceneState.FADING_TO_GAME)
+        setBlackSpriteState(nil, BlackSpriteState.FADING_TO_GAME)
+    end
+end
+function postRenderFadingToGame(self)
+    if hasFadeFinished(nil) then
+        setState(nil, CutsceneState.DISABLED)
+        local player = Isaac.GetPlayer()
+        player.ControlsEnabled = true
+    end
+end
+function drawText(self)
+    local centerPos = getScreenCenterPos(nil)
+    local offsetFromCenter = Vector(0, 50)
+    local topCenterPos = centerPos - offsetFromCenter
+    local offsetFromBetweenLine = Vector(0, 10)
+    local opacity = getTextOpacity(nil)
+    drawFontText(nil, "Victory for:", topCenterPos - offsetFromBetweenLine, opacity)
+    local roleName = getRoleName(nil, g.endGame.winningRole, true)
+    drawFontText(nil, roleName, topCenterPos + offsetFromBetweenLine, opacity)
+    drawItem(nil, topCenterPos, opacity)
+    local bottomCenterPos = centerPos + offsetFromCenter
+    drawFontText(nil, "The imposters were:", bottomCenterPos - offsetFromBetweenLine, opacity)
+    drawFontText(nil, g.endGame.imposterNames, bottomCenterPos + offsetFromBetweenLine, opacity)
+end
+function getTextOpacity(self)
+    if g.endGame.state == CutsceneState.TEXT or g.endGame.startRenderFrame == nil then
+        return 1
+    end
+    local renderFrameCount = Isaac.GetFrameCount()
+    local renderFramesPassed = renderFrameCount - g.endGame.startRenderFrame
+    local opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES
+    if g.endGame.state == CutsceneState.TEXT_FADING_IN then
+        return opacity
+    end
+    if g.endGame.state == CutsceneState.TEXT_FADING_OUT then
+        return 1 - opacity
+    end
+    return 1
+end
+function drawItem(self, textPosition, opacity)
+    local position = textPosition + ITEM_SPRITE_OFFSET
+    setSpriteOpacity(nil, itemSprite, opacity)
+    itemSprite:RenderLayer(0, position)
+end
+function hasFadeFinished(self)
+    if g.endGame.startRenderFrame == nil then
+        return false
+    end
+    local renderFrameCount = Isaac.GetFrameCount()
+    local renderFramesPassed = renderFrameCount - g.endGame.startRenderFrame
+    return renderFramesPassed >= FADE_TO_BLACK_FRAMES
+end
+function setState(self, state)
+    local renderFrameCount = Isaac.GetFrameCount()
+    g.endGame.state = state
+    g.endGame.startRenderFrame = renderFrameCount
+    log(((("Changed end game cutscene state: " .. CutsceneState[state]) .. " (") .. tostring(state)) .. ")")
+end
+function setSprite(self, role)
+    local collectibleType = role == Role.CREW and CollectibleType.NOTCHED_AXE or CollectibleType.MOMS_KNIFE
+    local gfxFileName = getCollectibleGfxFilename(nil, collectibleType)
+    itemSprite:ReplaceSpritesheet(0, gfxFileName)
+    itemSprite:LoadGraphics()
+end
+ITEM_SPRITE_OFFSET = Vector(0, -30)
+itemSprite = Sprite()
+itemSprite:Load("gfx/item.anm2", false)
+itemSprite:SetFrame("Default", 0)
+function ____exports.postRender(self)
+    repeat
+        local ____switch3 = g.endGame.state
+        local ____cond3 = ____switch3 == CutsceneState.DISABLED
+        if ____cond3 then
+            do
+                break
+            end
+        end
+        ____cond3 = ____cond3 or ____switch3 == CutsceneState.FADING_TO_BLACK
+        if ____cond3 then
+            do
+                postRenderFadingToBlack(nil)
+                break
+            end
+        end
+        ____cond3 = ____cond3 or ____switch3 == CutsceneState.TEXT_FADING_IN
+        if ____cond3 then
+            do
+                postRenderTextFadingIn(nil)
+                return
+            end
+        end
+        ____cond3 = ____cond3 or ____switch3 == CutsceneState.TEXT
+        if ____cond3 then
+            do
+                postRenderText(nil)
+                break
+            end
+        end
+        ____cond3 = ____cond3 or ____switch3 == CutsceneState.TEXT_FADING_OUT
+        if ____cond3 then
+            do
+                postRenderTextFadingOut(nil)
+                break
+            end
+        end
+        ____cond3 = ____cond3 or ____switch3 == CutsceneState.FADING_TO_GAME
+        if ____cond3 then
+            do
+                postRenderFadingToGame(nil)
+                break
+            end
+        end
+    until true
+end
+function ____exports.startEndGameCutscene(self)
+    setState(nil, CutsceneState.FADING_TO_BLACK)
+    setBlackSpriteState(nil, BlackSpriteState.FADING_TO_BLACK)
+    setSprite(nil, g.endGame.winningRole)
+    disableMinimapAPI(nil)
+    local player = Isaac.GetPlayer()
+    player.Velocity = VectorZero
+    player.ControlsEnabled = false
+    sfxManager:Play(SoundEffectCustom.VICTORY)
+end
+return ____exports
+ end,
+["packages.mod.src.debug"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
+local __TS__Iterator = ____lualib.__TS__Iterator
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local IS_DEV = ____common.IS_DEV
+local SkeldRoom = ____common.SkeldRoom
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local getPartialMatch = ____isaacscript_2Dcommon.getPartialMatch
+local logError = ____isaacscript_2Dcommon.logError
+local ____autoLogin = require("packages.mod.src.features.autoLogin")
+local startAutoLogin = ____autoLogin.startAutoLogin
+local ____endGameCutscene = require("packages.mod.src.features.endGameCutscene")
+local startEndGameCutscene = ____endGameCutscene.startEndGameCutscene
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
+local getSkeldRoomName = ____skeldRoomMap.getSkeldRoomName
+local getSkeldRoomNames = ____skeldRoomMap.getSkeldRoomNames
+local ____stageAPI = require("packages.mod.src.stageAPI")
+local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
+local TEST_PLAYERS = {
+    {"antizoubilamaka", 1},
+    {"Hispa", 2},
+    {"Gamonymous", 3},
+    {"MoucheronQuipet", 5},
+    {"leo_ze_tron", 6},
+    {"AshD0wn", 8},
+    {"Slash_SP", 9},
+    {"StoneAgeMarcus", 13},
+    {"thereisnofuture", 18},
+    {"Dea1h", 19},
+    {"Fawkeyes", 21},
+    {"toooschi", 22},
+    {"CrafterLynx", 23},
+    {"Adrayon", 24}
+}
+--- From the "d" console command.
+function ____exports.debugFunction1(self)
+    startEndGameCutscene(nil)
+end
+--- From the "d2" console command.
+function ____exports.debugFunction2(self)
+end
+--- Bound to F1.
+function ____exports.hotkeyFunction1(self)
+    startAutoLogin(nil)
+end
+--- Bound to F2.
+function ____exports.hotkeyFunction2(self)
+end
+function ____exports.injectTestPlayers(self)
+    if g.game == nil or #g.game.players ~= 1 or not IS_DEV then
+        return
+    end
+    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(TEST_PLAYERS)) do
+        local i = ____value[1]
+        local username = ____value[2][1]
+        local character = ____value[2][2]
+        local alive = true
+        if i == 1 or i == 3 or i == 8 or i == 10 or i == 13 then
+            alive = false
+        end
+        local ____g_game_players_0 = g.game.players
+        ____g_game_players_0[#____g_game_players_0 + 1] = {
+            index = #g.game.players,
+            userID = 100 + i,
+            username = username,
+            connected = true,
+            character = character,
+            alive = alive,
+            room = SkeldRoom.CAFETERIA,
+            usedEmergencyMeeting = false
+        }
+    end
+end
+function ____exports.warp(self, params)
+    local roomName
+    local num = tonumber(params)
+    if num == nil then
+        local roomNames = getSkeldRoomNames(nil)
+        local partialMatch = getPartialMatch(nil, params, roomNames)
+        if partialMatch == nil then
+            logError("Failed to find the room name corresponding to: " .. params)
+            return
+        end
+        roomName = partialMatch
+    else
+        local room = num
+        local potentialRoomName = getSkeldRoomName(nil, room)
+        if potentialRoomName == nil then
+            logError("Failed to find the room name for room ID: " .. tostring(room))
+            return
+        end
+        roomName = potentialRoomName
+    end
+    goToStageAPIRoom(nil, roomName)
+    logError("Warped to room: " .. roomName)
+end
+return ____exports
+ end,
+["packages.mod.src.features.emergencyButton"] = function(...) 
+local ____exports = {}
+local shouldEmergencyButtonBeEnabled
+local ____common = require("packages.common.src.index")
+local SkeldRoom = ____common.SkeldRoom
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local getEffects = ____isaacscript_2Dcommon.getEffects
+local removeAllEffects = ____isaacscript_2Dcommon.removeAllEffects
+local ____ButtonSubType = require("packages.mod.src.enums.ButtonSubType")
+local ButtonSubType = ____ButtonSubType.ButtonSubType
+local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
+local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____players = require("packages.mod.src.players")
+local getOurPlayer = ____players.getOurPlayer
+local ____stageAPI = require("packages.mod.src.stageAPI")
+local getSkeldRoom = ____stageAPI.getSkeldRoom
+local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
+local setButtonState = ____buttonSpawn.setButtonState
+local spawnButton = ____buttonSpawn.spawnButton
+function shouldEmergencyButtonBeEnabled(self)
+    if g.game == nil then
+        return false
+    end
+    local ourPlayer = getOurPlayer(nil)
+    if ourPlayer == nil then
+        return false
+    end
+    return ourPlayer.alive and not g.game.usedEmergencyMeeting and not g.game.emergencyButtonOnCooldown
+end
+local EMERGENCY_BUTTON_GRID_INDEX = 265
+function ____exports.spawnEmergencyButton(self)
+    if g.game == nil then
+        return
+    end
+    spawnButton(
+        nil,
+        ButtonSubType.EMERGENCY,
+        EMERGENCY_BUTTON_GRID_INDEX,
+        shouldEmergencyButtonBeEnabled(nil)
+    )
+end
+function ____exports.removeEmergencyButton(self)
+    removeAllEffects(nil, EffectVariantCustom.BUTTON, ButtonSubType.EMERGENCY)
+end
+function ____exports.setEmergencyButtonState(self)
+    if g.game == nil then
+        return
+    end
+    local skeldRoom = getSkeldRoom(nil)
+    if skeldRoom ~= SkeldRoom.CAFETERIA then
+        return
+    end
+    local emergencyButtons = getEffects(nil, EffectVariantCustom.BUTTON, ButtonSubType.EMERGENCY)
+    local emergencyButton = emergencyButtons[1]
+    if emergencyButton == nil then
+        return
+    end
+    local enabled = shouldEmergencyButtonBeEnabled(nil)
+    setButtonState(nil, emergencyButton, enabled)
+end
+return ____exports
+ end,
 ["packages.mod.src.rooms.cafeteria"] = function(...) 
 local ____exports = {}
 local spawnCafeteriaTable
@@ -65915,140 +68664,6 @@ function ____exports.setupMeeting(self, meetingEnded)
 end
 return ____exports
  end,
-["packages.mod.src.features.taskSubroutines"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ObjectValues = ____lualib.__TS__ObjectValues
-local ____exports = {}
-local muteSoundEffects, removeAllNPCs, removeAllGridEntities
-local ____common = require("packages.common.src.index")
-local SocketCommandModToServer = ____common.SocketCommandModToServer
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local arrayRemoveInPlace = ____isaacscript_2Dcommon.arrayRemoveInPlace
-local game = ____isaacscript_2Dcommon.game
-local getNPCs = ____isaacscript_2Dcommon.getNPCs
-local isVanillaWallGridIndex = ____isaacscript_2Dcommon.isVanillaWallGridIndex
-local log = ____isaacscript_2Dcommon.log
-local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
-local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
-local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
-local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____minimapAPI = require("packages.mod.src.minimapAPI")
-local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-local ____send = require("packages.mod.src.network.send")
-local sendTCP = ____send.sendTCP
-local ____setupPlayersAndUI = require("packages.mod.src.setupPlayersAndUI")
-local setupPlayerAndUI = ____setupPlayersAndUI.setupPlayerAndUI
-local ____stageAPI = require("packages.mod.src.stageAPI")
-local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
-local ____utils = require("packages.mod.src.utils")
-local removeGridEntity = ____utils.removeGridEntity
-function muteSoundEffects(self)
-    for ____, soundEffect in ipairs({SoundEffect.THUMBS_UP, SoundEffect.DEATH_BURST_SMALL, SoundEffect.BOSS_1_EXPLOSIONS, SoundEffect.ROCK_CRUMBLE}) do
-        sfxManager:Stop(soundEffect)
-    end
-end
-function ____exports.taskLeave(self)
-    if g.game == nil or g.game.currentTask == nil then
-        return
-    end
-    g.game.currentTask = nil
-    g.game.endTaskTime = Isaac.GetTime()
-    local elapsedTime = g.game.endTaskTime - g.game.startTaskTime
-    log("Task took: " .. tostring(elapsedTime))
-    setupPlayerAndUI(nil)
-    enableMinimapAPI(nil)
-    ____exports.clearRoomEntities(nil)
-    goToStageAPIRoom(nil, g.game.taskReturnRoomName, g.game.taskReturnGridIndex)
-end
-function ____exports.clearRoomEntities(self)
-    removeAllMatchingEntities(nil, EntityType.BOMB)
-    removeAllMatchingEntities(nil, EntityType.PICKUP)
-    removeAllMatchingEntities(nil, EntityType.EFFECT, EffectVariantCustom.BUTTON)
-    removeAllNPCs(nil)
-    removeAllGridEntities(nil)
-end
-function removeAllNPCs(self)
-    local npcs = getNPCs(nil)
-    for ____, npc in ipairs(npcs) do
-        npc:Remove()
-    end
-end
-function removeAllGridEntities(self)
-    local room = game:GetRoom()
-    local gridSize = room:GetGridSize()
-    do
-        local gridIndex = 0
-        while gridIndex < gridSize do
-            do
-                if isVanillaWallGridIndex(nil, gridIndex) then
-                    goto __continue17
-                end
-                local gridEntity = room:GetGridEntity(gridIndex)
-                if gridEntity ~= nil then
-                    removeGridEntity(nil, gridEntity)
-                end
-            end
-            ::__continue17::
-            gridIndex = gridIndex + 1
-        end
-    end
-end
-function ____exports.taskComplete(self)
-    if g.game == nil or g.game.currentTask == nil then
-        return
-    end
-    local task = g.game.currentTask
-    muteSoundEffects(nil)
-    mod:runNextGameFrame(function()
-        muteSoundEffects(nil)
-    end)
-    sfxManager:Play(SoundEffectCustom.TASK_COMPLETE)
-    sendTCP(nil, SocketCommandModToServer.TASK_COMPLETE, {gameID = g.game.id, task = task})
-    for ____, tasks in ipairs(__TS__ObjectValues(g.game.ourTasks)) do
-        arrayRemoveInPlace(nil, tasks, task)
-    end
-    ____exports.taskLeave(nil)
-end
-return ____exports
- end,
-["packages.mod.src.features.teleporter"] = function(...) 
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local getPlayerCloserThan = ____isaacscript_2Dcommon.getPlayerCloserThan
-local log = ____isaacscript_2Dcommon.log
-local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
-local taskLeave = ____taskSubroutines.taskLeave
-local TELEPORTER_ACTIVATION_DISTANCE = 20
-function ____exports.spawnTeleporter(self, gridIndex)
-    spawnGridEntity(nil, GridEntityType.TELEPORTER, gridIndex)
-end
-function ____exports.postGridEntityUpdateTeleporter(self, gridEntity)
-    if g.game == nil or g.game.currentTask == nil then
-        return
-    end
-    local playerTouching = getPlayerCloserThan(nil, gridEntity.Position, TELEPORTER_ACTIVATION_DISTANCE)
-    if playerTouching == nil then
-        return
-    end
-    log("Player touched teleporter.")
-    taskLeave(nil)
-end
-return ____exports
- end,
 ["packages.mod.src.tasks.bombRocks"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local Map = ____lualib.Map
@@ -66157,91 +68772,6 @@ function ____exports.postGridEntityUpdateRock(self, gridEntity)
     local broken = gridEntity.State == asNumber(nil, RockState.BROKEN)
     rockBrokenMap:set(gridIndex, broken)
     if everyRockBroken(nil) then
-        taskComplete(nil)
-    end
-end
-return ____exports
- end,
-["packages.mod.src.tasks.buttonsBehindKeyBlocks"] = function(...) 
-local ____exports = {}
-local spawnKeys
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local Direction = ____isaac_2Dtypescript_2Ddefinitions.Direction
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
-local KeySubType = ____isaac_2Dtypescript_2Ddefinitions.KeySubType
-local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local spawnGridEntity = ____isaacscript_2Dcommon.spawnGridEntity
-local ____collisionObjects = require("packages.mod.src.collisionObjects")
-local addCollision = ____collisionObjects.addCollision
-local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
-local spawnTaskButton = ____buttonSpawn.spawnTaskButton
-local ____buttonSubroutines = require("packages.mod.src.features.buttonSubroutines")
-local allButtonsPressed = ____buttonSubroutines.allButtonsPressed
-local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
-local taskComplete = ____taskSubroutines.taskComplete
-local ____teleporter = require("packages.mod.src.features.teleporter")
-local spawnTeleporter = ____teleporter.spawnTeleporter
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-local ____spawnObjects = require("packages.mod.src.spawnObjects")
-local spawnFakeBlockLine = ____spawnObjects.spawnFakeBlockLine
-local ____utils = require("packages.mod.src.utils")
-local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
-local spawnEntity = ____utils.spawnEntity
-function spawnKeys(self, gridIndex)
-    local entity = spawnEntity(
-        nil,
-        EntityType.PICKUP,
-        PickupVariant.KEY,
-        KeySubType.DOUBLE_PACK,
-        gridIndex
-    )
-    local sprite = entity:GetSprite()
-    sprite:SetLastFrame()
-end
-function ____exports.buttonsBehindKeyBlocks(self)
-    local leftGridIndex = 62
-    movePlayerToGridIndex(nil, leftGridIndex)
-    local topRightGridIndex = 42
-    spawnTeleporter(nil, topRightGridIndex)
-    spawnKeys(nil, 35)
-    spawnKeys(nil, 36)
-    spawnKeys(nil, 37)
-    spawnKeys(nil, 38)
-    spawnKeys(nil, 39)
-    spawnTaskButton(nil, 110, 1)
-    spawnTaskButton(nil, 112, 1)
-    spawnTaskButton(nil, 114, 1)
-    spawnFakeBlockLine(nil, 64, 4, Direction.DOWN)
-    mod:runNextGameFrame(function()
-        addCollision(nil, 64, 109)
-    end)
-    spawnFakeBlockLine(nil, 66, 4, Direction.DOWN)
-    mod:runNextGameFrame(function()
-        addCollision(nil, 66, 111)
-    end)
-    spawnFakeBlockLine(nil, 68, 4, Direction.DOWN)
-    mod:runNextGameFrame(function()
-        addCollision(nil, 68, 113)
-    end)
-    spawnFakeBlockLine(nil, 70, 4, Direction.DOWN)
-    mod:runNextGameFrame(function()
-        addCollision(nil, 70, 115)
-    end)
-    spawnGridEntity(nil, GridEntityType.LOCK, 65)
-    spawnGridEntity(nil, GridEntityType.LOCK, 80)
-    spawnGridEntity(nil, GridEntityType.LOCK, 95)
-    spawnGridEntity(nil, GridEntityType.LOCK, 67)
-    spawnGridEntity(nil, GridEntityType.LOCK, 82)
-    spawnGridEntity(nil, GridEntityType.LOCK, 97)
-    spawnGridEntity(nil, GridEntityType.LOCK, 69)
-    spawnGridEntity(nil, GridEntityType.LOCK, 84)
-    spawnGridEntity(nil, GridEntityType.LOCK, 99)
-end
-function ____exports.buttonsBehindKeyBlocksButtonPressed(self)
-    if allButtonsPressed(nil) then
         taskComplete(nil)
     end
 end
@@ -66610,1151 +69140,6 @@ function ____exports.dodgeStoneShooters(self)
     }
     for ____, gridIndex in ipairs(cobwebGridIndexes) do
         spawnGridEntity(nil, GridEntityType.SPIDER_WEB, gridIndex)
-    end
-end
-return ____exports
- end,
-["packages.mod.src.tasks.fixWires"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ObjectValues = ____lualib.__TS__ObjectValues
-local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
-local __TS__ObjectEntries = ____lualib.__TS__ObjectEntries
-local ____exports = {}
-local resetLineSprites, leftSideButtonPressed, rightSideButtonPressed, resetLeftButtons, WireColor, buttonColorActive, colorsComplete, lineSprites
-local ____common = require("packages.common.src.index")
-local Task = ____common.Task
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local emptyArray = ____isaacscript_2Dcommon.emptyArray
-local game = ____isaacscript_2Dcommon.game
-local getEffects = ____isaacscript_2Dcommon.getEffects
-local getEnumValues = ____isaacscript_2Dcommon.getEnumValues
-local newReadonlyColor = ____isaacscript_2Dcommon.newReadonlyColor
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local shuffleArray = ____isaacscript_2Dcommon.shuffleArray
-local ____ButtonSubType = require("packages.mod.src.enums.ButtonSubType")
-local ButtonSubType = ____ButtonSubType.ButtonSubType
-local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
-local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
-local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
-local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
-local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
-local spawnTaskButton = ____buttonSpawn.spawnTaskButton
-local ____buttonSubroutines = require("packages.mod.src.features.buttonSubroutines")
-local resetButton = ____buttonSubroutines.resetButton
-local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
-local taskComplete = ____taskSubroutines.taskComplete
-local taskLeave = ____taskSubroutines.taskLeave
-local ____teleporter = require("packages.mod.src.features.teleporter")
-local spawnTeleporter = ____teleporter.spawnTeleporter
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____utils = require("packages.mod.src.utils")
-local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
-local spawnEntity = ____utils.spawnEntity
-function resetLineSprites(self)
-    for ____, spriteDescription in ipairs(__TS__ObjectValues(lineSprites)) do
-        spriteDescription.startPosition = nil
-        spriteDescription.endPosition = nil
-        spriteDescription.finished = false
-    end
-end
-function leftSideButtonPressed(self, color, button)
-    resetLeftButtons(nil, color)
-    buttonColorActive = color
-    local spriteDescription = lineSprites[buttonColorActive]
-    spriteDescription.startPosition = Isaac.WorldToRenderPosition(button.Position)
-end
-function rightSideButtonPressed(self, color)
-    if color ~= buttonColorActive then
-        sfxManager:Play(SoundEffect.THUMBS_DOWN)
-        taskLeave(nil)
-        return
-    end
-    local spriteDescription = lineSprites[buttonColorActive]
-    spriteDescription.finished = true
-    colorsComplete[#colorsComplete + 1] = buttonColorActive
-    buttonColorActive = nil
-    local allColors = getEnumValues(nil, WireColor)
-    if #colorsComplete == #allColors then
-        taskComplete(nil)
-    end
-end
-function resetLeftButtons(self, exceptColor)
-    local leftButtons = getEffects(nil, EffectVariantCustom.BUTTON, ButtonSubType.TASK_1)
-    for ____, button in ipairs(leftButtons) do
-        local data = button:GetData()
-        local color = data.color
-        if color ~= exceptColor and not __TS__ArrayIncludes(colorsComplete, color) then
-            resetButton(nil, button)
-        end
-    end
-end
-local THIS_TASK = Task.SHORT_FIX_WIRES
-local NUM_BUTTONS = 4
-local WIRE_SIGN_OFFSET = Vector(-28, 0)
-WireColor = {}
-WireColor.YELLOW = 0
-WireColor[WireColor.YELLOW] = "YELLOW"
-WireColor.BLUE = 1
-WireColor[WireColor.BLUE] = "BLUE"
-WireColor.RED = 2
-WireColor[WireColor.RED] = "RED"
-WireColor.MAGENTA = 3
-WireColor[WireColor.MAGENTA] = "MAGENTA"
-local WIRE_COLORS = {
-    [WireColor.YELLOW] = newReadonlyColor(nil, 1, 1, 0),
-    [WireColor.BLUE] = newReadonlyColor(nil, 0, 0, 1),
-    [WireColor.RED] = newReadonlyColor(nil, 1, 0, 0),
-    [WireColor.MAGENTA] = newReadonlyColor(nil, 1, 0, 1)
-}
-buttonColorActive = nil
-colorsComplete = {}
-lineSprites = {
-    [WireColor.YELLOW] = {
-        startPosition = nil,
-        endPosition = nil,
-        sprite = Sprite(),
-        finished = false
-    },
-    [WireColor.BLUE] = {
-        startPosition = nil,
-        endPosition = nil,
-        sprite = Sprite(),
-        finished = false
-    },
-    [WireColor.RED] = {
-        startPosition = nil,
-        endPosition = nil,
-        sprite = Sprite(),
-        finished = false
-    },
-    [WireColor.MAGENTA] = {
-        startPosition = nil,
-        endPosition = nil,
-        sprite = Sprite(),
-        finished = false
-    }
-}
-for ____, spriteDescription in ipairs(__TS__ObjectValues(lineSprites)) do
-    local sprite = spriteDescription.sprite
-    sprite:Load("gfx/electrical/line.anm2", true)
-    sprite:SetFrame("Default", 0)
-end
-function ____exports.fixWires(self)
-    local room = game:GetRoom()
-    local gridWidth = room:GetGridWidth()
-    local centerGridIndex = 52
-    movePlayerToGridIndex(nil, centerGridIndex)
-    local bottomGridIndex = 97
-    spawnTeleporter(nil, bottomGridIndex)
-    local topLeftGridIndex = 16
-    do
-        local i = 0
-        while i < NUM_BUTTONS do
-            local gridIndex = topLeftGridIndex + i * gridWidth * 2
-            local button = spawnTaskButton(nil, gridIndex, 1)
-            local data = button:GetData()
-            data.color = i
-            local sign = spawnEntity(
-                nil,
-                EntityTypeCustom.WIRE_SIGN,
-                0,
-                0,
-                gridIndex
-            )
-            local sprite = sign:GetSprite()
-            sprite.Offset = WIRE_SIGN_OFFSET
-            sprite:SetFrame(i)
-            i = i + 1
-        end
-    end
-    local topRightGridIndex = 28
-    local wireColors = getEnumValues(nil, WireColor)
-    local randomWireColors = shuffleArray(nil, wireColors)
-    do
-        local i = 0
-        while i < NUM_BUTTONS do
-            local color = randomWireColors[i + 1]
-            if color == nil then
-                error("Failed to get the random wire color for index: " .. tostring(i))
-            end
-            local gridIndex = topRightGridIndex + i * gridWidth * 2
-            local button = spawnTaskButton(nil, gridIndex, 2)
-            local data = button:GetData()
-            data.color = color
-            local sign = spawnEntity(
-                nil,
-                EntityTypeCustom.WIRE_SIGN,
-                0,
-                0,
-                gridIndex
-            )
-            local sprite = sign:GetSprite()
-            sprite.Offset = WIRE_SIGN_OFFSET * -1
-            sprite:SetFrame(color)
-            i = i + 1
-        end
-    end
-    buttonColorActive = nil
-    emptyArray(nil, colorsComplete)
-    resetLineSprites(nil)
-end
-function ____exports.fixWiresButtonPressed(self, button, num)
-    local data = button:GetData()
-    local color = data.color
-    if num == 1 then
-        leftSideButtonPressed(nil, color, button)
-    else
-        rightSideButtonPressed(nil, color)
-    end
-end
-function ____exports.postRender(self)
-    if g.game == nil or g.game.currentTask ~= THIS_TASK then
-        return
-    end
-    local player = Isaac.GetPlayer()
-    if buttonColorActive ~= nil then
-        local spriteDescription = lineSprites[buttonColorActive]
-        spriteDescription.endPosition = Isaac.WorldToRenderPosition(player.Position)
-    end
-    for ____, ____value in ipairs(__TS__ObjectEntries(lineSprites)) do
-        local colorString = ____value[1]
-        local spriteDescription = ____value[2]
-        do
-            local color = colorString
-            local ____spriteDescription_0 = spriteDescription
-            local startPosition = ____spriteDescription_0.startPosition
-            local endPosition = ____spriteDescription_0.endPosition
-            local sprite = ____spriteDescription_0.sprite
-            local finished = ____spriteDescription_0.finished
-            if startPosition == nil or endPosition == nil then
-                goto __continue25
-            end
-            if color ~= buttonColorActive and not finished then
-                goto __continue25
-            end
-            local combinedVector = endPosition - startPosition
-            sprite.Rotation = combinedVector:GetAngleDegrees()
-            sprite.Scale = Vector(
-                combinedVector:Length(),
-                1
-            )
-            sprite.Color = WIRE_COLORS[color]
-            sprite:Render(startPosition)
-        end
-        ::__continue25::
-    end
-end
-return ____exports
- end,
-["packages.mod.src.tasks.identifyCollectibles"] = function(...) 
-local ____exports = {}
-local spawnButtons, setupRound, getRandomCollectibles, correctSelection, incorrectSelection, drawItemSprites, drawItemText, NUM_ROUNDS, NUM_RANDOM_COLLECTIBLES, BUTTON_SPACING, BUTTON_1_GRID_INDEX, ROW_LENGTH, TEXT_GRID_INDEX, collectibleSprites, currentRound, currentCollectible, correctCollectibleIndex
-local ____common = require("packages.common.src.index")
-local Task = ____common.Task
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local emptyArray = ____isaacscript_2Dcommon.emptyArray
-local game = ____isaacscript_2Dcommon.game
-local getCollectibleName = ____isaacscript_2Dcommon.getCollectibleName
-local getRandomArrayElement = ____isaacscript_2Dcommon.getRandomArrayElement
-local getRandomArrayIndex = ____isaacscript_2Dcommon.getRandomArrayIndex
-local ____repeat = ____isaacscript_2Dcommon["repeat"]
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
-local spawnTaskButton = ____buttonSpawn.spawnTaskButton
-local ____buttonSubroutines = require("packages.mod.src.features.buttonSubroutines")
-local resetAllButtons = ____buttonSubroutines.resetAllButtons
-local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
-local taskComplete = ____taskSubroutines.taskComplete
-local taskLeave = ____taskSubroutines.taskLeave
-local ____teleporter = require("packages.mod.src.features.teleporter")
-local spawnTeleporter = ____teleporter.spawnTeleporter
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-local ____sprite = require("packages.mod.src.sprite")
-local initGlowingItemSprite = ____sprite.initGlowingItemSprite
-local ____utils = require("packages.mod.src.utils")
-local drawFontText = ____utils.drawFontText
-local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
-function spawnButtons(self)
-    local gridIndex = BUTTON_1_GRID_INDEX
-    do
-        local i = 0
-        while i < NUM_RANDOM_COLLECTIBLES do
-            spawnTaskButton(nil, gridIndex, i + 1)
-            gridIndex = gridIndex + BUTTON_SPACING
-            i = i + 1
-        end
-    end
-end
-function setupRound(self)
-    local startGridIndex = 97
-    movePlayerToGridIndex(nil, startGridIndex)
-    local randomCollectibles = getRandomCollectibles(nil)
-    emptyArray(nil, collectibleSprites)
-    for ____, randomCollectible in ipairs(randomCollectibles) do
-        local sprite = initGlowingItemSprite(nil, randomCollectible)
-        collectibleSprites[#collectibleSprites + 1] = sprite
-    end
-    local randomIndex = getRandomArrayIndex(nil, randomCollectibles)
-    local randomCollectible = randomCollectibles[randomIndex + 1]
-    correctCollectibleIndex = randomIndex
-    currentCollectible = getCollectibleName(nil, randomCollectible)
-    resetAllButtons(nil)
-end
-function getRandomCollectibles(self)
-    local collectibleArray = mod:getCollectibleArray()
-    local randomCollectibles = {}
-    ____repeat(
-        nil,
-        NUM_RANDOM_COLLECTIBLES,
-        function()
-            local randomCollectible = getRandomArrayElement(nil, collectibleArray, nil, randomCollectibles)
-            randomCollectibles[#randomCollectibles + 1] = randomCollectible
-        end
-    )
-    return randomCollectibles
-end
-function correctSelection(self)
-    sfxManager:Play(SoundEffect.THUMBS_UP, 0.5)
-    currentRound = currentRound + 1
-    if currentRound >= NUM_ROUNDS then
-        taskComplete(nil)
-    else
-        setupRound(nil)
-    end
-end
-function incorrectSelection(self)
-    sfxManager:Play(SoundEffect.THUMBS_DOWN)
-    taskLeave(nil)
-end
-function drawItemSprites(self)
-    local room = game:GetRoom()
-    local buttonGridIndex = BUTTON_1_GRID_INDEX
-    do
-        local i = 0
-        while i < NUM_RANDOM_COLLECTIBLES do
-            local spriteGridIndex = buttonGridIndex - ROW_LENGTH
-            local gamePosition = room:GetGridPosition(spriteGridIndex)
-            local position = Isaac.WorldToRenderPosition(gamePosition)
-            local sprite = collectibleSprites[i + 1]
-            if sprite ~= nil then
-                sprite:RenderLayer(0, position)
-            end
-            buttonGridIndex = buttonGridIndex + BUTTON_SPACING
-            i = i + 1
-        end
-    end
-end
-function drawItemText(self)
-    local room = game:GetRoom()
-    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
-    local position = Isaac.WorldToRenderPosition(worldPosition)
-    local text = "Find: " .. currentCollectible
-    drawFontText(nil, text, position)
-end
-local THIS_TASK = Task.SHORT_IDENTIFY_COLLECTIBLES
-NUM_ROUNDS = 5
-local STARTING_ROUND = 1
-NUM_RANDOM_COLLECTIBLES = 5
-BUTTON_SPACING = 2
-BUTTON_1_GRID_INDEX = 48
-ROW_LENGTH = 15
-TEXT_GRID_INDEX = 86
-collectibleSprites = {}
-currentRound = STARTING_ROUND
-currentCollectible = ""
-correctCollectibleIndex = 0
-function ____exports.identifyCollectibles(self)
-    local bottomLeftGridIndex = 92
-    spawnTeleporter(nil, bottomLeftGridIndex)
-    spawnButtons(nil)
-    currentRound = STARTING_ROUND
-    setupRound(nil)
-end
-function ____exports.identifyCollectibleButtonPressed(self, num)
-    if num == correctCollectibleIndex + 1 then
-        correctSelection(nil)
-    else
-        incorrectSelection(nil)
-    end
-end
-function ____exports.postRender(self)
-    if g.game == nil or g.game.currentTask ~= THIS_TASK then
-        return
-    end
-    drawItemSprites(nil)
-    drawItemText(nil)
-end
-return ____exports
- end,
-["packages.mod.src.tasks.identifyPickupsInOrder"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
-local __TS__Iterator = ____lualib.__TS__Iterator
-local ____exports = {}
-local setupRound, drawPickupText, drawPickupSprites, spawnButtons, correctSelection, nextRound, incorrectSelection, NUM_ROUNDS, PLAYER_START_GRID_INDEX, TEXT_GRID_INDEX, TEXT_SHOW_FRAMES, BUTTON_GRID_INDEXES, ROW_LENGTH, SPRITE_OFFSET, PickupType, pickupDescriptions, currentRound, showingPickupIndex, showingPickupRenderFrame, pickupSprites, currentPickupOrder, currentChoosingIndex
-local ____common = require("packages.common.src.index")
-local Task = ____common.Task
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local GAME_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.GAME_FRAMES_PER_SECOND
-local emptyArray = ____isaacscript_2Dcommon.emptyArray
-local game = ____isaacscript_2Dcommon.game
-local getEnumValues = ____isaacscript_2Dcommon.getEnumValues
-local getRandomEnumValue = ____isaacscript_2Dcommon.getRandomEnumValue
-local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
-local ____repeat = ____isaacscript_2Dcommon["repeat"]
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
-local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
-local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
-local spawnTaskButton = ____buttonSpawn.spawnTaskButton
-local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
-local taskComplete = ____taskSubroutines.taskComplete
-local taskLeave = ____taskSubroutines.taskLeave
-local ____teleporter = require("packages.mod.src.features.teleporter")
-local spawnTeleporter = ____teleporter.spawnTeleporter
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-local ____utils = require("packages.mod.src.utils")
-local drawFontText = ____utils.drawFontText
-local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
-function setupRound(self)
-    movePlayerToGridIndex(nil, PLAYER_START_GRID_INDEX)
-    removeAllMatchingEntities(nil, EntityType.EFFECT, EffectVariantCustom.BUTTON)
-    emptyArray(nil, currentPickupOrder)
-    ____repeat(
-        nil,
-        currentRound,
-        function()
-            local randomPickupType = getRandomEnumValue(nil, PickupType, nil, currentPickupOrder)
-            currentPickupOrder[#currentPickupOrder + 1] = randomPickupType
-        end
-    )
-    showingPickupIndex = 0
-    mod:runInNGameFrames(
-        function()
-            showingPickupRenderFrame = Isaac.GetFrameCount()
-        end,
-        GAME_FRAMES_PER_SECOND / 2
-    )
-end
-function drawPickupText(self)
-    if showingPickupIndex == nil or showingPickupRenderFrame == nil then
-        return
-    end
-    local renderFrameCount = Isaac.GetFrameCount()
-    if renderFrameCount >= showingPickupRenderFrame + TEXT_SHOW_FRAMES then
-        showingPickupIndex = showingPickupIndex + 1
-        showingPickupRenderFrame = renderFrameCount
-        if showingPickupIndex >= #currentPickupOrder then
-            showingPickupIndex = nil
-            showingPickupRenderFrame = nil
-            currentChoosingIndex = 0
-            spawnButtons(nil)
-            return
-        end
-    end
-    local room = game:GetRoom()
-    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
-    local position = Isaac.WorldToRenderPosition(worldPosition)
-    local pickupType = currentPickupOrder[showingPickupIndex + 1]
-    local pickupDescription = pickupDescriptions[pickupType]
-    local text = pickupDescription.name
-    drawFontText(nil, text, position)
-end
-function drawPickupSprites(self)
-    if showingPickupIndex ~= nil or showingPickupRenderFrame ~= nil then
-        return
-    end
-    local room = game:GetRoom()
-    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(BUTTON_GRID_INDEXES)) do
-        local i = ____value[1]
-        local buttonGridIndex = ____value[2]
-        local spriteGridIndex = buttonGridIndex - ROW_LENGTH
-        local gamePosition = room:GetGridPosition(spriteGridIndex)
-        local renderPosition = Isaac.WorldToRenderPosition(gamePosition)
-        local position = renderPosition + SPRITE_OFFSET
-        local sprite = pickupSprites[i + 1]
-        if sprite ~= nil then
-            sprite:RenderLayer(0, position)
-        end
-    end
-end
-function spawnButtons(self)
-    local pickupTypes = getEnumValues(nil, PickupType)
-    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(pickupTypes)) do
-        local i = ____value[1]
-        local pickupType = ____value[2]
-        local gridIndex = BUTTON_GRID_INDEXES[i + 1]
-        if gridIndex == nil then
-            error("Failed to find the button grid index corresponding to pickup index: " .. tostring(i))
-        end
-        local button = spawnTaskButton(nil, gridIndex, 1)
-        local data = button:GetData()
-        data.pickupType = pickupType
-    end
-end
-function correctSelection(self)
-    sfxManager:Play(SoundEffect.THUMBS_UP, 0.5)
-    currentChoosingIndex = currentChoosingIndex + 1
-    if currentChoosingIndex >= #currentPickupOrder then
-        nextRound(nil)
-    else
-        movePlayerToGridIndex(nil, PLAYER_START_GRID_INDEX)
-    end
-end
-function nextRound(self)
-    currentRound = currentRound + 1
-    if currentRound >= NUM_ROUNDS then
-        taskComplete(nil)
-    else
-        setupRound(nil)
-    end
-end
-function incorrectSelection(self)
-    sfxManager:Play(SoundEffect.THUMBS_DOWN)
-    taskLeave(nil)
-end
-local THIS_TASK = Task.LONG_IDENTIFY_PICKUPS_IN_ORDER
-local STARTING_ROUND = 1
-NUM_ROUNDS = 6
-PLAYER_START_GRID_INDEX = 82
-TEXT_GRID_INDEX = 37
-TEXT_SHOW_FRAMES = 30
-BUTTON_GRID_INDEXES = {
-    32,
-    62,
-    92,
-    42,
-    72,
-    102,
-    35,
-    37,
-    39
-}
-ROW_LENGTH = 15
-SPRITE_OFFSET = Vector(0, 10)
-PickupType = {}
-PickupType.HEART = 0
-PickupType[PickupType.HEART] = "HEART"
-PickupType.COIN = 1
-PickupType[PickupType.COIN] = "COIN"
-PickupType.BOMB = 2
-PickupType[PickupType.BOMB] = "BOMB"
-PickupType.KEY = 3
-PickupType[PickupType.KEY] = "KEY"
-PickupType.PILL = 4
-PickupType[PickupType.PILL] = "PILL"
-PickupType.CARD = 5
-PickupType[PickupType.CARD] = "CARD"
-PickupType.CHEST = 6
-PickupType[PickupType.CHEST] = "CHEST"
-PickupType.SACK = 7
-PickupType[PickupType.SACK] = "SACK"
-PickupType.BATTERY = 8
-PickupType[PickupType.BATTERY] = "BATTERY"
-pickupDescriptions = {
-    [PickupType.HEART] = {name = "Heart", gfx = "gfx/005.011_heart.anm2"},
-    [PickupType.COIN] = {name = "Coin", gfx = "gfx/005.021_penny.anm2"},
-    [PickupType.BOMB] = {name = "Bomb", gfx = "gfx/005.041_bomb.anm2"},
-    [PickupType.KEY] = {name = "Key", gfx = "gfx/005.031_key.anm2"},
-    [PickupType.PILL] = {name = "Pill", gfx = "gfx/005.071_pill blue-blue.anm2"},
-    [PickupType.CARD] = {name = "Card", gfx = "gfx/005.301_tarot card.anm2"},
-    [PickupType.CHEST] = {name = "Chest", gfx = "gfx/005.050_chest.anm2"},
-    [PickupType.SACK] = {name = "Sack", gfx = "gfx/005.069_grabbag.anm2"},
-    [PickupType.BATTERY] = {name = "Battery", gfx = "gfx/005.090_littlebattery.anm2"}
-}
-currentRound = STARTING_ROUND
-showingPickupIndex = nil
-showingPickupRenderFrame = nil
-pickupSprites = {}
-currentPickupOrder = {}
-currentChoosingIndex = 0
-do
-    local i = 0
-    while i < #getEnumValues(nil, PickupType) do
-        local pickupDescription = pickupDescriptions[i]
-        local sprite = Sprite()
-        sprite:Load(pickupDescription.gfx, true)
-        sprite:SetFrame("Idle", 0)
-        pickupSprites[#pickupSprites + 1] = sprite
-        i = i + 1
-    end
-end
-function ____exports.identifyPickupsInOrder(self)
-    local bottomGridIndex = 112
-    spawnTeleporter(nil, bottomGridIndex)
-    currentRound = STARTING_ROUND
-    setupRound(nil)
-end
-function ____exports.postRender(self)
-    if g.game == nil or g.game.currentTask ~= THIS_TASK then
-        return
-    end
-    drawPickupText(nil)
-    drawPickupSprites(nil)
-end
-function ____exports.identifyPickupsInOrderButtonPressed(self, button)
-    local data = button:GetData()
-    local pickupType = data.pickupType
-    if pickupType == nil then
-        return
-    end
-    local correctPickupType = currentPickupOrder[currentChoosingIndex + 1]
-    if correctPickupType == pickupType then
-        correctSelection(nil)
-    else
-        incorrectSelection(nil)
-    end
-end
-return ____exports
- end,
-["packages.mod.src.tasks.identifyTrinkets"] = function(...) 
-local ____exports = {}
-local spawnButtons, setupRound, getRandomTrinkets, correctSelection, incorrectSelection, drawTrinketSprites, drawTrinketText, NUM_ROUNDS, NUM_RANDOM_TRINKETS, BUTTON_SPACING, BUTTON_1_GRID_INDEX, ROW_LENGTH, TEXT_GRID_INDEX, trinketSprites, currentTrinket, currentRound, correctTrinketIndex
-local ____common = require("packages.common.src.index")
-local Task = ____common.Task
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local emptyArray = ____isaacscript_2Dcommon.emptyArray
-local game = ____isaacscript_2Dcommon.game
-local getRandomArrayElement = ____isaacscript_2Dcommon.getRandomArrayElement
-local getRandomArrayIndex = ____isaacscript_2Dcommon.getRandomArrayIndex
-local getTrinketName = ____isaacscript_2Dcommon.getTrinketName
-local ____repeat = ____isaacscript_2Dcommon["repeat"]
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
-local spawnTaskButton = ____buttonSpawn.spawnTaskButton
-local ____buttonSubroutines = require("packages.mod.src.features.buttonSubroutines")
-local resetAllButtons = ____buttonSubroutines.resetAllButtons
-local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
-local taskComplete = ____taskSubroutines.taskComplete
-local taskLeave = ____taskSubroutines.taskLeave
-local ____teleporter = require("packages.mod.src.features.teleporter")
-local spawnTeleporter = ____teleporter.spawnTeleporter
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-local ____sprite = require("packages.mod.src.sprite")
-local initGlowingItemSprite = ____sprite.initGlowingItemSprite
-local ____utils = require("packages.mod.src.utils")
-local drawFontText = ____utils.drawFontText
-local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
-function spawnButtons(self)
-    local gridIndex = BUTTON_1_GRID_INDEX
-    do
-        local i = 0
-        while i < NUM_RANDOM_TRINKETS do
-            spawnTaskButton(nil, gridIndex, i + 1)
-            gridIndex = gridIndex + BUTTON_SPACING
-            i = i + 1
-        end
-    end
-end
-function setupRound(self)
-    local startGridIndex = 97
-    movePlayerToGridIndex(nil, startGridIndex)
-    local randomTrinkets = getRandomTrinkets(nil)
-    emptyArray(nil, trinketSprites)
-    for ____, randomTrinket in ipairs(randomTrinkets) do
-        local sprite = initGlowingItemSprite(nil, randomTrinket, true)
-        trinketSprites[#trinketSprites + 1] = sprite
-    end
-    local randomIndex = getRandomArrayIndex(nil, randomTrinkets)
-    local randomTrinket = randomTrinkets[randomIndex + 1]
-    correctTrinketIndex = randomIndex
-    currentTrinket = getTrinketName(nil, randomTrinket)
-    resetAllButtons(nil)
-end
-function getRandomTrinkets(self)
-    local trinketArray = mod:getTrinketArray()
-    local randomTrinkets = {}
-    ____repeat(
-        nil,
-        NUM_RANDOM_TRINKETS,
-        function()
-            local randomTrinket = getRandomArrayElement(nil, trinketArray, nil, randomTrinkets)
-            randomTrinkets[#randomTrinkets + 1] = randomTrinket
-        end
-    )
-    return randomTrinkets
-end
-function correctSelection(self)
-    sfxManager:Play(SoundEffect.THUMBS_UP, 0.5)
-    currentRound = currentRound + 1
-    if currentRound >= NUM_ROUNDS then
-        taskComplete(nil)
-    else
-        setupRound(nil)
-    end
-end
-function incorrectSelection(self)
-    sfxManager:Play(SoundEffect.THUMBS_DOWN)
-    taskLeave(nil)
-end
-function drawTrinketSprites(self)
-    local room = game:GetRoom()
-    local buttonGridIndex = BUTTON_1_GRID_INDEX
-    do
-        local i = 0
-        while i < NUM_RANDOM_TRINKETS do
-            local spriteGridIndex = buttonGridIndex - ROW_LENGTH
-            local gamePosition = room:GetGridPosition(spriteGridIndex)
-            local position = Isaac.WorldToRenderPosition(gamePosition)
-            local sprite = trinketSprites[i + 1]
-            if sprite ~= nil then
-                sprite:RenderLayer(0, position)
-            end
-            buttonGridIndex = buttonGridIndex + BUTTON_SPACING
-            i = i + 1
-        end
-    end
-end
-function drawTrinketText(self)
-    local room = game:GetRoom()
-    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
-    local position = Isaac.WorldToRenderPosition(worldPosition)
-    local text = "Find: " .. currentTrinket
-    drawFontText(nil, text, position)
-end
-local THIS_TASK = Task.SHORT_IDENTIFY_TRINKETS
-NUM_ROUNDS = 5
-local STARTING_ROUND = 1
-NUM_RANDOM_TRINKETS = 5
-BUTTON_SPACING = 2
-BUTTON_1_GRID_INDEX = 48
-ROW_LENGTH = 15
-TEXT_GRID_INDEX = 86
-trinketSprites = {}
-currentTrinket = ""
-currentRound = STARTING_ROUND
-correctTrinketIndex = 0
-function ____exports.identifyTrinkets(self)
-    local bottomLeftGridIndex = 92
-    spawnTeleporter(nil, bottomLeftGridIndex)
-    spawnButtons(nil)
-    currentRound = STARTING_ROUND
-    setupRound(nil)
-end
-function ____exports.identifyTrinketButtonPressed(self, num)
-    if num == correctTrinketIndex + 1 then
-        correctSelection(nil)
-    else
-        incorrectSelection(nil)
-    end
-end
-function ____exports.postRender(self)
-    if g.game == nil or g.game.currentTask ~= THIS_TASK then
-        return
-    end
-    drawTrinketSprites(nil)
-    drawTrinketText(nil)
-end
-return ____exports
- end,
-["packages.mod.src.tasks.killWorms"] = function(...) 
-local ____exports = {}
-local ____common = require("packages.common.src.index")
-local Task = ____common.Task
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local countEntities = ____isaacscript_2Dcommon.countEntities
-local game = ____isaacscript_2Dcommon.game
-local VectorZero = ____isaacscript_2Dcommon.VectorZero
-local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
-local taskComplete = ____taskSubroutines.taskComplete
-local ____teleporter = require("packages.mod.src.features.teleporter")
-local spawnTeleporter = ____teleporter.spawnTeleporter
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____utils = require("packages.mod.src.utils")
-local enableShooting = ____utils.enableShooting
-local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
-local THIS_TASK = Task.LONG_KILL_WORMS
-local TYPE_OF_ENEMY = EntityType.ROUND_WORM
-function ____exports.killWorms(self)
-    local room = game:GetRoom()
-    local centerGridIndex = 67
-    movePlayerToGridIndex(nil, centerGridIndex)
-    enableShooting(nil)
-    local rightGridIndex = 73
-    spawnTeleporter(nil, rightGridIndex)
-    local wormGridIndexes = {
-        32,
-        37,
-        42,
-        92,
-        97,
-        102,
-        62,
-        72
-    }
-    for ____, gridIndex in ipairs(wormGridIndexes) do
-        local position = room:GetGridPosition(gridIndex)
-        Isaac.Spawn(
-            TYPE_OF_ENEMY,
-            0,
-            0,
-            position,
-            VectorZero,
-            nil
-        )
-    end
-end
-function ____exports.postEntityKill(self)
-    if g.game == nil or g.game.currentTask ~= THIS_TASK then
-        return
-    end
-    local numAliveEnemies = countEntities(nil, TYPE_OF_ENEMY) - 1
-    if numAliveEnemies == 0 then
-        taskComplete(nil)
-    end
-end
-return ____exports
- end,
-["packages.mod.src.tasks.loadSlotMachines"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local spawnDoubleCoin, isAnySlotActive, SLOT_ACTIVE_ANIMATIONS
-local ____common = require("packages.common.src.index")
-local Task = ____common.Task
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local CoinSubType = ____isaac_2Dtypescript_2Ddefinitions.CoinSubType
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
-local SlotVariant = ____isaac_2Dtypescript_2Ddefinitions.SlotVariant
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local ReadonlySet = ____isaacscript_2Dcommon.ReadonlySet
-local getSlots = ____isaacscript_2Dcommon.getSlots
-local removeAllMatchingEntities = ____isaacscript_2Dcommon.removeAllMatchingEntities
-local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
-local taskComplete = ____taskSubroutines.taskComplete
-local ____teleporter = require("packages.mod.src.features.teleporter")
-local spawnTeleporter = ____teleporter.spawnTeleporter
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____utils = require("packages.mod.src.utils")
-local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
-local spawnEntity = ____utils.spawnEntity
-function spawnDoubleCoin(self, gridIndex)
-    local entity = spawnEntity(
-        nil,
-        EntityType.PICKUP,
-        PickupVariant.COIN,
-        CoinSubType.DOUBLE_PACK,
-        gridIndex
-    )
-    local sprite = entity:GetSprite()
-    sprite:SetLastFrame()
-end
-function isAnySlotActive(self)
-    for ____, slot in ipairs(getSlots(nil)) do
-        local sprite = slot:GetSprite()
-        local animation = sprite:GetAnimation()
-        if SLOT_ACTIVE_ANIMATIONS:has(animation) then
-            return true
-        end
-    end
-    return false
-end
-local THIS_TASK = Task.LONG_LOAD_SLOT_MACHINES
-local NUM_SLOT_MACHINES = 4
-local SLOT_MACHINE_SPACING = 2
-SLOT_ACTIVE_ANIMATIONS = __TS__New(ReadonlySet, {"Initiate", "Wiggle", "WiggleEnd"})
-function ____exports.loadSlotMachines(self)
-    local topRightGridIndex = 42
-    movePlayerToGridIndex(nil, topRightGridIndex)
-    local bottomRightGridIndex = 102
-    spawnTeleporter(nil, bottomRightGridIndex)
-    local startingGridIndex = 49
-    do
-        local i = 0
-        while i < NUM_SLOT_MACHINES do
-            local gridIndex = startingGridIndex + i * SLOT_MACHINE_SPACING
-            spawnEntity(
-                nil,
-                EntityType.SLOT,
-                SlotVariant.SLOT_MACHINE,
-                0,
-                gridIndex
-            )
-            i = i + 1
-        end
-    end
-    local coinGridIndexes = {
-        79,
-        80,
-        81,
-        82,
-        83,
-        84,
-        85
-    }
-    for ____, gridIndex in ipairs(coinGridIndexes) do
-        spawnDoubleCoin(nil, gridIndex)
-    end
-end
-function ____exports.postUpdate(self)
-    if g.game == nil or g.game.currentTask ~= THIS_TASK then
-        return
-    end
-    removeAllMatchingEntities(nil, EntityType.PICKUP, PickupVariant.COLLECTIBLE)
-    local player = Isaac.GetPlayer()
-    local numCoinsInInventory = player:GetNumCoins()
-    local numCoinsInRoom = Isaac.CountEntities(nil, EntityType.PICKUP, PickupVariant.COIN)
-    if numCoinsInInventory == 0 and numCoinsInRoom == 0 and not isAnySlotActive(nil) then
-        taskComplete(nil)
-    end
-end
-function ____exports.postPickupInitPill(self, pickup)
-    if g.game == nil or g.game.currentTask ~= THIS_TASK then
-        return
-    end
-    pickup:Remove()
-end
-return ____exports
- end,
-["packages.mod.src.tasks.makePentagram"] = function(...) 
-local ____exports = {}
-local getText
-local ____common = require("packages.common.src.index")
-local Task = ____common.Task
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
-local EffectVariant = ____isaac_2Dtypescript_2Ddefinitions.EffectVariant
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local VectorZero = ____isaacscript_2Dcommon.VectorZero
-local game = ____isaacscript_2Dcommon.game
-local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
-local taskComplete = ____taskSubroutines.taskComplete
-local ____teleporter = require("packages.mod.src.features.teleporter")
-local spawnTeleporter = ____teleporter.spawnTeleporter
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____utils = require("packages.mod.src.utils")
-local drawFontText = ____utils.drawFontText
-local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
-local updatePlayerStats = ____utils.updatePlayerStats
-function getText(self)
-    local numPentagrams = Isaac.CountEntities(nil, EntityType.EFFECT, EffectVariant.PENTAGRAM_BLACK_POWDER)
-    if numPentagrams == 0 then
-        return "Make a pentagram."
-    end
-    return "Not big enough!"
-end
-local THIS_TASK = Task.LONG_MAKE_PENTAGRAM
-local REQUIRED_PENTAGRAM_SIZE = 250
-local TEXT_GRID_INDEX = 93
-function ____exports.makePentagram(self)
-    local room = game:GetRoom()
-    local centerPos = room:GetCenterPos()
-    local startGridIndex = 100
-    movePlayerToGridIndex(nil, startGridIndex)
-    updatePlayerStats(nil)
-    local topRightGridIndex = 42
-    spawnTeleporter(nil, topRightGridIndex)
-    Isaac.Spawn(
-        EntityType.PICKUP,
-        PickupVariant.COLLECTIBLE,
-        CollectibleType.BLACK_POWDER,
-        centerPos,
-        VectorZero,
-        nil
-    )
-end
-function ____exports.postRender(self)
-    if g.game == nil or g.game.currentTask ~= THIS_TASK then
-        return
-    end
-    local room = game:GetRoom()
-    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
-    local position = Isaac.WorldToRenderPosition(worldPosition)
-    local text = getText(nil)
-    drawFontText(nil, text, position)
-end
-function ____exports.postEffectUpdatePentagramBlackPowder(self, effect)
-    if g.game == nil or g.game.currentTask ~= THIS_TASK then
-        return
-    end
-    if effect.Scale > REQUIRED_PENTAGRAM_SIZE then
-        taskComplete(nil)
-    end
-end
-return ____exports
- end,
-["packages.mod.src.tasks.pressButtonsWithGrudge"] = function(...) 
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
-local spawnTaskButton = ____buttonSpawn.spawnTaskButton
-local ____buttonSubroutines = require("packages.mod.src.features.buttonSubroutines")
-local allButtonsPressed = ____buttonSubroutines.allButtonsPressed
-local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
-local taskComplete = ____taskSubroutines.taskComplete
-local ____teleporter = require("packages.mod.src.features.teleporter")
-local spawnTeleporter = ____teleporter.spawnTeleporter
-local ____utils = require("packages.mod.src.utils")
-local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
-local spawnEntity = ____utils.spawnEntity
-function ____exports.pressButtonsWithGrudge(self)
-    local centerGridIndex = 67
-    movePlayerToGridIndex(nil, centerGridIndex)
-    local bottomLeftGridIndex = 73
-    spawnTeleporter(nil, bottomLeftGridIndex)
-    local cornerGridIndexes = {16, 28, 106, 118}
-    for ____, gridIndex in ipairs(cornerGridIndexes) do
-        spawnEntity(
-            nil,
-            EntityType.GRUDGE,
-            0,
-            0,
-            gridIndex
-        )
-    end
-    local buttonGridIndexes = {
-        19,
-        25,
-        109,
-        115,
-        61,
-        43,
-        103
-    }
-    for ____, gridIndex in ipairs(buttonGridIndexes) do
-        spawnTaskButton(nil, gridIndex, 1)
-    end
-end
-function ____exports.pressButtonsWithGrudgeButtonPressed(self)
-    if allButtonsPressed(nil) then
-        taskComplete(nil)
-    end
-end
-return ____exports
- end,
-["packages.mod.src.tasks.pushButtonsInOrder"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
-local __TS__Iterator = ____lualib.__TS__Iterator
-local ____exports = {}
-local setNewButtonOrder, spawnButtons, BUTTON_GRID_INDEXES, buttonOrder, nextButtonToPress
-local ____common = require("packages.common.src.index")
-local Task = ____common.Task
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local emptyArray = ____isaacscript_2Dcommon.emptyArray
-local game = ____isaacscript_2Dcommon.game
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local shuffleArrayInPlace = ____isaacscript_2Dcommon.shuffleArrayInPlace
-local ____buttonSpawn = require("packages.mod.src.features.buttonSpawn")
-local spawnTaskButton = ____buttonSpawn.spawnTaskButton
-local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
-local taskComplete = ____taskSubroutines.taskComplete
-local taskLeave = ____taskSubroutines.taskLeave
-local ____teleporter = require("packages.mod.src.features.teleporter")
-local spawnTeleporter = ____teleporter.spawnTeleporter
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____utils = require("packages.mod.src.utils")
-local drawFontText = ____utils.drawFontText
-local movePlayerToGridIndex = ____utils.movePlayerToGridIndex
-function setNewButtonOrder(self)
-    emptyArray(nil, buttonOrder)
-    do
-        local i = 0
-        while i < #BUTTON_GRID_INDEXES do
-            buttonOrder[#buttonOrder + 1] = i
-            i = i + 1
-        end
-    end
-    shuffleArrayInPlace(nil, buttonOrder)
-    nextButtonToPress = 0
-end
-function spawnButtons(self)
-    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(BUTTON_GRID_INDEXES)) do
-        local i = ____value[1]
-        local buttonGridIndex = ____value[2]
-        local button = spawnTaskButton(nil, buttonGridIndex, 1)
-        local data = button:GetData()
-        data.num = buttonOrder[i + 1]
-    end
-end
-local THIS_TASK = Task.SHORT_PUSH_BUTTONS_IN_ORDER
-BUTTON_GRID_INDEXES = {
-    32,
-    35,
-    39,
-    42,
-    62,
-    65,
-    69,
-    72,
-    92,
-    102
-}
-buttonOrder = {}
-nextButtonToPress = 0
-function ____exports.pushButtonsInOrder(self)
-    local centerGridIndex = 67
-    movePlayerToGridIndex(nil, centerGridIndex)
-    local bottomGridIndex = 112
-    spawnTeleporter(nil, bottomGridIndex)
-    setNewButtonOrder(nil)
-    spawnButtons(nil)
-end
-function ____exports.pushButtonsInOrderButtonPressed(self, button)
-    local data = button:GetData()
-    local num = data.num
-    if num == nil then
-        return
-    end
-    if num ~= nextButtonToPress then
-        sfxManager:Play(SoundEffect.THUMBS_DOWN)
-        taskLeave(nil)
-        return
-    end
-    nextButtonToPress = nextButtonToPress + 1
-    if nextButtonToPress >= #buttonOrder then
-        taskComplete(nil)
-    end
-end
-function ____exports.postRender(self)
-    if g.game == nil or g.game.currentTask ~= THIS_TASK then
-        return
-    end
-    local room = game:GetRoom()
-    local gridWidth = room:GetGridWidth()
-    for ____, ____value in __TS__Iterator(__TS__ArrayEntries(BUTTON_GRID_INDEXES)) do
-        local i = ____value[1]
-        local buttonGridIndex = ____value[2]
-        local textGridIndex = buttonGridIndex - gridWidth
-        local worldPosition = room:GetGridPosition(textGridIndex)
-        local position = Isaac.WorldToRenderPosition(worldPosition)
-        local num = buttonOrder[i + 1]
-        if num ~= nil then
-            local nextNum = num + 1
-            local text = tostring(nextNum)
-            drawFontText(nil, text, position)
-        end
     end
 end
 return ____exports
@@ -68476,6 +69861,89 @@ function ____exports.setSelfMultiplayerEntityInvisible(self)
 end
 return ____exports
  end,
+["packages.mod.src.features.drawOurUsername"] = function(...) 
+local ____exports = {}
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____console = require("packages.mod.src.features.console")
+local isConsoleOpen = ____console.isConsoleOpen
+local ____drawOtherPlayers = require("packages.mod.src.features.drawOtherPlayers")
+local drawUsername = ____drawOtherPlayers.drawUsername
+function ____exports.postRender(self)
+    if g.game == nil or g.userID == nil or isConsoleOpen(nil) then
+        return
+    end
+    local player = Isaac.GetPlayer()
+    if not player.Visible then
+        return
+    end
+    drawUsername(nil, g.userID, player.Position)
+end
+return ____exports
+ end,
+["packages.mod.src.features.drawRoomDescription"] = function(...) 
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local FAKE_TASK = ____common.FAKE_TASK
+local MAX_PLAYERS = ____common.MAX_PLAYERS
+local TASK_DESCRIPTIONS = ____common.TASK_DESCRIPTIONS
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local game = ____isaacscript_2Dcommon.game
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____stageAPI = require("packages.mod.src.stageAPI")
+local getSkeldRoom = ____stageAPI.getSkeldRoom
+local ____stageAPISubroutines = require("packages.mod.src.stageAPISubroutines")
+local getStageAPIRoomName = ____stageAPISubroutines.getStageAPIRoomName
+local ____utils = require("packages.mod.src.utils")
+local drawFontText = ____utils.drawFontText
+local inCutscene = ____utils.inCutscene
+local inEndMeeting = ____utils.inEndMeeting
+local ____console = require("packages.mod.src.features.console")
+local isConsoleOpen = ____console.isConsoleOpen
+local ____lobby = require("packages.mod.src.features.lobby")
+local inLobby = ____lobby.inLobby
+local TEXT_GRID_INDEX = 7
+local SECOND_LINE_OFFSET = Vector(0, 20)
+function ____exports.postRender(self)
+    if StageAPI == nil or g.game == nil or g.game.meeting ~= nil or inCutscene(nil) or inEndMeeting(nil) or isConsoleOpen(nil) then
+        return
+    end
+    local room = game:GetRoom()
+    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
+    local position = Isaac.WorldToRenderPosition(worldPosition)
+    if g.game.currentTask == FAKE_TASK then
+        drawFontText(nil, "Fake Task", position)
+        return
+    end
+    if g.game.currentTask ~= nil then
+        local taskDescription = TASK_DESCRIPTIONS[g.game.currentTask]
+        drawFontText(nil, "Task: " .. taskDescription.name, position)
+        return
+    end
+    if inLobby(nil) then
+        drawFontText(nil, "Lobby", position)
+        local positionBelow = position + SECOND_LINE_OFFSET
+        drawFontText(
+            nil,
+            (tostring(#g.game.players) .. " / ") .. tostring(MAX_PLAYERS),
+            positionBelow
+        )
+        return
+    end
+    local roomName = getStageAPIRoomName(nil)
+    if roomName == nil then
+        return
+    end
+    local skeldRoom = getSkeldRoom(nil)
+    if skeldRoom == nil then
+        return
+    end
+    local roomDescription = roomName
+    drawFontText(nil, roomDescription, position)
+end
+return ____exports
+ end,
 ["packages.mod.src.features.endMeeting"] = function(...) 
 local ____exports = {}
 local postRenderFadingToBlack, postRenderTextFadingIn, postRenderText, postRenderTextFadingOut, postRenderFadingToGame, drawText, getEndOfMeetingText, getTextOpacity, hasFadeFinished, setState
@@ -68657,331 +70125,6 @@ end
 function ____exports.endMeeting(self)
     setState(nil, EndMeetingState.FADING_TO_BLACK)
     setBlackSpriteState(nil, BlackSpriteState.FADING_TO_BLACK)
-end
-return ____exports
- end,
-["packages.mod.src.commands.endMeeting"] = function(...) 
-local ____exports = {}
-local ____endMeeting = require("packages.mod.src.features.endMeeting")
-local endMeeting = ____endMeeting.endMeeting
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function ____exports.commandEndMeeting(self, data)
-    if g.game == nil then
-        return
-    end
-    g.game.meeting = nil
-    g.game.endMeeting.meetingResolution = data.meetingResolution
-    g.game.endMeeting.userIDEjected = data.userIDEjected
-    endMeeting(nil)
-end
-return ____exports
- end,
-["packages.mod.src.commands.error"] = function(...) 
-local ____exports = {}
-local ____chat = require("packages.mod.src.chat")
-local addLocalChat = ____chat.addLocalChat
-function ____exports.commandError(self, data)
-    addLocalChat(nil, "Error: " .. data.msg)
-end
-return ____exports
- end,
-["packages.mod.src.commands.gameDescription"] = function(...) 
-local ____exports = {}
-local ____postGameStartedReordered = require("packages.mod.src.callbacksCustom.postGameStartedReordered")
-local checkChangeOurCharacter = ____postGameStartedReordered.checkChangeOurCharacter
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____players = require("packages.mod.src.players")
-local getOurPlayer = ____players.getOurPlayer
-local ____utils = require("packages.mod.src.utils")
-local inCutscene = ____utils.inCutscene
-function ____exports.commandGameDescription(self, data)
-    if g.game == nil then
-        return
-    end
-    g.game.players = data.players
-    g.game.started = data.started
-    g.game.meeting = data.meeting
-    local ourPlayer = getOurPlayer(nil)
-    if ourPlayer == nil then
-        error("Failed to get our player description after receiving the \"gameDescription\" command.")
-    end
-    g.game.character = ourPlayer.character
-    g.game.usedEmergencyMeeting = ourPlayer.usedEmergencyMeeting
-    if not inCutscene(nil) then
-        checkChangeOurCharacter(nil)
-    end
-end
-return ____exports
- end,
-["packages.mod.src.commands.gameList"] = function(...) 
-local ____exports = {}
-local ____common = require("packages.common.src.index")
-local SocketCommandModToServer = ____common.SocketCommandModToServer
-local ____chat = require("packages.mod.src.chat")
-local addLocalChat = ____chat.addLocalChat
-local autoLogin = require("packages.mod.src.features.autoLogin")
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____send = require("packages.mod.src.network.send")
-local sendTCP = ____send.sendTCP
-function ____exports.commandGameList(self, data)
-    if #data.gameList == 0 then
-        addLocalChat(nil, "No current games. (Create one with the \"/create [name] [password]\" command.)")
-        autoLogin:onGameList(data.gameList)
-        return
-    end
-    local joinedToGameID = nil
-    addLocalChat(nil, "Current games:")
-    local i = 1
-    for ____, started in ipairs({false, true}) do
-        for ____, game in ipairs(data.gameList) do
-            do
-                if game.started ~= started then
-                    goto __continue5
-                end
-                local startedText = started and " (ongoing)" or " (unstarted)"
-                local totalText = (" (num players: " .. tostring(game.numPlayers)) .. ")"
-                local passwordText = game.hasPassword and " (has password)" or ""
-                local joinedText = game.joined and " (our current game)" or ""
-                addLocalChat(
-                    nil,
-                    (((((tostring(i) .. ") ") .. game.name) .. startedText) .. totalText) .. passwordText) .. joinedText
-                )
-                i = i + 1
-                if game.joined then
-                    joinedToGameID = game.id
-                end
-            end
-            ::__continue5::
-        end
-    end
-    if joinedToGameID ~= nil and g.game == nil then
-        sendTCP(nil, SocketCommandModToServer.RECONNECT, {gameID = joinedToGameID})
-        return
-    end
-    autoLogin:onGameList(data.gameList)
-end
-return ____exports
- end,
-["packages.mod.src.commands.joined"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local getChatMessage
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local restart = ____isaacscript_2Dcommon.restart
-local ____chat = require("packages.mod.src.chat")
-local addLocalChat = ____chat.addLocalChat
-local ____AmongUsGame = require("packages.mod.src.classes.AmongUsGame")
-local AmongUsGame = ____AmongUsGame.AmongUsGame
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function getChatMessage(self, data)
-    if data.reconnected then
-        return "Reconnected to game: " .. data.name
-    end
-    if data.created then
-        local passwordText = data.hasPassword and "(password-protected)" or "(public)"
-        return (("Created game: " .. data.name) .. " ") .. passwordText
-    end
-    return "Joined game: " .. data.name
-end
-function ____exports.commandJoined(self, data)
-    g.game = __TS__New(
-        AmongUsGame,
-        data.gameID,
-        data.name,
-        data.ownerUserID,
-        data.character
-    )
-    local msg = getChatMessage(nil, data)
-    addLocalChat(nil, msg)
-    restart(nil)
-end
-return ____exports
- end,
-["packages.mod.src.commands.killed"] = function(...) 
-local ____exports = {}
-local KILLED_PLAYER_FADE
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local EntityCollisionClass = ____isaac_2Dtypescript_2Ddefinitions.EntityCollisionClass
-local EntityGridCollisionClass = ____isaac_2Dtypescript_2Ddefinitions.EntityGridCollisionClass
-local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local VectorZero = ____isaacscript_2Dcommon.VectorZero
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
-local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-local ____stageAPI = require("packages.mod.src.stageAPI")
-local getSkeldRoom = ____stageAPI.getSkeldRoom
-function ____exports.convertPlayerToGhostForm(self)
-    local player = Isaac.GetPlayer()
-    local sprite = player:GetSprite()
-    sprite.Color = Color(1, 1, 1, KILLED_PLAYER_FADE)
-    player.ControlsEnabled = true
-    player.Visible = true
-    player.GridCollisionClass = EntityGridCollisionClass.NONE
-    player.EntityCollisionClass = EntityCollisionClass.NONE
-end
---- The death animation is 55 frames long, but we render it in 110 frames.
-local POST_DEATH_DELAY_RENDER_FRAMES = 110 + 30
-KILLED_PLAYER_FADE = 0.25
-function ____exports.commandKilled(self, data)
-    if g.game == nil then
-        return
-    end
-    local killedPlayer = g.game:getPlayerFromUserID(data.userIDKilled)
-    if killedPlayer == nil then
-        error("Failed to find the player for user ID: " .. tostring(data.userIDKilled))
-    end
-    killedPlayer.alive = false
-    local renderFrameCount = Isaac.GetFrameCount()
-    local ____g_game_bodies_0 = g.game.bodies
-    ____g_game_bodies_0[#____g_game_bodies_0 + 1] = {
-        userID = data.userIDKilled,
-        room = data.room,
-        x = data.x,
-        y = data.y,
-        renderFrameKilled = renderFrameCount
-    }
-    local weDied = killedPlayer.userID == g.userID
-    local room = getSkeldRoom(nil)
-    if room ~= killedPlayer.room then
-        if weDied then
-            ____exports.convertPlayerToGhostForm(nil)
-        end
-        return
-    end
-    if weDied then
-        local player = Isaac.GetPlayer()
-        player.Position = Vector(data.x, data.y)
-        player.Velocity = VectorZero
-        player.ControlsEnabled = false
-        player.Visible = false
-        mod:runInNRenderFrames(____exports.convertPlayerToGhostForm, POST_DEATH_DELAY_RENDER_FRAMES)
-    end
-    sfxManager:Play(SoundEffect.ISAAC_DIES)
-    sfxManager:Play(SoundEffectCustom.KILL)
-end
-return ____exports
- end,
-["packages.mod.src.commands.left"] = function(...) 
-local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local restart = ____isaacscript_2Dcommon.restart
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function ____exports.commandLeft(self, data)
-    if g.game == nil or g.game.id ~= data.gameID then
-        return
-    end
-    g.game = nil
-    restart(nil)
-end
-return ____exports
- end,
-["packages.mod.src.commands.loggedIn"] = function(...) 
-local ____exports = {}
-local ____common = require("packages.common.src.index")
-local SocketCommandModToServer = ____common.SocketCommandModToServer
-local ____chat = require("packages.mod.src.chat")
-local addLocalChat = ____chat.addLocalChat
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____send = require("packages.mod.src.network.send")
-local sendTCP = ____send.sendTCP
-function ____exports.commandLoggedIn(self, data)
-    g.loggedIn = true
-    g.userID = data.userID
-    g.username = data.username
-    addLocalChat(nil, "Successfully logged in.")
-    sendTCP(nil, SocketCommandModToServer.GAME_LIST, {})
-end
-return ____exports
- end,
-["packages.mod.src.commands.newGame"] = function(...) 
-local ____exports = {}
-local ____chat = require("packages.mod.src.chat")
-local addLocalChat = ____chat.addLocalChat
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function ____exports.commandNewGame(self, data)
-    if g.game ~= nil then
-        return
-    end
-    addLocalChat(nil, (data.creator .. " created a new game: ") .. data.name)
-end
-return ____exports
- end,
-["packages.mod.src.commands.newOwner"] = function(...) 
-local ____exports = {}
-local ____chat = require("packages.mod.src.chat")
-local addLocalChat = ____chat.addLocalChat
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function ____exports.commandNewOwner(self, data)
-    if g.game == nil then
-        return
-    end
-    local player = g.game:getPlayerFromUserID(data.userID)
-    if player == nil then
-        return
-    end
-    addLocalChat(nil, player.username .. " is now thw owner of the game.")
-end
-return ____exports
- end,
-["packages.mod.src.commands.playerJoined"] = function(...) 
-local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local ____chat = require("packages.mod.src.chat")
-local addLocalChat = ____chat.addLocalChat
-local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
-local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
-local autoLogin = require("packages.mod.src.features.autoLogin")
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function ____exports.commandPlayerJoined(self, data)
-    if g.game == nil then
-        return
-    end
-    local player = g.game:getPlayerFromUserID(data.userID)
-    if player == nil then
-        return
-    end
-    addLocalChat(nil, player.username .. " joined the game.")
-    sfxManager:Play(SoundEffectCustom.PLAYER_JOINED)
-    autoLogin:onPlayerJoined(data.userID)
-end
-return ____exports
- end,
-["packages.mod.src.commands.playerLeft"] = function(...) 
-local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local ____chat = require("packages.mod.src.chat")
-local addLocalChat = ____chat.addLocalChat
-local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
-local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function ____exports.commandPlayerLeft(self, data)
-    if g.game == nil then
-        return
-    end
-    local player = g.game:getPlayerFromUserID(data.userID)
-    if player == nil then
-        return
-    end
-    addLocalChat(nil, player.username .. " left the game.")
-    sfxManager:Play(SoundEffectCustom.PLAYER_LEFT)
 end
 return ____exports
  end,
@@ -69331,298 +70474,6 @@ return {
 		},
 	},
 } end,
-["packages.mod.src.commands.reconnect"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local setPlayerPosition
-local ____common = require("packages.common.src.index")
-local Role = ____common.Role
-local SkeldRoom = ____common.SkeldRoom
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local game = ____isaacscript_2Dcommon.game
-local ____AmongUsGame = require("packages.mod.src.classes.AmongUsGame")
-local AmongUsGame = ____AmongUsGame.AmongUsGame
-local ____sendGameEvents = require("packages.mod.src.features.sendGameEvents")
-local disableSendingEvents = ____sendGameEvents.disableSendingEvents
-local enableSendingEvents = ____sendGameEvents.enableSendingEvents
-local ____setupMeeting = require("packages.mod.src.features.setupMeeting")
-local setupMeeting = ____setupMeeting.setupMeeting
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____loadMap = require("packages.mod.src.loadMap")
-local loadMap = ____loadMap.loadMap
-local ____minimapAPI = require("packages.mod.src.minimapAPI")
-local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
-local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local getSkeldRoomName = ____skeldRoomMap.getSkeldRoomName
-local ____stageAPI = require("packages.mod.src.stageAPI")
-local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
-local ____killed = require("packages.mod.src.commands.killed")
-local convertPlayerToGhostForm = ____killed.convertPlayerToGhostForm
-function setPlayerPosition(self, gridIndex)
-    local room = game:GetRoom()
-    local player = Isaac.GetPlayer()
-    player.Position = room:GetGridPosition(gridIndex)
-end
-function ____exports.commandReconnect(self, data)
-    if g.userID == nil then
-        return
-    end
-    g.game = __TS__New(
-        AmongUsGame,
-        data.gameID,
-        data.name,
-        data.ownerUserID,
-        data.character
-    )
-    g.game.players = data.players
-    g.game.started = true
-    g.game.imposterUserIDs = data.imposterUserIDs
-    g.game.ourTasks = data.tasks
-    g.game.role = #data.imposterUserIDs == 0 and Role.CREW or Role.IMPOSTER
-    g.game.meeting = data.meeting
-    g.game.emergencyButtonOnCooldown = data.emergencyButtonOnCooldown
-    local player = g.game:getPlayerFromUserID(g.userID)
-    if player == nil then
-        return
-    end
-    g.game.usedEmergencyMeeting = player.usedEmergencyMeeting
-    g.game.bodies = data.bodies
-    disableSendingEvents(nil)
-    loadMap(nil)
-    enableMinimapAPI(nil)
-    if g.game.meeting ~= nil then
-        setupMeeting(nil, false)
-        enableSendingEvents(nil)
-        return
-    end
-    if data.room ~= SkeldRoom.CAFETERIA then
-        local roomName = getSkeldRoomName(nil, data.room)
-        goToStageAPIRoom(nil, roomName)
-    end
-    setPlayerPosition(nil, data.enterGridIndex)
-    if not player.alive then
-        convertPlayerToGhostForm(nil)
-    end
-    enableSendingEvents(nil)
-end
-return ____exports
- end,
-["packages.mod.src.commands.sabotage"] = function(...) 
-local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local todo = ____isaacscript_2Dcommon.todo
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function ____exports.commandSabotage(self, _data)
-    if g.game == nil then
-        return
-    end
-    todo(nil)
-end
-return ____exports
- end,
-["packages.mod.src.features.startMeeting"] = function(...) 
-local ____exports = {}
-local postRenderAlertStrip, postRenderFadingToBlackWithAlertStrip, postRenderFadingToGame, drawAlertStrip, getAlertText, hasFadeFinished, setState, TEXT_OFFSET, blackSprite
-local ____common = require("packages.common.src.index")
-local MeetingType = ____common.MeetingType
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local VectorZero = ____isaacscript_2Dcommon.VectorZero
-local ____BlackSpriteState = require("packages.mod.src.enums.BlackSpriteState")
-local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
-local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
-local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
-local ____StartMeetingState = require("packages.mod.src.enums.StartMeetingState")
-local StartMeetingState = ____StartMeetingState.StartMeetingState
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____minimapAPI = require("packages.mod.src.minimapAPI")
-local disableMinimapAPI = ____minimapAPI.disableMinimapAPI
-local ____sprite = require("packages.mod.src.sprite")
-local initSprite = ____sprite.initSprite
-local ____utils = require("packages.mod.src.utils")
-local drawFontText = ____utils.drawFontText
-local ____blackSprite = require("packages.mod.src.features.blackSprite")
-local FADE_TO_BLACK_FRAMES = ____blackSprite.FADE_TO_BLACK_FRAMES
-local setBlackSpriteState = ____blackSprite.setBlackSpriteState
-local ____setupMeeting = require("packages.mod.src.features.setupMeeting")
-local setupMeeting = ____setupMeeting.setupMeeting
-function postRenderAlertStrip(self)
-    drawAlertStrip(nil)
-    if g.game ~= nil and hasFadeFinished(nil) then
-        setState(nil, StartMeetingState.FADING_TO_BLACK_WITH_ALERT_STRIP)
-        setBlackSpriteState(nil, BlackSpriteState.FADING_TO_BLACK)
-    end
-end
-function postRenderFadingToBlackWithAlertStrip(self)
-    drawAlertStrip(nil)
-    if g.game ~= nil and hasFadeFinished(nil) then
-        setState(nil, StartMeetingState.FADING_TO_GAME)
-        setBlackSpriteState(nil, BlackSpriteState.FADING_TO_GAME)
-        setupMeeting(nil, false)
-    end
-end
-function postRenderFadingToGame(self)
-    if g.game ~= nil and hasFadeFinished(nil) then
-        setState(nil, StartMeetingState.DISABLED)
-        setBlackSpriteState(nil, BlackSpriteState.DISABLED)
-    end
-end
-function drawAlertStrip(self)
-    local bottomRightPos = getScreenBottomRightPos(nil)
-    local position = Vector(0, bottomRightPos.Y / 3)
-    blackSprite:RenderLayer(0, position)
-    local opacity = 1
-    local centerPos = bottomRightPos / 2
-    local aboveCenterPos = centerPos + TEXT_OFFSET
-    local text = getAlertText(nil)
-    drawFontText(nil, text, aboveCenterPos, opacity)
-end
-function getAlertText(self)
-    local defaultValue = "???"
-    if g.game == nil or g.game.meeting == nil then
-        return defaultValue
-    end
-    local playerInitiated = g.game:getPlayerFromUserID(g.game.meeting.userIDInitiated)
-    if playerInitiated == nil then
-        return defaultValue
-    end
-    repeat
-        local ____switch19 = g.game.meeting.meetingType
-        local ____cond19 = ____switch19 == MeetingType.REPORT_BODY
-        if ____cond19 then
-            do
-                local playerKilled = g.game:getPlayerFromUserID(g.game.meeting.userIDKilled)
-                if playerKilled == nil then
-                    return defaultValue
-                end
-                return (playerInitiated.username .. " reported a dead body: ") .. playerKilled.username
-            end
-        end
-        ____cond19 = ____cond19 or ____switch19 == MeetingType.EMERGENCY
-        if ____cond19 then
-            do
-                return playerInitiated.username .. " called an emergency meeting!"
-            end
-        end
-    until true
-end
-function hasFadeFinished(self)
-    if g.game == nil or g.game.startMeeting.startRenderFrame == nil then
-        return false
-    end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local renderFramesPassed = renderFrameCount - g.game.startMeeting.startRenderFrame
-    return renderFramesPassed >= FADE_TO_BLACK_FRAMES
-end
-function setState(self, state)
-    if g.game == nil or not g.game.started then
-        return
-    end
-    local renderFrameCount = Isaac.GetFrameCount()
-    g.game.startMeeting.state = state
-    g.game.startMeeting.startRenderFrame = renderFrameCount
-end
-TEXT_OFFSET = Vector(0, -10)
-blackSprite = initSprite(nil, "gfx/black.anm2")
-function ____exports.postRender(self)
-    if g.game == nil or not g.game.started then
-        return
-    end
-    repeat
-        local ____switch4 = g.game.startMeeting.state
-        local ____cond4 = ____switch4 == StartMeetingState.DISABLED
-        if ____cond4 then
-            do
-                break
-            end
-        end
-        ____cond4 = ____cond4 or ____switch4 == StartMeetingState.ALERT_STRIP
-        if ____cond4 then
-            do
-                postRenderAlertStrip(nil)
-                break
-            end
-        end
-        ____cond4 = ____cond4 or ____switch4 == StartMeetingState.FADING_TO_BLACK_WITH_ALERT_STRIP
-        if ____cond4 then
-            do
-                postRenderFadingToBlackWithAlertStrip(nil)
-                break
-            end
-        end
-        ____cond4 = ____cond4 or ____switch4 == StartMeetingState.FADING_TO_GAME
-        if ____cond4 then
-            do
-                postRenderFadingToGame(nil)
-                break
-            end
-        end
-    until true
-end
-function ____exports.startMeeting(self, meetingType)
-    local player = Isaac.GetPlayer()
-    player.Velocity = VectorZero
-    player.ControlsEnabled = false
-    local bottomRightPos = getScreenBottomRightPos(nil)
-    blackSprite.Scale = Vector(bottomRightPos.X, bottomRightPos.Y / 3)
-    setState(nil, StartMeetingState.ALERT_STRIP)
-    disableMinimapAPI(nil)
-    local soundEffect = meetingType == MeetingType.REPORT_BODY and SoundEffectCustom.DEAD_BODY_REPORT or SoundEffectCustom.EMERGENCY_MEETING
-    sfxManager:Play(soundEffect)
-end
-return ____exports
- end,
-["packages.mod.src.commands.startMeeting"] = function(...) 
-local ____exports = {}
-local ____common = require("packages.common.src.index")
-local MeetingPhase = ____common.MeetingPhase
-local MeetingType = ____common.MeetingType
-local ____startMeeting = require("packages.mod.src.features.startMeeting")
-local startMeeting = ____startMeeting.startMeeting
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function ____exports.commandStartMeeting(self, data)
-    if g.game == nil then
-        return
-    end
-    g.game.meeting = {
-        meetingType = data.meetingType,
-        userIDInitiated = data.userIDInitiated,
-        userIDKilled = data.userIDKilled,
-        playersKilledSinceLastMeeting = data.playersKilledSinceLastMeeting,
-        meetingPhase = MeetingPhase.PRE_VOTING,
-        timePhaseStarted = data.timePhaseStarted,
-        phaseLengthSeconds = data.phaseLengthSeconds,
-        votes = data.votes
-    }
-    if data.meetingType == MeetingType.EMERGENCY and data.userIDInitiated == g.userID then
-        g.game.usedEmergencyMeeting = true
-    end
-    startMeeting(nil, data.meetingType)
-end
-return ____exports
- end,
-["packages.mod.src.commands.startVoting"] = function(...) 
-local ____exports = {}
-local ____common = require("packages.common.src.index")
-local MeetingPhase = ____common.MeetingPhase
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-function ____exports.commandStartVoting(self, data)
-    if g.game == nil or g.game.meeting == nil then
-        return
-    end
-    g.game.meeting.meetingPhase = MeetingPhase.VOTING
-    g.game.meeting.timePhaseStarted = data.timePhaseStarted
-    g.game.meeting.phaseLengthSeconds = data.phaseLengthSeconds
-end
-return ____exports
- end,
 ["packages.mod.src.features.startGameCutscene"] = function(...) 
 local ____exports = {}
 local postRenderFadingToBlack, setStartingPosition, postRenderTextFadingIn, postRenderText, postRenderTextFadingOut, postRenderFadingToGame, drawText, getTextOpacity, drawItem, hasFadeFinished, setState, setSprite, ITEM_SPRITE_OFFSET, itemSprite
@@ -69829,6 +70680,738 @@ function ____exports.startStartGameCutscene(self)
 end
 return ____exports
  end,
+["packages.mod.src.features.startMeeting"] = function(...) 
+local ____exports = {}
+local postRenderAlertStrip, postRenderFadingToBlackWithAlertStrip, postRenderFadingToGame, drawAlertStrip, getAlertText, hasFadeFinished, setState, TEXT_OFFSET, blackSprite
+local ____common = require("packages.common.src.index")
+local MeetingType = ____common.MeetingType
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
+local VectorZero = ____isaacscript_2Dcommon.VectorZero
+local ____BlackSpriteState = require("packages.mod.src.enums.BlackSpriteState")
+local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
+local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
+local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
+local ____StartMeetingState = require("packages.mod.src.enums.StartMeetingState")
+local StartMeetingState = ____StartMeetingState.StartMeetingState
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____minimapAPI = require("packages.mod.src.minimapAPI")
+local disableMinimapAPI = ____minimapAPI.disableMinimapAPI
+local ____sprite = require("packages.mod.src.sprite")
+local initSprite = ____sprite.initSprite
+local ____utils = require("packages.mod.src.utils")
+local drawFontText = ____utils.drawFontText
+local ____blackSprite = require("packages.mod.src.features.blackSprite")
+local FADE_TO_BLACK_FRAMES = ____blackSprite.FADE_TO_BLACK_FRAMES
+local setBlackSpriteState = ____blackSprite.setBlackSpriteState
+local ____setupMeeting = require("packages.mod.src.features.setupMeeting")
+local setupMeeting = ____setupMeeting.setupMeeting
+function postRenderAlertStrip(self)
+    drawAlertStrip(nil)
+    if g.game ~= nil and hasFadeFinished(nil) then
+        setState(nil, StartMeetingState.FADING_TO_BLACK_WITH_ALERT_STRIP)
+        setBlackSpriteState(nil, BlackSpriteState.FADING_TO_BLACK)
+    end
+end
+function postRenderFadingToBlackWithAlertStrip(self)
+    drawAlertStrip(nil)
+    if g.game ~= nil and hasFadeFinished(nil) then
+        setState(nil, StartMeetingState.FADING_TO_GAME)
+        setBlackSpriteState(nil, BlackSpriteState.FADING_TO_GAME)
+        setupMeeting(nil, false)
+    end
+end
+function postRenderFadingToGame(self)
+    if g.game ~= nil and hasFadeFinished(nil) then
+        setState(nil, StartMeetingState.DISABLED)
+        setBlackSpriteState(nil, BlackSpriteState.DISABLED)
+    end
+end
+function drawAlertStrip(self)
+    local bottomRightPos = getScreenBottomRightPos(nil)
+    local position = Vector(0, bottomRightPos.Y / 3)
+    blackSprite:RenderLayer(0, position)
+    local opacity = 1
+    local centerPos = bottomRightPos / 2
+    local aboveCenterPos = centerPos + TEXT_OFFSET
+    local text = getAlertText(nil)
+    drawFontText(nil, text, aboveCenterPos, opacity)
+end
+function getAlertText(self)
+    local defaultValue = "???"
+    if g.game == nil or g.game.meeting == nil then
+        return defaultValue
+    end
+    local playerInitiated = g.game:getPlayerFromUserID(g.game.meeting.userIDInitiated)
+    if playerInitiated == nil then
+        return defaultValue
+    end
+    repeat
+        local ____switch19 = g.game.meeting.meetingType
+        local ____cond19 = ____switch19 == MeetingType.REPORT_BODY
+        if ____cond19 then
+            do
+                local playerKilled = g.game:getPlayerFromUserID(g.game.meeting.userIDKilled)
+                if playerKilled == nil then
+                    return defaultValue
+                end
+                return (playerInitiated.username .. " reported a dead body: ") .. playerKilled.username
+            end
+        end
+        ____cond19 = ____cond19 or ____switch19 == MeetingType.EMERGENCY
+        if ____cond19 then
+            do
+                return playerInitiated.username .. " called an emergency meeting!"
+            end
+        end
+    until true
+end
+function hasFadeFinished(self)
+    if g.game == nil or g.game.startMeeting.startRenderFrame == nil then
+        return false
+    end
+    local renderFrameCount = Isaac.GetFrameCount()
+    local renderFramesPassed = renderFrameCount - g.game.startMeeting.startRenderFrame
+    return renderFramesPassed >= FADE_TO_BLACK_FRAMES
+end
+function setState(self, state)
+    if g.game == nil or not g.game.started then
+        return
+    end
+    local renderFrameCount = Isaac.GetFrameCount()
+    g.game.startMeeting.state = state
+    g.game.startMeeting.startRenderFrame = renderFrameCount
+end
+TEXT_OFFSET = Vector(0, -10)
+blackSprite = initSprite(nil, "gfx/black.anm2")
+function ____exports.postRender(self)
+    if g.game == nil or not g.game.started then
+        return
+    end
+    repeat
+        local ____switch4 = g.game.startMeeting.state
+        local ____cond4 = ____switch4 == StartMeetingState.DISABLED
+        if ____cond4 then
+            do
+                break
+            end
+        end
+        ____cond4 = ____cond4 or ____switch4 == StartMeetingState.ALERT_STRIP
+        if ____cond4 then
+            do
+                postRenderAlertStrip(nil)
+                break
+            end
+        end
+        ____cond4 = ____cond4 or ____switch4 == StartMeetingState.FADING_TO_BLACK_WITH_ALERT_STRIP
+        if ____cond4 then
+            do
+                postRenderFadingToBlackWithAlertStrip(nil)
+                break
+            end
+        end
+        ____cond4 = ____cond4 or ____switch4 == StartMeetingState.FADING_TO_GAME
+        if ____cond4 then
+            do
+                postRenderFadingToGame(nil)
+                break
+            end
+        end
+    until true
+end
+function ____exports.startMeeting(self, meetingType)
+    local player = Isaac.GetPlayer()
+    player.Velocity = VectorZero
+    player.ControlsEnabled = false
+    local bottomRightPos = getScreenBottomRightPos(nil)
+    blackSprite.Scale = Vector(bottomRightPos.X, bottomRightPos.Y / 3)
+    setState(nil, StartMeetingState.ALERT_STRIP)
+    disableMinimapAPI(nil)
+    local soundEffect = meetingType == MeetingType.REPORT_BODY and SoundEffectCustom.DEAD_BODY_REPORT or SoundEffectCustom.EMERGENCY_MEETING
+    sfxManager:Play(soundEffect)
+end
+return ____exports
+ end,
+["packages.mod.src.features.welcomeNotification"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__StringSplit = ____lualib.__TS__StringSplit
+local ____exports = {}
+local shouldDrawWelcomeNotification, drawWelcomeNotification, NOTIFICATION_TEXT
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local game = ____isaacscript_2Dcommon.game
+local getRoomGridIndex = ____isaacscript_2Dcommon.getRoomGridIndex
+local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
+local ____constants = require("packages.mod.src.constants")
+local MOD_NAME = ____constants.MOD_NAME
+local ____fonts = require("packages.mod.src.fonts")
+local fonts = ____fonts.fonts
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____console = require("packages.mod.src.features.console")
+local isConsoleOpen = ____console.isConsoleOpen
+local ____goToEmptyRoom = require("packages.mod.src.features.goToEmptyRoom")
+local START_ROOM_INDEX = ____goToEmptyRoom.START_ROOM_INDEX
+function shouldDrawWelcomeNotification(self)
+    if g.game ~= nil then
+        return false
+    end
+    local isPaused = game:IsPaused()
+    if isPaused then
+        return false
+    end
+    local roomGridIndex = getRoomGridIndex(nil)
+    if roomGridIndex ~= START_ROOM_INDEX then
+        return false
+    end
+    if isConsoleOpen(nil) then
+        return false
+    end
+    if not g.welcomeNotificationEnabled then
+        return false
+    end
+    return true
+end
+function drawWelcomeNotification(self)
+    local bottomRightPos = getScreenBottomRightPos(nil)
+    local closeToBottom = bottomRightPos.Y - 58
+    local color = KColor(1, 1, 0, 1)
+    local y = closeToBottom
+    for ____, line in ipairs(__TS__StringSplit(NOTIFICATION_TEXT, "\n")) do
+        fonts.pf:DrawString(
+            line,
+            0,
+            y,
+            color,
+            bottomRightPos.X,
+            true
+        )
+        y = y + 10
+    end
+end
+NOTIFICATION_TEXT = ("Welcome to the " .. MOD_NAME) .. " mod!\n\nPress enter, type /help, and then press enter again for\ninstructions on how to connect to the server."
+function ____exports.postRender(self)
+    if shouldDrawWelcomeNotification(nil) then
+        drawWelcomeNotification(nil)
+    end
+end
+return ____exports
+ end,
+["packages.mod.src.commands.chat"] = function(...) 
+local ____exports = {}
+local ____chat = require("packages.mod.src.chat")
+local addChat = ____chat.addChat
+function ____exports.commandChat(self, data)
+    addChat(nil, data)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.emergencyButtonCooldown"] = function(...) 
+local ____exports = {}
+local ____emergencyButton = require("packages.mod.src.features.emergencyButton")
+local setEmergencyButtonState = ____emergencyButton.setEmergencyButtonState
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function ____exports.commandEmergencyButtonCooldown(self, data)
+    if g.game == nil then
+        return
+    end
+    g.game.emergencyButtonOnCooldown = data.cooldown
+    setEmergencyButtonState(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.endGame"] = function(...) 
+local ____exports = {}
+local getImposterNames
+local ____endGameCutscene = require("packages.mod.src.features.endGameCutscene")
+local startEndGameCutscene = ____endGameCutscene.startEndGameCutscene
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function getImposterNames(self, game, imposterUserIDs)
+    local names = {}
+    for ____, userID in ipairs(imposterUserIDs) do
+        local player = game:getPlayerFromUserID(userID)
+        if player ~= nil then
+            names[#names + 1] = player.username
+        end
+    end
+    return table.concat(names, ", ")
+end
+function ____exports.commandEndGame(self, data)
+    if g.game == nil then
+        return
+    end
+    g.endGame.winningRole = data.winningRole
+    g.endGame.imposterNames = getImposterNames(nil, g.game, data.imposterUserIDs)
+    startEndGameCutscene(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.endMeeting"] = function(...) 
+local ____exports = {}
+local ____endMeeting = require("packages.mod.src.features.endMeeting")
+local endMeeting = ____endMeeting.endMeeting
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function ____exports.commandEndMeeting(self, data)
+    if g.game == nil then
+        return
+    end
+    g.game.meeting = nil
+    g.game.endMeeting.meetingResolution = data.meetingResolution
+    g.game.endMeeting.userIDEjected = data.userIDEjected
+    endMeeting(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.error"] = function(...) 
+local ____exports = {}
+local ____chat = require("packages.mod.src.chat")
+local addLocalChat = ____chat.addLocalChat
+function ____exports.commandError(self, data)
+    addLocalChat(nil, "Error: " .. data.msg)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.gameDescription"] = function(...) 
+local ____exports = {}
+local ____postGameStartedReordered = require("packages.mod.src.callbacksCustom.postGameStartedReordered")
+local checkChangeOurCharacter = ____postGameStartedReordered.checkChangeOurCharacter
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____players = require("packages.mod.src.players")
+local getOurPlayer = ____players.getOurPlayer
+local ____utils = require("packages.mod.src.utils")
+local inCutscene = ____utils.inCutscene
+function ____exports.commandGameDescription(self, data)
+    if g.game == nil then
+        return
+    end
+    g.game.players = data.players
+    g.game.started = data.started
+    g.game.meeting = data.meeting
+    local ourPlayer = getOurPlayer(nil)
+    if ourPlayer == nil then
+        error("Failed to get our player description after receiving the \"gameDescription\" command.")
+    end
+    g.game.character = ourPlayer.character
+    g.game.usedEmergencyMeeting = ourPlayer.usedEmergencyMeeting
+    if not inCutscene(nil) then
+        checkChangeOurCharacter(nil)
+    end
+end
+return ____exports
+ end,
+["packages.mod.src.commands.gameList"] = function(...) 
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____chat = require("packages.mod.src.chat")
+local addLocalChat = ____chat.addLocalChat
+local autoLogin = require("packages.mod.src.features.autoLogin")
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____send = require("packages.mod.src.network.send")
+local sendTCP = ____send.sendTCP
+function ____exports.commandGameList(self, data)
+    if #data.gameList == 0 then
+        addLocalChat(nil, "No current games. (Create one with the \"/create [name] [password]\" command.)")
+        autoLogin:onGameList(data.gameList)
+        return
+    end
+    local joinedToGameID = nil
+    addLocalChat(nil, "Current games:")
+    local i = 1
+    for ____, started in ipairs({false, true}) do
+        for ____, game in ipairs(data.gameList) do
+            do
+                if game.started ~= started then
+                    goto __continue5
+                end
+                local startedText = started and " (ongoing)" or " (unstarted)"
+                local totalText = (" (num players: " .. tostring(game.numPlayers)) .. ")"
+                local passwordText = game.hasPassword and " (has password)" or ""
+                local joinedText = game.joined and " (our current game)" or ""
+                addLocalChat(
+                    nil,
+                    (((((tostring(i) .. ") ") .. game.name) .. startedText) .. totalText) .. passwordText) .. joinedText
+                )
+                i = i + 1
+                if game.joined then
+                    joinedToGameID = game.id
+                end
+            end
+            ::__continue5::
+        end
+    end
+    if joinedToGameID ~= nil and g.game == nil then
+        sendTCP(nil, SocketCommandModToServer.RECONNECT, {gameID = joinedToGameID})
+        return
+    end
+    autoLogin:onGameList(data.gameList)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.joined"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local getChatMessage
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local restart = ____isaacscript_2Dcommon.restart
+local ____chat = require("packages.mod.src.chat")
+local addLocalChat = ____chat.addLocalChat
+local ____AmongUsGame = require("packages.mod.src.classes.AmongUsGame")
+local AmongUsGame = ____AmongUsGame.AmongUsGame
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function getChatMessage(self, data)
+    if data.reconnected then
+        return "Reconnected to game: " .. data.name
+    end
+    if data.created then
+        local passwordText = data.hasPassword and "(password-protected)" or "(public)"
+        return (("Created game: " .. data.name) .. " ") .. passwordText
+    end
+    return "Joined game: " .. data.name
+end
+function ____exports.commandJoined(self, data)
+    g.game = __TS__New(
+        AmongUsGame,
+        data.gameID,
+        data.name,
+        data.ownerUserID,
+        data.character
+    )
+    local msg = getChatMessage(nil, data)
+    addLocalChat(nil, msg)
+    restart(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.killed"] = function(...) 
+local ____exports = {}
+local KILLED_PLAYER_FADE
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local EntityCollisionClass = ____isaac_2Dtypescript_2Ddefinitions.EntityCollisionClass
+local EntityGridCollisionClass = ____isaac_2Dtypescript_2Ddefinitions.EntityGridCollisionClass
+local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local VectorZero = ____isaacscript_2Dcommon.VectorZero
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
+local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
+local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____mod = require("packages.mod.src.mod")
+local mod = ____mod.mod
+local ____stageAPI = require("packages.mod.src.stageAPI")
+local getSkeldRoom = ____stageAPI.getSkeldRoom
+function ____exports.convertPlayerToGhostForm(self)
+    local player = Isaac.GetPlayer()
+    local sprite = player:GetSprite()
+    sprite.Color = Color(1, 1, 1, KILLED_PLAYER_FADE)
+    player.ControlsEnabled = true
+    player.Visible = true
+    player.GridCollisionClass = EntityGridCollisionClass.NONE
+    player.EntityCollisionClass = EntityCollisionClass.NONE
+end
+--- The death animation is 55 frames long, but we render it in 110 frames.
+local POST_DEATH_DELAY_RENDER_FRAMES = 110 + 30
+KILLED_PLAYER_FADE = 0.25
+function ____exports.commandKilled(self, data)
+    if g.game == nil then
+        return
+    end
+    local killedPlayer = g.game:getPlayerFromUserID(data.userIDKilled)
+    if killedPlayer == nil then
+        error("Failed to find the player for user ID: " .. tostring(data.userIDKilled))
+    end
+    killedPlayer.alive = false
+    local renderFrameCount = Isaac.GetFrameCount()
+    local ____g_game_bodies_0 = g.game.bodies
+    ____g_game_bodies_0[#____g_game_bodies_0 + 1] = {
+        userID = data.userIDKilled,
+        room = data.room,
+        x = data.x,
+        y = data.y,
+        renderFrameKilled = renderFrameCount
+    }
+    local weDied = killedPlayer.userID == g.userID
+    local room = getSkeldRoom(nil)
+    if room ~= killedPlayer.room then
+        if weDied then
+            ____exports.convertPlayerToGhostForm(nil)
+        end
+        return
+    end
+    if weDied then
+        local player = Isaac.GetPlayer()
+        player.Position = Vector(data.x, data.y)
+        player.Velocity = VectorZero
+        player.ControlsEnabled = false
+        player.Visible = false
+        mod:runInNRenderFrames(____exports.convertPlayerToGhostForm, POST_DEATH_DELAY_RENDER_FRAMES)
+    end
+    sfxManager:Play(SoundEffect.ISAAC_DIES)
+    sfxManager:Play(SoundEffectCustom.KILL)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.left"] = function(...) 
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local restart = ____isaacscript_2Dcommon.restart
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function ____exports.commandLeft(self, data)
+    if g.game == nil or g.game.id ~= data.gameID then
+        return
+    end
+    g.game = nil
+    restart(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.loggedIn"] = function(...) 
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local SocketCommandModToServer = ____common.SocketCommandModToServer
+local ____chat = require("packages.mod.src.chat")
+local addLocalChat = ____chat.addLocalChat
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____send = require("packages.mod.src.network.send")
+local sendTCP = ____send.sendTCP
+function ____exports.commandLoggedIn(self, data)
+    g.loggedIn = true
+    g.userID = data.userID
+    g.username = data.username
+    addLocalChat(nil, "Successfully logged in.")
+    sendTCP(nil, SocketCommandModToServer.GAME_LIST, {})
+end
+return ____exports
+ end,
+["packages.mod.src.commands.newGame"] = function(...) 
+local ____exports = {}
+local ____chat = require("packages.mod.src.chat")
+local addLocalChat = ____chat.addLocalChat
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function ____exports.commandNewGame(self, data)
+    if g.game ~= nil then
+        return
+    end
+    addLocalChat(nil, (data.creator .. " created a new game: ") .. data.name)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.newOwner"] = function(...) 
+local ____exports = {}
+local ____chat = require("packages.mod.src.chat")
+local addLocalChat = ____chat.addLocalChat
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function ____exports.commandNewOwner(self, data)
+    if g.game == nil then
+        return
+    end
+    local player = g.game:getPlayerFromUserID(data.userID)
+    if player == nil then
+        return
+    end
+    addLocalChat(nil, player.username .. " is now thw owner of the game.")
+end
+return ____exports
+ end,
+["packages.mod.src.commands.playerJoined"] = function(...) 
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
+local ____chat = require("packages.mod.src.chat")
+local addLocalChat = ____chat.addLocalChat
+local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
+local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
+local autoLogin = require("packages.mod.src.features.autoLogin")
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function ____exports.commandPlayerJoined(self, data)
+    if g.game == nil then
+        return
+    end
+    local player = g.game:getPlayerFromUserID(data.userID)
+    if player == nil then
+        return
+    end
+    addLocalChat(nil, player.username .. " joined the game.")
+    sfxManager:Play(SoundEffectCustom.PLAYER_JOINED)
+    autoLogin:onPlayerJoined(data.userID)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.playerLeft"] = function(...) 
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local sfxManager = ____isaacscript_2Dcommon.sfxManager
+local ____chat = require("packages.mod.src.chat")
+local addLocalChat = ____chat.addLocalChat
+local ____SoundEffectCustom = require("packages.mod.src.enums.SoundEffectCustom")
+local SoundEffectCustom = ____SoundEffectCustom.SoundEffectCustom
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function ____exports.commandPlayerLeft(self, data)
+    if g.game == nil then
+        return
+    end
+    local player = g.game:getPlayerFromUserID(data.userID)
+    if player == nil then
+        return
+    end
+    addLocalChat(nil, player.username .. " left the game.")
+    sfxManager:Play(SoundEffectCustom.PLAYER_LEFT)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.reconnect"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local setPlayerPosition
+local ____common = require("packages.common.src.index")
+local Role = ____common.Role
+local SkeldRoom = ____common.SkeldRoom
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local game = ____isaacscript_2Dcommon.game
+local ____AmongUsGame = require("packages.mod.src.classes.AmongUsGame")
+local AmongUsGame = ____AmongUsGame.AmongUsGame
+local ____sendGameEvents = require("packages.mod.src.features.sendGameEvents")
+local disableSendingEvents = ____sendGameEvents.disableSendingEvents
+local enableSendingEvents = ____sendGameEvents.enableSendingEvents
+local ____setupMeeting = require("packages.mod.src.features.setupMeeting")
+local setupMeeting = ____setupMeeting.setupMeeting
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+local ____loadMap = require("packages.mod.src.loadMap")
+local loadMap = ____loadMap.loadMap
+local ____minimapAPI = require("packages.mod.src.minimapAPI")
+local enableMinimapAPI = ____minimapAPI.enableMinimapAPI
+local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
+local getSkeldRoomName = ____skeldRoomMap.getSkeldRoomName
+local ____stageAPI = require("packages.mod.src.stageAPI")
+local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
+local ____killed = require("packages.mod.src.commands.killed")
+local convertPlayerToGhostForm = ____killed.convertPlayerToGhostForm
+function setPlayerPosition(self, gridIndex)
+    local room = game:GetRoom()
+    local player = Isaac.GetPlayer()
+    player.Position = room:GetGridPosition(gridIndex)
+end
+function ____exports.commandReconnect(self, data)
+    if g.userID == nil then
+        return
+    end
+    g.game = __TS__New(
+        AmongUsGame,
+        data.gameID,
+        data.name,
+        data.ownerUserID,
+        data.character
+    )
+    g.game.players = data.players
+    g.game.started = true
+    g.game.imposterUserIDs = data.imposterUserIDs
+    g.game.ourTasks = data.tasks
+    g.game.role = #data.imposterUserIDs == 0 and Role.CREW or Role.IMPOSTER
+    g.game.meeting = data.meeting
+    g.game.emergencyButtonOnCooldown = data.emergencyButtonOnCooldown
+    local player = g.game:getPlayerFromUserID(g.userID)
+    if player == nil then
+        return
+    end
+    g.game.usedEmergencyMeeting = player.usedEmergencyMeeting
+    g.game.bodies = data.bodies
+    disableSendingEvents(nil)
+    loadMap(nil)
+    enableMinimapAPI(nil)
+    if g.game.meeting ~= nil then
+        setupMeeting(nil, false)
+        enableSendingEvents(nil)
+        return
+    end
+    if data.room ~= SkeldRoom.CAFETERIA then
+        local roomName = getSkeldRoomName(nil, data.room)
+        goToStageAPIRoom(nil, roomName)
+    end
+    setPlayerPosition(nil, data.enterGridIndex)
+    if not player.alive then
+        convertPlayerToGhostForm(nil)
+    end
+    enableSendingEvents(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.sabotage"] = function(...) 
+local ____exports = {}
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local todo = ____isaacscript_2Dcommon.todo
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function ____exports.commandSabotage(self, _data)
+    if g.game == nil then
+        return
+    end
+    todo(nil)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.startMeeting"] = function(...) 
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local MeetingPhase = ____common.MeetingPhase
+local MeetingType = ____common.MeetingType
+local ____startMeeting = require("packages.mod.src.features.startMeeting")
+local startMeeting = ____startMeeting.startMeeting
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function ____exports.commandStartMeeting(self, data)
+    if g.game == nil then
+        return
+    end
+    g.game.meeting = {
+        meetingType = data.meetingType,
+        userIDInitiated = data.userIDInitiated,
+        userIDKilled = data.userIDKilled,
+        playersKilledSinceLastMeeting = data.playersKilledSinceLastMeeting,
+        meetingPhase = MeetingPhase.PRE_VOTING,
+        timePhaseStarted = data.timePhaseStarted,
+        phaseLengthSeconds = data.phaseLengthSeconds,
+        votes = data.votes
+    }
+    if data.meetingType == MeetingType.EMERGENCY and data.userIDInitiated == g.userID then
+        g.game.usedEmergencyMeeting = true
+    end
+    startMeeting(nil, data.meetingType)
+end
+return ____exports
+ end,
+["packages.mod.src.commands.startVoting"] = function(...) 
+local ____exports = {}
+local ____common = require("packages.common.src.index")
+local MeetingPhase = ____common.MeetingPhase
+local ____globals = require("packages.mod.src.globals")
+local g = ____globals.g
+function ____exports.commandStartVoting(self, data)
+    if g.game == nil or g.game.meeting == nil then
+        return
+    end
+    g.game.meeting.meetingPhase = MeetingPhase.VOTING
+    g.game.meeting.timePhaseStarted = data.timePhaseStarted
+    g.game.meeting.phaseLengthSeconds = data.phaseLengthSeconds
+end
+return ____exports
+ end,
 ["packages.mod.src.commands.started"] = function(...) 
 local ____exports = {}
 local ____common = require("packages.common.src.index")
@@ -69993,1398 +71576,6 @@ ____exports.CLIENT_COMMAND_MAP = {
     [SocketCommandServerToMod.END_GAME] = commandEndGame,
     [SocketCommandServerToMod.TERMINATED] = commandTerminated
 }
-return ____exports
- end,
-["packages.mod.src.initFeatures"] = function(...) 
-local ____exports = {}
-local console = require("packages.mod.src.features.console")
-local disableMultiplayer = require("packages.mod.src.features.disableMultiplayer")
-local errors = require("packages.mod.src.features.errors")
-local socketClient = require("packages.mod.src.network.socketClient")
-function ____exports.initFeatures(self)
-    errors:init()
-    disableMultiplayer:init()
-    socketClient:init()
-    console:init()
-end
-return ____exports
- end,
-["packages.mod.src.callbacks.entityTakeDmg"] = function(...) 
-local ____exports = {}
-local entityTakeDmgPlayer, gameFrameReturningFromTask
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local game = ____isaacscript_2Dcommon.game
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
-local taskLeave = ____taskSubroutines.taskLeave
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-function entityTakeDmgPlayer(self, tookDamage, _damageAmount, _damageFlags, _damageSource, _damageCountdownFrames)
-    local gameFrameCount = game:GetFrameCount()
-    if gameFrameCount == gameFrameReturningFromTask then
-        return false
-    end
-    if g.game == nil or g.game.currentTask == nil then
-        return nil
-    end
-    local player = tookDamage:ToPlayer()
-    if player == nil then
-        return nil
-    end
-    sfxManager:Play(SoundEffect.THUMBS_DOWN)
-    gameFrameReturningFromTask = gameFrameCount
-    taskLeave(nil)
-    return false
-end
-gameFrameReturningFromTask = nil
-function ____exports.init(self)
-    mod:AddCallback(ModCallback.ENTITY_TAKE_DMG, entityTakeDmgPlayer, EntityType.PLAYER)
-end
-return ____exports
- end,
-["packages.mod.src.callbacks.evaluateCache"] = function(...) 
-local ____exports = {}
-local speed
-local ____common = require("packages.common.src.index")
-local IS_DEV = ____common.IS_DEV
-local Task = ____common.Task
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local CacheFlag = ____isaac_2Dtypescript_2Ddefinitions.CacheFlag
-local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-function speed(self, player)
-    if g.game == nil then
-        return
-    end
-    player.MoveSpeed = 0.75
-    if g.game.currentTask == Task.SHORT_FIX_WIRES or g.game.currentTask == Task.LONG_MAKE_PENTAGRAM then
-        player.MoveSpeed = 2
-    end
-    if g.game.currentTask == Task.LONG_DODGE_STONE_SHOOTERS then
-        player.MoveSpeed = 1
-    end
-    if IS_DEV then
-        player.MoveSpeed = 2
-    end
-end
-function ____exports.init(self)
-    mod:AddCallback(ModCallback.EVALUATE_CACHE, speed, CacheFlag.SPEED)
-end
-return ____exports
- end,
-["packages.mod.src.callbacks.inputAction"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local main, disablePreRunMovement, disableCutsceneInputs, shouldDisableCutsceneInputs, disableVanillaConsole, disableReset, MOVEMENT_BUTTONS
-local ____common = require("packages.common.src.index")
-local IS_DEV = ____common.IS_DEV
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local ButtonAction = ____isaac_2Dtypescript_2Ddefinitions.ButtonAction
-local InputHook = ____isaac_2Dtypescript_2Ddefinitions.InputHook
-local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local ReadonlySet = ____isaacscript_2Dcommon.ReadonlySet
-local game = ____isaacscript_2Dcommon.game
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-local ____utils = require("packages.mod.src.utils")
-local inCutscene = ____utils.inCutscene
-local inEndMeeting = ____utils.inEndMeeting
-function main(self, _entity, inputHook, buttonAction)
-    if g.game == nil then
-        return nil
-    end
-    local returnValue
-    returnValue = disablePreRunMovement(nil, inputHook, buttonAction)
-    if returnValue ~= nil then
-        return returnValue
-    end
-    returnValue = disableCutsceneInputs(nil, inputHook, buttonAction)
-    if returnValue ~= nil then
-        return returnValue
-    end
-    returnValue = disableVanillaConsole(nil, inputHook, buttonAction)
-    if returnValue ~= nil then
-        return returnValue
-    end
-    returnValue = disableReset(nil, inputHook, buttonAction)
-    if returnValue ~= nil then
-        return returnValue
-    end
-    return nil
-end
-function disablePreRunMovement(self, inputHook, buttonAction)
-    local gameFrameCount = game:GetFrameCount()
-    if gameFrameCount > 0 then
-        return nil
-    end
-    if MOVEMENT_BUTTONS:has(buttonAction) then
-        return inputHook == InputHook.GET_ACTION_VALUE and 0 or false
-    end
-    return nil
-end
-function disableCutsceneInputs(self, inputHook, buttonAction)
-    if buttonAction == ButtonAction.CONSOLE then
-        return nil
-    end
-    if shouldDisableCutsceneInputs(nil) then
-        return inputHook == InputHook.GET_ACTION_VALUE and 0 or false
-    end
-    return nil
-end
-function shouldDisableCutsceneInputs(self)
-    if g.game == nil then
-        return false
-    end
-    return inCutscene(nil) or g.game.meeting ~= nil or inEndMeeting(nil)
-end
-function disableVanillaConsole(self, inputHook, buttonAction)
-    if IS_DEV then
-        return nil
-    end
-    if buttonAction == ButtonAction.CONSOLE then
-        return inputHook == InputHook.GET_ACTION_VALUE and 0 or false
-    end
-    return nil
-end
-function disableReset(self, inputHook, buttonAction)
-    if IS_DEV then
-        return nil
-    end
-    if buttonAction == ButtonAction.RESTART then
-        return inputHook == InputHook.GET_ACTION_VALUE and 0 or false
-    end
-    return nil
-end
-MOVEMENT_BUTTONS = __TS__New(ReadonlySet, {ButtonAction.LEFT, ButtonAction.RIGHT, ButtonAction.UP, ButtonAction.DOWN})
-function ____exports.init(self)
-    mod:AddCallback(ModCallback.INPUT_ACTION, main)
-end
-return ____exports
- end,
-["packages.mod.src.callbacks.postCurseEval"] = function(...) 
-local ____exports = {}
-local main
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local LevelCurse = ____isaac_2Dtypescript_2Ddefinitions.LevelCurse
-local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local bitFlags = ____isaacscript_2Dcommon.bitFlags
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-function main(self)
-    return bitFlags(nil, LevelCurse.NONE)
-end
-function ____exports.init(self)
-    mod:AddCallback(ModCallback.POST_CURSE_EVAL, main)
-end
-return ____exports
- end,
-["packages.mod.src.features.buttons"] = function(...) 
-local ____exports = {}
-local checkIfButtonIsPressed, buttonPressed, buttonPressedGoToTask, buttonPressedEmergency, buttonPressedTask, BUTTON_ACTIVATION_DISTANCE
-local ____common = require("packages.common.src.index")
-local FAKE_TASK = ____common.FAKE_TASK
-local MeetingType = ____common.MeetingType
-local Role = ____common.Role
-local SocketCommandModToServer = ____common.SocketCommandModToServer
-local Task = ____common.Task
-local TASK_DESCRIPTIONS = ____common.TASK_DESCRIPTIONS
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local PressurePlateState = ____isaac_2Dtypescript_2Ddefinitions.PressurePlateState
-local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local asNumber = ____isaacscript_2Dcommon.asNumber
-local getPlayerCloserThan = ____isaacscript_2Dcommon.getPlayerCloserThan
-local sfxManager = ____isaacscript_2Dcommon.sfxManager
-local ____ButtonSubType = require("packages.mod.src.enums.ButtonSubType")
-local ButtonSubType = ____ButtonSubType.ButtonSubType
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____send = require("packages.mod.src.network.send")
-local sendTCP = ____send.sendTCP
-local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local getSkeldRoomName = ____skeldRoomMap.getSkeldRoomName
-local ____stageAPI = require("packages.mod.src.stageAPI")
-local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
-local ____buttonsBehindKeyBlocks = require("packages.mod.src.tasks.buttonsBehindKeyBlocks")
-local buttonsBehindKeyBlocksButtonPressed = ____buttonsBehindKeyBlocks.buttonsBehindKeyBlocksButtonPressed
-local ____fixWires = require("packages.mod.src.tasks.fixWires")
-local fixWiresButtonPressed = ____fixWires.fixWiresButtonPressed
-local ____identifyCollectibles = require("packages.mod.src.tasks.identifyCollectibles")
-local identifyCollectibleButtonPressed = ____identifyCollectibles.identifyCollectibleButtonPressed
-local ____identifyPickupsInOrder = require("packages.mod.src.tasks.identifyPickupsInOrder")
-local identifyPickupsInOrderButtonPressed = ____identifyPickupsInOrder.identifyPickupsInOrderButtonPressed
-local ____identifyTrinkets = require("packages.mod.src.tasks.identifyTrinkets")
-local identifyTrinketButtonPressed = ____identifyTrinkets.identifyTrinketButtonPressed
-local ____pressButtonsWithGrudge = require("packages.mod.src.tasks.pressButtonsWithGrudge")
-local pressButtonsWithGrudgeButtonPressed = ____pressButtonsWithGrudge.pressButtonsWithGrudgeButtonPressed
-local ____pushButtonsInOrder = require("packages.mod.src.tasks.pushButtonsInOrder")
-local pushButtonsInOrderButtonPressed = ____pushButtonsInOrder.pushButtonsInOrderButtonPressed
-local ____buttonSubroutines = require("packages.mod.src.features.buttonSubroutines")
-local getButtonAnimationSuffix = ____buttonSubroutines.getButtonAnimationSuffix
-local ____taskSubroutines = require("packages.mod.src.features.taskSubroutines")
-local taskComplete = ____taskSubroutines.taskComplete
-function checkIfButtonIsPressed(self, effect)
-    if effect.State == asNumber(nil, PressurePlateState.PRESSURE_PLATE_PRESSED) then
-        return
-    end
-    local player = getPlayerCloserThan(nil, effect.Position, BUTTON_ACTIVATION_DISTANCE)
-    if player == nil then
-        return
-    end
-    effect.State = PressurePlateState.PRESSURE_PLATE_PRESSED
-    local sprite = effect:GetSprite()
-    local animationSuffix = getButtonAnimationSuffix(nil, effect.SubType)
-    local animation = "Switched" .. animationSuffix
-    sprite:Play(animation, true)
-    sfxManager:Play(SoundEffect.BUTTON_PRESS)
-    buttonPressed(nil, effect)
-end
-function buttonPressed(self, button)
-    local buttonSubType = button.SubType
-    repeat
-        local ____switch7 = buttonSubType
-        local ____cond7 = ____switch7 == ButtonSubType.GO_TO_TASK
-        if ____cond7 then
-            do
-                buttonPressedGoToTask(nil, button)
-                break
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.EMERGENCY
-        if ____cond7 then
-            do
-                buttonPressedEmergency(nil)
-                break
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.CAMERA
-        if ____cond7 then
-            do
-                break
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.LIGHTS
-        if ____cond7 then
-            do
-                break
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.COMMS
-        if ____cond7 then
-            do
-                break
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.O2
-        if ____cond7 then
-            do
-                break
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_1
-        if ____cond7 then
-            do
-                buttonPressedTask(nil, button, 1)
-                break
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_2
-        if ____cond7 then
-            do
-                buttonPressedTask(nil, button, 2)
-                break
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_3
-        if ____cond7 then
-            do
-                buttonPressedTask(nil, button, 3)
-                break
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_4
-        if ____cond7 then
-            do
-                buttonPressedTask(nil, button, 4)
-                break
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_5
-        if ____cond7 then
-            do
-                buttonPressedTask(nil, button, 5)
-                break
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_6
-        if ____cond7 then
-            do
-                buttonPressedTask(nil, button, 6)
-                break
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_7
-        if ____cond7 then
-            do
-                buttonPressedTask(nil, button, 7)
-                break
-            end
-        end
-        ____cond7 = ____cond7 or ____switch7 == ButtonSubType.TASK_8
-        if ____cond7 then
-            do
-                buttonPressedTask(nil, button, 8)
-                break
-            end
-        end
-    until true
-end
-function buttonPressedGoToTask(self, effect)
-    if g.game == nil then
-        return
-    end
-    local data = effect:GetData()
-    local task = data.task
-    if task == nil then
-        error("Failed to read the task from a task button.")
-    end
-    local taskDescription = TASK_DESCRIPTIONS[task]
-    g.game.currentTask = g.game.role == Role.IMPOSTER and FAKE_TASK or task
-    g.game.taskReturnRoomName = getSkeldRoomName(nil, taskDescription.room)
-    g.game.taskReturnGridIndex = taskDescription.returnGridIndex
-    goToStageAPIRoom(nil, "Task")
-end
-function buttonPressedEmergency(self)
-    if g.game == nil then
-        return
-    end
-    sendTCP(nil, SocketCommandModToServer.MEETING, {meetingType = MeetingType.EMERGENCY, gameID = g.game.id, userIDKilled = 0})
-end
-function buttonPressedTask(self, button, num)
-    if g.game == nil or g.game.currentTask == nil then
-        return
-    end
-    repeat
-        local ____switch29 = g.game.currentTask
-        local ____cond29 = ____switch29 == Task.SHORT_IDENTIFY_COLLECTIBLES
-        if ____cond29 then
-            do
-                identifyCollectibleButtonPressed(nil, num)
-                break
-            end
-        end
-        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_IDENTIFY_TRINKETS
-        if ____cond29 then
-            do
-                identifyTrinketButtonPressed(nil, num)
-                break
-            end
-        end
-        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_PRESS_BUTTONS_WITH_GRUDGE
-        if ____cond29 then
-            do
-                pressButtonsWithGrudgeButtonPressed(nil)
-                break
-            end
-        end
-        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_FIX_WIRES
-        if ____cond29 then
-            do
-                fixWiresButtonPressed(nil, button, num)
-                break
-            end
-        end
-        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_WALK_DIAGONALLY_THROUGH_SPIKES
-        if ____cond29 then
-            do
-                taskComplete(nil)
-                break
-            end
-        end
-        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_WALK_BETWEEN_SUCTION_PITFALLS
-        if ____cond29 then
-            do
-                taskComplete(nil)
-                break
-            end
-        end
-        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_WALK_BETWEEN_SLIDES
-        if ____cond29 then
-            do
-                taskComplete(nil)
-                break
-            end
-        end
-        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_DODGE_RETRACTING_SPIKES
-        if ____cond29 then
-            do
-                taskComplete(nil)
-                break
-            end
-        end
-        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_BUTTONS_BEHIND_KEY_BLOCKS
-        if ____cond29 then
-            do
-                buttonsBehindKeyBlocksButtonPressed(nil)
-                break
-            end
-        end
-        ____cond29 = ____cond29 or ____switch29 == Task.SHORT_PUSH_BUTTONS_IN_ORDER
-        if ____cond29 then
-            do
-                pushButtonsInOrderButtonPressed(nil, button)
-                break
-            end
-        end
-        ____cond29 = ____cond29 or ____switch29 == Task.LONG_IDENTIFY_PICKUPS_IN_ORDER
-        if ____cond29 then
-            do
-                identifyPickupsInOrderButtonPressed(nil, button)
-                break
-            end
-        end
-        ____cond29 = ____cond29 or ____switch29 == Task.LONG_DODGE_STONE_SHOOTERS
-        if ____cond29 then
-            do
-                taskComplete(nil)
-                break
-            end
-        end
-        do
-            do
-                break
-            end
-        end
-    until true
-end
-BUTTON_ACTIVATION_DISTANCE = 20
-function ____exports.postEffectUpdateButton(self, effect)
-    checkIfButtonIsPressed(nil, effect)
-end
-return ____exports
- end,
-["packages.mod.src.callbacks.postEffectUpdate"] = function(...) 
-local ____exports = {}
-local pentagramBlackPowder, postEffectUpdateButton
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local EffectVariant = ____isaac_2Dtypescript_2Ddefinitions.EffectVariant
-local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
-local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
-local buttons = require("packages.mod.src.features.buttons")
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-local makePentagram = require("packages.mod.src.tasks.makePentagram")
-function pentagramBlackPowder(self, effect)
-    makePentagram:postEffectUpdatePentagramBlackPowder(effect)
-end
-function postEffectUpdateButton(self, effect)
-    buttons:postEffectUpdateButton(effect)
-end
-function ____exports.init(self)
-    mod:AddCallback(ModCallback.POST_EFFECT_UPDATE, pentagramBlackPowder, EffectVariant.PENTAGRAM_BLACK_POWDER)
-    mod:AddCallback(ModCallback.POST_EFFECT_UPDATE, postEffectUpdateButton, EffectVariantCustom.BUTTON)
-end
-return ____exports
- end,
-["packages.mod.src.callbacks.postEntityKill"] = function(...) 
-local ____exports = {}
-local main
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-local killWorms = require("packages.mod.src.tasks.killWorms")
-function main(self, _entity)
-    killWorms:postEntityKill()
-end
-function ____exports.init(self)
-    mod:AddCallback(ModCallback.POST_ENTITY_KILL, main)
-end
-return ____exports
- end,
-["packages.mod.src.callbacks.postNPCRender"] = function(...) 
-local ____exports = {}
-local keepStationary
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local VectorZero = ____isaacscript_2Dcommon.VectorZero
-local ____EntityTypeCustom = require("packages.mod.src.enums.EntityTypeCustom")
-local EntityTypeCustom = ____EntityTypeCustom.EntityTypeCustom
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-function keepStationary(self, npc)
-    if npc.Type >= EntityType.EFFECT then
-        return
-    end
-    local data = npc:GetData()
-    if data.position == nil then
-        data.position = npc.Position
-    end
-    npc.Position = data.position
-    npc.Velocity = VectorZero
-end
-function ____exports.init(self)
-    mod:AddCallback(ModCallback.POST_NPC_RENDER, keepStationary, EntityTypeCustom.BOX)
-    mod:AddCallback(ModCallback.POST_NPC_RENDER, keepStationary, EntityTypeCustom.TABLE)
-    mod:AddCallback(ModCallback.POST_NPC_RENDER, keepStationary, EntityTypeCustom.ADMIN_TABLE)
-end
-return ____exports
- end,
-["packages.mod.src.callbacks.postPickupInit"] = function(...) 
-local ____exports = {}
-local pill
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-local loadSlotMachines = require("packages.mod.src.tasks.loadSlotMachines")
-function pill(self, pickup)
-    loadSlotMachines:postPickupInitPill(pickup)
-end
-function ____exports.init(self)
-    mod:AddCallback(ModCallback.POST_PICKUP_INIT, pill, PickupVariant.PILL)
-end
-return ____exports
- end,
-["packages.mod.src.callbacks.postPlayerInit"] = function(...) 
-local ____exports = {}
-local main
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local disableMultiplayer = require("packages.mod.src.features.disableMultiplayer")
-local ____mod = require("packages.mod.src.mod")
-local mod = ____mod.mod
-function main(self, player)
-    disableMultiplayer:postPlayerInit(player)
-end
-function ____exports.init(self)
-    mod:AddCallback(ModCallback.POST_PLAYER_INIT, main)
-end
-return ____exports
- end,
-["packages.mod.src.features.connectedIcon"] = function(...) 
-local ____exports = {}
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
-local socketClient = require("packages.mod.src.network.socketClient")
-local CONNECTED_ICON_OFFSET = Vector(-33, -30)
-____exports.OTHER_UI_BUTTON_OFFSET = CONNECTED_ICON_OFFSET + Vector(5, -30)
-local connectedSprite = Sprite()
-connectedSprite:Load("gfx/wifi.anm2", true)
-connectedSprite:SetFrame("Default", 0)
-function ____exports.postRender(self)
-    if not socketClient:isConnected() then
-        return
-    end
-    local bottomRightPos = getScreenBottomRightPos(nil)
-    local position = bottomRightPos + CONNECTED_ICON_OFFSET
-    connectedSprite:RenderLayer(0, position)
-end
-return ____exports
- end,
-["packages.mod.src.features.actionSubroutines"] = function(...) 
-local ____exports = {}
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____utils = require("packages.mod.src.utils")
-local inCutscene = ____utils.inCutscene
-local inEndMeeting = ____utils.inEndMeeting
-local ____console = require("packages.mod.src.features.console")
-local isConsoleOpen = ____console.isConsoleOpen
-function ____exports.shouldShowActionButton(self)
-    return g.game ~= nil and g.game.started and g.game.meeting == nil and not inCutscene(nil) and not inEndMeeting(nil) and not isConsoleOpen(nil)
-end
-return ____exports
- end,
-["packages.mod.src.features.kill"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Spread = ____lualib.__TS__Spread
-local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
-local ____exports = {}
-local isCrewMemberClose, getClosestAliveCrewMember, KILL_DISTANCE
-local ____common = require("packages.common.src.index")
-local Role = ____common.Role
-local SocketCommandModToServer = ____common.SocketCommandModToServer
-local ____VentState = require("packages.mod.src.enums.VentState")
-local VentState = ____VentState.VentState
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____send = require("packages.mod.src.network.send")
-local sendTCP = ____send.sendTCP
-local ____players = require("packages.mod.src.players")
-local getOurPlayer = ____players.getOurPlayer
-local ____stageAPI = require("packages.mod.src.stageAPI")
-local getSkeldRoom = ____stageAPI.getSkeldRoom
-local ____actionSubroutines = require("packages.mod.src.features.actionSubroutines")
-local shouldShowActionButton = ____actionSubroutines.shouldShowActionButton
-function isCrewMemberClose(self)
-    local player = Isaac.GetPlayer()
-    local closestAliveCrewMember = getClosestAliveCrewMember(nil)
-    if closestAliveCrewMember == nil then
-        return false
-    end
-    local crewMemberPosition = Vector(closestAliveCrewMember.x, closestAliveCrewMember.y)
-    local distance = player.Position:Distance(crewMemberPosition)
-    return distance <= KILL_DISTANCE
-end
-function getClosestAliveCrewMember(self)
-    if g.game == nil then
-        return nil
-    end
-    local player = Isaac.GetPlayer()
-    local room = getSkeldRoom(nil)
-    local otherPlayersData = {__TS__Spread(g.game.playerMap:values())}
-    local aliveCrewMembersInRoom = __TS__ArrayFilter(
-        otherPlayersData,
-        function(____, otherPlayerData)
-            if g.game == nil then
-                return false
-            end
-            local playerDescription = g.game:getPlayerFromUserID(otherPlayerData.userID)
-            return playerDescription ~= nil and playerDescription.alive and not g.game:isImposter(playerDescription.userID) and otherPlayerData.room == room
-        end
-    )
-    local closestCrewMember
-    local closestDistance = math.huge
-    for ____, otherPlayerData in ipairs(aliveCrewMembersInRoom) do
-        local otherPlayerPosition = Vector(otherPlayerData.x, otherPlayerData.y)
-        local distance = otherPlayerPosition:Distance(player.Position)
-        if distance < closestDistance then
-            closestCrewMember = otherPlayerData
-            closestDistance = distance
-        end
-    end
-    return closestCrewMember
-end
-KILL_DISTANCE = 60
-function ____exports.ableToKillAPlayer(self)
-    local ourPlayer = getOurPlayer(nil)
-    return g.game ~= nil and g.game.role == Role.IMPOSTER and g.game.ventState == VentState.NONE and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isCrewMemberClose(nil)
-end
-function ____exports.kill(self)
-    if g.game == nil then
-        return
-    end
-    local closestAliveCrewMember = getClosestAliveCrewMember(nil)
-    if closestAliveCrewMember == nil then
-        return
-    end
-    sendTCP(nil, SocketCommandModToServer.KILL, {
-        gameID = g.game.id,
-        userIDKilled = closestAliveCrewMember.userID,
-        room = closestAliveCrewMember.room,
-        x = closestAliveCrewMember.x,
-        y = closestAliveCrewMember.y
-    })
-end
-return ____exports
- end,
-["packages.mod.src.features.report"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
-local ____exports = {}
-local isDeadBodyClose, getClosestDeadBody, REPORT_DISTANCE
-local ____common = require("packages.common.src.index")
-local MeetingType = ____common.MeetingType
-local SocketCommandModToServer = ____common.SocketCommandModToServer
-local ____VentState = require("packages.mod.src.enums.VentState")
-local VentState = ____VentState.VentState
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____send = require("packages.mod.src.network.send")
-local sendTCP = ____send.sendTCP
-local ____players = require("packages.mod.src.players")
-local getOurPlayer = ____players.getOurPlayer
-local ____stageAPI = require("packages.mod.src.stageAPI")
-local getSkeldRoom = ____stageAPI.getSkeldRoom
-local ____actionSubroutines = require("packages.mod.src.features.actionSubroutines")
-local shouldShowActionButton = ____actionSubroutines.shouldShowActionButton
-function isDeadBodyClose(self)
-    local player = Isaac.GetPlayer()
-    local closestDeadBody = getClosestDeadBody(nil)
-    if closestDeadBody == nil then
-        return false
-    end
-    local bodyPosition = Vector(closestDeadBody.x, closestDeadBody.y)
-    local distance = player.Position:Distance(bodyPosition)
-    return distance <= REPORT_DISTANCE
-end
-function getClosestDeadBody(self)
-    if g.game == nil then
-        return nil
-    end
-    local player = Isaac.GetPlayer()
-    local room = getSkeldRoom(nil)
-    local bodiesInThisRoom = __TS__ArrayFilter(
-        g.game.bodies,
-        function(____, body) return body.room == room end
-    )
-    if #bodiesInThisRoom == 0 then
-        return nil
-    end
-    local closestBody
-    local closestDistance = math.huge
-    for ____, body in ipairs(bodiesInThisRoom) do
-        local position = Vector(body.x, body.y)
-        local distance = player.Position:Distance(position)
-        if distance < closestDistance then
-            closestBody = body
-            closestDistance = distance
-        end
-    end
-    return closestBody
-end
-REPORT_DISTANCE = 60
-function ____exports.ableToReportDeadBody(self)
-    local ourPlayer = getOurPlayer(nil)
-    return g.game ~= nil and g.game.ventState == VentState.NONE and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isDeadBodyClose(nil)
-end
-function ____exports.reportDeadBody(self)
-    if g.game == nil then
-        return
-    end
-    local closestBody = getClosestDeadBody(nil)
-    if closestBody == nil then
-        return
-    end
-    sendTCP(nil, SocketCommandModToServer.MEETING, {gameID = g.game.id, userIDKilled = closestBody.userID, meetingType = MeetingType.REPORT_BODY})
-end
-return ____exports
- end,
-["packages.mod.src.enums.Vent"] = function(...) 
-local ____exports = {}
---- Also see the `VENT_DESCRIPTIONS` object.
-____exports.Vent = {}
-____exports.Vent.UPPER_ENGINE = 0
-____exports.Vent[____exports.Vent.UPPER_ENGINE] = "UPPER_ENGINE"
-____exports.Vent.REACTOR_TOP = 1
-____exports.Vent[____exports.Vent.REACTOR_TOP] = "REACTOR_TOP"
-____exports.Vent.WEAPONS = 2
-____exports.Vent[____exports.Vent.WEAPONS] = "WEAPONS"
-____exports.Vent.NAVIGATION_TOP = 3
-____exports.Vent[____exports.Vent.NAVIGATION_TOP] = "NAVIGATION_TOP"
-____exports.Vent.CAFETERIA = 4
-____exports.Vent[____exports.Vent.CAFETERIA] = "CAFETERIA"
-____exports.Vent.NAVIGATION_HALL = 5
-____exports.Vent[____exports.Vent.NAVIGATION_HALL] = "NAVIGATION_HALL"
-____exports.Vent.ADMIN = 6
-____exports.Vent[____exports.Vent.ADMIN] = "ADMIN"
-____exports.Vent.MEDBAY = 7
-____exports.Vent[____exports.Vent.MEDBAY] = "MEDBAY"
-____exports.Vent.ELECTRICAL = 8
-____exports.Vent[____exports.Vent.ELECTRICAL] = "ELECTRICAL"
-____exports.Vent.SECURITY = 9
-____exports.Vent[____exports.Vent.SECURITY] = "SECURITY"
-____exports.Vent.NAVIGATION_BOTTOM = 10
-____exports.Vent[____exports.Vent.NAVIGATION_BOTTOM] = "NAVIGATION_BOTTOM"
-____exports.Vent.SHIELDS = 11
-____exports.Vent[____exports.Vent.SHIELDS] = "SHIELDS"
-____exports.Vent.REACTOR_BOTTOM = 12
-____exports.Vent[____exports.Vent.REACTOR_BOTTOM] = "REACTOR_BOTTOM"
-____exports.Vent.LOWER_ENGINE = 13
-____exports.Vent[____exports.Vent.LOWER_ENGINE] = "LOWER_ENGINE"
-return ____exports
- end,
-["packages.mod.src.interfaces.VentDescription"] = function(...) 
-local ____exports = {}
-return ____exports
- end,
-["packages.mod.src.objects.ventDescriptions"] = function(...) 
-local ____exports = {}
-local ____common = require("packages.common.src.index")
-local SkeldRoom = ____common.SkeldRoom
-local ____Vent = require("packages.mod.src.enums.Vent")
-local Vent = ____Vent.Vent
-____exports.VENT_DESCRIPTIONS = {
-    [Vent.UPPER_ENGINE] = {room = SkeldRoom.UPPER_ENGINE, gridIndex = 68, destination = Vent.REACTOR_TOP},
-    [Vent.REACTOR_TOP] = {room = SkeldRoom.REACTOR, gridIndex = 31, destination = Vent.UPPER_ENGINE},
-    [Vent.WEAPONS] = {room = SkeldRoom.WEAPONS, gridIndex = 81, destination = Vent.NAVIGATION_TOP},
-    [Vent.NAVIGATION_TOP] = {room = SkeldRoom.NAVIGATION, gridIndex = 16, destination = Vent.WEAPONS},
-    [Vent.CAFETERIA] = {room = SkeldRoom.CAFETERIA, gridIndex = 334, destination = Vent.NAVIGATION_HALL},
-    [Vent.NAVIGATION_HALL] = {room = SkeldRoom.NAVIGATION_HALL, gridIndex = 46, destination = Vent.ADMIN},
-    [Vent.ADMIN] = {room = SkeldRoom.ADMIN, gridIndex = 106, destination = Vent.CAFETERIA},
-    [Vent.MEDBAY] = {room = SkeldRoom.MEDBAY, gridIndex = 114, destination = Vent.ELECTRICAL},
-    [Vent.ELECTRICAL] = {room = SkeldRoom.ELECTRICAL, gridIndex = 16, destination = Vent.SECURITY},
-    [Vent.SECURITY] = {room = SkeldRoom.SECURITY, gridIndex = 27, destination = Vent.MEDBAY},
-    [Vent.NAVIGATION_BOTTOM] = {room = SkeldRoom.NAVIGATION, gridIndex = 106, destination = Vent.SHIELDS},
-    [Vent.SHIELDS] = {room = SkeldRoom.SHIELDS, gridIndex = 99, destination = Vent.NAVIGATION_BOTTOM},
-    [Vent.REACTOR_BOTTOM] = {room = SkeldRoom.REACTOR, gridIndex = 76, destination = Vent.LOWER_ENGINE},
-    [Vent.LOWER_ENGINE] = {room = SkeldRoom.LOWER_ENGINE, gridIndex = 114, destination = Vent.REACTOR_BOTTOM}
-}
-return ____exports
- end,
-["packages.mod.src.features.vents"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ObjectValues = ____lualib.__TS__ObjectValues
-local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
-local ____exports = {}
-local getVentsForThisRoom, spawnVent, isVentClose, getClosestVent, drawInstructions, checkJumpIn, checkJumpOut, getVentDescription, VENT_DISTANCE, TEXT_GRID_INDEX
-local ____common = require("packages.common.src.index")
-local Role = ____common.Role
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local game = ____isaacscript_2Dcommon.game
-local getEffects = ____isaacscript_2Dcommon.getEffects
-local getLastFrameOfAnimation = ____isaacscript_2Dcommon.getLastFrameOfAnimation
-local VectorZero = ____isaacscript_2Dcommon.VectorZero
-local ____EffectVariantCustom = require("packages.mod.src.enums.EffectVariantCustom")
-local EffectVariantCustom = ____EffectVariantCustom.EffectVariantCustom
-local ____VentState = require("packages.mod.src.enums.VentState")
-local VentState = ____VentState.VentState
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____ventDescriptions = require("packages.mod.src.objects.ventDescriptions")
-local VENT_DESCRIPTIONS = ____ventDescriptions.VENT_DESCRIPTIONS
-local ____players = require("packages.mod.src.players")
-local getOurPlayer = ____players.getOurPlayer
-local ____skeldRoomMap = require("packages.mod.src.skeldRoomMap")
-local getSkeldRoomName = ____skeldRoomMap.getSkeldRoomName
-local ____stageAPI = require("packages.mod.src.stageAPI")
-local getSkeldRoom = ____stageAPI.getSkeldRoom
-local goToStageAPIRoom = ____stageAPI.goToStageAPIRoom
-local ____utils = require("packages.mod.src.utils")
-local drawFontText = ____utils.drawFontText
-local spawnEntity = ____utils.spawnEntity
-local ____actionSubroutines = require("packages.mod.src.features.actionSubroutines")
-local shouldShowActionButton = ____actionSubroutines.shouldShowActionButton
-function getVentsForThisRoom(self)
-    local room = getSkeldRoom(nil)
-    if room == nil then
-        return {}
-    end
-    local ventDescriptions = __TS__ObjectValues(VENT_DESCRIPTIONS)
-    return __TS__ArrayFilter(
-        ventDescriptions,
-        function(____, ventDescription) return ventDescription.room == room end
-    )
-end
-function spawnVent(self, ventDescription)
-    local vent = spawnEntity(
-        nil,
-        EntityType.EFFECT,
-        EffectVariantCustom.VENT,
-        0,
-        ventDescription.gridIndex
-    )
-    local data = vent:GetData()
-    data.destination = ventDescription.destination
-end
-function isVentClose(self)
-    local player = Isaac.GetPlayer()
-    local closestVent = getClosestVent(nil)
-    if closestVent == nil then
-        return false
-    end
-    local distance = player.Position:Distance(closestVent.Position)
-    return distance <= VENT_DISTANCE
-end
-function getClosestVent(self)
-    if g.game == nil then
-        return nil
-    end
-    local player = Isaac.GetPlayer()
-    local vents = getEffects(nil, EffectVariantCustom.VENT)
-    local closestVent
-    local closestDistance = math.huge
-    for ____, vent in ipairs(vents) do
-        local distance = player.Position:Distance(vent.Position)
-        if distance < closestDistance then
-            closestVent = vent
-            closestDistance = distance
-        end
-    end
-    return closestVent
-end
-function drawInstructions(self)
-    if g.game == nil or g.game.ventState ~= VentState.IN_VENT then
-        return
-    end
-    local room = game:GetRoom()
-    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
-    local position = Isaac.WorldToRenderPosition(worldPosition)
-    local modifiedPosition = position + Vector(0, 160)
-    local text = "Press [card] to switch rooms. Press [bomb] to leave."
-    drawFontText(nil, text, modifiedPosition)
-end
-function checkJumpIn(self, player)
-    if g.game == nil then
-        return
-    end
-    local sprite = player:GetSprite()
-    if not sprite:IsPlaying("Trapdoor") then
-        return
-    end
-    local frame = sprite:GetFrame()
-    local lastFrame = getLastFrameOfAnimation(nil, sprite)
-    if frame ~= lastFrame then
-        return
-    end
-    player:StopExtraAnimation()
-    player.Visible = false
-    g.game.ventState = VentState.IN_VENT
-end
-function checkJumpOut(self, player)
-    if g.game == nil then
-        return
-    end
-    local sprite = player:GetSprite()
-    if not sprite:IsPlaying("Jump") then
-        return
-    end
-    local frame = sprite:GetFrame()
-    local lastFrame = getLastFrameOfAnimation(nil, sprite)
-    if frame ~= lastFrame then
-        return
-    end
-    player:StopExtraAnimation()
-    player.ControlsEnabled = true
-    g.game.ventState = VentState.NONE
-end
-function getVentDescription(self, vent)
-    return VENT_DESCRIPTIONS[vent]
-end
-VENT_DISTANCE = 60
-TEXT_GRID_INDEX = 7
-function ____exports.spawnVents(self)
-    local vents = getVentsForThisRoom(nil)
-    for ____, ventDescription in ipairs(vents) do
-        spawnVent(nil, ventDescription)
-    end
-end
-function ____exports.ableToVent(self)
-    local ourPlayer = getOurPlayer(nil)
-    return g.game ~= nil and g.game.role == Role.IMPOSTER and g.game.ventState == VentState.NONE and ourPlayer ~= nil and ourPlayer.alive and shouldShowActionButton(nil) and isVentClose(nil)
-end
-function ____exports.jumpInVent(self)
-    if g.game == nil then
-        return
-    end
-    local closestVent = getClosestVent(nil)
-    if closestVent == nil then
-        return
-    end
-    local player = Isaac.GetPlayer()
-    player.Position = closestVent.Position
-    player.Velocity = VectorZero
-    player:PlayExtraAnimation("Trapdoor")
-    player.ControlsEnabled = false
-    g.game.ventState = VentState.JUMPING_IN
-end
-function ____exports.jumpOutVent(self)
-    if g.game == nil then
-        return
-    end
-    local closestVent = getClosestVent(nil)
-    if closestVent == nil then
-        return
-    end
-    local player = Isaac.GetPlayer()
-    player.Position = closestVent.Position
-    player:PlayExtraAnimation("Jump")
-    player.Visible = true
-    g.game.ventState = VentState.JUMPING_OUT
-end
-function ____exports.postRender(self)
-    drawInstructions(nil)
-    local player = Isaac.GetPlayer()
-    checkJumpIn(nil, player)
-    checkJumpOut(nil, player)
-end
-function ____exports.ventSwitchRoom(self)
-    local closestVent = getClosestVent(nil)
-    if closestVent == nil then
-        return
-    end
-    local data = closestVent:GetData()
-    local destination = data.destination
-    if destination == nil then
-        return
-    end
-    local ventDescription = getVentDescription(nil, destination)
-    if ventDescription == nil then
-        return
-    end
-    local roomName = getSkeldRoomName(nil, ventDescription.room)
-    goToStageAPIRoom(nil, roomName, ventDescription.gridIndex)
-end
-return ____exports
- end,
-["packages.mod.src.features.actionUI"] = function(...) 
-local ____exports = {}
-local drawSprite
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
-local todo = ____isaacscript_2Dcommon.todo
-local ____sprite = require("packages.mod.src.sprite")
-local initSprite = ____sprite.initSprite
-local ____connectedIcon = require("packages.mod.src.features.connectedIcon")
-local OTHER_UI_BUTTON_OFFSET = ____connectedIcon.OTHER_UI_BUTTON_OFFSET
-local ____kill = require("packages.mod.src.features.kill")
-local ableToKillAPlayer = ____kill.ableToKillAPlayer
-local ____report = require("packages.mod.src.features.report")
-local ableToReportDeadBody = ____report.ableToReportDeadBody
-local ____vents = require("packages.mod.src.features.vents")
-local ableToVent = ____vents.ableToVent
-function drawSprite(self, sprite)
-    local bottomRightPos = getScreenBottomRightPos(nil)
-    local position = bottomRightPos + OTHER_UI_BUTTON_OFFSET
-    sprite:RenderLayer(0, position)
-end
-local sprites = {
-    kill = initSprite(nil, "gfx/ui/kill.anm2"),
-    report = initSprite(nil, "gfx/ui/report.anm2"),
-    vent = initSprite(nil, "gfx/ui/vent.anm2")
-}
-function ____exports.postRender(self)
-    if ableToKillAPlayer(nil) then
-        drawSprite(nil, sprites.kill)
-        return
-    end
-    if ableToVent(nil) then
-        drawSprite(nil, sprites.vent)
-        return
-    end
-    if ableToReportDeadBody(nil) then
-        drawSprite(nil, sprites.report)
-        return
-    end
-    todo(nil)
-end
-return ____exports
- end,
-["packages.mod.src.features.chatCallbacks"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__StringSplit = ____lualib.__TS__StringSplit
-local ____exports = {}
-local drawChat, wordWrap, CHAT_POSITION, CHAT_POSITION_LEFT, MAX_TEXT_WIDTH, WIDTH_OF_SPACE, LINE_LENGTH, MAX_CHAT_MESSAGES, RENDER_FRAMES_FOR_CHAT_TO_SHOW
-local ____chat = require("packages.mod.src.chat")
-local getAllChat = ____chat.getAllChat
-local ____HexColors = require("packages.mod.src.enums.HexColors")
-local HexColors = ____HexColors.HexColors
-local ____fonts = require("packages.mod.src.fonts")
-local fonts = ____fonts.fonts
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____utils = require("packages.mod.src.utils")
-local getScreenPosition = ____utils.getScreenPosition
-local ____console = require("packages.mod.src.features.console")
-local CONSOLE_POSITION = ____console.CONSOLE_POSITION
-local CONSOLE_POSITION_LEFT = ____console.CONSOLE_POSITION_LEFT
-local isConsoleOpen = ____console.isConsoleOpen
-local SPACING_FROM_LEFT_EDGE = ____console.SPACING_FROM_LEFT_EDGE
-local ____drawText = require("packages.mod.src.features.drawText")
-local DEFAULT_OPACITY = ____drawText.DEFAULT_OPACITY
-local drawText = ____drawText.drawText
-function drawChat(self)
-    local renderFrameCount = Isaac.GetFrameCount()
-    local consoleOpen = isConsoleOpen(nil)
-    local alpha = DEFAULT_OPACITY
-    local ____opt_0 = g.game
-    local x = (____opt_0 and ____opt_0.meeting) == nil and CHAT_POSITION.X or CHAT_POSITION_LEFT.X
-    local y = CHAT_POSITION.Y
-    local numMessagesDrawn = 0
-    for ____, chatMessage in ipairs(getAllChat(nil)) do
-        local modifiedAlpha = chatMessage["local"] and DEFAULT_OPACITY or alpha
-        local renderFramesElapsed = renderFrameCount - chatMessage.renderFrameReceived
-        if not consoleOpen and renderFramesElapsed > RENDER_FRAMES_FOR_CHAT_TO_SHOW then
-            local renderFramesOverThreshold = renderFramesElapsed - RENDER_FRAMES_FOR_CHAT_TO_SHOW
-            modifiedAlpha = modifiedAlpha - renderFramesOverThreshold / (RENDER_FRAMES_FOR_CHAT_TO_SHOW * 2)
-        end
-        if modifiedAlpha <= 0 then
-            break
-        end
-        local text = ""
-        if chatMessage.time ~= "" and not chatMessage["local"] then
-            text = text .. ("[" .. chatMessage.time) .. "] "
-        end
-        if chatMessage.username ~= "" then
-            text = text .. ((((HexColors.GREEN .. "<") .. chatMessage.username) .. ">") .. HexColors.WHITE) .. " "
-        end
-        text = text .. chatMessage.msg
-        local lines = wordWrap(nil, text)
-        y = y - (#lines - 1) * LINE_LENGTH
-        for ____, line in ipairs(lines) do
-            drawText(
-                nil,
-                line,
-                Vector(x, y),
-                modifiedAlpha
-            )
-            y = y + LINE_LENGTH
-        end
-        y = y - (#lines + 1) * LINE_LENGTH
-        numMessagesDrawn = numMessagesDrawn + 1
-        if numMessagesDrawn > MAX_CHAT_MESSAGES then
-            break
-        end
-    end
-end
-function wordWrap(self, line)
-    local spaceLeft = MAX_TEXT_WIDTH
-    local words = __TS__StringSplit(line, " ")
-    do
-        local i = 0
-        while i < #words do
-            local word = words[i + 1]
-            local wordWidth = fonts.pf:GetStringWidth(word)
-            if wordWidth + WIDTH_OF_SPACE > spaceLeft then
-                words[i + 1] = "\n" .. word
-                spaceLeft = MAX_TEXT_WIDTH - wordWidth
-            else
-                spaceLeft = spaceLeft - (wordWidth + WIDTH_OF_SPACE)
-            end
-            i = i + 1
-        end
-    end
-    return __TS__StringSplit(
-        table.concat(words, " "),
-        "\n"
-    )
-end
-local CHAT_POSITION_VERTICAL_OFFSET = Vector(0, -15)
-CHAT_POSITION = CONSOLE_POSITION + CHAT_POSITION_VERTICAL_OFFSET
-CHAT_POSITION_LEFT = CONSOLE_POSITION_LEFT + CHAT_POSITION_VERTICAL_OFFSET
-local rightSideTextCutoffX = getScreenPosition(nil, 1 - SPACING_FROM_LEFT_EDGE, 0).X
-MAX_TEXT_WIDTH = rightSideTextCutoffX - CHAT_POSITION.X
-WIDTH_OF_SPACE = fonts.pf:GetStringWidth(" ")
-LINE_LENGTH = 13
-MAX_CHAT_MESSAGES = 10
-RENDER_FRAMES_FOR_CHAT_TO_SHOW = 120
-function ____exports.postRender(self)
-    drawChat(nil)
-end
-return ____exports
- end,
-["packages.mod.src.features.drawMeeting"] = function(...) 
-local ____exports = {}
-local drawTimeLeftText, getMeetingPhaseSecondsRemaining, drawVoteHelpText, TIME_LEFT_POS, VOTE_HELP_POS, LINE_SPACING
-local ____common = require("packages.common.src.index")
-local MeetingPhase = ____common.MeetingPhase
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____socketClient = require("packages.mod.src.network.socketClient")
-local getTime = ____socketClient.getTime
-local ____utils = require("packages.mod.src.utils")
-local drawFontText = ____utils.drawFontText
-local getScreenPosition = ____utils.getScreenPosition
-local inEndMeeting = ____utils.inEndMeeting
-local inStartMeeting = ____utils.inStartMeeting
-local ____console = require("packages.mod.src.features.console")
-local isConsoleOpen = ____console.isConsoleOpen
-function drawTimeLeftText(self)
-    if g.game == nil or g.game.meeting == nil then
-        return
-    end
-    local line1Pos = TIME_LEFT_POS
-    drawFontText(nil, "Time until", line1Pos)
-    local line2Pos = line1Pos + LINE_SPACING
-    local verb = g.game.meeting.meetingPhase == MeetingPhase.PRE_VOTING and "starts" or "ends"
-    drawFontText(nil, ("voting " .. verb) .. ":", line2Pos)
-    local line3Pos = line2Pos + Vector(0, 25)
-    local secondsRemaining = getMeetingPhaseSecondsRemaining(nil, g.game.meeting)
-    drawFontText(
-        nil,
-        tostring(secondsRemaining) .. " seconds",
-        line3Pos
-    )
-end
-function getMeetingPhaseSecondsRemaining(self, meeting)
-    local endMeetingTime = meeting.timePhaseStarted + meeting.phaseLengthSeconds
-    local now = getTime(nil)
-    local secondsRemaining = endMeetingTime - now
-    if secondsRemaining < 0 then
-        secondsRemaining = 0
-    end
-    return math.ceil(secondsRemaining)
-end
-function drawVoteHelpText(self)
-    if g.game == nil or g.game.meeting == nil or g.game.meeting.meetingPhase ~= MeetingPhase.VOTING then
-        return
-    end
-    local line1Pos = VOTE_HELP_POS
-    drawFontText(nil, "Vote with the", line1Pos)
-    local line2Pos = line1Pos + LINE_SPACING
-    drawFontText(nil, "/vote or /voteskip", line2Pos)
-    local line3Pos = line2Pos + LINE_SPACING
-    drawFontText(nil, "commands.", line3Pos)
-end
-local TEXT_X = 0.85
-TIME_LEFT_POS = getScreenPosition(nil, TEXT_X, 0.45)
-VOTE_HELP_POS = getScreenPosition(nil, TEXT_X, 0.15)
-LINE_SPACING = Vector(0, 15)
-function ____exports.postRender(self)
-    if g.game == nil or g.game.meeting == nil or inStartMeeting(nil) or inEndMeeting(nil) or isConsoleOpen(nil) then
-        return
-    end
-    drawTimeLeftText(nil)
-    drawVoteHelpText(nil)
-end
-return ____exports
- end,
-["packages.mod.src.features.drawOurUsername"] = function(...) 
-local ____exports = {}
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____console = require("packages.mod.src.features.console")
-local isConsoleOpen = ____console.isConsoleOpen
-local ____drawOtherPlayers = require("packages.mod.src.features.drawOtherPlayers")
-local drawUsername = ____drawOtherPlayers.drawUsername
-function ____exports.postRender(self)
-    if g.game == nil or g.userID == nil or isConsoleOpen(nil) then
-        return
-    end
-    local player = Isaac.GetPlayer()
-    if not player.Visible then
-        return
-    end
-    drawUsername(nil, g.userID, player.Position)
-end
-return ____exports
- end,
-["packages.mod.src.features.drawRoomDescription"] = function(...) 
-local ____exports = {}
-local ____common = require("packages.common.src.index")
-local FAKE_TASK = ____common.FAKE_TASK
-local MAX_PLAYERS = ____common.MAX_PLAYERS
-local TASK_DESCRIPTIONS = ____common.TASK_DESCRIPTIONS
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local game = ____isaacscript_2Dcommon.game
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____stageAPI = require("packages.mod.src.stageAPI")
-local getSkeldRoom = ____stageAPI.getSkeldRoom
-local ____stageAPISubroutines = require("packages.mod.src.stageAPISubroutines")
-local getStageAPIRoomName = ____stageAPISubroutines.getStageAPIRoomName
-local ____utils = require("packages.mod.src.utils")
-local drawFontText = ____utils.drawFontText
-local inCutscene = ____utils.inCutscene
-local inEndMeeting = ____utils.inEndMeeting
-local ____console = require("packages.mod.src.features.console")
-local isConsoleOpen = ____console.isConsoleOpen
-local ____lobby = require("packages.mod.src.features.lobby")
-local inLobby = ____lobby.inLobby
-local TEXT_GRID_INDEX = 7
-local SECOND_LINE_OFFSET = Vector(0, 20)
-function ____exports.postRender(self)
-    if StageAPI == nil or g.game == nil or g.game.meeting ~= nil or inCutscene(nil) or inEndMeeting(nil) or isConsoleOpen(nil) then
-        return
-    end
-    local room = game:GetRoom()
-    local worldPosition = room:GetGridPosition(TEXT_GRID_INDEX)
-    local position = Isaac.WorldToRenderPosition(worldPosition)
-    if g.game.currentTask == FAKE_TASK then
-        drawFontText(nil, "Fake Task", position)
-        return
-    end
-    if g.game.currentTask ~= nil then
-        local taskDescription = TASK_DESCRIPTIONS[g.game.currentTask]
-        drawFontText(nil, "Task: " .. taskDescription.name, position)
-        return
-    end
-    if inLobby(nil) then
-        drawFontText(nil, "Lobby", position)
-        local positionBelow = position + SECOND_LINE_OFFSET
-        drawFontText(
-            nil,
-            (tostring(#g.game.players) .. " / ") .. tostring(MAX_PLAYERS),
-            positionBelow
-        )
-        return
-    end
-    local roomName = getStageAPIRoomName(nil)
-    if roomName == nil then
-        return
-    end
-    local skeldRoom = getSkeldRoom(nil)
-    if skeldRoom == nil then
-        return
-    end
-    local roomDescription = roomName
-    drawFontText(nil, roomDescription, position)
-end
-return ____exports
- end,
-["packages.mod.src.features.welcomeNotification"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__StringSplit = ____lualib.__TS__StringSplit
-local ____exports = {}
-local shouldDrawWelcomeNotification, drawWelcomeNotification, NOTIFICATION_TEXT
-local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local game = ____isaacscript_2Dcommon.game
-local getRoomGridIndex = ____isaacscript_2Dcommon.getRoomGridIndex
-local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
-local ____constants = require("packages.mod.src.constants")
-local MOD_NAME = ____constants.MOD_NAME
-local ____fonts = require("packages.mod.src.fonts")
-local fonts = ____fonts.fonts
-local ____globals = require("packages.mod.src.globals")
-local g = ____globals.g
-local ____console = require("packages.mod.src.features.console")
-local isConsoleOpen = ____console.isConsoleOpen
-local ____goToEmptyRoom = require("packages.mod.src.features.goToEmptyRoom")
-local START_ROOM_INDEX = ____goToEmptyRoom.START_ROOM_INDEX
-function shouldDrawWelcomeNotification(self)
-    if g.game ~= nil then
-        return false
-    end
-    local isPaused = game:IsPaused()
-    if isPaused then
-        return false
-    end
-    local roomGridIndex = getRoomGridIndex(nil)
-    if roomGridIndex ~= START_ROOM_INDEX then
-        return false
-    end
-    if isConsoleOpen(nil) then
-        return false
-    end
-    if not g.welcomeNotificationEnabled then
-        return false
-    end
-    return true
-end
-function drawWelcomeNotification(self)
-    local bottomRightPos = getScreenBottomRightPos(nil)
-    local closeToBottom = bottomRightPos.Y - 58
-    local color = KColor(1, 1, 0, 1)
-    local y = closeToBottom
-    for ____, line in ipairs(__TS__StringSplit(NOTIFICATION_TEXT, "\n")) do
-        fonts.pf:DrawString(
-            line,
-            0,
-            y,
-            color,
-            bottomRightPos.X,
-            true
-        )
-        y = y + 10
-    end
-end
-NOTIFICATION_TEXT = ("Welcome to the " .. MOD_NAME) .. " mod!\n\nPress enter, type /help, and then press enter again for\ninstructions on how to connect to the server."
-function ____exports.postRender(self)
-    if shouldDrawWelcomeNotification(nil) then
-        drawWelcomeNotification(nil)
-    end
-end
 return ____exports
  end,
 ["packages.mod.src.network.socket"] = function(...) 
@@ -72562,9 +72753,23 @@ function ____exports.main()
 end
 return ____exports
  end,
+["packages.mod.src.initFeatures"] = function(...) 
+local ____exports = {}
+local console = require("packages.mod.src.features.console")
+local disableMultiplayer = require("packages.mod.src.features.disableMultiplayer")
+local errors = require("packages.mod.src.features.errors")
+local socketClient = require("packages.mod.src.network.socketClient")
+function ____exports.initFeatures(self)
+    errors:init()
+    disableMultiplayer:init()
+    socketClient:init()
+    console:init()
+end
+return ____exports
+ end,
 ["packages.mod.src.main"] = function(...) 
 local ____exports = {}
-local main, initLibraries, initCallbacks, initCallbacksCustom, initCallbacksStageAPI
+local initLibraries, initCallbacks, initCallbacksCustom, initCallbacksStageAPI
 local ____common = require("packages.common.src.index")
 local IS_DEV = ____common.IS_DEV
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -72606,22 +72811,6 @@ local ____mod = require("packages.mod.src.mod")
 local mod = ____mod.mod
 local ____socketClient = require("packages.mod.src.network.socketClient")
 local disconnect = ____socketClient.disconnect
-function main(self)
-    initLibraries(nil)
-    initFeatures(nil)
-    initCallbacks(nil)
-    initCallbacksCustom(nil)
-    initCallbacksStageAPI(nil)
-    if IS_DEV then
-        mod:addConsoleCommand("d", debugFunction1)
-        mod:addConsoleCommand("d2", debugFunction2)
-        mod:addConsoleCommand("w", warp)
-        mod:setHotkey(Keyboard.F1, hotkeyFunction1)
-        mod:setHotkey(Keyboard.F2, hotkeyFunction2)
-        mod:setHotkey(Keyboard.F4, disconnect)
-    end
-    log(((MOD_NAME .. " ") .. VERSION) .. " initialized.")
-end
 function initLibraries(self)
     collisionObjects:init(mod)
 end
@@ -72655,8 +72844,30 @@ function initCallbacksStageAPI(self)
     StageAPI.AddCallback(MOD_NAME, "POST_STAGEAPI_NEW_ROOM", callbackPriority, postStageAPINewRoom.main)
     StageAPI.AddCallback(MOD_NAME, "POST_ROOM_LOAD", callbackPriority, postRoomLoad.main)
 end
+function ____exports.main(self)
+    initLibraries(nil)
+    initFeatures(nil)
+    initCallbacks(nil)
+    initCallbacksCustom(nil)
+    initCallbacksStageAPI(nil)
+    if IS_DEV then
+        mod:addConsoleCommand("d", debugFunction1)
+        mod:addConsoleCommand("d2", debugFunction2)
+        mod:addConsoleCommand("w", warp)
+        mod:setHotkey(Keyboard.F1, hotkeyFunction1)
+        mod:setHotkey(Keyboard.F2, hotkeyFunction2)
+        mod:setHotkey(Keyboard.F4, disconnect)
+    end
+    log(((MOD_NAME .. " ") .. VERSION) .. " initialized.")
+end
+return ____exports
+ end,
+["packages.mod.src.bundleEntry"] = function(...) 
+local ____exports = {}
+local ____main = require("packages.mod.src.main")
+local main = ____main.main
 main(nil)
 return ____exports
  end,
 }
-return require("packages.mod.src.main", ...)
+return require("packages.mod.src.bundleEntry", ...)

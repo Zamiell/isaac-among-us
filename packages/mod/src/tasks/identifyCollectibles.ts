@@ -2,6 +2,7 @@ import { Task } from "common";
 import type { CollectibleType } from "isaac-typescript-definitions";
 import { SoundEffect } from "isaac-typescript-definitions";
 import {
+  VANILLA_COLLECTIBLE_TYPES,
   emptyArray,
   game,
   getCollectibleName,
@@ -15,7 +16,6 @@ import { resetAllButtons } from "../features/buttonSubroutines";
 import { taskComplete, taskLeave } from "../features/taskSubroutines";
 import { spawnTeleporter } from "../features/teleporter";
 import { g } from "../globals";
-import { mod } from "../mod";
 import { initGlowingItemSprite } from "../sprite";
 import { drawFontText, movePlayerToGridIndex } from "../utils";
 
@@ -75,12 +75,10 @@ function setupRound() {
 }
 
 function getRandomCollectibles(): CollectibleType[] {
-  const collectibleArray = mod.getCollectibleArray();
-
   const randomCollectibles: CollectibleType[] = [];
   repeat(NUM_RANDOM_COLLECTIBLES, () => {
     const randomCollectible = getRandomArrayElement(
-      collectibleArray,
+      VANILLA_COLLECTIBLE_TYPES,
       undefined,
       randomCollectibles,
     );
