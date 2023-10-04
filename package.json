@@ -11,15 +11,15 @@
   "dependencies": {
     "@prisma/client": "^5.3.1",
     "argon2": "^0.31.1",
-    "isaac-typescript-definitions": "^17.0.4",
-    "isaacscript-common": "^41.0.0",
+    "isaac-typescript-definitions": "^25.0.0",
+    "isaacscript-common": "^55.0.0",
     "struct": "^0.0.12"
   },
   "devDependencies": {
-    "@types/node": "^20.6.5",
-    "@types/struct": "^0.0.5",
+    "@types/node": "^20.8.2",
+    "@types/struct": "^0.0.6",
     "isaacscript": "^3.11.1",
-    "isaacscript-lint": "^5.10.0",
+    "isaacscript-lint": "^6.0.0",
     "isaacscript-spell": "^1.4.0",
     "isaacscript-tsconfig": "^4.0.0",
     "npm-check-updates": "^16.14.4",
@@ -28,7 +28,7 @@
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2",
-    "typescript-to-lua": "^1.19.3"
+    "typescript-to-lua": "^1.20.1"
   },
-  "packageManager": "yarn@3.6.3"
+  "packageManager": "yarn@3.6.4"
 }
