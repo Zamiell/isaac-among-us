@@ -66224,8 +66224,8 @@ local ButtonAction = ____isaac_2Dtypescript_2Ddefinitions.ButtonAction
 local InputHook = ____isaac_2Dtypescript_2Ddefinitions.InputHook
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local MOVEMENT_ACTIONS_SET = ____isaacscript_2Dcommon.MOVEMENT_ACTIONS_SET
 local isAfterGameFrame = ____isaacscript_2Dcommon.isAfterGameFrame
+local isMoveAction = ____isaacscript_2Dcommon.isMoveAction
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.g
 local ____mod = require("packages.mod.src.mod")
@@ -66260,7 +66260,7 @@ function disablePreRunMovement(self, inputHook, buttonAction)
     if isAfterGameFrame(nil, 0) then
         return nil
     end
-    if MOVEMENT_ACTIONS_SET:has(buttonAction) then
+    if isMoveAction(nil, buttonAction) then
         return inputHook == InputHook.GET_ACTION_VALUE and 0 or false
     end
     return nil
