@@ -4194,6 +4194,14 @@ do
     end
 end
 do
+    local ____export = require("lua_modules.isaacscript-common.dist.src.functions.frames")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+do
     local ____export = require("lua_modules.isaacscript-common.dist.src.functions.globals")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
@@ -8306,8 +8314,8 @@ ____exports.EffectVariant.CRACK_WAVE = 72
 ____exports.EffectVariant[____exports.EffectVariant.CRACK_WAVE] = "CRACK_WAVE"
 ____exports.EffectVariant.SHOCKWAVE_RANDOM = 73
 ____exports.EffectVariant[____exports.EffectVariant.SHOCKWAVE_RANDOM] = "SHOCKWAVE_RANDOM"
-____exports.EffectVariant.ISAACS_CARPET = 74
-____exports.EffectVariant[____exports.EffectVariant.ISAACS_CARPET] = "ISAACS_CARPET"
+____exports.EffectVariant.CARPET = 74
+____exports.EffectVariant[____exports.EffectVariant.CARPET] = "CARPET"
 ____exports.EffectVariant.BAR_PARTICLE = 75
 ____exports.EffectVariant[____exports.EffectVariant.BAR_PARTICLE] = "BAR_PARTICLE"
 ____exports.EffectVariant.DICE_FLOOR = 76
@@ -10782,8 +10790,8 @@ ____exports.TrinketType.CURSED_SKULL = 43
 ____exports.TrinketType[____exports.TrinketType.CURSED_SKULL] = "CURSED_SKULL"
 ____exports.TrinketType.SAFETY_CAP = 44
 ____exports.TrinketType[____exports.TrinketType.SAFETY_CAP] = "SAFETY_CAP"
-____exports.TrinketType.ACE_SPADES = 45
-____exports.TrinketType[____exports.TrinketType.ACE_SPADES] = "ACE_SPADES"
+____exports.TrinketType.ACE_OF_SPADES = 45
+____exports.TrinketType[____exports.TrinketType.ACE_OF_SPADES] = "ACE_OF_SPADES"
 ____exports.TrinketType.ISAACS_FORK = 46
 ____exports.TrinketType[____exports.TrinketType.ISAACS_FORK] = "ISAACS_FORK"
 ____exports.TrinketType.MISSING_PAGE = 48
@@ -10804,8 +10812,8 @@ ____exports.TrinketType.MAGGYS_FAITH = 55
 ____exports.TrinketType[____exports.TrinketType.MAGGYS_FAITH] = "MAGGYS_FAITH"
 ____exports.TrinketType.JUDAS_TONGUE = 56
 ____exports.TrinketType[____exports.TrinketType.JUDAS_TONGUE] = "JUDAS_TONGUE"
-____exports.TrinketType.SOUL = 57
-____exports.TrinketType[____exports.TrinketType.SOUL] = "SOUL"
+____exports.TrinketType.BLUE_BABYS_SOUL = 57
+____exports.TrinketType[____exports.TrinketType.BLUE_BABYS_SOUL] = "BLUE_BABYS_SOUL"
 ____exports.TrinketType.SAMSONS_LOCK = 58
 ____exports.TrinketType[____exports.TrinketType.SAMSONS_LOCK] = "SAMSONS_LOCK"
 ____exports.TrinketType.CAINS_EYE = 59
@@ -11406,6 +11414,14 @@ ____exports.HeavenLightDoorSubType.HEAVEN_DOOR = 0
 ____exports.HeavenLightDoorSubType[____exports.HeavenLightDoorSubType.HEAVEN_DOOR] = "HEAVEN_DOOR"
 ____exports.HeavenLightDoorSubType.MOONLIGHT = 1
 ____exports.HeavenLightDoorSubType[____exports.HeavenLightDoorSubType.MOONLIGHT] = "MOONLIGHT"
+--- For `EntityType.EFFECT` (1000), `EffectVariant.CARPET` (74).
+____exports.CarpetSubType = {}
+____exports.CarpetSubType.ISAACS_CARPET = 0
+____exports.CarpetSubType[____exports.CarpetSubType.ISAACS_CARPET] = "ISAACS_CARPET"
+____exports.CarpetSubType.MOMS_CARPET_1 = 1
+____exports.CarpetSubType[____exports.CarpetSubType.MOMS_CARPET_1] = "MOMS_CARPET_1"
+____exports.CarpetSubType.MOMS_CARPET_2 = 2
+____exports.CarpetSubType[____exports.CarpetSubType.MOMS_CARPET_2] = "MOMS_CARPET_2"
 --- For `EntityType.EFFECT` (1000), `EffectVariant.DICE_FLOOR` (76).
 ____exports.DiceFloorSubType = {}
 ____exports.DiceFloorSubType.ONE_PIP = 0
@@ -11642,6 +11658,8 @@ ____exports.BossID.BIG_HORN = 69
 ____exports.BossID[____exports.BossID.BIG_HORN] = "BIG_HORN"
 ____exports.BossID.DELIRIUM = 70
 ____exports.BossID[____exports.BossID.DELIRIUM] = "DELIRIUM"
+____exports.BossID.ULTRA_GREEDIER = 71
+____exports.BossID[____exports.BossID.ULTRA_GREEDIER] = "ULTRA_GREEDIER"
 ____exports.BossID.MATRIARCH = 72
 ____exports.BossID[____exports.BossID.MATRIARCH] = "MATRIARCH"
 ____exports.BossID.PILE = 73
@@ -17953,6 +17971,18 @@ function ____exports.assertDefined(self, value, ...)
         error(msg)
     end
 end
+--- Helper function to throw an error (using the `error` Lua function) if the provided value is equal
+-- to `null`.
+-- 
+-- This is useful to have TypeScript narrow a `T | null` value to `T` in a concise way.
+function ____exports.assertNotNull(self, value, ...)
+    local ____bindingPattern0 = {...}
+    local msg
+    msg = ____bindingPattern0[1]
+    if value == nil then
+        error(msg)
+    end
+end
 --- Helper function to return an array of integers with the specified range, inclusive on the lower
 -- end and exclusive on the high end. (The "e" in the function name stands for exclusive.) Thus,
 -- this function works in a similar way as the built-in `range` function from Python.
@@ -19807,6 +19837,8 @@ local SerializationBrand = ____SerializationBrand.SerializationBrand
 local ____isaacAPIClass = require("lua_modules.isaacscript-common.dist.src.functions.isaacAPIClass")
 local isaacAPIClassEquals = ____isaacAPIClass.isaacAPIClassEquals
 local isIsaacAPIClassOfType = ____isaacAPIClass.isIsaacAPIClassOfType
+local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
+local logError = ____log.logError
 local ____table = require("lua_modules.isaacscript-common.dist.src.functions.table")
 local getNumbersFromTable = ____table.getNumbersFromTable
 local tableHasKeys = ____table.tableHasKeys
@@ -19840,7 +19872,8 @@ end
 --- Helper function to set a seed to an RNG object using Blade's recommended shift index.
 function ____exports.setSeed(self, rng, seed)
     if seed == 0 then
-        error("You cannot set an RNG object to a seed of 0, or the game will crash.")
+        seed = ____exports.getRandomSeed(nil)
+        logError("Failed to set a RNG object to a seed of 0. Using a random value instead.")
     end
     rng:SetSeed(seed, RECOMMENDED_SHIFT_IDX)
 end
@@ -20078,6 +20111,81 @@ function ____exports.tableHasKeys(self, luaMap, ...)
         keys,
         function(____, key) return luaMap[key] ~= nil end
     )
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.functions.log"] = function(...) 
+local ____exports = {}
+local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
+local isNumber = ____types.isNumber
+--- Helper function to get the name and the line number of the current calling function.
+-- 
+-- For this function to work properly, the "--luadebug" flag must be enabled. Otherwise, it will
+-- always return undefined.
+-- 
+-- @param levels Optional. The amount of levels to look backwards in the call stack. Default is 3
+-- (because the first level is this function, the second level is the calling
+-- function, and the third level is the parent of the calling function).
+function ____exports.getParentFunctionDescription(levels)
+    if levels == nil then
+        levels = 3
+    end
+    if debug ~= nil then
+        local debugTable = debug.getinfo(levels)
+        if debugTable ~= nil then
+            return (tostring(debugTable.name) .. ":") .. tostring(debugTable.linedefined)
+        end
+    end
+    if SandboxGetParentFunctionDescription ~= nil then
+        return SandboxGetParentFunctionDescription(levels)
+    end
+    return nil
+end
+--- Helper function to avoid typing out `Isaac.DebugString()`.
+-- 
+-- If you have the "--luadebug" launch flag turned on, then this function will also prepend the
+-- function name and the line number before the string, like this:
+-- 
+-- ```text
+-- [INFO] - Lua Debug: saveToDisk:42494 - The save data manager wrote data to the "save#.dat" file.
+-- ```
+-- 
+-- Subsequently, it is recommended that you turn on the "--luadebug" launch flag when developing
+-- your mod so that debugging becomes a little bit easier.
+-- 
+-- @param msg The message to log.
+-- @param includeParentFunction Optional. Whether to prefix the message with the function name and
+-- line number, as shown in the above example. Default is true.
+function ____exports.log(msg, includeParentFunction)
+    if includeParentFunction == nil then
+        includeParentFunction = true
+    end
+    if isNumber(nil, msg) then
+        msg = tostring(msg)
+    end
+    local ____includeParentFunction_0
+    if includeParentFunction then
+        ____includeParentFunction_0 = ____exports.getParentFunctionDescription()
+    else
+        ____includeParentFunction_0 = nil
+    end
+    local parentFunctionDescription = ____includeParentFunction_0
+    local debugMsg = parentFunctionDescription == nil and msg or (parentFunctionDescription .. " - ") .. msg
+    Isaac.DebugString(debugMsg)
+end
+--- Helper function to log a message to the "log.txt" file and to print it to the screen at the same
+-- time.
+function ____exports.logAndPrint(self, msg)
+    ____exports.log(msg)
+    print(msg)
+end
+--- Helper function to log an error message and also print it to the console for better visibility.
+-- 
+-- This is useful in situations where using the `error` function would be dangerous (since it
+-- prevents all of the subsequent code in the callback from running).
+function ____exports.logError(msg)
+    local errorMsg = "Error: " .. msg
+    ____exports.logAndPrint(nil, errorMsg)
 end
 return ____exports
  end,
@@ -20341,6 +20449,7 @@ local __TS__ArraySlice = ____lualib.__TS__ArraySlice
 local __TS__SparseArrayNew = ____lualib.__TS__SparseArrayNew
 local __TS__SparseArrayPush = ____lualib.__TS__SparseArrayPush
 local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
+local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
 local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
 local __TS__ArraySome = ____lualib.__TS__ArraySome
 local __TS__ArrayReduce = ____lualib.__TS__ArrayReduce
@@ -20778,6 +20887,14 @@ function ____exports.getRandomArrayElementAndRemove(self, array, seedOrRNG, exce
     ____exports.arrayRemoveInPlace(nil, array, randomArrayElement)
     return randomArrayElement
 end
+--- Similar to the `Array.includes` method, but works on a widened version of the array.
+-- 
+-- This is useful when the normal `Array.includes` produces a type error from an array that uses an
+-- `as const` assertion.
+function ____exports.includes(self, array, searchElement)
+    local widenedArray = array
+    return __TS__ArrayIncludes(widenedArray, searchElement)
+end
 --- Since Lua uses tables for every non-primitive data structure, it is non-trivial to determine if a
 -- particular table is being used as an array. `isArray` returns true if:
 -- 
@@ -21035,109 +21152,111 @@ return ____exports
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
---- Used when rendering the "versusscreen.anm2" sprite.
+--- From the "portrait" attribute in the "bossportraits.xml" file. Used when rendering the
+-- "versusscreen.anm2" sprite.
 ____exports.BOSS_PORTRAIT_PNG_FILE_NAMES = {
-    [BossID.MONSTRO] = "portrait_20.0_monstro.png",
-    [BossID.LARRY_JR] = "portrait_19.0_larryjr.png",
-    [BossID.CHUB] = "portrait_28.0_chub.png",
-    [BossID.GURDY] = "portrait_36.0_gurdy.png",
-    [BossID.MONSTRO_2] = "portrait_43.0_monstro2.png",
-    [BossID.MOM] = "portrait_45.0_mom.png",
-    [BossID.SCOLEX] = "portrait_62.1_scolex.png",
-    [BossID.MOMS_HEART] = "portrait_78.0_momsheart.png",
-    [BossID.FAMINE] = "portrait_63.0_famine.png",
-    [BossID.PESTILENCE] = "portrait_64.0_pestilence.png",
-    [BossID.WAR] = "portrait_65.0_war.png",
-    [BossID.DEATH] = "portrait_66.0_death.png",
-    [BossID.DUKE_OF_FLIES] = "portrait_67.0_dukeofflies.png",
-    [BossID.PEEP] = "portrait_68.0_peep.png",
-    [BossID.LOKI] = "portrait_69.0_loki.png",
-    [BossID.BLASTOCYST] = "portrait_74.0_blastocyst.png",
-    [BossID.GEMINI] = "portrait_79.0_gemini.png",
-    [BossID.FISTULA] = "portrait_71.0_fistula.png",
-    [BossID.GISH] = "portrait_43.1_gish.png",
-    [BossID.STEVEN] = "portrait_79.1_steven.png",
-    [BossID.CHAD] = "portrait_28.1_chad.png",
-    [BossID.HEADLESS_HORSEMAN] = "portrait_82.0_headlesshorseman.png",
-    [BossID.FALLEN] = "portrait_81.0_thefallen.png",
-    [BossID.SATAN] = "portrait_84.0_satan.png",
-    [BossID.IT_LIVES] = "portrait_78.1_itlives.png",
-    [BossID.HOLLOW] = "portrait_19.1_thehollow.png",
-    [BossID.CARRION_QUEEN] = "portrait_28.2_carrionqueen.png",
-    [BossID.GURDY_JR] = "portrait_99.0_gurdyjr.png",
-    [BossID.HUSK] = "portrait_67.1_thehusk.png",
-    [BossID.BLOAT] = "portrait_68.1_bloat.png",
-    [BossID.LOKII] = "portrait_69.1_lokii.png",
-    [BossID.BLIGHTED_OVUM] = "portrait_79.2_blightedovum.png",
-    [BossID.TERATOMA] = "portrait_71.1_teratoma.png",
-    [BossID.WIDOW] = "portrait_100.0_widow.png",
-    [BossID.MASK_OF_INFAMY] = "portrait_97.0_maskofinfamy.png",
-    [BossID.WRETCHED] = "portrait_100.1_thewretched.png",
-    [BossID.PIN] = "portrait_62.0_pin.png",
-    [BossID.CONQUEST] = "portrait_65.1_conquest.png",
-    [BossID.ISAAC] = "portrait_102.0_isaac.png",
-    [BossID.BLUE_BABY] = "portrait_102.1_bluebaby.png",
-    [BossID.DADDY_LONG_LEGS] = "portrait_101.0_daddylonglegs.png",
-    [BossID.TRIACHNID] = "portrait_101.1_triachnid.png",
-    [BossID.HAUNT] = "portrait_260.0_thehaunt.png",
-    [BossID.DINGLE] = "portrait_261.0_dingle.png",
-    [BossID.MEGA_MAW] = "portrait_262.0_megamaw.png",
-    [BossID.GATE] = "portrait_263.0_megamaw2.png",
-    [BossID.MEGA_FATTY] = "portrait_264.0_megafatty.png",
-    [BossID.CAGE] = "portrait_265.0_fatty2.png",
-    [BossID.MAMA_GURDY] = "portrait_266.0_mamagurdy.png",
-    [BossID.DARK_ONE] = "portrait_267.0_darkone.png",
-    [BossID.ADVERSARY] = "portrait_268.0_darkone2.png",
-    [BossID.POLYCEPHALUS] = "portrait_269.0_polycephalus.png",
-    [BossID.MR_FRED] = "portrait_270.0_megafred.png",
-    [BossID.LAMB] = "portrait_273.0_thelamb.png",
-    [BossID.MEGA_SATAN] = "portrait_274.0_megasatan.png",
-    [BossID.GURGLING] = "portrait_276.0_gurglings.png",
-    [BossID.STAIN] = "portrait_401.0_thestain.png",
-    [BossID.BROWNIE] = "portrait_402.0_brownie.png",
-    [BossID.FORSAKEN] = "portrait_403.0_theforsaken.png",
-    [BossID.LITTLE_HORN] = "portrait_404.0_littlehorn.png",
-    [BossID.RAG_MAN] = "portrait_405.0_ragman.png",
-    [BossID.ULTRA_GREED] = "portrait_406.0_ultragreed.png",
-    [BossID.HUSH] = "portrait_407.0_hush.png",
-    [BossID.DANGLE] = "portrait_dangle.png",
-    [BossID.TURDLING] = "portrait_turdlings.png",
-    [BossID.FRAIL] = "portrait_thefrail.png",
-    [BossID.RAG_MEGA] = "portrait_ragmega.png",
-    [BossID.SISTERS_VIS] = "portrait_sistersvis.png",
-    [BossID.BIG_HORN] = "portrait_bighorn.png",
-    [BossID.DELIRIUM] = "portrait_delirium.png",
-    [BossID.MATRIARCH] = "portrait_matriarch.png",
-    [BossID.PILE] = "portrait_269.1_polycephalus2.png",
-    [BossID.REAP_CREEP] = "portrait_900.0_reapcreep.png",
-    [BossID.LIL_BLUB] = "portrait_901.0_beelzeblub.png",
-    [BossID.WORMWOOD] = "portrait_902.0_wormwood.png",
-    [BossID.RAINMAKER] = "portrait_902.0_rainmaker.png",
-    [BossID.VISAGE] = "portrait_903.0_visage.png",
-    [BossID.SIREN] = "portrait_904.0_siren.png",
-    [BossID.TUFF_TWINS] = "portrait_19.100_tufftwins.png",
-    [BossID.HERETIC] = "portrait_905.0_heretic.png",
-    [BossID.HORNFEL] = "portrait_906.0_hornfel.png",
-    [BossID.GREAT_GIDEON] = "portrait_907.0_gideon.png",
-    [BossID.BABY_PLUM] = "portrait_908.0_babyplum.png",
-    [BossID.SCOURGE] = "portrait_909.0_scourge.png",
-    [BossID.CHIMERA] = "portrait_910.0_chimera.png",
-    [BossID.ROTGUT] = "portrait_911.0_rotgut.png",
-    [BossID.MOTHER] = "portrait_mother.png",
-    [BossID.MAUSOLEUM_MOM] = "portrait_45.0_mom.png",
-    [BossID.MAUSOLEUM_MOMS_HEART] = "portrait_78.0_momsheart.png",
-    [BossID.MIN_MIN] = "portrait_minmin.png",
-    [BossID.CLOG] = "portrait_clog.png",
-    [BossID.SINGE] = "portrait_singe.png",
-    [BossID.BUMBINO] = "portrait_bumbino.png",
-    [BossID.COLOSTOMIA] = "portrait_colostomia.png",
-    [BossID.SHELL] = "portrait_shell.png",
-    [BossID.TURDLET] = "portrait_turdlet.png",
-    [BossID.RAGLICH] = "portrait_raglich.png",
-    [BossID.DOGMA] = "portrait_dogma.png",
-    [BossID.BEAST] = "portrait_dogma.png",
-    [BossID.HORNY_BOYS] = "portrait_hornyboys.png",
-    [BossID.CLUTCH] = "portrait_clutch.png"
+    [BossID.MONSTRO] = "Portrait_20.0_Monstro.png",
+    [BossID.LARRY_JR] = "Portrait_19.0_LarryJr.png",
+    [BossID.CHUB] = "Portrait_28.0_Chub.png",
+    [BossID.GURDY] = "Portrait_36.0_Gurdy.png",
+    [BossID.MONSTRO_2] = "Portrait_43.0_Monstro2.png",
+    [BossID.MOM] = "Portrait_45.0_Mom.png",
+    [BossID.SCOLEX] = "Portrait_62.1_Scolex.png",
+    [BossID.MOMS_HEART] = "Portrait_78.0_MomsHeart.png",
+    [BossID.FAMINE] = "Portrait_63.0_Famine.png",
+    [BossID.PESTILENCE] = "Portrait_64.0_Pestilence.png",
+    [BossID.WAR] = "Portrait_65.0_War.png",
+    [BossID.DEATH] = "Portrait_66.0_Death.png",
+    [BossID.DUKE_OF_FLIES] = "Portrait_67.0_DukeOfFlies.png",
+    [BossID.PEEP] = "Portrait_68.0_Peep.png",
+    [BossID.LOKI] = "Portrait_69.0_Loki.png",
+    [BossID.BLASTOCYST] = "Portrait_74.0_Blastocyst.png",
+    [BossID.GEMINI] = "Portrait_79.0_Gemini.png",
+    [BossID.FISTULA] = "Portrait_71.0_Fistula.png",
+    [BossID.GISH] = "Portrait_43.1_Gish.png",
+    [BossID.STEVEN] = "Portrait_79.1_Steven.png",
+    [BossID.CHAD] = "Portrait_28.1_CHAD.png",
+    [BossID.HEADLESS_HORSEMAN] = "Portrait_82.0_HeadlessHorseman.png",
+    [BossID.FALLEN] = "Portrait_81.0_TheFallen.png",
+    [BossID.SATAN] = "Portrait_84.0_Satan.png",
+    [BossID.IT_LIVES] = "Portrait_78.1_ItLives.png",
+    [BossID.HOLLOW] = "Portrait_19.1_TheHollow.png",
+    [BossID.CARRION_QUEEN] = "Portrait_28.2_CarrionQueen.png",
+    [BossID.GURDY_JR] = "Portrait_99.0_GurdyJr.png",
+    [BossID.HUSK] = "Portrait_67.1_TheHusk.png",
+    [BossID.BLOAT] = "Portrait_68.1_Bloat.png",
+    [BossID.LOKII] = "Portrait_69.1_Lokii.png",
+    [BossID.BLIGHTED_OVUM] = "Portrait_79.2_BlightedOvum.png",
+    [BossID.TERATOMA] = "Portrait_71.1_Teratoma.png",
+    [BossID.WIDOW] = "Portrait_100.0_Widow.png",
+    [BossID.MASK_OF_INFAMY] = "Portrait_97.0_MaskOfInfamy.png",
+    [BossID.WRETCHED] = "Portrait_100.1_TheWretched.png",
+    [BossID.PIN] = "Portrait_62.0_Pin.png",
+    [BossID.CONQUEST] = "Portrait_65.1_Conquest.png",
+    [BossID.ISAAC] = "Portrait_102.0_Isaac.png",
+    [BossID.BLUE_BABY] = "Portrait_102.1_BlueBaby.png",
+    [BossID.DADDY_LONG_LEGS] = "Portrait_101.0_DaddyLongLegs.png",
+    [BossID.TRIACHNID] = "Portrait_101.1_Triachnid.png",
+    [BossID.HAUNT] = "Portrait_260.0_TheHaunt.png",
+    [BossID.DINGLE] = "Portrait_261.0_Dingle.png",
+    [BossID.MEGA_MAW] = "Portrait_262.0_MegaMaw.png",
+    [BossID.GATE] = "Portrait_263.0_MegaMaw2.png",
+    [BossID.MEGA_FATTY] = "Portrait_264.0_MegaFatty.png",
+    [BossID.CAGE] = "Portrait_265.0_Fatty2.png",
+    [BossID.MAMA_GURDY] = "Portrait_266.0_MamaGurdy.png",
+    [BossID.DARK_ONE] = "Portrait_267.0_DarkOne.png",
+    [BossID.ADVERSARY] = "Portrait_268.0_DarkOne2.png",
+    [BossID.POLYCEPHALUS] = "Portrait_269.0_Polycephalus.png",
+    [BossID.MR_FRED] = "Portrait_270.0_MegaFred.png",
+    [BossID.LAMB] = "Portrait_273.0_TheLamb.png",
+    [BossID.MEGA_SATAN] = "Portrait_274.0_MegaSatan.png",
+    [BossID.GURGLING] = "Portrait_276.0_Gurglings.png",
+    [BossID.STAIN] = "Portrait_401.0_TheStain.png",
+    [BossID.BROWNIE] = "Portrait_402.0_Brownie.png",
+    [BossID.FORSAKEN] = "Portrait_403.0_TheForsaken.png",
+    [BossID.LITTLE_HORN] = "Portrait_404.0_LittleHorn.png",
+    [BossID.RAG_MAN] = "Portrait_405.0_Ragman.png",
+    [BossID.ULTRA_GREED] = "Portrait_406.0_UltraGreed.png",
+    [BossID.HUSH] = "Portrait_407.0_Hush.png",
+    [BossID.DANGLE] = "Portrait_Dangle.png",
+    [BossID.TURDLING] = "Portrait_Turdlings.png",
+    [BossID.FRAIL] = "Portrait_TheFrail.png",
+    [BossID.RAG_MEGA] = "Portrait_RagMega.png",
+    [BossID.SISTERS_VIS] = "Portrait_SistersVis.png",
+    [BossID.BIG_HORN] = "Portrait_BigHorn.png",
+    [BossID.DELIRIUM] = "Portrait_Delirium.png",
+    [BossID.ULTRA_GREEDIER] = "Portrait_406.0_UltraGreed.png",
+    [BossID.MATRIARCH] = "Portrait_Matriarch.png",
+    [BossID.PILE] = "Portrait_269.1_Polycephalus2.png",
+    [BossID.REAP_CREEP] = "Portrait_900.0_ReapCreep.png",
+    [BossID.LIL_BLUB] = "Portrait_901.0_Beelzeblub.png",
+    [BossID.WORMWOOD] = "Portrait_902.0_Wormwood.png",
+    [BossID.RAINMAKER] = "Portrait_902.0_Rainmaker.png",
+    [BossID.VISAGE] = "Portrait_903.0_Visage.png",
+    [BossID.SIREN] = "Portrait_904.0_Siren.png",
+    [BossID.TUFF_TWINS] = "Portrait_19.100_TuffTwins.png",
+    [BossID.HERETIC] = "Portrait_905.0_Heretic.png",
+    [BossID.HORNFEL] = "Portrait_906.0_Hornfel.png",
+    [BossID.GREAT_GIDEON] = "Portrait_907.0_Gideon.png",
+    [BossID.BABY_PLUM] = "Portrait_908.0_BabyPlum.png",
+    [BossID.SCOURGE] = "Portrait_909.0_Scourge.png",
+    [BossID.CHIMERA] = "Portrait_910.0_Chimera.png",
+    [BossID.ROTGUT] = "Portrait_911.0_Rotgut.png",
+    [BossID.MOTHER] = "Portrait_Mother.png",
+    [BossID.MAUSOLEUM_MOM] = "Portrait_45.0_Mom.png",
+    [BossID.MAUSOLEUM_MOMS_HEART] = "Portrait_78.0_MomsHeart.png",
+    [BossID.MIN_MIN] = "Portrait_MinMin.png",
+    [BossID.CLOG] = "Portrait_Clog.png",
+    [BossID.SINGE] = "Portrait_Singe.png",
+    [BossID.BUMBINO] = "Portrait_Bumbino.png",
+    [BossID.COLOSTOMIA] = "Portrait_Colostomia.png",
+    [BossID.SHELL] = "Portrait_Shell.png",
+    [BossID.TURDLET] = "Portrait_Turdlet.png",
+    [BossID.RAGLICH] = "Portrait_Raglich.png",
+    [BossID.DOGMA] = "Portrait_Dogma.png",
+    [BossID.BEAST] = "Portrait_The Beast.png",
+    [BossID.HORNY_BOYS] = "Portrait_HornyBoys.png",
+    [BossID.CLUTCH] = "Portrait_Clutch.png"
 }
 return ____exports
  end,
@@ -21145,109 +21264,111 @@ return ____exports
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
---- Used when rendering the "versusscreen.anm2" sprite.
+--- From the "nameimage" attribute in the "bossportraits.xml" file. Used when rendering the
+-- "versusscreen.anm2" sprite.
 ____exports.BOSS_NAME_PNG_FILE_NAMES = {
-    [BossID.MONSTRO] = "bossname_20.0_monstro.png",
-    [BossID.LARRY_JR] = "bossname_19.0_larryjr.png",
-    [BossID.CHUB] = "bossname_28.0_chub.png",
-    [BossID.GURDY] = "bossname_36.0_gurdy.png",
-    [BossID.MONSTRO_2] = "bossname_43.0_monstro2.png",
-    [BossID.MOM] = "bossname_45.0_mom.png",
-    [BossID.SCOLEX] = "bossname_62.1_scolex.png",
-    [BossID.MOMS_HEART] = "bossname_78.0_momsheart.png",
-    [BossID.FAMINE] = "bossname_63.0_famine.png",
-    [BossID.PESTILENCE] = "bossname_64.0_pestilence.png",
-    [BossID.WAR] = "bossname_65.0_war.png",
-    [BossID.DEATH] = "bossname_66.0_death.png",
-    [BossID.DUKE_OF_FLIES] = "bossname_67.0_dukeofflies.png",
-    [BossID.PEEP] = "bossname_68.0_peep.png",
-    [BossID.LOKI] = "bossname_69.0_loki.png",
-    [BossID.BLASTOCYST] = "bossname_74.0_blastocyst.png",
-    [BossID.GEMINI] = "bossname_79.0_gemini.png",
-    [BossID.FISTULA] = "bossname_71.0_fistula.png",
-    [BossID.GISH] = "bossname_43.1_gish.png",
-    [BossID.STEVEN] = "bossname_79.1_steven.png",
-    [BossID.CHAD] = "bossname_28.1_chad.png",
-    [BossID.HEADLESS_HORSEMAN] = "bossname_82.0_headlesshorseman.png",
-    [BossID.FALLEN] = "bossname_81.0_thefallen.png",
-    [BossID.SATAN] = "bossname_84.0_satan.png",
-    [BossID.IT_LIVES] = "bossname_78.1_itlives.png",
-    [BossID.HOLLOW] = "bossname_19.1_thehollow.png",
-    [BossID.CARRION_QUEEN] = "bossname_28.2_carrionqueen.png",
-    [BossID.GURDY_JR] = "bossname_99.0_gurdyjr.png",
-    [BossID.HUSK] = "bossname_67.1_thehusk.png",
-    [BossID.BLOAT] = "bossname_68.1_bloat.png",
-    [BossID.LOKII] = "bossname_69.1_lokii.png",
-    [BossID.BLIGHTED_OVUM] = "bossname_79.2_blightedovum.png",
-    [BossID.TERATOMA] = "bossname_71.1_teratoma.png",
-    [BossID.WIDOW] = "bossname_100.0_widow.png",
-    [BossID.MASK_OF_INFAMY] = "bossname_97.0_maskofinfamy.png",
-    [BossID.WRETCHED] = "bossname_100.1_thewretched.png",
-    [BossID.PIN] = "bossname_62.0_pin.png",
-    [BossID.CONQUEST] = "bossname_65.1_conquest.png",
-    [BossID.ISAAC] = "playername_01_isaac.png",
-    [BossID.BLUE_BABY] = "bossname_102.1_bluebaby.png",
-    [BossID.DADDY_LONG_LEGS] = "bossname_101.0_daddylonglegs.png",
-    [BossID.TRIACHNID] = "bossname_101.1_triachnid.png",
-    [BossID.HAUNT] = "bossname_260.0_thehaunt.png",
-    [BossID.DINGLE] = "bossname_261.0_dingle.png",
-    [BossID.MEGA_MAW] = "bossname_262.0_megamaw.png",
-    [BossID.GATE] = "bossname_263.0_megamaw2.png",
-    [BossID.MEGA_FATTY] = "bossname_264.0_megafatty.png",
-    [BossID.CAGE] = "bossname_265.0_fatty2.png",
-    [BossID.MAMA_GURDY] = "bossname_266.0_mamagurdy.png",
-    [BossID.DARK_ONE] = "bossname_267.0_darkone.png",
-    [BossID.ADVERSARY] = "bossname_268.0_darkone2.png",
-    [BossID.POLYCEPHALUS] = "bossname_269.0_polycephalus.png",
-    [BossID.MR_FRED] = "bossname_270.0_megafred.png",
-    [BossID.LAMB] = "bossname_273.0_thelamb.png",
-    [BossID.MEGA_SATAN] = "bossname_274.0_megasatan.png",
-    [BossID.GURGLING] = "bossname_276.0_gurglings.png",
-    [BossID.STAIN] = "bossname_401.0_thestain.png",
-    [BossID.BROWNIE] = "bossname_402.0_brownie.png",
-    [BossID.FORSAKEN] = "bossname_403.0_theforsaken.png",
-    [BossID.LITTLE_HORN] = "bossname_404.0_littlehorn.png",
-    [BossID.RAG_MAN] = "bossname_405.0_ragman.png",
-    [BossID.ULTRA_GREED] = "bossname_406.0_ultragreed.png",
-    [BossID.HUSH] = "bossname_407.0_hush.png",
-    [BossID.DANGLE] = "bossname_dangle.png",
-    [BossID.TURDLING] = "bossname_turdlings.png",
-    [BossID.FRAIL] = "bossname_thefrail.png",
-    [BossID.RAG_MEGA] = "bossname_ragmega.png",
-    [BossID.SISTERS_VIS] = "bossname_sisterssvis.png",
-    [BossID.BIG_HORN] = "bossname_bighorn.png",
-    [BossID.DELIRIUM] = "bossname_delirium.png",
-    [BossID.MATRIARCH] = "bossname_matriarch.png",
-    [BossID.PILE] = "bossname_polycephalus2.png",
-    [BossID.REAP_CREEP] = "bossname_reapcreep.png",
-    [BossID.LIL_BLUB] = "bossname_beelzeblub.png",
-    [BossID.WORMWOOD] = "bossname_wormwood.png",
-    [BossID.RAINMAKER] = "bossname_rainmaker.png",
-    [BossID.VISAGE] = "bossname_visage.png",
-    [BossID.SIREN] = "bossname_siren.png",
-    [BossID.TUFF_TWINS] = "bossname_tufftwins.png",
-    [BossID.HERETIC] = "bossname_heretic.png",
-    [BossID.HORNFEL] = "bossname_hornfel.png",
-    [BossID.GREAT_GIDEON] = "bossname_gideon.png",
-    [BossID.BABY_PLUM] = "bossname_babyplum.png",
-    [BossID.SCOURGE] = "bossname_scourge.png",
-    [BossID.CHIMERA] = "bossname_chimera.png",
-    [BossID.ROTGUT] = "bossname_rotgut.png",
-    [BossID.MOTHER] = "bossname_mother.png",
-    [BossID.MAUSOLEUM_MOM] = "bossname_45.0_mom.png",
-    [BossID.MAUSOLEUM_MOMS_HEART] = "bossname_78.0_momsheart.png",
-    [BossID.MIN_MIN] = "bossname_minmin.png",
-    [BossID.CLOG] = "bossname_clog.png",
-    [BossID.SINGE] = "bossname_singe.png",
-    [BossID.BUMBINO] = "bossname_bumbino.png",
-    [BossID.COLOSTOMIA] = "bossname_colostomia.png",
-    [BossID.SHELL] = "bossname_shell.png",
-    [BossID.TURDLET] = "bossname_turdlet.png",
-    [BossID.RAGLICH] = "bossname_raglich.png",
-    [BossID.DOGMA] = "bossname_dogma.png",
-    [BossID.BEAST] = "bossname_dogma.png",
-    [BossID.HORNY_BOYS] = "bossname_hornyboys.png",
-    [BossID.CLUTCH] = "bossname_clutch.png"
+    [BossID.MONSTRO] = "BossName_20.0_Monstro.png",
+    [BossID.LARRY_JR] = "BossName_19.0_LarryJr.png",
+    [BossID.CHUB] = "BossName_28.0_Chub.png",
+    [BossID.GURDY] = "BossName_36.0_Gurdy.png",
+    [BossID.MONSTRO_2] = "BossName_43.0_Monstro2.png",
+    [BossID.MOM] = "BossName_45.0_Mom.png",
+    [BossID.SCOLEX] = "BossName_62.1_Scolex.png",
+    [BossID.MOMS_HEART] = "BossName_78.0_MomsHeart.png",
+    [BossID.FAMINE] = "BossName_63.0_Famine.png",
+    [BossID.PESTILENCE] = "BossName_64.0_Pestilence.png",
+    [BossID.WAR] = "BossName_65.0_War.png",
+    [BossID.DEATH] = "BossName_66.0_Death.png",
+    [BossID.DUKE_OF_FLIES] = "BossName_67.0_DukeOfFlies.png",
+    [BossID.PEEP] = "BossName_68.0_Peep.png",
+    [BossID.LOKI] = "BossName_69.0_Loki.png",
+    [BossID.BLASTOCYST] = "BossName_74.0_Blastocyst.png",
+    [BossID.GEMINI] = "BossName_79.0_Gemini.png",
+    [BossID.FISTULA] = "BossName_71.0_Fistula.png",
+    [BossID.GISH] = "BossName_43.1_Gish.png",
+    [BossID.STEVEN] = "BossName_79.1_Steven.png",
+    [BossID.CHAD] = "BossName_28.1_CHAD.png",
+    [BossID.HEADLESS_HORSEMAN] = "BossName_82.0_HeadlessHorseman.png",
+    [BossID.FALLEN] = "BossName_81.0_TheFallen.png",
+    [BossID.SATAN] = "BossName_84.0_Satan.png",
+    [BossID.IT_LIVES] = "BossName_78.1_ItLives.png",
+    [BossID.HOLLOW] = "BossName_19.1_TheHollow.png",
+    [BossID.CARRION_QUEEN] = "BossName_28.2_CarrionQueen.png",
+    [BossID.GURDY_JR] = "BossName_99.0_GurdyJr.png",
+    [BossID.HUSK] = "BossName_67.1_TheHusk.png",
+    [BossID.BLOAT] = "BossName_68.1_Bloat.png",
+    [BossID.LOKII] = "BossName_69.1_Lokii.png",
+    [BossID.BLIGHTED_OVUM] = "BossName_79.2_BlightedOvum.png",
+    [BossID.TERATOMA] = "BossName_71.1_Teratoma.png",
+    [BossID.WIDOW] = "BossName_100.0_Widow.png",
+    [BossID.MASK_OF_INFAMY] = "BossName_97.0_MaskOfInfamy.png",
+    [BossID.WRETCHED] = "BossName_100.1_TheWretched.png",
+    [BossID.PIN] = "BossName_62.0_Pin.png",
+    [BossID.CONQUEST] = "BossName_65.1_Conquest.png",
+    [BossID.ISAAC] = "PlayerName_01_Isaac.png",
+    [BossID.BLUE_BABY] = "BossName_102.1_BlueBaby.png",
+    [BossID.DADDY_LONG_LEGS] = "BossName_101.0_DaddyLongLegs.png",
+    [BossID.TRIACHNID] = "BossName_101.1_Triachnid.png",
+    [BossID.HAUNT] = "BossName_260.0_TheHaunt.png",
+    [BossID.DINGLE] = "BossName_261.0_Dingle.png",
+    [BossID.MEGA_MAW] = "Portrait_262.0_MegaMaw.png",
+    [BossID.GATE] = "BossName_263.0_MegaMaw2.png",
+    [BossID.MEGA_FATTY] = "BossName_264.0_MegaFatty.png",
+    [BossID.CAGE] = "BossName_265.0_Fatty2.png",
+    [BossID.MAMA_GURDY] = "BossName_266.0_MamaGurdy.png",
+    [BossID.DARK_ONE] = "BossName_267.0_DarkOne.png",
+    [BossID.ADVERSARY] = "BossName_268.0_DarkOne2.png",
+    [BossID.POLYCEPHALUS] = "BossName_269.0_Polycephalus.png",
+    [BossID.MR_FRED] = "BossName_270.0_MegaFred.png",
+    [BossID.LAMB] = "BossName_273.0_TheLamb.png",
+    [BossID.MEGA_SATAN] = "BossName_274.0_MegaSatan.png",
+    [BossID.GURGLING] = "BossName_276.0_Gurglings.png",
+    [BossID.STAIN] = "BossName_401.0_TheStain.png",
+    [BossID.BROWNIE] = "BossName_402.0_Brownie.png",
+    [BossID.FORSAKEN] = "BossName_403.0_TheForsaken.png",
+    [BossID.LITTLE_HORN] = "BossName_404.0_LittleHorn.png",
+    [BossID.RAG_MAN] = "BossName_405.0_RagMan.png",
+    [BossID.ULTRA_GREED] = "BossName_406.0_UltraGreed.png",
+    [BossID.HUSH] = "BossName_407.0_Hush.png",
+    [BossID.DANGLE] = "BossName_Dangle.png",
+    [BossID.TURDLING] = "BossName_Turdlings.png",
+    [BossID.FRAIL] = "BossName_TheFrail.png",
+    [BossID.RAG_MEGA] = "BossName_RagMega.png",
+    [BossID.SISTERS_VIS] = "BossName_SisterssVis.png",
+    [BossID.BIG_HORN] = "BossName_BigHorn.png",
+    [BossID.DELIRIUM] = "BossName_Delirium.png",
+    [BossID.ULTRA_GREEDIER] = "BossName_406.0_UltraGreed.png",
+    [BossID.MATRIARCH] = "BossName_Matriarch.png",
+    [BossID.PILE] = "BossName_Polycephalus2.png",
+    [BossID.REAP_CREEP] = "BossName_ReapCreep.png",
+    [BossID.LIL_BLUB] = "BossName_Beelzeblub.png",
+    [BossID.WORMWOOD] = "BossName_Wormwood.png",
+    [BossID.RAINMAKER] = "BossName_Rainmaker.png",
+    [BossID.VISAGE] = "BossName_Visage.png",
+    [BossID.SIREN] = "BossName_Siren.png",
+    [BossID.TUFF_TWINS] = "BossName_TuffTwins.png",
+    [BossID.HERETIC] = "BossName_Heretic.png",
+    [BossID.HORNFEL] = "BossName_Hornfel.png",
+    [BossID.GREAT_GIDEON] = "BossName_Gideon.png",
+    [BossID.BABY_PLUM] = "BossName_BabyPlum.png",
+    [BossID.SCOURGE] = "BossName_Scourge.png",
+    [BossID.CHIMERA] = "BossName_Chimera.png",
+    [BossID.ROTGUT] = "BossName_Rotgut.png",
+    [BossID.MOTHER] = "BossName_Mother.png",
+    [BossID.MAUSOLEUM_MOM] = "BossName_45.0_Mom.png",
+    [BossID.MAUSOLEUM_MOMS_HEART] = "BossName_78.0_MomsHeart.png",
+    [BossID.MIN_MIN] = "BossName_MinMin.png",
+    [BossID.CLOG] = "BossName_Clog.png",
+    [BossID.SINGE] = "BossName_Singe.png",
+    [BossID.BUMBINO] = "BossName_Bumbino.png",
+    [BossID.COLOSTOMIA] = "BossName_Colostomia.png",
+    [BossID.SHELL] = "BossName_Shell.png",
+    [BossID.TURDLET] = "BossName_Turdlet.png",
+    [BossID.RAGLICH] = "BossName_Raglich.png",
+    [BossID.DOGMA] = "BossName_Dogma.png",
+    [BossID.BEAST] = "BossName_TheBeast.png",
+    [BossID.HORNY_BOYS] = "BossName_HornyBoys.png",
+    [BossID.CLUTCH] = "BossName_Clutch.png"
 }
 return ____exports
  end,
@@ -21724,8 +21845,8 @@ ____exports.DIMENSIONS = eRange(nil, ____exports.NUM_DIMENSIONS)
 -- horse pills.)
 ____exports.NUM_PILL_COLORS_IN_POOL = NUM_NORMAL_PILL_COLORS
 ____exports.ONE_BY_ONE_ROOM_GRID_SIZE = 135
---- An array representing every valid collectible type quality. Specifically, this is `[0, 1, 2, 3,
--- 4]`.
+--- An array representing every valid collectible type quality. Specifically, this is: `[0, 1, 2, 3,
+-- 4]`
 ____exports.QUALITIES = {
     0,
     1,
@@ -21733,6 +21854,7 @@ ____exports.QUALITIES = {
     3,
     4
 }
+____exports.MAX_QUALITY = 4
 ____exports.SECOND_IN_MILLISECONDS = 1000
 ____exports.MINUTE_IN_MILLISECONDS = 60 * ____exports.SECOND_IN_MILLISECONDS
 --- This is equivalent to the bottom-right screen position when the game is in full screen mode.
@@ -23098,8 +23220,6 @@ local ____constants = require("lua_modules.isaacscript-common.dist.src.core.cons
 local VectorZero = ____constants.VectorZero
 local ____entitiesWithArmorSet = require("lua_modules.isaacscript-common.dist.src.sets.entitiesWithArmorSet")
 local ENTITIES_WITH_ARMOR_SET = ____entitiesWithArmorSet.ENTITIES_WITH_ARMOR_SET
-local ____storyBossEntityTypesSet = require("lua_modules.isaacscript-common.dist.src.sets.storyBossEntityTypesSet")
-local STORY_BOSS_ENTITY_TYPES_SET = ____storyBossEntityTypesSet.STORY_BOSS_ENTITY_TYPES_SET
 local ____isaacAPIClass = require("lua_modules.isaacscript-common.dist.src.functions.isaacAPIClass")
 local getIsaacAPIClassName = ____isaacAPIClass.getIsaacAPIClassName
 local ____random = require("lua_modules.isaacscript-common.dist.src.functions.random")
@@ -23433,12 +23553,6 @@ function ____exports.isEntityMoving(self, entity, threshold)
     end
     return doesVectorHaveLength(nil, entity.Velocity, threshold)
 end
---- Helper function to determine if the specified entity type is an end-game story boss, like Isaac,
--- Blue Baby, Mega Satan, The Beast, and so on. This is useful because certain effects should only
--- apply to non-story bosses, like Vanishing Twin.
-function ____exports.isStoryBoss(self, entityType)
-    return STORY_BOSS_ENTITY_TYPES_SET:has(entityType)
-end
 --- Helper function to parse a string that contains an entity type, a variant, and a sub-type,
 -- separated by periods.
 -- 
@@ -23641,31 +23755,6 @@ function ____exports.spawnWithSeed(self, entityType, variant, subType, positionO
         seedOrRNG
     )
 end
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.sets.storyBossEntityTypesSet"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
-local ReadonlySet = ____ReadonlySet.ReadonlySet
-____exports.STORY_BOSS_ENTITY_TYPES_SET = __TS__New(ReadonlySet, {
-    EntityType.MOM,
-    EntityType.MOMS_HEART,
-    EntityType.SATAN,
-    EntityType.ISAAC,
-    EntityType.LAMB,
-    EntityType.MEGA_SATAN,
-    EntityType.MEGA_SATAN_2,
-    EntityType.ULTRA_GREED,
-    EntityType.HUSH,
-    EntityType.DELIRIUM,
-    EntityType.MOTHER,
-    EntityType.DOGMA,
-    EntityType.BEAST
-})
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.entitiesWithArmorSet"] = function(...) 
@@ -24733,6 +24822,12 @@ function ____exports.hasForm(self, player, ...)
         function(____, playerForm) return player:HasPlayerForm(playerForm) end
     )
 end
+--- Helper function to check if a player has homing tears.
+-- 
+-- Under the hood, this checks the `EntityPlayer.TearFlags` variable for `TearFlag.HOMING` (1 << 2).
+function ____exports.hasHoming(self, player)
+    return hasFlag(nil, player.TearFlags, TearFlag.HOMING)
+end
 --- After touching a white fire, a player will turn into The Lost until they clear a room.
 function ____exports.hasLostCurse(self, player)
     local effects = player:GetEffects()
@@ -24740,13 +24835,15 @@ function ____exports.hasLostCurse(self, player)
 end
 --- Helper function to check if a player has piercing tears.
 -- 
--- Under the hood, this checks the `EntityPlayer.TearFlags` variable.
+-- Under the hood, this checks the `EntityPlayer.TearFlags` variable for `TearFlag.PIERCING` (1 <<
+-- 1).
 function ____exports.hasPiercing(self, player)
     return hasFlag(nil, player.TearFlags, TearFlag.PIERCING)
 end
 --- Helper function to check if a player has spectral tears.
 -- 
--- Under the hood, this checks the `EntityPlayer.TearFlags` variable.
+-- Under the hood, this checks the `EntityPlayer.TearFlags` variable for `TearFlag.SPECTRAL` (1 <<
+-- 0).
 function ____exports.hasSpectral(self, player)
     return hasFlag(nil, player.TearFlags, TearFlag.SPECTRAL)
 end
@@ -27379,6 +27476,11 @@ function ____exports.getStageType(self)
     return level:GetStageType()
 end
 --- Helper function to directly warp to a specific stage using the "stage" console command.
+-- 
+-- Note that if you use this function on game frame 0, it will confuse the
+-- `POST_GAME_STARTED_REORDERED`, `POST_NEW_LEVEL_REORDERED`, and `POST_NEW_ROOM_REORDERED` custom
+-- callbacks. If you are using the function in this situation, remember to call the
+-- `reorderedCallbacksSetStage` function.
 function ____exports.goToStage(self, stage, stageType)
     local stageTypeLetterSuffix = ____exports.stageTypeToLetter(nil, stageType)
     local command = ("stage " .. tostring(stage)) .. stageTypeLetterSuffix
@@ -29700,6 +29802,8 @@ local ____entitiesSpecific = require("lua_modules.isaacscript-common.dist.src.fu
 local spawnSlot = ____entitiesSpecific.spawnSlot
 local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
 local log = ____log.log
+local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
+local isString = ____types.isString
 --- Helper function to see if any seed effects (i.e. Easter Eggs) are enabled for the current run.
 function ____exports.anySeedEffectEnabled(self)
     local seeds = game:GetSeeds()
@@ -29772,6 +29876,18 @@ function ____exports.restart(self, character)
     log((((("Restarting the run as " .. characterName) .. " (") .. tostring(character)) .. ") with a console command of: ") .. command)
     Isaac.ExecuteCommand(command)
 end
+--- Helper function to restart the run on a particular starting seed.
+-- 
+-- Under the hood, this function executes the `seed` console command.
+-- 
+-- @param startSeedOrStartSeedString Either the numerical start seed (e.g. 268365970) or the start
+-- seed string (e.g. "AAJ2 8V9C").
+function ____exports.setRunSeed(self, startSeedOrStartSeedString)
+    local startSeedString = isString(nil, startSeedOrStartSeedString) and startSeedOrStartSeedString or Seeds.Seed2String(startSeedOrStartSeedString)
+    local command = "seed " .. startSeedString
+    log("Restarting the run to set a seed with a console command of: " .. command)
+    Isaac.ExecuteCommand(command)
+end
 --- Helper function to change the run status to that of an unseeded run with a new random seed.
 -- 
 -- This is useful to revert the behavior where playing on a set seed and restarting the game will
@@ -29783,73 +29899,6 @@ function ____exports.setUnseeded(self)
     local seeds = game:GetSeeds()
     seeds:Reset()
     seeds:Restart(Challenge.NULL)
-end
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.functions.log"] = function(...) 
-local ____exports = {}
-local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
-local isNumber = ____types.isNumber
---- Helper function to get the name and the line number of the current calling function.
--- 
--- For this function to work properly, the "--luadebug" flag must be enabled. Otherwise, it will
--- always return undefined.
--- 
--- @param levels Optional. The amount of levels to look backwards in the call stack. Default is 3
--- (because the first level is this function, the second level is the calling
--- function, and the third level is the parent of the calling function).
-function ____exports.getParentFunctionDescription(levels)
-    if levels == nil then
-        levels = 3
-    end
-    if debug ~= nil then
-        local debugTable = debug.getinfo(levels)
-        if debugTable ~= nil then
-            return (tostring(debugTable.name) .. ":") .. tostring(debugTable.linedefined)
-        end
-    end
-    if SandboxGetParentFunctionDescription ~= nil then
-        return SandboxGetParentFunctionDescription(levels)
-    end
-    return nil
-end
---- Helper function to avoid typing out `Isaac.DebugString()`.
--- 
--- If you have the "--luadebug" launch flag turned on, then this function will also prepend the
--- function name and the line number before the string, like this:
--- 
--- ```text
--- [INFO] - Lua Debug: saveToDisk:42494 - The save data manager wrote data to the "save#.dat" file.
--- ```
--- 
--- Subsequently, it is recommended that you turn on the "--luadebug" launch flag when developing
--- your mod so that debugging becomes a little bit easier.
--- 
--- @param msg The message to log.
--- @param includeParentFunction Optional. Whether to prefix the message with the function name and
--- line number, as shown in the above example. Default is true.
-function ____exports.log(msg, includeParentFunction)
-    if includeParentFunction == nil then
-        includeParentFunction = true
-    end
-    if isNumber(nil, msg) then
-        msg = tostring(msg)
-    end
-    local ____includeParentFunction_0
-    if includeParentFunction then
-        ____includeParentFunction_0 = ____exports.getParentFunctionDescription()
-    else
-        ____includeParentFunction_0 = nil
-    end
-    local parentFunctionDescription = ____includeParentFunction_0
-    local debugMsg = parentFunctionDescription == nil and msg or (parentFunctionDescription .. " - ") .. msg
-    Isaac.DebugString(debugMsg)
-end
---- Helper function to log a message to the "log.txt" file and to print it to the screen at the same
--- time.
-function ____exports.logAndPrint(self, msg)
-    ____exports.log(msg)
-    print(msg)
 end
 return ____exports
  end,
@@ -29915,6 +29964,7 @@ local getRoomDescriptor = ____roomData.getRoomDescriptor
 local getRoomDescriptorReadOnly = ____roomData.getRoomDescriptorReadOnly
 local getRoomGridIndex = ____roomData.getRoomGridIndex
 local ____roomShape = require("lua_modules.isaacscript-common.dist.src.functions.roomShape")
+local isBigRoomShape = ____roomShape.isBigRoomShape
 local isLRoomShape = ____roomShape.isLRoomShape
 local ____roomTransition = require("lua_modules.isaacscript-common.dist.src.functions.roomTransition")
 local reloadRoom = ____roomTransition.reloadRoom
@@ -30011,6 +30061,11 @@ end
 -- being equal to `DungeonSubType.BEAST_ROOM` (4).
 function ____exports.isBeastRoom(self, roomData)
     return roomData.Type == RoomType.DUNGEON and roomData.Subtype == asNumber(nil, DungeonSubType.BEAST_ROOM)
+end
+--- Helper function to detect if the provided room is big. Specifically, this is all 1x2 rooms, 2x2
+-- rooms, and L rooms.
+function ____exports.isBigRoom(self, roomData)
+    return isBigRoomShape(nil, roomData.Shape)
 end
 --- Helper function to check if the provided room is the Boss Room for a particular boss. This will
 -- only work for bosses that have dedicated boss rooms in the "00.special rooms.stb" file.
@@ -30265,6 +30320,12 @@ function ____exports.inBeastRoom(self)
     local roomData = getRoomData(nil)
     return ____exports.isBeastRoom(nil, roomData)
 end
+--- Helper function to detect if the current room is big. Specifically, this is all 1x2 rooms, 2x2
+-- rooms, and L rooms.
+function ____exports.inBigRoom(self)
+    local roomData = getRoomData(nil)
+    return ____exports.isBigRoom(nil, roomData)
+end
 --- Helper function to check if the current room is the Boss Room for a particular boss. This will
 -- only work for bosses that have dedicated boss rooms in the "00.special rooms.stb" file.
 function ____exports.inBossRoomOf(self, bossID)
@@ -30488,12 +30549,12 @@ function ____exports.setRoomCleared(self)
     for ____, door in ipairs(getDoors(nil)) do
         do
             if isHiddenSecretRoomDoor(nil, door) then
-                goto __continue82
+                goto __continue84
             end
             openDoorFast(nil, door)
             door.ExtraVisible = false
         end
-        ::__continue82::
+        ::__continue84::
     end
     sfxManager:Stop(SoundEffect.DOOR_HEAVY_OPEN)
     game:ShakeScreen(0)
@@ -31605,6 +31666,8 @@ local ____roomShapeVolumes = require("lua_modules.isaacscript-common.dist.src.ob
 local ROOM_SHAPE_VOLUMES = ____roomShapeVolumes.ROOM_SHAPE_VOLUMES
 local ____LRoomShapesSet = require("lua_modules.isaacscript-common.dist.src.sets.LRoomShapesSet")
 local L_ROOM_SHAPES_SET = ____LRoomShapesSet.L_ROOM_SHAPES_SET
+local ____bigRoomShapesSet = require("lua_modules.isaacscript-common.dist.src.sets.bigRoomShapesSet")
+local BIG_ROOM_SHAPES_SET = ____bigRoomShapesSet.BIG_ROOM_SHAPES_SET
 local ____narrowRoomShapesSet = require("lua_modules.isaacscript-common.dist.src.sets.narrowRoomShapesSet")
 local NARROW_ROOM_SHAPES_SET = ____narrowRoomShapesSet.NARROW_ROOM_SHAPES_SET
 --- Helper function to see if a given room shape will grant a single charge or a double charge to the
@@ -31674,6 +31737,11 @@ end
 function ____exports.getRoomShapeWidth(self, roomShape)
     return ROOM_SHAPE_TO_GRID_WIDTH[roomShape]
 end
+--- Helper function to detect if the provided room shape is big. Specifically, this is all 1x2 rooms,
+-- 2x2 rooms, and L rooms.
+function ____exports.isBigRoomShape(self, roomShape)
+    return BIG_ROOM_SHAPES_SET:has(roomShape)
+end
 function ____exports.isLRoomShape(self, roomShape)
     return L_ROOM_SHAPES_SET:has(roomShape)
 end
@@ -31691,6 +31759,25 @@ local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 ____exports.NARROW_ROOM_SHAPES_SET = __TS__New(ReadonlySet, {RoomShape.IH, RoomShape.IV, RoomShape.IIV, RoomShape.IIH})
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.sets.bigRoomShapesSet"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.BIG_ROOM_SHAPES_SET = __TS__New(ReadonlySet, {
+    RoomShape.SHAPE_1x2,
+    RoomShape.SHAPE_2x1,
+    RoomShape.SHAPE_2x2,
+    RoomShape.LTL,
+    RoomShape.LTR,
+    RoomShape.LBL,
+    RoomShape.LBR
+})
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.sets.LRoomShapesSet"] = function(...) 
@@ -33991,6 +34078,25 @@ function getRockPNGName(self)
         end
     until true
 end
+--- Helper function to get the grid indexes on the surrounding tiles from the provided grid index.
+-- 
+-- There are always 8 grid indexes returned (e.g. top-left + top + top-right + left + right +
+-- bottom-left + bottom + right), even if the computed values would be negative or otherwise
+-- invalid.
+function ____exports.getSurroundingGridIndexes(self, gridIndex)
+    local room = game:GetRoom()
+    local gridWidth = room:GetGridWidth()
+    return {
+        gridIndex - gridWidth - 1,
+        gridIndex - gridWidth,
+        gridIndex - gridWidth + 1,
+        gridIndex - 1,
+        gridIndex + 1,
+        gridIndex + gridWidth - 1,
+        gridIndex + gridWidth,
+        gridIndex + gridWidth + 1
+    }
+end
 --- Helper function to get the grid index of the top left wall. (This will depend on what the current
 -- room shape is.)
 -- 
@@ -34334,18 +34440,8 @@ end
 -- rocks (e.g. top-left + top + top-right + left + right + bottom-left + bottom + right).
 function ____exports.getSurroundingGridEntities(self, gridEntity)
     local room = game:GetRoom()
-    local gridWidth = room:GetGridWidth()
     local gridIndex = gridEntity:GetGridIndex()
-    local surroundingGridIndexes = {
-        gridIndex - 1,
-        gridIndex + 1,
-        gridIndex - gridWidth - 1,
-        gridIndex - gridWidth,
-        gridIndex - gridWidth + 1,
-        gridIndex + gridWidth - 1,
-        gridIndex + gridWidth,
-        gridIndex + gridWidth + 1
-    }
+    local surroundingGridIndexes = ____exports.getSurroundingGridIndexes(nil, gridIndex)
     local surroundingGridEntities = {}
     for ____, surroundingGridIndex in ipairs(surroundingGridIndexes) do
         local surroundingGridEntity = room:GetGridEntity(surroundingGridIndex)
@@ -34387,6 +34483,26 @@ end
 -- the `PRE_ROOM_ENTITY_SPAWN` callback for narrowing the type of the first argument.
 function ____exports.isGridEntityXMLType(self, num)
     return GRID_ENTITY_XML_TYPES_SET:has(num)
+end
+--- Helper function to check if the provided grid index has a door on it or if the surrounding 8 grid
+-- indexes have a door on it.
+function ____exports.isGridIndexAdjacentToDoor(self, gridIndex)
+    local room = game:GetRoom()
+    local surroundingGridIndexes = ____exports.getSurroundingGridIndexes(nil, gridIndex)
+    local gridIndexes = {
+        gridIndex,
+        table.unpack(surroundingGridIndexes)
+    }
+    for ____, gridIndexToInspect in ipairs(gridIndexes) do
+        local gridEntity = room:GetGridEntity(gridIndexToInspect)
+        if gridEntity ~= nil then
+            local door = gridEntity:ToDoor()
+            if door ~= nil then
+                return true
+            end
+        end
+    end
+    return false
 end
 --- Helper function to see if a `GridEntityXMLType` is some kind of poop.
 function ____exports.isPoopGridEntityXMLType(self, gridEntityXMLType)
@@ -34842,8 +34958,6 @@ local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local NullItemID = ____isaac_2Dtypescript_2Ddefinitions.NullItemID
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
 local TrinketType = ____isaac_2Dtypescript_2Ddefinitions.TrinketType
-local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
-local game = ____cachedClasses.game
 local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
 local MAX_TAINTED_SAMSON_BERSERK_CHARGE = ____constants.MAX_TAINTED_SAMSON_BERSERK_CHARGE
 local TAINTED_SAMSON_BERSERK_CHARGE_FROM_TAKING_DAMAGE = ____constants.TAINTED_SAMSON_BERSERK_CHARGE_FROM_TAKING_DAMAGE
@@ -34851,6 +34965,8 @@ local ____MysteriousPaperEffect = require("lua_modules.isaacscript-common.dist.s
 local MysteriousPaperEffect = ____MysteriousPaperEffect.MysteriousPaperEffect
 local ____characters = require("lua_modules.isaacscript-common.dist.src.functions.characters")
 local getCharacterDeathAnimationName = ____characters.getCharacterDeathAnimationName
+local ____frames = require("lua_modules.isaacscript-common.dist.src.functions.frames")
+local onGameFrame = ____frames.onGameFrame
 local ____playerHealth = require("lua_modules.isaacscript-common.dist.src.functions.playerHealth")
 local getPlayerMaxHeartContainers = ____playerHealth.getPlayerMaxHeartContainers
 local ____players = require("lua_modules.isaacscript-common.dist.src.functions.players")
@@ -34891,7 +35007,6 @@ end
 --- Uses the player's current health and other miscellaneous things to determine if incoming damage
 -- will be fatal.
 function ____exports.isDamageToPlayerFatal(self, player, amount, source, lastDamageGameFrame)
-    local gameFrameCount = game:GetFrameCount()
     local character = player:GetPlayerType()
     local effects = player:GetEffects()
     local isBerserk = effects:HasCollectibleEffect(CollectibleType.BERSERK)
@@ -34921,7 +35036,7 @@ function ____exports.isDamageToPlayerFatal(self, player, amount, source, lastDam
     if ____exports.willReviveFromHeartbreak(nil, player) then
         return false
     end
-    if player:HasCollectible(CollectibleType.BROKEN_GLASS_CANNON) and gameFrameCount == lastDamageGameFrame then
+    if player:HasCollectible(CollectibleType.BROKEN_GLASS_CANNON) and onGameFrame(nil, lastDamageGameFrame) then
         return false
     end
     local hearts = player:GetHearts()
@@ -35807,6 +35922,195 @@ function ____exports.isActiveSlotDoubleCharged(self, player, activeSlot)
     local batteryCharge = player:GetBatteryCharge(activeSlot)
     local maxCharges = getCollectibleMaxCharges(nil, collectibleType)
     return batteryCharge >= maxCharges
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.functions.frames"] = function(...) 
+local ____exports = {}
+local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
+local game = ____cachedClasses.game
+function ____exports.getElapsedGameFramesSince(self, gameFrameCount)
+    local thisGameFrameCount = game:GetFrameCount()
+    return thisGameFrameCount - gameFrameCount
+end
+function ____exports.getElapsedRenderFramesSince(self, renderFrameCount)
+    local thisRenderFrameCount = Isaac.GetFrameCount()
+    return thisRenderFrameCount - renderFrameCount
+end
+function ____exports.getElapsedRoomFramesSince(self, roomFrameCount)
+    local room = game:GetRoom()
+    local thisRoomFrameCount = room:GetFrameCount()
+    return thisRoomFrameCount - roomFrameCount
+end
+--- Helper function to check if the current game frame count is higher than a specific game frame
+-- count.
+-- 
+-- This returns false if the submitted game frame count is null or undefined.
+function ____exports.isAfterGameFrame(self, gameFrameCount)
+    if gameFrameCount == nil or gameFrameCount == nil then
+        return false
+    end
+    local thisGameFrameCount = game:GetFrameCount()
+    return thisGameFrameCount > gameFrameCount
+end
+--- Helper function to check if the current render frame count is higher than a specific render frame
+-- count.
+-- 
+-- This returns false if the submitted render frame count is null or undefined.
+function ____exports.isAfterRenderFrame(self, renderFrameCount)
+    if renderFrameCount == nil or renderFrameCount == nil then
+        return false
+    end
+    local thisRenderFrameCount = Isaac.GetFrameCount()
+    return thisRenderFrameCount > renderFrameCount
+end
+--- Helper function to check if the current room frame count is higher than a specific room frame
+-- count.
+-- 
+-- This returns false if the submitted room frame count is null or undefined.
+function ____exports.isAfterRoomFrame(self, roomFrameCount)
+    if roomFrameCount == nil or roomFrameCount == nil then
+        return false
+    end
+    local room = game:GetRoom()
+    local thisGameFrameCount = room:GetFrameCount()
+    return thisGameFrameCount > roomFrameCount
+end
+--- Helper function to check if the current game frame count is lower than a specific game frame
+-- count.
+-- 
+-- This returns false if the submitted game frame count is null or undefined.
+function ____exports.isBeforeGameFrame(self, gameFrameCount)
+    if gameFrameCount == nil or gameFrameCount == nil then
+        return false
+    end
+    local thisGameFrameCount = game:GetFrameCount()
+    return thisGameFrameCount < gameFrameCount
+end
+--- Helper function to check if the current render frame count is lower than a specific render frame
+-- count.
+-- 
+-- This returns false if the submitted render frame count is null or undefined.
+function ____exports.isBeforeRenderFrame(self, renderFrameCount)
+    if renderFrameCount == nil or renderFrameCount == nil then
+        return false
+    end
+    local thisRenderFrameCount = Isaac.GetFrameCount()
+    return thisRenderFrameCount < renderFrameCount
+end
+--- Helper function to check if the current room frame count is lower than a specific room frame
+-- count.
+-- 
+-- This returns false if the submitted room frame count is null or undefined.
+function ____exports.isBeforeRoomFrame(self, roomFrameCount)
+    if roomFrameCount == nil or roomFrameCount == nil then
+        return false
+    end
+    local room = game:GetRoom()
+    local thisGameFrameCount = room:GetFrameCount()
+    return thisGameFrameCount < roomFrameCount
+end
+--- Helper function to check if the current game frame count is exactly equal to a specific game
+-- frame count.
+-- 
+-- This returns false if the submitted game frame count is null or undefined.
+function ____exports.onGameFrame(self, gameFrameCount)
+    if gameFrameCount == nil or gameFrameCount == nil then
+        return false
+    end
+    local thisGameFrameCount = game:GetFrameCount()
+    return thisGameFrameCount == gameFrameCount
+end
+--- Helper function to check if the current game frame count is equal to or higher than a specific
+-- game frame count.
+-- 
+-- This returns false if the submitted game frame count is null or undefined.
+function ____exports.onOrAfterGameFrame(self, gameFrameCount)
+    if gameFrameCount == nil or gameFrameCount == nil then
+        return false
+    end
+    local thisGameFrameCount = game:GetFrameCount()
+    return thisGameFrameCount >= gameFrameCount
+end
+--- Helper function to check if the current render frame count is equal to or higher than a specific
+-- render frame count.
+-- 
+-- This returns false if the submitted render frame count is null or undefined.
+function ____exports.onOrAfterRenderFrame(self, renderFrameCount)
+    if renderFrameCount == nil or renderFrameCount == nil then
+        return false
+    end
+    local thisRenderFrameCount = Isaac.GetFrameCount()
+    return thisRenderFrameCount >= renderFrameCount
+end
+--- Helper function to check if the current room frame count is equal to or higher than a specific
+-- room frame count.
+-- 
+-- This returns false if the submitted room frame count is null or undefined.
+function ____exports.onOrAfterRoomFrame(self, roomFrameCount)
+    if roomFrameCount == nil or roomFrameCount == nil then
+        return false
+    end
+    local room = game:GetRoom()
+    local thisGameFrameCount = room:GetFrameCount()
+    return thisGameFrameCount >= roomFrameCount
+end
+--- Helper function to check if the current game frame count is equal to or lower than a specific
+-- game frame count.
+-- 
+-- This returns false if the submitted game frame count is null or undefined.
+function ____exports.onOrBeforeGameFrame(self, gameFrameCount)
+    if gameFrameCount == nil or gameFrameCount == nil then
+        return false
+    end
+    local thisGameFrameCount = game:GetFrameCount()
+    return thisGameFrameCount <= gameFrameCount
+end
+--- Helper function to check if the current render frame count is equal to or lower than a specific
+-- render frame count.
+-- 
+-- This returns false if the submitted render frame count is null or undefined.
+function ____exports.onOrBeforeRenderFrame(self, renderFrameCount)
+    if renderFrameCount == nil or renderFrameCount == nil then
+        return false
+    end
+    local thisRenderFrameCount = Isaac.GetFrameCount()
+    return thisRenderFrameCount <= renderFrameCount
+end
+--- Helper function to check if the current room frame count is equal to or lower than a specific
+-- room frame count.
+-- 
+-- This returns false if the submitted room frame count is null or undefined.
+function ____exports.onOrBeforeRoomFrame(self, roomFrameCount)
+    if roomFrameCount == nil or roomFrameCount == nil then
+        return false
+    end
+    local room = game:GetRoom()
+    local thisGameFrameCount = room:GetFrameCount()
+    return thisGameFrameCount >= roomFrameCount
+end
+--- Helper function to check if the current render frame count is exactly equal to a specific render
+-- frame count.
+-- 
+-- This returns false if the submitted render frame count is null or undefined.
+function ____exports.onRenderFrame(self, renderFrameCount)
+    if renderFrameCount == nil or renderFrameCount == nil then
+        return false
+    end
+    local thisRenderFrameCount = Isaac.GetFrameCount()
+    return thisRenderFrameCount >= renderFrameCount
+end
+--- Helper function to check if the current room frame count is exactly equal to a specific room
+-- frame count.
+-- 
+-- This returns false if the submitted room frame count is null or undefined.
+function ____exports.onRoomFrame(self, roomFrameCount)
+    if roomFrameCount == nil or roomFrameCount == nil then
+        return false
+    end
+    local room = game:GetRoom()
+    local thisGameFrameCount = room:GetFrameCount()
+    return thisGameFrameCount == roomFrameCount
 end
 return ____exports
  end,
@@ -37144,6 +37448,8 @@ local PILL_EFFECT_CLASSES = ____pillEffectClasses.PILL_EFFECT_CLASSES
 local ____pillEffectNames = require("lua_modules.isaacscript-common.dist.src.objects.pillEffectNames")
 local DEFAULT_PILL_EFFECT_NAME = ____pillEffectNames.DEFAULT_PILL_EFFECT_NAME
 local PILL_EFFECT_NAMES = ____pillEffectNames.PILL_EFFECT_NAMES
+local ____pillEffectTypeToPillEffects = require("lua_modules.isaacscript-common.dist.src.objects.pillEffectTypeToPillEffects")
+local PILL_EFFECT_TYPE_TO_PILL_EFFECTS = ____pillEffectTypeToPillEffects.PILL_EFFECT_TYPE_TO_PILL_EFFECTS
 local ____pillEffectTypes = require("lua_modules.isaacscript-common.dist.src.objects.pillEffectTypes")
 local DEFAULT_PILL_EFFECT_TYPE = ____pillEffectTypes.DEFAULT_PILL_EFFECT_TYPE
 local PILL_EFFECT_TYPES = ____pillEffectTypes.PILL_EFFECT_TYPES
@@ -37264,8 +37570,11 @@ end
 -- Due to limitations in the API, this function will not work properly for modded pill effects, and
 -- will always return `DEFAULT_PILL_EFFECT_TYPE` in those cases.
 function ____exports.getPillEffectType(self, pillEffect)
-    local pillEffectClass = PILL_EFFECT_TYPES[pillEffect]
-    return pillEffectClass or DEFAULT_PILL_EFFECT_TYPE
+    local pillEffectType = PILL_EFFECT_TYPES[pillEffect]
+    return pillEffectType or DEFAULT_PILL_EFFECT_TYPE
+end
+function ____exports.getVanillaPillEffectsOfType(self, pillEffectType)
+    return PILL_EFFECT_TYPE_TO_PILL_EFFECTS[pillEffectType]
 end
 --- Helper function to see if the given pill color is either a gold pill or a horse gold pill.
 function ____exports.isGoldPill(self, pillColor)
@@ -37337,6 +37646,36 @@ ____exports.PILL_EFFECT_TYPES = {
     [PillEffect.SHOT_SPEED_DOWN] = ItemConfigPillEffectType.NEGATIVE,
     [PillEffect.SHOT_SPEED_UP] = ItemConfigPillEffectType.POSITIVE,
     [PillEffect.EXPERIMENTAL] = ItemConfigPillEffectType.NEUTRAL
+}
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.objects.pillEffectTypeToPillEffects"] = function(...) 
+local ____exports = {}
+local getPillEffectsOfType
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local ItemConfigPillEffectType = ____isaac_2Dtypescript_2Ddefinitions.ItemConfigPillEffectType
+local ____constantsVanilla = require("lua_modules.isaacscript-common.dist.src.core.constantsVanilla")
+local VANILLA_PILL_EFFECTS = ____constantsVanilla.VANILLA_PILL_EFFECTS
+local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
+local filterMap = ____array.filterMap
+local ____pillEffectTypes = require("lua_modules.isaacscript-common.dist.src.objects.pillEffectTypes")
+local PILL_EFFECT_TYPES = ____pillEffectTypes.PILL_EFFECT_TYPES
+function getPillEffectsOfType(self, matchingPillEffectType)
+    return filterMap(
+        nil,
+        VANILLA_PILL_EFFECTS,
+        function(____, pillEffect)
+            local pillEffectType = PILL_EFFECT_TYPES[pillEffect]
+            return pillEffectType == matchingPillEffectType and pillEffect or nil
+        end
+    )
+end
+____exports.PILL_EFFECT_TYPE_TO_PILL_EFFECTS = {
+    [ItemConfigPillEffectType.NULL] = getPillEffectsOfType(nil, ItemConfigPillEffectType.NULL),
+    [ItemConfigPillEffectType.POSITIVE] = getPillEffectsOfType(nil, ItemConfigPillEffectType.POSITIVE),
+    [ItemConfigPillEffectType.NEGATIVE] = getPillEffectsOfType(nil, ItemConfigPillEffectType.NEGATIVE),
+    [ItemConfigPillEffectType.NEUTRAL] = getPillEffectsOfType(nil, ItemConfigPillEffectType.NEUTRAL),
+    [ItemConfigPillEffectType.MODDED] = getPillEffectsOfType(nil, ItemConfigPillEffectType.MODDED)
 }
 return ____exports
  end,
@@ -39898,7 +40237,6 @@ local ____isaacAPIClass = require("lua_modules.isaacscript-common.dist.src.funct
 local getIsaacAPIClassName = ____isaacAPIClass.getIsaacAPIClassName
 local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
 local log = ____log.log
-local logAndPrint = ____log.logAndPrint
 local ____playerHealth = require("lua_modules.isaacscript-common.dist.src.functions.playerHealth")
 local getPlayerHealth = ____playerHealth.getPlayerHealth
 local ____players = require("lua_modules.isaacscript-common.dist.src.functions.players")
@@ -40002,14 +40340,6 @@ end
 function ____exports.logEntityID(entity)
     local entityID = getEntityID(nil, entity)
     log("Logging entity: " .. entityID)
-end
---- Helper function to log an error message and also print it to the console for better visibility.
--- 
--- This is useful in situations where using the `error` function would be dangerous (since it
--- prevents all of the subsequent code in the callback from running).
-function ____exports.logError(msg)
-    local errorMsg = "Error: " .. msg
-    logAndPrint(nil, errorMsg)
 end
 --- Helper function for logging every game state flag that is turned on. Useful when debugging.
 function ____exports.logGameStateFlags()
@@ -41475,8 +41805,8 @@ return ____exports
 ["lua_modules.isaacscript-common.dist.src.functions.jsonHelpers"] = function(...) 
 local ____exports = {}
 local jsonLua = require("lua_modules.isaacscript-common.src.lib.jsonLua")
-local ____logMisc = require("lua_modules.isaacscript-common.dist.src.functions.logMisc")
-local logError = ____logMisc.logError
+local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
+local logError = ____log.logError
 local function tryDecode(jsonString)
     return jsonLua.decode(jsonString)
 end
@@ -42034,10 +42364,10 @@ ____exports.MODIFIER_KEYS = {
     Keyboard.RIGHT_ALT,
     Keyboard.RIGHT_SUPER
 }
-____exports.MOVEMENT_ACTIONS = {ButtonAction.LEFT, ButtonAction.RIGHT, ButtonAction.UP, ButtonAction.DOWN}
-____exports.MOVEMENT_ACTIONS_SET = __TS__New(ReadonlySet, ____exports.MOVEMENT_ACTIONS)
-____exports.SHOOTING_ACTIONS = {ButtonAction.SHOOT_LEFT, ButtonAction.SHOOT_RIGHT, ButtonAction.SHOOT_UP, ButtonAction.SHOOT_DOWN}
-____exports.SHOOTING_ACTIONS_SET = __TS__New(ReadonlySet, ____exports.SHOOTING_ACTIONS)
+____exports.MOVEMENT_BUTTON_ACTIONS = {ButtonAction.LEFT, ButtonAction.RIGHT, ButtonAction.UP, ButtonAction.DOWN}
+____exports.MOVEMENT_BUTTON_ACTIONS_SET = __TS__New(ReadonlySet, ____exports.MOVEMENT_BUTTON_ACTIONS)
+____exports.SHOOTING_BUTTON_ACTIONS = {ButtonAction.SHOOT_LEFT, ButtonAction.SHOOT_RIGHT, ButtonAction.SHOOT_UP, ButtonAction.SHOOT_DOWN}
+____exports.SHOOTING_BUTTON_ACTIONS_SET = __TS__New(ReadonlySet, ____exports.SHOOTING_BUTTON_ACTIONS)
 --- Helper function to get the enum name for the specified `Controller` value. Note that this will
 -- trim off the "BUTTON_" prefix.
 -- 
@@ -42052,18 +42382,18 @@ end
 --- Helper function to get the movement actions that the specified `ControllerIndex` is currently
 -- pressing down. This returns an array because a player can be holding down more than one movement
 -- key at a time.
-function ____exports.getMoveActions(self, controllerIndex)
+function ____exports.getMoveButtonActions(self, controllerIndex)
     return __TS__ArrayFilter(
-        ____exports.MOVEMENT_ACTIONS,
+        ____exports.MOVEMENT_BUTTON_ACTIONS,
         function(____, buttonAction) return Input.IsActionPressed(buttonAction, controllerIndex) end
     )
 end
 --- Helper function to get the shooting actions that the specified `ControllerIndex` is currently
 -- pressing down. This returns an array because a player can be holding down more than one shooting
 -- key at a time.
-function ____exports.getShootActions(self, controllerIndex)
+function ____exports.getShootButtonActions(self, controllerIndex)
     return __TS__ArrayFilter(
-        ____exports.SHOOTING_ACTIONS,
+        ____exports.SHOOTING_BUTTON_ACTIONS,
         function(____, buttonAction) return Input.IsActionPressed(buttonAction, controllerIndex) end
     )
 end
@@ -42144,18 +42474,18 @@ function ____exports.isModifierKeyPressed(self)
     )
 end
 function ____exports.isMoveAction(self, buttonAction)
-    return ____exports.MOVEMENT_ACTIONS_SET:has(buttonAction)
+    return ____exports.MOVEMENT_BUTTON_ACTIONS_SET:has(buttonAction)
 end
 function ____exports.isMoveActionPressed(self, controllerIndex)
     return ____exports.isActionPressed(
         nil,
         controllerIndex,
-        table.unpack(____exports.MOVEMENT_ACTIONS)
+        table.unpack(____exports.MOVEMENT_BUTTON_ACTIONS)
     )
 end
 function ____exports.isMoveActionPressedOnAnyInput(self)
     return __TS__ArraySome(
-        ____exports.MOVEMENT_ACTIONS,
+        ____exports.MOVEMENT_BUTTON_ACTIONS,
         function(____, moveAction) return ____exports.isActionPressedOnAnyInput(nil, moveAction) end
     )
 end
@@ -42163,28 +42493,28 @@ function ____exports.isMoveActionTriggered(self, controllerIndex)
     return ____exports.isActionTriggered(
         nil,
         controllerIndex,
-        table.unpack(____exports.MOVEMENT_ACTIONS)
+        table.unpack(____exports.MOVEMENT_BUTTON_ACTIONS)
     )
 end
 function ____exports.isMoveActionTriggeredOnAnyInput(self)
     return __TS__ArraySome(
-        ____exports.MOVEMENT_ACTIONS,
+        ____exports.MOVEMENT_BUTTON_ACTIONS,
         function(____, moveAction) return ____exports.isActionTriggeredOnAnyInput(nil, moveAction) end
     )
 end
 function ____exports.isShootAction(self, buttonAction)
-    return ____exports.SHOOTING_ACTIONS_SET:has(buttonAction)
+    return ____exports.SHOOTING_BUTTON_ACTIONS_SET:has(buttonAction)
 end
 function ____exports.isShootActionPressed(self, controllerIndex)
     return ____exports.isActionPressed(
         nil,
         controllerIndex,
-        table.unpack(____exports.SHOOTING_ACTIONS)
+        table.unpack(____exports.SHOOTING_BUTTON_ACTIONS)
     )
 end
 function ____exports.isShootActionPressedOnAnyInput(self)
     return __TS__ArraySome(
-        ____exports.SHOOTING_ACTIONS,
+        ____exports.SHOOTING_BUTTON_ACTIONS,
         function(____, shootAction) return ____exports.isActionPressedOnAnyInput(nil, shootAction) end
     )
 end
@@ -42192,12 +42522,12 @@ function ____exports.isShootActionTriggered(self, controllerIndex)
     return ____exports.isActionTriggered(
         nil,
         controllerIndex,
-        table.unpack(____exports.SHOOTING_ACTIONS)
+        table.unpack(____exports.SHOOTING_BUTTON_ACTIONS)
     )
 end
 function ____exports.isShootActionTriggeredOnAnyInput(self)
     return __TS__ArraySome(
-        ____exports.SHOOTING_ACTIONS,
+        ____exports.SHOOTING_BUTTON_ACTIONS,
         function(____, shootAction) return ____exports.isActionTriggeredOnAnyInput(nil, shootAction) end
     )
 end
@@ -42298,8 +42628,8 @@ local ____lualib = require("lualib_bundle")
 local __TS__StringReplace = ____lualib.__TS__StringReplace
 local ____exports = {}
 local hexToRGB, HEX_STRING_LENGTH
-local ____logMisc = require("lua_modules.isaacscript-common.dist.src.functions.logMisc")
-local logError = ____logMisc.logError
+local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
+local logError = ____log.logError
 function hexToRGB(self, hexString)
     hexString = __TS__StringReplace(hexString, "#", "")
     if #hexString ~= HEX_STRING_LENGTH then
@@ -42631,22 +42961,6 @@ return ____exports
 local ____exports = {}
 local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
 local log = ____log.log
---- Players can boot the game with an launch option called "--luadebug", which will enable additional
--- functionality that is considered to be unsafe. For more information about this flag, see the
--- wiki: https://bindingofisaacrebirth.fandom.com/wiki/Launch_Options
--- 
--- When this flag is enabled, the global environment will be slightly different. The differences are
--- documented here: https://wofsauge.github.io/IsaacDocs/rep/Globals.html
--- 
--- This function uses the `package` global variable as a proxy to determine if the "--luadebug" flag
--- is enabled.
--- 
--- Note that this function will return false if the Racing+ sandbox is enabled, even if the
--- "--luadebug" flag is really turned on. If checking for this case is needed, check for the
--- presence of the `sandboxGetTraceback` function.
-function ____exports.isLuaDebugEnabled(self)
-    return _G.package ~= nil
-end
 --- Helper function to get the current time for benchmarking / profiling purposes.
 -- 
 -- The return value will either be in seconds or milliseconds, depending on if the "--luadebug" flag
@@ -42681,6 +42995,28 @@ function ____exports.getTime(self, useSocketIfAvailable)
     end
     return Isaac.GetTime()
 end
+--- Players can boot the game with an launch option called "--luadebug", which will enable additional
+-- functionality that is considered to be unsafe. For more information about this flag, see the
+-- wiki: https://bindingofisaacrebirth.fandom.com/wiki/Launch_Options
+-- 
+-- When this flag is enabled, the global environment will be slightly different. The differences are
+-- documented here: https://wofsauge.github.io/IsaacDocs/rep/Globals.html
+-- 
+-- This function uses the `package` global variable as a proxy to determine if the "--luadebug" flag
+-- is enabled.
+-- 
+-- Note that this function will return false if the Racing+ sandbox is enabled, even if the
+-- "--luadebug" flag is really turned on. If checking for this case is needed, check for the
+-- presence of the `sandboxGetTraceback` function.
+function ____exports.isLuaDebugEnabled(self)
+    return _G.package ~= nil
+end
+--- Helper function to get the amount of elapsed time for benchmarking / profiling purposes.
+-- 
+-- For more information, see the documentation for the `getTime` helper function.
+function ____exports.getElapsedTimeSince(self, time)
+    return ____exports.getTime(nil) - time
+end
 --- Helper function to get a stack trace.
 -- 
 -- This will only work if the `--luadebug` launch option is enabled. If it isn't, then a error
@@ -42709,35 +43045,46 @@ return ____exports
 local ____exports = {}
 local ____collectibles = require("lua_modules.isaacscript-common.dist.src.functions.collectibles")
 local getCollectibleName = ____collectibles.getCollectibleName
+local REBIRTH_ITEM_TRACKER_REMOVE_COLLECTIBLE_COMMAND = "REBIRTH_ITEM_TRACKER_REMOVE_COLLECTIBLE"
 local REBIRTH_ITEM_TRACKER_WRITE_TO_FILE_COMMAND = "REBIRTH_ITEM_TRACKER_WRITE_TO_FILE"
+--- Helper function to let the Rebirth Item Tracker know that it should remove a collectible from its
+-- list.
+-- 
+-- The "item tracker" in this function does not refer to the in-game item tracker, but rather to the
+-- external Python program.
+-- 
+-- This function is variadic, meaning that you can pass as many collectible types as you want to
+-- remove.
+-- 
+-- Note that calling this function is not normally necessary when removing collectibles from
+-- players. For example, when you remove a collectible with the `EntityPlayer.RemoveCollectible`
+-- method, a message is sent to the log file by the game and the item tracker will automatically
+-- remove it. However, in some cases, manually removing collectibles can be useful:
+-- 
+-- - We may be giving the player a "fake" collectible (e.g. 1-Up for the purposes of an extra life)
+--   and do not want the fake collectible to show up on the tracker.
+-- - We may be removing a starting active item. Since active items are never removed from the
+--   tracker, we want to tell the item tracker that the player never had a particular active item to
+--   begin with.
+-- 
+-- @see https ://github.com/Rchardon/RebirthItemTracker
+function ____exports.rebirthItemTrackerRemoveCollectible(self, ...)
+    local collectibleTypes = {...}
+    for ____, collectibleType in ipairs(collectibleTypes) do
+        local collectibleName = getCollectibleName(nil, collectibleType)
+        Isaac.DebugString(((((REBIRTH_ITEM_TRACKER_REMOVE_COLLECTIBLE_COMMAND .. " Removing collectible ") .. tostring(collectibleType)) .. " (") .. collectibleName) .. ") on player 0 (Player)")
+    end
+end
 --- Helper function to let the Rebirth Item Tracker know that it should write the submitted text
 -- string to a file. This is useful for capturing text in programs like Open Broadcaster Software
 -- (OBS).
 -- 
 -- The "item tracker" in this function does not refer to the in-game item tracker, but rather to the
--- Python program located at: https://github.com/Rchardon/RebirthItemTracker
+-- external Python program.
+-- 
+-- @see https ://github.com/Rchardon/RebirthItemTracker
 function ____exports.rebirthItemTrackerWriteToFile(self, msg)
     Isaac.DebugString((REBIRTH_ITEM_TRACKER_WRITE_TO_FILE_COMMAND .. " ") .. msg)
-end
---- Helper function to put a message in the log.txt file to let the Rebirth Item Tracker know that it
--- should remove an item.
--- 
--- The "item tracker" in this function does not refer to the in-game item tracker, but rather to the
--- Python program located at: https://github.com/Rchardon/RebirthItemTracker
--- 
--- This function is useful when you need to add a "fake" collectible to a player. Note that calling
--- this function is not necessary when removing items from players. For example, when you remove a
--- collectible with the `EntityPlayer.RemoveCollectible` method, a proper message is sent to the log
--- the item tracker will automatically remove it.
--- 
--- This function is variadic, meaning that you can pass as many collectible types as you want to
--- remove.
-function ____exports.removeCollectibleFromItemTracker(self, ...)
-    local collectibleTypes = {...}
-    for ____, collectibleType in ipairs(collectibleTypes) do
-        local collectibleName = getCollectibleName(nil, collectibleType)
-        Isaac.DebugString(((("Removing collectible " .. tostring(collectibleType)) .. " (") .. collectibleName) .. ") on player 0 (Player)")
-    end
 end
 return ____exports
  end,
@@ -43875,13 +44222,50 @@ end
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.challenges"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
 local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local Challenge = ____isaac_2Dtypescript_2Ddefinitions.Challenge
+local ____challengeBosses = require("lua_modules.isaacscript-common.dist.src.objects.challengeBosses")
+local CHALLENGE_BOSSES = ____challengeBosses.CHALLENGE_BOSSES
+local DEFAULT_CHALLENGE_BOSS_ID = ____challengeBosses.DEFAULT_CHALLENGE_BOSS_ID
 local ____challengeCharacters = require("lua_modules.isaacscript-common.dist.src.objects.challengeCharacters")
 local CHALLENGE_CHARACTERS = ____challengeCharacters.CHALLENGE_CHARACTERS
 local DEFAULT_CHALLENGE_CHARACTER = ____challengeCharacters.DEFAULT_CHALLENGE_CHARACTER
 local ____challengeNames = require("lua_modules.isaacscript-common.dist.src.objects.challengeNames")
 local CHALLENGE_NAMES = ____challengeNames.CHALLENGE_NAMES
 local DEFAULT_CHALLENGE_NAME = ____challengeNames.DEFAULT_CHALLENGE_NAME
+local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
+local log = ____log.log
+--- Helper function to see if the player is playing any challenge.
+function ____exports.onAnyChallenge(self)
+    local challenge = Isaac.GetChallenge()
+    return challenge ~= Challenge.NULL
+end
+--- Helper function to clear the current challenge, which will restart the run on a new random
+-- non-challenge seed with the current character.
+-- 
+-- If the player is not in a challenge already, this function will do nothing.
+-- 
+-- Under the hood, this function executes the `challenge 0` console command.
+function ____exports.clearChallenge(self)
+    if ____exports.onAnyChallenge(nil) then
+        local command = "challenge " .. tostring(Challenge.NULL)
+        log("Restarting the run to clear the current challenge with a console command of: " .. command)
+        Isaac.ExecuteCommand(command)
+    end
+end
+--- Get the final boss of a challenge. This will only work for vanilla challenges.
+-- 
+-- For modded challenges, `BossID.MOM` (6) will be returned.
+-- 
+-- Note that for `Challenge.BACKASSWARDS` (31), this function will return `BossID.MEGA_SATAN` (55),
+-- but this is not actually the final boss. (There is no final boss for this challenge.)
+function ____exports.getChallengeBoss(self, challenge)
+    local challengeBossID = CHALLENGE_BOSSES[challenge]
+    return challengeBossID or DEFAULT_CHALLENGE_BOSS_ID
+end
 --- Get the starting character of a challenge. This will only work for vanilla challenges.
 -- 
 -- For modded challenges, `PlayerType.ISAAC` (0) will be returned.
@@ -43895,6 +44279,27 @@ end
 function ____exports.getChallengeName(self, challenge)
     local challengeName = CHALLENGE_NAMES[challenge]
     return challengeName or DEFAULT_CHALLENGE_NAME
+end
+--- Helper function to check to see if the player is playing a particular challenge.
+-- 
+-- This function is variadic, meaning that you can specify as many challenges as you want to check
+-- for.
+function ____exports.onChallenge(self, ...)
+    local challenges = {...}
+    local challenge = Isaac.GetChallenge()
+    return __TS__ArrayIncludes(challenges, challenge)
+end
+--- Helper function to restart the run on a particular challenge.
+-- 
+-- If the player is already in the particular challenge, this function will do nothing.
+-- 
+-- Under the hood, this function executes the `challenge 0` console command.
+function ____exports.setChallenge(self, challenge)
+    if not ____exports.onChallenge(nil, challenge) then
+        local command = "challenge " .. tostring(challenge)
+        log("Restarting the run to set a challenge with a console command of: " .. command)
+        Isaac.ExecuteCommand(command)
+    end
 end
 return ____exports
  end,
@@ -44011,6 +44416,65 @@ ____exports.CHALLENGE_CHARACTERS = {
 }
 return ____exports
  end,
+["lua_modules.isaacscript-common.dist.src.objects.challengeBosses"] = function(...) 
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
+local Challenge = ____isaac_2Dtypescript_2Ddefinitions.Challenge
+____exports.DEFAULT_CHALLENGE_BOSS_ID = BossID.MOM
+--- Taken from the "challenges.xml" file.
+-- 
+-- @see https ://bindingofisaacrebirth.fandom.com/wiki/Challenges
+____exports.CHALLENGE_BOSSES = {
+    [Challenge.NULL] = BossID.MOM,
+    [Challenge.PITCH_BLACK] = BossID.MOM,
+    [Challenge.HIGH_BROW] = BossID.MOM,
+    [Challenge.HEAD_TRAUMA] = BossID.MOM,
+    [Challenge.DARKNESS_FALLS] = BossID.SATAN,
+    [Challenge.TANK] = BossID.MOM,
+    [Challenge.SOLAR_SYSTEM] = BossID.MOMS_HEART,
+    [Challenge.SUICIDE_KING] = BossID.ISAAC,
+    [Challenge.CAT_GOT_YOUR_TONGUE] = BossID.MOM,
+    [Challenge.DEMO_MAN] = BossID.MOMS_HEART,
+    [Challenge.CURSED] = BossID.MOM,
+    [Challenge.GLASS_CANNON] = BossID.SATAN,
+    [Challenge.WHEN_LIFE_GIVES_LEMONS] = BossID.MOM,
+    [Challenge.BEANS] = BossID.MOM,
+    [Challenge.ITS_IN_THE_CARDS] = BossID.MOM,
+    [Challenge.SLOW_ROLL] = BossID.MOM,
+    [Challenge.COMPUTER_SAVY] = BossID.MOM,
+    [Challenge.WAKA_WAKA] = BossID.MOM,
+    [Challenge.HOST] = BossID.MOM,
+    [Challenge.FAMILY_MAN] = BossID.ISAAC,
+    [Challenge.PURIST] = BossID.MOMS_HEART,
+    [Challenge.XXXXXXXXL] = BossID.MOMS_HEART,
+    [Challenge.SPEED] = BossID.MOMS_HEART,
+    [Challenge.BLUE_BOMBER] = BossID.SATAN,
+    [Challenge.PAY_TO_PLAY] = BossID.ISAAC,
+    [Challenge.HAVE_A_HEART] = BossID.MOMS_HEART,
+    [Challenge.I_RULE] = BossID.MEGA_SATAN,
+    [Challenge.BRAINS] = BossID.BLUE_BABY,
+    [Challenge.PRIDE_DAY] = BossID.MOMS_HEART,
+    [Challenge.ONANS_STREAK] = BossID.ISAAC,
+    [Challenge.GUARDIAN] = BossID.MOMS_HEART,
+    [Challenge.BACKASSWARDS] = BossID.MEGA_SATAN,
+    [Challenge.APRILS_FOOL] = BossID.MOMS_HEART,
+    [Challenge.POKEY_MANS] = BossID.ISAAC,
+    [Challenge.ULTRA_HARD] = BossID.MEGA_SATAN,
+    [Challenge.PONG] = BossID.BLUE_BABY,
+    [Challenge.SCAT_MAN] = BossID.MOM,
+    [Challenge.BLOODY_MARY] = BossID.SATAN,
+    [Challenge.BAPTISM_BY_FIRE] = BossID.SATAN,
+    [Challenge.ISAACS_AWAKENING] = BossID.MOTHER,
+    [Challenge.SEEING_DOUBLE] = BossID.MOMS_HEART,
+    [Challenge.PICA_RUN] = BossID.ISAAC,
+    [Challenge.HOT_POTATO] = BossID.SATAN,
+    [Challenge.CANTRIPPED] = BossID.MOM,
+    [Challenge.RED_REDEMPTION] = BossID.MOTHER,
+    [Challenge.DELETE_THIS] = BossID.BLUE_BABY
+}
+return ____exports
+ end,
 ["lua_modules.isaacscript-common.dist.src.functions.cards"] = function(...) 
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -44030,13 +44494,15 @@ local ____itemConfigCardTypesForCardsSet = require("lua_modules.isaacscript-comm
 local ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET = ____itemConfigCardTypesForCardsSet.ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET
 local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
 local addFlag = ____flag.addFlag
---- Returns true for any vanilla card or rune.
 function ____exports.isVanillaCardType(self, cardType)
     return cardType <= LAST_VANILLA_CARD_TYPE
 end
---- Helper function to get a card description from a Card enum value.
+--- Helper function to get a card description from a `CardType` value. Returns "Unknown" if the
+-- provided card type is not valid.
 -- 
--- For example, `getCardDescription(card)` returns "Where journey begins".
+-- This function works for both vanilla and modded trinkets.
+-- 
+-- For example, `getCardDescription(CardType.FOOL)` would return "Where journey begins".
 function ____exports.getCardDescription(self, cardType)
     local cardDescription = CARD_DESCRIPTIONS[cardType]
     if cardDescription ~= nil then
@@ -44076,11 +44542,12 @@ function ____exports.getItemConfigCardType(self, cardType)
     end
     return itemConfigCard.CardType
 end
---- Returns true for cards that have the following card type:
--- - CardType.TAROT
--- - CardType.SUIT
--- - CardType.SPECIAL
--- - CardType.TAROT_REVERSE
+--- Returns true for card types that have the following item config card type:
+-- 
+-- - `ItemConfigCardType.TAROT` (0)
+-- - `ItemConfigCardType.SUIT` (1)
+-- - `ItemConfigCardType.SPECIAL` (3)
+-- - `ItemConfigCardType.TAROT_REVERSE` (5)
 function ____exports.isCard(self, cardType)
     local itemConfigCardType = ____exports.getItemConfigCardType(nil, cardType)
     if itemConfigCardType == nil then
@@ -44092,31 +44559,31 @@ end
 function ____exports.isCardType(self, cardType, itemConfigCardType)
     return itemConfigCardType == ____exports.getItemConfigCardType(nil, cardType)
 end
---- Returns true for any card or rune added by a mod.
+--- Returns true for any card type added by a mod.
 function ____exports.isModdedCardType(self, cardType)
     return not ____exports.isVanillaCardType(nil, cardType)
 end
---- Returns true for cards that have `ItemConfigCardType.SPECIAL_OBJECT`.
+--- Returns true for card types that have `ItemConfigCardType.SPECIAL_OBJECT`.
 function ____exports.isPocketItemObject(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.SPECIAL_OBJECT)
 end
---- Returns true for cards that have `ItemConfigCardType.TAROT_REVERSE`.
+--- Returns true for card types that have `ItemConfigCardType.TAROT_REVERSE`.
 function ____exports.isReverseTarotCard(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.TAROT_REVERSE)
 end
---- Returns true for cards that have `ItemConfigCardType.RUNE`.
+--- Returns true for card types that have `ItemConfigCardType.RUNE`.
 function ____exports.isRune(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.RUNE)
 end
---- Returns true for cards that have `ItemConfigCardType.SPECIAL`.
+--- Returns true for card types that have `ItemConfigCardType.SPECIAL`.
 function ____exports.isSpecialCard(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.SPECIAL)
 end
---- Returns true for cards that have `ItemConfigCardType.SUIT`.
+--- Returns true for card types that have `ItemConfigCardType.SUIT`.
 function ____exports.isSuitCard(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.SUIT)
 end
---- Returns true for cards that have `ItemConfigCardType.TAROT`.
+--- Returns true for card types that have `ItemConfigCardType.TAROT`.
 function ____exports.isTarotCard(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.TAROT)
 end
@@ -44373,11 +44840,16 @@ local ____entityTypeVariantToBossIDMap = require("lua_modules.isaacscript-common
 local ENTITY_TYPE_VARIANT_TO_BOSS_ID_MAP = ____entityTypeVariantToBossIDMap.ENTITY_TYPE_VARIANT_TO_BOSS_ID_MAP
 local ____bossIDToEntityTypeVariant = require("lua_modules.isaacscript-common.dist.src.objects.bossIDToEntityTypeVariant")
 local BOSS_ID_TO_ENTITY_TYPE_VARIANT = ____bossIDToEntityTypeVariant.BOSS_ID_TO_ENTITY_TYPE_VARIANT
+local ____bossNames = require("lua_modules.isaacscript-common.dist.src.objects.bossNames")
+local BOSS_NAMES = ____bossNames.BOSS_NAMES
+local DEFAULT_BOSS_NAME = ____bossNames.DEFAULT_BOSS_NAME
 local ____bossSets = require("lua_modules.isaacscript-common.dist.src.sets.bossSets")
 local ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET = ____bossSets.ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET
 local ALL_BOSSES_SET = ____bossSets.ALL_BOSSES_SET
 local STAGE_TO_COMBINED_BOSS_SET_MAP = ____bossSets.STAGE_TO_COMBINED_BOSS_SET_MAP
 local STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP = ____bossSets.STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP
+local STORY_BOSS_ENTITY_TYPES_SET = ____bossSets.STORY_BOSS_ENTITY_TYPES_SET
+local STORY_BOSS_IDS_SET = ____bossSets.STORY_BOSS_IDS_SET
 local ____repentanceBossIDsSet = require("lua_modules.isaacscript-common.dist.src.sets.repentanceBossIDsSet")
 local REPENTANCE_ONLY_BOSS_IDS_SET = ____repentanceBossIDsSet.REPENTANCE_ONLY_BOSS_IDS_SET
 local ____sinEntityTypesSet = require("lua_modules.isaacscript-common.dist.src.sets.sinEntityTypesSet")
@@ -44448,6 +44920,7 @@ end
 -- 
 -- This includes:
 -- - Ultra Greed
+-- - Ultra Greedier
 -- 
 -- This does not include:
 -- - mini-bosses (e.g. Ultra Pride, Krampus)
@@ -44484,6 +44957,11 @@ end
 function ____exports.getBossIDFromEntityTypeVariant(self, entityType, variant)
     local entityTypeVariant = (tostring(entityType) .. ".") .. tostring(variant)
     return ENTITY_TYPE_VARIANT_TO_BOSS_ID_MAP:get(entityTypeVariant)
+end
+--- Helper function to get the proper English name for a boss. For example, the name for
+-- `BossID.WRETCHED` (36) is "The Wretched".
+function ____exports.getBossName(self, bossID)
+    return BOSS_NAMES[bossID] or DEFAULT_BOSS_NAME
 end
 --- Helper function to get the set of vanilla bosses for a particular stage and stage type
 -- combination.
@@ -44540,26 +45018,30 @@ end
 function ____exports.isRepentanceBoss(self, bossID)
     return REPENTANCE_ONLY_BOSS_IDS_SET:has(bossID)
 end
+--- Helper function to check if the provided NPC is a Sin miniboss, such as Sloth or Lust.
+function ____exports.isSin(self, npc)
+    return SIN_ENTITY_TYPES_SET:has(npc.Type)
+end
 local function getNumBossSegments(self, entityType, variant, numSegments)
     if numSegments ~= nil then
         return numSegments
     end
     repeat
-        local ____switch18 = entityType
-        local ____cond18 = ____switch18 == EntityType.CHUB
-        if ____cond18 then
+        local ____switch20 = entityType
+        local ____cond20 = ____switch20 == EntityType.CHUB
+        if ____cond20 then
             do
                 return 3
             end
         end
-        ____cond18 = ____cond18 or ____switch18 == EntityType.LOKI
-        if ____cond18 then
+        ____cond20 = ____cond20 or ____switch20 == EntityType.LOKI
+        if ____cond20 then
             do
                 return variant == asNumber(nil, LokiVariant.LOKII) and 2 or 1
             end
         end
-        ____cond18 = ____cond18 or ____switch18 == EntityType.GURGLING
-        if ____cond18 then
+        ____cond20 = ____cond20 or ____switch20 == EntityType.GURGLING
+        if ____cond20 then
             do
                 return 2
             end
@@ -44571,9 +45053,17 @@ local function getNumBossSegments(self, entityType, variant, numSegments)
         end
     until true
 end
---- Helper function to check if the provided NPC is a Sin miniboss, such as Sloth or Lust.
-function ____exports.isSin(self, npc)
-    return SIN_ENTITY_TYPES_SET:has(npc.Type)
+--- Helper function to determine if the specified entity type is an end-game story boss, like Isaac,
+-- Blue Baby, Mega Satan, The Beast, and so on. This is useful because certain effects should only
+-- apply to non-story bosses, like Vanishing Twin.
+function ____exports.isStoryBoss(self, entityType)
+    return STORY_BOSS_ENTITY_TYPES_SET:has(entityType)
+end
+--- Helper function to determine if the specified boss ID is an end-game story boss, like Isaac, Blue
+-- Baby, Mega Satan, The Beast, and so on. This is useful because certain effects should only apply
+-- to non-story bosses, like Vanishing Twin.
+function ____exports.isStoryBossID(self, bossID)
+    return STORY_BOSS_IDS_SET:has(bossID)
 end
 --- Helper function to spawn a boss.
 -- 
@@ -44704,6 +45194,7 @@ local __TS__Spread = ____lualib.__TS__Spread
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
 local StageType = ____isaac_2Dtypescript_2Ddefinitions.StageType
 local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.src.arrays.cachedEnumValues")
@@ -45067,7 +45558,7 @@ ____exports.ALL_BOSSES_SET = __TS__New(
         function(____, bossID) return bossID ~= BossID.RAGLICH end
     )
 )
-local STORY_BOSS_IDS_SET = __TS__New(ReadonlySet, {
+____exports.STORY_BOSS_IDS_SET = __TS__New(ReadonlySet, {
     BossID.MOM,
     BossID.MOMS_HEART,
     BossID.SATAN,
@@ -45079,19 +45570,149 @@ local STORY_BOSS_IDS_SET = __TS__New(ReadonlySet, {
     BossID.ULTRA_GREED,
     BossID.HUSH,
     BossID.DELIRIUM,
+    BossID.ULTRA_GREEDIER,
     BossID.MOTHER,
     BossID.MAUSOLEUM_MOM,
     BossID.MAUSOLEUM_MOMS_HEART,
     BossID.DOGMA,
     BossID.BEAST
 })
+____exports.STORY_BOSS_ENTITY_TYPES_SET = __TS__New(ReadonlySet, {
+    EntityType.MOM,
+    EntityType.MOMS_HEART,
+    EntityType.SATAN,
+    EntityType.ISAAC,
+    EntityType.LAMB,
+    EntityType.MEGA_SATAN,
+    EntityType.MEGA_SATAN_2,
+    EntityType.ULTRA_GREED,
+    EntityType.HUSH,
+    EntityType.DELIRIUM,
+    EntityType.MOTHER,
+    EntityType.DOGMA,
+    EntityType.BEAST
+})
 ____exports.ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET = __TS__New(
     ReadonlySet,
     __TS__ArrayFilter(
         {__TS__Spread(____exports.ALL_BOSSES_SET)},
-        function(____, bossID) return not STORY_BOSS_IDS_SET:has(bossID) end
+        function(____, bossID) return not ____exports.STORY_BOSS_IDS_SET:has(bossID) end
     )
 )
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.objects.bossNames"] = function(...) 
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
+____exports.DEFAULT_BOSS_NAME = "Unknown"
+--- From "bossportraits.xml".
+-- 
+-- Note that Blue Baby returns "Blue Baby" instead of "???".
+____exports.BOSS_NAMES = {
+    [BossID.MONSTRO] = "Monstro",
+    [BossID.LARRY_JR] = "Larry Jr.",
+    [BossID.CHUB] = "Chub",
+    [BossID.GURDY] = "Gurdy",
+    [BossID.MONSTRO_2] = "Monstro II",
+    [BossID.MOM] = "Mom",
+    [BossID.SCOLEX] = "Scolex",
+    [BossID.MOMS_HEART] = "Mom's Heart",
+    [BossID.FAMINE] = "Famine",
+    [BossID.PESTILENCE] = "Pestilence",
+    [BossID.WAR] = "War",
+    [BossID.DEATH] = "Death",
+    [BossID.DUKE_OF_FLIES] = "Duke of Flies",
+    [BossID.PEEP] = "Peep",
+    [BossID.LOKI] = "Loki",
+    [BossID.BLASTOCYST] = "Blastocyst",
+    [BossID.GEMINI] = "Gemini",
+    [BossID.FISTULA] = "Fistula",
+    [BossID.GISH] = "Gish",
+    [BossID.STEVEN] = "Steven",
+    [BossID.CHAD] = "C.H.A.D.",
+    [BossID.HEADLESS_HORSEMAN] = "Headless Horseman",
+    [BossID.FALLEN] = "The Fallen",
+    [BossID.SATAN] = "Satan",
+    [BossID.IT_LIVES] = "It Lives!",
+    [BossID.HOLLOW] = "The Hollow",
+    [BossID.CARRION_QUEEN] = "The Carrion Queen",
+    [BossID.GURDY_JR] = "Gurdy Jr.",
+    [BossID.HUSK] = "The Husk",
+    [BossID.BLOAT] = "The Bloat",
+    [BossID.LOKII] = "Lokii",
+    [BossID.BLIGHTED_OVUM] = "The Blighted Ovum",
+    [BossID.TERATOMA] = "Teratoma",
+    [BossID.WIDOW] = "The Widow",
+    [BossID.MASK_OF_INFAMY] = "Mask of Infamy",
+    [BossID.WRETCHED] = "The Wretched",
+    [BossID.PIN] = "Pin",
+    [BossID.CONQUEST] = "Conquest",
+    [BossID.ISAAC] = "Isaac",
+    [BossID.BLUE_BABY] = "Blue Baby",
+    [BossID.DADDY_LONG_LEGS] = "Daddy Long Legs",
+    [BossID.TRIACHNID] = "Triachnid",
+    [BossID.HAUNT] = "The Haunt",
+    [BossID.DINGLE] = "Dingle",
+    [BossID.MEGA_MAW] = "Mega Maw",
+    [BossID.GATE] = "The Gate",
+    [BossID.MEGA_FATTY] = "Mega Fatty",
+    [BossID.CAGE] = "The Cage",
+    [BossID.MAMA_GURDY] = "Mega Gurdy",
+    [BossID.DARK_ONE] = "Dark One",
+    [BossID.ADVERSARY] = "The Adversary",
+    [BossID.POLYCEPHALUS] = "Polycephalus",
+    [BossID.MR_FRED] = "Mr. Fred",
+    [BossID.LAMB] = "The Lamb",
+    [BossID.MEGA_SATAN] = "Mega Satan",
+    [BossID.GURGLING] = "Gurglings",
+    [BossID.STAIN] = "The Stain",
+    [BossID.BROWNIE] = "Brownie",
+    [BossID.FORSAKEN] = "The Forsaken",
+    [BossID.LITTLE_HORN] = "Little Horn",
+    [BossID.RAG_MAN] = "Rag Man",
+    [BossID.ULTRA_GREED] = "Ultra Greed",
+    [BossID.HUSH] = "Hush",
+    [BossID.DANGLE] = "Dangle",
+    [BossID.TURDLING] = "Turdling",
+    [BossID.FRAIL] = "The Frail",
+    [BossID.RAG_MEGA] = "Rag Mega",
+    [BossID.SISTERS_VIS] = "Sisters Vis",
+    [BossID.BIG_HORN] = "Big Horn",
+    [BossID.DELIRIUM] = "Delirium",
+    [BossID.ULTRA_GREEDIER] = "Ultra Greedier",
+    [BossID.MATRIARCH] = "The Matriarch",
+    [BossID.PILE] = "The Pile",
+    [BossID.REAP_CREEP] = "Reap Creep",
+    [BossID.LIL_BLUB] = "Lil Blub",
+    [BossID.WORMWOOD] = "Wormwood",
+    [BossID.RAINMAKER] = "The Rainmaker",
+    [BossID.VISAGE] = "The Visage",
+    [BossID.SIREN] = "The Siren",
+    [BossID.TUFF_TWINS] = "Tuff Twins",
+    [BossID.HERETIC] = "The Heretic",
+    [BossID.HORNFEL] = "Hornfel",
+    [BossID.GREAT_GIDEON] = "Great Gideon",
+    [BossID.BABY_PLUM] = "Baby Plum",
+    [BossID.SCOURGE] = "The Scourge",
+    [BossID.CHIMERA] = "Chimera",
+    [BossID.ROTGUT] = "Rotgut",
+    [BossID.MOTHER] = "Mother",
+    [BossID.MAUSOLEUM_MOM] = "Mom (Mausoleum)",
+    [BossID.MAUSOLEUM_MOMS_HEART] = "Mom's Heart (Mausoleum)",
+    [BossID.MIN_MIN] = "Min-Min",
+    [BossID.CLOG] = "Clog",
+    [BossID.SINGE] = "Singe",
+    [BossID.BUMBINO] = "Bumbino",
+    [BossID.COLOSTOMIA] = "Colostomia",
+    [BossID.SHELL] = "The Shell",
+    [BossID.TURDLET] = "Turdlet",
+    [BossID.RAGLICH] = "Raglich",
+    [BossID.DOGMA] = "Dogma",
+    [BossID.BEAST] = "The Beast",
+    [BossID.HORNY_BOYS] = "Horny Boys",
+    [BossID.CLUTCH] = "Clutch"
+}
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.objects.bossIDToEntityTypeVariant"] = function(...) 
@@ -45203,6 +45824,7 @@ ____exports.BOSS_ID_TO_ENTITY_TYPE_VARIANT = {
     [BossID.SISTERS_VIS] = {EntityType.SISTERS_VIS, 0},
     [BossID.BIG_HORN] = {EntityType.BIG_HORN, BigHornVariant.BIG_HORN},
     [BossID.DELIRIUM] = {EntityType.DELIRIUM, 0},
+    [BossID.ULTRA_GREEDIER] = {EntityType.ULTRA_GREED, UltraGreedVariant.ULTRA_GREEDIER},
     [BossID.MATRIARCH] = {EntityType.MATRIARCH, 0},
     [BossID.PILE] = {EntityType.POLYCEPHALUS, PolycephalusVariant.PILE},
     [BossID.REAP_CREEP] = {EntityType.REAP_CREEP, 0},
@@ -45330,7 +45952,6 @@ local __TS__ArrayEvery = ____lualib.__TS__ArrayEvery
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArrayFind = ____lualib.__TS__ArrayFind
 local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
-local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
 local __TS__ArrayJoin = ____lualib.__TS__ArrayJoin
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local __TS__ArraySome = ____lualib.__TS__ArraySome
@@ -45360,15 +45981,6 @@ end
 -- Internally, this just calls `array.forEach`.
 function ____exports.forEach(self, array, func)
     __TS__ArrayForEach(array, func)
-end
---- Helper function for non-TypeScript users to check if an element is in an array.
--- 
--- Since this takes O(N) time, using this function is usually a mistake, since you can use a `Set`
--- data structure to get O(1) lookups.
--- 
--- Internally, this just calls `array.includes`.
-function ____exports.includes(self, array, element)
-    return __TS__ArrayIncludes(array, element)
 end
 --- Helper function for non-TypeScript users to convert an array to a string with the specified
 -- separator.
@@ -45877,17 +46489,19 @@ ____exports.ISCFeature.RUN_IN_N_FRAMES = 48
 ____exports.ISCFeature[____exports.ISCFeature.RUN_IN_N_FRAMES] = "RUN_IN_N_FRAMES"
 ____exports.ISCFeature.RUN_NEXT_ROOM = 49
 ____exports.ISCFeature[____exports.ISCFeature.RUN_NEXT_ROOM] = "RUN_NEXT_ROOM"
-____exports.ISCFeature.SAVE_DATA_MANAGER = 50
+____exports.ISCFeature.RUN_NEXT_RUN = 50
+____exports.ISCFeature[____exports.ISCFeature.RUN_NEXT_RUN] = "RUN_NEXT_RUN"
+____exports.ISCFeature.SAVE_DATA_MANAGER = 51
 ____exports.ISCFeature[____exports.ISCFeature.SAVE_DATA_MANAGER] = "SAVE_DATA_MANAGER"
-____exports.ISCFeature.SPAWN_ALT_ROCK_REWARDS = 51
+____exports.ISCFeature.SPAWN_ALT_ROCK_REWARDS = 52
 ____exports.ISCFeature[____exports.ISCFeature.SPAWN_ALT_ROCK_REWARDS] = "SPAWN_ALT_ROCK_REWARDS"
-____exports.ISCFeature.SPAWN_COLLECTIBLE = 52
+____exports.ISCFeature.SPAWN_COLLECTIBLE = 53
 ____exports.ISCFeature[____exports.ISCFeature.SPAWN_COLLECTIBLE] = "SPAWN_COLLECTIBLE"
-____exports.ISCFeature.STAGE_HISTORY = 53
+____exports.ISCFeature.STAGE_HISTORY = 54
 ____exports.ISCFeature[____exports.ISCFeature.STAGE_HISTORY] = "STAGE_HISTORY"
-____exports.ISCFeature.START_AMBUSH = 54
+____exports.ISCFeature.START_AMBUSH = 55
 ____exports.ISCFeature[____exports.ISCFeature.START_AMBUSH] = "START_AMBUSH"
-____exports.ISCFeature.TAINTED_LAZARUS_PLAYERS = 55
+____exports.ISCFeature.TAINTED_LAZARUS_PLAYERS = 56
 ____exports.ISCFeature[____exports.ISCFeature.TAINTED_LAZARUS_PLAYERS] = "TAINTED_LAZARUS_PLAYERS"
 return ____exports
  end,
@@ -46075,6 +46689,7 @@ local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
 local ____features = require("lua_modules.isaacscript-common.dist.src.features")
 local getFeatures = ____features.getFeatures
 local ____debugFunctions = require("lua_modules.isaacscript-common.dist.src.functions.debugFunctions")
+local getElapsedTimeSince = ____debugFunctions.getElapsedTimeSince
 local getTime = ____debugFunctions.getTime
 local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
 local getParentFunctionDescription = ____log.getParentFunctionDescription
@@ -46142,8 +46757,7 @@ function ModUpgraded.prototype.AddPriorityCallback(self, modCallback, priority, 
             local startTime = getTime(nil)
             Isaac.DebugString(signature .. " - START")
             local returnValue = callback(nil, ...)
-            local endTime = getTime(nil)
-            local elapsedTime = endTime - startTime
+            local elapsedTime = getElapsedTimeSince(nil, startTime)
             if self.timeThreshold == nil or self.timeThreshold <= elapsedTime then
                 Isaac.DebugString((signature .. " - END - time: ") .. tostring(elapsedTime))
             else
@@ -46420,6 +47034,8 @@ local ____RunInNFrames = require("lua_modules.isaacscript-common.dist.src.classe
 local RunInNFrames = ____RunInNFrames.RunInNFrames
 local ____RunNextRoom = require("lua_modules.isaacscript-common.dist.src.classes.features.other.RunNextRoom")
 local RunNextRoom = ____RunNextRoom.RunNextRoom
+local ____RunNextRun = require("lua_modules.isaacscript-common.dist.src.classes.features.other.RunNextRun")
+local RunNextRun = ____RunNextRun.RunNextRun
 local ____SaveDataManager = require("lua_modules.isaacscript-common.dist.src.classes.features.other.SaveDataManager")
 local SaveDataManager = ____SaveDataManager.SaveDataManager
 local ____SpawnCollectible = require("lua_modules.isaacscript-common.dist.src.classes.features.other.SpawnCollectible")
@@ -46554,6 +47170,7 @@ function ____exports.getFeatures(self, mod, callbacks)
         [ISCFeature.ROOM_HISTORY] = roomHistory,
         [ISCFeature.RUN_IN_N_FRAMES] = runInNFrames,
         [ISCFeature.RUN_NEXT_ROOM] = runNextRoom,
+        [ISCFeature.RUN_NEXT_RUN] = __TS__New(RunNextRun),
         [ISCFeature.SAVE_DATA_MANAGER] = saveDataManager,
         [ISCFeature.SPAWN_ALT_ROCK_REWARDS] = __TS__New(SpawnRockAltRewards, itemPoolDetection),
         [ISCFeature.SPAWN_COLLECTIBLE] = spawnCollectible,
@@ -46578,8 +47195,8 @@ local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
 local ____decorators = require("lua_modules.isaacscript-common.dist.src.decorators")
 local Exported = ____decorators.Exported
-local ____logMisc = require("lua_modules.isaacscript-common.dist.src.functions.logMisc")
-local logError = ____logMisc.logError
+local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
+local logError = ____log.logError
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 local v = {run = {
@@ -47488,8 +48105,6 @@ local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
-local game = ____cachedClasses.game
 local ____decorators = require("lua_modules.isaacscript-common.dist.src.decorators")
 local Exported = ____decorators.Exported
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
@@ -47500,6 +48115,8 @@ local ____SerializationType = require("lua_modules.isaacscript-common.dist.src.e
 local SerializationType = ____SerializationType.SerializationType
 local ____deepCopy = require("lua_modules.isaacscript-common.dist.src.functions.deepCopy")
 local deepCopy = ____deepCopy.deepCopy
+local ____frames = require("lua_modules.isaacscript-common.dist.src.functions.frames")
+local isAfterGameFrame = ____frames.isAfterGameFrame
 local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
 local log = ____log.log
 local ____stage = require("lua_modules.isaacscript-common.dist.src.functions.stage")
@@ -47552,8 +48169,7 @@ function SaveDataManager.prototype.____constructor(self, mod)
         self.inARun = true
         self.restoreGlowingHourGlassDataOnNextRoom = false
         loadFromDisk(nil, self.mod, self.saveDataMap, self.classConstructors)
-        local gameFrameCount = game:GetFrameCount()
-        local isContinued = gameFrameCount ~= 0
+        local isContinued = isAfterGameFrame(nil, 0)
         if not isContinued then
             restoreDefaultsForAllFeaturesAndKeys(nil, self.saveDataMap, self.saveDataDefaultsMap)
         end
@@ -47750,8 +48366,8 @@ local ____SerializationType = require("lua_modules.isaacscript-common.dist.src.e
 local SerializationType = ____SerializationType.SerializationType
 local ____deepCopy = require("lua_modules.isaacscript-common.dist.src.functions.deepCopy")
 local deepCopy = ____deepCopy.deepCopy
-local ____logMisc = require("lua_modules.isaacscript-common.dist.src.functions.logMisc")
-local logError = ____logMisc.logError
+local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
+local logError = ____log.logError
 local ____table = require("lua_modules.isaacscript-common.dist.src.functions.table")
 local clearTable = ____table.clearTable
 local iterateTableInOrder = ____table.iterateTableInOrder
@@ -47819,8 +48435,7 @@ local ____jsonHelpers = require("lua_modules.isaacscript-common.dist.src.functio
 local jsonDecode = ____jsonHelpers.jsonDecode
 local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
 local log = ____log.log
-local ____logMisc = require("lua_modules.isaacscript-common.dist.src.functions.logMisc")
-local logError = ____logMisc.logError
+local logError = ____log.logError
 local ____merge = require("lua_modules.isaacscript-common.dist.src.functions.merge")
 local merge = ____merge.merge
 local ____table = require("lua_modules.isaacscript-common.dist.src.functions.table")
@@ -48004,6 +48619,44 @@ function ____exports.restoreGlowingHourGlassBackup(self, saveDataMap, saveDataCo
         SAVE_DATA_MANAGER_DEBUG
     )
 end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.classes.features.other.RunNextRun"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__ClassExtends = ____lualib.__TS__ClassExtends
+local __TS__DecorateLegacy = ____lualib.__TS__DecorateLegacy
+local ____exports = {}
+local ____decorators = require("lua_modules.isaacscript-common.dist.src.decorators")
+local Exported = ____decorators.Exported
+local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
+local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
+local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
+local emptyArray = ____array.emptyArray
+local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
+local Feature = ____Feature.Feature
+local v = {persistent = {queuedFunctions = {}}}
+____exports.RunNextRun = __TS__Class()
+local RunNextRun = ____exports.RunNextRun
+RunNextRun.name = "RunNextRun"
+__TS__ClassExtends(RunNextRun, Feature)
+function RunNextRun.prototype.____constructor(self)
+    Feature.prototype.____constructor(self)
+    self.v = v
+    self.vConditionalFunc = function() return false end
+    self.postGameStartedReorderedFalse = function()
+        for ____, func in ipairs(v.persistent.queuedFunctions) do
+            func(nil)
+        end
+        emptyArray(nil, v.persistent.queuedFunctions)
+    end
+    self.customCallbacksUsed = {{ModCallbackCustom.POST_GAME_STARTED_REORDERED, self.postGameStartedReorderedFalse, {false}}}
+end
+function RunNextRun.prototype.runNextRun(self, func)
+    local ____v_persistent_queuedFunctions_0 = v.persistent.queuedFunctions
+    ____v_persistent_queuedFunctions_0[#____v_persistent_queuedFunctions_0 + 1] = func
+end
+__TS__DecorateLegacy({Exported}, RunNextRun.prototype, "runNextRun", true)
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.features.other.RunNextRoom"] = function(...) 
@@ -48544,6 +49197,8 @@ local ____collectibles = require("lua_modules.isaacscript-common.dist.src.functi
 local setCollectibleSubType = ____collectibles.setCollectibleSubType
 local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.entities")
 local getEntityID = ____entities.getEntityID
+local ____frames = require("lua_modules.isaacscript-common.dist.src.functions.frames")
+local onGameFrame = ____frames.onGameFrame
 local ____pickupVariants = require("lua_modules.isaacscript-common.dist.src.functions.pickupVariants")
 local isCollectible = ____pickupVariants.isCollectible
 local ____pickupsSpecific = require("lua_modules.isaacscript-common.dist.src.functions.pickupsSpecific")
@@ -48597,8 +49252,7 @@ function PreventCollectibleRotation.prototype.____constructor(self, pickupIndexC
         if trackedCollectibleType == nil then
             return
         end
-        local gameFrameCount = game:GetFrameCount()
-        if v.run.rollGameFrame ~= nil and (gameFrameCount == v.run.rollGameFrame or gameFrameCount == v.run.rollGameFrame + 1) then
+        if v.run.rollGameFrame ~= nil and (onGameFrame(nil, v.run.rollGameFrame) or onGameFrame(nil, v.run.rollGameFrame + 1)) then
             v.run.trackedCollectibles:delete(pickupIndex)
             return
         end
@@ -48880,6 +49534,8 @@ local ____ISCFeature = require("lua_modules.isaacscript-common.dist.src.enums.IS
 local ISCFeature = ____ISCFeature.ISCFeature
 local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.entities")
 local getEntityID = ____entities.getEntityID
+local ____frames = require("lua_modules.isaacscript-common.dist.src.functions.frames")
+local onOrBeforeRoomFrame = ____frames.onOrBeforeRoomFrame
 local ____roomData = require("lua_modules.isaacscript-common.dist.src.functions.roomData")
 local getRoomListIndex = ____roomData.getRoomListIndex
 local ____stage = require("lua_modules.isaacscript-common.dist.src.functions.stage")
@@ -48938,8 +49594,7 @@ function PickupIndexCreation.prototype.setPickupIndex(self, pickup)
     local pickupIndexFromLevelData = self:getPickupIndexFromPreviousData(pickup)
     local room = game:GetRoom()
     local isFirstVisit = room:IsFirstVisit()
-    local roomFrameCount = room:GetFrameCount()
-    if pickupIndexFromLevelData ~= nil and not isFirstVisit and roomFrameCount <= 0 then
+    if pickupIndexFromLevelData ~= nil and not isFirstVisit and onOrBeforeRoomFrame(nil, 0) then
         v.room.pickupIndexes:set(ptrHash, pickupIndexFromLevelData)
         return
     end
@@ -49238,8 +49893,8 @@ local removeAllProjectiles = ____entitiesSpecific.removeAllProjectiles
 local removeAllTears = ____entitiesSpecific.removeAllTears
 local ____isaacAPIClass = require("lua_modules.isaacscript-common.dist.src.functions.isaacAPIClass")
 local isTear = ____isaacAPIClass.isTear
-local ____logMisc = require("lua_modules.isaacscript-common.dist.src.functions.logMisc")
-local logError = ____logMisc.logError
+local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
+local logError = ____log.logError
 local ____playerCollectibles = require("lua_modules.isaacscript-common.dist.src.functions.playerCollectibles")
 local useActiveItemTemp = ____playerCollectibles.useActiveItemTemp
 local ____playerIndex = require("lua_modules.isaacscript-common.dist.src.functions.playerIndex")
@@ -50682,8 +51337,8 @@ local isVanillaConsoleCommand = ____console.isVanillaConsoleCommand
 local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
 local addFlag = ____flag.addFlag
 local bitFlags = ____flag.bitFlags
-local ____logMisc = require("lua_modules.isaacscript-common.dist.src.functions.logMisc")
-local logError = ____logMisc.logError
+local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
+local logError = ____log.logError
 local ____string = require("lua_modules.isaacscript-common.dist.src.functions.string")
 local getMapPartialMatch = ____string.getMapPartialMatch
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
@@ -52015,6 +52670,7 @@ function ____exports.seedStick(self)
     local seedsClass = game:GetSeeds()
     local startSeedString = seedsClass:GetStartSeedString()
     Isaac.ExecuteCommand("seed " .. startSeedString)
+    print("Sticking to seed: " .. startSeedString)
 end
 --- Logs all of the current run's seed effects to the "log.txt" file.
 function ____exports.seeds(self)
@@ -52291,6 +52947,10 @@ function ____exports.warp(self, params)
     end
     warpToRoomType(nil, roomType)
 end
+--- Alias for the "labyrinth" command.
+function ____exports.xl(self)
+    ____exports.labyrinth(nil)
+end
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.classes.features.other.extraConsoleCommands.subroutines"] = function(...) 
@@ -52528,8 +53188,8 @@ local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____decorators = require("lua_modules.isaacscript-common.dist.src.decorators")
 local Exported = ____decorators.Exported
 local ____input = require("lua_modules.isaacscript-common.dist.src.functions.input")
-local MOVEMENT_ACTIONS_SET = ____input.MOVEMENT_ACTIONS_SET
-local SHOOTING_ACTIONS_SET = ____input.SHOOTING_ACTIONS_SET
+local MOVEMENT_BUTTON_ACTIONS_SET = ____input.MOVEMENT_BUTTON_ACTIONS_SET
+local SHOOTING_BUTTON_ACTIONS_SET = ____input.SHOOTING_BUTTON_ACTIONS_SET
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
@@ -52611,11 +53271,11 @@ function DisableInputs.prototype.disableAllInputsExceptFor(self, key, whitelist)
 end
 __TS__DecorateLegacy({Exported}, DisableInputs.prototype, "disableAllInputsExceptFor", true)
 function DisableInputs.prototype.disableMovementInputs(self, key)
-    self:enableAllInputsExceptFor(key, MOVEMENT_ACTIONS_SET)
+    self:enableAllInputsExceptFor(key, MOVEMENT_BUTTON_ACTIONS_SET)
 end
 __TS__DecorateLegacy({Exported}, DisableInputs.prototype, "disableMovementInputs", true)
 function DisableInputs.prototype.disableShootingInputs(self, key)
-    self:enableAllInputsExceptFor(key, SHOOTING_ACTIONS_SET)
+    self:enableAllInputsExceptFor(key, SHOOTING_BUTTON_ACTIONS_SET)
 end
 __TS__DecorateLegacy({Exported}, DisableInputs.prototype, "disableShootingInputs", true)
 return ____exports
@@ -53799,6 +54459,10 @@ local ____TrapdoorAnimation = require("lua_modules.isaacscript-common.dist.src.e
 local TrapdoorAnimation = ____TrapdoorAnimation.TrapdoorAnimation
 local ____easing = require("lua_modules.isaacscript-common.dist.src.functions.easing")
 local easeOutSine = ____easing.easeOutSine
+local ____frames = require("lua_modules.isaacscript-common.dist.src.functions.frames")
+local isAfterRoomFrame = ____frames.isAfterRoomFrame
+local isBeforeRenderFrame = ____frames.isBeforeRenderFrame
+local onOrAfterRenderFrame = ____frames.onOrAfterRenderFrame
 local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
 local log = ____log.log
 local ____playerCenter = require("lua_modules.isaacscript-common.dist.src.functions.playerCenter")
@@ -53957,14 +54621,13 @@ function CustomTrapdoors.prototype.checkPixelationToBlackComplete(self)
     if v.run.state ~= StageTravelState.PIXELATION_TO_BLACK or v.run.stateRenderFrame == nil then
         return
     end
-    local hud = game:GetHUD()
-    local renderFrameCount = Isaac.GetFrameCount()
     local renderFrameScreenBlack = v.run.stateRenderFrame + PIXELATION_TO_BLACK_FRAMES
-    if renderFrameCount < renderFrameScreenBlack then
+    if isBeforeRenderFrame(nil, renderFrameScreenBlack) then
         return
     end
     v.run.state = StageTravelState.WAITING_FOR_FIRST_PIXELATION_TO_END
     self:logStateChanged()
+    local hud = game:GetHUD()
     hud:SetVisible(false)
     self.runInNFrames:runNextGameFrame(function()
         local level = game:GetLevel()
@@ -54003,14 +54666,13 @@ function CustomTrapdoors.prototype.checkSecondPixelationHalfWay(self)
     if v.run.state ~= StageTravelState.WAITING_FOR_SECOND_PIXELATION_TO_GET_HALF_WAY or v.run.stateRenderFrame == nil then
         return
     end
-    local hud = game:GetHUD()
-    local renderFrameCount = Isaac.GetFrameCount()
     local renderFrameScreenBlack = v.run.stateRenderFrame + PIXELATION_TO_BLACK_FRAMES
-    if renderFrameCount < renderFrameScreenBlack then
+    if isBeforeRenderFrame(nil, renderFrameScreenBlack) then
         return
     end
     v.run.state = StageTravelState.PIXELATION_TO_ROOM
     self:logStateChanged()
+    local hud = game:GetHUD()
     hud:SetVisible(true)
     self.runNextRoom:runNextRoom(function()
         v.run.state = StageTravelState.PLAYERS_LAYING_DOWN
@@ -54066,11 +54728,10 @@ function CustomTrapdoors.prototype.shouldTrapdoorOpen(self, gridEntity, firstSpa
     return not anyPlayerCloserThan(nil, gridEntity.Position, TRAPDOOR_OPEN_DISTANCE) and not self:isPlayerCloseAfterBoss(gridEntity.Position) and not shouldBeClosedFromStartingInRoomWithEnemies(nil, firstSpawn, roomClear)
 end
 function CustomTrapdoors.prototype.isPlayerCloseAfterBoss(self, position)
-    local gameFrameCount = game:GetFrameCount()
     local room = game:GetRoom()
     local roomType = room:GetType()
     local roomClearGameFrame = self.roomClearFrame:getRoomClearGameFrame()
-    if roomType ~= RoomType.BOSS or roomClearGameFrame == nil or gameFrameCount >= roomClearGameFrame + TRAPDOOR_BOSS_REACTION_FRAMES then
+    if roomType ~= RoomType.BOSS or roomClearGameFrame == nil or onOrAfterRenderFrame(nil, roomClearGameFrame + TRAPDOOR_BOSS_REACTION_FRAMES) then
         return false
     end
     return anyPlayerCloserThan(nil, position, TRAPDOOR_OPEN_DISTANCE_AFTER_BOSS)
@@ -54180,9 +54841,8 @@ function CustomTrapdoors.prototype.checkJumpComplete(self, player)
 end
 function CustomTrapdoors.prototype.shouldTrapdoorSpawnOpen(self, gridEntity, firstSpawn)
     local room = game:GetRoom()
-    local roomFrameCount = room:GetFrameCount()
     local roomClear = room:IsClear()
-    if roomFrameCount > 0 then
+    if isAfterRoomFrame(nil, 0) then
         return false
     end
     if not roomClear then
@@ -54216,7 +54876,6 @@ function CustomTrapdoors.prototype.spawnCustomTrapdoor(self, gridIndexOrPosition
         destinationStageType = self.stageHistory:getNextStageTypeWithHistory()
     end
     local room = game:GetRoom()
-    local roomFrameCount = room:GetFrameCount()
     local roomListIndex = getRoomListIndex(nil)
     local gridIndex = isVector(nil, gridIndexOrPosition) and room:GetGridIndex(gridIndexOrPosition) or gridIndexOrPosition
     local gridEntity = self.customGridEntities:spawnCustomGridEntity(
@@ -54226,7 +54885,7 @@ function CustomTrapdoors.prototype.spawnCustomTrapdoor(self, gridIndexOrPosition
         anm2Path,
         TrapdoorAnimation.OPENED
     )
-    local firstSpawn = roomFrameCount ~= 0
+    local firstSpawn = isAfterRoomFrame(nil, 0)
     local ____spawnOpen_0 = spawnOpen
     if ____spawnOpen_0 == nil then
         ____spawnOpen_0 = self:shouldTrapdoorSpawnOpen(gridEntity, firstSpawn)
@@ -54336,8 +54995,8 @@ local getDoorSlotsForRoomShape = ____doors.getDoorSlotsForRoomShape
 local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
 local hasFlag = ____flag.hasFlag
 local removeFlag = ____flag.removeFlag
-local ____logMisc = require("lua_modules.isaacscript-common.dist.src.functions.logMisc")
-local logError = ____logMisc.logError
+local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
+local logError = ____log.logError
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
 local newRNG = ____rng.newRNG
 local ____rockAlt = require("lua_modules.isaacscript-common.dist.src.functions.rockAlt")
@@ -55197,6 +55856,9 @@ local KColorDefault = ____constants.KColorDefault
 local VectorOne = ____constants.VectorOne
 local ____UIStreakAnimation = require("lua_modules.isaacscript-common.dist.src.enums.private.UIStreakAnimation")
 local UIStreakAnimation = ____UIStreakAnimation.UIStreakAnimation
+local ____frames = require("lua_modules.isaacscript-common.dist.src.functions.frames")
+local getElapsedGameFramesSince = ____frames.getElapsedGameFramesSince
+local getElapsedRenderFramesSince = ____frames.getElapsedRenderFramesSince
 local ____ui = require("lua_modules.isaacscript-common.dist.src.functions.ui")
 local getScreenBottomCenterPos = ____ui.getScreenBottomCenterPos
 local getScreenTopCenterPos = ____ui.getScreenTopCenterPos
@@ -55206,16 +55868,15 @@ function checkEndTopStreakText(self)
     if v.run.topStreakTextStartedRenderFrame == nil or v.run.topStreakText.animation ~= UIStreakAnimation.TEXT_STAY then
         return
     end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local elapsedFrames = renderFrameCount - v.run.topStreakTextStartedRenderFrame
+    local elapsedFrames = getElapsedRenderFramesSince(nil, v.run.topStreakTextStartedRenderFrame)
     if elapsedFrames >= 115 then
         v.run.topStreakText.animation = UIStreakAnimation.TEXT
         v.run.topStreakText.frame = TEXT_OUT_FRAME - 2
     end
 end
 function trackMapInputPressed(self)
+    local gameFrameCount = game:GetFrameCount()
     for ____, controllerIndex in ipairs(CONTROLLER_INDEX_VALUES) do
-        local gameFrameCount = game:GetFrameCount()
         local oldPushedMapFrame = v.run.controllerIndexPushingMapRenderFrame:get(controllerIndex)
         local isPushingMap = Input.IsActionPressed(ButtonAction.MAP, controllerIndex)
         if isPushingMap then
@@ -55236,8 +55897,7 @@ function checkStartBottomStreakText(self)
         return
     end
     local earliestFrame = math.min(table.unpack(pushedMapFrames))
-    local gameFrameCount = game:GetFrameCount()
-    local elapsedFrames = gameFrameCount - earliestFrame
+    local elapsedFrames = getElapsedGameFramesSince(nil, earliestFrame)
     if elapsedFrames >= NUM_RENDER_FRAMES_MAP_HELD_BEFORE_STREAK_TEXT then
         v.run.bottomStreakText.animation = UIStreakAnimation.TEXT
         v.run.bottomStreakText.frame = 0
@@ -57112,6 +57772,9 @@ local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.
 local game = ____cachedClasses.game
 local ____decorators = require("lua_modules.isaacscript-common.dist.src.decorators")
 local Exported = ____decorators.Exported
+local ____frames = require("lua_modules.isaacscript-common.dist.src.functions.frames")
+local onGameFrame = ____frames.onGameFrame
+local onRenderFrame = ____frames.onRenderFrame
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
 local Feature = ____Feature.Feature
 --- By default, callbacks fire in the following order:
@@ -57166,13 +57829,12 @@ function GameReorderedCallbacks.prototype.____constructor(self, postGameStartedR
         self.renderFrameRunStarted = nil
     end
     self.postNewLevel = function()
-        local gameFrameCount = game:GetFrameCount()
         local level = game:GetLevel()
         local stage = level:GetStage()
         local stageType = level:GetStageType()
         local room = game:GetRoom()
         local roomType = room:GetType()
-        if gameFrameCount == 0 and not self.forceNewLevel then
+        if onGameFrame(nil, 0) and not self.forceNewLevel then
             return
         end
         self.forceNewLevel = false
@@ -57181,13 +57843,11 @@ function GameReorderedCallbacks.prototype.____constructor(self, postGameStartedR
         self.postNewRoomReordered:fire(roomType)
     end
     self.postNewRoom = function()
-        local gameFrameCount = game:GetFrameCount()
         local level = game:GetLevel()
         local stage = level:GetStage()
         local stageType = level:GetStageType()
         local room = game:GetRoom()
         local roomType = room:GetType()
-        local renderFrameCount = Isaac.GetFrameCount()
         if self.usedGlowingHourGlass then
             self.usedGlowingHourGlass = false
             if self.currentStage ~= stage or self.currentStageType ~= stageType then
@@ -57197,7 +57857,7 @@ function GameReorderedCallbacks.prototype.____constructor(self, postGameStartedR
                 return
             end
         end
-        if (gameFrameCount == 0 or renderFrameCount == self.renderFrameRunStarted or self.currentStage ~= stage or self.currentStageType ~= stageType) and not self.forceNewRoom then
+        if (onGameFrame(nil, 0) or onRenderFrame(nil, self.renderFrameRunStarted) or self.currentStage ~= stage or self.currentStageType ~= stageType) and not self.forceNewRoom then
             return
         end
         self.forceNewRoom = false
@@ -57372,11 +58032,10 @@ local ISCFeature = ____ISCFeature.ISCFeature
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
 local ____external = require("lua_modules.isaacscript-common.dist.src.functions.external")
-local removeCollectibleFromItemTracker = ____external.removeCollectibleFromItemTracker
+local rebirthItemTrackerRemoveCollectible = ____external.rebirthItemTrackerRemoveCollectible
 local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
 local log = ____log.log
-local ____logMisc = require("lua_modules.isaacscript-common.dist.src.functions.logMisc")
-local logError = ____logMisc.logError
+local logError = ____log.logError
 local ____playerIndex = require("lua_modules.isaacscript-common.dist.src.functions.playerIndex")
 local getPlayerFromIndex = ____playerIndex.getPlayerFromIndex
 local getPlayerIndex = ____playerIndex.getPlayerIndex
@@ -57475,7 +58134,7 @@ function CustomRevive.prototype.playerIsAboutToDie(self, player)
     v.run.dyingPlayerIndex = getPlayerIndex(nil, player)
     self:logStateChanged()
     player:AddCollectible(CollectibleType.ONE_UP, 0, false)
-    removeCollectibleFromItemTracker(nil, CollectibleType.ONE_UP)
+    rebirthItemTrackerRemoveCollectible(nil, CollectibleType.ONE_UP)
     local playerIndex = getPlayerIndex(nil, player)
     self.runInNFrames:runNextGameFrame(function()
         local futurePlayer = getPlayerFromIndex(nil, playerIndex)
@@ -58886,12 +59545,12 @@ function PreRoomEntitySpawnFilter.prototype.____constructor(self)
         local callbackEntityTypeOrGridEntityXMLType, callbackVariant, callbackSubType = table.unpack(optionalArgs)
         return (callbackEntityTypeOrGridEntityXMLType == nil or callbackEntityTypeOrGridEntityXMLType == entityTypeOrGridEntityXMLType) and (callbackVariant == nil or callbackVariant == variant) and (callbackSubType == nil or callbackSubType == subType)
     end
-    self.preRoomEntitySpawn = function(____, entityTypeOrGridEntityXMLType, variant, subType, gridIndex, seed) return self:fire(
+    self.preRoomEntitySpawn = function(____, entityTypeOrGridEntityXMLType, variant, subType, gridIndex, initSeed) return self:fire(
         entityTypeOrGridEntityXMLType,
         variant,
         subType,
         gridIndex,
-        seed
+        initSeed
     ) end
     self.callbacksUsed = {{ModCallback.PRE_ROOM_ENTITY_SPAWN, self.preRoomEntitySpawn}}
 end
@@ -61057,8 +61716,8 @@ local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
-local game = ____cachedClasses.game
+local ____frames = require("lua_modules.isaacscript-common.dist.src.functions.frames")
+local isAfterRoomFrame = ____frames.isAfterRoomFrame
 local ____roomData = require("lua_modules.isaacscript-common.dist.src.functions.roomData")
 local getRoomVisitedCount = ____roomData.getRoomVisitedCount
 local ____shouldFire = require("lua_modules.isaacscript-common.dist.src.shouldFire")
@@ -61074,10 +61733,8 @@ function PostPickupInitFirst.prototype.____constructor(self)
     self.v = {room = {firedSet = __TS__New(Set)}}
     self.shouldFire = shouldFirePickup
     self.postPickupInit = function(____, pickup)
-        local room = game:GetRoom()
-        local roomFrameCount = room:GetFrameCount()
         local roomVisitedCount = getRoomVisitedCount(nil)
-        if roomFrameCount > 0 or roomVisitedCount == 0 then
+        if isAfterRoomFrame(nil, 0) or roomVisitedCount == 0 then
             self:fire(pickup)
         end
     end
@@ -61230,8 +61887,8 @@ local game = ____cachedClasses.game
 local ____gridEntities = require("lua_modules.isaacscript-common.dist.src.functions.gridEntities")
 local getTopLeftWallGridIndex = ____gridEntities.getTopLeftWallGridIndex
 local spawnGridEntity = ____gridEntities.spawnGridEntity
-local ____logMisc = require("lua_modules.isaacscript-common.dist.src.functions.logMisc")
-local logError = ____logMisc.logError
+local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
+local logError = ____log.logError
 local ____shouldFire = require("lua_modules.isaacscript-common.dist.src.shouldFire")
 local shouldFireRoom = ____shouldFire.shouldFireRoom
 local ____CustomCallback = require("lua_modules.isaacscript-common.dist.src.classes.private.CustomCallback")
@@ -62894,6 +63551,8 @@ local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.src.e
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
 local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
 local hasFlag = ____flag.hasFlag
+local ____frames = require("lua_modules.isaacscript-common.dist.src.functions.frames")
+local onGameFrame = ____frames.onGameFrame
 local ____playerDataStructures = require("lua_modules.isaacscript-common.dist.src.functions.playerDataStructures")
 local mapGetPlayer = ____playerDataStructures.mapGetPlayer
 local mapSetPlayer = ____playerDataStructures.mapSetPlayer
@@ -62970,8 +63629,7 @@ function PostCursedTeleport.prototype.isPotentialNaturalTeleportFromSacrificeRoo
     return roomType == RoomType.SACRIFICE and isSpikeDamage and (v.level.numSacrifices == 6 or v.level.numSacrifices >= 12)
 end
 function PostCursedTeleport.prototype.playerIsTeleportingFromCursedTeleport(self, player, lastDamageFrame)
-    local gameFrameCount = game:GetFrameCount()
-    if gameFrameCount ~= lastDamageFrame then
+    if not onGameFrame(nil, lastDamageFrame) then
         return false
     end
     local sprite = player:GetSprite()
@@ -64075,6 +64733,7 @@ local ____exports = {}
 local drawBlackSprite, getBlackSpriteOpacity, sprite, state, startRenderFrame
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local VectorZero = ____isaacscript_2Dcommon.VectorZero
+local getElapsedRenderFramesSince = ____isaacscript_2Dcommon.getElapsedRenderFramesSince
 local ____BlackSpriteState = require("packages.mod.src.enums.BlackSpriteState")
 local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
 local ____sprite = require("packages.mod.src.sprite")
@@ -64092,9 +64751,8 @@ function getBlackSpriteOpacity(self)
     if state == BlackSpriteState.SOLID or startRenderFrame == nil then
         return 1
     end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local renderFramesPassed = renderFrameCount - startRenderFrame
-    local opacity = renderFramesPassed / ____exports.FADE_TO_BLACK_FRAMES
+    local elapsedRenderFrames = getElapsedRenderFramesSince(nil, startRenderFrame)
+    local opacity = elapsedRenderFrames / ____exports.FADE_TO_BLACK_FRAMES
     if state == BlackSpriteState.FADING_TO_BLACK then
         return opacity
     end
@@ -64754,7 +65412,7 @@ function main(self, isContinued)
     local seeds = game:GetSeeds()
     local startSeedString = seeds:GetStartSeedString()
     local renderFrameCount = Isaac.GetFrameCount()
-    log((((("MC_POST_GAME_STARTED - startSeedString: " .. startSeedString) .. " - renderFrameCount: ") .. tostring(renderFrameCount)) .. " - isContinued: ") .. tostring(isContinued))
+    log((((("POST_GAME_STARTED_REORDERED - startSeedString: " .. startSeedString) .. " - renderFrameCount: ") .. tostring(renderFrameCount)) .. " - isContinued: ") .. tostring(isContinued))
     if errors:postGameStarted() then
         return
     end
@@ -64933,7 +65591,7 @@ function ____exports.spawnFakeBlock(self, gridIndex)
     return spawnEntity(
         nil,
         EntityType.EFFECT,
-        EffectVariant.ISAACS_CARPET,
+        EffectVariant.CARPET,
         CarpetSubTypeCustom.BLOCK,
         gridIndex
     )
@@ -65557,10 +66215,8 @@ end
 return ____exports
  end,
 ["packages.mod.src.callbacks.inputAction"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
 local ____exports = {}
-local main, disablePreRunMovement, disableCutsceneInputs, shouldDisableCutsceneInputs, disableVanillaConsole, disableReset, MOVEMENT_BUTTONS
+local main, disablePreRunMovement, disableCutsceneInputs, shouldDisableCutsceneInputs, disableVanillaConsole, disableReset
 local ____common = require("packages.common.src.index")
 local IS_DEV = ____common.IS_DEV
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -65568,8 +66224,8 @@ local ButtonAction = ____isaac_2Dtypescript_2Ddefinitions.ButtonAction
 local InputHook = ____isaac_2Dtypescript_2Ddefinitions.InputHook
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
-local ReadonlySet = ____isaacscript_2Dcommon.ReadonlySet
-local game = ____isaacscript_2Dcommon.game
+local MOVEMENT_ACTIONS_SET = ____isaacscript_2Dcommon.MOVEMENT_ACTIONS_SET
+local isAfterGameFrame = ____isaacscript_2Dcommon.isAfterGameFrame
 local ____globals = require("packages.mod.src.globals")
 local g = ____globals.g
 local ____mod = require("packages.mod.src.mod")
@@ -65601,11 +66257,10 @@ function main(self, _entity, inputHook, buttonAction)
     return nil
 end
 function disablePreRunMovement(self, inputHook, buttonAction)
-    local gameFrameCount = game:GetFrameCount()
-    if gameFrameCount > 0 then
+    if isAfterGameFrame(nil, 0) then
         return nil
     end
-    if MOVEMENT_BUTTONS:has(buttonAction) then
+    if MOVEMENT_ACTIONS_SET:has(buttonAction) then
         return inputHook == InputHook.GET_ACTION_VALUE and 0 or false
     end
     return nil
@@ -65643,7 +66298,6 @@ function disableReset(self, inputHook, buttonAction)
     end
     return nil
 end
-MOVEMENT_BUTTONS = __TS__New(ReadonlySet, {ButtonAction.LEFT, ButtonAction.RIGHT, ButtonAction.UP, ButtonAction.DOWN})
 function ____exports.init(self)
     mod:AddCallback(ModCallback.INPUT_ACTION, main)
 end
@@ -69291,6 +69945,8 @@ local ____lualib = require("lualib_bundle")
 local __TS__StringSplit = ____lualib.__TS__StringSplit
 local ____exports = {}
 local drawChat, wordWrap, CHAT_POSITION, CHAT_POSITION_LEFT, MAX_TEXT_WIDTH, WIDTH_OF_SPACE, LINE_LENGTH, MAX_CHAT_MESSAGES, RENDER_FRAMES_FOR_CHAT_TO_SHOW
+local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local getElapsedRenderFramesSince = ____isaacscript_2Dcommon.getElapsedRenderFramesSince
 local ____chat = require("packages.mod.src.chat")
 local getAllChat = ____chat.getAllChat
 local ____HexColors = require("packages.mod.src.enums.HexColors")
@@ -69310,7 +69966,6 @@ local ____drawText = require("packages.mod.src.features.drawText")
 local DEFAULT_OPACITY = ____drawText.DEFAULT_OPACITY
 local drawText = ____drawText.drawText
 function drawChat(self)
-    local renderFrameCount = Isaac.GetFrameCount()
     local consoleOpen = isConsoleOpen(nil)
     local alpha = DEFAULT_OPACITY
     local ____opt_0 = g.game
@@ -69319,9 +69974,9 @@ function drawChat(self)
     local numMessagesDrawn = 0
     for ____, chatMessage in ipairs(getAllChat(nil)) do
         local modifiedAlpha = chatMessage["local"] and DEFAULT_OPACITY or alpha
-        local renderFramesElapsed = renderFrameCount - chatMessage.renderFrameReceived
-        if not consoleOpen and renderFramesElapsed > RENDER_FRAMES_FOR_CHAT_TO_SHOW then
-            local renderFramesOverThreshold = renderFramesElapsed - RENDER_FRAMES_FOR_CHAT_TO_SHOW
+        local elapsedRenderFrames = getElapsedRenderFramesSince(nil, chatMessage.renderFrameReceived)
+        if not consoleOpen and elapsedRenderFrames > RENDER_FRAMES_FOR_CHAT_TO_SHOW then
+            local renderFramesOverThreshold = elapsedRenderFrames - RENDER_FRAMES_FOR_CHAT_TO_SHOW
             modifiedAlpha = modifiedAlpha - renderFramesOverThreshold / (RENDER_FRAMES_FOR_CHAT_TO_SHOW * 2)
         end
         if modifiedAlpha <= 0 then
@@ -69518,6 +70173,7 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local getCollectibleGfxFilename = ____isaacscript_2Dcommon.getCollectibleGfxFilename
+local getElapsedRenderFramesSince = ____isaacscript_2Dcommon.getElapsedRenderFramesSince
 local getScreenCenterPos = ____isaacscript_2Dcommon.getScreenCenterPos
 local log = ____isaacscript_2Dcommon.log
 local restart = ____isaacscript_2Dcommon.restart
@@ -69593,9 +70249,8 @@ function getTextOpacity(self)
     if g.endGame.state == CutsceneState.TEXT or g.endGame.startRenderFrame == nil then
         return 1
     end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local renderFramesPassed = renderFrameCount - g.endGame.startRenderFrame
-    local opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES
+    local elapsedRenderFrames = getElapsedRenderFramesSince(nil, g.endGame.startRenderFrame)
+    local opacity = elapsedRenderFrames / FADE_TO_BLACK_FRAMES
     if g.endGame.state == CutsceneState.TEXT_FADING_IN then
         return opacity
     end
@@ -69613,9 +70268,8 @@ function hasFadeFinished(self)
     if g.endGame.startRenderFrame == nil then
         return false
     end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local renderFramesPassed = renderFrameCount - g.endGame.startRenderFrame
-    return renderFramesPassed >= FADE_TO_BLACK_FRAMES
+    local elapsedRenderFrames = getElapsedRenderFramesSince(nil, g.endGame.startRenderFrame)
+    return elapsedRenderFrames >= FADE_TO_BLACK_FRAMES
 end
 function setState(self, state)
     local renderFrameCount = Isaac.GetFrameCount()
@@ -70885,6 +71539,7 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local asNumber = ____isaacscript_2Dcommon.asNumber
+local getElapsedRenderFramesSince = ____isaacscript_2Dcommon.getElapsedRenderFramesSince
 local ReadonlySet = ____isaacscript_2Dcommon.ReadonlySet
 local RENDER_FRAMES_PER_SECOND = ____isaacscript_2Dcommon.RENDER_FRAMES_PER_SECOND
 local VectorZero = ____isaacscript_2Dcommon.VectorZero
@@ -70911,7 +71566,6 @@ function drawOtherPlayersFromUDP(self)
     if g.game == nil or g.game.meeting ~= nil then
         return
     end
-    local renderFrameCount = Isaac.GetFrameCount()
     local room = getSkeldRoom(nil)
     local userIDsInOurGame = __TS__ArrayMap(
         g.game.players,
@@ -70926,7 +71580,7 @@ function drawOtherPlayersFromUDP(self)
                 g.game.playerMap:delete(playerData.userID)
                 goto __continue8
             end
-            local renderFramesSinceLastUpdate = renderFrameCount - playerData.renderFrameUpdated
+            local renderFramesSinceLastUpdate = getElapsedRenderFramesSince(nil, playerData.renderFrameUpdated)
             local player = g.game:getPlayerFromUserID(playerData.userID)
             if renderFramesSinceLastUpdate > RENDER_FRAMES_PER_SECOND or playerData.room ~= room or player == nil or not player.alive then
                 goto __continue8
@@ -70954,7 +71608,6 @@ function drawOtherPlayersBodies(self)
     if g.game == nil or g.game.meeting ~= nil then
         return
     end
-    local renderFrameCount = Isaac.GetFrameCount()
     local room = getSkeldRoom(nil)
     for ____, body in ipairs(g.game.bodies) do
         do
@@ -70966,7 +71619,8 @@ function drawOtherPlayersBodies(self)
             setPlayerCharacter(nil, entity, body.userID)
             local deathFrame = DEATH_ANIMATION_FINAL_FRAME
             if body.renderFrameKilled ~= nil then
-                deathFrame = math.floor((renderFrameCount - body.renderFrameKilled) / 2)
+                local elapsedRenderFrames = getElapsedRenderFramesSince(nil, body.renderFrameKilled)
+                deathFrame = math.floor(elapsedRenderFrames / 2)
             end
             if deathFrame < 0 or deathFrame > DEATH_ANIMATION_FINAL_FRAME then
                 deathFrame = DEATH_ANIMATION_FINAL_FRAME
@@ -71260,6 +71914,7 @@ local postRenderFadingToBlack, postRenderTextFadingIn, postRenderText, postRende
 local ____common = require("packages.common.src.index")
 local MeetingResolution = ____common.MeetingResolution
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local getElapsedRenderFramesSince = ____isaacscript_2Dcommon.getElapsedRenderFramesSince
 local getScreenCenterPos = ____isaacscript_2Dcommon.getScreenCenterPos
 local ____BlackSpriteState = require("packages.mod.src.enums.BlackSpriteState")
 local BlackSpriteState = ____BlackSpriteState.BlackSpriteState
@@ -71353,9 +72008,8 @@ function getTextOpacity(self)
     if g.game == nil or g.game.endMeeting.state == EndMeetingState.TEXT or g.game.endMeeting.startRenderFrame == nil then
         return 1
     end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local renderFramesPassed = renderFrameCount - g.game.endMeeting.startRenderFrame
-    local opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES
+    local elapsedRenderFrames = getElapsedRenderFramesSince(nil, g.game.endMeeting.startRenderFrame)
+    local opacity = elapsedRenderFrames / FADE_TO_BLACK_FRAMES
     if g.game.endMeeting.state == EndMeetingState.TEXT_FADING_IN then
         return opacity
     end
@@ -71368,9 +72022,8 @@ function hasFadeFinished(self)
     if g.game == nil or g.game.endMeeting.startRenderFrame == nil then
         return false
     end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local renderFramesPassed = renderFrameCount - g.game.endMeeting.startRenderFrame
-    return renderFramesPassed >= FADE_TO_BLACK_FRAMES
+    local elapsedRenderFrames = getElapsedRenderFramesSince(nil, g.game.endMeeting.startRenderFrame)
+    return elapsedRenderFrames >= FADE_TO_BLACK_FRAMES
 end
 function setState(self, state)
     if g.game == nil or not g.game.started then
@@ -71793,6 +72446,7 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
 local getCollectibleGfxFilename = ____isaacscript_2Dcommon.getCollectibleGfxFilename
+local getElapsedRenderFramesSince = ____isaacscript_2Dcommon.getElapsedRenderFramesSince
 local getScreenCenterPos = ____isaacscript_2Dcommon.getScreenCenterPos
 local log = ____isaacscript_2Dcommon.log
 local sfxManager = ____isaacscript_2Dcommon.sfxManager
@@ -71884,9 +72538,8 @@ function getTextOpacity(self)
     if g.game == nil or g.game.startGameCutscene.state == CutsceneState.TEXT or g.game.startGameCutscene.startRenderFrame == nil then
         return 1
     end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local renderFramesPassed = renderFrameCount - g.game.startGameCutscene.startRenderFrame
-    local opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES
+    local elapsedRenderFrames = getElapsedRenderFramesSince(nil, g.game.startGameCutscene.startRenderFrame)
+    local opacity = elapsedRenderFrames / FADE_TO_BLACK_FRAMES
     if g.game.startGameCutscene.state == CutsceneState.TEXT_FADING_IN then
         return opacity
     end
@@ -71904,9 +72557,8 @@ function hasFadeFinished(self)
     if g.game == nil or g.game.startGameCutscene.startRenderFrame == nil then
         return false
     end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local renderFramesPassed = renderFrameCount - g.game.startGameCutscene.startRenderFrame
-    return renderFramesPassed >= FADE_TO_BLACK_FRAMES
+    local elapsedRenderFrames = getElapsedRenderFramesSince(nil, g.game.startGameCutscene.startRenderFrame)
+    return elapsedRenderFrames >= FADE_TO_BLACK_FRAMES
 end
 function setState(self, state)
     if g.game == nil or not g.game.started then
@@ -71996,6 +72648,7 @@ local postRenderAlertStrip, postRenderFadingToBlackWithAlertStrip, postRenderFad
 local ____common = require("packages.common.src.index")
 local MeetingType = ____common.MeetingType
 local ____isaacscript_2Dcommon = require("lua_modules.isaacscript-common.dist.src.index")
+local getElapsedRenderFramesSince = ____isaacscript_2Dcommon.getElapsedRenderFramesSince
 local getScreenBottomRightPos = ____isaacscript_2Dcommon.getScreenBottomRightPos
 local sfxManager = ____isaacscript_2Dcommon.sfxManager
 local VectorZero = ____isaacscript_2Dcommon.VectorZero
@@ -72082,9 +72735,8 @@ function hasFadeFinished(self)
     if g.game == nil or g.game.startMeeting.startRenderFrame == nil then
         return false
     end
-    local renderFrameCount = Isaac.GetFrameCount()
-    local renderFramesPassed = renderFrameCount - g.game.startMeeting.startRenderFrame
-    return renderFramesPassed >= FADE_TO_BLACK_FRAMES
+    local elapsedRenderFrames = getElapsedRenderFramesSince(nil, g.game.startMeeting.startRenderFrame)
+    return elapsedRenderFrames >= FADE_TO_BLACK_FRAMES
 end
 function setState(self, state)
     if g.game == nil or not g.game.started then
@@ -73370,7 +74022,7 @@ function main(self)
     local renderFrameCount = Isaac.GetFrameCount()
     local roomStageID = getRoomStageID(nil)
     local roomVariant = getRoomVariant(nil)
-    log(((((((((((("MC_POST_NEW_ROOM - " .. tostring(roomStageID)) .. ".") .. tostring(roomVariant)) .. " (on stage ") .. tostring(stage)) .. ".") .. tostring(stageType)) .. ") (game frame ") .. tostring(gameFrameCount)) .. ") (render frame ") .. tostring(renderFrameCount)) .. ")")
+    log(((((((((((("POST_NEW_ROOM_REORDERED - " .. tostring(roomStageID)) .. ".") .. tostring(roomVariant)) .. " (on stage ") .. tostring(stage)) .. ".") .. tostring(stageType)) .. ") (game frame ") .. tostring(gameFrameCount)) .. ") (render frame ") .. tostring(renderFrameCount)) .. ")")
     lobby:postNewRoom()
     checkSetPlayerToGhostForm(nil)
 end

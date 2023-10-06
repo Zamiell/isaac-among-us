@@ -4,7 +4,7 @@ import {
   InputHook,
   ModCallback,
 } from "isaac-typescript-definitions";
-import { MOVEMENT_ACTIONS_SET, isAfterGameFrame } from "isaacscript-common";
+import { isAfterGameFrame, isMoveAction } from "isaacscript-common";
 import { g } from "../globals";
 import { mod } from "../mod";
 import { inCutscene, inEndMeeting } from "../utils";
@@ -55,7 +55,7 @@ function disablePreRunMovement(
     return undefined;
   }
 
-  if (MOVEMENT_ACTIONS_SET.has(buttonAction)) {
+  if (isMoveAction(buttonAction)) {
     return inputHook === InputHook.GET_ACTION_VALUE ? 0 : false;
   }
 
