@@ -4288,7 +4288,7 @@ __metadata:
     argon2: ^0.31.1
     isaac-typescript-definitions: ^27.0.0
     isaacscript: ^3.13.0
-    isaacscript-common: ^59.6.0
+    isaacscript-common: ^60.0.0
     isaacscript-lint: ^6.0.0
     isaacscript-spell: ^1.6.0
     isaacscript-tsconfig: ^4.0.0
@@ -4319,12 +4319,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isaacscript-common@npm:^59.6.0":
-  version: 59.6.0
-  resolution: "isaacscript-common@npm:59.6.0"
+"isaacscript-common@npm:^60.0.0":
+  version: 60.0.0
+  resolution: "isaacscript-common@npm:60.0.0"
   dependencies:
     isaac-typescript-definitions: ^27.0.0
-  checksum: dcd9779850a5b97deb47b5d8e9b3340cdf12c6df80621863eba7d00e388ffeabeb74704cf33127552d08b609dd17edab609760e1872077a7b16019b88912f0e8
+  checksum: 342232c53d4c26ab425e480cdbc21244a098d6e88c2ca2eaf0eb0005c4f5f8c0809e47a07cab37f3e64f0056cac86c76dd552466d3c0ad9f65a65036c9ea883e
   languageName: node
   linkType: hard
 

@@ -107,7 +107,6 @@ function drawOtherPlayersBodies() {
     return;
   }
 
-  const renderFrameCount = Isaac.GetFrameCount();
   const room = getSkeldRoom();
 
   for (const body of g.game.bodies) {
@@ -122,8 +121,10 @@ function drawOtherPlayersBodies() {
 
     let deathFrame = DEATH_ANIMATION_FINAL_FRAME;
     if (body.renderFrameKilled !== undefined) {
-      // We divide it by two to slow it down.
-      deathFrame = Math.floor((renderFrameCount - body.renderFrameKilled) / 2);
+      const elapsedRenderFrames = getElapsedRenderFramesSince(
+        body.renderFrameKilled,
+      );
+      deathFrame = Math.floor(elapsedRenderFrames / 2); // We divide it by two to slow it down.
     }
 
     if (deathFrame < 0 || deathFrame > DEATH_ANIMATION_FINAL_FRAME) {

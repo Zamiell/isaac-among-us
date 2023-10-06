@@ -4,17 +4,10 @@ import {
   InputHook,
   ModCallback,
 } from "isaac-typescript-definitions";
-import { ReadonlySet, isPastGameFrame } from "isaacscript-common";
+import { MOVEMENT_ACTIONS_SET, isAfterGameFrame } from "isaacscript-common";
 import { g } from "../globals";
 import { mod } from "../mod";
 import { inCutscene, inEndMeeting } from "../utils";
-
-const MOVEMENT_BUTTONS = new ReadonlySet<ButtonAction>([
-  ButtonAction.LEFT, // 0
-  ButtonAction.RIGHT, // 1
-  ButtonAction.UP, // 2
-  ButtonAction.DOWN, // 3
-]);
 
 export function init(): void {
   mod.AddCallback(ModCallback.INPUT_ACTION, main);
@@ -57,12 +50,12 @@ function main(
 function disablePreRunMovement(
   inputHook: InputHook,
   buttonAction: ButtonAction,
-) {
-  if (isPastGameFrame(0)) {
+): boolean | float | undefined {
+  if (isAfterGameFrame(0)) {
     return undefined;
   }
 
-  if (MOVEMENT_BUTTONS.has(buttonAction)) {
+  if (MOVEMENT_ACTIONS_SET.has(buttonAction)) {
     return inputHook === InputHook.GET_ACTION_VALUE ? 0 : false;
   }
 
@@ -72,7 +65,7 @@ function disablePreRunMovement(
 function disableCutsceneInputs(
   inputHook: InputHook,
   buttonAction: ButtonAction,
-) {
+): boolean | float | undefined {
   if (buttonAction === ButtonAction.CONSOLE) {
     return undefined;
   }
@@ -84,7 +77,7 @@ function disableCutsceneInputs(
   return undefined;
 }
 
-function shouldDisableCutsceneInputs() {
+function shouldDisableCutsceneInputs(): boolean {
   if (g.game === null) {
     return false;
   }
@@ -95,7 +88,7 @@ function shouldDisableCutsceneInputs() {
 function disableVanillaConsole(
   inputHook: InputHook,
   buttonAction: ButtonAction,
-) {
+): boolean | float | undefined {
   if (IS_DEV) {
     return undefined;
   }
@@ -107,7 +100,10 @@ function disableVanillaConsole(
   return undefined;
 }
 
-function disableReset(inputHook: InputHook, buttonAction: ButtonAction) {
+function disableReset(
+  inputHook: InputHook,
+  buttonAction: ButtonAction,
+): boolean | float | undefined {
   if (IS_DEV) {
     return undefined;
   }
