@@ -27,7 +27,7 @@ function main() {
   const roomVariant = getRoomVariant();
 
   log(
-    `MC_POST_NEW_ROOM - ${roomStageID}.${roomVariant} (on stage ${stage}.${stageType}) (game frame ${gameFrameCount}) (render frame ${renderFrameCount})`,
+    `POST_NEW_ROOM_REORDERED - ${roomStageID}.${roomVariant} (on stage ${stage}.${stageType}) (game frame ${gameFrameCount}) (render frame ${renderFrameCount})`,
   );
 
   lobby.postNewRoom();

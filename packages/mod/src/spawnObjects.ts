@@ -19,7 +19,7 @@ function spawnBlock(gridIndex: int, visible = true): GridEntity | undefined {
 export function spawnFakeBlock(gridIndex: int): Entity {
   return spawnEntity(
     EntityType.EFFECT,
-    EffectVariant.ISAACS_CARPET,
+    EffectVariant.CARPET,
     CarpetSubTypeCustom.BLOCK,
     gridIndex,
   );

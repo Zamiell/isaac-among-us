@@ -4,7 +4,7 @@ import {
   InputHook,
   ModCallback,
 } from "isaac-typescript-definitions";
-import { ReadonlySet, game } from "isaacscript-common";
+import { ReadonlySet, isPastGameFrame } from "isaacscript-common";
 import { g } from "../globals";
 import { mod } from "../mod";
 import { inCutscene, inEndMeeting } from "../utils";
@@ -58,9 +58,7 @@ function disablePreRunMovement(
   inputHook: InputHook,
   buttonAction: ButtonAction,
 ) {
-  const gameFrameCount = game.GetFrameCount();
-
-  if (gameFrameCount > 0) {
+  if (isPastGameFrame(0)) {
     return undefined;
   }
 

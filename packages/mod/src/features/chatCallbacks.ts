@@ -1,3 +1,4 @@
+import { getElapsedRenderFramesSince } from "isaacscript-common";
 import { getAllChat } from "../chat";
 import { HexColors } from "../enums/HexColors";
 import { fonts } from "../fonts";
@@ -30,7 +31,6 @@ export function postRender(): void {
 }
 
 function drawChat() {
-  const renderFrameCount = Isaac.GetFrameCount();
   const consoleOpen = isConsoleOpen();
 
   // If the console is open, display the last N messages with default opacity Otherwise, only
@@ -48,11 +48,12 @@ function drawChat() {
     let modifiedAlpha = chatMessage.local ? DEFAULT_OPACITY : alpha;
 
     // Make chat messages slowly fade away (if the console is closed).
-    const renderFramesElapsed =
-      renderFrameCount - chatMessage.renderFrameReceived;
-    if (!consoleOpen && renderFramesElapsed > RENDER_FRAMES_FOR_CHAT_TO_SHOW) {
+    const elapsedRenderFrames = getElapsedRenderFramesSince(
+      chatMessage.renderFrameReceived,
+    );
+    if (!consoleOpen && elapsedRenderFrames > RENDER_FRAMES_FOR_CHAT_TO_SHOW) {
       const renderFramesOverThreshold =
-        renderFramesElapsed - RENDER_FRAMES_FOR_CHAT_TO_SHOW;
+        elapsedRenderFrames - RENDER_FRAMES_FOR_CHAT_TO_SHOW;
       modifiedAlpha -=
         renderFramesOverThreshold / (RENDER_FRAMES_FOR_CHAT_TO_SHOW * 2);
     }

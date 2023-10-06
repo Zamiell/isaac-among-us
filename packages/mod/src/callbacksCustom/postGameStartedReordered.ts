@@ -29,7 +29,7 @@ function main(isContinued: boolean) {
   const renderFrameCount = Isaac.GetFrameCount();
 
   log(
-    `MC_POST_GAME_STARTED - startSeedString: ${startSeedString} - renderFrameCount: ${renderFrameCount} - isContinued: ${isContinued}`,
+    `POST_GAME_STARTED_REORDERED - startSeedString: ${startSeedString} - renderFrameCount: ${renderFrameCount} - isContinued: ${isContinued}`,
   );
 
   // Check for errors that should prevent the mod from doing anything.

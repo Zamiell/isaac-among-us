@@ -1,5 +1,8 @@
 import { MeetingResolution } from "common";
-import { getScreenCenterPos } from "isaacscript-common";
+import {
+  getElapsedRenderFramesSince,
+  getScreenCenterPos,
+} from "isaacscript-common";
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { EndMeetingState } from "../enums/EndMeetingState";
 import { g } from "../globals";
@@ -138,10 +141,10 @@ function getTextOpacity() {
     return 1;
   }
 
-  const renderFrameCount = Isaac.GetFrameCount();
-  const renderFramesPassed =
-    renderFrameCount - g.game.endMeeting.startRenderFrame;
-  const opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES;
+  const elapsedRenderFrames = getElapsedRenderFramesSince(
+    g.game.endMeeting.startRenderFrame,
+  );
+  const opacity = elapsedRenderFrames / FADE_TO_BLACK_FRAMES;
 
   if (g.game.endMeeting.state === EndMeetingState.TEXT_FADING_IN) {
     return opacity;
@@ -159,10 +162,10 @@ function hasFadeFinished(): boolean {
     return false;
   }
 
-  const renderFrameCount = Isaac.GetFrameCount();
-  const renderFramesPassed =
-    renderFrameCount - g.game.endMeeting.startRenderFrame;
-  return renderFramesPassed >= FADE_TO_BLACK_FRAMES;
+  const elapsedRenderFrames = getElapsedRenderFramesSince(
+    g.game.endMeeting.startRenderFrame,
+  );
+  return elapsedRenderFrames >= FADE_TO_BLACK_FRAMES;
 }
 
 export function endMeeting(): void {

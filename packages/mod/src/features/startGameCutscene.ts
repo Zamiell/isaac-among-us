@@ -2,6 +2,7 @@ import { Role } from "common";
 import { CollectibleType } from "isaac-typescript-definitions";
 import {
   getCollectibleGfxFilename,
+  getElapsedRenderFramesSince,
   getScreenCenterPos,
   log,
   sfxManager,
@@ -146,10 +147,10 @@ function getTextOpacity() {
     return 1;
   }
 
-  const renderFrameCount = Isaac.GetFrameCount();
-  const renderFramesPassed =
-    renderFrameCount - g.game.startGameCutscene.startRenderFrame;
-  const opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES;
+  const elapsedRenderFrames = getElapsedRenderFramesSince(
+    g.game.startGameCutscene.startRenderFrame,
+  );
+  const opacity = elapsedRenderFrames / FADE_TO_BLACK_FRAMES;
 
   if (g.game.startGameCutscene.state === CutsceneState.TEXT_FADING_IN) {
     return opacity;
@@ -173,10 +174,10 @@ function hasFadeFinished(): boolean {
     return false;
   }
 
-  const renderFrameCount = Isaac.GetFrameCount();
-  const renderFramesPassed =
-    renderFrameCount - g.game.startGameCutscene.startRenderFrame;
-  return renderFramesPassed >= FADE_TO_BLACK_FRAMES;
+  const elapsedRenderFrames = getElapsedRenderFramesSince(
+    g.game.startGameCutscene.startRenderFrame,
+  );
+  return elapsedRenderFrames >= FADE_TO_BLACK_FRAMES;
 }
 
 export function startStartGameCutscene(): void {

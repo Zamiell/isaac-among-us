@@ -1,5 +1,6 @@
 import { MeetingType } from "common";
 import {
+  getElapsedRenderFramesSince,
   getScreenBottomRightPos,
   sfxManager,
   VectorZero,
@@ -121,10 +122,10 @@ function hasFadeFinished(): boolean {
     return false;
   }
 
-  const renderFrameCount = Isaac.GetFrameCount();
-  const renderFramesPassed =
-    renderFrameCount - g.game.startMeeting.startRenderFrame;
-  return renderFramesPassed >= FADE_TO_BLACK_FRAMES;
+  const elapsedRenderFrames = getElapsedRenderFramesSince(
+    g.game.startMeeting.startRenderFrame,
+  );
+  return elapsedRenderFrames >= FADE_TO_BLACK_FRAMES;
 }
 
 export function startMeeting(meetingType: MeetingType): void {

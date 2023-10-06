@@ -1,4 +1,4 @@
-import { VectorZero } from "isaacscript-common";
+import { VectorZero, getElapsedRenderFramesSince } from "isaacscript-common";
 import { BlackSpriteState } from "../enums/BlackSpriteState";
 import { initSprite, setSpriteOpacity } from "../sprite";
 
@@ -29,9 +29,8 @@ function getBlackSpriteOpacity() {
     return 1;
   }
 
-  const renderFrameCount = Isaac.GetFrameCount();
-  const renderFramesPassed = renderFrameCount - startRenderFrame;
-  const opacity = renderFramesPassed / FADE_TO_BLACK_FRAMES;
+  const elapsedRenderFrames = getElapsedRenderFramesSince(startRenderFrame);
+  const opacity = elapsedRenderFrames / FADE_TO_BLACK_FRAMES;
 
   if (state === BlackSpriteState.FADING_TO_BLACK) {
     return opacity;

@@ -5,6 +5,7 @@
 import { EntityType } from "isaac-typescript-definitions";
 import {
   asNumber,
+  getElapsedRenderFramesSince,
   ReadonlySet,
   RENDER_FRAMES_PER_SECOND,
   VectorZero,
@@ -52,7 +53,6 @@ function drawOtherPlayersFromUDP() {
     return;
   }
 
-  const renderFrameCount = Isaac.GetFrameCount();
   const room = getSkeldRoom();
   const userIDsInOurGame = g.game.players.map((player) => player.userID);
   const userIDsInOurGameSet = new ReadonlySet(userIDsInOurGame);
@@ -66,8 +66,9 @@ function drawOtherPlayersFromUDP() {
       continue;
     }
 
-    const renderFramesSinceLastUpdate =
-      renderFrameCount - playerData.renderFrameUpdated;
+    const renderFramesSinceLastUpdate = getElapsedRenderFramesSince(
+      playerData.renderFrameUpdated,
+    );
     const player = g.game.getPlayerFromUserID(playerData.userID);
     if (
       // Don't draw stale players, since they might have disconnected.
