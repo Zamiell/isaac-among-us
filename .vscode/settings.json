@@ -30,8 +30,9 @@
     "**/dist/": true,
     "**/node_modules/": true,
     "LICENSE": true,
-    // @template-ignore-next-line
+    // @template-customization-start
     "**/main.lua": true,
+    // @template-customization-end
   },
 
   // ------------------
