@@ -28,6 +28,7 @@
     "**/*.wav": true,
     "**/.yarn/": true,
     "**/dist/": true,
+    "LICENSE": true,
     // @template-ignore-next-line
     "**/main.lua": true,
   },

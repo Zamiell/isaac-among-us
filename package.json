@@ -9,21 +9,21 @@
     "postinstall": "prisma generate --schema=packages/server/prisma/schema.prisma"
   },
   "dependencies": {
-    "@prisma/client": "^5.4.1",
+    "@prisma/client": "^5.4.2",
     "argon2": "^0.31.1",
-    "isaac-typescript-definitions": "^27.0.0",
-    "isaacscript-common": "^61.0.0",
+    "isaac-typescript-definitions": "^33.0.0",
+    "isaacscript-common": "^67.0.0",
     "struct": "^0.0.12"
   },
   "devDependencies": {
-    "@types/node": "^20.8.2",
+    "@types/node": "^20.8.4",
     "@types/struct": "^0.0.6",
-    "isaacscript": "^3.13.0",
+    "isaacscript": "^3.15.0",
     "isaacscript-lint": "^6.0.0",
     "isaacscript-spell": "^1.6.0",
     "isaacscript-tsconfig": "^4.0.0",
     "npm-check-updates": "^16.14.5",
-    "prisma": "^5.4.1",
+    "prisma": "^5.4.2",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
