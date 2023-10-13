@@ -9048,6 +9048,22 @@ ____exports.BatterySubType[____exports.BatterySubType.GOLDEN] = "GOLDEN"
 --- For `EntityType.PICKUP` (5), `PickupVariant.COLLECTIBLE` (100).
 -- 
 -- This is the sub-type of a collectible.
+-- 
+-- This enum is not contiguous. In other words, the enum ranges from `CollectibleType.NULL` (0) to
+-- `CollectibleType.MOMS_RING` (732), but there is no corresponding `CollectibleType` with the
+-- following values:
+-- 
+-- 1. 43 (Pills here)
+-- 2. 61 (Tarot Card)
+-- 3. 235
+-- 4. 587 (Menorah)
+-- 5. 613 (Salt Shaker)
+-- 6. 620 (Voodoo Pin)
+-- 7. 630 (Lucky Seven)
+-- 8. 648 (Pill Crusher)
+-- 9. 662
+-- 10. 666
+-- 11. 718
 ____exports.CollectibleType = {}
 ____exports.CollectibleType.NULL = 0
 ____exports.CollectibleType[____exports.CollectibleType.NULL] = "NULL"
@@ -10499,6 +10515,8 @@ ____exports.CollectibleType[____exports.CollectibleType.MOMS_RING] = "MOMS_RING"
 -- 
 -- This enum was renamed from "Card" to be consistent with the `CollectibleType` and `TrinketType`
 -- enums.
+-- 
+-- This enum is contiguous. (Every value is satisfied between 0 and 97, inclusive.)
 ____exports.CardType = {}
 ____exports.CardType.NULL = 0
 ____exports.CardType[____exports.CardType.NULL] = "NULL"
@@ -10699,6 +10717,10 @@ ____exports.CardType[____exports.CardType.SOUL_OF_JACOB_AND_ESAU] = "SOUL_OF_JAC
 --- For `EntityType.PICKUP` (5), `PickupVariant.TRINKET` (350).
 -- 
 -- This is the sub-type of a trinket.
+-- 
+-- This enum is not contiguous. In other words, the enum ranges from `TrinketType.NULL` (0) to
+-- `TrinketType.SIGIL_OF_BAPHOMET` (189), but there is no corresponding `TrinketType` with a value
+-- of 47.
 ____exports.TrinketType = {}
 ____exports.TrinketType.NULL = 0
 ____exports.TrinketType[____exports.TrinketType.NULL] = "NULL"
@@ -11515,6 +11537,8 @@ ____exports.TreasureRoomSubType[____exports.TreasureRoomSubType.KNIFE_PIECE] = "
 -- 
 -- The enum is named `BossID` instead of `BossRoomSubType` in order to match the `Entity.GetBossID`,
 -- `Room.GetBossID` and `Room.GetSecondBossID` methods.
+-- 
+-- This enum is contiguous. (Every value is satisfied between 1 and 102, inclusive.)
 -- 
 -- Also see the `MinibossID` enum.
 ____exports.BossID = {}
@@ -14430,6 +14454,7 @@ return ____exports
  end,
 ["lua_modules.isaac-typescript-definitions.dist.src.enums.PillEffect"] = function(...) 
 local ____exports = {}
+--- This enum is contiguous. (Every value is satisfied between 0 and 49, inclusive.)
 ____exports.PillEffect = {}
 ____exports.PillEffect.BAD_GAS = 0
 ____exports.PillEffect[____exports.PillEffect.BAD_GAS] = "BAD_GAS"
@@ -17187,6 +17212,7 @@ return ____exports
  end,
 ["lua_modules.isaac-typescript-definitions.dist.src.enums.Challenge"] = function(...) 
 local ____exports = {}
+--- This enum is contiguous. (Every value is satisfied between 0 and 45, inclusive.)
 ____exports.Challenge = {}
 ____exports.Challenge.NULL = 0
 ____exports.Challenge[____exports.Challenge.NULL] = "NULL"
@@ -18119,10 +18145,10 @@ end
 --   print(i); // Prints "0", "1", "2"
 -- });
 -- ```
-____exports["repeat"] = function(self, n, func)
+____exports["repeat"] = function(self, num, func)
     do
         local i = 0
-        while i < n do
+        while i < num do
             func(nil, i)
             i = i + 1
         end
@@ -25820,7 +25846,7 @@ function ____exports.getVanillaCollectibleTypesOfQuality(self, quality)
     )
     return collectibleTypes
 end
---- Returns true if the item type in the item config is equal to `ItemType.ITEM_ACTIVE`.
+--- Returns true if the item type in the item config is equal to `ItemType.ACTIVE`.
 function ____exports.isActiveCollectible(self, collectibleType)
     local itemType = ____exports.getCollectibleItemType(nil, collectibleType)
     return itemType == ItemType.ACTIVE
@@ -25844,6 +25870,11 @@ function ____exports.isBlindCollectible(self, collectible)
     local frame = sprite:GetFrame()
     questionMarkSprite:SetFrame(animation, frame)
     return ____exports.collectibleSpriteEquals(nil, sprite, questionMarkSprite)
+end
+--- Returns true if the item type in the item config is equal to `ItemType.FAMILIAR`.
+function ____exports.isFamiliarCollectible(self, collectibleType)
+    local itemType = ____exports.getCollectibleItemType(nil, collectibleType)
+    return itemType == ItemType.FAMILIAR
 end
 --- Returns whether the given collectible is a "glitched" item. All items are replaced by glitched
 -- items once a player has TMTRAINER. However, glitched items can also "naturally" appear in secret
@@ -31380,10 +31411,10 @@ function ____exports.convertDecimalToBinary(self, num, minLength)
 end
 --- Helper function to count the number of bits that are set to 1 in a binary representation of a
 -- number.
-function ____exports.countSetBits(self, n)
+function ____exports.countSetBits(self, num)
     local count = 0
-    while n > 0 do
-        n = n & n - 1
+    while num > 0 do
+        num = num & num - 1
         count = count + 1
     end
     return count
@@ -33129,6 +33160,39 @@ function ____exports.sign(self, n)
         return -1
     end
     return 0
+end
+--- Breaks a number into chunks of a given size. This is similar to the `String.split` method, but
+-- for a number instead of a string.
+-- 
+-- For example, `splitNumber(90, 25)` would return an array with four elements:
+-- 
+-- - [1, 25]
+-- - [26, 50]
+-- - [51, 75]
+-- - [76, 90]
+-- 
+-- @param num The number to split into chunks. This must be a positive integer.
+-- @param size The size of each chunk. This must be a positive integer.
+-- @param startAtZero Whether to start at 0. Defaults to false. If true, the chunks will start at 0
+-- instead of 1.
+function ____exports.splitNumber(self, num, size, startAtZero)
+    if startAtZero == nil then
+        startAtZero = false
+    end
+    if num <= 0 then
+        error("The number to split needs to be a positive number and is instead: " .. tostring(num))
+    end
+    if size <= 0 then
+        error("The size to split needs to be a positive number and is instead: " .. tostring(num))
+    end
+    local chunks = {}
+    local start = startAtZero and 0 or 1
+    while start <= num do
+        local ____end = math.min(start + size - 1, num)
+        chunks[#chunks + 1] = {start, ____end}
+        start = start + size
+    end
+    return chunks
 end
 function ____exports.tanh(self, x)
     return (math.exp(x) - math.exp(-x)) / (math.exp(x) + math.exp(-x))
@@ -35915,68 +35979,38 @@ function ____exports.getElapsedRoomFramesSince(self, roomFrameCount)
 end
 --- Helper function to check if the current game frame count is higher than a specific game frame
 -- count.
--- 
--- This returns false if the submitted game frame count is null or undefined.
 function ____exports.isAfterGameFrame(self, gameFrameCount)
-    if gameFrameCount == nil or gameFrameCount == nil then
-        return false
-    end
     local thisGameFrameCount = game:GetFrameCount()
     return thisGameFrameCount > gameFrameCount
 end
 --- Helper function to check if the current render frame count is higher than a specific render frame
 -- count.
--- 
--- This returns false if the submitted render frame count is null or undefined.
 function ____exports.isAfterRenderFrame(self, renderFrameCount)
-    if renderFrameCount == nil or renderFrameCount == nil then
-        return false
-    end
     local thisRenderFrameCount = Isaac.GetFrameCount()
     return thisRenderFrameCount > renderFrameCount
 end
 --- Helper function to check if the current room frame count is higher than a specific room frame
 -- count.
--- 
--- This returns false if the submitted room frame count is null or undefined.
 function ____exports.isAfterRoomFrame(self, roomFrameCount)
-    if roomFrameCount == nil or roomFrameCount == nil then
-        return false
-    end
     local room = game:GetRoom()
     local thisGameFrameCount = room:GetFrameCount()
     return thisGameFrameCount > roomFrameCount
 end
 --- Helper function to check if the current game frame count is lower than a specific game frame
 -- count.
--- 
--- This returns false if the submitted game frame count is null or undefined.
 function ____exports.isBeforeGameFrame(self, gameFrameCount)
-    if gameFrameCount == nil or gameFrameCount == nil then
-        return false
-    end
     local thisGameFrameCount = game:GetFrameCount()
     return thisGameFrameCount < gameFrameCount
 end
 --- Helper function to check if the current render frame count is lower than a specific render frame
 -- count.
--- 
--- This returns false if the submitted render frame count is null or undefined.
 function ____exports.isBeforeRenderFrame(self, renderFrameCount)
-    if renderFrameCount == nil or renderFrameCount == nil then
-        return false
-    end
     local thisRenderFrameCount = Isaac.GetFrameCount()
     return thisRenderFrameCount < renderFrameCount
 end
 --- Helper function to check if the current room frame count is lower than a specific room frame
 -- count.
--- 
--- This returns false if the submitted room frame count is null or undefined.
 function ____exports.isBeforeRoomFrame(self, roomFrameCount)
-    if roomFrameCount == nil or roomFrameCount == nil then
-        return false
-    end
     local room = game:GetRoom()
     local thisGameFrameCount = room:GetFrameCount()
     return thisGameFrameCount < roomFrameCount
@@ -35984,7 +36018,7 @@ end
 --- Helper function to check if the current game frame count is exactly equal to a specific game
 -- frame count.
 -- 
--- This returns false if the submitted game frame count is null or undefined.
+-- This returns false if the submitted render frame count is null or undefined.
 function ____exports.onGameFrame(self, gameFrameCount)
     if gameFrameCount == nil or gameFrameCount == nil then
         return false
@@ -35994,68 +36028,38 @@ function ____exports.onGameFrame(self, gameFrameCount)
 end
 --- Helper function to check if the current game frame count is equal to or higher than a specific
 -- game frame count.
--- 
--- This returns false if the submitted game frame count is null or undefined.
 function ____exports.onOrAfterGameFrame(self, gameFrameCount)
-    if gameFrameCount == nil or gameFrameCount == nil then
-        return false
-    end
     local thisGameFrameCount = game:GetFrameCount()
     return thisGameFrameCount >= gameFrameCount
 end
 --- Helper function to check if the current render frame count is equal to or higher than a specific
 -- render frame count.
--- 
--- This returns false if the submitted render frame count is null or undefined.
 function ____exports.onOrAfterRenderFrame(self, renderFrameCount)
-    if renderFrameCount == nil or renderFrameCount == nil then
-        return false
-    end
     local thisRenderFrameCount = Isaac.GetFrameCount()
     return thisRenderFrameCount >= renderFrameCount
 end
 --- Helper function to check if the current room frame count is equal to or higher than a specific
 -- room frame count.
--- 
--- This returns false if the submitted room frame count is null or undefined.
 function ____exports.onOrAfterRoomFrame(self, roomFrameCount)
-    if roomFrameCount == nil or roomFrameCount == nil then
-        return false
-    end
     local room = game:GetRoom()
     local thisGameFrameCount = room:GetFrameCount()
     return thisGameFrameCount >= roomFrameCount
 end
 --- Helper function to check if the current game frame count is equal to or lower than a specific
 -- game frame count.
--- 
--- This returns false if the submitted game frame count is null or undefined.
 function ____exports.onOrBeforeGameFrame(self, gameFrameCount)
-    if gameFrameCount == nil or gameFrameCount == nil then
-        return false
-    end
     local thisGameFrameCount = game:GetFrameCount()
     return thisGameFrameCount <= gameFrameCount
 end
 --- Helper function to check if the current render frame count is equal to or lower than a specific
 -- render frame count.
--- 
--- This returns false if the submitted render frame count is null or undefined.
 function ____exports.onOrBeforeRenderFrame(self, renderFrameCount)
-    if renderFrameCount == nil or renderFrameCount == nil then
-        return false
-    end
     local thisRenderFrameCount = Isaac.GetFrameCount()
     return thisRenderFrameCount <= renderFrameCount
 end
 --- Helper function to check if the current room frame count is equal to or lower than a specific
 -- room frame count.
--- 
--- This returns false if the submitted room frame count is null or undefined.
 function ____exports.onOrBeforeRoomFrame(self, roomFrameCount)
-    if roomFrameCount == nil or roomFrameCount == nil then
-        return false
-    end
     local room = game:GetRoom()
     local thisGameFrameCount = room:GetFrameCount()
     return thisGameFrameCount <= roomFrameCount
