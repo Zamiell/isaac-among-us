@@ -34,7 +34,7 @@ function setNewButtonOrder() {
   for (let i = 0; i < BUTTON_GRID_INDEXES.length; i++) {
     buttonOrder.push(i);
   }
-  shuffleArrayInPlace(buttonOrder);
+  shuffleArrayInPlace(buttonOrder, undefined);
 
   nextButtonToPress = 0;
 }

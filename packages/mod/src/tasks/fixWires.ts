@@ -109,7 +109,7 @@ export function fixWires(): void {
   // The right side is randomized, with the color being stored as entity data.
   const topRightGridIndex = 28;
   const wireColors = getEnumValues(WireColor);
-  const randomWireColors = shuffleArray(wireColors);
+  const randomWireColors = shuffleArray(wireColors, undefined);
   for (let i = 0; i < NUM_BUTTONS; i++) {
     const color = randomWireColors[i];
     if (color === undefined) {

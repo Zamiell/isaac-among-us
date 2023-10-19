@@ -66,7 +66,7 @@ function setupRound() {
   }
 
   // Randomly select one of the three trinkets.
-  const randomIndex = getRandomArrayIndex(randomTrinkets);
+  const randomIndex = getRandomArrayIndex(randomTrinkets, undefined);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const randomTrinket = randomTrinkets[randomIndex]!;
   correctTrinketIndex = randomIndex;

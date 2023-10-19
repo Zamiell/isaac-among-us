@@ -65,7 +65,7 @@ function setupRound() {
   }
 
   // Randomly select one of the three items.
-  const randomIndex = getRandomArrayIndex(randomCollectibles);
+  const randomIndex = getRandomArrayIndex(randomCollectibles, undefined);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const randomCollectible = randomCollectibles[randomIndex]!;
   correctCollectibleIndex = randomIndex;

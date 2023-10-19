@@ -7371,6 +7371,8 @@ ____exports.PrideVariant.PRIDE = 0
 ____exports.PrideVariant[____exports.PrideVariant.PRIDE] = "PRIDE"
 ____exports.PrideVariant.SUPER_PRIDE = 1
 ____exports.PrideVariant[____exports.PrideVariant.SUPER_PRIDE] = "SUPER_PRIDE"
+____exports.PrideVariant.ULTRA_PRIDE = 2
+____exports.PrideVariant[____exports.PrideVariant.ULTRA_PRIDE] = "ULTRA_PRIDE"
 --- For `EntityType.DOPLE` (53).
 ____exports.DopleVariant = {}
 ____exports.DopleVariant.DOPLE = 0
@@ -12686,8 +12688,8 @@ ____exports.SoundEffect.TEAR_IMPACTS = 150
 ____exports.SoundEffect[____exports.SoundEffect.TEAR_IMPACTS] = "TEAR_IMPACTS"
 ____exports.SoundEffect.TEARS_FIRE = 153
 ____exports.SoundEffect[____exports.SoundEffect.TEARS_FIRE] = "TEARS_FIRE"
-____exports.SoundEffect.UNLOCK = 156
-____exports.SoundEffect[____exports.SoundEffect.UNLOCK] = "UNLOCK"
+____exports.SoundEffect.UNLOCK_DOOR = 156
+____exports.SoundEffect[____exports.SoundEffect.UNLOCK_DOOR] = "UNLOCK_DOOR"
 ____exports.SoundEffect.VAMP_GULP = 157
 ____exports.SoundEffect[____exports.SoundEffect.VAMP_GULP] = "VAMP_GULP"
 ____exports.SoundEffect.WHEEZY_COUGH = 158
@@ -12720,8 +12722,8 @@ ____exports.SoundEffect.LIGHT_BOLT_CHARGE = 173
 ____exports.SoundEffect[____exports.SoundEffect.LIGHT_BOLT_CHARGE] = "LIGHT_BOLT_CHARGE"
 ____exports.SoundEffect.BLOOD_BANK_TOUCHED = 174
 ____exports.SoundEffect[____exports.SoundEffect.BLOOD_BANK_TOUCHED] = "BLOOD_BANK_TOUCHED"
-____exports.SoundEffect.BLOOD_BANK_SPAWN = 175
-____exports.SoundEffect[____exports.SoundEffect.BLOOD_BANK_SPAWN] = "BLOOD_BANK_SPAWN"
+____exports.SoundEffect.PINKING_SHEARS = 175
+____exports.SoundEffect[____exports.SoundEffect.PINKING_SHEARS] = "PINKING_SHEARS"
 ____exports.SoundEffect.BLOOD_SHOOT = 178
 ____exports.SoundEffect[____exports.SoundEffect.BLOOD_SHOOT] = "BLOOD_SHOOT"
 ____exports.SoundEffect.BOIL_HATCH = 181
@@ -12934,8 +12936,8 @@ ____exports.SoundEffect.BERKANO = 331
 ____exports.SoundEffect[____exports.SoundEffect.BERKANO] = "BERKANO"
 ____exports.SoundEffect.BOMBS_ARE_KEY = 332
 ____exports.SoundEffect[____exports.SoundEffect.BOMBS_ARE_KEY] = "BOMBS_ARE_KEY"
-____exports.SoundEffect.CARD_VS_HUMAN = 333
-____exports.SoundEffect[____exports.SoundEffect.CARD_VS_HUMAN] = "CARD_VS_HUMAN"
+____exports.SoundEffect.CARD_AGAINST_HUMANITY = 333
+____exports.SoundEffect[____exports.SoundEffect.CARD_AGAINST_HUMANITY] = "CARD_AGAINST_HUMANITY"
 ____exports.SoundEffect.CHAOS_CARD = 334
 ____exports.SoundEffect[____exports.SoundEffect.CHAOS_CARD] = "CHAOS_CARD"
 ____exports.SoundEffect.CREDIT_CARD = 335
@@ -13026,8 +13028,8 @@ ____exports.SoundEffect.HERMIT = 377
 ____exports.SoundEffect[____exports.SoundEffect.HERMIT] = "HERMIT"
 ____exports.SoundEffect.HIEROPHANT = 378
 ____exports.SoundEffect[____exports.SoundEffect.HIEROPHANT] = "HIEROPHANT"
-____exports.SoundEffect.HIGHT_PRIESTESS = 379
-____exports.SoundEffect[____exports.SoundEffect.HIGHT_PRIESTESS] = "HIGHT_PRIESTESS"
+____exports.SoundEffect.HIGH_PRIESTESS = 379
+____exports.SoundEffect[____exports.SoundEffect.HIGH_PRIESTESS] = "HIGH_PRIESTESS"
 ____exports.SoundEffect.LOVERS = 380
 ____exports.SoundEffect[____exports.SoundEffect.LOVERS] = "LOVERS"
 ____exports.SoundEffect.MAGICIAN = 381
@@ -13042,14 +13044,14 @@ ____exports.SoundEffect.TOWER = 385
 ____exports.SoundEffect[____exports.SoundEffect.TOWER] = "TOWER"
 ____exports.SoundEffect.WORLD = 386
 ____exports.SoundEffect[____exports.SoundEffect.WORLD] = "WORLD"
-____exports.SoundEffect.TWO_CLUBS = 387
-____exports.SoundEffect[____exports.SoundEffect.TWO_CLUBS] = "TWO_CLUBS"
-____exports.SoundEffect.TWO_DIAMONDS = 388
-____exports.SoundEffect[____exports.SoundEffect.TWO_DIAMONDS] = "TWO_DIAMONDS"
-____exports.SoundEffect.TWO_HEARTS = 389
-____exports.SoundEffect[____exports.SoundEffect.TWO_HEARTS] = "TWO_HEARTS"
-____exports.SoundEffect.TWO_SPADES = 390
-____exports.SoundEffect[____exports.SoundEffect.TWO_SPADES] = "TWO_SPADES"
+____exports.SoundEffect.TWO_OF_CLUBS = 387
+____exports.SoundEffect[____exports.SoundEffect.TWO_OF_CLUBS] = "TWO_OF_CLUBS"
+____exports.SoundEffect.TWO_OF_DIAMONDS = 388
+____exports.SoundEffect[____exports.SoundEffect.TWO_OF_DIAMONDS] = "TWO_OF_DIAMONDS"
+____exports.SoundEffect.TWO_OF_HEARTS = 389
+____exports.SoundEffect[____exports.SoundEffect.TWO_OF_HEARTS] = "TWO_OF_HEARTS"
+____exports.SoundEffect.TWO_OF_SPADES = 390
+____exports.SoundEffect[____exports.SoundEffect.TWO_OF_SPADES] = "TWO_OF_SPADES"
 ____exports.SoundEffect.WHEEL_OF_FORTUNE = 391
 ____exports.SoundEffect[____exports.SoundEffect.WHEEL_OF_FORTUNE] = "WHEEL_OF_FORTUNE"
 ____exports.SoundEffect.RAGMAN_1 = 392
@@ -13072,12 +13074,12 @@ ____exports.SoundEffect.DICE_SHARD = 400
 ____exports.SoundEffect[____exports.SoundEffect.DICE_SHARD] = "DICE_SHARD"
 ____exports.SoundEffect.EMERGENCY = 401
 ____exports.SoundEffect[____exports.SoundEffect.EMERGENCY] = "EMERGENCY"
-____exports.SoundEffect.INFESTED_EXCL = 402
-____exports.SoundEffect[____exports.SoundEffect.INFESTED_EXCL] = "INFESTED_EXCL"
-____exports.SoundEffect.INFESTED_QUEST = 403
-____exports.SoundEffect[____exports.SoundEffect.INFESTED_QUEST] = "INFESTED_QUEST"
-____exports.SoundEffect.JAIL_CARD = 404
-____exports.SoundEffect[____exports.SoundEffect.JAIL_CARD] = "JAIL_CARD"
+____exports.SoundEffect.INFESTED_EXCLAMATION = 402
+____exports.SoundEffect[____exports.SoundEffect.INFESTED_EXCLAMATION] = "INFESTED_EXCLAMATION"
+____exports.SoundEffect.INFESTED_QUESTION = 403
+____exports.SoundEffect[____exports.SoundEffect.INFESTED_QUESTION] = "INFESTED_QUESTION"
+____exports.SoundEffect.GET_OUT_OF_JAIL_CARD = 404
+____exports.SoundEffect[____exports.SoundEffect.GET_OUT_OF_JAIL_CARD] = "GET_OUT_OF_JAIL_CARD"
 ____exports.SoundEffect.LARGER = 405
 ____exports.SoundEffect[____exports.SoundEffect.LARGER] = "LARGER"
 ____exports.SoundEffect.PERCS = 406
@@ -13092,8 +13094,8 @@ ____exports.SoundEffect.RETRO = 410
 ____exports.SoundEffect[____exports.SoundEffect.RETRO] = "RETRO"
 ____exports.SoundEffect.SMALL = 411
 ____exports.SoundEffect[____exports.SoundEffect.SMALL] = "SMALL"
-____exports.SoundEffect.QQQ = 412
-____exports.SoundEffect[____exports.SoundEffect.QQQ] = "QQQ"
+____exports.SoundEffect.QUESTION_MARKS = 412
+____exports.SoundEffect[____exports.SoundEffect.QUESTION_MARKS] = "QUESTION_MARKS"
 ____exports.SoundEffect.DANGLE_WHISTLE = 413
 ____exports.SoundEffect[____exports.SoundEffect.DANGLE_WHISTLE] = "DANGLE_WHISTLE"
 ____exports.SoundEffect.LITTLE_HORN_COUGH = 414
@@ -13152,8 +13154,8 @@ ____exports.SoundEffect.ULTRA_GREED_SPINNING = 440
 ____exports.SoundEffect[____exports.SoundEffect.ULTRA_GREED_SPINNING] = "ULTRA_GREED_SPINNING"
 ____exports.SoundEffect.DOG_BARK = 441
 ____exports.SoundEffect[____exports.SoundEffect.DOG_BARK] = "DOG_BARK"
-____exports.SoundEffect.DOG_HOWELL = 442
-____exports.SoundEffect[____exports.SoundEffect.DOG_HOWELL] = "DOG_HOWELL"
+____exports.SoundEffect.DOG_HOWL = 442
+____exports.SoundEffect[____exports.SoundEffect.DOG_HOWL] = "DOG_HOWL"
 ____exports.SoundEffect.X_LAX = 443
 ____exports.SoundEffect[____exports.SoundEffect.X_LAX] = "X_LAX"
 ____exports.SoundEffect.WRONG = 444
@@ -13162,14 +13164,14 @@ ____exports.SoundEffect.VURP = 445
 ____exports.SoundEffect[____exports.SoundEffect.VURP] = "VURP"
 ____exports.SoundEffect.SUNSHINE = 446
 ____exports.SoundEffect[____exports.SoundEffect.SUNSHINE] = "SUNSHINE"
-____exports.SoundEffect.SPADES = 447
-____exports.SoundEffect[____exports.SoundEffect.SPADES] = "SPADES"
+____exports.SoundEffect.ACE_OF_SPADES = 447
+____exports.SoundEffect[____exports.SoundEffect.ACE_OF_SPADES] = "ACE_OF_SPADES"
 ____exports.SoundEffect.HORF = 448
 ____exports.SoundEffect[____exports.SoundEffect.HORF] = "HORF"
 ____exports.SoundEffect.HOLY_CARD = 449
 ____exports.SoundEffect[____exports.SoundEffect.HOLY_CARD] = "HOLY_CARD"
-____exports.SoundEffect.HEARTS = 450
-____exports.SoundEffect[____exports.SoundEffect.HEARTS] = "HEARTS"
+____exports.SoundEffect.ACE_OF_HEARTS = 450
+____exports.SoundEffect[____exports.SoundEffect.ACE_OF_HEARTS] = "ACE_OF_HEARTS"
 ____exports.SoundEffect.GULP = 451
 ____exports.SoundEffect[____exports.SoundEffect.GULP] = "GULP"
 ____exports.SoundEffect.FRIENDS = 452
@@ -13178,10 +13180,10 @@ ____exports.SoundEffect.EXCITED = 453
 ____exports.SoundEffect[____exports.SoundEffect.EXCITED] = "EXCITED"
 ____exports.SoundEffect.DROWSY = 454
 ____exports.SoundEffect[____exports.SoundEffect.DROWSY] = "DROWSY"
-____exports.SoundEffect.DIAMONDS = 455
-____exports.SoundEffect[____exports.SoundEffect.DIAMONDS] = "DIAMONDS"
-____exports.SoundEffect.CLUBS = 456
-____exports.SoundEffect[____exports.SoundEffect.CLUBS] = "CLUBS"
+____exports.SoundEffect.ACE_OF_DIAMONDS = 455
+____exports.SoundEffect[____exports.SoundEffect.ACE_OF_DIAMONDS] = "ACE_OF_DIAMONDS"
+____exports.SoundEffect.ACE_OF_CLUBS = 456
+____exports.SoundEffect[____exports.SoundEffect.ACE_OF_CLUBS] = "ACE_OF_CLUBS"
 ____exports.SoundEffect.BLACK_RUNE = 457
 ____exports.SoundEffect[____exports.SoundEffect.BLACK_RUNE] = "BLACK_RUNE"
 ____exports.SoundEffect.PING_PONG = 458
@@ -17238,8 +17240,8 @@ ____exports.Challenge.CURSED = 10
 ____exports.Challenge[____exports.Challenge.CURSED] = "CURSED"
 ____exports.Challenge.GLASS_CANNON = 11
 ____exports.Challenge[____exports.Challenge.GLASS_CANNON] = "GLASS_CANNON"
-____exports.Challenge.WHEN_LIFE_GIVES_LEMONS = 12
-____exports.Challenge[____exports.Challenge.WHEN_LIFE_GIVES_LEMONS] = "WHEN_LIFE_GIVES_LEMONS"
+____exports.Challenge.WHEN_LIFE_GIVES_YOU_LEMONS = 12
+____exports.Challenge[____exports.Challenge.WHEN_LIFE_GIVES_YOU_LEMONS] = "WHEN_LIFE_GIVES_YOU_LEMONS"
 ____exports.Challenge.BEANS = 13
 ____exports.Challenge[____exports.Challenge.BEANS] = "BEANS"
 ____exports.Challenge.ITS_IN_THE_CARDS = 14
@@ -17924,6 +17926,23 @@ function ____exports.getObjectPartialMatch(self, searchText, object)
     local value = object[matchingKey]
     assertDefined(nil, value, "Failed to get the object value corresponding to the partial match of: " .. matchingKey)
     return {matchingKey, value}
+end
+--- Helper function to parse a Semantic Versioning string into its individual constituents. Returns
+-- undefined if the submitted string was not a proper Semantic Version string.
+-- 
+-- https://semver.org/
+function ____exports.parseSemanticVersion(self, versionString)
+    local majorVersionString, minorVersionString, patchVersionString = string.match(versionString, "(%d+).(%d+).(%d+)")
+    if majorVersionString == nil or minorVersionString == nil or patchVersionString == nil then
+        return nil
+    end
+    local majorVersion = tonumber(majorVersionString)
+    local minorVersion = tonumber(minorVersionString)
+    local patchVersion = tonumber(patchVersionString)
+    if majorVersion == nil or minorVersion == nil or patchVersion == nil then
+        return nil
+    end
+    return {majorVersion = majorVersion, minorVersion = minorVersion, patchVersion = patchVersion}
 end
 function ____exports.removeAllCharacters(self, ____string, character)
     return __TS__StringReplaceAll(____string, character, "")
@@ -19785,17 +19804,20 @@ local ____array = require("lua_modules.isaacscript-common.dist.src.functions.arr
 local sumArray = ____array.sumArray
 local ____random = require("lua_modules.isaacscript-common.dist.src.functions.random")
 local getRandomFloat = ____random.getRandomFloat
-local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
 local assertDefined = ____utils.assertDefined
 --- Get a random index from a `WeightedArray`. (A `WeightedArray` is an array of tuples, where the
 -- first element in the tuple is a value, and the second element in the tuple is a float
 -- corresponding to the value's weight.)
+-- 
+-- If you want to get an unseeded index, you must explicitly pass `undefined` to the `seedOrRNG`
+-- parameter.
+-- 
+-- @param weightedArray The array to pick from.
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 function ____exports.getRandomIndexFromWeightedArray(self, weightedArray, seedOrRNG)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if #weightedArray == 0 then
         error("Failed to get a random index from a weighted array since the provided array was empty.")
     end
@@ -19820,10 +19842,15 @@ end
 --- Get a random value from a `WeightedArray`. (A `WeightedArray` is an array of tuples, where the
 -- first element in the tuple is a value, and the second element in the tuple is a float
 -- corresponding to the value's weight.)
+-- 
+-- If you want to get an unseeded element, you must explicitly pass `undefined` to the `seedOrRNG`
+-- parameter.
+-- 
+-- @param weightedArray The array to pick from.
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 function ____exports.getRandomFromWeightedArray(self, weightedArray, seedOrRNG)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     local randomIndex = ____exports.getRandomIndexFromWeightedArray(nil, weightedArray, seedOrRNG)
     local randomElement = weightedArray[randomIndex + 1]
     assertDefined(
@@ -19832,6 +19859,97 @@ function ____exports.getRandomFromWeightedArray(self, weightedArray, seedOrRNG)
         "Failed to get an element from a weighted array using a random index of: " .. tostring(randomIndex)
     )
     return randomElement[1]
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.functions.random"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
+local isRNG = ____rng.isRNG
+local newRNG = ____rng.newRNG
+--- Returns a random float between 0 and 1. It is inclusive on the low end, but exclusive on the high
+-- end. (This is because the `RNG.RandomFloat` method will never return a value of exactly 1.)
+-- 
+-- If you want to generate an unseeded number, you must explicitly pass `undefined` to the
+-- `seedOrRNG` parameter.
+-- 
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
+function ____exports.getRandom(self, seedOrRNG)
+    local rng = isRNG(nil, seedOrRNG) and seedOrRNG or newRNG(nil, seedOrRNG)
+    return rng:RandomFloat()
+end
+--- Returns a random float between min and max.
+-- 
+-- For example:
+-- 
+-- ```ts
+-- const realNumberBetweenOneAndThree = getRandomFloat(1, 3, undefined);
+-- ```
+-- 
+-- If you want to generate an unseeded number, you must explicitly pass `undefined` to the
+-- `seedOrRNG` parameter.
+-- 
+-- @param min The lower bound for the random number (inclusive).
+-- @param max The upper bound for the random number (exclusive).
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
+function ____exports.getRandomFloat(self, min, max, seedOrRNG)
+    if min > max then
+        local oldMin = min
+        local oldMax = max
+        min = oldMax
+        max = oldMin
+    end
+    return min + ____exports.getRandom(nil, seedOrRNG) * (max - min)
+end
+--- Returns a random integer between min and max. It is inclusive on both ends.
+-- 
+-- For example:
+-- 
+-- ```ts
+-- const oneTwoOrThree = getRandomInt(1, 3);
+-- ```
+-- 
+-- If you want to generate an unseeded number, you must explicitly pass `undefined` to the
+-- `seedOrRNG` parameter.
+-- 
+-- @param min The lower bound for the random number (inclusive).
+-- @param max The upper bound for the random number (inclusive).
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
+-- @param exceptions Optional. An array of elements that will be skipped over when getting the
+-- random integer. For example, a min of 1, a max of 4, and an exceptions array of
+-- `[2]` would cause the function to return either 1, 3, or 4. Default is an empty
+-- array.
+function ____exports.getRandomInt(self, min, max, seedOrRNG, exceptions)
+    if exceptions == nil then
+        exceptions = {}
+    end
+    local rng = isRNG(nil, seedOrRNG) and seedOrRNG or newRNG(nil, seedOrRNG)
+    min = math.ceil(min)
+    max = math.floor(max)
+    if min > max then
+        local oldMin = min
+        local oldMax = max
+        min = oldMax
+        max = oldMin
+    end
+    local exceptionsSet = __TS__New(ReadonlySet, exceptions)
+    local randomInt
+    repeat
+        do
+            randomInt = rng:RandomInt(max - min + 1) + min
+        end
+    until not exceptionsSet:has(randomInt)
+    return randomInt
 end
 return ____exports
  end,
@@ -19870,7 +19988,7 @@ function ____exports.isRNG(self, object)
 end
 --- Helper function to initialize a new RNG object using Blade's recommended shift index.
 -- 
--- @param seed The seed to initialize it with. Default is `getRandomSeed()`.
+-- @param seed Optional. The seed to initialize it with. Default is a random seed.
 function ____exports.newRNG(self, seed)
     if seed == nil then
         seed = ____exports.getRandomSeed(nil)
@@ -20351,98 +20469,6 @@ ____exports.SerializationBrand.OBJECT_WITH_NUMBER_KEYS = "__TSTL_OBJECT_WITH_NUM
 ____exports.SerializationBrand.TSTL_CLASS = "__TSTL_CLASS"
 return ____exports
  end,
-["lua_modules.isaacscript-common.dist.src.functions.random"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
-local ReadonlySet = ____ReadonlySet.ReadonlySet
-local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
-local isRNG = ____rng.isRNG
-local newRNG = ____rng.newRNG
---- Returns a random float between 0 and 1. It is inclusive on the low end, but exclusive on the high
--- end. (This is because the `RNG.RandomFloat` method will never return a value of exactly 1.)
--- 
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
-function ____exports.getRandom(self, seedOrRNG)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
-    local rng = isRNG(nil, seedOrRNG) and seedOrRNG or newRNG(nil, seedOrRNG)
-    return rng:RandomFloat()
-end
---- Returns a random float between min and max.
--- 
--- For example:
--- 
--- ```ts
--- const realNumberBetweenOneAndThree = getRandomFloat(1, 3);
--- ```
--- 
--- @param min The lower bound for the random number (inclusive).
--- @param max The upper bound for the random number (exclusive).
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
-function ____exports.getRandomFloat(self, min, max, seedOrRNG)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
-    if min > max then
-        local oldMin = min
-        local oldMax = max
-        min = oldMax
-        max = oldMin
-    end
-    return min + ____exports.getRandom(nil, seedOrRNG) * (max - min)
-end
---- Returns a random integer between min and max. It is inclusive on both ends.
--- 
--- Note that this function will run the `Next` method on the `RNG` object before returning the
--- random number.
--- 
--- For example:
--- 
--- ```ts
--- const oneTwoOrThree = getRandomInt(1, 3);
--- ```
--- 
--- @param min The lower bound for the random number (inclusive).
--- @param max The upper bound for the random number (inclusive).
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
--- @param exceptions Optional. An array of elements that will be skipped over when getting the
--- random integer. For example, a min of 1, a max of 4, and an exceptions array of
--- `[2]` would cause the function to return either 1, 3, or 4. Default is an empty
--- array.
-function ____exports.getRandomInt(self, min, max, seedOrRNG, exceptions)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
-    if exceptions == nil then
-        exceptions = {}
-    end
-    local rng = isRNG(nil, seedOrRNG) and seedOrRNG or newRNG(nil, seedOrRNG)
-    min = math.ceil(min)
-    max = math.floor(max)
-    if min > max then
-        local oldMin = min
-        local oldMax = max
-        min = oldMax
-        max = oldMin
-    end
-    local exceptionsSet = __TS__New(ReadonlySet, exceptions)
-    local randomInt
-    repeat
-        do
-            randomInt = rng:RandomInt(max - min + 1) + min
-        end
-    until not exceptionsSet:has(randomInt)
-    return randomInt
-end
-return ____exports
- end,
 ["lua_modules.isaacscript-common.dist.src.functions.array"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__ArrayEvery = ____lualib.__TS__ArrayEvery
@@ -20470,7 +20496,6 @@ local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____random = require("lua_modules.isaacscript-common.dist.src.functions.random")
 local getRandomInt = ____random.getRandomInt
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local isRNG = ____rng.isRNG
 local newRNG = ____rng.newRNG
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
@@ -20573,15 +20598,16 @@ function addCombinations(self, n, src, got, all)
 end
 --- Helper function to get a random index from the provided array.
 -- 
+-- If you want to get an unseeded index, you must explicitly pass `undefined` to the `seedOrRNG`
+-- parameter.
+-- 
 -- @param array The array to get the index from.
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 -- @param exceptions Optional. An array of indexes that will be skipped over when getting the random
 -- index. Default is an empty array.
 function ____exports.getRandomArrayIndex(self, array, seedOrRNG, exceptions)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if exceptions == nil then
         exceptions = {}
     end
@@ -20598,15 +20624,16 @@ function ____exports.getRandomArrayIndex(self, array, seedOrRNG, exceptions)
 end
 --- Shuffles the provided array in-place using the Fisher-Yates algorithm.
 -- 
+-- If you want an unseeded shuffle, you must explicitly pass `undefined` to the `seedOrRNG`
+-- parameter.
+-- 
 -- From: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 -- 
 -- @param array The array to shuffle.
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 function ____exports.shuffleArrayInPlace(self, array, seedOrRNG)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     local currentIndex = #array
     local rng = isRNG(nil, seedOrRNG) and seedOrRNG or newRNG(nil, seedOrRNG)
     while currentIndex > 0 do
@@ -20851,14 +20878,15 @@ function ____exports.getLowestArrayElement(self, array)
 end
 --- Helper function to get a random element from the provided array.
 -- 
+-- If you want to get an unseeded element, you must explicitly pass `undefined` to the `seedOrRNG`
+-- parameter.
+-- 
 -- @param array The array to get an element from.
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 -- @param exceptions Optional. An array of elements to skip over if selected.
 function ____exports.getRandomArrayElement(self, array, seedOrRNG, exceptions)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if exceptions == nil then
         exceptions = {}
     end
@@ -20882,14 +20910,15 @@ end
 --- Helper function to get a random element from the provided array. Once the random element is
 -- decided, it is then removed from the array (in-place).
 -- 
+-- If you want to get an unseeded element, you must explicitly pass `undefined` to the `seedOrRNG`
+-- parameter.
+-- 
 -- @param array The array to get an element from.
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 -- @param exceptions Optional. An array of elements to skip over if selected.
 function ____exports.getRandomArrayElementAndRemove(self, array, seedOrRNG, exceptions)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if exceptions == nil then
         exceptions = {}
     end
@@ -20984,15 +21013,16 @@ function ____exports.setAllArrayElements(self, array, value)
 end
 --- Shallow copies and shuffles the array using the Fisher-Yates algorithm. Returns the copied array.
 -- 
+-- If you want an unseeded shuffle, you must explicitly pass `undefined` to the `seedOrRNG`
+-- parameter.
+-- 
 -- From: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 -- 
 -- @param originalArray The array to shuffle.
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 function ____exports.shuffleArray(self, originalArray, seedOrRNG)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     local array = ____exports.copyArray(nil, originalArray)
     ____exports.shuffleArrayInPlace(nil, array, seedOrRNG)
     return array
@@ -21395,7 +21425,6 @@ local isaacAPIClassEquals = ____isaacAPIClass.isaacAPIClassEquals
 local ____random = require("lua_modules.isaacscript-common.dist.src.functions.random")
 local getRandomFloat = ____random.getRandomFloat
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local isRNG = ____rng.isRNG
 local newRNG = ____rng.newRNG
 local ____table = require("lua_modules.isaacscript-common.dist.src.functions.table")
@@ -21473,12 +21502,13 @@ end
 -- 
 -- Use this over the `RandomVector` function when you need the vector to be seeded.
 -- 
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- If you want to generate an unseeded vector, you must explicitly pass `undefined` to the
+-- `seedOrRNG` parameter.
+-- 
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 function ____exports.getRandomVector(self, seedOrRNG)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     local rng = isRNG(nil, seedOrRNG) and seedOrRNG or newRNG(nil, seedOrRNG)
     local x = getRandomFloat(nil, -1, 1, rng)
     local y = getRandomFloat(nil, -1, 1, rng)
@@ -21997,8 +22027,6 @@ local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.R
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
 local getRandomArrayElement = ____array.getRandomArrayElement
-local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isNumber = ____types.isNumber
 local isString = ____types.isString
@@ -22152,14 +22180,14 @@ function ____exports.getLowestEnumValue(self, transpiledEnum)
 end
 --- Helper function to get a random value from the provided enum.
 -- 
+-- If you want an unseeded value, you must explicitly pass `undefined` to the `seedOrRNG` parameter.
+-- 
 -- @param transpiledEnum The enum to get the value from.
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 -- @param exceptions Optional. An array of elements to skip over if selected.
 function ____exports.getRandomEnumValue(self, transpiledEnum, seedOrRNG, exceptions)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if exceptions == nil then
         exceptions = {}
     end
@@ -22950,7 +22978,6 @@ local isIsaacAPIClassOfType = ____isaacAPIClass.isIsaacAPIClassOfType
 local ____random = require("lua_modules.isaacscript-common.dist.src.functions.random")
 local getRandom = ____random.getRandom
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local isRNG = ____rng.isRNG
 local newRNG = ____rng.newRNG
 local ____table = require("lua_modules.isaacscript-common.dist.src.functions.table")
@@ -22992,15 +23019,16 @@ function ____exports.deserializeKColor(self, kColor)
     assertDefined(nil, a, ("Failed to deserialize a " .. OBJECT_NAME) .. " object since the provided object did not have a value for: Alpha")
     return KColor(r, g, b, a)
 end
---- Helper function to get a random color.
+--- Helper function to get a random `KColor` object (for use in fonts).
 -- 
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- If you want to generate an unseeded object, you must explicitly pass `undefined` to the
+-- `seedOrRNG` parameter.
+-- 
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 -- @param alpha Optional. The alpha value to use. Default is 1.
 function ____exports.getRandomKColor(self, seedOrRNG, alpha)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if alpha == nil then
         alpha = 1
     end
@@ -23049,7 +23077,6 @@ local isIsaacAPIClassOfType = ____isaacAPIClass.isIsaacAPIClassOfType
 local ____random = require("lua_modules.isaacscript-common.dist.src.functions.random")
 local getRandom = ____random.getRandom
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local isRNG = ____rng.isRNG
 local newRNG = ____rng.newRNG
 local ____table = require("lua_modules.isaacscript-common.dist.src.functions.table")
@@ -23117,15 +23144,16 @@ function ____exports.deserializeColor(self, color)
         bo
     )
 end
---- Helper function to get a random color.
+--- Helper function to get a random `Color` object.
 -- 
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- If you want to generate an unseeded object, you must explicitly pass `undefined` to the
+-- `seedOrRNG` parameter.
+-- 
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 -- @param alpha Optional. The alpha value to use. Default is 1.
 function ____exports.getRandomColor(self, seedOrRNG, alpha)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if alpha == nil then
         alpha = 1
     end
@@ -24950,7 +24978,12 @@ function ____exports.removeDeadEyeMultiplier(self, player)
 end
 --- Helper function to blindfold the player by using a hack with the challenge variable.
 -- 
--- The method used in this function was discovered by im_tem.
+-- Note that if the player dies and respawns (from e.g. Dead Cat), the blindfold will have to be
+-- reapplied.
+-- 
+-- Under the hood, this function sets the challenge to one with a blindfold, changes the player to
+-- the same character that they currently are, and then changes the challenge back. This method was
+-- discovered by im_tem.
 -- 
 -- @param player The player to apply or remove the blindfold state from.
 -- @param enabled Whether to apply or remove the blindfold.
@@ -25879,6 +25912,8 @@ end
 --- Returns whether the given collectible is a "glitched" item. All items are replaced by glitched
 -- items once a player has TMTRAINER. However, glitched items can also "naturally" appear in secret
 -- rooms and I AM ERROR rooms if the "Corrupted Data" achievement is unlocked.
+-- 
+-- Under the hood, this checks if the sub-type of the collectible is greater than 4,000,000,000.
 function ____exports.isGlitchedCollectible(self, collectible)
     return collectible.Variant == PickupVariant.COLLECTIBLE and collectible.SubType > GLITCHED_ITEM_THRESHOLD
 end
@@ -28026,24 +28061,28 @@ local isRNG = ____rng.isRNG
 -- Isaac's rotation mechanic. To handle that, use the `spawnCollectible` helper function instead
 -- (which is provided by `ISCFeature.SPAWN_COLLECTIBLE`).
 -- 
+-- If you want to spawn an unseeded collectible, you must explicitly pass `undefined` to the
+-- `seedOrRNG` parameter.
+-- 
 -- @param collectibleType The collectible type to spawn.
 -- @param positionOrGridIndex The position or grid index to spawn the collectible at.
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 -- @param options Optional. Set to true to make the collectible a "There's Options" style
 -- collectible. Default is false.
 -- @param forceFreeItem Optional. Set to true to disable the logic that gives the item a price for
 -- Tainted Keeper. Default is false.
 -- @param spawner Optional.
 function ____exports.spawnCollectibleUnsafe(self, collectibleType, positionOrGridIndex, seedOrRNG, options, forceFreeItem, spawner)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if options == nil then
         options = false
     end
     if forceFreeItem == nil then
         forceFreeItem = false
+    end
+    if seedOrRNG == nil then
+        seedOrRNG = getRandomSeed(nil)
     end
     local seed = isRNG(nil, seedOrRNG) and seedOrRNG:Next() or seedOrRNG
     local collectible = spawnPickupWithSeed(
@@ -28073,13 +28112,14 @@ end
 -- Onion because it is a quest collectible and quest collectibles will prevent Damocles from
 -- duplicating the pedestal.)
 -- 
+-- If you want to spawn an unseeded collectible, you must explicitly pass `undefined` to the
+-- `seedOrRNG` parameter.
+-- 
 -- @param positionOrGridIndex The position or grid index to spawn the empty collectible at.
 -- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 function ____exports.spawnEmptyCollectible(self, positionOrGridIndex, seedOrRNG)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     local collectible = ____exports.spawnCollectibleUnsafe(
         nil,
         CollectibleType.BROKEN_SHOVEL_1,
@@ -29364,8 +29404,6 @@ local ____array = require("lua_modules.isaacscript-common.dist.src.functions.arr
 local getArrayCombinations = ____array.getArrayCombinations
 local getRandomArrayElement = ____array.getRandomArrayElement
 local sumArray = ____array.sumArray
-local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
 local isPrimitive = ____types.isPrimitive
 --- Helper function to get a sorted array based on the contents of a set.
@@ -29432,14 +29470,15 @@ function ____exports.deleteSetsFromSet(self, mainSet, ...)
 end
 --- Helper function to get a random element from the provided set.
 -- 
+-- If you want to get an unseeded element, you must explicitly pass `undefined` to the `seedOrRNG`
+-- parameter.
+-- 
 -- @param set The set to get an element from.
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 -- @param exceptions Optional. An array of elements to skip over if selected.
 function ____exports.getRandomSetElement(self, set, seedOrRNG, exceptions)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if exceptions == nil then
         exceptions = {}
     end
@@ -29916,6 +29955,7 @@ local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local __TS__ArrayEvery = ____lualib.__TS__ArrayEvery
 local __TS__StringIncludes = ____lualib.__TS__StringIncludes
+local __TS__ArraySome = ____lualib.__TS__ArraySome
 local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -29925,8 +29965,10 @@ local DoorSlot = ____isaac_2Dtypescript_2Ddefinitions.DoorSlot
 local DoorSlotFlag = ____isaac_2Dtypescript_2Ddefinitions.DoorSlotFlag
 local DownpourRoomSubType = ____isaac_2Dtypescript_2Ddefinitions.DownpourRoomSubType
 local DungeonSubType = ____isaac_2Dtypescript_2Ddefinitions.DungeonSubType
+local EntityFlag = ____isaac_2Dtypescript_2Ddefinitions.EntityFlag
 local GridRoom = ____isaac_2Dtypescript_2Ddefinitions.GridRoom
 local HomeRoomSubType = ____isaac_2Dtypescript_2Ddefinitions.HomeRoomSubType
+local ProjectileFlag = ____isaac_2Dtypescript_2Ddefinitions.ProjectileFlag
 local RoomDescriptorFlag = ____isaac_2Dtypescript_2Ddefinitions.RoomDescriptorFlag
 local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
 local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
@@ -30470,19 +30512,23 @@ function ____exports.inStartingRoom(self)
 end
 --- Helper function to loop through every room on the floor and see if it has been cleared.
 -- 
--- This function will only check rooms inside the gird and inside the current dimension.
+-- This function will only check rooms inside the grid and inside the current dimension.
 -- 
 -- @param onlyCheckRoomTypes Optional. A whitelist of room types. If specified, room types not in
 -- the array will be ignored. If not specified, then all rooms will be
 -- checked. Undefined by default.
--- @param includeSecretAndSuperSecretRoom Optional. Whether to include the Secret Room and the Super
--- Secret Room. Default is false.
+-- @param includeSecretRoom Optional. Whether to include the Secret Room. Default is false.
+-- @param includeSuperSecretRoom Optional. Whether to include the Super Secret Room. Default is
+-- false.
 -- @param includeUltraSecretRoom Optional. Whether to include the Ultra Secret Room. Default is
 -- false.
 -- @allowEmptyVariadic
-function ____exports.isAllRoomsClear(self, onlyCheckRoomTypes, includeSecretAndSuperSecretRoom, includeUltraSecretRoom)
-    if includeSecretAndSuperSecretRoom == nil then
-        includeSecretAndSuperSecretRoom = false
+function ____exports.isAllRoomsClear(self, onlyCheckRoomTypes, includeSecretRoom, includeSuperSecretRoom, includeUltraSecretRoom)
+    if includeSecretRoom == nil then
+        includeSecretRoom = false
+    end
+    if includeSuperSecretRoom == nil then
+        includeSuperSecretRoom = false
     end
     if includeUltraSecretRoom == nil then
         includeUltraSecretRoom = false
@@ -30498,10 +30544,16 @@ function ____exports.isAllRoomsClear(self, onlyCheckRoomTypes, includeSecretAndS
             function(____, roomDescriptor) return roomDescriptor.Data ~= nil and roomTypeWhitelist:has(roomDescriptor.Data.Type) end
         )
     end
-    if not includeSecretAndSuperSecretRoom then
+    if not includeSecretRoom then
         matchingRooms = __TS__ArrayFilter(
             matchingRooms,
-            function(____, roomDescriptor) return roomDescriptor.Data ~= nil and roomDescriptor.Data.Type ~= RoomType.SECRET and roomDescriptor.Data.Type ~= RoomType.SUPER_SECRET end
+            function(____, roomDescriptor) return roomDescriptor.Data ~= nil and roomDescriptor.Data.Type ~= RoomType.SECRET end
+        )
+    end
+    if not includeSuperSecretRoom then
+        matchingRooms = __TS__ArrayFilter(
+            matchingRooms,
+            function(____, roomDescriptor) return roomDescriptor.Data ~= nil and roomDescriptor.Data.Type ~= RoomType.SUPER_SECRET end
         )
     end
     if not includeUltraSecretRoom then
@@ -30514,6 +30566,38 @@ function ____exports.isAllRoomsClear(self, onlyCheckRoomTypes, includeSecretAndS
         matchingRooms,
         function(____, roomDescriptor) return roomDescriptor.Clear end
     )
+end
+--- Helper function to check if the room contains one or more enemies/projectiles that could damage
+-- the player.
+-- 
+-- This is useful to check to see if it is safe to pause the game or display some informational
+-- text.
+function ____exports.isRoomDangerous(self)
+    local room = game:GetRoom()
+    local isClear = room:IsClear()
+    if not isClear then
+        return true
+    end
+    local entities = getEntities(nil)
+    if __TS__ArraySome(
+        entities,
+        function(____, entity) return entity:IsActiveEnemy(false) and not entity:HasEntityFlags(EntityFlag.FRIENDLY) end
+    ) then
+        return true
+    end
+    if __TS__ArraySome(
+        entities,
+        function(____, entity)
+            local projectile = entity:ToProjectile()
+            if projectile == nil then
+                return false
+            end
+            return not projectile:HasProjectileFlags(ProjectileFlag.CANT_HIT_PLAYER)
+        end
+    ) then
+        return true
+    end
+    return false
 end
 --- Helper function to detect if a room type is a Secret Room, a Super Secret Room, or an Ultra
 -- Secret Room.
@@ -30551,12 +30635,12 @@ function ____exports.setRoomCleared(self)
     for ____, door in ipairs(getDoors(nil)) do
         do
             if isHiddenSecretRoomDoor(nil, door) then
-                goto __continue84
+                goto __continue93
             end
             openDoorFast(nil, door)
             door.ExtraVisible = false
         end
-        ::__continue84::
+        ::__continue93::
     end
     sfxManager:Stop(SoundEffect.DOOR_HEAVY_OPEN)
     game:ShakeScreen(0)
@@ -34190,7 +34274,20 @@ end
 -- - handles giving pits collision
 -- - removes existing grid entities on the same tile, if any
 -- - allows you to specify the grid index or the position
-function ____exports.spawnGridEntityWithVariant(self, gridEntityType, variant, gridIndexOrPosition)
+-- 
+-- @param gridEntityType The `GridEntityType` to use.
+-- @param variant The variant to use.
+-- @param gridIndexOrPosition The grid index or position in the room that you want to spawn the grid
+-- entity at. If a position is specified, the closest grid index will be
+-- used.
+-- @param removeExistingGridEntity Optional. Whether to remove the existing grid entity on the same
+-- tile, if it exists. Defaults to true. If false, this function
+-- will do nothing, since spawning a grid entity on top of another
+-- grid entity will not replace it.
+function ____exports.spawnGridEntityWithVariant(self, gridEntityType, variant, gridIndexOrPosition, removeExistingGridEntity)
+    if removeExistingGridEntity == nil then
+        removeExistingGridEntity = true
+    end
     local room = game:GetRoom()
     local ____isVector_result_3
     if isVector(nil, gridIndexOrPosition) then
@@ -34200,7 +34297,11 @@ function ____exports.spawnGridEntityWithVariant(self, gridEntityType, variant, g
     end
     local existingGridEntity = ____isVector_result_3
     if existingGridEntity ~= nil then
-        ____exports.removeGridEntity(nil, existingGridEntity, true)
+        if removeExistingGridEntity then
+            ____exports.removeGridEntity(nil, existingGridEntity, true)
+        else
+            return
+        end
     end
     local position = isVector(nil, gridIndexOrPosition) and gridIndexOrPosition or room:GetGridPosition(gridIndexOrPosition)
     local gridEntity = Isaac.GridSpawn(gridEntityType, variant, position)
@@ -34705,7 +34806,7 @@ function ____exports.spawnGiantPoop(self, topLeftGridIndex)
     local bottomRight = ____exports.spawnGridEntityWithVariant(nil, GridEntityType.POOP, PoopGridEntityVariant.GIANT_BOTTOM_RIGHT, bottomRightGridIndex)
     return topLeft ~= nil and topLeft:GetType() == GridEntityType.POOP and topLeft:GetVariant() == PoopGridEntityVariant.GIANT_TOP_LEFT and topRight ~= nil and topRight:GetType() == GridEntityType.POOP and topRight:GetVariant() == PoopGridEntityVariant.GIANT_TOP_RIGHT and bottomLeft ~= nil and bottomLeft:GetType() == GridEntityType.POOP and bottomLeft:GetVariant() == PoopGridEntityVariant.GIANT_BOTTOM_LEFT and bottomRight ~= nil and bottomRight:GetType() == GridEntityType.POOP and bottomRight:GetVariant() == PoopGridEntityVariant.GIANT_BOTTOM_RIGHT
 end
---- Helper function to spawn a grid entity.
+--- Helper function to spawn a grid entity with a specific type.
 -- 
 -- This function assumes you want to give the grid entity a variant of 0. If you want to specify a
 -- variant, use the `spawnGridEntityWithVariant` helper function instead.
@@ -34714,8 +34815,26 @@ end
 -- - handles giving pits collision
 -- - removes existing grid entities on the same tile, if any
 -- - allows you to specify either the grid index or the position
-function ____exports.spawnGridEntity(self, gridEntityType, gridIndexOrPosition)
-    return ____exports.spawnGridEntityWithVariant(nil, gridEntityType, 0, gridIndexOrPosition)
+-- 
+-- @param gridEntityType The `GridEntityType` to use.
+-- @param gridIndexOrPosition The grid index or position in the room that you want to spawn the grid
+-- entity at. If a position is specified, the closest grid index will be
+-- used.
+-- @param removeExistingGridEntity Optional. Whether to remove the existing grid entity on the same
+-- tile, if it exists. Defaults to true. If false, this function
+-- will do nothing, since spawning a grid entity on top of another
+-- grid entity will not replace it.
+function ____exports.spawnGridEntity(self, gridEntityType, gridIndexOrPosition, removeExistingGridEntity)
+    if removeExistingGridEntity == nil then
+        removeExistingGridEntity = true
+    end
+    return ____exports.spawnGridEntityWithVariant(
+        nil,
+        gridEntityType,
+        0,
+        gridIndexOrPosition,
+        removeExistingGridEntity
+    )
 end
 --- Helper function to spawn a Void Portal. This is more complicated than simply spawning a trapdoor
 -- with the appropriate variant, as the game does not give it the correct sprite automatically.
@@ -36020,9 +36139,6 @@ end
 -- 
 -- This returns false if the submitted render frame count is null or undefined.
 function ____exports.onGameFrame(self, gameFrameCount)
-    if gameFrameCount == nil or gameFrameCount == nil then
-        return false
-    end
     local thisGameFrameCount = game:GetFrameCount()
     return thisGameFrameCount == gameFrameCount
 end
@@ -36069,9 +36185,6 @@ end
 -- 
 -- This returns false if the submitted render frame count is null or undefined.
 function ____exports.onRenderFrame(self, renderFrameCount)
-    if renderFrameCount == nil or renderFrameCount == nil then
-        return false
-    end
     local thisRenderFrameCount = Isaac.GetFrameCount()
     return thisRenderFrameCount == renderFrameCount
 end
@@ -36080,9 +36193,6 @@ end
 -- 
 -- This returns false if the submitted room frame count is null or undefined.
 function ____exports.onRoomFrame(self, roomFrameCount)
-    if roomFrameCount == nil or roomFrameCount == nil then
-        return false
-    end
     local room = game:GetRoom()
     local thisGameFrameCount = room:GetFrameCount()
     return thisGameFrameCount == roomFrameCount
@@ -38399,10 +38509,13 @@ local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local GameStateFlag = ____isaac_2Dtypescript_2Ddefinitions.GameStateFlag
 local GridRoom = ____isaac_2Dtypescript_2Ddefinitions.GridRoom
+local LevelCurse = ____isaac_2Dtypescript_2Ddefinitions.LevelCurse
 local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
 local StageType = ____isaac_2Dtypescript_2Ddefinitions.StageType
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
 local game = ____cachedClasses.game
+local ____curses = require("lua_modules.isaacscript-common.dist.src.functions.curses")
+local hasCurse = ____curses.hasCurse
 local ____roomData = require("lua_modules.isaacscript-common.dist.src.functions.roomData")
 local getRoomGridIndex = ____roomData.getRoomGridIndex
 local ____stage = require("lua_modules.isaacscript-common.dist.src.functions.stage")
@@ -38448,7 +38561,7 @@ function ____exports.getNextStage(self)
                 if repentanceStage then
                     return asNumber(nil, stage) + 1
                 end
-                if stage == LevelStage.DEPTHS_2 then
+                if stage == LevelStage.DEPTHS_2 or stage == LevelStage.DEPTHS_1 and hasCurse(nil, LevelCurse.LABYRINTH) then
                     return LevelStage.DEPTHS_2
                 end
                 return stage
@@ -38533,6 +38646,44 @@ function ____exports.getNextStageType(self, upwards)
         return StageType.ORIGINAL
     end
     return calculateStageType(nil, nextStage)
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.functions.curses"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArraySome = ____lualib.__TS__ArraySome
+local ____exports = {}
+local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
+local game = ____cachedClasses.game
+local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
+local hasFlag = ____flag.hasFlag
+--- Helper function to get the actual bit flag for modded curses.
+-- 
+-- Will throw a run-time error if the provided curse does not exist.
+-- 
+-- Use this over the `Isaac.GetCurseIdByName` method because that will return an integer instead of
+-- a bit flag.
+function ____exports.getCurseIDByName(self, name)
+    local curseID = Isaac.GetCurseIdByName(name)
+    if curseID == -1 then
+        error(("Failed to get the curse ID corresponding to the curse name of \"" .. tostring(curseID)) .. "\". Does this name match what you put in the \"content/curses.xml\" file?")
+    end
+    return 1 << curseID - 1
+end
+--- Helper function to check if the current floor has a particular curse.
+-- 
+-- This function is variadic, meaning that you can specify as many curses as you want. The function
+-- will return true if the level has one or more of the curses.
+-- 
+-- Under the hood, this function uses the `Level.GetCurses` method.
+function ____exports.hasCurse(self, ...)
+    local curses = {...}
+    local level = game:GetLevel()
+    local levelCurses = level:GetCurses()
+    return __TS__ArraySome(
+        curses,
+        function(____, curse) return hasFlag(nil, levelCurses, curse) end
+    )
 end
 return ____exports
  end,
@@ -40199,6 +40350,8 @@ local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____array = require("lua_modules.isaacscript-common.dist.src.functions.array")
 local arrayToString = ____array.arrayToString
 local isArray = ____array.isArray
+local ____bosses = require("lua_modules.isaacscript-common.dist.src.functions.bosses")
+local getBossID = ____bosses.getBossID
 local ____collectibles = require("lua_modules.isaacscript-common.dist.src.functions.collectibles")
 local getCollectibleName = ____collectibles.getCollectibleName
 local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.entities")
@@ -40436,8 +40589,7 @@ function ____exports.logProjectileFlags(projectileFlags)
 end
 --- Helper function for logging information about the current room.
 function ____exports.logRoom()
-    local room = game:GetRoom()
-    local bossID = room:GetBossID()
+    local bossID = getBossID(nil)
     local roomGridIndex = getRoomGridIndex(nil)
     local roomListIndex = getRoomListIndex(nil)
     local roomData = getRoomData(nil)
@@ -40676,6 +40828,1080 @@ function ____exports.logVector(vector, name, round)
     local vectorString = vectorToString(nil, vector, round)
     log((("Logging " .. name) .. ": ") .. vectorString)
 end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.functions.bosses"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local LokiVariant = ____isaac_2Dtypescript_2Ddefinitions.LokiVariant
+local UltraGreedVariant = ____isaac_2Dtypescript_2Ddefinitions.UltraGreedVariant
+local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
+local game = ____cachedClasses.game
+local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
+local VectorZero = ____constants.VectorZero
+local ____entityTypeVariantToBossIDMap = require("lua_modules.isaacscript-common.dist.src.maps.entityTypeVariantToBossIDMap")
+local ENTITY_TYPE_VARIANT_TO_BOSS_ID_MAP = ____entityTypeVariantToBossIDMap.ENTITY_TYPE_VARIANT_TO_BOSS_ID_MAP
+local ____bossIDToEntityTypeVariant = require("lua_modules.isaacscript-common.dist.src.objects.bossIDToEntityTypeVariant")
+local BOSS_ID_TO_ENTITY_TYPE_VARIANT = ____bossIDToEntityTypeVariant.BOSS_ID_TO_ENTITY_TYPE_VARIANT
+local ____bossNames = require("lua_modules.isaacscript-common.dist.src.objects.bossNames")
+local BOSS_NAMES = ____bossNames.BOSS_NAMES
+local DEFAULT_BOSS_NAME = ____bossNames.DEFAULT_BOSS_NAME
+local ____bossSets = require("lua_modules.isaacscript-common.dist.src.sets.bossSets")
+local ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET = ____bossSets.ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET
+local ALL_BOSSES_SET = ____bossSets.ALL_BOSSES_SET
+local STAGE_TO_COMBINED_BOSS_SET_MAP = ____bossSets.STAGE_TO_COMBINED_BOSS_SET_MAP
+local STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP = ____bossSets.STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP
+local STORY_BOSS_ENTITY_TYPES_SET = ____bossSets.STORY_BOSS_ENTITY_TYPES_SET
+local STORY_BOSS_IDS_SET = ____bossSets.STORY_BOSS_IDS_SET
+local ____repentanceBossIDsSet = require("lua_modules.isaacscript-common.dist.src.sets.repentanceBossIDsSet")
+local REPENTANCE_ONLY_BOSS_IDS_SET = ____repentanceBossIDsSet.REPENTANCE_ONLY_BOSS_IDS_SET
+local ____sinEntityTypesSet = require("lua_modules.isaacscript-common.dist.src.sets.sinEntityTypesSet")
+local SIN_ENTITY_TYPES_SET = ____sinEntityTypesSet.SIN_ENTITY_TYPES_SET
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+local ____entities = require("lua_modules.isaacscript-common.dist.src.functions.entities")
+local doesEntityExist = ____entities.doesEntityExist
+local ____entitiesSpecific = require("lua_modules.isaacscript-common.dist.src.functions.entitiesSpecific")
+local getNPCs = ____entitiesSpecific.getNPCs
+local spawnNPC = ____entitiesSpecific.spawnNPC
+local ____npcs = require("lua_modules.isaacscript-common.dist.src.functions.npcs")
+local getAliveNPCs = ____npcs.getAliveNPCs
+local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
+local isRNG = ____rng.isRNG
+local ____rooms = require("lua_modules.isaacscript-common.dist.src.functions.rooms")
+local inBeastRoom = ____rooms.inBeastRoom
+local inDogmaRoom = ____rooms.inDogmaRoom
+local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
+local asNumber = ____types.asNumber
+local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
+local ____repeat = ____utils["repeat"]
+local BOSSES_THAT_REQUIRE_MULTIPLE_SPAWNS = __TS__New(ReadonlySet, {
+    EntityType.LARRY_JR,
+    EntityType.CHUB,
+    EntityType.LOKI,
+    EntityType.GURGLING,
+    EntityType.TURDLET
+})
+local DEFAULT_BOSS_MULTI_SEGMENTS = 4
+--- Helper function to get all of the non-dead bosses in the room.
+-- 
+-- This function will not include bosses on an internal blacklist, such as Death's scythes or Big
+-- Horn holes.
+-- 
+-- @param entityType Optional. If specified, will only get the bosses that match the type. Default
+-- is -1, which matches every type.
+-- @param variant Optional. If specified, will only get the bosses that match the variant. Default
+-- is -1, which matches every variant.
+-- @param subType Optional. If specified, will only get the bosses that match the sub-type. Default
+-- is -1, which matches every sub-type.
+-- @param ignoreFriendly Optional. Default is false.
+function ____exports.getAliveBosses(self, entityType, variant, subType, ignoreFriendly)
+    if entityType == nil then
+        entityType = -1
+    end
+    if variant == nil then
+        variant = -1
+    end
+    if subType == nil then
+        subType = -1
+    end
+    if ignoreFriendly == nil then
+        ignoreFriendly = false
+    end
+    local aliveNPCs = getAliveNPCs(
+        nil,
+        entityType,
+        variant,
+        subType,
+        ignoreFriendly
+    )
+    return __TS__ArrayFilter(
+        aliveNPCs,
+        function(____, aliveNPC) return aliveNPC:IsBoss() end
+    )
+end
+--- Helper function to get the set of every boss in the game (which is derived from the `BossID`
+-- enum).
+-- 
+-- This includes:
+-- - Ultra Greed
+-- - Ultra Greedier
+-- 
+-- This does not include:
+-- - mini-bosses (e.g. Ultra Pride, Krampus)
+-- - bosses that do not appear in Boss Rooms (e.g. Uriel, Gabriel)
+-- - the second phase of multi-phase bosses (e.g. Mega Satan 2)
+-- - sub-bosses of The Beast fight (e.g. Ultra Famine, Ultra Pestilence, Ultra War, Ultra Death)
+-- - bosses that do not have any Boss Rooms defined due to being unfinished (e.g. Raglich)
+-- 
+-- Also see the `getBossSet` and `getCombinedBossSet` functions.
+-- 
+-- @param includeStoryBosses Optional. Whether to include "story" bosses like Mom and It Lives.
+-- Default is true.
+function ____exports.getAllBossesSet(self, includeStoryBosses)
+    if includeStoryBosses == nil then
+        includeStoryBosses = true
+    end
+    return includeStoryBosses and ALL_BOSSES_SET or ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET
+end
+--- Helper function to get the boss ID corresponding to the current room. Returns undefined if the
+-- current room is not a Boss Room.
+-- 
+-- Use this instead of the vanilla `Room.GetBossID` method since it has a saner return type and it
+-- correctly handles Dogma, The Beast, and Ultra Greedier.
+function ____exports.getBossID(self)
+    if inDogmaRoom(nil) then
+        return BossID.DOGMA
+    end
+    if inBeastRoom(nil) then
+        return BossID.BEAST
+    end
+    local room = game:GetRoom()
+    local bossID = room:GetBossID()
+    if bossID == 0 then
+        return nil
+    end
+    if bossID == BossID.ULTRA_GREED and doesEntityExist(nil, EntityType.ULTRA_GREED, UltraGreedVariant.ULTRA_GREEDIER) then
+        return BossID.ULTRA_GREEDIER
+    end
+    return bossID
+end
+function ____exports.getBossIDFromEntityTypeVariant(self, entityType, variant)
+    local entityTypeVariant = (tostring(entityType) .. ".") .. tostring(variant)
+    return ENTITY_TYPE_VARIANT_TO_BOSS_ID_MAP:get(entityTypeVariant)
+end
+--- Helper function to get the proper English name for a boss. For example, the name for
+-- `BossID.WRETCHED` (36) is "The Wretched".
+function ____exports.getBossName(self, bossID)
+    return BOSS_NAMES[bossID] or DEFAULT_BOSS_NAME
+end
+--- Helper function to get the set of vanilla bosses for a particular stage and stage type
+-- combination.
+-- 
+-- Also see the `getAllBossesSet` and `getCombinedBossSet` functions.
+function ____exports.getBossSet(self, stage, stageType)
+    local stageTypeMap = STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP:get(stage)
+    if stageTypeMap == nil then
+        return nil
+    end
+    return stageTypeMap:get(stageType)
+end
+--- Helper function to get all of the bosses in the room.
+-- 
+-- @param entityType Optional. If specified, will only get the bosses that match the type. Default
+-- is -1, which matches every type.
+-- @param variant Optional. If specified, will only get the bosses that match the variant. Default
+-- is -1, which matches every variant.
+-- @param subType Optional. If specified, will only get the bosses that match the sub-type. Default
+-- is -1, which matches every sub-type.
+-- @param ignoreFriendly Optional. Default is false.
+function ____exports.getBosses(self, entityType, variant, subType, ignoreFriendly)
+    if ignoreFriendly == nil then
+        ignoreFriendly = false
+    end
+    local npcs = getNPCs(
+        nil,
+        entityType,
+        variant,
+        subType,
+        ignoreFriendly
+    )
+    return __TS__ArrayFilter(
+        npcs,
+        function(____, npc) return npc:IsBoss() end
+    )
+end
+--- Helper function to get the set of vanilla bosses for a particular stage across all of the stage
+-- types. For example, specifying `LevelStage.BASEMENT_2` will return a set with all of the bosses
+-- for Basement, Cellar, Burning Basement, Downpour, and Dross.
+-- 
+-- Also see the `getAllBossesSet` and `getBossSet` functions.
+function ____exports.getCombinedBossSet(self, stage)
+    return STAGE_TO_COMBINED_BOSS_SET_MAP:get(stage)
+end
+function ____exports.getEntityTypeVariantFromBossID(self, bossID)
+    return BOSS_ID_TO_ENTITY_TYPE_VARIANT[bossID]
+end
+--- Helper function to check if a boss is only found on a Repentance floor such as Dross, Mines, and
+-- so on.
+-- 
+-- For example, The Pile is a boss that was added in Repentance, but since it can appear in
+-- Necropolis, it is not considered a Repentance boss for the purposes of this function.
+function ____exports.isRepentanceBoss(self, bossID)
+    return REPENTANCE_ONLY_BOSS_IDS_SET:has(bossID)
+end
+--- Helper function to check if the provided NPC is a Sin miniboss, such as Sloth or Lust.
+function ____exports.isSin(self, npc)
+    return SIN_ENTITY_TYPES_SET:has(npc.Type)
+end
+local function getNumBossSegments(self, entityType, variant, numSegments)
+    if numSegments ~= nil then
+        return numSegments
+    end
+    repeat
+        local ____switch22 = entityType
+        local ____cond22 = ____switch22 == EntityType.CHUB
+        if ____cond22 then
+            do
+                return 3
+            end
+        end
+        ____cond22 = ____cond22 or ____switch22 == EntityType.LOKI
+        if ____cond22 then
+            do
+                return variant == asNumber(nil, LokiVariant.LOKII) and 2 or 1
+            end
+        end
+        ____cond22 = ____cond22 or ____switch22 == EntityType.GURGLING
+        if ____cond22 then
+            do
+                return 2
+            end
+        end
+        do
+            do
+                return DEFAULT_BOSS_MULTI_SEGMENTS
+            end
+        end
+    until true
+end
+--- Helper function to determine if the specified entity type is an end-game story boss, like Isaac,
+-- Blue Baby, Mega Satan, The Beast, and so on. This is useful because certain effects should only
+-- apply to non-story bosses, like Vanishing Twin.
+function ____exports.isStoryBoss(self, entityType)
+    return STORY_BOSS_ENTITY_TYPES_SET:has(entityType)
+end
+--- Helper function to determine if the specified boss ID is an end-game story boss, like Isaac, Blue
+-- Baby, Mega Satan, The Beast, and so on. This is useful because certain effects should only apply
+-- to non-story bosses, like Vanishing Twin.
+function ____exports.isStoryBossID(self, bossID)
+    return STORY_BOSS_IDS_SET:has(bossID)
+end
+--- Helper function to spawn a boss.
+-- 
+-- Use this function instead of `spawnNPC` since it handles automatically spawning multiple segments
+-- for multi-segment bosses.
+-- 
+-- By default, this will spawn Chub (and his variants) with 3 segments, Lokii with 2 copies,
+-- Gurglings/Turdlings with 2 copies, and other multi-segment bosses with 4 segments. You can
+-- customize this via the "numSegments" argument.
+function ____exports.spawnBoss(self, entityType, variant, subType, positionOrGridIndex, velocity, spawner, seedOrRNG, numSegments)
+    if velocity == nil then
+        velocity = VectorZero
+    end
+    local seed = isRNG(nil, seedOrRNG) and seedOrRNG:Next() or seedOrRNG
+    local npc = spawnNPC(
+        nil,
+        entityType,
+        variant,
+        subType,
+        positionOrGridIndex,
+        velocity,
+        spawner,
+        seed
+    )
+    if BOSSES_THAT_REQUIRE_MULTIPLE_SPAWNS:has(entityType) then
+        local numBossSegments = getNumBossSegments(nil, entityType, variant, numSegments)
+        local remainingSegmentsToSpawn = numBossSegments - 1
+        ____repeat(
+            nil,
+            remainingSegmentsToSpawn,
+            function()
+                spawnNPC(
+                    nil,
+                    entityType,
+                    variant,
+                    subType,
+                    positionOrGridIndex,
+                    velocity,
+                    spawner,
+                    seed
+                )
+            end
+        )
+    end
+    return npc
+end
+--- Helper function to spawn a boss with a specific seed.
+-- 
+-- For more information, see the documentation for the `spawnBoss` function.
+function ____exports.spawnBossWithSeed(self, entityType, variant, subType, positionOrGridIndex, seedOrRNG, velocity, spawner, numSegments)
+    if velocity == nil then
+        velocity = VectorZero
+    end
+    local seed = isRNG(nil, seedOrRNG) and seedOrRNG:Next() or seedOrRNG
+    return ____exports.spawnBoss(
+        nil,
+        entityType,
+        variant,
+        subType,
+        positionOrGridIndex,
+        velocity,
+        spawner,
+        seed,
+        numSegments
+    )
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.sets.sinEntityTypesSet"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.SIN_ENTITY_TYPES_SET = __TS__New(ReadonlySet, {
+    EntityType.SLOTH,
+    EntityType.LUST,
+    EntityType.WRATH,
+    EntityType.GLUTTONY,
+    EntityType.GREED,
+    EntityType.ENVY,
+    EntityType.PRIDE
+})
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.sets.repentanceBossIDsSet"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+____exports.REPENTANCE_ONLY_BOSS_IDS_SET = __TS__New(ReadonlySet, {
+    BossID.LIL_BLUB,
+    BossID.WORMWOOD,
+    BossID.RAINMAKER,
+    BossID.VISAGE,
+    BossID.SIREN,
+    BossID.TUFF_TWINS,
+    BossID.HERETIC,
+    BossID.HORNFEL,
+    BossID.GREAT_GIDEON,
+    BossID.SCOURGE,
+    BossID.CHIMERA,
+    BossID.ROTGUT,
+    BossID.MOTHER,
+    BossID.MAUSOLEUM_MOM,
+    BossID.MAUSOLEUM_MOMS_HEART,
+    BossID.MIN_MIN,
+    BossID.CLOG,
+    BossID.SINGE,
+    BossID.COLOSTOMIA,
+    BossID.SHELL,
+    BossID.TURDLET,
+    BossID.HORNY_BOYS,
+    BossID.CLUTCH
+})
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.sets.bossSets"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local __TS__Spread = ____lualib.__TS__Spread
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
+local StageType = ____isaac_2Dtypescript_2Ddefinitions.StageType
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.src.arrays.cachedEnumValues")
+local BOSS_IDS = ____cachedEnumValues.BOSS_IDS
+local ____set = require("lua_modules.isaacscript-common.dist.src.functions.set")
+local combineSets = ____set.combineSets
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+--- Contains just the bosses in Basement (not e.g. Burning Basement).
+local BASEMENT_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.MONSTRO,
+    BossID.LARRY_JR,
+    BossID.FAMINE,
+    BossID.DUKE_OF_FLIES,
+    BossID.GEMINI,
+    BossID.STEVEN,
+    BossID.HEADLESS_HORSEMAN,
+    BossID.FALLEN,
+    BossID.DINGLE,
+    BossID.GURGLING,
+    BossID.LITTLE_HORN,
+    BossID.DANGLE,
+    BossID.TURDLING,
+    BossID.BABY_PLUM
+})
+--- Contains just the bosses in Cellar (not e.g. Burning Basement).
+local CELLAR_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.FAMINE,
+    BossID.DUKE_OF_FLIES,
+    BossID.HEADLESS_HORSEMAN,
+    BossID.FALLEN,
+    BossID.BLIGHTED_OVUM,
+    BossID.WIDOW,
+    BossID.PIN,
+    BossID.HAUNT,
+    BossID.LITTLE_HORN,
+    BossID.RAG_MAN,
+    BossID.BABY_PLUM
+})
+--- Contains just the bosses in Burning Basement (not e.g. Cellar).
+local BURNING_BASEMENT_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.MONSTRO,
+    BossID.LARRY_JR,
+    BossID.FAMINE,
+    BossID.DUKE_OF_FLIES,
+    BossID.GEMINI,
+    BossID.STEVEN,
+    BossID.HEADLESS_HORSEMAN,
+    BossID.FALLEN,
+    BossID.DINGLE,
+    BossID.GURGLING,
+    BossID.LITTLE_HORN,
+    BossID.RAG_MAN,
+    BossID.DANGLE,
+    BossID.TURDLING,
+    BossID.BABY_PLUM
+})
+--- Contains just the bosses in Downpour (not e.g. Burning Basement).
+local DOWNPOUR_BOSSES_SET = __TS__New(ReadonlySet, {BossID.LIL_BLUB, BossID.WORMWOOD, BossID.RAINMAKER, BossID.MIN_MIN})
+--- Contains just the bosses in Dross (not e.g. Burning Basement).
+local DROSS_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.LIL_BLUB,
+    BossID.WORMWOOD,
+    BossID.CLOG,
+    BossID.COLOSTOMIA,
+    BossID.TURDLET
+})
+--- The set of unique bosses for Basement, Cellar, and so on.
+local ALL_BASEMENT_BOSSES_SET = combineSets(
+    nil,
+    BASEMENT_BOSSES_SET,
+    CELLAR_BOSSES_SET,
+    BURNING_BASEMENT_BOSSES_SET,
+    DOWNPOUR_BOSSES_SET,
+    DROSS_BOSSES_SET
+)
+local BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
+    {StageType.ORIGINAL, BASEMENT_BOSSES_SET},
+    {StageType.WRATH_OF_THE_LAMB, CELLAR_BOSSES_SET},
+    {StageType.AFTERBIRTH, BURNING_BASEMENT_BOSSES_SET},
+    {StageType.REPENTANCE, DOWNPOUR_BOSSES_SET},
+    {StageType.REPENTANCE_B, DROSS_BOSSES_SET}
+})
+--- Contains just the bosses in Caves (not e.g. Flooded Caves).
+local CAVES_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.CHUB,
+    BossID.GURDY,
+    BossID.PESTILENCE,
+    BossID.PEEP,
+    BossID.FISTULA,
+    BossID.CHAD,
+    BossID.HEADLESS_HORSEMAN,
+    BossID.GURDY_JR,
+    BossID.MEGA_FATTY,
+    BossID.MEGA_MAW,
+    BossID.FALLEN,
+    BossID.STAIN,
+    BossID.RAG_MEGA,
+    BossID.BIG_HORN,
+    BossID.BUMBINO
+})
+--- Contains just the bosses in Catacombs (not e.g. Flooded Caves).
+local CATACOMBS_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.PESTILENCE,
+    BossID.PEEP,
+    BossID.HEADLESS_HORSEMAN,
+    BossID.FALLEN,
+    BossID.HOLLOW,
+    BossID.CARRION_QUEEN,
+    BossID.GURDY_JR,
+    BossID.HUSK,
+    BossID.WRETCHED,
+    BossID.DARK_ONE,
+    BossID.POLYCEPHALUS,
+    BossID.FORSAKEN,
+    BossID.FRAIL,
+    BossID.RAG_MEGA,
+    BossID.BIG_HORN,
+    BossID.BUMBINO
+})
+--- Contains just the bosses in Flooded Caves (not e.g. Catacombs).
+local FLOODED_CAVES_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.CHUB,
+    BossID.GURDY,
+    BossID.PESTILENCE,
+    BossID.PEEP,
+    BossID.FISTULA,
+    BossID.CHAD,
+    BossID.HEADLESS_HORSEMAN,
+    BossID.FALLEN,
+    BossID.GURDY_JR,
+    BossID.MEGA_MAW,
+    BossID.MEGA_FATTY,
+    BossID.STAIN,
+    BossID.FORSAKEN,
+    BossID.FRAIL,
+    BossID.RAG_MEGA,
+    BossID.BIG_HORN,
+    BossID.BUMBINO
+})
+--- Contains just the bosses in Mines (not e.g. Flooded Caves).
+local MINES_BOSSES_SET = __TS__New(ReadonlySet, {BossID.REAP_CREEP, BossID.TUFF_TWINS, BossID.HORNFEL, BossID.GREAT_GIDEON})
+--- Contains just the bosses in Ashpit (not e.g. Flooded Caves).
+local ASHPIT_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.PILE,
+    BossID.GREAT_GIDEON,
+    BossID.SINGE,
+    BossID.SHELL,
+    BossID.CLUTCH
+})
+--- The set of unique bosses for Caves, Catacombs, and so on.
+local ALL_CAVES_BOSSES_SET = combineSets(
+    nil,
+    CAVES_BOSSES_SET,
+    CATACOMBS_BOSSES_SET,
+    FLOODED_CAVES_BOSSES_SET,
+    MINES_BOSSES_SET,
+    ASHPIT_BOSSES_SET
+)
+local CAVES_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
+    {StageType.ORIGINAL, CAVES_BOSSES_SET},
+    {StageType.WRATH_OF_THE_LAMB, CATACOMBS_BOSSES_SET},
+    {StageType.AFTERBIRTH, FLOODED_CAVES_BOSSES_SET},
+    {StageType.REPENTANCE, MINES_BOSSES_SET},
+    {StageType.REPENTANCE_B, ASHPIT_BOSSES_SET}
+})
+--- Contains just the bosses in Depths (not e.g. Dank Depths).
+-- 
+-- Note that this set includes Mom, even though they are not technically in the boss pool.
+local DEPTHS_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.MONSTRO_2,
+    BossID.MOM,
+    BossID.WAR,
+    BossID.LOKI,
+    BossID.GISH,
+    BossID.HEADLESS_HORSEMAN,
+    BossID.FALLEN,
+    BossID.GATE,
+    BossID.CAGE,
+    BossID.BROWNIE,
+    BossID.SISTERS_VIS,
+    BossID.REAP_CREEP
+})
+--- Contains just the bosses in Necropolis (not e.g. Dank Depths).
+-- 
+-- Note that this set includes Mom, even though they are not technically in the boss pool.
+local NECROPOLIS_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.MOM,
+    BossID.WAR,
+    BossID.LOKI,
+    BossID.HEADLESS_HORSEMAN,
+    BossID.FALLEN,
+    BossID.BLOAT,
+    BossID.MASK_OF_INFAMY,
+    BossID.ADVERSARY,
+    BossID.BROWNIE,
+    BossID.SISTERS_VIS,
+    BossID.PILE
+})
+--- Contains just the bosses in Dank Depths (not e.g. Necropolis).
+-- 
+-- Note that this set includes Mom, even though they are not technically in the boss pool.
+local DANK_DEPTHS_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.MONSTRO_2,
+    BossID.MOM,
+    BossID.WAR,
+    BossID.LOKI,
+    BossID.GISH,
+    BossID.HEADLESS_HORSEMAN,
+    BossID.FALLEN,
+    BossID.GATE,
+    BossID.CAGE,
+    BossID.BROWNIE,
+    BossID.SISTERS_VIS,
+    BossID.REAP_CREEP
+})
+--- Contains just the bosses in Mausoleum (not e.g. Dank Depths).
+-- 
+-- Note that this set includes Mausoleum Mom, even though they are not technically in the boss pool.
+local MAUSOLEUM_BOSSES_SET = __TS__New(ReadonlySet, {BossID.SIREN, BossID.HERETIC, BossID.MAUSOLEUM_MOM})
+--- Contains just the bosses in Gehenna (not e.g. Dank Depths).
+-- 
+-- Note that this set includes Mausoleum Mom, even though they are not technically in the boss pool.
+local GEHENNA_BOSSES_SET = __TS__New(ReadonlySet, {BossID.VISAGE, BossID.MAUSOLEUM_MOM, BossID.HORNY_BOYS})
+--- The set of unique bosses for Depths, Necropolis, and so on.
+local ALL_DEPTHS_BOSSES_SET = combineSets(
+    nil,
+    DEPTHS_BOSSES_SET,
+    NECROPOLIS_BOSSES_SET,
+    DANK_DEPTHS_BOSSES_SET,
+    MAUSOLEUM_BOSSES_SET,
+    GEHENNA_BOSSES_SET
+)
+local DEPTHS_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
+    {StageType.ORIGINAL, DEPTHS_BOSSES_SET},
+    {StageType.WRATH_OF_THE_LAMB, NECROPOLIS_BOSSES_SET},
+    {StageType.AFTERBIRTH, DANK_DEPTHS_BOSSES_SET},
+    {StageType.REPENTANCE, MAUSOLEUM_BOSSES_SET},
+    {StageType.REPENTANCE_B, GEHENNA_BOSSES_SET}
+})
+--- Contains just the bosses in Womb (not e.g. Scarred Womb).
+-- 
+-- Note that this set includes Mom's Heart & It Lives, even though they are not technically in the
+-- boss pool.
+local WOMB_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.SCOLEX,
+    BossID.MOMS_HEART,
+    BossID.DEATH,
+    BossID.BLASTOCYST,
+    BossID.HEADLESS_HORSEMAN,
+    BossID.FALLEN,
+    BossID.IT_LIVES,
+    BossID.LOKII,
+    BossID.CONQUEST,
+    BossID.MAMA_GURDY,
+    BossID.MR_FRED,
+    BossID.MATRIARCH
+})
+--- Contains just the bosses in Utero (not e.g. Scarred Womb).
+-- 
+-- Note that this set includes Mom's Heart & It Lives, even though they are not technically in the
+-- boss pool.
+local UTERO_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.MOMS_HEART,
+    BossID.DEATH,
+    BossID.HEADLESS_HORSEMAN,
+    BossID.FALLEN,
+    BossID.IT_LIVES,
+    BossID.BLOAT,
+    BossID.LOKII,
+    BossID.TERATOMA,
+    BossID.CONQUEST,
+    BossID.DADDY_LONG_LEGS,
+    BossID.TRIACHNID
+})
+--- Contains just the bosses in Scarred Womb (not e.g. Utero).
+-- 
+-- Note that this set includes Mom's Heart & It Lives, even though they are not technically in the
+-- boss pool.
+local SCARRED_WOMB_BOSSES_SET = __TS__New(ReadonlySet, {
+    BossID.SCOLEX,
+    BossID.MOMS_HEART,
+    BossID.DEATH,
+    BossID.BLASTOCYST,
+    BossID.HEADLESS_HORSEMAN,
+    BossID.FALLEN,
+    BossID.IT_LIVES,
+    BossID.LOKII,
+    BossID.CONQUEST,
+    BossID.TRIACHNID,
+    BossID.MAMA_GURDY,
+    BossID.MR_FRED,
+    BossID.MATRIARCH
+})
+--- Contains just the bosses in Corpse (not e.g. Scarred Womb).
+-- 
+-- Note that this set includes Mother, even though they are not technically in the boss pool.
+local CORPSE_BOSSES_SET = __TS__New(ReadonlySet, {BossID.SCOURGE, BossID.CHIMERA, BossID.ROTGUT, BossID.MOTHER})
+--- The set of unique bosses for Womb, Utero, and so on.
+local ALL_WOMB_BOSSES_SET = combineSets(
+    nil,
+    WOMB_BOSSES_SET,
+    UTERO_BOSSES_SET,
+    SCARRED_WOMB_BOSSES_SET,
+    CORPSE_BOSSES_SET
+)
+local WOMB_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, WOMB_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, UTERO_BOSSES_SET}, {StageType.AFTERBIRTH, SCARRED_WOMB_BOSSES_SET}, {StageType.REPENTANCE, CORPSE_BOSSES_SET}})
+local BLUE_WOMB_BOSSES_SET = __TS__New(ReadonlySet, {BossID.HUSH})
+local BLUE_WOMB_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, BLUE_WOMB_BOSSES_SET}})
+local SHEOL_BOSSES_SET = __TS__New(ReadonlySet, {BossID.SATAN})
+local CATHEDRAL_BOSSES_SET = __TS__New(ReadonlySet, {BossID.ISAAC})
+local ALL_STAGE_10_BOSSES_SET = combineSets(nil, SHEOL_BOSSES_SET, CATHEDRAL_BOSSES_SET)
+local STAGE_10_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, SHEOL_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, CATHEDRAL_BOSSES_SET}})
+--- Note that this set includes Mega Satan, even though they are not technically in the boss pool.
+local DARK_ROOM_BOSSES_SET = __TS__New(ReadonlySet, {BossID.LAMB, BossID.MEGA_SATAN})
+--- Note that this set includes Mega Satan, even though they are not technically in the boss pool.
+local CHEST_BOSSES_SET = __TS__New(ReadonlySet, {BossID.BLUE_BABY, BossID.MEGA_SATAN})
+local ALL_STAGE_11_BOSSES_SET = combineSets(nil, DARK_ROOM_BOSSES_SET, CHEST_BOSSES_SET)
+local STAGE_11_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, DARK_ROOM_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, CHEST_BOSSES_SET}})
+local VOID_BOSSES_SET = __TS__New(ReadonlySet, {BossID.DELIRIUM})
+local VOID_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, VOID_BOSSES_SET}})
+--- Note that this does not include Ultra Famine, Ultra Pestilence, Ultra War, and Ultra Death.
+local HOME_BOSSES_SET = __TS__New(ReadonlySet, {BossID.DOGMA, BossID.BEAST})
+local HOME_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, HOME_BOSSES_SET}})
+____exports.STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
+    {LevelStage.BASEMENT_1, BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP},
+    {LevelStage.BASEMENT_2, BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP},
+    {LevelStage.CAVES_1, CAVES_STAGE_TYPE_TO_BOSS_SET_MAP},
+    {LevelStage.CAVES_2, CAVES_STAGE_TYPE_TO_BOSS_SET_MAP},
+    {LevelStage.DEPTHS_1, DEPTHS_STAGE_TYPE_TO_BOSS_SET_MAP},
+    {LevelStage.DEPTHS_2, DEPTHS_STAGE_TYPE_TO_BOSS_SET_MAP},
+    {LevelStage.WOMB_1, WOMB_STAGE_TYPE_TO_BOSS_SET_MAP},
+    {LevelStage.WOMB_2, WOMB_STAGE_TYPE_TO_BOSS_SET_MAP},
+    {LevelStage.BLUE_WOMB, BLUE_WOMB_STAGE_TYPE_TO_BOSS_SET_MAP},
+    {LevelStage.SHEOL_CATHEDRAL, STAGE_10_STAGE_TYPE_TO_BOSS_SET_MAP},
+    {LevelStage.DARK_ROOM_CHEST, STAGE_11_STAGE_TYPE_TO_BOSS_SET_MAP},
+    {LevelStage.VOID, VOID_STAGE_TYPE_TO_BOSS_SET_MAP},
+    {LevelStage.HOME, HOME_STAGE_TYPE_TO_BOSS_SET_MAP}
+})
+____exports.STAGE_TO_COMBINED_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
+    {LevelStage.BASEMENT_1, ALL_BASEMENT_BOSSES_SET},
+    {LevelStage.BASEMENT_2, ALL_BASEMENT_BOSSES_SET},
+    {LevelStage.CAVES_1, ALL_CAVES_BOSSES_SET},
+    {LevelStage.CAVES_2, ALL_CAVES_BOSSES_SET},
+    {LevelStage.DEPTHS_1, ALL_DEPTHS_BOSSES_SET},
+    {LevelStage.DEPTHS_2, ALL_DEPTHS_BOSSES_SET},
+    {LevelStage.WOMB_1, ALL_WOMB_BOSSES_SET},
+    {LevelStage.WOMB_2, ALL_WOMB_BOSSES_SET},
+    {LevelStage.BLUE_WOMB, BLUE_WOMB_BOSSES_SET},
+    {LevelStage.SHEOL_CATHEDRAL, ALL_STAGE_10_BOSSES_SET},
+    {LevelStage.DARK_ROOM_CHEST, ALL_STAGE_11_BOSSES_SET},
+    {LevelStage.VOID, VOID_BOSSES_SET},
+    {LevelStage.HOME, HOME_BOSSES_SET}
+})
+____exports.ALL_BOSSES_SET = __TS__New(
+    ReadonlySet,
+    __TS__ArrayFilter(
+        BOSS_IDS,
+        function(____, bossID) return bossID ~= BossID.RAGLICH end
+    )
+)
+____exports.STORY_BOSS_IDS_SET = __TS__New(ReadonlySet, {
+    BossID.MOM,
+    BossID.MOMS_HEART,
+    BossID.SATAN,
+    BossID.IT_LIVES,
+    BossID.ISAAC,
+    BossID.BLUE_BABY,
+    BossID.LAMB,
+    BossID.MEGA_SATAN,
+    BossID.ULTRA_GREED,
+    BossID.HUSH,
+    BossID.DELIRIUM,
+    BossID.ULTRA_GREEDIER,
+    BossID.MOTHER,
+    BossID.MAUSOLEUM_MOM,
+    BossID.MAUSOLEUM_MOMS_HEART,
+    BossID.DOGMA,
+    BossID.BEAST
+})
+____exports.STORY_BOSS_ENTITY_TYPES_SET = __TS__New(ReadonlySet, {
+    EntityType.MOM,
+    EntityType.MOMS_HEART,
+    EntityType.SATAN,
+    EntityType.ISAAC,
+    EntityType.LAMB,
+    EntityType.MEGA_SATAN,
+    EntityType.MEGA_SATAN_2,
+    EntityType.ULTRA_GREED,
+    EntityType.HUSH,
+    EntityType.DELIRIUM,
+    EntityType.MOTHER,
+    EntityType.DOGMA,
+    EntityType.BEAST
+})
+____exports.ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET = __TS__New(
+    ReadonlySet,
+    __TS__ArrayFilter(
+        {__TS__Spread(____exports.ALL_BOSSES_SET)},
+        function(____, bossID) return not ____exports.STORY_BOSS_IDS_SET:has(bossID) end
+    )
+)
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.objects.bossNames"] = function(...) 
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
+____exports.DEFAULT_BOSS_NAME = "Unknown"
+--- From "bossportraits.xml".
+-- 
+-- Note that Blue Baby returns "Blue Baby" instead of "???".
+____exports.BOSS_NAMES = {
+    [BossID.MONSTRO] = "Monstro",
+    [BossID.LARRY_JR] = "Larry Jr.",
+    [BossID.CHUB] = "Chub",
+    [BossID.GURDY] = "Gurdy",
+    [BossID.MONSTRO_2] = "Monstro II",
+    [BossID.MOM] = "Mom",
+    [BossID.SCOLEX] = "Scolex",
+    [BossID.MOMS_HEART] = "Mom's Heart",
+    [BossID.FAMINE] = "Famine",
+    [BossID.PESTILENCE] = "Pestilence",
+    [BossID.WAR] = "War",
+    [BossID.DEATH] = "Death",
+    [BossID.DUKE_OF_FLIES] = "Duke of Flies",
+    [BossID.PEEP] = "Peep",
+    [BossID.LOKI] = "Loki",
+    [BossID.BLASTOCYST] = "Blastocyst",
+    [BossID.GEMINI] = "Gemini",
+    [BossID.FISTULA] = "Fistula",
+    [BossID.GISH] = "Gish",
+    [BossID.STEVEN] = "Steven",
+    [BossID.CHAD] = "C.H.A.D.",
+    [BossID.HEADLESS_HORSEMAN] = "Headless Horseman",
+    [BossID.FALLEN] = "The Fallen",
+    [BossID.SATAN] = "Satan",
+    [BossID.IT_LIVES] = "It Lives!",
+    [BossID.HOLLOW] = "The Hollow",
+    [BossID.CARRION_QUEEN] = "The Carrion Queen",
+    [BossID.GURDY_JR] = "Gurdy Jr.",
+    [BossID.HUSK] = "The Husk",
+    [BossID.BLOAT] = "The Bloat",
+    [BossID.LOKII] = "Lokii",
+    [BossID.BLIGHTED_OVUM] = "The Blighted Ovum",
+    [BossID.TERATOMA] = "Teratoma",
+    [BossID.WIDOW] = "The Widow",
+    [BossID.MASK_OF_INFAMY] = "Mask of Infamy",
+    [BossID.WRETCHED] = "The Wretched",
+    [BossID.PIN] = "Pin",
+    [BossID.CONQUEST] = "Conquest",
+    [BossID.ISAAC] = "Isaac",
+    [BossID.BLUE_BABY] = "Blue Baby",
+    [BossID.DADDY_LONG_LEGS] = "Daddy Long Legs",
+    [BossID.TRIACHNID] = "Triachnid",
+    [BossID.HAUNT] = "The Haunt",
+    [BossID.DINGLE] = "Dingle",
+    [BossID.MEGA_MAW] = "Mega Maw",
+    [BossID.GATE] = "The Gate",
+    [BossID.MEGA_FATTY] = "Mega Fatty",
+    [BossID.CAGE] = "The Cage",
+    [BossID.MAMA_GURDY] = "Mega Gurdy",
+    [BossID.DARK_ONE] = "Dark One",
+    [BossID.ADVERSARY] = "The Adversary",
+    [BossID.POLYCEPHALUS] = "Polycephalus",
+    [BossID.MR_FRED] = "Mr. Fred",
+    [BossID.LAMB] = "The Lamb",
+    [BossID.MEGA_SATAN] = "Mega Satan",
+    [BossID.GURGLING] = "Gurglings",
+    [BossID.STAIN] = "The Stain",
+    [BossID.BROWNIE] = "Brownie",
+    [BossID.FORSAKEN] = "The Forsaken",
+    [BossID.LITTLE_HORN] = "Little Horn",
+    [BossID.RAG_MAN] = "Rag Man",
+    [BossID.ULTRA_GREED] = "Ultra Greed",
+    [BossID.HUSH] = "Hush",
+    [BossID.DANGLE] = "Dangle",
+    [BossID.TURDLING] = "Turdling",
+    [BossID.FRAIL] = "The Frail",
+    [BossID.RAG_MEGA] = "Rag Mega",
+    [BossID.SISTERS_VIS] = "Sisters Vis",
+    [BossID.BIG_HORN] = "Big Horn",
+    [BossID.DELIRIUM] = "Delirium",
+    [BossID.ULTRA_GREEDIER] = "Ultra Greedier",
+    [BossID.MATRIARCH] = "The Matriarch",
+    [BossID.PILE] = "The Pile",
+    [BossID.REAP_CREEP] = "Reap Creep",
+    [BossID.LIL_BLUB] = "Lil Blub",
+    [BossID.WORMWOOD] = "Wormwood",
+    [BossID.RAINMAKER] = "The Rainmaker",
+    [BossID.VISAGE] = "The Visage",
+    [BossID.SIREN] = "The Siren",
+    [BossID.TUFF_TWINS] = "Tuff Twins",
+    [BossID.HERETIC] = "The Heretic",
+    [BossID.HORNFEL] = "Hornfel",
+    [BossID.GREAT_GIDEON] = "Great Gideon",
+    [BossID.BABY_PLUM] = "Baby Plum",
+    [BossID.SCOURGE] = "The Scourge",
+    [BossID.CHIMERA] = "Chimera",
+    [BossID.ROTGUT] = "Rotgut",
+    [BossID.MOTHER] = "Mother",
+    [BossID.MAUSOLEUM_MOM] = "Mom (Mausoleum)",
+    [BossID.MAUSOLEUM_MOMS_HEART] = "Mom's Heart (Mausoleum)",
+    [BossID.MIN_MIN] = "Min-Min",
+    [BossID.CLOG] = "Clog",
+    [BossID.SINGE] = "Singe",
+    [BossID.BUMBINO] = "Bumbino",
+    [BossID.COLOSTOMIA] = "Colostomia",
+    [BossID.SHELL] = "The Shell",
+    [BossID.TURDLET] = "Turdlet",
+    [BossID.RAGLICH] = "Raglich",
+    [BossID.DOGMA] = "Dogma",
+    [BossID.BEAST] = "The Beast",
+    [BossID.HORNY_BOYS] = "Horny Boys",
+    [BossID.CLUTCH] = "Clutch"
+}
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.objects.bossIDToEntityTypeVariant"] = function(...) 
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local BeastVariant = ____isaac_2Dtypescript_2Ddefinitions.BeastVariant
+local BigHornVariant = ____isaac_2Dtypescript_2Ddefinitions.BigHornVariant
+local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
+local ChubVariant = ____isaac_2Dtypescript_2Ddefinitions.ChubVariant
+local DaddyLongLegsVariant = ____isaac_2Dtypescript_2Ddefinitions.DaddyLongLegsVariant
+local DingleVariant = ____isaac_2Dtypescript_2Ddefinitions.DingleVariant
+local DogmaVariant = ____isaac_2Dtypescript_2Ddefinitions.DogmaVariant
+local DukeOfFliesVariant = ____isaac_2Dtypescript_2Ddefinitions.DukeOfFliesVariant
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local FallenVariant = ____isaac_2Dtypescript_2Ddefinitions.FallenVariant
+local FistulaVariant = ____isaac_2Dtypescript_2Ddefinitions.FistulaVariant
+local GeminiVariant = ____isaac_2Dtypescript_2Ddefinitions.GeminiVariant
+local GurglingVariant = ____isaac_2Dtypescript_2Ddefinitions.GurglingVariant
+local HauntVariant = ____isaac_2Dtypescript_2Ddefinitions.HauntVariant
+local IsaacVariant = ____isaac_2Dtypescript_2Ddefinitions.IsaacVariant
+local LambVariant = ____isaac_2Dtypescript_2Ddefinitions.LambVariant
+local LarryJrVariant = ____isaac_2Dtypescript_2Ddefinitions.LarryJrVariant
+local LittleHornVariant = ____isaac_2Dtypescript_2Ddefinitions.LittleHornVariant
+local LokiVariant = ____isaac_2Dtypescript_2Ddefinitions.LokiVariant
+local MamaGurdyVariant = ____isaac_2Dtypescript_2Ddefinitions.MamaGurdyVariant
+local MegaSatanVariant = ____isaac_2Dtypescript_2Ddefinitions.MegaSatanVariant
+local MomVariant = ____isaac_2Dtypescript_2Ddefinitions.MomVariant
+local MomsHeartVariant = ____isaac_2Dtypescript_2Ddefinitions.MomsHeartVariant
+local Monstro2Variant = ____isaac_2Dtypescript_2Ddefinitions.Monstro2Variant
+local MotherVariant = ____isaac_2Dtypescript_2Ddefinitions.MotherVariant
+local PeepVariant = ____isaac_2Dtypescript_2Ddefinitions.PeepVariant
+local PinVariant = ____isaac_2Dtypescript_2Ddefinitions.PinVariant
+local PolycephalusVariant = ____isaac_2Dtypescript_2Ddefinitions.PolycephalusVariant
+local RagManVariant = ____isaac_2Dtypescript_2Ddefinitions.RagManVariant
+local RagMegaVariant = ____isaac_2Dtypescript_2Ddefinitions.RagMegaVariant
+local RaglichVariant = ____isaac_2Dtypescript_2Ddefinitions.RaglichVariant
+local SatanVariant = ____isaac_2Dtypescript_2Ddefinitions.SatanVariant
+local UltraGreedVariant = ____isaac_2Dtypescript_2Ddefinitions.UltraGreedVariant
+local WarVariant = ____isaac_2Dtypescript_2Ddefinitions.WarVariant
+local WidowVariant = ____isaac_2Dtypescript_2Ddefinitions.WidowVariant
+____exports.BOSS_ID_TO_ENTITY_TYPE_VARIANT = {
+    [BossID.MONSTRO] = {EntityType.MONSTRO, 0},
+    [BossID.LARRY_JR] = {EntityType.LARRY_JR, LarryJrVariant.LARRY_JR},
+    [BossID.CHUB] = {EntityType.CHUB, ChubVariant.CHUB},
+    [BossID.GURDY] = {EntityType.GURDY, 0},
+    [BossID.MONSTRO_2] = {EntityType.MONSTRO_2, Monstro2Variant.MONSTRO_2},
+    [BossID.MOM] = {EntityType.MOM, MomVariant.MOM},
+    [BossID.SCOLEX] = {EntityType.PIN, PinVariant.SCOLEX},
+    [BossID.MOMS_HEART] = {EntityType.MOMS_HEART, MomsHeartVariant.MOMS_HEART},
+    [BossID.FAMINE] = {EntityType.FAMINE, 0},
+    [BossID.PESTILENCE] = {EntityType.PESTILENCE, 0},
+    [BossID.WAR] = {EntityType.WAR, WarVariant.WAR},
+    [BossID.DEATH] = {EntityType.DEATH, 0},
+    [BossID.DUKE_OF_FLIES] = {EntityType.DUKE_OF_FLIES, DukeOfFliesVariant.DUKE_OF_FLIES},
+    [BossID.PEEP] = {EntityType.PEEP, PeepVariant.PEEP},
+    [BossID.LOKI] = {EntityType.LOKI, LokiVariant.LOKI},
+    [BossID.BLASTOCYST] = {EntityType.BLASTOCYST_BIG, 0},
+    [BossID.GEMINI] = {EntityType.GEMINI, GeminiVariant.GEMINI},
+    [BossID.FISTULA] = {EntityType.FISTULA_BIG, FistulaVariant.FISTULA},
+    [BossID.GISH] = {EntityType.MONSTRO_2, Monstro2Variant.GISH},
+    [BossID.STEVEN] = {EntityType.GEMINI, GeminiVariant.STEVEN},
+    [BossID.CHAD] = {EntityType.CHUB, ChubVariant.CHAD},
+    [BossID.HEADLESS_HORSEMAN] = {EntityType.HEADLESS_HORSEMAN, 0},
+    [BossID.FALLEN] = {EntityType.FALLEN, FallenVariant.FALLEN},
+    [BossID.SATAN] = {EntityType.SATAN, SatanVariant.SATAN},
+    [BossID.IT_LIVES] = {EntityType.MOMS_HEART, MomsHeartVariant.IT_LIVES},
+    [BossID.HOLLOW] = {EntityType.LARRY_JR, LarryJrVariant.HOLLOW},
+    [BossID.CARRION_QUEEN] = {EntityType.CHUB, ChubVariant.CARRION_QUEEN},
+    [BossID.GURDY_JR] = {EntityType.GURDY_JR, 0},
+    [BossID.HUSK] = {EntityType.DUKE_OF_FLIES, DukeOfFliesVariant.HUSK},
+    [BossID.BLOAT] = {EntityType.PEEP, PeepVariant.BLOAT},
+    [BossID.LOKII] = {EntityType.LOKI, LokiVariant.LOKII},
+    [BossID.BLIGHTED_OVUM] = {EntityType.GEMINI, GeminiVariant.BLIGHTED_OVUM},
+    [BossID.TERATOMA] = {EntityType.FISTULA_BIG, FistulaVariant.TERATOMA},
+    [BossID.WIDOW] = {EntityType.WIDOW, WidowVariant.WIDOW},
+    [BossID.MASK_OF_INFAMY] = {EntityType.MASK_OF_INFAMY, 0},
+    [BossID.WRETCHED] = {EntityType.WIDOW, WidowVariant.WRETCHED},
+    [BossID.PIN] = {EntityType.PIN, PinVariant.PIN},
+    [BossID.CONQUEST] = {EntityType.WAR, WarVariant.CONQUEST},
+    [BossID.ISAAC] = {EntityType.ISAAC, IsaacVariant.ISAAC},
+    [BossID.BLUE_BABY] = {EntityType.ISAAC, IsaacVariant.BLUE_BABY},
+    [BossID.DADDY_LONG_LEGS] = {EntityType.DADDY_LONG_LEGS, DaddyLongLegsVariant.DADDY_LONG_LEGS},
+    [BossID.TRIACHNID] = {EntityType.DADDY_LONG_LEGS, DaddyLongLegsVariant.TRIACHNID},
+    [BossID.HAUNT] = {EntityType.HAUNT, HauntVariant.HAUNT},
+    [BossID.DINGLE] = {EntityType.DINGLE, DingleVariant.DINGLE},
+    [BossID.MEGA_MAW] = {EntityType.MEGA_MAW, 0},
+    [BossID.GATE] = {EntityType.GATE, 0},
+    [BossID.MEGA_FATTY] = {EntityType.MEGA_FATTY, 0},
+    [BossID.CAGE] = {EntityType.CAGE, 0},
+    [BossID.MAMA_GURDY] = {EntityType.MAMA_GURDY, MamaGurdyVariant.MAMA_GURDY},
+    [BossID.DARK_ONE] = {EntityType.DARK_ONE, 0},
+    [BossID.ADVERSARY] = {EntityType.ADVERSARY, 0},
+    [BossID.POLYCEPHALUS] = {EntityType.POLYCEPHALUS, PolycephalusVariant.POLYCEPHALUS},
+    [BossID.MR_FRED] = {EntityType.MR_FRED, 0},
+    [BossID.LAMB] = {EntityType.LAMB, LambVariant.LAMB},
+    [BossID.MEGA_SATAN] = {EntityType.MEGA_SATAN, MegaSatanVariant.MEGA_SATAN},
+    [BossID.GURGLING] = {EntityType.GURGLING, GurglingVariant.GURGLING_BOSS},
+    [BossID.STAIN] = {EntityType.STAIN, 0},
+    [BossID.BROWNIE] = {EntityType.BROWNIE, 0},
+    [BossID.FORSAKEN] = {EntityType.FORSAKEN, 0},
+    [BossID.LITTLE_HORN] = {EntityType.LITTLE_HORN, LittleHornVariant.LITTLE_HORN},
+    [BossID.RAG_MAN] = {EntityType.RAG_MAN, RagManVariant.RAG_MAN},
+    [BossID.ULTRA_GREED] = {EntityType.ULTRA_GREED, UltraGreedVariant.ULTRA_GREED},
+    [BossID.HUSH] = {EntityType.HUSH, 0},
+    [BossID.DANGLE] = {EntityType.DINGLE, DingleVariant.DANGLE},
+    [BossID.TURDLING] = {EntityType.GURGLING, GurglingVariant.TURDLING},
+    [BossID.FRAIL] = {EntityType.PIN, PinVariant.FRAIL},
+    [BossID.RAG_MEGA] = {EntityType.RAG_MEGA, RagMegaVariant.RAG_MEGA},
+    [BossID.SISTERS_VIS] = {EntityType.SISTERS_VIS, 0},
+    [BossID.BIG_HORN] = {EntityType.BIG_HORN, BigHornVariant.BIG_HORN},
+    [BossID.DELIRIUM] = {EntityType.DELIRIUM, 0},
+    [BossID.ULTRA_GREEDIER] = {EntityType.ULTRA_GREED, UltraGreedVariant.ULTRA_GREEDIER},
+    [BossID.MATRIARCH] = {EntityType.MATRIARCH, 0},
+    [BossID.PILE] = {EntityType.POLYCEPHALUS, PolycephalusVariant.PILE},
+    [BossID.REAP_CREEP] = {EntityType.REAP_CREEP, 0},
+    [BossID.LIL_BLUB] = {EntityType.LIL_BLUB, 0},
+    [BossID.WORMWOOD] = {EntityType.PIN, PinVariant.WORMWOOD},
+    [BossID.RAINMAKER] = {EntityType.RAINMAKER, 0},
+    [BossID.VISAGE] = {EntityType.VISAGE, 0},
+    [BossID.SIREN] = {EntityType.SIREN, 0},
+    [BossID.TUFF_TWINS] = {EntityType.LARRY_JR, LarryJrVariant.TUFF_TWIN},
+    [BossID.HERETIC] = {EntityType.HERETIC, 0},
+    [BossID.HORNFEL] = {EntityType.HORNFEL, 0},
+    [BossID.GREAT_GIDEON] = {EntityType.GREAT_GIDEON, 0},
+    [BossID.BABY_PLUM] = {EntityType.BABY_PLUM, 0},
+    [BossID.SCOURGE] = {EntityType.SCOURGE, 0},
+    [BossID.CHIMERA] = {EntityType.CHIMERA, 0},
+    [BossID.ROTGUT] = {EntityType.ROTGUT, 0},
+    [BossID.MOTHER] = {EntityType.MOTHER, MotherVariant.MOTHER_1},
+    [BossID.MAUSOLEUM_MOM] = {EntityType.MOM, MomVariant.MOM},
+    [BossID.MAUSOLEUM_MOMS_HEART] = {EntityType.MOMS_HEART, MomsHeartVariant.MOMS_HEART},
+    [BossID.MIN_MIN] = {EntityType.MIN_MIN, 0},
+    [BossID.CLOG] = {EntityType.CLOG, 0},
+    [BossID.SINGE] = {EntityType.SINGE, 0},
+    [BossID.BUMBINO] = {EntityType.BUMBINO, 0},
+    [BossID.COLOSTOMIA] = {EntityType.COLOSTOMIA, 0},
+    [BossID.SHELL] = {EntityType.LARRY_JR, LarryJrVariant.SHELL},
+    [BossID.TURDLET] = {EntityType.TURDLET, 0},
+    [BossID.RAGLICH] = {EntityType.RAGLICH, RaglichVariant.RAGLICH},
+    [BossID.DOGMA] = {EntityType.DOGMA, DogmaVariant.DOGMA_PHASE_1},
+    [BossID.BEAST] = {EntityType.BEAST, BeastVariant.BEAST},
+    [BossID.HORNY_BOYS] = {EntityType.HORNY_BOYS, 0},
+    [BossID.CLUTCH] = {EntityType.CLUTCH, 0}
+}
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.src.maps.entityTypeVariantToBossIDMap"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ObjectEntries = ____lualib.__TS__ObjectEntries
+local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____bossIDToEntityTypeVariant = require("lua_modules.isaacscript-common.dist.src.objects.bossIDToEntityTypeVariant")
+local BOSS_ID_TO_ENTITY_TYPE_VARIANT = ____bossIDToEntityTypeVariant.BOSS_ID_TO_ENTITY_TYPE_VARIANT
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
+____exports.ENTITY_TYPE_VARIANT_TO_BOSS_ID_MAP = __TS__New(
+    ReadonlyMap,
+    __TS__ArrayMap(
+        {table.unpack(__TS__ObjectEntries(BOSS_ID_TO_ENTITY_TYPE_VARIANT))},
+        function(____, ____bindingPattern0)
+            local entityTypeVariant
+            local bossIDRaw
+            bossIDRaw = ____bindingPattern0[1]
+            entityTypeVariant = ____bindingPattern0[2]
+            local bossID = bossIDRaw
+            local entityType, variant = table.unpack(entityTypeVariant)
+            local entityTypeVariantString = (tostring(entityType) .. ".") .. tostring(variant)
+            return {entityTypeVariantString, bossID}
+        end
+    )
+)
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.logEntities"] = function(...) 
@@ -41022,7 +42248,6 @@ local removeFlag = ____flag.removeFlag
 local ____map = require("lua_modules.isaacscript-common.dist.src.functions.map")
 local copyMap = ____map.copyMap
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local isRNG = ____rng.isRNG
 local newRNG = ____rng.newRNG
 local ____roomData = require("lua_modules.isaacscript-common.dist.src.functions.roomData")
@@ -41284,17 +42509,18 @@ end
 -- some floors will not have any valid spots. If this is the case, this function will return
 -- undefined.
 -- 
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- If you want to get an unseeded room, you must explicitly pass `undefined` to the `seedOrRNG`
+-- parameter.
+-- 
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 -- @param ensureDeadEnd Optional. Whether to pick a valid dead end attached to a normal room. If
 -- false, the function will randomly pick from any valid location that would
 -- have a red door.
 -- @returns Either a tuple of adjacent room grid index, `DoorSlot`, and new room grid index, or
 -- undefined.
 function ____exports.getNewRoomCandidate(self, seedOrRNG, ensureDeadEnd)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if ensureDeadEnd == nil then
         ensureDeadEnd = true
     end
@@ -41382,9 +42608,12 @@ function ____exports.isDoorSlotValidAtGridIndexForRedRoom(self, doorSlot, roomGr
 end
 --- Helper function to generate a new room on the floor.
 -- 
+-- If you want to generate an unseeded room, you must explicitly pass `undefined` to the `seedOrRNG`
+-- parameter.
+-- 
 -- Under the hood, this function uses the `Level.MakeRedRoomDoor` method to create the room.
 -- 
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
 -- `RNG.Next` method will be called. Default is `Level.GetDungeonPlacementSeed`.
 -- Note that the RNG is only used to select the random location to put the room on
 -- the floor; it does not influence the randomly chosen room contents. (That is
@@ -41586,8 +42815,6 @@ local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
 local log = ____log.log
 local ____random = require("lua_modules.isaacscript-common.dist.src.functions.random")
 local getRandomFloat = ____random.getRandomFloat
-local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
 local assertDefined = ____utils.assertDefined
 function getTotalWeightOfJSONObject(self, jsonOjectArray)
@@ -41712,15 +42939,16 @@ end
 -- properly account for each room weight using the algorithm from:
 -- https://stackoverflow.com/questions/1761626/weighted-random-numbers
 -- 
+-- If you want an unseeded entity, you must explicitly pass `undefined` to the `seedOrRNG`
+-- parameter.
+-- 
 -- @param jsonEntities The array of entities to randomly choose between.
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 -- @param verbose Optional. If specified, will write entries to the "log.txt" file that describe
 -- what the function is doing. Default is false.
 function ____exports.getRandomJSONEntity(self, jsonEntities, seedOrRNG, verbose)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if verbose == nil then
         verbose = false
     end
@@ -41748,15 +42976,15 @@ end
 -- properly account for each room weight using the algorithm from:
 -- https://stackoverflow.com/questions/1761626/weighted-random-numbers
 -- 
+-- If you want an unseeded room, you must explicitly pass `undefined` to the `seedOrRNG` parameter.
+-- 
 -- @param jsonRooms The array of rooms to randomly choose between.
--- @param seedOrRNG Optional. The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
--- `RNG.Next` method will be called. Default is `getRandomSeed()`.
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
 -- @param verbose Optional. If specified, will write entries to the "log.txt" file that describe
 -- what the function is doing. Default is false.
 function ____exports.getRandomJSONRoom(self, jsonRooms, seedOrRNG, verbose)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if verbose == nil then
         verbose = false
     end
@@ -42283,9 +43511,16 @@ local GREED_MODE_ITEM_POOL_TYPES = ____arrayRemove_3(__TS__SparseArraySpread(___
 --- Helper function to get a random item pool. This is not as simple as getting a random value from
 -- the `ItemPoolType` enum, since `ItemPoolType.SHELL_GAME` (7) is not a real item pool and the
 -- Greed Mode item pools should be excluded if not playing in Greed Mode.
-function ____exports.getRandomItemPool(self)
+-- 
+-- If you want to get an unseeded item pool, you must explicitly pass `undefined` to the `seedOrRNG`
+-- parameter.
+-- 
+-- @param seedOrRNG The `Seed` or `RNG` object to use. If an `RNG` object is provided, the
+-- `RNG.Next` method will be called. If `undefined` is provided, it will default to
+-- a random seed.
+function ____exports.getRandomItemPool(self, seedOrRNG)
     local itemPoolTypes = game:IsGreedMode() and GREED_MODE_ITEM_POOL_TYPES or NORMAL_MODE_ITEM_POOL_TYPES
-    return getRandomArrayElement(nil, itemPoolTypes)
+    return getRandomArrayElement(nil, itemPoolTypes, seedOrRNG)
 end
 --- Helper function to remove one or more collectibles from all item pools.
 -- 
@@ -44036,32 +45271,6 @@ function ModFeature.prototype.uninit(self)
 end
 return ____exports
  end,
-["lua_modules.isaacscript-common.dist.src.functions.curses"] = function(...) 
-local ____exports = {}
-local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
-local game = ____cachedClasses.game
-local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
-local hasFlag = ____flag.hasFlag
---- Helper function to get the actual bit flag for modded curses.
--- 
--- Will throw a run-time error if the provided curse does not exist.
--- 
--- Use this over the `Isaac.GetCurseIdByName` method because that will return an integer instead of
--- a bit flag.
-function ____exports.getCurseIDByName(self, name)
-    local curseID = Isaac.GetCurseIdByName(name)
-    if curseID == -1 then
-        error(("Failed to get the curse ID corresponding to the curse name of \"" .. tostring(curseID)) .. "\". Does this name match what you put in the \"content/curses.xml\" file?")
-    end
-    return 1 << curseID - 1
-end
-function ____exports.hasCurse(self, curse)
-    local level = game:GetLevel()
-    local curses = level:GetCurses()
-    return hasFlag(nil, curses, curse)
-end
-return ____exports
- end,
 ["lua_modules.isaacscript-common.dist.src.functions.console"] = function(...) 
 local ____exports = {}
 local ____consoleCommandsSet = require("lua_modules.isaacscript-common.dist.src.sets.consoleCommandsSet")
@@ -44207,9 +45416,13 @@ local DEFAULT_CHALLENGE_BOSS_ID = ____challengeBosses.DEFAULT_CHALLENGE_BOSS_ID
 local ____challengeCharacters = require("lua_modules.isaacscript-common.dist.src.objects.challengeCharacters")
 local CHALLENGE_CHARACTERS = ____challengeCharacters.CHALLENGE_CHARACTERS
 local DEFAULT_CHALLENGE_CHARACTER = ____challengeCharacters.DEFAULT_CHALLENGE_CHARACTER
+local ____challengeCollectibleTypes = require("lua_modules.isaacscript-common.dist.src.objects.challengeCollectibleTypes")
+local CHALLENGE_COLLECTIBLE_TYPES = ____challengeCollectibleTypes.CHALLENGE_COLLECTIBLE_TYPES
 local ____challengeNames = require("lua_modules.isaacscript-common.dist.src.objects.challengeNames")
 local CHALLENGE_NAMES = ____challengeNames.CHALLENGE_NAMES
 local DEFAULT_CHALLENGE_NAME = ____challengeNames.DEFAULT_CHALLENGE_NAME
+local ____challengeTrinketType = require("lua_modules.isaacscript-common.dist.src.objects.challengeTrinketType")
+local CHALLENGE_TRINKET_TYPE = ____challengeTrinketType.CHALLENGE_TRINKET_TYPE
 local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
 local log = ____log.log
 --- Helper function to see if the player is playing any challenge.
@@ -44247,12 +45460,26 @@ function ____exports.getChallengeCharacter(self, challenge)
     local challengeCharacter = CHALLENGE_CHARACTERS[challenge]
     return challengeCharacter or DEFAULT_CHALLENGE_CHARACTER
 end
+--- Get the extra starting collectibles for a challenge. This will only work for vanilla challenges.
+-- 
+-- For modded challenges, an empty array will be returned.
+function ____exports.getChallengeCollectibleTypes(self, challenge)
+    return CHALLENGE_COLLECTIBLE_TYPES[challenge]
+end
 --- Get the proper name for a `Challenge` enum. This will only work for vanilla challenges.
 -- 
 -- For modded challenges, "Unknown" will be returned.
 function ____exports.getChallengeName(self, challenge)
     local challengeName = CHALLENGE_NAMES[challenge]
     return challengeName or DEFAULT_CHALLENGE_NAME
+end
+--- Get the extra starting trinket for a challenge. This will only work for vanilla challenges.
+-- 
+-- If a challenge does not grant a starting trinket, `undefined` will be returned.
+-- 
+-- For modded challenges, `undefined` will be returned.
+function ____exports.getChallengeTrinketType(self, challenge)
+    return CHALLENGE_TRINKET_TYPE[challenge]
 end
 --- Helper function to check to see if the player is playing a particular challenge.
 -- 
@@ -44277,6 +45504,65 @@ function ____exports.setChallenge(self, challenge)
 end
 return ____exports
  end,
+["lua_modules.isaacscript-common.dist.src.objects.challengeTrinketType"] = function(...) 
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local Challenge = ____isaac_2Dtypescript_2Ddefinitions.Challenge
+local TrinketType = ____isaac_2Dtypescript_2Ddefinitions.TrinketType
+--- Contains the starting trinket for each challenge. Challenges that do not grant a starting trinket
+-- will have a value of `undefined`.
+-- 
+-- Taken from the "challenges.xml" file.
+____exports.CHALLENGE_TRINKET_TYPE = {
+    [Challenge.NULL] = nil,
+    [Challenge.PITCH_BLACK] = nil,
+    [Challenge.HIGH_BROW] = TrinketType.PETRIFIED_POOP,
+    [Challenge.HEAD_TRAUMA] = nil,
+    [Challenge.DARKNESS_FALLS] = nil,
+    [Challenge.TANK] = nil,
+    [Challenge.SOLAR_SYSTEM] = nil,
+    [Challenge.SUICIDE_KING] = nil,
+    [Challenge.CAT_GOT_YOUR_TONGUE] = nil,
+    [Challenge.DEMO_MAN] = TrinketType.MATCH_STICK,
+    [Challenge.CURSED] = TrinketType.CHILDS_HEART,
+    [Challenge.GLASS_CANNON] = nil,
+    [Challenge.WHEN_LIFE_GIVES_YOU_LEMONS] = nil,
+    [Challenge.BEANS] = nil,
+    [Challenge.ITS_IN_THE_CARDS] = nil,
+    [Challenge.SLOW_ROLL] = nil,
+    [Challenge.COMPUTER_SAVY] = nil,
+    [Challenge.WAKA_WAKA] = nil,
+    [Challenge.HOST] = TrinketType.TICK,
+    [Challenge.FAMILY_MAN] = nil,
+    [Challenge.PURIST] = nil,
+    [Challenge.XXXXXXXXL] = nil,
+    [Challenge.SPEED] = nil,
+    [Challenge.BLUE_BOMBER] = nil,
+    [Challenge.PAY_TO_PLAY] = nil,
+    [Challenge.HAVE_A_HEART] = nil,
+    [Challenge.I_RULE] = nil,
+    [Challenge.BRAINS] = nil,
+    [Challenge.PRIDE_DAY] = TrinketType.RAINBOW_WORM,
+    [Challenge.ONANS_STREAK] = nil,
+    [Challenge.GUARDIAN] = nil,
+    [Challenge.BACKASSWARDS] = nil,
+    [Challenge.APRILS_FOOL] = nil,
+    [Challenge.POKEY_MANS] = nil,
+    [Challenge.ULTRA_HARD] = nil,
+    [Challenge.PONG] = nil,
+    [Challenge.SCAT_MAN] = TrinketType.MYSTERIOUS_CANDY,
+    [Challenge.BLOODY_MARY] = TrinketType.CHILDS_HEART,
+    [Challenge.BAPTISM_BY_FIRE] = TrinketType.MAGGYS_FAITH,
+    [Challenge.ISAACS_AWAKENING] = nil,
+    [Challenge.SEEING_DOUBLE] = nil,
+    [Challenge.PICA_RUN] = nil,
+    [Challenge.HOT_POTATO] = nil,
+    [Challenge.CANTRIPPED] = nil,
+    [Challenge.RED_REDEMPTION] = nil,
+    [Challenge.DELETE_THIS] = nil
+}
+return ____exports
+ end,
 ["lua_modules.isaacscript-common.dist.src.objects.challengeNames"] = function(...) 
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
@@ -44296,7 +45582,7 @@ ____exports.CHALLENGE_NAMES = {
     [Challenge.DEMO_MAN] = "Demo Man",
     [Challenge.CURSED] = "Cursed!",
     [Challenge.GLASS_CANNON] = "Glass Cannon",
-    [Challenge.WHEN_LIFE_GIVES_LEMONS] = "When Life Gives You Lemons",
+    [Challenge.WHEN_LIFE_GIVES_YOU_LEMONS] = "When Life Gives You Lemons",
     [Challenge.BEANS] = "Beans!",
     [Challenge.ITS_IN_THE_CARDS] = "It's In The Cards",
     [Challenge.SLOW_ROLL] = "Slow Roll",
@@ -44333,13 +45619,97 @@ ____exports.CHALLENGE_NAMES = {
 }
 return ____exports
  end,
+["lua_modules.isaacscript-common.dist.src.objects.challengeCollectibleTypes"] = function(...) 
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
+local Challenge = ____isaac_2Dtypescript_2Ddefinitions.Challenge
+local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
+--- Contains the extra starting collectibles for each challenge. Challenges that do not grant extra
+-- starting collectibles are represented by an empty array.
+-- 
+-- Taken from the "challenges.xml" file.
+____exports.CHALLENGE_COLLECTIBLE_TYPES = {
+    [Challenge.NULL] = {},
+    [Challenge.PITCH_BLACK] = {},
+    [Challenge.HIGH_BROW] = {CollectibleType.NUMBER_ONE, CollectibleType.BUTT_BOMBS, CollectibleType.E_COLI, CollectibleType.FLUSH},
+    [Challenge.HEAD_TRAUMA] = {CollectibleType.SMALL_ROCK, CollectibleType.IRON_BAR, CollectibleType.TINY_PLANET, CollectibleType.SOY_MILK},
+    [Challenge.DARKNESS_FALLS] = {CollectibleType.PENTAGRAM, CollectibleType.RAZOR_BLADE, CollectibleType.SACRIFICIAL_DAGGER, CollectibleType.DARK_MATTER},
+    [Challenge.TANK] = {CollectibleType.BUCKET_OF_LARD, CollectibleType.INFAMY, CollectibleType.THUNDER_THIGHS},
+    [Challenge.SOLAR_SYSTEM] = {CollectibleType.HALO_OF_FLIES, CollectibleType.TRANSCENDENCE, CollectibleType.DISTANT_ADMIRATION, CollectibleType.FOREVER_ALONE},
+    [Challenge.SUICIDE_KING] = {CollectibleType.MY_REFLECTION, CollectibleType.MR_MEGA, CollectibleType.IPECAC},
+    [Challenge.CAT_GOT_YOUR_TONGUE] = {CollectibleType.GUPPYS_TAIL, CollectibleType.GUPPYS_HEAD, CollectibleType.GUPPYS_HAIRBALL},
+    [Challenge.DEMO_MAN] = {CollectibleType.DR_FETUS, CollectibleType.REMOTE_DETONATOR},
+    [Challenge.CURSED] = {CollectibleType.RAW_LIVER, CollectibleType.COMPASS, CollectibleType.TREASURE_MAP, CollectibleType.BLUE_MAP},
+    [Challenge.GLASS_CANNON] = {CollectibleType.LOKIS_HORNS, CollectibleType.EPIC_FETUS},
+    [Challenge.WHEN_LIFE_GIVES_YOU_LEMONS] = {CollectibleType.LEMON_MISHAP, CollectibleType.NINE_VOLT, CollectibleType.HABIT},
+    [Challenge.BEANS] = {
+        CollectibleType.BEAN,
+        CollectibleType.NINE_VOLT,
+        CollectibleType.BLACK_BEAN,
+        CollectibleType.PYRO,
+        CollectibleType.BUTT_BOMBS
+    },
+    [Challenge.ITS_IN_THE_CARDS] = {CollectibleType.BATTERY, CollectibleType.DECK_OF_CARDS, CollectibleType.NINE_VOLT, CollectibleType.STARTER_DECK},
+    [Challenge.SLOW_ROLL] = {CollectibleType.MY_REFLECTION, CollectibleType.CUPIDS_ARROW, CollectibleType.POLYPHEMUS},
+    [Challenge.COMPUTER_SAVY] = {CollectibleType.SPOON_BENDER, CollectibleType.TECHNOLOGY, CollectibleType.TECHNOLOGY_2},
+    [Challenge.WAKA_WAKA] = {CollectibleType.ANTI_GRAVITY, CollectibleType.STRANGE_ATTRACTOR},
+    [Challenge.HOST] = {CollectibleType.MULLIGAN, CollectibleType.SPIDERBABY},
+    [Challenge.FAMILY_MAN] = {
+        CollectibleType.BROTHER_BOBBY,
+        CollectibleType.SISTER_MAGGY,
+        CollectibleType.DADS_KEY,
+        CollectibleType.BFFS,
+        CollectibleType.ROTTEN_BABY
+    },
+    [Challenge.PURIST] = {},
+    [Challenge.XXXXXXXXL] = {},
+    [Challenge.SPEED] = {},
+    [Challenge.BLUE_BOMBER] = {CollectibleType.BROTHER_BOBBY, CollectibleType.KAMIKAZE, CollectibleType.MR_MEGA, CollectibleType.PYROMANIAC},
+    [Challenge.PAY_TO_PLAY] = {CollectibleType.SACK_OF_PENNIES, CollectibleType.MONEY_EQUALS_POWER},
+    [Challenge.HAVE_A_HEART] = {CollectibleType.CHARM_OF_THE_VAMPIRE},
+    [Challenge.I_RULE] = {CollectibleType.LADDER, CollectibleType.MOMS_KNIFE, CollectibleType.TRINITY_SHIELD, CollectibleType.BOOMERANG},
+    [Challenge.BRAINS] = {CollectibleType.BOBS_BRAIN, CollectibleType.BOBS_BRAIN, CollectibleType.BOBS_BRAIN, CollectibleType.THUNDER_THIGHS},
+    [Challenge.PRIDE_DAY] = {CollectibleType.RAINBOW_BABY, CollectibleType.THREE_DOLLAR_BILL},
+    [Challenge.ONANS_STREAK] = {CollectibleType.CHOCOLATE_MILK},
+    [Challenge.GUARDIAN] = {CollectibleType.HOLY_GRAIL, CollectibleType.ISAACS_HEART, CollectibleType.PUNCHING_BAG, CollectibleType.SPEAR_OF_DESTINY},
+    [Challenge.BACKASSWARDS] = {},
+    [Challenge.APRILS_FOOL] = {},
+    [Challenge.POKEY_MANS] = {CollectibleType.MOMS_EYESHADOW, CollectibleType.FRIEND_BALL},
+    [Challenge.ULTRA_HARD] = {CollectibleType.BOOK_OF_REVELATIONS, CollectibleType.CAFFEINE_PILL},
+    [Challenge.PONG] = {CollectibleType.CUPIDS_ARROW, CollectibleType.RUBBER_CEMENT},
+    [Challenge.SCAT_MAN] = {
+        CollectibleType.SKATOLE,
+        CollectibleType.POOP,
+        CollectibleType.NINE_VOLT,
+        CollectibleType.BUTT_BOMBS,
+        CollectibleType.BUTT_BOMBS,
+        CollectibleType.BUTT_BOMBS,
+        CollectibleType.E_COLI,
+        CollectibleType.BFFS,
+        CollectibleType.THUNDER_THIGHS,
+        CollectibleType.DIRTY_MIND
+    },
+    [Challenge.BLOODY_MARY] = {CollectibleType.BOOK_OF_BELIAL, CollectibleType.BLOOD_BAG, CollectibleType.ANEMIC, CollectibleType.BLOOD_OATH},
+    [Challenge.BAPTISM_BY_FIRE] = {CollectibleType.GUPPYS_PAW, CollectibleType.SCHOOLBAG, CollectibleType.URN_OF_SOULS},
+    [Challenge.ISAACS_AWAKENING] = {CollectibleType.TRINITY_SHIELD, CollectibleType.SPIRIT_SWORD, CollectibleType.MOMS_BRACELET},
+    [Challenge.SEEING_DOUBLE] = {245},
+    [Challenge.PICA_RUN] = {CollectibleType.MOMS_PURSE, CollectibleType.MOMS_BOX, CollectibleType.MARBLES},
+    [Challenge.HOT_POTATO] = {},
+    [Challenge.CANTRIPPED] = {},
+    [Challenge.RED_REDEMPTION] = {CollectibleType.DADS_KEY},
+    [Challenge.DELETE_THIS] = {CollectibleType.TMTRAINER}
+}
+return ____exports
+ end,
 ["lua_modules.isaacscript-common.dist.src.objects.challengeCharacters"] = function(...) 
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
 local Challenge = ____isaac_2Dtypescript_2Ddefinitions.Challenge
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
 ____exports.DEFAULT_CHALLENGE_CHARACTER = PlayerType.ISAAC
---- Taken from the "challenges.xml" file.
+--- Contains the starting character for each challenge.
+-- 
+-- Taken from the "challenges.xml" file.
 ____exports.CHALLENGE_CHARACTERS = {
     [Challenge.NULL] = ____exports.DEFAULT_CHALLENGE_CHARACTER,
     [Challenge.PITCH_BLACK] = ____exports.DEFAULT_CHALLENGE_CHARACTER,
@@ -44353,7 +45723,7 @@ ____exports.CHALLENGE_CHARACTERS = {
     [Challenge.DEMO_MAN] = ____exports.DEFAULT_CHALLENGE_CHARACTER,
     [Challenge.CURSED] = PlayerType.MAGDALENE,
     [Challenge.GLASS_CANNON] = PlayerType.JUDAS,
-    [Challenge.WHEN_LIFE_GIVES_LEMONS] = ____exports.DEFAULT_CHALLENGE_CHARACTER,
+    [Challenge.WHEN_LIFE_GIVES_YOU_LEMONS] = ____exports.DEFAULT_CHALLENGE_CHARACTER,
     [Challenge.BEANS] = ____exports.DEFAULT_CHALLENGE_CHARACTER,
     [Challenge.ITS_IN_THE_CARDS] = ____exports.DEFAULT_CHALLENGE_CHARACTER,
     [Challenge.SLOW_ROLL] = ____exports.DEFAULT_CHALLENGE_CHARACTER,
@@ -44396,7 +45766,9 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
 local Challenge = ____isaac_2Dtypescript_2Ddefinitions.Challenge
 ____exports.DEFAULT_CHALLENGE_BOSS_ID = BossID.MOM
---- Taken from the "challenges.xml" file.
+--- Contains the boss goal for each challenge.
+-- 
+-- Taken from the "challenges.xml" file.
 -- 
 -- @see https ://bindingofisaacrebirth.fandom.com/wiki/Challenges
 ____exports.CHALLENGE_BOSSES = {
@@ -44412,7 +45784,7 @@ ____exports.CHALLENGE_BOSSES = {
     [Challenge.DEMO_MAN] = BossID.MOMS_HEART,
     [Challenge.CURSED] = BossID.MOM,
     [Challenge.GLASS_CANNON] = BossID.SATAN,
-    [Challenge.WHEN_LIFE_GIVES_LEMONS] = BossID.MOM,
+    [Challenge.WHEN_LIFE_GIVES_YOU_LEMONS] = BossID.MOM,
     [Challenge.BEANS] = BossID.MOM,
     [Challenge.ITS_IN_THE_CARDS] = BossID.MOM,
     [Challenge.SLOW_ROLL] = BossID.MOM,
@@ -44795,1070 +46167,6 @@ ____exports.CARD_DESCRIPTIONS = {
     [CardType.SOUL_OF_BETHANY] = "Friends from beyond",
     [CardType.SOUL_OF_JACOB_AND_ESAU] = "Bound by blood"
 }
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.functions.bosses"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local LokiVariant = ____isaac_2Dtypescript_2Ddefinitions.LokiVariant
-local ____cachedClasses = require("lua_modules.isaacscript-common.dist.src.core.cachedClasses")
-local game = ____cachedClasses.game
-local ____constants = require("lua_modules.isaacscript-common.dist.src.core.constants")
-local VectorZero = ____constants.VectorZero
-local ____entityTypeVariantToBossIDMap = require("lua_modules.isaacscript-common.dist.src.maps.entityTypeVariantToBossIDMap")
-local ENTITY_TYPE_VARIANT_TO_BOSS_ID_MAP = ____entityTypeVariantToBossIDMap.ENTITY_TYPE_VARIANT_TO_BOSS_ID_MAP
-local ____bossIDToEntityTypeVariant = require("lua_modules.isaacscript-common.dist.src.objects.bossIDToEntityTypeVariant")
-local BOSS_ID_TO_ENTITY_TYPE_VARIANT = ____bossIDToEntityTypeVariant.BOSS_ID_TO_ENTITY_TYPE_VARIANT
-local ____bossNames = require("lua_modules.isaacscript-common.dist.src.objects.bossNames")
-local BOSS_NAMES = ____bossNames.BOSS_NAMES
-local DEFAULT_BOSS_NAME = ____bossNames.DEFAULT_BOSS_NAME
-local ____bossSets = require("lua_modules.isaacscript-common.dist.src.sets.bossSets")
-local ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET = ____bossSets.ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET
-local ALL_BOSSES_SET = ____bossSets.ALL_BOSSES_SET
-local STAGE_TO_COMBINED_BOSS_SET_MAP = ____bossSets.STAGE_TO_COMBINED_BOSS_SET_MAP
-local STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP = ____bossSets.STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP
-local STORY_BOSS_ENTITY_TYPES_SET = ____bossSets.STORY_BOSS_ENTITY_TYPES_SET
-local STORY_BOSS_IDS_SET = ____bossSets.STORY_BOSS_IDS_SET
-local ____repentanceBossIDsSet = require("lua_modules.isaacscript-common.dist.src.sets.repentanceBossIDsSet")
-local REPENTANCE_ONLY_BOSS_IDS_SET = ____repentanceBossIDsSet.REPENTANCE_ONLY_BOSS_IDS_SET
-local ____sinEntityTypesSet = require("lua_modules.isaacscript-common.dist.src.sets.sinEntityTypesSet")
-local SIN_ENTITY_TYPES_SET = ____sinEntityTypesSet.SIN_ENTITY_TYPES_SET
-local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
-local ReadonlySet = ____ReadonlySet.ReadonlySet
-local ____entitiesSpecific = require("lua_modules.isaacscript-common.dist.src.functions.entitiesSpecific")
-local getNPCs = ____entitiesSpecific.getNPCs
-local spawnNPC = ____entitiesSpecific.spawnNPC
-local ____npcs = require("lua_modules.isaacscript-common.dist.src.functions.npcs")
-local getAliveNPCs = ____npcs.getAliveNPCs
-local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local isRNG = ____rng.isRNG
-local ____rooms = require("lua_modules.isaacscript-common.dist.src.functions.rooms")
-local inBeastRoom = ____rooms.inBeastRoom
-local inDogmaRoom = ____rooms.inDogmaRoom
-local ____types = require("lua_modules.isaacscript-common.dist.src.functions.types")
-local asNumber = ____types.asNumber
-local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
-local ____repeat = ____utils["repeat"]
-local BOSSES_THAT_REQUIRE_MULTIPLE_SPAWNS = __TS__New(ReadonlySet, {
-    EntityType.LARRY_JR,
-    EntityType.CHUB,
-    EntityType.LOKI,
-    EntityType.GURGLING,
-    EntityType.TURDLET
-})
-local DEFAULT_BOSS_MULTI_SEGMENTS = 4
---- Helper function to get all of the non-dead bosses in the room.
--- 
--- This function will not include bosses on an internal blacklist, such as Death's scythes or Big
--- Horn holes.
--- 
--- @param entityType Optional. If specified, will only get the bosses that match the type. Default
--- is -1, which matches every type.
--- @param variant Optional. If specified, will only get the bosses that match the variant. Default
--- is -1, which matches every variant.
--- @param subType Optional. If specified, will only get the bosses that match the sub-type. Default
--- is -1, which matches every sub-type.
--- @param ignoreFriendly Optional. Default is false.
-function ____exports.getAliveBosses(self, entityType, variant, subType, ignoreFriendly)
-    if entityType == nil then
-        entityType = -1
-    end
-    if variant == nil then
-        variant = -1
-    end
-    if subType == nil then
-        subType = -1
-    end
-    if ignoreFriendly == nil then
-        ignoreFriendly = false
-    end
-    local aliveNPCs = getAliveNPCs(
-        nil,
-        entityType,
-        variant,
-        subType,
-        ignoreFriendly
-    )
-    return __TS__ArrayFilter(
-        aliveNPCs,
-        function(____, aliveNPC) return aliveNPC:IsBoss() end
-    )
-end
---- Helper function to get the set of every boss in the game (which is derived from the `BossID`
--- enum).
--- 
--- This includes:
--- - Ultra Greed
--- - Ultra Greedier
--- 
--- This does not include:
--- - mini-bosses (e.g. Ultra Pride, Krampus)
--- - bosses that do not appear in Boss Rooms (e.g. Uriel, Gabriel)
--- - the second phase of multi-phase bosses (e.g. Mega Satan 2)
--- - sub-bosses of The Beast fight (e.g. Ultra Famine, Ultra Pestilence, Ultra War, Ultra Death)
--- - bosses that do not have any Boss Rooms defined due to being unfinished (e.g. Raglich)
--- 
--- Also see the `getBossSet` and `getCombinedBossSet` functions.
--- 
--- @param includeStoryBosses Optional. Whether to include "story" bosses like Mom and It Lives.
--- Default is true.
-function ____exports.getAllBossesSet(self, includeStoryBosses)
-    if includeStoryBosses == nil then
-        includeStoryBosses = true
-    end
-    return includeStoryBosses and ALL_BOSSES_SET or ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET
-end
---- Helper function to get the boss ID corresponding to the current room. Returns 0 if the current
--- room is not a Boss Room.
--- 
--- Use this instead of the vanilla `Room.GetBossID` method since it correctly handles Dogma and The
--- Beast.
-function ____exports.getBossID(self)
-    if inDogmaRoom(nil) then
-        return BossID.DOGMA
-    end
-    if inBeastRoom(nil) then
-        return BossID.BEAST
-    end
-    local room = game:GetRoom()
-    return room:GetBossID()
-end
-function ____exports.getBossIDFromEntityTypeVariant(self, entityType, variant)
-    local entityTypeVariant = (tostring(entityType) .. ".") .. tostring(variant)
-    return ENTITY_TYPE_VARIANT_TO_BOSS_ID_MAP:get(entityTypeVariant)
-end
---- Helper function to get the proper English name for a boss. For example, the name for
--- `BossID.WRETCHED` (36) is "The Wretched".
-function ____exports.getBossName(self, bossID)
-    return BOSS_NAMES[bossID] or DEFAULT_BOSS_NAME
-end
---- Helper function to get the set of vanilla bosses for a particular stage and stage type
--- combination.
--- 
--- Also see the `getAllBossesSet` and `getCombinedBossSet` functions.
-function ____exports.getBossSet(self, stage, stageType)
-    local stageTypeMap = STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP:get(stage)
-    if stageTypeMap == nil then
-        return nil
-    end
-    return stageTypeMap:get(stageType)
-end
---- Helper function to get all of the bosses in the room.
--- 
--- @param entityType Optional. If specified, will only get the bosses that match the type. Default
--- is -1, which matches every type.
--- @param variant Optional. If specified, will only get the bosses that match the variant. Default
--- is -1, which matches every variant.
--- @param subType Optional. If specified, will only get the bosses that match the sub-type. Default
--- is -1, which matches every sub-type.
--- @param ignoreFriendly Optional. Default is false.
-function ____exports.getBosses(self, entityType, variant, subType, ignoreFriendly)
-    if ignoreFriendly == nil then
-        ignoreFriendly = false
-    end
-    local npcs = getNPCs(
-        nil,
-        entityType,
-        variant,
-        subType,
-        ignoreFriendly
-    )
-    return __TS__ArrayFilter(
-        npcs,
-        function(____, npc) return npc:IsBoss() end
-    )
-end
---- Helper function to get the set of vanilla bosses for a particular stage across all of the stage
--- types. For example, specifying `LevelStage.BASEMENT_2` will return a set with all of the bosses
--- for Basement, Cellar, Burning Basement, Downpour, and Dross.
--- 
--- Also see the `getAllBossesSet` and `getBossSet` functions.
-function ____exports.getCombinedBossSet(self, stage)
-    return STAGE_TO_COMBINED_BOSS_SET_MAP:get(stage)
-end
-function ____exports.getEntityTypeVariantFromBossID(self, bossID)
-    return BOSS_ID_TO_ENTITY_TYPE_VARIANT[bossID]
-end
---- Helper function to check if a boss is only found on a Repentance floor such as Dross, Mines, and
--- so on.
--- 
--- For example, The Pile is a boss that was added in Repentance, but since it can appear in
--- Necropolis, it is not considered a Repentance boss for the purposes of this function.
-function ____exports.isRepentanceBoss(self, bossID)
-    return REPENTANCE_ONLY_BOSS_IDS_SET:has(bossID)
-end
---- Helper function to check if the provided NPC is a Sin miniboss, such as Sloth or Lust.
-function ____exports.isSin(self, npc)
-    return SIN_ENTITY_TYPES_SET:has(npc.Type)
-end
-local function getNumBossSegments(self, entityType, variant, numSegments)
-    if numSegments ~= nil then
-        return numSegments
-    end
-    repeat
-        local ____switch20 = entityType
-        local ____cond20 = ____switch20 == EntityType.CHUB
-        if ____cond20 then
-            do
-                return 3
-            end
-        end
-        ____cond20 = ____cond20 or ____switch20 == EntityType.LOKI
-        if ____cond20 then
-            do
-                return variant == asNumber(nil, LokiVariant.LOKII) and 2 or 1
-            end
-        end
-        ____cond20 = ____cond20 or ____switch20 == EntityType.GURGLING
-        if ____cond20 then
-            do
-                return 2
-            end
-        end
-        do
-            do
-                return DEFAULT_BOSS_MULTI_SEGMENTS
-            end
-        end
-    until true
-end
---- Helper function to determine if the specified entity type is an end-game story boss, like Isaac,
--- Blue Baby, Mega Satan, The Beast, and so on. This is useful because certain effects should only
--- apply to non-story bosses, like Vanishing Twin.
-function ____exports.isStoryBoss(self, entityType)
-    return STORY_BOSS_ENTITY_TYPES_SET:has(entityType)
-end
---- Helper function to determine if the specified boss ID is an end-game story boss, like Isaac, Blue
--- Baby, Mega Satan, The Beast, and so on. This is useful because certain effects should only apply
--- to non-story bosses, like Vanishing Twin.
-function ____exports.isStoryBossID(self, bossID)
-    return STORY_BOSS_IDS_SET:has(bossID)
-end
---- Helper function to spawn a boss.
--- 
--- Use this function instead of `spawnNPC` since it handles automatically spawning multiple segments
--- for multi-segment bosses.
--- 
--- By default, this will spawn Chub (and his variants) with 3 segments, Lokii with 2 copies,
--- Gurglings/Turdlings with 2 copies, and other multi-segment bosses with 4 segments. You can
--- customize this via the "numSegments" argument.
-function ____exports.spawnBoss(self, entityType, variant, subType, positionOrGridIndex, velocity, spawner, seedOrRNG, numSegments)
-    if velocity == nil then
-        velocity = VectorZero
-    end
-    local seed = isRNG(nil, seedOrRNG) and seedOrRNG:Next() or seedOrRNG
-    local npc = spawnNPC(
-        nil,
-        entityType,
-        variant,
-        subType,
-        positionOrGridIndex,
-        velocity,
-        spawner,
-        seed
-    )
-    if BOSSES_THAT_REQUIRE_MULTIPLE_SPAWNS:has(entityType) then
-        local numBossSegments = getNumBossSegments(nil, entityType, variant, numSegments)
-        local remainingSegmentsToSpawn = numBossSegments - 1
-        ____repeat(
-            nil,
-            remainingSegmentsToSpawn,
-            function()
-                spawnNPC(
-                    nil,
-                    entityType,
-                    variant,
-                    subType,
-                    positionOrGridIndex,
-                    velocity,
-                    spawner,
-                    seed
-                )
-            end
-        )
-    end
-    return npc
-end
---- Helper function to spawn a boss with a specific seed.
--- 
--- For more information, see the documentation for the `spawnBoss` function.
-function ____exports.spawnBossWithSeed(self, entityType, variant, subType, positionOrGridIndex, seedOrRNG, velocity, spawner, numSegments)
-    if velocity == nil then
-        velocity = VectorZero
-    end
-    local seed = isRNG(nil, seedOrRNG) and seedOrRNG:Next() or seedOrRNG
-    return ____exports.spawnBoss(
-        nil,
-        entityType,
-        variant,
-        subType,
-        positionOrGridIndex,
-        velocity,
-        spawner,
-        seed,
-        numSegments
-    )
-end
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.sets.sinEntityTypesSet"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
-local ReadonlySet = ____ReadonlySet.ReadonlySet
-____exports.SIN_ENTITY_TYPES_SET = __TS__New(ReadonlySet, {
-    EntityType.SLOTH,
-    EntityType.LUST,
-    EntityType.WRATH,
-    EntityType.GLUTTONY,
-    EntityType.GREED,
-    EntityType.ENVY,
-    EntityType.PRIDE
-})
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.sets.repentanceBossIDsSet"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
-local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
-local ReadonlySet = ____ReadonlySet.ReadonlySet
-____exports.REPENTANCE_ONLY_BOSS_IDS_SET = __TS__New(ReadonlySet, {
-    BossID.LIL_BLUB,
-    BossID.WORMWOOD,
-    BossID.RAINMAKER,
-    BossID.VISAGE,
-    BossID.SIREN,
-    BossID.TUFF_TWINS,
-    BossID.HERETIC,
-    BossID.HORNFEL,
-    BossID.GREAT_GIDEON,
-    BossID.SCOURGE,
-    BossID.CHIMERA,
-    BossID.ROTGUT,
-    BossID.MOTHER,
-    BossID.MAUSOLEUM_MOM,
-    BossID.MAUSOLEUM_MOMS_HEART,
-    BossID.MIN_MIN,
-    BossID.CLOG,
-    BossID.SINGE,
-    BossID.COLOSTOMIA,
-    BossID.SHELL,
-    BossID.TURDLET,
-    BossID.HORNY_BOYS,
-    BossID.CLUTCH
-})
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.sets.bossSets"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__New = ____lualib.__TS__New
-local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
-local __TS__Spread = ____lualib.__TS__Spread
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
-local StageType = ____isaac_2Dtypescript_2Ddefinitions.StageType
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.src.arrays.cachedEnumValues")
-local BOSS_IDS = ____cachedEnumValues.BOSS_IDS
-local ____set = require("lua_modules.isaacscript-common.dist.src.functions.set")
-local combineSets = ____set.combineSets
-local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
-local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
-local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.src.types.ReadonlySet")
-local ReadonlySet = ____ReadonlySet.ReadonlySet
---- Contains just the bosses in Basement (not e.g. Burning Basement).
-local BASEMENT_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.MONSTRO,
-    BossID.LARRY_JR,
-    BossID.FAMINE,
-    BossID.DUKE_OF_FLIES,
-    BossID.GEMINI,
-    BossID.STEVEN,
-    BossID.HEADLESS_HORSEMAN,
-    BossID.FALLEN,
-    BossID.DINGLE,
-    BossID.GURGLING,
-    BossID.LITTLE_HORN,
-    BossID.DANGLE,
-    BossID.TURDLING,
-    BossID.BABY_PLUM
-})
---- Contains just the bosses in Cellar (not e.g. Burning Basement).
-local CELLAR_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.FAMINE,
-    BossID.DUKE_OF_FLIES,
-    BossID.HEADLESS_HORSEMAN,
-    BossID.FALLEN,
-    BossID.BLIGHTED_OVUM,
-    BossID.WIDOW,
-    BossID.PIN,
-    BossID.HAUNT,
-    BossID.LITTLE_HORN,
-    BossID.RAG_MAN,
-    BossID.BABY_PLUM
-})
---- Contains just the bosses in Burning Basement (not e.g. Cellar).
-local BURNING_BASEMENT_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.MONSTRO,
-    BossID.LARRY_JR,
-    BossID.FAMINE,
-    BossID.DUKE_OF_FLIES,
-    BossID.GEMINI,
-    BossID.STEVEN,
-    BossID.HEADLESS_HORSEMAN,
-    BossID.FALLEN,
-    BossID.DINGLE,
-    BossID.GURGLING,
-    BossID.LITTLE_HORN,
-    BossID.RAG_MAN,
-    BossID.DANGLE,
-    BossID.TURDLING,
-    BossID.BABY_PLUM
-})
---- Contains just the bosses in Downpour (not e.g. Burning Basement).
-local DOWNPOUR_BOSSES_SET = __TS__New(ReadonlySet, {BossID.LIL_BLUB, BossID.WORMWOOD, BossID.RAINMAKER, BossID.MIN_MIN})
---- Contains just the bosses in Dross (not e.g. Burning Basement).
-local DROSS_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.LIL_BLUB,
-    BossID.WORMWOOD,
-    BossID.CLOG,
-    BossID.COLOSTOMIA,
-    BossID.TURDLET
-})
---- The set of unique bosses for Basement, Cellar, and so on.
-local ALL_BASEMENT_BOSSES_SET = combineSets(
-    nil,
-    BASEMENT_BOSSES_SET,
-    CELLAR_BOSSES_SET,
-    BURNING_BASEMENT_BOSSES_SET,
-    DOWNPOUR_BOSSES_SET,
-    DROSS_BOSSES_SET
-)
-local BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
-    {StageType.ORIGINAL, BASEMENT_BOSSES_SET},
-    {StageType.WRATH_OF_THE_LAMB, CELLAR_BOSSES_SET},
-    {StageType.AFTERBIRTH, BURNING_BASEMENT_BOSSES_SET},
-    {StageType.REPENTANCE, DOWNPOUR_BOSSES_SET},
-    {StageType.REPENTANCE_B, DROSS_BOSSES_SET}
-})
---- Contains just the bosses in Caves (not e.g. Flooded Caves).
-local CAVES_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.CHUB,
-    BossID.GURDY,
-    BossID.PESTILENCE,
-    BossID.PEEP,
-    BossID.FISTULA,
-    BossID.CHAD,
-    BossID.HEADLESS_HORSEMAN,
-    BossID.GURDY_JR,
-    BossID.MEGA_FATTY,
-    BossID.MEGA_MAW,
-    BossID.FALLEN,
-    BossID.STAIN,
-    BossID.RAG_MEGA,
-    BossID.BIG_HORN,
-    BossID.BUMBINO
-})
---- Contains just the bosses in Catacombs (not e.g. Flooded Caves).
-local CATACOMBS_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.PESTILENCE,
-    BossID.PEEP,
-    BossID.HEADLESS_HORSEMAN,
-    BossID.FALLEN,
-    BossID.HOLLOW,
-    BossID.CARRION_QUEEN,
-    BossID.GURDY_JR,
-    BossID.HUSK,
-    BossID.WRETCHED,
-    BossID.DARK_ONE,
-    BossID.POLYCEPHALUS,
-    BossID.FORSAKEN,
-    BossID.FRAIL,
-    BossID.RAG_MEGA,
-    BossID.BIG_HORN,
-    BossID.BUMBINO
-})
---- Contains just the bosses in Flooded Caves (not e.g. Catacombs).
-local FLOODED_CAVES_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.CHUB,
-    BossID.GURDY,
-    BossID.PESTILENCE,
-    BossID.PEEP,
-    BossID.FISTULA,
-    BossID.CHAD,
-    BossID.HEADLESS_HORSEMAN,
-    BossID.FALLEN,
-    BossID.GURDY_JR,
-    BossID.MEGA_MAW,
-    BossID.MEGA_FATTY,
-    BossID.STAIN,
-    BossID.FORSAKEN,
-    BossID.FRAIL,
-    BossID.RAG_MEGA,
-    BossID.BIG_HORN,
-    BossID.BUMBINO
-})
---- Contains just the bosses in Mines (not e.g. Flooded Caves).
-local MINES_BOSSES_SET = __TS__New(ReadonlySet, {BossID.REAP_CREEP, BossID.TUFF_TWINS, BossID.HORNFEL, BossID.GREAT_GIDEON})
---- Contains just the bosses in Ashpit (not e.g. Flooded Caves).
-local ASHPIT_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.PILE,
-    BossID.GREAT_GIDEON,
-    BossID.SINGE,
-    BossID.SHELL,
-    BossID.CLUTCH
-})
---- The set of unique bosses for Caves, Catacombs, and so on.
-local ALL_CAVES_BOSSES_SET = combineSets(
-    nil,
-    CAVES_BOSSES_SET,
-    CATACOMBS_BOSSES_SET,
-    FLOODED_CAVES_BOSSES_SET,
-    MINES_BOSSES_SET,
-    ASHPIT_BOSSES_SET
-)
-local CAVES_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
-    {StageType.ORIGINAL, CAVES_BOSSES_SET},
-    {StageType.WRATH_OF_THE_LAMB, CATACOMBS_BOSSES_SET},
-    {StageType.AFTERBIRTH, FLOODED_CAVES_BOSSES_SET},
-    {StageType.REPENTANCE, MINES_BOSSES_SET},
-    {StageType.REPENTANCE_B, ASHPIT_BOSSES_SET}
-})
---- Contains just the bosses in Depths (not e.g. Dank Depths).
--- 
--- Note that this set includes Mom, even though they are not technically in the boss pool.
-local DEPTHS_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.MONSTRO_2,
-    BossID.MOM,
-    BossID.WAR,
-    BossID.LOKI,
-    BossID.GISH,
-    BossID.HEADLESS_HORSEMAN,
-    BossID.FALLEN,
-    BossID.GATE,
-    BossID.CAGE,
-    BossID.BROWNIE,
-    BossID.SISTERS_VIS,
-    BossID.REAP_CREEP
-})
---- Contains just the bosses in Necropolis (not e.g. Dank Depths).
--- 
--- Note that this set includes Mom, even though they are not technically in the boss pool.
-local NECROPOLIS_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.MOM,
-    BossID.WAR,
-    BossID.LOKI,
-    BossID.HEADLESS_HORSEMAN,
-    BossID.FALLEN,
-    BossID.BLOAT,
-    BossID.MASK_OF_INFAMY,
-    BossID.ADVERSARY,
-    BossID.BROWNIE,
-    BossID.SISTERS_VIS,
-    BossID.PILE
-})
---- Contains just the bosses in Dank Depths (not e.g. Necropolis).
--- 
--- Note that this set includes Mom, even though they are not technically in the boss pool.
-local DANK_DEPTHS_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.MONSTRO_2,
-    BossID.MOM,
-    BossID.WAR,
-    BossID.LOKI,
-    BossID.GISH,
-    BossID.HEADLESS_HORSEMAN,
-    BossID.FALLEN,
-    BossID.GATE,
-    BossID.CAGE,
-    BossID.BROWNIE,
-    BossID.SISTERS_VIS,
-    BossID.REAP_CREEP
-})
---- Contains just the bosses in Mausoleum (not e.g. Dank Depths).
--- 
--- Note that this set includes Mausoleum Mom, even though they are not technically in the boss pool.
-local MAUSOLEUM_BOSSES_SET = __TS__New(ReadonlySet, {BossID.SIREN, BossID.HERETIC, BossID.MAUSOLEUM_MOM})
---- Contains just the bosses in Gehenna (not e.g. Dank Depths).
--- 
--- Note that this set includes Mausoleum Mom, even though they are not technically in the boss pool.
-local GEHENNA_BOSSES_SET = __TS__New(ReadonlySet, {BossID.VISAGE, BossID.MAUSOLEUM_MOM, BossID.HORNY_BOYS})
---- The set of unique bosses for Depths, Necropolis, and so on.
-local ALL_DEPTHS_BOSSES_SET = combineSets(
-    nil,
-    DEPTHS_BOSSES_SET,
-    NECROPOLIS_BOSSES_SET,
-    DANK_DEPTHS_BOSSES_SET,
-    MAUSOLEUM_BOSSES_SET,
-    GEHENNA_BOSSES_SET
-)
-local DEPTHS_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
-    {StageType.ORIGINAL, DEPTHS_BOSSES_SET},
-    {StageType.WRATH_OF_THE_LAMB, NECROPOLIS_BOSSES_SET},
-    {StageType.AFTERBIRTH, DANK_DEPTHS_BOSSES_SET},
-    {StageType.REPENTANCE, MAUSOLEUM_BOSSES_SET},
-    {StageType.REPENTANCE_B, GEHENNA_BOSSES_SET}
-})
---- Contains just the bosses in Womb (not e.g. Scarred Womb).
--- 
--- Note that this set includes Mom's Heart & It Lives, even though they are not technically in the
--- boss pool.
-local WOMB_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.SCOLEX,
-    BossID.MOMS_HEART,
-    BossID.DEATH,
-    BossID.BLASTOCYST,
-    BossID.HEADLESS_HORSEMAN,
-    BossID.FALLEN,
-    BossID.IT_LIVES,
-    BossID.LOKII,
-    BossID.CONQUEST,
-    BossID.MAMA_GURDY,
-    BossID.MR_FRED,
-    BossID.MATRIARCH
-})
---- Contains just the bosses in Utero (not e.g. Scarred Womb).
--- 
--- Note that this set includes Mom's Heart & It Lives, even though they are not technically in the
--- boss pool.
-local UTERO_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.MOMS_HEART,
-    BossID.DEATH,
-    BossID.HEADLESS_HORSEMAN,
-    BossID.FALLEN,
-    BossID.IT_LIVES,
-    BossID.BLOAT,
-    BossID.LOKII,
-    BossID.TERATOMA,
-    BossID.CONQUEST,
-    BossID.DADDY_LONG_LEGS,
-    BossID.TRIACHNID
-})
---- Contains just the bosses in Scarred Womb (not e.g. Utero).
--- 
--- Note that this set includes Mom's Heart & It Lives, even though they are not technically in the
--- boss pool.
-local SCARRED_WOMB_BOSSES_SET = __TS__New(ReadonlySet, {
-    BossID.SCOLEX,
-    BossID.MOMS_HEART,
-    BossID.DEATH,
-    BossID.BLASTOCYST,
-    BossID.HEADLESS_HORSEMAN,
-    BossID.FALLEN,
-    BossID.IT_LIVES,
-    BossID.LOKII,
-    BossID.CONQUEST,
-    BossID.TRIACHNID,
-    BossID.MAMA_GURDY,
-    BossID.MR_FRED,
-    BossID.MATRIARCH
-})
---- Contains just the bosses in Corpse (not e.g. Scarred Womb).
--- 
--- Note that this set includes Mother, even though they are not technically in the boss pool.
-local CORPSE_BOSSES_SET = __TS__New(ReadonlySet, {BossID.SCOURGE, BossID.CHIMERA, BossID.ROTGUT, BossID.MOTHER})
---- The set of unique bosses for Womb, Utero, and so on.
-local ALL_WOMB_BOSSES_SET = combineSets(
-    nil,
-    WOMB_BOSSES_SET,
-    UTERO_BOSSES_SET,
-    SCARRED_WOMB_BOSSES_SET,
-    CORPSE_BOSSES_SET
-)
-local WOMB_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, WOMB_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, UTERO_BOSSES_SET}, {StageType.AFTERBIRTH, SCARRED_WOMB_BOSSES_SET}, {StageType.REPENTANCE, CORPSE_BOSSES_SET}})
-local BLUE_WOMB_BOSSES_SET = __TS__New(ReadonlySet, {BossID.HUSH})
-local BLUE_WOMB_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, BLUE_WOMB_BOSSES_SET}})
-local SHEOL_BOSSES_SET = __TS__New(ReadonlySet, {BossID.SATAN})
-local CATHEDRAL_BOSSES_SET = __TS__New(ReadonlySet, {BossID.ISAAC})
-local ALL_STAGE_10_BOSSES_SET = combineSets(nil, SHEOL_BOSSES_SET, CATHEDRAL_BOSSES_SET)
-local STAGE_10_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, SHEOL_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, CATHEDRAL_BOSSES_SET}})
---- Note that this set includes Mega Satan, even though they are not technically in the boss pool.
-local DARK_ROOM_BOSSES_SET = __TS__New(ReadonlySet, {BossID.LAMB, BossID.MEGA_SATAN})
---- Note that this set includes Mega Satan, even though they are not technically in the boss pool.
-local CHEST_BOSSES_SET = __TS__New(ReadonlySet, {BossID.BLUE_BABY, BossID.MEGA_SATAN})
-local ALL_STAGE_11_BOSSES_SET = combineSets(nil, DARK_ROOM_BOSSES_SET, CHEST_BOSSES_SET)
-local STAGE_11_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, DARK_ROOM_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, CHEST_BOSSES_SET}})
-local VOID_BOSSES_SET = __TS__New(ReadonlySet, {BossID.DELIRIUM})
-local VOID_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, VOID_BOSSES_SET}})
---- Note that this does not include Ultra Famine, Ultra Pestilence, Ultra War, and Ultra Death.
-local HOME_BOSSES_SET = __TS__New(ReadonlySet, {BossID.DOGMA, BossID.BEAST})
-local HOME_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, HOME_BOSSES_SET}})
-____exports.STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
-    {LevelStage.BASEMENT_1, BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.BASEMENT_2, BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.CAVES_1, CAVES_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.CAVES_2, CAVES_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.DEPTHS_1, DEPTHS_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.DEPTHS_2, DEPTHS_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.WOMB_1, WOMB_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.WOMB_2, WOMB_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.BLUE_WOMB, BLUE_WOMB_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.SHEOL_CATHEDRAL, STAGE_10_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.DARK_ROOM_CHEST, STAGE_11_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.VOID, VOID_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.HOME, HOME_STAGE_TYPE_TO_BOSS_SET_MAP}
-})
-____exports.STAGE_TO_COMBINED_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
-    {LevelStage.BASEMENT_1, ALL_BASEMENT_BOSSES_SET},
-    {LevelStage.BASEMENT_2, ALL_BASEMENT_BOSSES_SET},
-    {LevelStage.CAVES_1, ALL_CAVES_BOSSES_SET},
-    {LevelStage.CAVES_2, ALL_CAVES_BOSSES_SET},
-    {LevelStage.DEPTHS_1, ALL_DEPTHS_BOSSES_SET},
-    {LevelStage.DEPTHS_2, ALL_DEPTHS_BOSSES_SET},
-    {LevelStage.WOMB_1, ALL_WOMB_BOSSES_SET},
-    {LevelStage.WOMB_2, ALL_WOMB_BOSSES_SET},
-    {LevelStage.BLUE_WOMB, BLUE_WOMB_BOSSES_SET},
-    {LevelStage.SHEOL_CATHEDRAL, ALL_STAGE_10_BOSSES_SET},
-    {LevelStage.DARK_ROOM_CHEST, ALL_STAGE_11_BOSSES_SET},
-    {LevelStage.VOID, VOID_BOSSES_SET},
-    {LevelStage.HOME, HOME_BOSSES_SET}
-})
-____exports.ALL_BOSSES_SET = __TS__New(
-    ReadonlySet,
-    __TS__ArrayFilter(
-        BOSS_IDS,
-        function(____, bossID) return bossID ~= BossID.RAGLICH end
-    )
-)
-____exports.STORY_BOSS_IDS_SET = __TS__New(ReadonlySet, {
-    BossID.MOM,
-    BossID.MOMS_HEART,
-    BossID.SATAN,
-    BossID.IT_LIVES,
-    BossID.ISAAC,
-    BossID.BLUE_BABY,
-    BossID.LAMB,
-    BossID.MEGA_SATAN,
-    BossID.ULTRA_GREED,
-    BossID.HUSH,
-    BossID.DELIRIUM,
-    BossID.ULTRA_GREEDIER,
-    BossID.MOTHER,
-    BossID.MAUSOLEUM_MOM,
-    BossID.MAUSOLEUM_MOMS_HEART,
-    BossID.DOGMA,
-    BossID.BEAST
-})
-____exports.STORY_BOSS_ENTITY_TYPES_SET = __TS__New(ReadonlySet, {
-    EntityType.MOM,
-    EntityType.MOMS_HEART,
-    EntityType.SATAN,
-    EntityType.ISAAC,
-    EntityType.LAMB,
-    EntityType.MEGA_SATAN,
-    EntityType.MEGA_SATAN_2,
-    EntityType.ULTRA_GREED,
-    EntityType.HUSH,
-    EntityType.DELIRIUM,
-    EntityType.MOTHER,
-    EntityType.DOGMA,
-    EntityType.BEAST
-})
-____exports.ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET = __TS__New(
-    ReadonlySet,
-    __TS__ArrayFilter(
-        {__TS__Spread(____exports.ALL_BOSSES_SET)},
-        function(____, bossID) return not ____exports.STORY_BOSS_IDS_SET:has(bossID) end
-    )
-)
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.objects.bossNames"] = function(...) 
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
-____exports.DEFAULT_BOSS_NAME = "Unknown"
---- From "bossportraits.xml".
--- 
--- Note that Blue Baby returns "Blue Baby" instead of "???".
-____exports.BOSS_NAMES = {
-    [BossID.MONSTRO] = "Monstro",
-    [BossID.LARRY_JR] = "Larry Jr.",
-    [BossID.CHUB] = "Chub",
-    [BossID.GURDY] = "Gurdy",
-    [BossID.MONSTRO_2] = "Monstro II",
-    [BossID.MOM] = "Mom",
-    [BossID.SCOLEX] = "Scolex",
-    [BossID.MOMS_HEART] = "Mom's Heart",
-    [BossID.FAMINE] = "Famine",
-    [BossID.PESTILENCE] = "Pestilence",
-    [BossID.WAR] = "War",
-    [BossID.DEATH] = "Death",
-    [BossID.DUKE_OF_FLIES] = "Duke of Flies",
-    [BossID.PEEP] = "Peep",
-    [BossID.LOKI] = "Loki",
-    [BossID.BLASTOCYST] = "Blastocyst",
-    [BossID.GEMINI] = "Gemini",
-    [BossID.FISTULA] = "Fistula",
-    [BossID.GISH] = "Gish",
-    [BossID.STEVEN] = "Steven",
-    [BossID.CHAD] = "C.H.A.D.",
-    [BossID.HEADLESS_HORSEMAN] = "Headless Horseman",
-    [BossID.FALLEN] = "The Fallen",
-    [BossID.SATAN] = "Satan",
-    [BossID.IT_LIVES] = "It Lives!",
-    [BossID.HOLLOW] = "The Hollow",
-    [BossID.CARRION_QUEEN] = "The Carrion Queen",
-    [BossID.GURDY_JR] = "Gurdy Jr.",
-    [BossID.HUSK] = "The Husk",
-    [BossID.BLOAT] = "The Bloat",
-    [BossID.LOKII] = "Lokii",
-    [BossID.BLIGHTED_OVUM] = "The Blighted Ovum",
-    [BossID.TERATOMA] = "Teratoma",
-    [BossID.WIDOW] = "The Widow",
-    [BossID.MASK_OF_INFAMY] = "Mask of Infamy",
-    [BossID.WRETCHED] = "The Wretched",
-    [BossID.PIN] = "Pin",
-    [BossID.CONQUEST] = "Conquest",
-    [BossID.ISAAC] = "Isaac",
-    [BossID.BLUE_BABY] = "Blue Baby",
-    [BossID.DADDY_LONG_LEGS] = "Daddy Long Legs",
-    [BossID.TRIACHNID] = "Triachnid",
-    [BossID.HAUNT] = "The Haunt",
-    [BossID.DINGLE] = "Dingle",
-    [BossID.MEGA_MAW] = "Mega Maw",
-    [BossID.GATE] = "The Gate",
-    [BossID.MEGA_FATTY] = "Mega Fatty",
-    [BossID.CAGE] = "The Cage",
-    [BossID.MAMA_GURDY] = "Mega Gurdy",
-    [BossID.DARK_ONE] = "Dark One",
-    [BossID.ADVERSARY] = "The Adversary",
-    [BossID.POLYCEPHALUS] = "Polycephalus",
-    [BossID.MR_FRED] = "Mr. Fred",
-    [BossID.LAMB] = "The Lamb",
-    [BossID.MEGA_SATAN] = "Mega Satan",
-    [BossID.GURGLING] = "Gurglings",
-    [BossID.STAIN] = "The Stain",
-    [BossID.BROWNIE] = "Brownie",
-    [BossID.FORSAKEN] = "The Forsaken",
-    [BossID.LITTLE_HORN] = "Little Horn",
-    [BossID.RAG_MAN] = "Rag Man",
-    [BossID.ULTRA_GREED] = "Ultra Greed",
-    [BossID.HUSH] = "Hush",
-    [BossID.DANGLE] = "Dangle",
-    [BossID.TURDLING] = "Turdling",
-    [BossID.FRAIL] = "The Frail",
-    [BossID.RAG_MEGA] = "Rag Mega",
-    [BossID.SISTERS_VIS] = "Sisters Vis",
-    [BossID.BIG_HORN] = "Big Horn",
-    [BossID.DELIRIUM] = "Delirium",
-    [BossID.ULTRA_GREEDIER] = "Ultra Greedier",
-    [BossID.MATRIARCH] = "The Matriarch",
-    [BossID.PILE] = "The Pile",
-    [BossID.REAP_CREEP] = "Reap Creep",
-    [BossID.LIL_BLUB] = "Lil Blub",
-    [BossID.WORMWOOD] = "Wormwood",
-    [BossID.RAINMAKER] = "The Rainmaker",
-    [BossID.VISAGE] = "The Visage",
-    [BossID.SIREN] = "The Siren",
-    [BossID.TUFF_TWINS] = "Tuff Twins",
-    [BossID.HERETIC] = "The Heretic",
-    [BossID.HORNFEL] = "Hornfel",
-    [BossID.GREAT_GIDEON] = "Great Gideon",
-    [BossID.BABY_PLUM] = "Baby Plum",
-    [BossID.SCOURGE] = "The Scourge",
-    [BossID.CHIMERA] = "Chimera",
-    [BossID.ROTGUT] = "Rotgut",
-    [BossID.MOTHER] = "Mother",
-    [BossID.MAUSOLEUM_MOM] = "Mom (Mausoleum)",
-    [BossID.MAUSOLEUM_MOMS_HEART] = "Mom's Heart (Mausoleum)",
-    [BossID.MIN_MIN] = "Min-Min",
-    [BossID.CLOG] = "Clog",
-    [BossID.SINGE] = "Singe",
-    [BossID.BUMBINO] = "Bumbino",
-    [BossID.COLOSTOMIA] = "Colostomia",
-    [BossID.SHELL] = "The Shell",
-    [BossID.TURDLET] = "Turdlet",
-    [BossID.RAGLICH] = "Raglich",
-    [BossID.DOGMA] = "Dogma",
-    [BossID.BEAST] = "The Beast",
-    [BossID.HORNY_BOYS] = "Horny Boys",
-    [BossID.CLUTCH] = "Clutch"
-}
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.objects.bossIDToEntityTypeVariant"] = function(...) 
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.src.index")
-local BeastVariant = ____isaac_2Dtypescript_2Ddefinitions.BeastVariant
-local BigHornVariant = ____isaac_2Dtypescript_2Ddefinitions.BigHornVariant
-local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
-local ChubVariant = ____isaac_2Dtypescript_2Ddefinitions.ChubVariant
-local DaddyLongLegsVariant = ____isaac_2Dtypescript_2Ddefinitions.DaddyLongLegsVariant
-local DingleVariant = ____isaac_2Dtypescript_2Ddefinitions.DingleVariant
-local DogmaVariant = ____isaac_2Dtypescript_2Ddefinitions.DogmaVariant
-local DukeOfFliesVariant = ____isaac_2Dtypescript_2Ddefinitions.DukeOfFliesVariant
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
-local FallenVariant = ____isaac_2Dtypescript_2Ddefinitions.FallenVariant
-local FistulaVariant = ____isaac_2Dtypescript_2Ddefinitions.FistulaVariant
-local GeminiVariant = ____isaac_2Dtypescript_2Ddefinitions.GeminiVariant
-local GurglingVariant = ____isaac_2Dtypescript_2Ddefinitions.GurglingVariant
-local HauntVariant = ____isaac_2Dtypescript_2Ddefinitions.HauntVariant
-local IsaacVariant = ____isaac_2Dtypescript_2Ddefinitions.IsaacVariant
-local LambVariant = ____isaac_2Dtypescript_2Ddefinitions.LambVariant
-local LarryJrVariant = ____isaac_2Dtypescript_2Ddefinitions.LarryJrVariant
-local LittleHornVariant = ____isaac_2Dtypescript_2Ddefinitions.LittleHornVariant
-local LokiVariant = ____isaac_2Dtypescript_2Ddefinitions.LokiVariant
-local MamaGurdyVariant = ____isaac_2Dtypescript_2Ddefinitions.MamaGurdyVariant
-local MegaSatanVariant = ____isaac_2Dtypescript_2Ddefinitions.MegaSatanVariant
-local MomVariant = ____isaac_2Dtypescript_2Ddefinitions.MomVariant
-local MomsHeartVariant = ____isaac_2Dtypescript_2Ddefinitions.MomsHeartVariant
-local Monstro2Variant = ____isaac_2Dtypescript_2Ddefinitions.Monstro2Variant
-local MotherVariant = ____isaac_2Dtypescript_2Ddefinitions.MotherVariant
-local PeepVariant = ____isaac_2Dtypescript_2Ddefinitions.PeepVariant
-local PinVariant = ____isaac_2Dtypescript_2Ddefinitions.PinVariant
-local PolycephalusVariant = ____isaac_2Dtypescript_2Ddefinitions.PolycephalusVariant
-local RagManVariant = ____isaac_2Dtypescript_2Ddefinitions.RagManVariant
-local RagMegaVariant = ____isaac_2Dtypescript_2Ddefinitions.RagMegaVariant
-local RaglichVariant = ____isaac_2Dtypescript_2Ddefinitions.RaglichVariant
-local SatanVariant = ____isaac_2Dtypescript_2Ddefinitions.SatanVariant
-local UltraGreedVariant = ____isaac_2Dtypescript_2Ddefinitions.UltraGreedVariant
-local WarVariant = ____isaac_2Dtypescript_2Ddefinitions.WarVariant
-local WidowVariant = ____isaac_2Dtypescript_2Ddefinitions.WidowVariant
-____exports.BOSS_ID_TO_ENTITY_TYPE_VARIANT = {
-    [BossID.MONSTRO] = {EntityType.MONSTRO, 0},
-    [BossID.LARRY_JR] = {EntityType.LARRY_JR, LarryJrVariant.LARRY_JR},
-    [BossID.CHUB] = {EntityType.CHUB, ChubVariant.CHUB},
-    [BossID.GURDY] = {EntityType.GURDY, 0},
-    [BossID.MONSTRO_2] = {EntityType.MONSTRO_2, Monstro2Variant.MONSTRO_2},
-    [BossID.MOM] = {EntityType.MOM, MomVariant.MOM},
-    [BossID.SCOLEX] = {EntityType.PIN, PinVariant.SCOLEX},
-    [BossID.MOMS_HEART] = {EntityType.MOMS_HEART, MomsHeartVariant.MOMS_HEART},
-    [BossID.FAMINE] = {EntityType.FAMINE, 0},
-    [BossID.PESTILENCE] = {EntityType.PESTILENCE, 0},
-    [BossID.WAR] = {EntityType.WAR, WarVariant.WAR},
-    [BossID.DEATH] = {EntityType.DEATH, 0},
-    [BossID.DUKE_OF_FLIES] = {EntityType.DUKE_OF_FLIES, DukeOfFliesVariant.DUKE_OF_FLIES},
-    [BossID.PEEP] = {EntityType.PEEP, PeepVariant.PEEP},
-    [BossID.LOKI] = {EntityType.LOKI, LokiVariant.LOKI},
-    [BossID.BLASTOCYST] = {EntityType.BLASTOCYST_BIG, 0},
-    [BossID.GEMINI] = {EntityType.GEMINI, GeminiVariant.GEMINI},
-    [BossID.FISTULA] = {EntityType.FISTULA_BIG, FistulaVariant.FISTULA},
-    [BossID.GISH] = {EntityType.MONSTRO_2, Monstro2Variant.GISH},
-    [BossID.STEVEN] = {EntityType.GEMINI, GeminiVariant.STEVEN},
-    [BossID.CHAD] = {EntityType.CHUB, ChubVariant.CHAD},
-    [BossID.HEADLESS_HORSEMAN] = {EntityType.HEADLESS_HORSEMAN, 0},
-    [BossID.FALLEN] = {EntityType.FALLEN, FallenVariant.FALLEN},
-    [BossID.SATAN] = {EntityType.SATAN, SatanVariant.SATAN},
-    [BossID.IT_LIVES] = {EntityType.MOMS_HEART, MomsHeartVariant.IT_LIVES},
-    [BossID.HOLLOW] = {EntityType.LARRY_JR, LarryJrVariant.HOLLOW},
-    [BossID.CARRION_QUEEN] = {EntityType.CHUB, ChubVariant.CARRION_QUEEN},
-    [BossID.GURDY_JR] = {EntityType.GURDY_JR, 0},
-    [BossID.HUSK] = {EntityType.DUKE_OF_FLIES, DukeOfFliesVariant.HUSK},
-    [BossID.BLOAT] = {EntityType.PEEP, PeepVariant.BLOAT},
-    [BossID.LOKII] = {EntityType.LOKI, LokiVariant.LOKII},
-    [BossID.BLIGHTED_OVUM] = {EntityType.GEMINI, GeminiVariant.BLIGHTED_OVUM},
-    [BossID.TERATOMA] = {EntityType.FISTULA_BIG, FistulaVariant.TERATOMA},
-    [BossID.WIDOW] = {EntityType.WIDOW, WidowVariant.WIDOW},
-    [BossID.MASK_OF_INFAMY] = {EntityType.MASK_OF_INFAMY, 0},
-    [BossID.WRETCHED] = {EntityType.WIDOW, WidowVariant.WRETCHED},
-    [BossID.PIN] = {EntityType.PIN, PinVariant.PIN},
-    [BossID.CONQUEST] = {EntityType.WAR, WarVariant.CONQUEST},
-    [BossID.ISAAC] = {EntityType.ISAAC, IsaacVariant.ISAAC},
-    [BossID.BLUE_BABY] = {EntityType.ISAAC, IsaacVariant.BLUE_BABY},
-    [BossID.DADDY_LONG_LEGS] = {EntityType.DADDY_LONG_LEGS, DaddyLongLegsVariant.DADDY_LONG_LEGS},
-    [BossID.TRIACHNID] = {EntityType.DADDY_LONG_LEGS, DaddyLongLegsVariant.TRIACHNID},
-    [BossID.HAUNT] = {EntityType.HAUNT, HauntVariant.HAUNT},
-    [BossID.DINGLE] = {EntityType.DINGLE, DingleVariant.DINGLE},
-    [BossID.MEGA_MAW] = {EntityType.MEGA_MAW, 0},
-    [BossID.GATE] = {EntityType.GATE, 0},
-    [BossID.MEGA_FATTY] = {EntityType.MEGA_FATTY, 0},
-    [BossID.CAGE] = {EntityType.CAGE, 0},
-    [BossID.MAMA_GURDY] = {EntityType.MAMA_GURDY, MamaGurdyVariant.MAMA_GURDY},
-    [BossID.DARK_ONE] = {EntityType.DARK_ONE, 0},
-    [BossID.ADVERSARY] = {EntityType.ADVERSARY, 0},
-    [BossID.POLYCEPHALUS] = {EntityType.POLYCEPHALUS, PolycephalusVariant.POLYCEPHALUS},
-    [BossID.MR_FRED] = {EntityType.MR_FRED, 0},
-    [BossID.LAMB] = {EntityType.LAMB, LambVariant.LAMB},
-    [BossID.MEGA_SATAN] = {EntityType.MEGA_SATAN, MegaSatanVariant.MEGA_SATAN},
-    [BossID.GURGLING] = {EntityType.GURGLING, GurglingVariant.GURGLING_BOSS},
-    [BossID.STAIN] = {EntityType.STAIN, 0},
-    [BossID.BROWNIE] = {EntityType.BROWNIE, 0},
-    [BossID.FORSAKEN] = {EntityType.FORSAKEN, 0},
-    [BossID.LITTLE_HORN] = {EntityType.LITTLE_HORN, LittleHornVariant.LITTLE_HORN},
-    [BossID.RAG_MAN] = {EntityType.RAG_MAN, RagManVariant.RAG_MAN},
-    [BossID.ULTRA_GREED] = {EntityType.ULTRA_GREED, UltraGreedVariant.ULTRA_GREED},
-    [BossID.HUSH] = {EntityType.HUSH, 0},
-    [BossID.DANGLE] = {EntityType.DINGLE, DingleVariant.DANGLE},
-    [BossID.TURDLING] = {EntityType.GURGLING, GurglingVariant.TURDLING},
-    [BossID.FRAIL] = {EntityType.PIN, PinVariant.FRAIL},
-    [BossID.RAG_MEGA] = {EntityType.RAG_MEGA, RagMegaVariant.RAG_MEGA},
-    [BossID.SISTERS_VIS] = {EntityType.SISTERS_VIS, 0},
-    [BossID.BIG_HORN] = {EntityType.BIG_HORN, BigHornVariant.BIG_HORN},
-    [BossID.DELIRIUM] = {EntityType.DELIRIUM, 0},
-    [BossID.ULTRA_GREEDIER] = {EntityType.ULTRA_GREED, UltraGreedVariant.ULTRA_GREEDIER},
-    [BossID.MATRIARCH] = {EntityType.MATRIARCH, 0},
-    [BossID.PILE] = {EntityType.POLYCEPHALUS, PolycephalusVariant.PILE},
-    [BossID.REAP_CREEP] = {EntityType.REAP_CREEP, 0},
-    [BossID.LIL_BLUB] = {EntityType.LIL_BLUB, 0},
-    [BossID.WORMWOOD] = {EntityType.PIN, PinVariant.WORMWOOD},
-    [BossID.RAINMAKER] = {EntityType.RAINMAKER, 0},
-    [BossID.VISAGE] = {EntityType.VISAGE, 0},
-    [BossID.SIREN] = {EntityType.SIREN, 0},
-    [BossID.TUFF_TWINS] = {EntityType.LARRY_JR, LarryJrVariant.TUFF_TWIN},
-    [BossID.HERETIC] = {EntityType.HERETIC, 0},
-    [BossID.HORNFEL] = {EntityType.HORNFEL, 0},
-    [BossID.GREAT_GIDEON] = {EntityType.GREAT_GIDEON, 0},
-    [BossID.BABY_PLUM] = {EntityType.BABY_PLUM, 0},
-    [BossID.SCOURGE] = {EntityType.SCOURGE, 0},
-    [BossID.CHIMERA] = {EntityType.CHIMERA, 0},
-    [BossID.ROTGUT] = {EntityType.ROTGUT, 0},
-    [BossID.MOTHER] = {EntityType.MOTHER, MotherVariant.MOTHER_1},
-    [BossID.MAUSOLEUM_MOM] = {EntityType.MOM, MomVariant.MOM},
-    [BossID.MAUSOLEUM_MOMS_HEART] = {EntityType.MOMS_HEART, MomsHeartVariant.MOMS_HEART},
-    [BossID.MIN_MIN] = {EntityType.MIN_MIN, 0},
-    [BossID.CLOG] = {EntityType.CLOG, 0},
-    [BossID.SINGE] = {EntityType.SINGE, 0},
-    [BossID.BUMBINO] = {EntityType.BUMBINO, 0},
-    [BossID.COLOSTOMIA] = {EntityType.COLOSTOMIA, 0},
-    [BossID.SHELL] = {EntityType.LARRY_JR, LarryJrVariant.SHELL},
-    [BossID.TURDLET] = {EntityType.TURDLET, 0},
-    [BossID.RAGLICH] = {EntityType.RAGLICH, RaglichVariant.RAGLICH},
-    [BossID.DOGMA] = {EntityType.DOGMA, DogmaVariant.DOGMA_PHASE_1},
-    [BossID.BEAST] = {EntityType.BEAST, BeastVariant.BEAST},
-    [BossID.HORNY_BOYS] = {EntityType.HORNY_BOYS, 0},
-    [BossID.CLUTCH] = {EntityType.CLUTCH, 0}
-}
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.src.maps.entityTypeVariantToBossIDMap"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ObjectEntries = ____lualib.__TS__ObjectEntries
-local __TS__ArrayMap = ____lualib.__TS__ArrayMap
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____bossIDToEntityTypeVariant = require("lua_modules.isaacscript-common.dist.src.objects.bossIDToEntityTypeVariant")
-local BOSS_ID_TO_ENTITY_TYPE_VARIANT = ____bossIDToEntityTypeVariant.BOSS_ID_TO_ENTITY_TYPE_VARIANT
-local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.src.types.ReadonlyMap")
-local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
-____exports.ENTITY_TYPE_VARIANT_TO_BOSS_ID_MAP = __TS__New(
-    ReadonlyMap,
-    __TS__ArrayMap(
-        {table.unpack(__TS__ObjectEntries(BOSS_ID_TO_ENTITY_TYPE_VARIANT))},
-        function(____, ____bindingPattern0)
-            local entityTypeVariant
-            local bossIDRaw
-            bossIDRaw = ____bindingPattern0[1]
-            entityTypeVariant = ____bindingPattern0[2]
-            local bossID = bossIDRaw
-            local entityType, variant = table.unpack(entityTypeVariant)
-            local entityTypeVariantString = (tostring(entityType) .. ".") .. tostring(variant)
-            return {entityTypeVariantString, bossID}
-        end
-    )
-)
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.src.functions.bombs"] = function(...) 
@@ -47559,7 +47867,6 @@ local fireProjectilesInCircle = ____projectiles.fireProjectilesInCircle
 local ____random = require("lua_modules.isaacscript-common.dist.src.functions.random")
 local getRandom = ____random.getRandom
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local isRNG = ____rng.isRNG
 local newRNG = ____rng.newRNG
 local ____spawnCollectible = require("lua_modules.isaacscript-common.dist.src.functions.spawnCollectible")
@@ -47589,9 +47896,6 @@ function SpawnRockAltRewards.prototype.____constructor(self, itemPoolDetection)
     self.itemPoolDetection = itemPoolDetection
 end
 function SpawnRockAltRewards.prototype.spawnRockAltReward(self, positionOrGridIndex, rockAltType, seedOrRNG)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     local room = game:GetRoom()
     local position = isVector(nil, positionOrGridIndex) and positionOrGridIndex or room:GetGridPosition(positionOrGridIndex)
     local rng = isRNG(nil, seedOrRNG) and seedOrRNG or newRNG(nil, seedOrRNG)
@@ -48002,8 +48306,6 @@ local ____ISCFeature = require("lua_modules.isaacscript-common.dist.src.enums.IS
 local ISCFeature = ____ISCFeature.ISCFeature
 local ____collectibleTag = require("lua_modules.isaacscript-common.dist.src.functions.collectibleTag")
 local isQuestCollectible = ____collectibleTag.isQuestCollectible
-local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local ____spawnCollectible = require("lua_modules.isaacscript-common.dist.src.functions.spawnCollectible")
 local spawnCollectibleUnsafe = ____spawnCollectible.spawnCollectibleUnsafe
 local ____Feature = require("lua_modules.isaacscript-common.dist.src.classes.private.Feature")
@@ -48018,9 +48320,6 @@ function SpawnCollectible.prototype.____constructor(self, preventCollectibleRota
     self.preventCollectibleRotation = preventCollectibleRotation
 end
 function SpawnCollectible.prototype.spawnCollectible(self, collectibleType, positionOrGridIndex, seedOrRNG, options, forceFreeItem, spawner)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if options == nil then
         options = false
     end
@@ -48043,9 +48342,6 @@ function SpawnCollectible.prototype.spawnCollectible(self, collectibleType, posi
 end
 __TS__DecorateLegacy({Exported}, SpawnCollectible.prototype, "spawnCollectible", true)
 function SpawnCollectible.prototype.spawnCollectibleFromPool(self, itemPoolType, positionOrGridIndex, seedOrRNG, options, forceFreeItem, spawner)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if options == nil then
         options = false
     end
@@ -50112,8 +50408,6 @@ local isHiddenCollectible = ____collectibles.isHiddenCollectible
 local isPassiveOrFamiliarCollectible = ____collectibles.isPassiveOrFamiliarCollectible
 local ____flag = require("lua_modules.isaacscript-common.dist.src.functions.flag")
 local getFlagName = ____flag.getFlagName
-local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local ____set = require("lua_modules.isaacscript-common.dist.src.functions.set")
 local copySet = ____set.copySet
 local deleteSetsFromSet = ____set.deleteSetsFromSet
@@ -50666,9 +50960,6 @@ function ModdedElementSets.prototype.getEdenPassiveCollectibleTypes(self)
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getEdenPassiveCollectibleTypes", true)
 function ModdedElementSets.prototype.getRandomEdenActiveCollectibleType(self, seedOrRNG, exceptions)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if exceptions == nil then
         exceptions = {}
     end
@@ -50677,9 +50968,6 @@ function ModdedElementSets.prototype.getRandomEdenActiveCollectibleType(self, se
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomEdenActiveCollectibleType", true)
 function ModdedElementSets.prototype.getRandomEdenPassiveCollectibleType(self, seedOrRNG, exceptions)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if exceptions == nil then
         exceptions = {}
     end
@@ -50733,9 +51021,6 @@ function ModdedElementSets.prototype.getCardTypesOfType(self, ...)
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCardTypesOfType", true)
 function ModdedElementSets.prototype.getRandomCardTypeOfType(self, itemConfigCardType, seedOrRNG, exceptions)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if exceptions == nil then
         exceptions = {}
     end
@@ -50744,9 +51029,6 @@ function ModdedElementSets.prototype.getRandomCardTypeOfType(self, itemConfigCar
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomCardTypeOfType", true)
 function ModdedElementSets.prototype.getRandomCard(self, seedOrRNG, exceptions)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if exceptions == nil then
         exceptions = {}
     end
@@ -50755,9 +51037,6 @@ function ModdedElementSets.prototype.getRandomCard(self, seedOrRNG, exceptions)
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomCard", true)
 function ModdedElementSets.prototype.getRandomRune(self, seedOrRNG, exceptions)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if exceptions == nil then
         exceptions = {}
     end
@@ -51739,7 +52018,7 @@ function ____exports.spawnCollectible(self, params)
     end
     local roomClass = game:GetRoom()
     local centerPos = roomClass:GetCenterPos()
-    spawnCollectibleUnsafe(nil, collectibleType, centerPos)
+    spawnCollectibleUnsafe(nil, collectibleType, centerPos, nil)
 end
 --- The same thing as the `spawnTrinket` command but spawns a golden version of the specified
 -- trinket.
@@ -52790,7 +53069,7 @@ function ____exports.spawnCollectibleAt(self, params)
         return
     end
     local collectibleType = asCollectibleType(nil, collectibleTypeNumber)
-    spawnCollectibleUnsafe(nil, collectibleType, gridIndex)
+    spawnCollectibleUnsafe(nil, collectibleType, gridIndex, nil)
 end
 --- Alias for the `spawnGoldenTrinket` command.
 function ____exports.spawnGoldTrinket(self, params)
@@ -53350,7 +53629,6 @@ local getRandomJSONEntity = ____jsonRoom.getRandomJSONEntity
 local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
 local log = ____log.log
 local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local isRNG = ____rng.isRNG
 local newRNG = ____rng.newRNG
 local ____roomGrid = require("lua_modules.isaacscript-common.dist.src.functions.roomGrid")
@@ -53520,7 +53798,7 @@ function DeployJSONRoom.prototype.spawnAllEntities(self, jsonRoom, rng, verbose)
         local yString = jsonSpawn["$"].y
         local y = tonumber(yString)
         assertDefined(nil, y, "Failed to convert the following y coordinate to a number (for a spawn): " .. yString)
-        local jsonEntity = getRandomJSONEntity(nil, jsonSpawn.entity)
+        local jsonEntity = getRandomJSONEntity(nil, jsonSpawn.entity, rng)
         local entityTypeString = jsonEntity["$"].type
         local entityTypeNumber = tonumber(entityTypeString)
         assertDefined(nil, entityTypeNumber, "Failed to convert the entity type to a number: " .. entityTypeString)
@@ -53611,9 +53889,6 @@ function DeployJSONRoom.prototype.spawnNormalEntityForJSONRoom(self, entityType,
     return entity
 end
 function DeployJSONRoom.prototype.deployJSONRoom(self, jsonRoom, seedOrRNG, verbose)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if verbose == nil then
         verbose = false
     end
@@ -55733,8 +56008,6 @@ local ____log = require("lua_modules.isaacscript-common.dist.src.functions.log")
 local log = ____log.log
 local ____random = require("lua_modules.isaacscript-common.dist.src.functions.random")
 local getRandomFloat = ____random.getRandomFloat
-local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 function getTotalWeightOfCustomStageRooms(self, roomsMetadata)
     local weights = __TS__ArrayMap(
         roomsMetadata,
@@ -55773,9 +56046,6 @@ end
 -- properly account for each room weight using the algorithm from:
 -- https://stackoverflow.com/questions/1761626/weighted-random-numbers
 function ____exports.getRandomCustomStageRoom(self, roomsMetadata, seedOrRNG, verbose)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if verbose == nil then
         verbose = false
     end
@@ -55790,9 +56060,6 @@ function ____exports.getRandomCustomStageRoom(self, roomsMetadata, seedOrRNG, ve
     return getCustomStageRoomWithChosenWeight(nil, roomsMetadata, chosenWeight)
 end
 function ____exports.getRandomBossRoomFromPool(self, roomsMetadata, bossPool, seedOrRNG, verbose)
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
-    end
     if verbose == nil then
         verbose = false
     end
@@ -56619,8 +56886,6 @@ local ____array = require("lua_modules.isaacscript-common.dist.src.functions.arr
 local arrayRemoveIndexInPlace = ____array.arrayRemoveIndexInPlace
 local ____map = require("lua_modules.isaacscript-common.dist.src.functions.map")
 local copyMap = ____map.copyMap
-local ____rng = require("lua_modules.isaacscript-common.dist.src.functions.rng")
-local getRandomSeed = ____rng.getRandomSeed
 local ____utils = require("lua_modules.isaacscript-common.dist.src.functions.utils")
 local assertDefined = ____utils.assertDefined
 local ____weighted = require("lua_modules.isaacscript-common.dist.src.functions.weighted")
@@ -56648,12 +56913,9 @@ function CustomItemPools.prototype.registerCustomItemPool(self, itemPoolTypeCust
     customItemPoolMap:set(itemPoolTypeCustom, collectibles)
 end
 __TS__DecorateLegacy({Exported}, CustomItemPools.prototype, "registerCustomItemPool", true)
-function CustomItemPools.prototype.getCustomItemPoolCollectible(self, itemPoolTypeCustom, decrease, seedOrRNG, defaultItem)
+function CustomItemPools.prototype.getCustomItemPoolCollectible(self, itemPoolTypeCustom, seedOrRNG, decrease, defaultItem)
     if decrease == nil then
         decrease = false
-    end
-    if seedOrRNG == nil then
-        seedOrRNG = getRandomSeed(nil)
     end
     if defaultItem == nil then
         defaultItem = CollectibleType.NULL
@@ -67246,7 +67508,7 @@ function ____exports.fixWires(self)
     end
     local topRightGridIndex = 28
     local wireColors = getEnumValues(nil, WireColor)
-    local randomWireColors = shuffleArray(nil, wireColors)
+    local randomWireColors = shuffleArray(nil, wireColors, nil)
     do
         local i = 0
         while i < NUM_BUTTONS do
@@ -67375,7 +67637,7 @@ function setupRound(self)
         local sprite = initGlowingItemSprite(nil, randomCollectible)
         collectibleSprites[#collectibleSprites + 1] = sprite
     end
-    local randomIndex = getRandomArrayIndex(nil, randomCollectibles)
+    local randomIndex = getRandomArrayIndex(nil, randomCollectibles, nil)
     local randomCollectible = randomCollectibles[randomIndex + 1]
     correctCollectibleIndex = randomIndex
     currentCollectible = getCollectibleName(nil, randomCollectible)
@@ -67745,7 +68007,7 @@ function setupRound(self)
         local sprite = initGlowingItemSprite(nil, randomTrinket, true)
         trinketSprites[#trinketSprites + 1] = sprite
     end
-    local randomIndex = getRandomArrayIndex(nil, randomTrinkets)
+    local randomIndex = getRandomArrayIndex(nil, randomTrinkets, nil)
     local randomTrinket = randomTrinkets[randomIndex + 1]
     correctTrinketIndex = randomIndex
     currentTrinket = getTrinketName(nil, randomTrinket)
@@ -67922,7 +68184,7 @@ function setNewButtonOrder(self)
             i = i + 1
         end
     end
-    shuffleArrayInPlace(nil, buttonOrder)
+    shuffleArrayInPlace(nil, buttonOrder, nil)
     nextButtonToPress = 0
 end
 function spawnButtons(self)
