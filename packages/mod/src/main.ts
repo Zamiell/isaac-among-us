@@ -1,5 +1,5 @@
 import { IS_DEV } from "common";
-import { Keyboard } from "isaac-typescript-definitions";
+import { Keyboard, StageAPICallback } from "isaac-typescript-definitions";
 import { log } from "isaacscript-common";
 import * as entityTakeDmg from "./callbacks/entityTakeDmg";
 import * as evaluateCache from "./callbacks/evaluateCache";
