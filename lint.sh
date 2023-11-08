@@ -65,7 +65,7 @@ npx cspell-check-unused-words
 
 # @template-customization-start
 # Check for base file updates.
-npx isaacscript check --ignore ".eslintrc.cjs,build.sh,bundleEntry.ts,publish.sh,run.sh,tsconfig.json,tsconfig.eslint.json"
+npx isaacscript check --ignore ".eslintrc.cjs,build.sh,bundleEntry.ts,lint.ts,publish.sh,run.sh,tsconfig.json,tsconfig.eslint.json"
 # @template-customization-end
 
 echo "Successfully linted $REPO_NAME in $SECONDS seconds."

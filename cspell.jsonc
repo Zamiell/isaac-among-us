@@ -8,22 +8,24 @@
   "useGitignore": true,
   "ignorePaths": [
     "*.anm2",
-    // @template-ignore-next-line
-    "*.lua",
+    "*.ogg",
     "*.pyc",
     "*.stb",
     "*.wav",
     ".git/**",
     ".yarn/**",
     "dist/**",
-    // @template-ignore-next-line
-    "migration.sql",
+    "mod/main.lua",
     "mod/content/rooms/**",
     "mod/resources/rooms/**",
     "node_modules/**",
     "package-lock.json",
     "pnpm-lock.yaml",
-    "yarn.lock"
+    "yarn.lock",
+    // @template-customization-start
+    "*.lua",
+    "migration.sql",
+    // @template-customization-end
   ],
   "words": [
     "amongus",
@@ -44,6 +46,6 @@
     "Somdudewillson",
     "STAGEAPI",
     "unstarted",
-    "voteskip"
-  ]
+    "voteskip",
+  ],
 }
