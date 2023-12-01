@@ -46,6 +46,7 @@ function addDevTask(player: Player) {
   }
 }
 
+// eslint-disable-next-line isaacscript/no-mutable-return
 function getTasksOfType(tasks: Set<Task>, taskType: TaskType): Set<Task> {
   const tasksOfType = new Set<Task>();
   for (const task of tasks) {

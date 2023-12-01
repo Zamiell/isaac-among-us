@@ -21,7 +21,7 @@ type TranspiledEnum = Record<string, string | number>;
  *
  * This function is variadic, meaning that you can specify N arguments to remove N elements.
  */
-// eslint-disable-next-line isaacscript/no-mutable-array-return
+// eslint-disable-next-line isaacscript/no-mutable-return
 function arrayRemove<T>(
   originalArray: T[] | readonly T[],
   ...elementsToRemove: T[]
@@ -175,7 +175,7 @@ function getRandomInt(
 }
 
 /** Initializes an array with all elements containing the specified default value. */
-// eslint-disable-next-line isaacscript/no-mutable-array-return
+// eslint-disable-next-line isaacscript/no-mutable-return
 export function newArray<T>(length: number, value: T): T[] {
   return Array.from({ length }, () => value);
 }

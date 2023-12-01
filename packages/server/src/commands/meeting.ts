@@ -207,7 +207,7 @@ function getMeetingResolution(game: Game): [MeetingResolution, number] {
   return defaultReturn;
 }
 
-function getVoteMap(votes: number[]) {
+function getVoteMap(votes: number[]): ReadonlyMap<number, number> {
   /** Indexed by user ID. Values are number of votes. */
   const voteMap = new Map<number, number>();
 
@@ -230,7 +230,7 @@ function getVoteMap(votes: number[]) {
 
 function getUserIDsThatHaveNumVotes(
   numVotesToMatch: number,
-  voteMap: Map<number, number>,
+  voteMap: ReadonlyMap<number, number>,
 ): readonly number[] {
   const userIDs: number[] = [];
   for (const [userID, numVotes] of voteMap) {

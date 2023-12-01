@@ -12,6 +12,7 @@ interface UDPSocket {
 /** Indexed by game ID then by user ID. Keys are TTL values. */
 export const udpSockets = new Map<number, Map<number, UDPSocket>>();
 
+// eslint-disable-next-line isaacscript/no-mutable-return
 export function getGameMap(gameID: number): Map<number, UDPSocket> {
   // Lazy-init the connection map for every game.
   let gameMap = udpSockets.get(gameID);
