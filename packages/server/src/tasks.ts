@@ -1,5 +1,4 @@
 import { IS_DEV, TASK_DESCRIPTIONS, Task, TaskType } from "common";
-import { getEnumValues } from "isaacscript-common";
 import type { Game } from "./classes/Game.js";
 import type { Player } from "./classes/Player.js";
 import {
@@ -7,7 +6,7 @@ import {
   DEFAULT_NUM_LONG_TASKS,
   DEFAULT_NUM_SHORT_TASKS,
 } from "./constants.js";
-import { getRandomArrayElement } from "./isaacScriptCommonTS.js";
+import { getEnumValues, getRandomArrayElement } from "./isaacScriptCommonTS.js";
 
 const DEV_TASK = undefined as Task | undefined;
 
