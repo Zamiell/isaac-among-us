@@ -2,7 +2,7 @@ import { SocketCommandModToServer } from "common";
 import { addLocalChat } from "../chat";
 import { sendTCP } from "../network/send";
 
-export function usernameChatCommand(args: string[]): void {
+export function usernameChatCommand(args: readonly string[]): void {
   if (args.length === 0) {
     addLocalChat('You must provide a username. (e.g. "/username Alice")');
     return;

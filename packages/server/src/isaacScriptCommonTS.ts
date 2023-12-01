@@ -4,6 +4,10 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+export type ReadonlyRecord<K extends string | number | symbol, V> = Readonly<
+  Record<K, V>
+>;
+
 interface ReadonlySetConstructor {
   new <T = any>(values?: readonly T[] | Iterable<T> | null): ReadonlySet<T>;
   readonly prototype: ReadonlySet<any>;
@@ -23,8 +27,8 @@ type TranspiledEnum = Record<string, string | number>;
  */
 // eslint-disable-next-line isaacscript/no-mutable-return
 function arrayRemove<T>(
-  originalArray: T[] | readonly T[],
-  ...elementsToRemove: T[]
+  originalArray: readonly T[],
+  ...elementsToRemove: readonly T[]
 ): T[] {
   const elementsToRemoveSet = new ReadonlySet(elementsToRemove);
 
@@ -45,8 +49,9 @@ function arrayRemove<T>(
  * This function is variadic, meaning that you can specify N arguments to remove N elements.
  */
 export function arrayRemoveInPlace<T>(
+  // eslint-disable-next-line isaacscript/prefer-readonly-parameter-types
   array: T[],
-  ...elementsToRemove: T[]
+  ...elementsToRemove: readonly T[]
 ): boolean {
   let removedOneOrMoreElements = false;
   for (const element of elementsToRemove) {
@@ -61,6 +66,7 @@ export function arrayRemoveInPlace<T>(
 }
 
 /** Helper function to remove all of the elements in an array in-place. */
+// eslint-disable-next-line isaacscript/prefer-readonly-parameter-types
 export function emptyArray<T>(array: T[]): void {
   array.splice(0, array.length);
 }
@@ -91,8 +97,8 @@ export function getEnumValues<T extends TranspiledEnum>(
  * @param exceptions Optional. An array of elements to skip over if selected.
  */
 export function getRandomArrayElement<T>(
-  array: T[] | readonly T[],
-  exceptions: T[] | readonly T[] = [],
+  array: readonly T[],
+  exceptions: readonly T[] = [],
 ): T {
   if (array.length === 0) {
     throw new Error(
@@ -120,8 +126,8 @@ export function getRandomArrayElement<T>(
  *                   index. Default is an empty array.
  */
 export function getRandomArrayIndex<T>(
-  array: T[] | readonly T[],
-  exceptions: number[] | readonly number[] = [],
+  array: readonly T[],
+  exceptions: readonly number[] = [],
 ): number {
   if (array.length === 0) {
     throw new Error(
@@ -151,7 +157,7 @@ export function getRandomArrayIndex<T>(
 function getRandomInt(
   min: number,
   max: number,
-  exceptions: number[] | readonly number[] = [],
+  exceptions: readonly number[] = [],
 ): number {
   min = Math.ceil(min);
   max = Math.floor(max);

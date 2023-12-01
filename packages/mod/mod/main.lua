@@ -24802,7 +24802,8 @@ function ____exports.doesAnyEntityExist(self, entityTypes, ignoreFriendly)
     if ignoreFriendly == nil then
         ignoreFriendly = false
     end
-    local entityTypesArray = isTSTLSet(nil, entityTypes) and ({__TS__Spread(entityTypes:values())}) or entityTypes
+    local entityTypesMutable = entityTypes
+    local entityTypesArray = isTSTLSet(nil, entityTypesMutable) and ({__TS__Spread(entityTypesMutable:values())}) or entityTypesMutable
     return __TS__ArraySome(
         entityTypesArray,
         function(____, entityType) return ____exports.doesEntityExist(
@@ -32989,7 +32990,8 @@ end
 --- Helper function to convert an array of door slots or a set of door slots to the resulting bit
 -- flag number.
 function ____exports.doorSlotsToDoorSlotFlags(self, doorSlots)
-    local doorSlotArray = isTSTLSet(nil, doorSlots) and ({__TS__Spread(doorSlots:values())}) or doorSlots
+    local doorSlotsMutable = doorSlots
+    local doorSlotArray = isTSTLSet(nil, doorSlotsMutable) and ({__TS__Spread(doorSlotsMutable:values())}) or doorSlotsMutable
     local doorSlotFlagArray = __TS__ArrayMap(
         doorSlotArray,
         function(____, doorSlot) return ____exports.doorSlotToDoorSlotFlag(nil, doorSlot) end
@@ -33364,7 +33366,7 @@ end
 --- Helper function to convert a set of flags to a single `BitFlags` object.
 function ____exports.setToBitFlags(self, set)
     local flags = 0
-    for ____, flag in __TS__Iterator(set:values()) do
+    for ____, flag in __TS__Iterator(set) do
         flags = addFlag(nil, flags, flag)
     end
     return flags
@@ -39210,7 +39212,7 @@ end
 -- `Set.add` method if you have a set of this type.
 function ____exports.setAddPlayer(self, set, player)
     local playerIndex = getPlayerIndex(nil, player)
-    return set:add(playerIndex)
+    set:add(playerIndex)
 end
 --- Helper function to make using sets with an type of `PlayerIndex` easier. Use this instead of the
 -- `Set.delete` method if you have a set of this type.
@@ -40436,7 +40438,7 @@ end
 -- `Set.add` method if you have a set of this type.
 function ____exports.setAddNPC(self, set, npc)
     local ptrHash = GetPtrHash(npc)
-    return set:add(ptrHash)
+    set:add(ptrHash)
 end
 --- Helper function to make using sets with an type of `PtrHash` easier. Use this instead of the
 -- `Set.delete` method if you have a set of this type.
@@ -42213,7 +42215,7 @@ end
 --- Helper function to copy a map. (You can also use a Map constructor to accomplish this task.)
 function ____exports.copyMap(self, oldMap)
     local newMap = __TS__New(Map)
-    for ____, ____value in __TS__Iterator(oldMap:entries()) do
+    for ____, ____value in __TS__Iterator(oldMap) do
         local key = ____value[1]
         local value = ____value[2]
         newMap:set(key, value)
@@ -42846,7 +42848,6 @@ local ____lualib = require("lualib_bundle")
 local __TS__SparseArrayNew = ____lualib.__TS__SparseArrayNew
 local __TS__SparseArrayPush = ____lualib.__TS__SparseArrayPush
 local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
-local Set = ____lualib.Set
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local ItemPoolType = ____isaac_2Dtypescript_2Ddefinitions.ItemPoolType
@@ -50694,47 +50695,47 @@ local ____exports = {}
 --- Helper function for non-TypeScript users to check if every element in the array is equal to a
 -- condition.
 -- 
--- Internally, this just calls `array.every`.
+-- Internally, this just calls `Array.every`.
 function ____exports.every(self, array, func)
     return __TS__ArrayEvery(array, func)
 end
 --- Helper function for non-TypeScript users to filter the elements in an array. Returns the filtered
 -- array.
 -- 
--- Internally, this just calls `array.filter`.
+-- Internally, this just calls `Array.filter`.
 function ____exports.filter(self, array, func)
     return __TS__ArrayFilter(array, func)
 end
 --- Helper function for non-TypeScript users to find an element in an array.
 -- 
--- Internally, this just calls `array.find`.
+-- Internally, this just calls `Array.find`.
 function ____exports.find(self, array, func)
     return __TS__ArrayFind(array, func)
 end
 --- Helper function for non-TypeScript users to iterate over an array.
 -- 
--- Internally, this just calls `array.forEach`.
+-- Internally, this just calls `Array.forEach`.
 function ____exports.forEach(self, array, func)
     __TS__ArrayForEach(array, func)
 end
 --- Helper function for non-TypeScript users to convert an array to a string with the specified
 -- separator.
 -- 
--- Internally, this just calls `array.join`.
+-- Internally, this just calls `Array.join`.
 function ____exports.join(self, array, separator)
     return __TS__ArrayJoin(array, separator)
 end
 --- Helper function for non-TypeScript users to convert all of the elements in an array to something
 -- else.
 -- 
--- Internally, this just calls `array.map`.
+-- Internally, this just calls `Array.map`.
 function ____exports.map(self, array, func)
     return __TS__ArrayMap(array, func)
 end
 --- Helper function for non-TypeScript users to check if one or more elements in the array is equal
 -- to a condition.
 -- 
--- Internally, this just calls `array.some`.
+-- Internally, this just calls `Array.some`.
 function ____exports.some(self, array, func)
     return __TS__ArraySome(array, func)
 end
@@ -54438,6 +54439,9 @@ local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local Set = ____lualib.Set
 local Map = ____lualib.Map
 local __TS__DecorateLegacy = ____lualib.__TS__DecorateLegacy
+local __TS__SparseArrayNew = ____lualib.__TS__SparseArrayNew
+local __TS__SparseArrayPush = ____lualib.__TS__SparseArrayPush
+local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local CacheFlag = ____isaac_2Dtypescript_2Ddefinitions.CacheFlag
@@ -55100,8 +55104,10 @@ function ModdedElementSets.prototype.getRandomRune(self, seedOrRNG, exceptions)
         exceptions = {}
     end
     local runeCardTypes = self:getCardTypesOfType(ItemConfigCardType.RUNE)
-    exceptions[#exceptions + 1] = CardType.RUNE_SHARD
-    return getRandomArrayElement(nil, runeCardTypes, seedOrRNG, exceptions)
+    local ____array_13 = __TS__SparseArrayNew(table.unpack(exceptions))
+    __TS__SparseArrayPush(____array_13, CardType.RUNE_SHARD)
+    local runeExceptions = {__TS__SparseArraySpread(____array_13)}
+    return getRandomArrayElement(nil, runeCardTypes, seedOrRNG, runeExceptions)
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomRune", true)
 return ____exports
@@ -57651,8 +57657,8 @@ local __TS__New = ____lualib.__TS__New
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__DecorateLegacy = ____lualib.__TS__DecorateLegacy
-local Map = ____lualib.Map
 local __TS__Iterator = ____lualib.__TS__Iterator
+local Map = ____lualib.Map
 local ____exports = {}
 local spawnGridEntityForJSONRoom, fixPitGraphics, getPitMap, getPitFrame
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
@@ -60925,8 +60931,8 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.classes.features.other.CustomItemPools"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
+local Map = ____lualib.Map
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__DecorateLegacy = ____lualib.__TS__DecorateLegacy
@@ -60945,9 +60951,11 @@ local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local assertDefined = ____utils.assertDefined
 local ____weighted = require("lua_modules.isaacscript-common.dist.functions.weighted")
 local getRandomIndexFromWeightedArray = ____weighted.getRandomIndexFromWeightedArray
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 local ____Feature = require("lua_modules.isaacscript-common.dist.classes.private.Feature")
 local Feature = ____Feature.Feature
-local v = {run = {customItemPools = __TS__New(Map)}}
+local v = {run = {customItemPools = __TS__New(ReadonlyMap)}}
 local customItemPoolMap = __TS__New(Map)
 ____exports.CustomItemPools = __TS__Class()
 local CustomItemPools = ____exports.CustomItemPools

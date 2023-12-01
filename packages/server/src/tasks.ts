@@ -47,7 +47,10 @@ function addDevTask(player: Player) {
 }
 
 // eslint-disable-next-line isaacscript/no-mutable-return
-function getTasksOfType(tasks: Set<Task>, taskType: TaskType): Set<Task> {
+function getTasksOfType(
+  tasks: ReadonlySet<Task>,
+  taskType: TaskType,
+): Set<Task> {
   const tasksOfType = new Set<Task>();
   for (const task of tasks) {
     const taskDescription = TASK_DESCRIPTIONS[task];
@@ -75,6 +78,7 @@ function getNumTasks(taskType: TaskType) {
   }
 }
 
+// eslint-disable-next-line isaacscript/prefer-readonly-parameter-types
 function checkRefillTasks(tasks: Set<Task>, taskType: TaskType) {
   if (tasks.size === 0) {
     // There are so many players in this game that we have already assigned every task of this type;

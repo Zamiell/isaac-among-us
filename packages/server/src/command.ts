@@ -6,6 +6,7 @@ import { getPlayer } from "./game.js";
 import { games, getGameByName } from "./games.js";
 import type { ExtraCommandData } from "./interfaces/ExtraCommandData.js";
 import type { Socket } from "./interfaces/Socket.js";
+import type { ReadonlyRecord } from "./isaacScriptCommonTS.js";
 import { ReadonlySet } from "./isaacScriptCommonTS.js";
 import {
   validateAlphanumeric,
@@ -252,7 +253,7 @@ function validateNumberAndInteger(socket: Socket, key: string, value: unknown) {
   return true;
 }
 
-function getExtraData(socket: Socket, data: Record<string, unknown>) {
+function getExtraData(socket: Socket, data: ReadonlyRecord<string, unknown>) {
   const extraData: ExtraCommandData = {};
 
   const { userID } = socket;

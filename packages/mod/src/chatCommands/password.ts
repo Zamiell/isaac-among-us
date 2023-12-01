@@ -3,7 +3,7 @@ import { addLocalChat } from "../chat";
 import { g } from "../globals";
 import { sendTCP } from "../network/send";
 
-export function passwordChatCommand(args: string[]): void {
+export function passwordChatCommand(args: readonly string[]): void {
   if (args.length === 0) {
     addLocalChat('You must provide a password. (e.g. "/password hunter2")');
     return;
