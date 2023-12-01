@@ -12,6 +12,8 @@ interface ReadonlySetConstructor {
 /** An alias for the `Set` constructor that returns a read-only set. */
 export const ReadonlySet = Set as ReadonlySetConstructor;
 
+type TranspiledEnum = Record<string, string | number>;
+
 /**
  * Shallow copies and removes the specified element(s) from the array. Returns the copied array. If
  * the specified element(s) are not found in the array, it will simply return a shallow copy of the
@@ -19,6 +21,7 @@ export const ReadonlySet = Set as ReadonlySetConstructor;
  *
  * This function is variadic, meaning that you can specify N arguments to remove N elements.
  */
+// eslint-disable-next-line isaacscript/no-mutable-array-return
 function arrayRemove<T>(
   originalArray: T[] | readonly T[],
   ...elementsToRemove: T[]
@@ -60,6 +63,25 @@ export function arrayRemoveInPlace<T>(
 /** Helper function to remove all of the elements in an array in-place. */
 export function emptyArray<T>(array: T[]): void {
   array.splice(0, array.length);
+}
+
+/**
+ * Helper function to get the only the values of an enum.
+ *
+ * (By default, TypeScript will put the keys inside of the values of a number-based enum, so those
+ * have to be filtered out.)
+ *
+ * This function will work properly for both number and string enums.
+ */
+export function getEnumValues<T extends TranspiledEnum>(
+  transpiledEnum: T,
+): ReadonlyArray<T[keyof T]> {
+  const values = Object.values(transpiledEnum);
+  const numberValues = values.filter((value) => typeof value === "number");
+
+  // If there are no number values, then this must be a string enum, and no filtration is required.
+  const valuesToReturn = numberValues.length > 0 ? numberValues : values;
+  return valuesToReturn as Array<T[keyof T]>;
 }
 
 /**
@@ -153,6 +175,32 @@ function getRandomInt(
 }
 
 /** Initializes an array with all elements containing the specified default value. */
+// eslint-disable-next-line isaacscript/no-mutable-array-return
 export function newArray<T>(length: number, value: T): T[] {
   return Array.from({ length }, () => value);
+}
+
+/**
+ * Helper function to repeat code N times. This is faster to type and cleaner than using a for loop.
+ *
+ * For example:
+ *
+ * ```ts
+ * repeat(10, () => {
+ *   foo();
+ * });
+ * ```
+ *
+ * The repeated function is passed the index of the iteration, if needed:
+ *
+ * ```ts
+ * repeat(3, (i) => {
+ *   console.log(i); // Prints "0", "1", "2"
+ * });
+ * ```
+ */
+export function repeat(num: number, func: (i: number) => void): void {
+  for (let i = 0; i < num; i++) {
+    func(i);
+  }
 }

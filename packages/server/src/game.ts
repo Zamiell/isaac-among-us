@@ -1,7 +1,7 @@
 import { PlayerTypeAllowed } from "common";
 import type { Game } from "./classes/Game.js";
 import type { Player } from "./classes/Player.js";
-import { getEnumValues } from "./utils.js";
+import { getEnumValues } from "./isaacScriptCommonTS.js";
 
 export function getLowestUnusedCharacter(game: Game): PlayerTypeAllowed {
   const existingCharacters = new Set<PlayerTypeAllowed>();

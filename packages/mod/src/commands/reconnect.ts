@@ -25,9 +25,9 @@ export function commandReconnect(data: ReconnectDataToMod): void {
     data.ownerUserID,
     data.character,
   );
-  g.game.players = data.players;
+  g.game.players = [...data.players];
   g.game.started = true;
-  g.game.imposterUserIDs = data.imposterUserIDs;
+  g.game.imposterUserIDs = [...data.imposterUserIDs];
   g.game.ourTasks = data.tasks;
   g.game.role = data.imposterUserIDs.length === 0 ? Role.CREW : Role.IMPOSTER;
   g.game.meeting = data.meeting;
@@ -38,7 +38,7 @@ export function commandReconnect(data: ReconnectDataToMod): void {
     return;
   }
   g.game.usedEmergencyMeeting = player.usedEmergencyMeeting;
-  g.game.bodies = data.bodies;
+  g.game.bodies = [...data.bodies];
 
   disableSendingEvents();
   loadMap();

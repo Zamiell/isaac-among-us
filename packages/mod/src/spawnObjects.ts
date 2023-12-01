@@ -69,7 +69,7 @@ function getGridIncrement(direction: Direction) {
 
     // 1
     case Direction.UP: {
-      return -gridWidth;
+      return gridWidth * -1;
     }
 
     // 2

@@ -69,7 +69,7 @@ function enableButton(enable: boolean) {
   }
 }
 
-export function getMeetingCirclePoints(): Vector[] {
+export function getMeetingCirclePoints(): ReadonlyArray<Readonly<Vector>> {
   if (g.game === null) {
     error("Failed to get the meeting circle points since the game is null.");
   }

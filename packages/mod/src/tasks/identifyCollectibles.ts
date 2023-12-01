@@ -74,7 +74,7 @@ function setupRound() {
   resetAllButtons();
 }
 
-function getRandomCollectibles(): CollectibleType[] {
+function getRandomCollectibles(): readonly CollectibleType[] {
   const randomCollectibles: CollectibleType[] = [];
   repeat(NUM_RANDOM_COLLECTIBLES, () => {
     const randomCollectible = getRandomArrayElement(

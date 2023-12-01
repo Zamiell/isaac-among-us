@@ -29,7 +29,7 @@ export function startAutoLogin(): void {
   }
 }
 
-export function onGameList(gameList: GameListDescription[]): void {
+export function onGameList(gameList: readonly GameListDescription[]): void {
   if (!autoLogin || g.game !== null) {
     return;
   }

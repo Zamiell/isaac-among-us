@@ -231,7 +231,7 @@ function getVoteMap(votes: number[]) {
 function getUserIDsThatHaveNumVotes(
   numVotesToMatch: number,
   voteMap: Map<number, number>,
-) {
+): readonly number[] {
   const userIDs: number[] = [];
   for (const [userID, numVotes] of voteMap) {
     if (numVotes === numVotesToMatch) {

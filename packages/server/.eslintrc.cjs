@@ -24,5 +24,60 @@ module.exports = {
     "unicorn/no-null": "off",
 
     "no-param-reassign": "off",
+
+    // Copy-pasted from "eslint-config-isaacscript".
+    "@typescript-eslint/no-restricted-imports": [
+      "error",
+      {
+        patterns: [
+          // Some "src" directories have an "index.ts" file, which means that importing from the
+          // directory is valid. Thus, we check for the "src" directory with no suffix.
+          {
+            group: ["**/src"],
+            message:
+              'You cannot import from a "src" directory. If this is a monorepo, import using the package name like you would in a non-monorepo project.',
+          },
+
+          {
+            group: ["**/src/**"],
+            message:
+              'You cannot import from a "src" directory. If this is a monorepo, import using the package name like you would in a non-monorepo project.',
+          },
+
+          // Some "dist" directories have an "index.ts" file, which means that importing from the
+          // directory is valid. Thus, we check for the "dist" directory with no suffix.
+          {
+            group: ["**/dist"],
+            message:
+              'You cannot import from a "dist" directory. If this is a monorepo, import using the package name like you would in a non-monorepo project.',
+          },
+
+          {
+            group: ["**/dist/**"],
+            message:
+              'You cannot import from a "dist" directory. If this is a monorepo, import using the package name like you would in a non-monorepo project.',
+          },
+
+          {
+            group: ["**/index"],
+            message:
+              "You cannot import from a package index. Instead, import directly from the file where the code is located.",
+          },
+
+          {
+            group: ["**/index.{js,cjs,mjs,ts,cts,mts}"],
+            message:
+              "You cannot import from a package index. Instead, import directly from the file where the code is located.",
+          },
+
+          // Added for this project.
+          {
+            group: ["isaacscript-common"],
+            message:
+              "You cannot import from Lua packages on the TypeScript server.",
+          },
+        ],
+      },
+    ],
   },
 };

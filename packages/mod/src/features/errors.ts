@@ -122,7 +122,7 @@ function drawText(text: string) {
   }
 }
 
-function wordWrap(line: string): string[] {
+function wordWrap(line: string): readonly string[] {
   let spaceLeft = MAX_CHARACTERS;
   const words = line.split(" ");
   for (let i = 0; i < words.length; i++) {

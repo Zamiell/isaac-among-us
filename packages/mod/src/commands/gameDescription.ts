@@ -9,7 +9,7 @@ export function commandGameDescription(data: GameDescriptionDataToMod): void {
     return;
   }
 
-  g.game.players = data.players;
+  g.game.players = [...data.players];
   g.game.started = data.started;
   g.game.meeting = data.meeting;
 

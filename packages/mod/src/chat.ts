@@ -27,7 +27,7 @@ export function addLocalChat(msg: string): void {
   log(msg);
 }
 
-export function getAllChat(): ChatMessage[] {
+export function getAllChat(): readonly ChatMessage[] {
   return [...chatMessages];
 }
 

@@ -10,7 +10,7 @@ export function commandStarted(data: StartedDataToMod): void {
   }
 
   g.game.started = true;
-  g.game.imposterUserIDs = data.imposterUserIDs;
+  g.game.imposterUserIDs = [...data.imposterUserIDs];
   g.game.role = data.imposterUserIDs.length === 0 ? Role.CREW : Role.IMPOSTER;
   g.game.ourTasks = data.tasks;
 

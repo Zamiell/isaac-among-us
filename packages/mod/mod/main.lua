@@ -1509,6 +1509,10 @@ local function __TS__NumberIsFinite(value)
     return type(value) == "number" and value == value and value ~= math.huge and value ~= -math.huge
 end
 
+local function __TS__NumberIsInteger(value)
+    return __TS__NumberIsFinite(value) and math.floor(value) == value
+end
+
 local function __TS__NumberIsNaN(value)
     return value ~= value
 end
@@ -2610,6 +2614,7 @@ return {
   __TS__New = __TS__New,
   __TS__Number = __TS__Number,
   __TS__NumberIsFinite = __TS__NumberIsFinite,
+  __TS__NumberIsInteger = __TS__NumberIsInteger,
   __TS__NumberIsNaN = __TS__NumberIsNaN,
   __TS__ParseInt = __TS__ParseInt,
   __TS__ParseFloat = __TS__ParseFloat,
@@ -4739,6 +4744,14 @@ do
     end
 end
 do
+    local ____export = require("lua_modules.isaacscript-common.dist.functions.storyBosses")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+do
     local ____export = require("lua_modules.isaacscript-common.dist.functions.string")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
@@ -5353,6 +5366,14 @@ do
 end
 do
     local ____export = require("lua_modules.isaac-typescript-definitions.dist.enums.Music")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+do
+    local ____export = require("lua_modules.isaac-typescript-definitions.dist.enums.NPCID")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
             ____exports[____exportKey] = ____exportValue
@@ -7461,7 +7482,7 @@ ____exports.HostVariant.HOST = 0
 ____exports.HostVariant[____exports.HostVariant.HOST] = "HOST"
 ____exports.HostVariant.RED_HOST = 1
 ____exports.HostVariant[____exports.HostVariant.RED_HOST] = "RED_HOST"
-____exports.HostVariant.HARD_HOST = 2
+____exports.HostVariant.HARD_HOST = 3
 ____exports.HostVariant[____exports.HostVariant.HARD_HOST] = "HARD_HOST"
 --- For `EntityType.CHUB` (28).
 ____exports.ChubVariant = {}
@@ -7779,7 +7800,7 @@ ____exports.MomsHeartVariant.MOMS_HEART = 0
 ____exports.MomsHeartVariant[____exports.MomsHeartVariant.MOMS_HEART] = "MOMS_HEART"
 ____exports.MomsHeartVariant.IT_LIVES = 1
 ____exports.MomsHeartVariant[____exports.MomsHeartVariant.IT_LIVES] = "IT_LIVES"
-____exports.MomsHeartVariant.MOMS_GUTS = 2
+____exports.MomsHeartVariant.MOMS_GUTS = 10
 ____exports.MomsHeartVariant[____exports.MomsHeartVariant.MOMS_GUTS] = "MOMS_GUTS"
 --- For `EntityType.GEMINI` (79).
 ____exports.GeminiVariant = {}
@@ -8369,6 +8390,10 @@ ____exports.MotherVariant.MOTHER_1 = 0
 ____exports.MotherVariant[____exports.MotherVariant.MOTHER_1] = "MOTHER_1"
 ____exports.MotherVariant.MOTHER_2 = 10
 ____exports.MotherVariant[____exports.MotherVariant.MOTHER_2] = "MOTHER_2"
+____exports.MotherVariant.DEAD_ISAAC = 20
+____exports.MotherVariant[____exports.MotherVariant.DEAD_ISAAC] = "DEAD_ISAAC"
+____exports.MotherVariant.WORM = 30
+____exports.MotherVariant[____exports.MotherVariant.WORM] = "WORM"
 ____exports.MotherVariant.BALL = 100
 ____exports.MotherVariant[____exports.MotherVariant.BALL] = "BALL"
 --- For `EntityType.SINGE` (915).
@@ -8860,6 +8885,8 @@ local ____exports = {}
 --- For `EntityType.PLAYER` (1), `PlayerVariant.PLAYER` (0).
 -- 
 -- This is the sub-type of a player.
+-- 
+-- This enum is contiguous. (Every value is satisfied between -1 and 40, inclusive.)
 -- 
 -- Conventionally, variables that have this type are represented as "character" instead of
 -- "playerType", since the former is more descriptive of what this value actually represents.
@@ -9756,8 +9783,8 @@ ____exports.CollectibleType.IRON_BAR = 201
 ____exports.CollectibleType[____exports.CollectibleType.IRON_BAR] = "IRON_BAR"
 ____exports.CollectibleType.MIDAS_TOUCH = 202
 ____exports.CollectibleType[____exports.CollectibleType.MIDAS_TOUCH] = "MIDAS_TOUCH"
-____exports.CollectibleType.HUMBLING_BUNDLE = 203
-____exports.CollectibleType[____exports.CollectibleType.HUMBLING_BUNDLE] = "HUMBLING_BUNDLE"
+____exports.CollectibleType.HUMBLEING_BUNDLE = 203
+____exports.CollectibleType[____exports.CollectibleType.HUMBLEING_BUNDLE] = "HUMBLEING_BUNDLE"
 ____exports.CollectibleType.FANNY_PACK = 204
 ____exports.CollectibleType[____exports.CollectibleType.FANNY_PACK] = "FANNY_PACK"
 ____exports.CollectibleType.SHARP_PLUG = 205
@@ -11407,6 +11434,20 @@ ____exports.LaserSubType.RING_FOLLOW_PARENT = 3
 ____exports.LaserSubType[____exports.LaserSubType.RING_FOLLOW_PARENT] = "RING_FOLLOW_PARENT"
 ____exports.LaserSubType.NO_IMPACT = 4
 ____exports.LaserSubType[____exports.LaserSubType.NO_IMPACT] = "NO_IMPACT"
+--- For `EntityType.GAPER` (10), `GaperVariant.ROTTEN_GAPER` (3).
+____exports.RottenGaperSubType = {}
+____exports.RottenGaperSubType.V1 = 0
+____exports.RottenGaperSubType[____exports.RottenGaperSubType.V1] = "V1"
+____exports.RottenGaperSubType.V2 = 1
+____exports.RottenGaperSubType[____exports.RottenGaperSubType.V2] = "V2"
+____exports.RottenGaperSubType.V3 = 2
+____exports.RottenGaperSubType[____exports.RottenGaperSubType.V3] = "V3"
+____exports.RottenGaperSubType.V4 = 3
+____exports.RottenGaperSubType[____exports.RottenGaperSubType.V4] = "V4"
+____exports.RottenGaperSubType.V5 = 4
+____exports.RottenGaperSubType[____exports.RottenGaperSubType.V5] = "V5"
+____exports.RottenGaperSubType.V6 = 5
+____exports.RottenGaperSubType[____exports.RottenGaperSubType.V6] = "V6"
 --- For `EntityType.LARRY_JR` (19), `LarryJrVariant.LARRY_JR` (0).
 ____exports.LarryJrSubType = {}
 ____exports.LarryJrSubType.NORMAL = 0
@@ -11439,6 +11480,12 @@ ____exports.ChargerSubType.CHARGER = 0
 ____exports.ChargerSubType[____exports.ChargerSubType.CHARGER] = "CHARGER"
 ____exports.ChargerSubType.MY_SHADOW = 1
 ____exports.ChargerSubType[____exports.ChargerSubType.MY_SHADOW] = "MY_SHADOW"
+--- For `EntityType.BOOM_FLY` (25), `BoomFlyVariant.DRAGON_FLY` (3).
+____exports.DragonFlySubType = {}
+____exports.DragonFlySubType.NORMAL = 0
+____exports.DragonFlySubType[____exports.DragonFlySubType.NORMAL] = "NORMAL"
+____exports.DragonFlySubType.X = 1
+____exports.DragonFlySubType[____exports.DragonFlySubType.X] = "X"
 --- For `EntityType.CHUB` (28), `ChubVariant.CHUB (0)`.
 ____exports.ChubSubType = {}
 ____exports.ChubSubType.NORMAL = 0
@@ -11459,6 +11506,12 @@ ____exports.GurdySubType.NORMAL = 0
 ____exports.GurdySubType[____exports.GurdySubType.NORMAL] = "NORMAL"
 ____exports.GurdySubType.GREEN = 1
 ____exports.GurdySubType[____exports.GurdySubType.GREEN] = "GREEN"
+--- For `EntityType.BABY` (37), variant `BabyVariant.ANGELIC_BABY`.
+____exports.AngelicBabySubType = {}
+____exports.AngelicBabySubType.NORMAL = 0
+____exports.AngelicBabySubType[____exports.AngelicBabySubType.NORMAL] = "NORMAL"
+____exports.AngelicBabySubType.SMALL = 1
+____exports.AngelicBabySubType[____exports.AngelicBabySubType.SMALL] = "SMALL"
 --- For `EntityType.MONSTRO_2` (43), `Monstro2Variant.MONSTRO_2` (0).
 ____exports.Monstro2SubType = {}
 ____exports.Monstro2SubType.NORMAL = 0
@@ -11578,6 +11631,19 @@ ____exports.GurglingSubType.YELLOW = 1
 ____exports.GurglingSubType[____exports.GurglingSubType.YELLOW] = "YELLOW"
 ____exports.GurglingSubType.BLACK = 2
 ____exports.GurglingSubType[____exports.GurglingSubType.BLACK] = "BLACK"
+--- For `EntityType.CONSTANT_STONE_SHOOTER` (202),
+-- `ConstantStoneShooterVariant.CONSTANT_STONE_SHOOTER` (0).
+-- 
+-- This is the same as the `Direction` enum.
+____exports.ConstantStoneShooterSubType = {}
+____exports.ConstantStoneShooterSubType.LEFT = 0
+____exports.ConstantStoneShooterSubType[____exports.ConstantStoneShooterSubType.LEFT] = "LEFT"
+____exports.ConstantStoneShooterSubType.UP = 1
+____exports.ConstantStoneShooterSubType[____exports.ConstantStoneShooterSubType.UP] = "UP"
+____exports.ConstantStoneShooterSubType.RIGHT = 2
+____exports.ConstantStoneShooterSubType[____exports.ConstantStoneShooterSubType.RIGHT] = "RIGHT"
+____exports.ConstantStoneShooterSubType.DOWN = 3
+____exports.ConstantStoneShooterSubType[____exports.ConstantStoneShooterSubType.DOWN] = "DOWN"
 --- For `EntityType.HAUNT` (260), `HauntVariant.HAUNT` (0).
 ____exports.HauntSubType = {}
 ____exports.HauntSubType.NORMAL = 0
@@ -11634,6 +11700,16 @@ ____exports.PolycephalusSubType.RED = 1
 ____exports.PolycephalusSubType[____exports.PolycephalusSubType.RED] = "RED"
 ____exports.PolycephalusSubType.PINK = 2
 ____exports.PolycephalusSubType[____exports.PolycephalusSubType.PINK] = "PINK"
+--- For `EntityType.LEPER` (310), variant 0.
+____exports.LeperSubType = {}
+____exports.LeperSubType.STAGE_1 = 0
+____exports.LeperSubType[____exports.LeperSubType.STAGE_1] = "STAGE_1"
+____exports.LeperSubType.STAGE_2 = 1
+____exports.LeperSubType[____exports.LeperSubType.STAGE_2] = "STAGE_2"
+____exports.LeperSubType.STAGE_3 = 2
+____exports.LeperSubType[____exports.LeperSubType.STAGE_3] = "STAGE_3"
+____exports.LeperSubType.STAGE_4 = 3
+____exports.LeperSubType[____exports.LeperSubType.STAGE_4] = "STAGE_4"
 --- For `EntityType.STAIN` (401), variant 0.
 ____exports.StainSubType = {}
 ____exports.StainSubType.NORMAL = 0
@@ -11668,25 +11744,74 @@ ____exports.RagManSubType.RED = 1
 ____exports.RagManSubType[____exports.RagManSubType.RED] = "RED"
 ____exports.RagManSubType.BLACK = 2
 ____exports.RagManSubType[____exports.RagManSubType.BLACK] = "BLACK"
---- For `EntityType.CONSTANT_STONE_SHOOTER` (202),
--- `ConstantStoneShooterVariant.CONSTANT_STONE_SHOOTER` (0).
+--- For `EntityType.QUAKE_GRIMACE` (804), variant 0.
 -- 
 -- This is the same as the `Direction` enum.
-____exports.ConstantStoneShooterSubType = {}
-____exports.ConstantStoneShooterSubType.LEFT = 0
-____exports.ConstantStoneShooterSubType[____exports.ConstantStoneShooterSubType.LEFT] = "LEFT"
-____exports.ConstantStoneShooterSubType.UP = 1
-____exports.ConstantStoneShooterSubType[____exports.ConstantStoneShooterSubType.UP] = "UP"
-____exports.ConstantStoneShooterSubType.RIGHT = 2
-____exports.ConstantStoneShooterSubType[____exports.ConstantStoneShooterSubType.RIGHT] = "RIGHT"
-____exports.ConstantStoneShooterSubType.DOWN = 3
-____exports.ConstantStoneShooterSubType[____exports.ConstantStoneShooterSubType.DOWN] = "DOWN"
+____exports.QuakeGrimaceSubType = {}
+____exports.QuakeGrimaceSubType.LEFT = 0
+____exports.QuakeGrimaceSubType[____exports.QuakeGrimaceSubType.LEFT] = "LEFT"
+____exports.QuakeGrimaceSubType.UP = 1
+____exports.QuakeGrimaceSubType[____exports.QuakeGrimaceSubType.UP] = "UP"
+____exports.QuakeGrimaceSubType.RIGHT = 2
+____exports.QuakeGrimaceSubType[____exports.QuakeGrimaceSubType.RIGHT] = "RIGHT"
+____exports.QuakeGrimaceSubType.DOWN = 3
+____exports.QuakeGrimaceSubType[____exports.QuakeGrimaceSubType.DOWN] = "DOWN"
+--- For `EntityType.DEEP_GAPER` (811), variant 0.
+____exports.DeepGaperSubType = {}
+____exports.DeepGaperSubType.V1 = 0
+____exports.DeepGaperSubType[____exports.DeepGaperSubType.V1] = "V1"
+____exports.DeepGaperSubType.V2 = 1
+____exports.DeepGaperSubType[____exports.DeepGaperSubType.V2] = "V2"
+____exports.DeepGaperSubType.V3 = 2
+____exports.DeepGaperSubType[____exports.DeepGaperSubType.V3] = "V3"
+____exports.DeepGaperSubType.V4 = 3
+____exports.DeepGaperSubType[____exports.DeepGaperSubType.V4] = "V4"
+____exports.DeepGaperSubType.V5 = 4
+____exports.DeepGaperSubType[____exports.DeepGaperSubType.V5] = "V5"
+____exports.DeepGaperSubType.V6 = 5
+____exports.DeepGaperSubType[____exports.DeepGaperSubType.V6] = "V6"
+____exports.DeepGaperSubType.V7 = 6
+____exports.DeepGaperSubType[____exports.DeepGaperSubType.V7] = "V7"
+--- For `EntityType.MORNINGSTAR` (863), variant 0.
+____exports.MorningStarSubType = {}
+____exports.MorningStarSubType.RANDOM = 0
+____exports.MorningStarSubType[____exports.MorningStarSubType.RANDOM] = "RANDOM"
+____exports.MorningStarSubType.NORMAL = 1
+____exports.MorningStarSubType[____exports.MorningStarSubType.NORMAL] = "NORMAL"
+____exports.MorningStarSubType.ALTERNATE = 2
+____exports.MorningStarSubType[____exports.MorningStarSubType.ALTERNATE] = "ALTERNATE"
+--- For `EntityType.DARK_ESAU` (866), variant 0.
+____exports.DarkEsauSubType = {}
+____exports.DarkEsauSubType.DARK = 0
+____exports.DarkEsauSubType[____exports.DarkEsauSubType.DARK] = "DARK"
+____exports.DarkEsauSubType.DARKER = 1
+____exports.DarkEsauSubType[____exports.DarkEsauSubType.DARKER] = "DARKER"
+--- For `EntityType.MAZE_ROAMER` (890), variant 0.
+____exports.MazeRoamerSubType = {}
+____exports.MazeRoamerSubType.NORMAL = 0
+____exports.MazeRoamerSubType[____exports.MazeRoamerSubType.NORMAL] = "NORMAL"
+____exports.MazeRoamerSubType.MIRRORED = 1
+____exports.MazeRoamerSubType[____exports.MazeRoamerSubType.MIRRORED] = "MIRRORED"
 --- For `EntityType.MOTHER` (912), `MotherVariant.MOTHER_1` (0).
 ____exports.MotherSubType = {}
 ____exports.MotherSubType.PHASE_1 = 0
 ____exports.MotherSubType[____exports.MotherSubType.PHASE_1] = "PHASE_1"
 ____exports.MotherSubType.PHASE_2 = 1
 ____exports.MotherSubType[____exports.MotherSubType.PHASE_2] = "PHASE_2"
+____exports.MotherSubType.LEFT_ARM = 2
+____exports.MotherSubType[____exports.MotherSubType.LEFT_ARM] = "LEFT_ARM"
+____exports.MotherSubType.RIGHT_ARM = 3
+____exports.MotherSubType[____exports.MotherSubType.RIGHT_ARM] = "RIGHT_ARM"
+____exports.MotherSubType.DISAPPEAR = 4
+____exports.MotherSubType[____exports.MotherSubType.DISAPPEAR] = "DISAPPEAR"
+--- For `EntityType.MOTHER` (912), `MotherVariant.BALL` (100).
+____exports.MotherBallSubType = {}
+____exports.MotherBallSubType.LARGE = 0
+____exports.MotherBallSubType[____exports.MotherBallSubType.LARGE] = "LARGE"
+____exports.MotherBallSubType.MEDIUM = 1
+____exports.MotherBallSubType[____exports.MotherBallSubType.MEDIUM] = "MEDIUM"
+____exports.MotherBallSubType.SMALL = 2
+____exports.MotherBallSubType[____exports.MotherBallSubType.SMALL] = "SMALL"
 --- For `EntityType.EFFECT` (1000), `EffectVariant.BLOOD_EXPLOSION` (2).
 ____exports.BloodExplosionSubType = {}
 ____exports.BloodExplosionSubType.MEDIUM_WITH_LEFTOVER_BLOOD = 0
@@ -15274,6 +15399,754 @@ ____exports.NPCState.DEATH = 18
 ____exports.NPCState[____exports.NPCState.DEATH] = "DEATH"
 return ____exports
  end,
+["lua_modules.isaac-typescript-definitions.dist.enums.NPCID"] = function(...) 
+local ____exports = {}
+--- EntityIDs which reference an NPC.
+____exports.NPCID = {}
+____exports.NPCID.FROWNING_GAPER = "10.0.0"
+____exports.NPCID.GAPER = "10.1.0"
+____exports.NPCID.FLAMING_GAPER = "10.2.0"
+____exports.NPCID.ROTTEN_GAPER = "10.3.0"
+____exports.NPCID.ROTTEN_GAPER_2 = "10.3.1"
+____exports.NPCID.ROTTEN_GAPER_3 = "10.3.2"
+____exports.NPCID.ROTTEN_GAPER_4 = "10.3.3"
+____exports.NPCID.ROTTEN_GAPER_5 = "10.3.4"
+____exports.NPCID.ROTTEN_GAPER_6 = "10.3.5"
+____exports.NPCID.GUSHER = "11.0.0"
+____exports.NPCID.PACER = "11.1.0"
+____exports.NPCID.HORF = "12.0.0"
+____exports.NPCID.FLY = "13.0.0"
+____exports.NPCID.POOTER = "14.0.0"
+____exports.NPCID.SUPER_POOTER = "14.1.0"
+____exports.NPCID.TAINTED_POOTER = "14.2.0"
+____exports.NPCID.CLOTTY = "15.0.0"
+____exports.NPCID.CLOT = "15.1.0"
+____exports.NPCID.I_BLOB = "15.2.0"
+____exports.NPCID.GRILLED_CLOTTY = "15.3.0"
+____exports.NPCID.MULLIGAN = "16.0.0"
+____exports.NPCID.MULLIGOON = "16.1.0"
+____exports.NPCID.MULLIBOOM = "16.2.0"
+____exports.NPCID.SHOPKEEPER = "17.0.0"
+____exports.NPCID.SECRET_ROOM_KEEPER = "17.1.0"
+____exports.NPCID.ERROR_ROOM_KEEPER = "17.2.0"
+____exports.NPCID.SPECIAL_SHOPKEEPER = "17.3.0"
+____exports.NPCID.SPECIAL_SECRET_ROOM_KEEPER = "17.4.0"
+____exports.NPCID.ATTACK_FLY = "18.0.0"
+____exports.NPCID.LARRY_JR = "19.0.0"
+____exports.NPCID.LARRY_JR_GREEN = "19.0.1"
+____exports.NPCID.LARRY_JR_BLUE = "19.0.2"
+____exports.NPCID.THE_HOLLOW = "19.1.0"
+____exports.NPCID.THE_HOLLOW_GREEN = "19.1.1"
+____exports.NPCID.THE_HOLLOW_BLACK = "19.1.2"
+____exports.NPCID.THE_HOLLOW_YELLOW = "19.1.3"
+____exports.NPCID.TUFF_TWIN = "19.2.0"
+____exports.NPCID.THE_SHELL = "19.3.0"
+____exports.NPCID.MONSTRO = "20.0.0"
+____exports.NPCID.MONSTRO_RED = "20.0.1"
+____exports.NPCID.MONSTRO_GREY = "20.0.2"
+____exports.NPCID.MAGGOT = "21.0.0"
+____exports.NPCID.HIVE = "22.0.0"
+____exports.NPCID.DROWNED_HIVE = "22.1.0"
+____exports.NPCID.HOLY_MULLIGAN = "22.2.0"
+____exports.NPCID.TAINTED_MULLIGAN = "22.3.0"
+____exports.NPCID.CHARGER = "23.0.0"
+____exports.NPCID.MY_SHADOW = "23.0.1"
+____exports.NPCID.DROWNED_CHARGER = "23.1.0"
+____exports.NPCID.DANK_CHARGER = "23.2.0"
+____exports.NPCID.CARRION_PRINCESS = "23.3.0"
+____exports.NPCID.GLOBIN = "24.0.0"
+____exports.NPCID.GAZING_GLOBIN = "24.1.0"
+____exports.NPCID.DANK_GLOBIN = "24.2.0"
+____exports.NPCID.CURSED_GLOBIN = "24.3.0"
+____exports.NPCID.BOOM_FLY = "25.0.0"
+____exports.NPCID.RED_BOOM_FLY = "25.1.0"
+____exports.NPCID.DROWNED_BOOM_FLY = "25.2.0"
+____exports.NPCID.DRAGON_FLY = "25.3.0"
+____exports.NPCID.DRAGON_FLY_X = "25.3.1"
+____exports.NPCID.BONE_FLY = "25.4.0"
+____exports.NPCID.SICK_BOOM_FLY = "25.5.0"
+____exports.NPCID.TAINTED_BOOM_FLY = "25.6.0"
+____exports.NPCID.MAW = "26.0.0"
+____exports.NPCID.RED_MAW = "26.1.0"
+____exports.NPCID.PSYCHIC_MAW = "26.2.0"
+____exports.NPCID.HOST = "27.0.0"
+____exports.NPCID.RED_HOST = "27.1.0"
+____exports.NPCID.HARD_HOST = "27.3.0"
+____exports.NPCID.CHUB = "28.0.0"
+____exports.NPCID.CHUB_BLUE = "28.0.1"
+____exports.NPCID.CHUB_ORANGE = "28.0.2"
+____exports.NPCID.CHAD = "28.1.0"
+____exports.NPCID.THE_CARRION_QUEEN = "28.2.0"
+____exports.NPCID.THE_CARRION_QUEEN_PINK = "28.2.1"
+____exports.NPCID.HOPPER = "29.0.0"
+____exports.NPCID.TRITE = "29.1.0"
+____exports.NPCID.EGGY = "29.2.0"
+____exports.NPCID.TAINTED_HOPPER = "29.3.0"
+____exports.NPCID.BOIL = "30.0.0"
+____exports.NPCID.BOIL_BLUE = "30.0.1"
+____exports.NPCID.GUT = "30.1.0"
+____exports.NPCID.SACK = "30.2.0"
+____exports.NPCID.SPITTY = "31.0.0"
+____exports.NPCID.TAINTED_SPITTY = "31.1.0"
+____exports.NPCID.BRAIN = "32.0.0"
+____exports.NPCID.FIRE_PLACE = "33.0.0"
+____exports.NPCID.RED_FIRE_PLACE = "33.1.0"
+____exports.NPCID.BLUE_FIRE_PLACE = "33.2.0"
+____exports.NPCID.PURPLE_FIRE_PLACE = "33.3.0"
+____exports.NPCID.WHITE_FIRE_PLACE = "33.4.0"
+____exports.NPCID.MOVEABLE_FIREPLACE = "33.10.0"
+____exports.NPCID.COAL = "33.11.0"
+____exports.NPCID.COAL_2 = "33.11.1"
+____exports.NPCID.COAL_3 = "33.11.2"
+____exports.NPCID.COAL_4 = "33.11.3"
+____exports.NPCID.MOVEABLE_BLUE_FIREPLACE = "33.12.0"
+____exports.NPCID.MOVEABLE_PURPLE_FIREPLACE = "33.13.0"
+____exports.NPCID.LEAPER = "34.0.0"
+____exports.NPCID.STICKY_LEAPER = "34.1.0"
+____exports.NPCID.MR_MAW = "35.0.0"
+____exports.NPCID.MR_MAW_HEAD = "35.1.0"
+____exports.NPCID.MR_RED_MAW = "35.2.0"
+____exports.NPCID.MR_RED_MAW_HEAD = "35.3.0"
+____exports.NPCID.MR_MAW_NECK = "35.10.0"
+____exports.NPCID.GURDY = "36.0.0"
+____exports.NPCID.GURDY_GREEN = "36.0.1"
+____exports.NPCID.BABY = "38.0.0"
+____exports.NPCID.ANGELIC_BABY = "38.1.0"
+____exports.NPCID.ANGELIC_BABY_SMALL = "38.1.1"
+____exports.NPCID.ULTRA_PRIDE_BABY = "38.2.0"
+____exports.NPCID.WRINKLY_BABY = "38.3.0"
+____exports.NPCID.VIS = "39.0.0"
+____exports.NPCID.DOUBLE_VIS = "39.1.0"
+____exports.NPCID.CHUBBER = "39.2.0"
+____exports.NPCID.SCARRED_DOUBLE_VIS = "39.3.0"
+____exports.NPCID.CHUBBER_PROJECTILE = "39.22.0"
+____exports.NPCID.GUTS = "40.0.0"
+____exports.NPCID.SCARRED_GUTS = "40.1.0"
+____exports.NPCID.SLOG = "40.2.0"
+____exports.NPCID.KNIGHT = "41.0.0"
+____exports.NPCID.SELFLESS_KNIGHT = "41.1.0"
+____exports.NPCID.LOOSE_KNIGHT = "41.2.0"
+____exports.NPCID.BRAINLESS_KNIGHT = "41.3.0"
+____exports.NPCID.BLACK_KNIGHT = "41.4.0"
+____exports.NPCID.STONE_GRIMACE = "42.0.0"
+____exports.NPCID.VOMIT_GRIMACE = "42.1.0"
+____exports.NPCID.TRIPLE_GRIMACE = "42.2.0"
+____exports.NPCID.MONSTRO_II = "43.0.0"
+____exports.NPCID.MONSTRO_II_RED = "43.0.1"
+____exports.NPCID.GISH = "43.1.0"
+____exports.NPCID.POKY = "44.0.0"
+____exports.NPCID.SLIDE = "44.1.0"
+____exports.NPCID.MOM = "45.0.0"
+____exports.NPCID.MOM_BLUE = "45.0.1"
+____exports.NPCID.MOM_RED = "45.0.2"
+____exports.NPCID.MOM_STOMP = "45.10.0"
+____exports.NPCID.MOM_STOMP_BLUE = "45.10.1"
+____exports.NPCID.MOM_STOMP_RED = "45.10.2"
+____exports.NPCID.SLOTH = "46.0.0"
+____exports.NPCID.SUPER_SLOTH = "46.1.0"
+____exports.NPCID.ULTRA_PRIDE = "46.2.0"
+____exports.NPCID.LUST = "47.0.0"
+____exports.NPCID.SUPER_LUST = "47.1.0"
+____exports.NPCID.WRATH = "48.0.0"
+____exports.NPCID.SUPER_WRATH = "48.1.0"
+____exports.NPCID.GLUTTONY = "49.0.0"
+____exports.NPCID.SUPER_GLUTTONY = "49.1.0"
+____exports.NPCID.GREED = "50.0.0"
+____exports.NPCID.SUPER_GREED = "50.1.0"
+____exports.NPCID.ENVY = "51.0.0"
+____exports.NPCID.SUPER_ENVY = "51.1.0"
+____exports.NPCID.ENVY_BIG = "51.10.0"
+____exports.NPCID.SUPER_ENVY_BIG = "51.11.0"
+____exports.NPCID.ENVY_MEDIUM = "51.20.0"
+____exports.NPCID.SUPER_ENVY_MEDIUM = "51.21.0"
+____exports.NPCID.ENVY_SMALL = "51.30.0"
+____exports.NPCID.SUPER_ENVY_SMALL = "51.31.0"
+____exports.NPCID.PRIDE = "52.0.0"
+____exports.NPCID.SUPER_PRIDE = "52.1.0"
+____exports.NPCID.DOPLE = "53.0.0"
+____exports.NPCID.EVIL_TWIN = "53.1.0"
+____exports.NPCID.FLAMING_HOPPER = "54.0.0"
+____exports.NPCID.LEECH = "55.0.0"
+____exports.NPCID.KAMIKAZE_LEECH = "55.1.0"
+____exports.NPCID.HOLY_LEECH = "55.2.0"
+____exports.NPCID.LUMP = "56.0.0"
+____exports.NPCID.MEMBRAIN = "57.0.0"
+____exports.NPCID.MAMA_GUTS = "57.1.0"
+____exports.NPCID.DEAD_MEAT = "57.2.0"
+____exports.NPCID.PARA_BITE = "58.0.0"
+____exports.NPCID.SCARRED_PARA_BITE = "58.1.0"
+____exports.NPCID.FRED = "59.0.0"
+____exports.NPCID.EYE = "60.0.0"
+____exports.NPCID.BLOODSHOT_EYE = "60.1.0"
+____exports.NPCID.HOLY_EYE = "60.2.0"
+____exports.NPCID.SUCKER = "61.0.0"
+____exports.NPCID.SPIT = "61.1.0"
+____exports.NPCID.SOUL_SUCKER = "61.2.0"
+____exports.NPCID.INK = "61.3.0"
+____exports.NPCID.MAMA_FLY = "61.4.0"
+____exports.NPCID.BULB = "61.5.0"
+____exports.NPCID.BLOODFLY = "61.6.0"
+____exports.NPCID.TAINTED_SUCKER = "61.7.0"
+____exports.NPCID.PIN = "62.0.0"
+____exports.NPCID.PIN_GREY = "62.0.1"
+____exports.NPCID.SCOLEX = "62.1.0"
+____exports.NPCID.THE_FRAIL = "62.2.0"
+____exports.NPCID.THE_FRAIL_BLACK = "62.2.1"
+____exports.NPCID.WORMWOOD = "62.3.0"
+____exports.NPCID.FAMINE = "63.0.0"
+____exports.NPCID.FAMINE_BLUE = "63.0.1"
+____exports.NPCID.PESTILENCE = "64.0.0"
+____exports.NPCID.PESTILENCE_GREY = "64.0.1"
+____exports.NPCID.WAR = "65.0.0"
+____exports.NPCID.WAR_GREY = "65.0.1"
+____exports.NPCID.CONQUEST = "65.1.0"
+____exports.NPCID.WAR_WITHOUT_HORSE = "65.10.0"
+____exports.NPCID.WAR_WITHOUT_HORSE_GREY = "65.10.1"
+____exports.NPCID.DEATH = "66.0.0"
+____exports.NPCID.DEATH_BLACK = "66.0.1"
+____exports.NPCID.DEATH_SCYTHE = "66.10.0"
+____exports.NPCID.DEATH_SCYTHE_BLACK = "66.10.1"
+____exports.NPCID.DEATH_HORSE = "66.20.0"
+____exports.NPCID.DEATH_HORSE_BLACK = "66.20.1"
+____exports.NPCID.DEATH_WITHOUT_HORSE = "66.30.0"
+____exports.NPCID.DEATH_WITHOUT_HORSE_BLACK = "66.30.1"
+____exports.NPCID.THE_DUKE_OF_FLIES = "67.0.0"
+____exports.NPCID.THE_DUKE_OF_FLIES_GREEN = "67.0.1"
+____exports.NPCID.THE_DUKE_OF_FLIES_ORANGE = "67.0.2"
+____exports.NPCID.THE_HUSK = "67.1.0"
+____exports.NPCID.THE_HUSK_BLACK = "67.1.1"
+____exports.NPCID.THE_HUSK_RED = "67.1.2"
+____exports.NPCID.PEEP = "68.0.0"
+____exports.NPCID.PEEP_YELLOW = "68.0.1"
+____exports.NPCID.PEEP_CYAN = "68.0.2"
+____exports.NPCID.THE_BLOAT = "68.1.0"
+____exports.NPCID.THE_BLOAT_GREEN = "68.1.1"
+____exports.NPCID.PEEP_EYE = "68.10.0"
+____exports.NPCID.PEEP_EYE_YELLOW = "68.10.1"
+____exports.NPCID.PEEP_EYE_CYAN = "68.10.2"
+____exports.NPCID.BLOAT_EYE = "68.11.0"
+____exports.NPCID.BLOAT_EYE_GREEN = "68.11.1"
+____exports.NPCID.LOKI = "69.0.0"
+____exports.NPCID.LOKII = "69.1.0"
+____exports.NPCID.FISTULA = "71.0.0"
+____exports.NPCID.FISTULA_GREY = "71.0.1"
+____exports.NPCID.TERATOMA = "71.1.0"
+____exports.NPCID.FISTULA_MEDIUM = "72.0.0"
+____exports.NPCID.FISTULA_MEDIUM_GREY = "72.0.1"
+____exports.NPCID.TERATOMA_MEDIUM = "72.1.0"
+____exports.NPCID.FISTULA_SMALL = "73.0.0"
+____exports.NPCID.FISTULA_SMALL_GREY = "73.0.1"
+____exports.NPCID.TERATOMA_SMALL = "73.1.0"
+____exports.NPCID.BLASTOCYST = "74.0.0"
+____exports.NPCID.BLASTOCYST_MEDIUM = "75.0.0"
+____exports.NPCID.BLASTOCYST_SMALL = "76.0.0"
+____exports.NPCID.EMBRYO = "77.0.0"
+____exports.NPCID.MOMS_HEART = "78.0.0"
+____exports.NPCID.IT_LIVES = "78.1.0"
+____exports.NPCID.MOMS_GUTS = "78.10.0"
+____exports.NPCID.GEMINI = "79.0.0"
+____exports.NPCID.GEMINI_GREEN = "79.0.1"
+____exports.NPCID.GEMINI_BLUE = "79.0.2"
+____exports.NPCID.STEVEN = "79.1.0"
+____exports.NPCID.THE_BLIGHTED_OVUM = "79.2.0"
+____exports.NPCID.GEMINI_BABY = "79.10.0"
+____exports.NPCID.GEMINI_BABY_GREEN = "79.10.1"
+____exports.NPCID.GEMINI_BABY_BLUE = "79.10.2"
+____exports.NPCID.STEVEN_BABY = "79.11.0"
+____exports.NPCID.THE_BLIGHTED_OVUM_BABY = "79.12.0"
+____exports.NPCID.UMBILICAL_CORD = "79.20.0"
+____exports.NPCID.UMBILICAL_CORD_GREEN = "79.20.1"
+____exports.NPCID.UMBILICAL_CORD_BLUE = "79.20.2"
+____exports.NPCID.MOTER = "80.0.0"
+____exports.NPCID.THE_FALLEN = "81.0.0"
+____exports.NPCID.KRAMPUS = "81.1.0"
+____exports.NPCID.HEADLESS_HORSEMAN = "82.0.0"
+____exports.NPCID.HEADLESS_HORSEMAN_HEAD = "83.0.0"
+____exports.NPCID.SATAN = "84.0.0"
+____exports.NPCID.SATAN_STOMP = "84.10.0"
+____exports.NPCID.SPIDER = "85.0.0"
+____exports.NPCID.KEEPER = "86.0.0"
+____exports.NPCID.GURGLE = "87.0.0"
+____exports.NPCID.CRACKLE = "87.1.0"
+____exports.NPCID.WALKING_BOIL = "88.0.0"
+____exports.NPCID.WALKING_GUT = "88.1.0"
+____exports.NPCID.WALKING_SACK = "88.2.0"
+____exports.NPCID.BUTTLICKER = "89.0.0"
+____exports.NPCID.HANGER = "90.0.0"
+____exports.NPCID.SWARMER = "91.0.0"
+____exports.NPCID.HEART = "92.0.0"
+____exports.NPCID.HALF_HEART = "92.1.0"
+____exports.NPCID.HALF_HEART_2 = "92.1.1"
+____exports.NPCID.MASK = "93.0.0"
+____exports.NPCID.MASK_II = "93.1.0"
+____exports.NPCID.BIG_SPIDER = "94.0.0"
+____exports.NPCID.ETERNAL_FLY = "96.0.0"
+____exports.NPCID.MASK_OF_INFAMY = "97.0.0"
+____exports.NPCID.MASK_OF_INFAMY_BLACK = "97.0.1"
+____exports.NPCID.HEART_OF_INFAMY = "98.0.0"
+____exports.NPCID.HEART_OF_INFAMY_BLACK = "98.0.1"
+____exports.NPCID.GURDY_JR = "99.0.0"
+____exports.NPCID.GURDY_JR_BLUE = "99.0.1"
+____exports.NPCID.GURDY_JR_YELLOW = "99.0.2"
+____exports.NPCID.WIDOW = "100.0.0"
+____exports.NPCID.WIDOW_BLACK = "100.0.1"
+____exports.NPCID.WIDOW_PINK = "100.0.2"
+____exports.NPCID.THE_WRETCHED = "100.1.0"
+____exports.NPCID.DADDY_LONG_LEGS = "101.0.0"
+____exports.NPCID.TRIACHNID = "101.1.0"
+____exports.NPCID.ISAAC = "102.0.0"
+____exports.NPCID.BLUE_BABY = "102.1.0"
+____exports.NPCID.BLUE_BABY_HUSH = "102.2.0"
+____exports.NPCID.STONE_EYE = "201.0.0"
+____exports.NPCID.CONSTANT_STONE_SHOOTER_LEFT = "202.0.0"
+____exports.NPCID.CONSTANT_STONE_SHOOTER_UP = "202.0.1"
+____exports.NPCID.CONSTANT_STONE_SHOOTER_RIGHT = "202.0.2"
+____exports.NPCID.CONSTANT_STONE_SHOOTER_DOWN = "202.0.3"
+____exports.NPCID.CROSS_STONE_SHOOTER = "202.10.0"
+____exports.NPCID.CROSS_STONE_SHOOTER_2 = "202.10.1"
+____exports.NPCID.CROSS_STONE_SHOOTER_ALWAYS_ON = "202.11.0"
+____exports.NPCID.CROSS_STONE_SHOOTER_ALWAYS_ON_2 = "202.11.1"
+____exports.NPCID.BRIMSTONE_HEAD = "203.0.0"
+____exports.NPCID.MOBILE_HOST = "204.0.0"
+____exports.NPCID.NEST = "205.0.0"
+____exports.NPCID.BABY_LONG_LEGS = "206.0.0"
+____exports.NPCID.SMALL_BABY_LONG_LEGS = "206.1.0"
+____exports.NPCID.CRAZY_LONG_LEGS = "207.0.0"
+____exports.NPCID.SMALL_CRAZY_LONG_LEGS = "207.1.0"
+____exports.NPCID.FATTY = "208.0.0"
+____exports.NPCID.PALE_FATTY = "208.1.0"
+____exports.NPCID.FLAMING_FATTY = "208.2.0"
+____exports.NPCID.FAT_SACK = "209.0.0"
+____exports.NPCID.BLUBBER = "210.0.0"
+____exports.NPCID.HALF_SACK = "211.0.0"
+____exports.NPCID.DEATHS_HEAD = "212.0.0"
+____exports.NPCID.DANK_DEATHS_HEAD = "212.1.0"
+____exports.NPCID.CURSED_DEATHS_HEAD = "212.2.0"
+____exports.NPCID.BRIMSTONE_DEATHS_HEAD = "212.3.0"
+____exports.NPCID.REDSKULL = "212.4.0"
+____exports.NPCID.MOMS_HAND = "213.0.0"
+____exports.NPCID.LEVEL_2_FLY = "214.0.0"
+____exports.NPCID.LEVEL_2_SPIDER = "215.0.0"
+____exports.NPCID.SWINGER = "216.0.0"
+____exports.NPCID.SWINGER_HEAD = "216.1.0"
+____exports.NPCID.SWINGER_NECK = "216.10.0"
+____exports.NPCID.DIP = "217.0.0"
+____exports.NPCID.CORN = "217.1.0"
+____exports.NPCID.BROWNIE_CORN = "217.2.0"
+____exports.NPCID.BIG_CORN = "217.3.0"
+____exports.NPCID.WALL_HUGGER = "218.0.0"
+____exports.NPCID.WIZOOB = "219.0.0"
+____exports.NPCID.SQUIRT = "220.0.0"
+____exports.NPCID.DANK_SQUIRT = "220.1.0"
+____exports.NPCID.COD_WORM = "221.0.0"
+____exports.NPCID.RING_FLY = "222.0.0"
+____exports.NPCID.DINGA = "223.0.0"
+____exports.NPCID.OOB = "224.0.0"
+____exports.NPCID.BLACK_MAW = "225.0.0"
+____exports.NPCID.SKINNY = "226.0.0"
+____exports.NPCID.ROTTY = "226.1.0"
+____exports.NPCID.CRISPY = "226.2.0"
+____exports.NPCID.BONY = "227.0.0"
+____exports.NPCID.HOLY_BONY = "227.1.0"
+____exports.NPCID.HOMUNCULUS = "228.0.0"
+____exports.NPCID.HOMUNCULUS_CORD = "228.10.0"
+____exports.NPCID.TUMOR = "229.0.0"
+____exports.NPCID.PLANETOID = "229.1.0"
+____exports.NPCID.CAMILLO_JR = "230.0.0"
+____exports.NPCID.NERVE_ENDING = "231.0.0"
+____exports.NPCID.NERVE_ENDING_2 = "231.1.0"
+____exports.NPCID.ONE_TOOTH = "234.0.0"
+____exports.NPCID.GAPING_MAW = "235.0.0"
+____exports.NPCID.BROKEN_GAPING_MAW = "236.0.0"
+____exports.NPCID.GURGLING = "237.0.0"
+____exports.NPCID.GURGLING_BOSS = "237.1.0"
+____exports.NPCID.GURGLING_BOSS_YELLOW = "237.1.1"
+____exports.NPCID.GURGLING_BOSS_BLACK = "237.1.2"
+____exports.NPCID.TURDLING = "237.2.0"
+____exports.NPCID.SPLASHER = "238.0.0"
+____exports.NPCID.GRUB = "239.0.0"
+____exports.NPCID.CORPSE_EATER = "239.100.0"
+____exports.NPCID.CARRION_RIDER = "239.101.0"
+____exports.NPCID.WALL_CREEP = "240.0.0"
+____exports.NPCID.SOY_CREEP = "240.1.0"
+____exports.NPCID.RAG_CREEP = "240.2.0"
+____exports.NPCID.TAINTED_SOY_CREEP = "240.3.0"
+____exports.NPCID.RAGE_CREEP = "241.0.0"
+____exports.NPCID.SPLIT_RAGE_CREEP = "241.1.0"
+____exports.NPCID.BLIND_CREEP = "242.0.0"
+____exports.NPCID.CONJOINED_SPITTY = "243.0.0"
+____exports.NPCID.ROUND_WORM = "244.0.0"
+____exports.NPCID.TUBE_WORM = "244.1.0"
+____exports.NPCID.TAINTED_ROUND_WORM = "244.2.0"
+____exports.NPCID.TAINTED_ROUND_WORM_BUTT = "244.2.1"
+____exports.NPCID.TAINTED_TUBE_WORM = "244.3.0"
+____exports.NPCID.POOP = "245.0.0"
+____exports.NPCID.RAGLING = "246.0.0"
+____exports.NPCID.RAG_MANS_RAGLING = "246.1.0"
+____exports.NPCID.RAG_MANS_RAGLING_RED = "246.1.1"
+____exports.NPCID.RAG_MANS_RAGLING_BLACK = "246.1.2"
+____exports.NPCID.FLESH_MOBILE_HOST = "247.0.0"
+____exports.NPCID.PSYCHIC_HORF = "248.0.0"
+____exports.NPCID.FULL_FLY = "249.0.0"
+____exports.NPCID.TICKING_SPIDER = "250.0.0"
+____exports.NPCID.BEGOTTEN = "251.0.0"
+____exports.NPCID.BEGOTTEN_CHAIN = "251.10.0"
+____exports.NPCID.NULLS = "252.0.0"
+____exports.NPCID.PSY_TUMOR = "253.0.0"
+____exports.NPCID.FLOATING_KNIGHT = "254.0.0"
+____exports.NPCID.NIGHT_CRAWLER = "255.0.0"
+____exports.NPCID.DART_FLY = "256.0.0"
+____exports.NPCID.CONJOINED_FATTY = "257.0.0"
+____exports.NPCID.BLUE_CONJOINED_FATTY = "257.1.0"
+____exports.NPCID.FAT_BAT = "258.0.0"
+____exports.NPCID.IMP = "259.0.0"
+____exports.NPCID.HAUNT = "260.0.0"
+____exports.NPCID.HAUNT_BLACK = "260.0.1"
+____exports.NPCID.HAUNT_PINK = "260.0.2"
+____exports.NPCID.LIL_HAUNT = "260.10.0"
+____exports.NPCID.DINGLE = "261.0.0"
+____exports.NPCID.DINGLE_RED = "261.0.1"
+____exports.NPCID.DINGLE_BLACK = "261.0.2"
+____exports.NPCID.DANGLE = "261.1.0"
+____exports.NPCID.MEGA_MAW = "262.0.0"
+____exports.NPCID.MEGA_MAW_RED = "262.0.1"
+____exports.NPCID.MEGA_MAW_BLACK = "262.0.2"
+____exports.NPCID.THE_GATE = "263.0.0"
+____exports.NPCID.THE_GATE_RED = "263.0.1"
+____exports.NPCID.THE_GATE_BLACK = "263.0.2"
+____exports.NPCID.MEGA_FATTY = "264.0.0"
+____exports.NPCID.MEGA_FATTY_RED = "264.0.1"
+____exports.NPCID.MEGA_FATTY_BROWN = "264.0.2"
+____exports.NPCID.THE_CAGE = "265.0.0"
+____exports.NPCID.THE_CAGE_GREEN = "265.0.1"
+____exports.NPCID.THE_CAGE_PINK = "265.0.2"
+____exports.NPCID.MAMA_GURDY = "266.0.0"
+____exports.NPCID.MAMA_GURDY_LEFT_HAND = "266.1.0"
+____exports.NPCID.MAMA_GURDY_RIGHT_HAND = "266.2.0"
+____exports.NPCID.DARK_ONE = "267.0.0"
+____exports.NPCID.THE_ADVERSARY = "268.0.0"
+____exports.NPCID.POLYCEPHALUS = "269.0.0"
+____exports.NPCID.POLYCEPHALUS_RED = "269.0.1"
+____exports.NPCID.POLYCEPHALUS_PINK = "269.0.2"
+____exports.NPCID.THE_PILE = "269.1.0"
+____exports.NPCID.MR_FRED = "270.0.0"
+____exports.NPCID.URIEL = "271.0.0"
+____exports.NPCID.FALLEN_URIEL = "271.1.0"
+____exports.NPCID.GABRIEL = "272.0.0"
+____exports.NPCID.FALLEN_GABRIEL = "272.1.0"
+____exports.NPCID.THE_LAMB = "273.0.0"
+____exports.NPCID.LAMB_BODY = "273.10.0"
+____exports.NPCID.MEGA_SATAN = "274.0.0"
+____exports.NPCID.MEGA_SATANS_RIGHT_HAND = "274.1.0"
+____exports.NPCID.MEGA_SATANS_LEFT_HAND = "274.2.0"
+____exports.NPCID.MEGA_SATAN_2 = "275.0.0"
+____exports.NPCID.MEGA_SATAN_2_RIGHT_HAND = "275.1.0"
+____exports.NPCID.MEGA_SATAN_2_LEFT_HAND = "275.2.0"
+____exports.NPCID.ROUNDY = "276.0.0"
+____exports.NPCID.BLACK_BONY = "277.0.0"
+____exports.NPCID.BLACK_GLOBIN = "278.0.0"
+____exports.NPCID.BLACK_GLOBINS_HEAD = "279.0.0"
+____exports.NPCID.BLACK_GLOBINS_BODY = "280.0.0"
+____exports.NPCID.SWARM = "281.0.0"
+____exports.NPCID.MEGA_CLOTTY = "282.0.0"
+____exports.NPCID.BONE_KNIGHT = "283.0.0"
+____exports.NPCID.CYCLOPIA = "284.0.0"
+____exports.NPCID.RED_GHOST = "285.0.0"
+____exports.NPCID.FLESH_DEATHS_HEAD = "286.0.0"
+____exports.NPCID.MOMS_DEAD_HAND = "287.0.0"
+____exports.NPCID.DUKIE = "288.0.0"
+____exports.NPCID.ULCER = "289.0.0"
+____exports.NPCID.MEATBALL = "290.0.0"
+____exports.NPCID.PITFALL = "291.0.0"
+____exports.NPCID.SUCTION_PITFALL = "291.1.0"
+____exports.NPCID.TELEPORT_PITFALL = "291.2.0"
+____exports.NPCID.MOVABLE_TNT = "292.0.0"
+____exports.NPCID.MOVABLE_TNT_MINE_CRAFTER = "292.1.0"
+____exports.NPCID.ULTRA_GREED_COIN_SPINNER = "293.0.0"
+____exports.NPCID.ULTRA_GREED_COIN_KEY = "293.1.0"
+____exports.NPCID.ULTRA_GREED_COIN_BOMB = "293.2.0"
+____exports.NPCID.ULTRA_GREED_COIN_HEART = "293.3.0"
+____exports.NPCID.ULTRA_GREED_DOOR = "294.0.0"
+____exports.NPCID.CORN_MINE = "295.0.0"
+____exports.NPCID.CORN_MINE_BLACK = "295.0.1"
+____exports.NPCID.HUSH_FLY = "296.0.0"
+____exports.NPCID.BLUE_GAPER = "297.0.0"
+____exports.NPCID.BLUE_BOIL = "298.0.0"
+____exports.NPCID.GREED_GAPER = "299.0.0"
+____exports.NPCID.MUSHROOM = "300.0.0"
+____exports.NPCID.POISON_MIND = "301.0.0"
+____exports.NPCID.STONEY = "302.0.0"
+____exports.NPCID.CROSS_STONEY = "302.10.0"
+____exports.NPCID.BLISTER = "303.0.0"
+____exports.NPCID.THE_THING = "304.0.0"
+____exports.NPCID.MINISTRO = "305.0.0"
+____exports.NPCID.PORTAL = "306.0.0"
+____exports.NPCID.LIL_PORTAL = "306.1.0"
+____exports.NPCID.TAR_BOY = "307.0.0"
+____exports.NPCID.TAR_BOY_MOUTH = "307.0.1"
+____exports.NPCID.FISTULOID = "308.0.0"
+____exports.NPCID.GUSH = "309.0.0"
+____exports.NPCID.LEPER = "310.0.0"
+____exports.NPCID.LEPER_STAGE_2 = "310.0.1"
+____exports.NPCID.LEPER_STAGE_3 = "310.0.2"
+____exports.NPCID.LEPER_STAGE_4 = "310.0.3"
+____exports.NPCID.LEPER_FLESH = "310.1.0"
+____exports.NPCID.MR_MINE = "311.0.0"
+____exports.NPCID.MR_MINE_NECK = "311.10.0"
+____exports.NPCID.THE_STAIN = "401.0.0"
+____exports.NPCID.THE_STAIN_GREY = "401.0.1"
+____exports.NPCID.BROWNIE = "402.0.0"
+____exports.NPCID.BROWNIE_BLACK = "402.0.1"
+____exports.NPCID.THE_FORSAKEN = "403.0.0"
+____exports.NPCID.THE_FORSAKEN_BLACK = "403.0.1"
+____exports.NPCID.LITTLE_HORN = "404.0.0"
+____exports.NPCID.LITTLE_HORN_ORANGE = "404.0.1"
+____exports.NPCID.LITTLE_HORN_BLACK = "404.0.2"
+____exports.NPCID.DARK_BALL = "404.1.0"
+____exports.NPCID.DARK_BALL_ORANGE = "404.1.1"
+____exports.NPCID.DARK_BALL_BLACK = "404.1.2"
+____exports.NPCID.RAG_MAN = "405.0.0"
+____exports.NPCID.RAG_MAN_RED = "405.0.1"
+____exports.NPCID.RAG_MAN_BLACK = "405.0.2"
+____exports.NPCID.RAG_MANS_HEAD = "405.1.0"
+____exports.NPCID.RAG_MANS_HEAD_RED = "405.1.1"
+____exports.NPCID.RAG_MANS_HEAD_BLACK = "405.1.2"
+____exports.NPCID.ULTRA_GREED = "406.0.0"
+____exports.NPCID.ULTRA_GREEDIER = "406.1.0"
+____exports.NPCID.HUSH = "407.0.0"
+____exports.NPCID.HUSH_SKINLESS = "408.0.0"
+____exports.NPCID.RAG_MEGA = "409.0.0"
+____exports.NPCID.PURPLE_BALL = "409.1.0"
+____exports.NPCID.RAG_MEGA_REBIRTH_PILLAR = "409.2.0"
+____exports.NPCID.SISTERS_VIS = "410.0.0"
+____exports.NPCID.BIG_HORN = "411.0.0"
+____exports.NPCID.SMALL_HOLE = "411.1.0"
+____exports.NPCID.BIG_HOLE = "411.2.0"
+____exports.NPCID.DELIRIUM = "412.0.0"
+____exports.NPCID.THE_MATRIARCH = "413.0.0"
+____exports.NPCID.BLOOD_PUPPY_SMALL = "802.0.0"
+____exports.NPCID.BLOOD_PUPPY_LARGE = "802.1.0"
+____exports.NPCID.BLIND_BAT = "803.0.0"
+____exports.NPCID.QUAKE_GRIMACE_LEFT = "804.0.0"
+____exports.NPCID.QUAKE_GRIMACE_UP = "804.0.1"
+____exports.NPCID.QUAKE_GRIMACE_RIGHT = "804.0.2"
+____exports.NPCID.QUAKE_GRIMACE_DOWN = "804.0.3"
+____exports.NPCID.BISHOP = "805.0.0"
+____exports.NPCID.BUBBLES = "806.0.0"
+____exports.NPCID.WRAITH = "807.0.0"
+____exports.NPCID.WILLO = "808.0.0"
+____exports.NPCID.BOMB_GRIMACE = "809.0.0"
+____exports.NPCID.SMALL_LEECH = "810.0.0"
+____exports.NPCID.DEEP_GAPER = "811.0.0"
+____exports.NPCID.DEEP_GAPER_2 = "811.0.1"
+____exports.NPCID.DEEP_GAPER_3 = "811.0.2"
+____exports.NPCID.DEEP_GAPER_4 = "811.0.3"
+____exports.NPCID.DEEP_GAPER_5 = "811.0.4"
+____exports.NPCID.DEEP_GAPER_6 = "811.0.5"
+____exports.NPCID.DEEP_GAPER_7 = "811.0.6"
+____exports.NPCID.SUB_HORF = "812.0.0"
+____exports.NPCID.TAINTED_SUB_HORF = "812.1.0"
+____exports.NPCID.BLURB = "813.0.0"
+____exports.NPCID.STRIDER = "814.0.0"
+____exports.NPCID.FISSURE = "815.0.0"
+____exports.NPCID.POLTY = "816.0.0"
+____exports.NPCID.KINETI = "816.1.0"
+____exports.NPCID.PREY = "817.0.0"
+____exports.NPCID.MULLIGHOUL = "817.1.0"
+____exports.NPCID.ROCK_SPIDER = "818.0.0"
+____exports.NPCID.ROCK_SPIDER_2 = "818.0.1"
+____exports.NPCID.ROCK_SPIDER_3 = "818.0.2"
+____exports.NPCID.ROCK_SPIDER_4 = "818.0.3"
+____exports.NPCID.TINTED_ROCK_SPIDER = "818.1.0"
+____exports.NPCID.TINTED_ROCK_SPIDER_2 = "818.1.1"
+____exports.NPCID.TINTED_ROCK_SPIDER_3 = "818.1.2"
+____exports.NPCID.TINTED_ROCK_SPIDER_4 = "818.1.3"
+____exports.NPCID.COAL_SPIDER = "818.2.0"
+____exports.NPCID.COAL_SPIDER_2 = "818.2.1"
+____exports.NPCID.COAL_SPIDER_3 = "818.2.2"
+____exports.NPCID.COAL_SPIDER_4 = "818.2.3"
+____exports.NPCID.FLY_BOMB = "819.0.0"
+____exports.NPCID.ETERNAL_FLY_BOMB = "819.1.0"
+____exports.NPCID.DANNY = "820.0.0"
+____exports.NPCID.COAL_BOY = "820.1.0"
+____exports.NPCID.BLASTER = "821.0.0"
+____exports.NPCID.BOUNCER = "822.0.0"
+____exports.NPCID.QUAKEY = "823.0.0"
+____exports.NPCID.GYRO = "824.0.0"
+____exports.NPCID.GRILLED_GYRO = "824.1.0"
+____exports.NPCID.FIRE_WORM = "825.0.0"
+____exports.NPCID.HARDY = "826.0.0"
+____exports.NPCID.FACELESS = "827.0.0"
+____exports.NPCID.TAINTED_FACELESS = "827.1.0"
+____exports.NPCID.NECRO = "828.0.0"
+____exports.NPCID.MOLE = "829.0.0"
+____exports.NPCID.TAINTED_MOLE = "829.1.0"
+____exports.NPCID.BIG_BONY = "830.0.0"
+____exports.NPCID.BIG_BONE = "830.10.0"
+____exports.NPCID.GUTTED_FATTY = "831.0.0"
+____exports.NPCID.GUTTED_FATTY_EYE = "831.10.0"
+____exports.NPCID.FESTERING_GUTS = "831.20.0"
+____exports.NPCID.EXORCIST = "832.0.0"
+____exports.NPCID.FANATIC = "832.1.0"
+____exports.NPCID.CANDLER = "833.0.0"
+____exports.NPCID.WHIPPER = "834.0.0"
+____exports.NPCID.SNAPPER = "834.1.0"
+____exports.NPCID.FLAGELLANT = "834.2.0"
+____exports.NPCID.PEEPING_FATTY = "835.0.0"
+____exports.NPCID.PEEPING_FATTY_EYE = "835.10.0"
+____exports.NPCID.VIS_VERSA = "836.0.0"
+____exports.NPCID.HENRY = "837.0.0"
+____exports.NPCID.LEVEL_2_WILLO = "838.0.0"
+____exports.NPCID.STRIFER = "839.0.0"
+____exports.NPCID.PON = "840.0.0"
+____exports.NPCID.REVENANT = "841.0.0"
+____exports.NPCID.QUAD_REVENANT = "841.1.0"
+____exports.NPCID.NIGHTWATCH = "842.0.0"
+____exports.NPCID.CANARY = "843.0.0"
+____exports.NPCID.FOREIGNER = "843.1.0"
+____exports.NPCID.BOMBGAGGER = "844.0.0"
+____exports.NPCID.LEVEL_2_GAPER = "850.0.0"
+____exports.NPCID.LEVEL_2_HORF = "850.1.0"
+____exports.NPCID.LEVEL_2_GUSHER = "850.2.0"
+____exports.NPCID.TWITCHY = "851.0.0"
+____exports.NPCID.SPIKEBALL = "852.0.0"
+____exports.NPCID.SMALL_MAGGOT = "853.0.0"
+____exports.NPCID.ADULT_LEECH = "854.0.0"
+____exports.NPCID.LEVEL_2_CHARGER = "855.0.0"
+____exports.NPCID.ELLEECH = "855.1.0"
+____exports.NPCID.GASBAG = "856.0.0"
+____exports.NPCID.COHORT = "857.0.0"
+____exports.NPCID.VESSEL = "858.0.0"
+____exports.NPCID.FLOAST = "859.0.0"
+____exports.NPCID.UNBORN = "860.0.0"
+____exports.NPCID.PUSTULE = "861.0.0"
+____exports.NPCID.CYST = "862.0.0"
+____exports.NPCID.MORNINGSTAR = "863.0.0"
+____exports.NPCID.MORNINGSTAR_2 = "863.0.1"
+____exports.NPCID.MORNINGSTAR_3 = "863.0.2"
+____exports.NPCID.MOCKULUS = "864.0.0"
+____exports.NPCID.EVIS = "865.0.0"
+____exports.NPCID.EVIS_GUTS = "865.10.0"
+____exports.NPCID.DARK_ESAU = "866.0.0"
+____exports.NPCID.DARKER_ESAU = "866.0.1"
+____exports.NPCID.DARK_ESAUS_PIT = "866.1.0"
+____exports.NPCID.MOTHERS_SHADOW = "867.0.0"
+____exports.NPCID.ARMY_FLY = "868.0.0"
+____exports.NPCID.MIGRAINE = "869.0.0"
+____exports.NPCID.DRIP = "870.0.0"
+____exports.NPCID.SPLURT = "871.0.0"
+____exports.NPCID.CLOGGY = "872.0.0"
+____exports.NPCID.FLY_TRAP = "873.0.0"
+____exports.NPCID.GAS_DWARF = "874.0.0"
+____exports.NPCID.POOT_MINE = "875.0.0"
+____exports.NPCID.DUMP = "876.0.0"
+____exports.NPCID.DUMP_HEAD = "876.1.0"
+____exports.NPCID.GRUDGE = "877.0.0"
+____exports.NPCID.BUTT_SLICKER = "878.0.0"
+____exports.NPCID.BLOATY = "879.0.0"
+____exports.NPCID.FLESH_MAIDEN = "880.0.0"
+____exports.NPCID.NEEDLE = "881.0.0"
+____exports.NPCID.PASTY = "881.1.0"
+____exports.NPCID.DUST = "882.0.0"
+____exports.NPCID.BABY_BEGOTTEN = "883.0.0"
+____exports.NPCID.SWARM_SPIDER = "884.0.0"
+____exports.NPCID.CULTIST = "885.0.0"
+____exports.NPCID.BLOOD_CULTIST = "885.1.0"
+____exports.NPCID.BONE_TRAP = "885.10.0"
+____exports.NPCID.VIS_FATTY = "886.0.0"
+____exports.NPCID.FETAL_DEMON = "886.1.0"
+____exports.NPCID.DUSTY_DEATHS_HEAD = "887.0.0"
+____exports.NPCID.SHADY = "888.0.0"
+____exports.NPCID.CLICKETY_CLACK = "889.0.0"
+____exports.NPCID.MAZE_ROAMER = "890.0.0"
+____exports.NPCID.MAZE_ROAMER_2 = "890.0.1"
+____exports.NPCID.GOAT = "891.0.0"
+____exports.NPCID.BLACK_GOAT = "891.1.0"
+____exports.NPCID.POOFER = "892.0.0"
+____exports.NPCID.BALL_AND_CHAIN = "893.0.0"
+____exports.NPCID.REAP_CREEP = "900.0.0"
+____exports.NPCID.LIL_BLUB = "901.0.0"
+____exports.NPCID.RAINMAKER = "902.0.0"
+____exports.NPCID.THE_VISAGE = "903.0.0"
+____exports.NPCID.VISAGE_MASK = "903.1.0"
+____exports.NPCID.VISAGE_CHAIN = "903.10.0"
+____exports.NPCID.VISAGE_PLASMA = "903.20.0"
+____exports.NPCID.SIREN = "904.0.0"
+____exports.NPCID.SIRENS_SKULL = "904.1.0"
+____exports.NPCID.SIREN_HELPER_PROJECTILE = "904.10.0"
+____exports.NPCID.THE_HERETIC = "905.0.0"
+____exports.NPCID.HORNFEL = "906.0.0"
+____exports.NPCID.HORNFEL_DECOY = "906.1.0"
+____exports.NPCID.GREAT_GIDEON = "907.0.0"
+____exports.NPCID.GREAT_GIDEON_DEFEATED = "907.0.1"
+____exports.NPCID.BABY_PLUM = "908.0.0"
+____exports.NPCID.THE_SCOURGE = "909.0.0"
+____exports.NPCID.THE_SCOURGE_CHAIN = "909.10.0"
+____exports.NPCID.CHIMERA = "910.0.0"
+____exports.NPCID.CHIMERA_BODY = "910.1.0"
+____exports.NPCID.CHIMERA_HEAD = "910.2.0"
+____exports.NPCID.ROTGUT = "911.0.0"
+____exports.NPCID.ROTGUT_MAGGOT = "911.1.0"
+____exports.NPCID.ROTGUT_HEART = "911.2.0"
+____exports.NPCID.MOTHER_PHASE_1 = "912.0.0"
+____exports.NPCID.MOTHER_PHASE_2 = "912.0.1"
+____exports.NPCID.MOTHER_LEFT_ARM = "912.0.2"
+____exports.NPCID.MOTHER_RIGHT_ARM = "912.0.3"
+____exports.NPCID.MOTHER_DISAPPEAR = "912.0.4"
+____exports.NPCID.MOTHER_2 = "912.10.0"
+____exports.NPCID.DEAD_ISAAC = "912.20.0"
+____exports.NPCID.MOTHER_WORM = "912.30.0"
+____exports.NPCID.MOTHER_BALL = "912.100.0"
+____exports.NPCID.MOTHER_BALL_MEDIUM = "912.100.1"
+____exports.NPCID.MOTHER_BALL_SMALL = "912.100.2"
+____exports.NPCID.MIN_MIN = "913.0.0"
+____exports.NPCID.CLOG = "914.0.0"
+____exports.NPCID.SINGE = "915.0.0"
+____exports.NPCID.SINGES_BALL = "915.1.0"
+____exports.NPCID.BUMBINO = "916.0.0"
+____exports.NPCID.COLOSTOMIA = "917.0.0"
+____exports.NPCID.TURDLET = "918.0.0"
+____exports.NPCID.RAGLICH = "919.0.0"
+____exports.NPCID.RAGLICH_ARM = "919.1.0"
+____exports.NPCID.HORNY_BOYS = "920.0.0"
+____exports.NPCID.CLUTCH = "921.0.0"
+____exports.NPCID.CLUTCH_ORBITAL = "921.1.0"
+____exports.NPCID.DOGMA = "950.0.0"
+____exports.NPCID.DOGMAS_TV = "950.1.0"
+____exports.NPCID.DOGMA_ANGEL = "950.2.0"
+____exports.NPCID.DOGMA_ANGEL_BABY = "950.10.0"
+____exports.NPCID.THE_BEAST = "951.0.0"
+____exports.NPCID.STALACTITE = "951.1.0"
+____exports.NPCID.BEAST_ROCK_PROJECTILE = "951.2.0"
+____exports.NPCID.BEAST_SOUL = "951.3.0"
+____exports.NPCID.ULTRA_FAMINE = "951.10.0"
+____exports.NPCID.ULTRA_FAMINE_FLY = "951.11.0"
+____exports.NPCID.ULTRA_PESTILENCE = "951.20.0"
+____exports.NPCID.ULTRA_PESTILENCE_FLY = "951.21.0"
+____exports.NPCID.ULTRA_PESTILENCE_MAGGOT = "951.22.0"
+____exports.NPCID.ULTRA_PESTILENCE_FLY_BALL = "951.23.0"
+____exports.NPCID.ULTRA_WAR = "951.30.0"
+____exports.NPCID.ULTRA_WAR_BOMB = "951.31.0"
+____exports.NPCID.ULTRA_DEATH = "951.40.0"
+____exports.NPCID.ULTRA_DEATH_SCYTHE = "951.41.0"
+____exports.NPCID.ULTRA_DEATH_HEAD = "951.42.0"
+____exports.NPCID.BACKGROUND_BEAST = "951.100.0"
+____exports.NPCID.BACKGROUND_FAMINE = "951.101.0"
+____exports.NPCID.BACKGROUND_PESTILENCE = "951.102.0"
+____exports.NPCID.BACKGROUND_WAR = "951.103.0"
+____exports.NPCID.BACKGROUND_DEATH = "951.104.0"
+____exports.NPCID.GENERIC_PROP = "960.0.0"
+____exports.NPCID.MOMS_DRESSER = "960.1.0"
+____exports.NPCID.MOMS_VANITY = "960.2.0"
+____exports.NPCID.COUCH = "960.3.0"
+____exports.NPCID.TV = "960.4.0"
+____exports.NPCID.FROZEN_ENEMY = "963.0.0"
+____exports.NPCID.DUMMY = "964.0.0"
+____exports.NPCID.MINECART = "965.0.0"
+____exports.NPCID.SIREN_HELPER = "966.0.0"
+____exports.NPCID.HORNFEL_DOOR = "967.0.0"
+return ____exports
+ end,
 ["lua_modules.isaac-typescript-definitions.dist.enums.Music"] = function(...) 
 local ____exports = {}
 ____exports.Music = {}
@@ -18189,13 +19062,16 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local __TS__Spread = ____lualib.__TS__Spread
 local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
-local __TS__ArraySort = ____lualib.__TS__ArraySort
+local __TS__ArrayToSorted = ____lualib.__TS__ArrayToSorted
 local __TS__StringReplaceAll = ____lualib.__TS__StringReplaceAll
 local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
+local __TS__ArraySort = ____lualib.__TS__ArraySort
 local __TS__StringSlice = ____lualib.__TS__StringSlice
 local __TS__StringEndsWith = ____lualib.__TS__StringEndsWith
 local ____exports = {}
+local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
+local parseIntSafe = ____types.parseIntSafe
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local assertDefined = ____utils.assertDefined
 --- Helper function to get the closest value from an array of strings based on partial search text.
@@ -18216,11 +19092,11 @@ local assertDefined = ____utils.assertDefined
 -- found, returns undefined.
 -- ```
 function ____exports.getPartialMatch(self, searchText, array)
-    __TS__ArraySort(array)
+    local sortedArray = __TS__ArrayToSorted(array)
     searchText = string.lower(searchText)
     searchText = __TS__StringReplaceAll(searchText, " ", "")
     local matchingElements = __TS__ArrayFilter(
-        array,
+        sortedArray,
         function(____, element) return __TS__StringStartsWith(
             string.lower(element),
             searchText
@@ -18309,9 +19185,9 @@ function ____exports.parseSemanticVersion(self, versionString)
     if majorVersionString == nil or minorVersionString == nil or patchVersionString == nil then
         return nil
     end
-    local majorVersion = tonumber(majorVersionString)
-    local minorVersion = tonumber(minorVersionString)
-    local patchVersion = tonumber(patchVersionString)
+    local majorVersion = parseIntSafe(nil, majorVersionString)
+    local minorVersion = parseIntSafe(nil, minorVersionString)
+    local patchVersion = parseIntSafe(nil, patchVersionString)
     if majorVersion == nil or minorVersion == nil or patchVersion == nil then
         return nil
     end
@@ -18356,6 +19232,15 @@ function ____exports.trimSuffix(self, ____string, prefix)
     end
     local endCharacter = #____string - #prefix
     return __TS__StringSlice(____string, 0, endCharacter)
+end
+function ____exports.uncapitalizeFirstLetter(self, ____string)
+    if ____string == "" then
+        return ____string
+    end
+    local firstCharacter = string.sub(____string, 1, 1)
+    local uncapitalizedFirstLetter = string.lower(firstCharacter)
+    local restOfString = string.sub(____string, 2)
+    return uncapitalizedFirstLetter .. restOfString
 end
 return ____exports
  end,
@@ -18684,6 +19569,23 @@ function ____exports.isTable(self, variable)
 end
 function ____exports.isUserdata(self, variable)
     return type(variable) == "userdata"
+end
+--- Helper function to convert a string to an integer. Returns undefined if the string is not an
+-- integer.
+-- 
+-- Under the hood, this uses the built-in `tonumber` and `math.floor` functions.
+-- 
+-- This is named `parseIntSafe` in order to match the helper function in `isaacscript-common-ts`.
+function ____exports.parseIntSafe(self, ____string)
+    if not ____exports.isString(nil, ____string) then
+        return nil
+    end
+    local number = tonumber(____string)
+    if number == nil then
+        return nil
+    end
+    local flooredNumber = math.floor(number)
+    return number == flooredNumber and flooredNumber or nil
 end
 return ____exports
  end,
@@ -19340,7 +20242,7 @@ ____exports.COLLECTIBLE_NAMES = {
     [CollectibleType.MOMS_EYESHADOW] = "Mom's Eyeshadow",
     [CollectibleType.IRON_BAR] = "Iron Bar",
     [CollectibleType.MIDAS_TOUCH] = "Midas' Touch",
-    [CollectibleType.HUMBLING_BUNDLE] = "Humbleing Bundle",
+    [CollectibleType.HUMBLEING_BUNDLE] = "Humbleing Bundle",
     [CollectibleType.FANNY_PACK] = "Fanny Pack",
     [CollectibleType.SHARP_PLUG] = "Sharp Plug",
     [CollectibleType.GUILLOTINE] = "Guillotine",
@@ -20342,6 +21244,8 @@ local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cach
 local game = ____cachedClasses.game
 local ____SerializationBrand = require("lua_modules.isaacscript-common.dist.enums.private.SerializationBrand")
 local SerializationBrand = ____SerializationBrand.SerializationBrand
+local ____debugFunctions = require("lua_modules.isaacscript-common.dist.functions.debugFunctions")
+local traceback = ____debugFunctions.traceback
 local ____isaacAPIClass = require("lua_modules.isaacscript-common.dist.functions.isaacAPIClass")
 local isaacAPIClassEquals = ____isaacAPIClass.isaacAPIClassEquals
 local isIsaacAPIClassOfType = ____isaacAPIClass.isIsaacAPIClassOfType
@@ -20382,6 +21286,7 @@ function ____exports.setSeed(self, rng, seed)
     if seed == 0 then
         seed = ____exports.getRandomSeed(nil)
         logError("Failed to set a RNG object to a seed of 0. Using a random value instead.")
+        traceback()
     end
     rng:SetSeed(seed, RECOMMENDED_SHIFT_IDX)
 end
@@ -20514,8 +21419,9 @@ function ____exports.getBooleansFromTable(self, luaMap, objectName, ...)
     end
     return booleans
 end
---- Helper function to safely get number values from specific keys on a Lua table. Will throw an
--- error if the specific value does not exist on the table or if it cannot be converted to a number.
+--- Helper function to safely get number values from specific keys on a Lua table. If the values are
+-- strings, they will be converted to numbers. Will throw an error if the specific value does not
+-- exist on the table or if it cannot be converted to a number.
 -- 
 -- This function is variadic, meaning that you can specify N arguments to get N values.
 function ____exports.getNumbersFromTable(self, luaMap, objectName, ...)
@@ -20831,6 +21737,98 @@ function ____exports.isaacAPIClassEquals(self, object1, object2, keys)
 end
 return ____exports
  end,
+["lua_modules.isaacscript-common.dist.functions.debugFunctions"] = function(...) 
+local ____exports = {}
+local ____log = require("lua_modules.isaacscript-common.dist.functions.log")
+local log = ____log.log
+--- Helper function to get the current time for benchmarking / profiling purposes.
+-- 
+-- The return value will either be in seconds or milliseconds, depending on if the "--luadebug" flag
+-- is turned on.
+-- 
+-- If the "--luadebug" flag is present, then this function will use the `socket.gettime` method,
+-- which returns the epoch timestamp in seconds (e.g. "1640320492.5779"). This is preferable over
+-- the more conventional `Isaac.GetTime` method, since it has one extra decimal point of precision.
+-- 
+-- If the "--luadebug" flag is not present, then this function will use the `Isaac.GetTime` method,
+-- which returns the number of milliseconds since the computer's operating system was started (e.g.
+-- "739454963").
+-- 
+-- @param useSocketIfAvailable Optional. Whether to use the `socket.gettime` method, if available.
+-- Default is true. If set to false, the `Isaac.GetTime()` method will
+-- always be used.
+function ____exports.getTime(self, useSocketIfAvailable)
+    if useSocketIfAvailable == nil then
+        useSocketIfAvailable = true
+    end
+    if useSocketIfAvailable then
+        if SandboxGetTime ~= nil then
+            return SandboxGetTime()
+        end
+        if ____exports.isLuaDebugEnabled(nil) then
+            local ok, requiredSocket = pcall(require, "socket")
+            if ok then
+                local socket = requiredSocket
+                return socket.gettime()
+            end
+        end
+    end
+    return Isaac.GetTime()
+end
+--- Players can boot the game with an launch option called "--luadebug", which will enable additional
+-- functionality that is considered to be unsafe. For more information about this flag, see the
+-- wiki: https://bindingofisaacrebirth.fandom.com/wiki/Launch_Options
+-- 
+-- When this flag is enabled, the global environment will be slightly different. The differences are
+-- documented here: https://wofsauge.github.io/IsaacDocs/rep/Globals.html
+-- 
+-- This function uses the `package` global variable as a proxy to determine if the "--luadebug" flag
+-- is enabled.
+-- 
+-- Note that this function will return false if the Racing+ sandbox is enabled, even if the
+-- "--luadebug" flag is really turned on. If checking for this case is needed, check for the
+-- presence of the `sandboxGetTraceback` function.
+function ____exports.isLuaDebugEnabled(self)
+    return _G.package ~= nil
+end
+--- Helper function to get the amount of elapsed time for benchmarking / profiling purposes.
+-- 
+-- For more information, see the documentation for the `getTime` helper function.
+-- 
+-- @param time The milliseconds (int) or fractional seconds (float).
+-- @param useSocketIfAvailable Optional. Whether to use the `socket.gettime` method, if available.
+-- Default is true. If set to false, the `Isaac.GetTime()` method will
+-- always be used.
+function ____exports.getElapsedTimeSince(self, time, useSocketIfAvailable)
+    if useSocketIfAvailable == nil then
+        useSocketIfAvailable = true
+    end
+    return ____exports.getTime(nil, useSocketIfAvailable) - time
+end
+--- Helper function to get a stack trace.
+-- 
+-- This will only work if the `--luadebug` launch option is enabled. If it isn't, then a error
+-- string will be returned.
+function ____exports.getTraceback()
+    if SandboxGetTraceback ~= nil then
+        return SandboxGetTraceback()
+    end
+    if debug ~= nil then
+        return debug.traceback()
+    end
+    return "stack traceback:\n(the \"--luadebug\" flag is not enabled)"
+end
+--- Helper function to log a stack trace to the "log.txt" file, similar to JavaScript's
+-- `console.trace` function.
+-- 
+-- This will only work if the `--luadebug` launch option is enabled. If it isn't, then a error
+-- string will be logged.
+function ____exports.traceback()
+    local tracebackOutput = ____exports.getTraceback()
+    log(tracebackOutput)
+end
+return ____exports
+ end,
 ["lua_modules.isaacscript-common.dist.enums.private.SerializationBrand"] = function(...) 
 local ____exports = {}
 --- During serialization, we write an arbitrary string key to the object with a value of an empty
@@ -20852,10 +21850,10 @@ return ____exports
 ["lua_modules.isaacscript-common.dist.functions.array"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__ArrayEvery = ____lualib.__TS__ArrayEvery
+local __TS__New = ____lualib.__TS__New
 local __TS__ArrayIndexOf = ____lualib.__TS__ArrayIndexOf
 local __TS__ArraySplice = ____lualib.__TS__ArraySplice
 local __TS__ArrayPushArray = ____lualib.__TS__ArrayPushArray
-local __TS__New = ____lualib.__TS__New
 local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
 local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
@@ -20910,28 +21908,6 @@ function ____exports.arrayRemoveAllInPlace(self, array, ...)
         until not (index > -1)
     end
     return removedOneOrMoreElements
-end
---- Removes the specified element(s) from the array. If the specified element(s) are not found in the
--- array, this function will do nothing.
--- 
--- This function is variadic, meaning that you can specify N arguments to remove N elements.
--- 
--- If there is more than one matching element in the array, this function will only remove the first
--- matching element. If you want to remove all of the elements, use the `arrayRemoveAllInPlace`
--- function instead.
--- 
--- @returns The removed elements. This will be an empty array if no elements were removed.
-function ____exports.arrayRemoveInPlace(self, array, ...)
-    local elementsToRemove = {...}
-    local removedElements = {}
-    for ____, element in ipairs(elementsToRemove) do
-        local index = __TS__ArrayIndexOf(array, element)
-        if index > -1 then
-            local removedElement = __TS__ArraySplice(array, index, 1)
-            __TS__ArrayPushArray(removedElements, removedElement)
-        end
-    end
-    return removedElements
 end
 --- Helper function to perform a shallow copy.
 -- 
@@ -21043,9 +22019,9 @@ function ____exports.arrayEquals(self, array1, array2)
         end
     )
 end
---- Shallow copies and removes the specified element(s) from the array. Returns the copied array. If
--- the specified element(s) are not found in the array, it will simply return a shallow copy of the
--- array.
+--- Builds a new array based on the original array without the specified element(s). Returns the new
+-- array. If the specified element(s) are not found in the array, it will simply return a shallow
+-- copy of the array.
 -- 
 -- This function is variadic, meaning that you can specify N arguments to remove N elements.
 -- 
@@ -21053,8 +22029,14 @@ end
 -- matching element. If you want to remove all of the elements, use the `arrayRemoveAll` function
 -- instead.
 function ____exports.arrayRemove(self, originalArray, ...)
-    local array = ____exports.copyArray(nil, originalArray)
-    ____exports.arrayRemoveInPlace(nil, array, ...)
+    local elementsToRemove = {...}
+    local elementsToRemoveSet = __TS__New(ReadonlySet, elementsToRemove)
+    local array = {}
+    for ____, element in ipairs(originalArray) do
+        if not elementsToRemoveSet:has(element) then
+            array[#array + 1] = element
+        end
+    end
     return array
 end
 --- Shallow copies and removes the specified element(s) from the array. Returns the copied array. If
@@ -21070,6 +22052,28 @@ function ____exports.arrayRemoveAll(self, originalArray, ...)
     local array = ____exports.copyArray(nil, originalArray)
     ____exports.arrayRemoveAllInPlace(nil, array, ...)
     return array
+end
+--- Removes the specified element(s) from the array. If the specified element(s) are not found in the
+-- array, this function will do nothing.
+-- 
+-- This function is variadic, meaning that you can specify N arguments to remove N elements.
+-- 
+-- If there is more than one matching element in the array, this function will only remove the first
+-- matching element. If you want to remove all of the elements, use the `arrayRemoveAllInPlace`
+-- function instead.
+-- 
+-- @returns The removed elements. This will be an empty array if no elements were removed.
+function ____exports.arrayRemoveInPlace(self, array, ...)
+    local elementsToRemove = {...}
+    local removedElements = {}
+    for ____, element in ipairs(elementsToRemove) do
+        local index = __TS__ArrayIndexOf(array, element)
+        if index > -1 then
+            local removedElement = __TS__ArraySplice(array, index, 1)
+            __TS__ArrayPushArray(removedElements, removedElement)
+        end
+    end
+    return removedElements
 end
 --- Shallow copies and removes the elements at the specified indexes from the array. Returns the
 -- copied array. If the specified indexes are not found in the array, it will simply return a
@@ -22329,11 +23333,9 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local CardType = ____isaac_2Dtypescript_2Ddefinitions.CardType
 local Challenge = ____isaac_2Dtypescript_2Ddefinitions.Challenge
 local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
-local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
 local PillColor = ____isaac_2Dtypescript_2Ddefinitions.PillColor
 local PillEffect = ____isaac_2Dtypescript_2Ddefinitions.PillEffect
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
-local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
 local TrinketType = ____isaac_2Dtypescript_2Ddefinitions.TrinketType
 local ____enums = require("lua_modules.isaacscript-common.dist.functions.enums")
 local getEnumLength = ____enums.getEnumLength
@@ -22344,20 +23346,23 @@ local iRange = ____utils.iRange
 ____exports.FIRST_COLLECTIBLE_TYPE = CollectibleType.SAD_ONION
 --- Calculated from the `CollectibleType` enum.
 -- 
--- Note that this cannot be calculated from the length of the enum, because unlike all of the other
--- enums, collectible types are not contiguous.
+-- Note that this cannot be calculated from the length of the enum, because collectible types are
+-- not contiguous.
 ____exports.LAST_VANILLA_COLLECTIBLE_TYPE = getHighestEnumValue(nil, CollectibleType)
 --- Calculated from the `CollectibleType` enum. (`CollectibleType.NULL` is not included.)
 ____exports.NUM_VANILLA_COLLECTIBLE_TYPES = getEnumLength(nil, CollectibleType) - 1
 --- Equal to `TrinketType.SWALLOWED_PENNY`.
 ____exports.FIRST_TRINKET_TYPE = TrinketType.SWALLOWED_PENNY
 --- Calculated from the `TrinketType` enum.
+-- 
+-- Note that this cannot be calculated from the length of the enum, because trinket types are not
+-- contiguous.
 ____exports.LAST_VANILLA_TRINKET_TYPE = getHighestEnumValue(nil, TrinketType)
 --- Calculated from the `TrinketType` enum. (`TrinketType.NULL` is not included.)
 ____exports.NUM_VANILLA_TRINKET_TYPES = getEnumLength(nil, TrinketType) - 1
 --- Equal to `Card.FOOL`.
 ____exports.FIRST_CARD_TYPE = CardType.FOOL
---- Calculated from the `Card` enum.
+--- Calculated from the `CardType` enum.
 ____exports.LAST_VANILLA_CARD_TYPE = getHighestEnumValue(nil, CardType)
 --- Calculated from the `Card` enum. `Card.NULL` is not included.
 ____exports.NUM_VANILLA_CARD_TYPES = getEnumLength(nil, CardType) - 1
@@ -22387,10 +23392,6 @@ ____exports.NUM_NORMAL_PILL_COLORS = #iRange(nil, ____exports.FIRST_PILL_COLOR, 
 ____exports.FIRST_CHARACTER = PlayerType.ISAAC
 --- Calculated from the `PlayerType` enum.
 ____exports.LAST_VANILLA_CHARACTER = getHighestEnumValue(nil, PlayerType)
-____exports.FIRST_ROOM_TYPE = RoomType.DEFAULT
-____exports.LAST_ROOM_TYPE = getHighestEnumValue(nil, RoomType)
-____exports.FIRST_STAGE = LevelStage.BASEMENT_1
-____exports.LAST_STAGE = getHighestEnumValue(nil, LevelStage)
 --- Calculated from the `Challenge` enum. `Challenge.NULL` is not included.
 ____exports.NUM_VANILLA_CHALLENGES = getEnumLength(nil, Challenge) - 1
 return ____exports
@@ -23071,6 +24072,7 @@ local ____sprites = require("lua_modules.isaacscript-common.dist.functions.sprit
 local clearSprite = ____sprites.clearSprite
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
 local asNumber = ____types.asNumber
+local asTrinketType = ____types.asTrinketType
 function ____exports.isGoldenTrinketType(self, trinketType)
     return asNumber(nil, trinketType) > GOLDEN_TRINKET_ADJUSTMENT
 end
@@ -23089,7 +24091,7 @@ local TRINKET_SPRITE_LAYER = 0
 -- For example, passing `TrinketType.SWALLOWED_PENNY` would result in 32769, which is the value that
 -- corresponds to the golden trinket sub-type for Swallowed Penny.
 function ____exports.getGoldenTrinketType(self, trinketType)
-    return ____exports.isGoldenTrinketType(nil, trinketType) and trinketType or asNumber(nil, trinketType) + GOLDEN_TRINKET_ADJUSTMENT
+    return ____exports.isGoldenTrinketType(nil, trinketType) and trinketType or trinketType + GOLDEN_TRINKET_ADJUSTMENT
 end
 --- Helper function to get the current effect that the Mysterious Paper trinket is providing to the
 -- player. Returns undefined if the player does not have the Mysterious Paper trinket.
@@ -23123,7 +24125,7 @@ end
 -- If the provided trinket type is already a normal trinket type, then the trinket type will be
 -- returned unmodified.
 function ____exports.getNormalTrinketType(self, trinketType)
-    return ____exports.isGoldenTrinketType(nil, trinketType) and asNumber(nil, trinketType) - GOLDEN_TRINKET_ADJUSTMENT or trinketType
+    return ____exports.isGoldenTrinketType(nil, trinketType) and trinketType - GOLDEN_TRINKET_ADJUSTMENT or trinketType
 end
 --- Helper function to get the in-game description for a trinket. Returns "Unknown" if the provided
 -- trinket type was not valid.
@@ -23172,6 +24174,11 @@ function ____exports.getTrinketName(self, trinketType)
 end
 function ____exports.isModdedTrinketType(self, trinketType)
     return not ____exports.isVanillaTrinketType(nil, trinketType)
+end
+function ____exports.isValidTrinketType(self, trinketType)
+    local potentialTrinketType = asTrinketType(nil, trinketType)
+    local itemConfigItem = itemConfig:GetTrinket(potentialTrinketType)
+    return itemConfigItem ~= nil
 end
 --- Helper function to generate a new sprite based on a collectible. If the provided collectible type
 -- is invalid, a sprite with a Curse of the Blind question mark will be returned.
@@ -23661,6 +24668,7 @@ local isTSTLSet = ____tstlClass.isTSTLSet
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
 local asNPCState = ____types.asNPCState
 local isPrimitive = ____types.isPrimitive
+local parseIntSafe = ____types.parseIntSafe
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local assertDefined = ____utils.assertDefined
 local ____vector = require("lua_modules.isaacscript-common.dist.functions.vector")
@@ -23840,24 +24848,15 @@ function ____exports.getConstituentsFromEntityID(self, entityID)
         error("Failed to get the constituents from entity ID: " .. entityID)
     end
     local entityTypeString, variantString, subTypeString = table.unpack(parts)
-    local entityType = tonumber(entityTypeString)
-    assertDefined(
-        nil,
-        entityType,
-        "Failed to convert the entity type to a number: " .. tostring(entityTypeString)
-    )
-    local variant = tonumber(variantString)
-    assertDefined(
-        nil,
-        variant,
-        "Failed to convert the entity variant to a number: " .. tostring(variantString)
-    )
-    local subType = tonumber(subTypeString)
-    assertDefined(
-        nil,
-        subType,
-        "Failed to convert the entity sub-type to a number: " .. tostring(subTypeString)
-    )
+    assertDefined(nil, entityTypeString, "Failed to get the first constituent from an entity ID: " .. entityID)
+    assertDefined(nil, variantString, "Failed to get the second constituent from an entity ID: " .. entityID)
+    assertDefined(nil, subTypeString, "Failed to get the third constituent from an entity ID: " .. entityID)
+    local entityType = parseIntSafe(nil, entityTypeString)
+    assertDefined(nil, entityType, "Failed to convert the entity type to an integer: " .. entityTypeString)
+    local variant = parseIntSafe(nil, variantString)
+    assertDefined(nil, variant, "Failed to convert the entity variant to an integer: " .. variantString)
+    local subType = parseIntSafe(nil, subTypeString)
+    assertDefined(nil, subType, "Failed to convert the entity sub-type to an integer: " .. subTypeString)
     return {entityType, variant, subType}
 end
 --- Helper function to get all of the entities in the room or all of the entities that match a
@@ -24066,16 +25065,13 @@ function ____exports.parseEntityID(self, entityID)
         return nil
     end
     local entityTypeString, variantString, subTypeString = table.unpack(entityIDArray)
-    local entityType = tonumber(entityTypeString)
-    if entityType == nil then
+    if entityTypeString == nil or variantString == nil or subTypeString == nil then
         return nil
     end
-    local variant = tonumber(variantString)
-    if variant == nil then
-        return nil
-    end
-    local subType = tonumber(subTypeString)
-    if subType == nil then
+    local entityType = parseIntSafe(nil, entityTypeString)
+    local variant = parseIntSafe(nil, variantString)
+    local subType = parseIntSafe(nil, subTypeString)
+    if entityType == nil or variant == nil or subType == nil then
         return nil
     end
     return {entityType, variant, subType}
@@ -24092,12 +25088,12 @@ function ____exports.parseEntityTypeVariantString(self, entityTypeVariantString)
         return nil
     end
     local entityTypeString, variantString = table.unpack(entityTypeVariantArray)
-    local entityType = tonumber(entityTypeString)
-    if entityType == nil then
+    if entityTypeString == nil or variantString == nil then
         return nil
     end
-    local variant = tonumber(variantString)
-    if variant == nil then
+    local entityType = parseIntSafe(nil, entityTypeString)
+    local variant = parseIntSafe(nil, variantString)
+    if entityType == nil or variant == nil then
         return nil
     end
     return {entityType, variant}
@@ -24719,6 +25715,18 @@ local getAllPlayers = ____playerIndex.getAllPlayers
 local getPlayers = ____playerIndex.getPlayers
 local ____players = require("lua_modules.isaacscript-common.dist.functions.players")
 local isCharacter = ____players.isCharacter
+--- Returns the total number of collectibles amongst all players. For example, if player 1 has 1 Sad
+-- Onion and player 2 has 2 Sad Onions, then this function would return 3.
+-- 
+-- Note that this will filter out non-real collectibles like Lilith's Incubus.
+function ____exports.getTotalPlayerCollectibles(self, collectibleType)
+    local players = getPlayers(nil)
+    local numCollectiblesArray = __TS__ArrayMap(
+        players,
+        function(____, player) return player:GetCollectibleNum(collectibleType, true) end
+    )
+    return sumArray(nil, numCollectiblesArray)
+end
 --- Helper function to add one or more collectibles to a player.
 -- 
 -- This function is variadic, meaning that you can supply as many collectible types as you want to
@@ -24760,6 +25768,13 @@ function ____exports.getActiveItemSlots(self, player, collectibleType)
         end
     )
 end
+--- Helper function to get the adjusted price for a pickup, depending on how many Steam Sales all
+-- players currently have. (For example, if Jacob has one Steam Sale and Esau has one Steam Sale,
+-- the prices for items in the shop would be the same as if Isaac had two Steam Sales.)
+function ____exports.getAdjustedPrice(self, basePrice)
+    local numSteamSales = ____exports.getTotalPlayerCollectibles(nil, CollectibleType.STEAM_SALE)
+    return numSteamSales > 0 and math.floor(basePrice / (numSteamSales + 1)) or basePrice
+end
 --- Helper function to return the total amount of collectibles that a player has that match the
 -- collectible type(s) provided.
 -- 
@@ -24788,18 +25803,6 @@ function ____exports.getPlayersWithCollectible(self, ...)
             function(____, collectibleType) return player:HasCollectible(collectibleType) end
         ) end
     )
-end
---- Returns the total number of collectibles amongst all players. For example, if player 1 has 1 Sad
--- Onion and player 2 has 2 Sad Onions, then this function would return 3.
--- 
--- Note that this will filter out non-real collectibles like Lilith's Incubus.
-function ____exports.getTotalPlayerCollectibles(self, collectibleType)
-    local players = getPlayers(nil)
-    local numCollectiblesArray = __TS__ArrayMap(
-        players,
-        function(____, player) return player:GetCollectibleNum(collectibleType, true) end
-    )
-    return sumArray(nil, numCollectiblesArray)
 end
 --- Helper function to check to see if a player has one or more collectibles.
 -- 
@@ -24864,7 +25867,7 @@ function ____exports.removeAllActiveItems(self, player)
         do
             local collectibleType = player:GetActiveItem(activeSlot)
             if collectibleType == CollectibleType.NULL then
-                goto __continue28
+                goto __continue29
             end
             local stillHasCollectible
             repeat
@@ -24874,7 +25877,7 @@ function ____exports.removeAllActiveItems(self, player)
                 end
             until not stillHasCollectible
         end
-        ::__continue28::
+        ::__continue29::
     end
 end
 --- Helper function to remove one or more collectibles to a player.
@@ -24943,9 +25946,9 @@ function ____exports.setActiveItem(self, player, collectibleType, activeSlot, ch
         itemPool:RemoveCollectible(collectibleType)
     end
     repeat
-        local ____switch46 = activeSlot
-        local ____cond46 = ____switch46 == ActiveSlot.PRIMARY
-        if ____cond46 then
+        local ____switch47 = activeSlot
+        local ____cond47 = ____switch47 == ActiveSlot.PRIMARY
+        if ____cond47 then
             do
                 if primaryCollectibleType ~= CollectibleType.NULL then
                     player:RemoveCollectible(primaryCollectibleType)
@@ -24954,8 +25957,8 @@ function ____exports.setActiveItem(self, player, collectibleType, activeSlot, ch
                 break
             end
         end
-        ____cond46 = ____cond46 or ____switch46 == ActiveSlot.SECONDARY
-        if ____cond46 then
+        ____cond47 = ____cond47 or ____switch47 == ActiveSlot.SECONDARY
+        if ____cond47 then
             do
                 if primaryCollectibleType ~= CollectibleType.NULL then
                     player:RemoveCollectible(primaryCollectibleType)
@@ -24970,16 +25973,16 @@ function ____exports.setActiveItem(self, player, collectibleType, activeSlot, ch
                 break
             end
         end
-        ____cond46 = ____cond46 or ____switch46 == ActiveSlot.POCKET
-        if ____cond46 then
+        ____cond47 = ____cond47 or ____switch47 == ActiveSlot.POCKET
+        if ____cond47 then
             do
                 player:SetPocketActiveItem(collectibleType, activeSlot, keepInPools)
                 player:SetActiveCharge(charge, activeSlot)
                 break
             end
         end
-        ____cond46 = ____cond46 or ____switch46 == ActiveSlot.POCKET_SINGLE_USE
-        if ____cond46 then
+        ____cond47 = ____cond47 or ____switch47 == ActiveSlot.POCKET_SINGLE_USE
+        if ____cond47 then
             do
                 player:SetPocketActiveItem(collectibleType, activeSlot, keepInPools)
                 break
@@ -25010,6 +26013,7 @@ local __TS__ArrayAt = ____lualib.__TS__ArrayAt
 local __TS__ArrayFind = ____lualib.__TS__ArrayFind
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local ____exports = {}
+local isTaintedModded
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local Challenge = ____isaac_2Dtypescript_2Ddefinitions.Challenge
 local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
@@ -25050,6 +26054,12 @@ end
 function ____exports.isVanillaPlayer(self, player)
     local character = player:GetPlayerType()
     return isVanillaCharacter(nil, character)
+end
+function isTaintedModded(self, player)
+    local character = player:GetPlayerType()
+    local name = player:GetName()
+    local taintedCharacter = Isaac.GetPlayerTypeByName(name, true)
+    return character == taintedCharacter
 end
 --- Helper function to check to see if any player is holding up an item (from e.g. an active item
 -- activation, a poop from IBS, etc.).
@@ -25328,13 +26338,6 @@ end
 function ____exports.isEden(self, player)
     local character = player:GetPlayerType()
     return character == PlayerType.EDEN or character == PlayerType.EDEN_B
-end
---- Not exported since end-users should use the `isTainted` helper function directly.
-local function isTaintedModded(self, player)
-    local character = player:GetPlayerType()
-    local name = player:GetName()
-    local taintedCharacter = Isaac.GetPlayerTypeByName(name, true)
-    return character == taintedCharacter
 end
 function ____exports.isFirstPlayer(self, player)
     return getPlayerIndexVanilla(nil, player) == 0
@@ -25950,7 +26953,6 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
-local Set = ____lualib.Set
 local ____exports = {}
 local getCollectibleTypeFromArg
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
@@ -25992,6 +26994,7 @@ local ____sprites = require("lua_modules.isaacscript-common.dist.functions.sprit
 local clearSprite = ____sprites.clearSprite
 local spriteEquals = ____sprites.spriteEquals
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
+local asCollectibleType = ____types.asCollectibleType
 local isInteger = ____types.isInteger
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local assertDefined = ____utils.assertDefined
@@ -26090,14 +27093,14 @@ local GLITCHED_ITEM_THRESHOLD = 4000000000
 local QUALITY_TO_VANILLA_COLLECTIBLE_TYPES_MAP = (function()
     local qualityToCollectibleTypesMap = __TS__New(Map)
     for ____, quality in ipairs(QUALITIES) do
-        local collectibleTypesSet = __TS__New(Set)
+        local collectibleTypes = {}
         for ____, collectibleType in ipairs(VANILLA_COLLECTIBLE_TYPES) do
             local collectibleTypeQuality = ____exports.getCollectibleQuality(nil, collectibleType)
             if collectibleTypeQuality == quality then
-                collectibleTypesSet:add(collectibleType)
+                collectibleTypes[#collectibleTypes + 1] = collectibleType
             end
         end
-        qualityToCollectibleTypesMap:set(quality, collectibleTypesSet)
+        qualityToCollectibleTypesMap:set(quality, collectibleTypes)
     end
     return qualityToCollectibleTypesMap
 end)(nil)
@@ -26216,8 +27219,13 @@ function ____exports.getCollectibleGfxFilename(self, collectibleOrCollectibleTyp
     end
     return itemConfigItem.GfxFileName
 end
---- Helper function to get the initial amount of charges that a collectible has. Returns 0 if the
--- provided collectible type was not valid.
+--- Helper function to get the initial amount of charges that a collectible has. In most cases, when
+-- picking up an active collectible for the first time, it will be fully charged, which corresponds
+-- to an `InitCharge` value of -1. However, in some cases, this may be different. For example,
+-- Eden's Soul starts without any charges, so it has an `InitCharge` value of 0.
+-- 
+-- This function returns 0 if the provided collectible type was not valid. This function returns -1
+-- if the provided collectible type was not an active collectible.
 function ____exports.getCollectibleInitCharge(self, collectibleOrCollectibleType)
     local collectibleType = getCollectibleTypeFromArg(nil, collectibleOrCollectibleType, "getCollectibleInitCharge")
     local itemConfigItem = itemConfig:GetCollectible(collectibleType)
@@ -26288,7 +27296,7 @@ function ____exports.getCollectibleTags(self, collectibleOrCollectibleType)
     local itemConfigItem = itemConfig:GetCollectible(collectibleType)
     return itemConfigItem == nil and ItemConfigTagZero or itemConfigItem.Tags
 end
---- Returns a set containing every vanilla collectible type with the given quality.
+--- Returns an array containing every vanilla collectible type with the given quality.
 -- 
 -- Note that this function will only return vanilla collectible types. To handle modded collectible
 -- types, use the `getCollectibleTypesOfQuality` helper function instead.
@@ -26369,7 +27377,8 @@ function ____exports.isSingleUseCollectible(self, collectibleType)
     return SINGLE_USE_ACTIVE_COLLECTIBLE_TYPES_SET:has(collectibleType)
 end
 function ____exports.isValidCollectibleType(self, collectibleType)
-    local itemConfigItem = itemConfig:GetCollectible(collectibleType)
+    local potentialCollectibleType = asCollectibleType(nil, collectibleType)
+    local itemConfigItem = itemConfig:GetCollectible(potentialCollectibleType)
     return itemConfigItem ~= nil
 end
 --- Helper function to generate a new sprite based on a collectible. If the provided collectible type
@@ -26690,7 +27699,7 @@ ____exports.COLLECTIBLE_DESCRIPTIONS = {
     [CollectibleType.MOMS_EYESHADOW] = "Charm tears",
     [CollectibleType.IRON_BAR] = "DMG up + concussive tears",
     [CollectibleType.MIDAS_TOUCH] = "Golden touch",
-    [CollectibleType.HUMBLING_BUNDLE] = "1+1 free 4Evar",
+    [CollectibleType.HUMBLEING_BUNDLE] = "1+1 free 4Evar",
     [CollectibleType.FANNY_PACK] = "Filled with goodies",
     [CollectibleType.SHARP_PLUG] = "Infinite charge... at a cost",
     [CollectibleType.GUILLOTINE] = "DMG + tears up. An out-of-body experience!",
@@ -27890,8 +28899,12 @@ end
 --- Helper function to check if a tear hit an enemy. A tear is considered to be missed if it hit the
 -- ground, a wall, or a grid entity.
 -- 
--- Under the hood, this function uses the `Entity.IsDead` method to determine this. (Tears will not
--- die if they hit an enemy, but they will die if they hit a wall or object.)
+-- Note that tears are still considered to be missed if they hit a poop or fire, so you may want to
+-- handle those separately using the `POST_GRID_ENTITY_COLLISION` and `POST_ENTITY_COLLISION`
+-- callbacks, respectively.
+-- 
+-- Under the hood, this function uses the `Entity.IsDead` method. (Tears will not die if they hit an
+-- enemy, but they will die if they hit a wall or object.)
 function ____exports.isMissedTear(self, tear)
     return tear:IsDead()
 end
@@ -27947,6 +28960,64 @@ function ____exports.isTearFromPlayer(self, tear)
     end
     local player = tear.SpawnerEntity:ToPlayer()
     return player ~= nil
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.functions.storyBosses"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
+local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
+local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
+local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.types.ReadonlySet")
+local ReadonlySet = ____ReadonlySet.ReadonlySet
+local STORY_BOSS_IDS = {
+    BossID.MOM,
+    BossID.MOMS_HEART,
+    BossID.SATAN,
+    BossID.IT_LIVES,
+    BossID.ISAAC,
+    BossID.BLUE_BABY,
+    BossID.LAMB,
+    BossID.MEGA_SATAN,
+    BossID.ULTRA_GREED,
+    BossID.HUSH,
+    BossID.DELIRIUM,
+    BossID.ULTRA_GREEDIER,
+    BossID.MOTHER,
+    BossID.MAUSOLEUM_MOM,
+    BossID.MAUSOLEUM_MOMS_HEART,
+    BossID.DOGMA,
+    BossID.BEAST
+}
+local STORY_BOSS_ENTITY_TYPES_SET = __TS__New(ReadonlySet, {
+    EntityType.MOM,
+    EntityType.MOMS_HEART,
+    EntityType.SATAN,
+    EntityType.ISAAC,
+    EntityType.LAMB,
+    EntityType.MEGA_SATAN,
+    EntityType.MEGA_SATAN_2,
+    EntityType.ULTRA_GREED,
+    EntityType.HUSH,
+    EntityType.DELIRIUM,
+    EntityType.MOTHER,
+    EntityType.DOGMA,
+    EntityType.BEAST
+})
+local STORY_BOSS_IDS_SET = __TS__New(ReadonlySet, STORY_BOSS_IDS)
+--- Helper function to determine if the specified entity type is an end-game story boss, like Isaac,
+-- Blue Baby, Mega Satan, The Beast, and so on. This is useful because certain effects should only
+-- apply to non-story bosses, like Vanishing Twin.
+function ____exports.isStoryBoss(self, entityType)
+    return STORY_BOSS_ENTITY_TYPES_SET:has(entityType)
+end
+--- Helper function to determine if the specified boss ID is an end-game story boss, like Isaac, Blue
+-- Baby, Mega Satan, The Beast, and so on. This is useful because certain effects should only apply
+-- to non-story bosses, like Vanishing Twin.
+function ____exports.isStoryBossID(self, bossID)
+    return STORY_BOSS_IDS_SET:has(bossID)
 end
 return ____exports
  end,
@@ -28114,11 +29185,10 @@ local ____stageToStageID = require("lua_modules.isaacscript-common.dist.objects.
 local STAGE_TO_STAGE_ID = ____stageToStageID.STAGE_TO_STAGE_ID
 local ____stageTypeSuffixes = require("lua_modules.isaacscript-common.dist.objects.stageTypeSuffixes")
 local STAGE_TYPE_SUFFIXES = ____stageTypeSuffixes.STAGE_TYPE_SUFFIXES
-local ____stageTypeToLetter = require("lua_modules.isaacscript-common.dist.objects.stageTypeToLetter")
-local STAGE_TYPE_TO_LETTER = ____stageTypeToLetter.STAGE_TYPE_TO_LETTER
+local ____log = require("lua_modules.isaacscript-common.dist.functions.log")
+local log = ____log.log
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
 local asLevelStage = ____types.asLevelStage
-local asNumber = ____types.asNumber
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local inRange = ____utils.inRange
 --- Helper function to check if the provided stage type is equal to `StageType.REPENTANCE` or
@@ -28140,13 +29210,6 @@ function ____exports.onRepentanceStage(self)
     local stageType = level:GetStageType()
     return ____exports.isRepentanceStage(nil, stageType)
 end
---- Helper function to convert a numerical `StageType` into the letter suffix supplied to the "stage"
--- console command. For example, `StageType.REPENTANCE` is the stage type for Downpour, and the
--- console command to go to Downpour is "stage 1c", so this function converts `StageType.REPENTANCE`
--- to "c".
-function ____exports.stageTypeToLetter(self, stageType)
-    return STAGE_TYPE_TO_LETTER[stageType]
-end
 --- Helper function that calculates what the stage type should be for the provided stage. This
 -- emulates what the game's internal code does.
 function ____exports.calculateStageType(self, stage)
@@ -28167,10 +29230,7 @@ function ____exports.calculateStageTypeRepentance(self, stage)
         return StageType.REPENTANCE
     end
     local seeds = game:GetSeeds()
-    local adjustedStage = asLevelStage(
-        nil,
-        asNumber(nil, stage) + 1
-    )
+    local adjustedStage = asLevelStage(nil, stage + 1)
     local stageSeed = seeds:GetStageSeed(adjustedStage)
     local halfStageSeed = math.floor(stageSeed / 2)
     if halfStageSeed % 2 == 0 then
@@ -28185,7 +29245,7 @@ function ____exports.getEffectiveStage(self)
     local level = game:GetLevel()
     local stage = level:GetStage()
     if ____exports.onRepentanceStage(nil) then
-        return asNumber(nil, stage) + 1
+        return stage + 1
     end
     return stage
 end
@@ -28255,16 +29315,12 @@ function ____exports.getStageType(self)
     local level = game:GetLevel()
     return level:GetStageType()
 end
---- Helper function to directly warp to a specific stage using the "stage" console command.
--- 
--- Note that if you use this function on game frame 0, it will confuse the
--- `POST_GAME_STARTED_REORDERED`, `POST_NEW_LEVEL_REORDERED`, and `POST_NEW_ROOM_REORDERED` custom
--- callbacks. If you are using the function in this situation, remember to call the
--- `reorderedCallbacksSetStage` function.
-function ____exports.goToStage(self, stage, stageType)
-    local stageTypeLetterSuffix = ____exports.stageTypeToLetter(nil, stageType)
-    local command = ("stage " .. tostring(stage)) .. stageTypeLetterSuffix
-    Isaac.ExecuteCommand(command)
+--- Helper function to convert a numerical `StageType` into the letter suffix supplied to the "stage"
+-- console command. For example, `StageType.REPENTANCE` is the stage type for Downpour, and the
+-- console command to go to Downpour is "stage 1c", so this function converts `StageType.REPENTANCE`
+-- to "c".
+function ____exports.getStageTypeSuffix(self, stageType)
+    return STAGE_TYPE_SUFFIXES[stageType]
 end
 --- Returns whether the provided stage and stage type represent a "final floor". This is defined as a
 -- floor that prevents the player from entering the I AM ERROR room on.
@@ -28468,10 +29524,15 @@ function ____exports.onStageWithStoryBoss(self)
     local stage = level:GetStage()
     return ____exports.isStageWithStoryBoss(nil, stage)
 end
---- Helper function to warp to a new stage/level.
+--- Helper function to directly warp to a specific stage using the "stage" console command.
 -- 
--- Note that this is different from the `Level.SetStage` method, which will change the stage and/or
+-- This is different from the vanilla `Level.SetStage` method, which will change the stage and/or
 -- stage type of the current floor without moving the player to a new floor.
+-- 
+-- Note that if you use this function on game frame 0, it will confuse the
+-- `POST_GAME_STARTED_REORDERED`, `POST_NEW_LEVEL_REORDERED`, and `POST_NEW_ROOM_REORDERED` custom
+-- callbacks. If you are using the function in this situation, remember to call the
+-- `reorderedCallbacksSetStage` function.
 -- 
 -- @param stage The stage number to warp to.
 -- @param stageType The stage type to warp to.
@@ -28482,27 +29543,15 @@ function ____exports.setStage(self, stage, stageType, reseed)
     if reseed == nil then
         reseed = false
     end
-    local stageTypeSuffix = STAGE_TYPE_SUFFIXES[stageType]
+    local stageTypeSuffix = ____exports.getStageTypeSuffix(nil, stageType)
     local command = ("stage " .. tostring(stage)) .. stageTypeSuffix
+    log("Warping to a stage with a console command of: " .. command)
     Isaac.ExecuteCommand(command)
     if reseed then
+        log("Reseeding the floor with a console command of: reseed")
         Isaac.ExecuteCommand("reseed")
     end
 end
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.objects.stageTypeToLetter"] = function(...) 
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
-local StageType = ____isaac_2Dtypescript_2Ddefinitions.StageType
-____exports.STAGE_TYPE_TO_LETTER = {
-    [StageType.ORIGINAL] = "",
-    [StageType.WRATH_OF_THE_LAMB] = "a",
-    [StageType.AFTERBIRTH] = "b",
-    [StageType.GREED_MODE] = "",
-    [StageType.REPENTANCE] = "c",
-    [StageType.REPENTANCE_B] = "d"
-}
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.objects.stageTypeSuffixes"] = function(...) 
@@ -30176,6 +31225,8 @@ local __TS__New = ____lualib.__TS__New
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local __TS__Spread = ____lualib.__TS__Spread
 local __TS__ArraySort = ____lualib.__TS__ArraySort
+local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
+local __TS__ObjectValues = ____lualib.__TS__ObjectValues
 local __TS__ArraySome = ____lualib.__TS__ArraySome
 local ____exports = {}
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.types.ReadonlySet")
@@ -30188,20 +31239,45 @@ local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
 local isPrimitive = ____types.isPrimitive
 --- Helper function to get a sorted array based on the contents of a set.
 -- 
--- Normally, set values are returned in a random order, so use this function when the ordering of
+-- Normally, set values are returned in insertion order, so use this function when the ordering of
 -- the contents is important.
 function ____exports.getSortedSetValues(self, set)
-    local values = set:values()
-    local array = {__TS__Spread(values)}
-    local firstElement = array[1]
+    local values = {__TS__Spread(set)}
+    local firstElement = values[1]
     if firstElement ~= nil then
         local arrayType = type(firstElement)
         if not isPrimitive(nil, arrayType) then
             error(("Failed to get the sorted set values because the provided set was of type \"" .. tostring(arrayType)) .. "\". Having sets with non-primitive types doesn't make much sense in general, so you might need to rethink what you are doing.")
         end
     end
-    __TS__ArraySort(array)
-    return array
+    __TS__ArraySort(values)
+    return values
+end
+--- Helper function to convert the keys of an object to a set.
+-- 
+-- Note that the set values will be inserted in a random order, due to how `pairs` works under the
+-- hood.
+-- 
+-- Also see the `objectKeysToReadonlySet` function.
+function ____exports.objectKeysToSet(self, object)
+    local set = __TS__New(Set)
+    for ____, key in ipairs(__TS__ObjectKeys(object)) do
+        set:add(key)
+    end
+    return set
+end
+--- Helper function to convert the values of an object to a set.
+-- 
+-- Note that the set values will be inserted in a random order, due to how `pairs` works under the
+-- hood.
+-- 
+-- Also see the `objectValuesToReadonlySet` function.
+function ____exports.objectValuesToSet(self, object)
+    local set = __TS__New(Set)
+    for ____, key in ipairs(__TS__ObjectValues(object)) do
+        set:add(key)
+    end
+    return set
 end
 --- Helper function to add all of the values in one set to another set. The first set passed will be
 -- modified in place.
@@ -30210,7 +31286,7 @@ end
 function ____exports.addSetsToSet(self, mainSet, ...)
     local setsToAdd = {...}
     for ____, set in ipairs(setsToAdd) do
-        for ____, value in __TS__Iterator(set:values()) do
+        for ____, value in __TS__Iterator(set) do
             mainSet:add(value)
         end
     end
@@ -30222,7 +31298,7 @@ function ____exports.combineSets(self, ...)
     local sets = {...}
     local newSet = __TS__New(Set)
     for ____, set in ipairs(sets) do
-        for ____, value in __TS__Iterator(set:values()) do
+        for ____, value in __TS__Iterator(set) do
             newSet:add(value)
         end
     end
@@ -30231,7 +31307,7 @@ end
 --- Helper function to copy a set. (You can also use a Set constructor to accomplish this task.)
 function ____exports.copySet(self, oldSet)
     local newSet = __TS__New(Set)
-    for ____, value in __TS__Iterator(oldSet:values()) do
+    for ____, value in __TS__Iterator(oldSet) do
         newSet:add(value)
     end
     return newSet
@@ -30243,7 +31319,7 @@ end
 function ____exports.deleteSetsFromSet(self, mainSet, ...)
     local setsToRemove = {...}
     for ____, set in ipairs(setsToRemove) do
-        for ____, value in __TS__Iterator(set:values()) do
+        for ____, value in __TS__Iterator(set) do
             mainSet:delete(value)
         end
     end
@@ -30290,6 +31366,24 @@ function ____exports.getSetCombinations(self, set, includeEmptyArray)
         function(____, array) return __TS__New(ReadonlySet, array) end
     )
 end
+--- Helper function to convert the keys of an object to a read-only set.
+-- 
+-- Note that the set values will be inserted in a random order, due to how `pairs` works under the
+-- hood.
+-- 
+-- Also see the `objectKeysToSet` function.
+function ____exports.objectKeysToReadonlySet(self, object)
+    return ____exports.objectKeysToSet(nil, object)
+end
+--- Helper function to convert the values of an object to a read-only set.
+-- 
+-- Note that the set values will be inserted in a random order, due to how `pairs` works under the
+-- hood.
+-- 
+-- Also see the `objectValuesToSet` function.
+function ____exports.objectValuesToReadonlySet(self, object)
+    return ____exports.objectValuesToSet(nil, object)
+end
 --- Helper function to add one or more elements to a set at once without having to repeatedly call
 -- the `Set.add` method.
 -- 
@@ -30314,7 +31408,7 @@ function ____exports.setHas(self, set, ...)
 end
 --- Helper function to sum every value in a set together.
 function ____exports.sumSet(self, set)
-    local values = {__TS__Spread(set:values())}
+    local values = {__TS__Spread(set)}
     return sumArray(nil, values)
 end
 return ____exports
@@ -30615,13 +31709,12 @@ local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local Challenge = ____isaac_2Dtypescript_2Ddefinitions.Challenge
+local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
 local SeedEffect = ____isaac_2Dtypescript_2Ddefinitions.SeedEffect
 local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
 local SEED_EFFECTS = ____cachedEnumValues.SEED_EFFECTS
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
-local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.core.constantsFirstLast")
-local FIRST_CHARACTER = ____constantsFirstLast.FIRST_CHARACTER
 local ____characters = require("lua_modules.isaacscript-common.dist.functions.characters")
 local getCharacterName = ____characters.getCharacterName
 local ____log = require("lua_modules.isaacscript-common.dist.functions.log")
@@ -30685,7 +31778,7 @@ function ____exports.restart(self, character)
         Isaac.ExecuteCommand(command)
         return
     end
-    if character < FIRST_CHARACTER then
+    if character < PlayerType.ISAAC then
         error(("Restarting as a character of " .. tostring(character)) .. " would crash the game.")
     end
     local command = "restart " .. tostring(character)
@@ -30731,7 +31824,6 @@ local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local __TS__ArrayEvery = ____lualib.__TS__ArrayEvery
 local __TS__StringIncludes = ____lualib.__TS__StringIncludes
-local __TS__ArraySome = ____lualib.__TS__ArraySome
 local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
@@ -30743,9 +31835,7 @@ local DownpourRoomSubType = ____isaac_2Dtypescript_2Ddefinitions.DownpourRoomSub
 local DungeonSubType = ____isaac_2Dtypescript_2Ddefinitions.DungeonSubType
 local GridRoom = ____isaac_2Dtypescript_2Ddefinitions.GridRoom
 local HomeRoomSubType = ____isaac_2Dtypescript_2Ddefinitions.HomeRoomSubType
-local ProjectileFlag = ____isaac_2Dtypescript_2Ddefinitions.ProjectileFlag
 local RoomDescriptorFlag = ____isaac_2Dtypescript_2Ddefinitions.RoomDescriptorFlag
-local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
 local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
 local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
 local StageID = ____isaac_2Dtypescript_2Ddefinitions.StageID
@@ -30770,7 +31860,6 @@ local isHiddenSecretRoomDoor = ____doors.isHiddenSecretRoomDoor
 local openDoorFast = ____doors.openDoorFast
 local ____entities = require("lua_modules.isaacscript-common.dist.functions.entities")
 local getEntities = ____entities.getEntities
-local isActiveEnemy = ____entities.isActiveEnemy
 local ____flag = require("lua_modules.isaacscript-common.dist.functions.flag")
 local hasFlag = ____flag.hasFlag
 local ____positionVelocity = require("lua_modules.isaacscript-common.dist.functions.positionVelocity")
@@ -30784,14 +31873,13 @@ local getRoomDescriptor = ____roomData.getRoomDescriptor
 local getRoomDescriptorReadOnly = ____roomData.getRoomDescriptorReadOnly
 local getRoomGridIndex = ____roomData.getRoomGridIndex
 local ____roomShape = require("lua_modules.isaacscript-common.dist.functions.roomShape")
+local is2x1RoomShape = ____roomShape.is2x1RoomShape
 local isBigRoomShape = ____roomShape.isBigRoomShape
 local isLRoomShape = ____roomShape.isLRoomShape
 local ____roomTransition = require("lua_modules.isaacscript-common.dist.functions.roomTransition")
 local reloadRoom = ____roomTransition.reloadRoom
 local ____stage = require("lua_modules.isaacscript-common.dist.functions.stage")
 local getGotoCommand = ____stage.getGotoCommand
-local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asNumber = ____types.asNumber
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local assertDefined = ____utils.assertDefined
 local iRange = ____utils.iRange
@@ -30864,14 +31952,14 @@ function ____exports.getRoomsOutsideGrid(self)
 end
 --- Helper function to determine if the provided room is equal to `RoomShape.1x2` or `RoomShape.2x1`.
 function ____exports.is2x1Room(self, roomData)
-    return roomData.Shape == RoomShape.SHAPE_1x2 or roomData.Shape == RoomShape.SHAPE_2x1
+    return is2x1RoomShape(nil, roomData.Shape)
 end
 --- Helper function to check to see if the current room is an angel shop.
 -- 
 -- Under the hood, this checks the room type being equal to `RoomType.ANGEL` (15) and the sub-type
 -- being equal to `AngelRoomSubType.SHOP` (1).
 function ____exports.isAngelShop(self, roomData)
-    return roomData.Type == RoomType.ANGEL and roomData.Subtype == asNumber(nil, AngelRoomSubType.SHOP)
+    return roomData.Type == RoomType.ANGEL and roomData.Subtype == AngelRoomSubType.SHOP
 end
 --- Helper function to check to see if the provided room is the Boss Room for The Beast.
 -- 
@@ -30880,7 +31968,7 @@ end
 -- Under the hood, this checks the room type being equal to `RoomType.DUNGEON` (16) and the sub-type
 -- being equal to `DungeonSubType.BEAST_ROOM` (4).
 function ____exports.isBeastRoom(self, roomData)
-    return roomData.Type == RoomType.DUNGEON and roomData.Subtype == asNumber(nil, DungeonSubType.BEAST_ROOM)
+    return roomData.Type == RoomType.DUNGEON and roomData.Subtype == DungeonSubType.BEAST_ROOM
 end
 --- Helper function to detect if the provided room is big. Specifically, this is all 1x2 rooms, 2x2
 -- rooms, and L rooms.
@@ -30890,13 +31978,13 @@ end
 --- Helper function to check if the provided room is the Boss Room for a particular boss. This will
 -- only work for bosses that have dedicated boss rooms in the "00.special rooms.stb" file.
 function ____exports.isBossRoomOf(self, roomData, bossID)
-    return roomData.Type == RoomType.BOSS and roomData.StageID == StageID.SPECIAL_ROOMS and roomData.Subtype == asNumber(nil, bossID)
+    return roomData.Type == RoomType.BOSS and roomData.StageID == StageID.SPECIAL_ROOMS and roomData.Subtype == bossID
 end
 --- Helper function for determining whether the provided room is a crawl space. Use this function
 -- over comparing to `RoomType.DUNGEON` or `GridRoom.DUNGEON_IDX` since there is a special case of
 -- the player being in a boss fight that takes place in a dungeon.
 function ____exports.isCrawlSpace(self, roomData)
-    return roomData.Type == RoomType.DUNGEON and roomData.Subtype == asNumber(nil, DungeonSubType.NORMAL)
+    return roomData.Type == RoomType.DUNGEON and roomData.Subtype == DungeonSubType.NORMAL
 end
 --- Helper function for checking whether the provided room is a crawl space with a door corresponding
 -- to `DoorSlotFlag.RIGHT_0` (1 << 2).
@@ -30905,7 +31993,7 @@ function ____exports.isCrawlSpaceWithBlackMarketEntrance(self, roomData)
 end
 --- Helper function to detect if the provided room is one of the rooms in the Death Certificate area.
 function ____exports.isDeathCertificateArea(self, roomData)
-    return roomData.StageID == StageID.HOME and (roomData.Subtype == asNumber(nil, HomeRoomSubType.DEATH_CERTIFICATE_ENTRANCE) or roomData.Subtype == asNumber(nil, HomeRoomSubType.DEATH_CERTIFICATE_ITEMS))
+    return roomData.StageID == StageID.HOME and (roomData.Subtype == HomeRoomSubType.DEATH_CERTIFICATE_ENTRANCE or roomData.Subtype == HomeRoomSubType.DEATH_CERTIFICATE_ITEMS)
 end
 --- Helper function to detect if the provided room is a Treasure Room created when entering with a
 -- Devil's Crown trinket.
@@ -30926,7 +32014,7 @@ end
 -- Dogma Boss Room that exists in vanilla) and the sub-type being equal to
 -- `HomeRoomSubType.LIVING_ROOM` (3).
 function ____exports.isDogmaRoom(self, roomData)
-    return roomData.StageID == StageID.HOME and roomData.Type == RoomType.DEFAULT and roomData.Variant == 1000 and roomData.Subtype == asNumber(nil, HomeRoomSubType.LIVING_ROOM)
+    return roomData.StageID == StageID.HOME and roomData.Type == RoomType.DEFAULT and roomData.Variant == 1000 and roomData.Subtype == HomeRoomSubType.LIVING_ROOM
 end
 --- Helper function to detect if the provided room is a Double Trouble Boss Room.
 -- 
@@ -30941,23 +32029,23 @@ function ____exports.isDoubleTrouble(self, roomData)
     return roomData.Type == RoomType.BOSS and __TS__StringIncludes(roomData.Name, "Double Trouble")
 end
 --- Helper function to determine if the index of the provided room is equal to `GridRoom.GENESIS`.
-function ____exports.isGenesisRoom(self, roomDescriptor)
-    return roomDescriptor.GridIndex == asNumber(nil, GridRoom.GENESIS)
+function ____exports.isGenesisRoom(self, roomGridIndex)
+    return roomGridIndex == GridRoom.GENESIS
 end
 --- Helper function to check if the provided room is either the left Home closet (behind the red
 -- door) or the right Home closet (with one random pickup).
 -- 
 -- Home closets have a unique shape that is different from any other room in the game.
 function ____exports.isHomeCloset(self, roomData)
-    return roomData.StageID == StageID.HOME and (roomData.Subtype == asNumber(nil, HomeRoomSubType.CLOSET_LEFT) or roomData.Subtype == asNumber(nil, HomeRoomSubType.CLOSET_RIGHT))
+    return roomData.StageID == StageID.HOME and (roomData.Subtype == HomeRoomSubType.CLOSET_LEFT or roomData.Subtype == HomeRoomSubType.CLOSET_RIGHT)
 end
 --- Helper function to determine if the provided room is one of the four L room shapes.
 function ____exports.isLRoom(self, roomData)
     return isLRoomShape(nil, roomData.Shape)
 end
 --- Helper function to determine if the index of the provided room is equal to `GridRoom.MEGA_SATAN`.
-function ____exports.isMegaSatanRoom(self, roomDescriptor)
-    return roomDescriptor.GridIndex == asNumber(nil, GridRoom.MEGA_SATAN)
+function ____exports.isMegaSatanRoom(self, roomGridIndex)
+    return roomGridIndex == GridRoom.MEGA_SATAN
 end
 --- Helper function to determine if the provided room is part of the Repentance "escape sequence" in
 -- the Mines/Ashpit.
@@ -30967,12 +32055,12 @@ end
 --- Helper function to check if the provided room is a miniboss room for a particular miniboss. This
 -- will only work for mini-bosses that have dedicated boss rooms in the "00.special rooms.stb" file.
 function ____exports.isMinibossRoomOf(self, roomData, minibossID)
-    return roomData.Type == RoomType.MINI_BOSS and roomData.StageID == StageID.SPECIAL_ROOMS and roomData.Subtype == asNumber(nil, minibossID)
+    return roomData.Type == RoomType.MINI_BOSS and roomData.StageID == StageID.SPECIAL_ROOMS and roomData.Subtype == minibossID
 end
 --- Helper function to check if the provided room is a "mirror room" in Downpour or Dross. (These
 -- rooms are marked with a specific sub-type.)
 function ____exports.isMirrorRoom(self, roomData)
-    return roomData.Type == RoomType.DEFAULT and (roomData.StageID == StageID.DOWNPOUR or roomData.StageID == StageID.DROSS) and roomData.Subtype == asNumber(nil, DownpourRoomSubType.MIRROR)
+    return roomData.Type == RoomType.DEFAULT and (roomData.StageID == StageID.DOWNPOUR or roomData.StageID == StageID.DROSS) and roomData.Subtype == DownpourRoomSubType.MIRROR
 end
 --- Helper function to check if the provided room matches one of the given room shapes.
 -- 
@@ -30990,8 +32078,8 @@ function ____exports.isRoomType(self, roomData, ...)
 end
 --- Helper function for checking if the provided room is a secret exit that leads to a Repentance
 -- floor.
-function ____exports.isSecretExit(self, roomDescriptor)
-    return roomDescriptor.GridIndex == asNumber(nil, GridRoom.SECRET_EXIT)
+function ____exports.isSecretExit(self, roomGridIndex)
+    return roomGridIndex == GridRoom.SECRET_EXIT
 end
 --- Helper function for checking if the provided room is a secret shop (from the Member Card
 -- collectible).
@@ -30999,8 +32087,8 @@ end
 -- Secret shops are simply copies of normal shops, but with the backdrop of a secret room. In other
 -- words, they will have the same room type, room variant, and room sub-type of a normal shop. Thus,
 -- the only way to detect them is by using the grid index.
-function ____exports.isSecretShop(self, roomDescriptor)
-    return roomDescriptor.GridIndex == asNumber(nil, GridRoom.SECRET_SHOP)
+function ____exports.isSecretShop(self, roomGridIndex)
+    return roomGridIndex == GridRoom.SECRET_SHOP
 end
 local SECRET_ROOM_TYPES = __TS__New(ReadonlySet, {RoomType.SECRET, RoomType.SUPER_SECRET, RoomType.ULTRA_SECRET})
 --- Helper function for quickly switching to a new room without playing a particular animation. Use
@@ -31078,7 +32166,7 @@ end
 --- Helper function to get the room descriptor for every room on the level. This includes off-grid
 -- rooms, such as the Devil Room.
 -- 
--- Room descriptors without any data are assumed to be non-existent and are not included.
+-- Room without any data are assumed to be non-existent and are not included.
 -- 
 -- - If you want just the rooms inside of the grid, use the `getRoomsInsideGrid` helper function.
 -- - If you want just the rooms outside of the grid, use the `getRoomsOutsideGrid` helper function.
@@ -31208,8 +32296,8 @@ function ____exports.inDoubleTrouble(self)
 end
 --- Helper function to determine if the current room index is equal to `GridRoom.GENESIS`.
 function ____exports.inGenesisRoom(self)
-    local roomDescriptor = getRoomDescriptorReadOnly(nil)
-    return ____exports.isGenesisRoom(nil, roomDescriptor)
+    local roomGridIndex = getRoomGridIndex(nil)
+    return ____exports.isGenesisRoom(nil, roomGridIndex)
 end
 --- Helper function to check if the current room is either the left Home closet (behind the red door)
 -- or the right Home closet (with one random pickup).
@@ -31226,8 +32314,8 @@ function ____exports.inLRoom(self)
 end
 --- Helper function to determine if the current room index is equal to `GridRoom.MEGA_SATAN`.
 function ____exports.inMegaSatanRoom(self)
-    local roomDescriptor = getRoomDescriptorReadOnly(nil)
-    return ____exports.isMegaSatanRoom(nil, roomDescriptor)
+    local roomGridIndex = getRoomGridIndex(nil)
+    return ____exports.isMegaSatanRoom(nil, roomGridIndex)
 end
 --- Helper function to determine if the current room is part of the Repentance "escape sequence" in
 -- the Mines/Ashpit.
@@ -31264,8 +32352,8 @@ end
 --- Helper function for checking if the current room is a secret exit that leads to a Repentance
 -- floor.
 function ____exports.inSecretExit(self)
-    local roomDescriptor = getRoomDescriptorReadOnly(nil)
-    return ____exports.isSecretExit(nil, roomDescriptor)
+    local roomGridIndex = getRoomGridIndex(nil)
+    return ____exports.isSecretExit(nil, roomGridIndex)
 end
 --- Helper function for checking if the current room is a secret shop (from the Member Card
 -- collectible).
@@ -31274,8 +32362,8 @@ end
 -- words, they will have the same room type, room variant, and room sub-type of a normal shop. Thus,
 -- the only way to detect them is by using the grid index.
 function ____exports.inSecretShop(self)
-    local roomDescriptor = getRoomDescriptorReadOnly(nil)
-    return ____exports.isSecretShop(nil, roomDescriptor)
+    local roomGridIndex = getRoomGridIndex(nil)
+    return ____exports.isSecretShop(nil, roomGridIndex)
 end
 --- Helper function to determine whether the current room is the starting room of a floor. It only
 -- returns true for the starting room of the primary dimension (meaning that being in the starting
@@ -31343,38 +32431,6 @@ function ____exports.isAllRoomsClear(self, onlyCheckRoomTypes, includeSecretRoom
         function(____, roomDescriptor) return roomDescriptor.Clear end
     )
 end
---- Helper function to check if the room contains one or more enemies/projectiles that could damage
--- the player.
--- 
--- This is useful to check to see if it is safe to pause the game or display some informational
--- text.
-function ____exports.isRoomDangerous(self)
-    local room = game:GetRoom()
-    local isClear = room:IsClear()
-    if not isClear then
-        return true
-    end
-    local entities = getEntities(nil)
-    if __TS__ArraySome(
-        entities,
-        function(____, entity) return isActiveEnemy(nil, entity) end
-    ) then
-        return true
-    end
-    if __TS__ArraySome(
-        entities,
-        function(____, entity)
-            local projectile = entity:ToProjectile()
-            if projectile == nil then
-                return false
-            end
-            return not projectile:HasProjectileFlags(ProjectileFlag.CANT_HIT_PLAYER)
-        end
-    ) then
-        return true
-    end
-    return false
-end
 --- Helper function to detect if a room type is a Secret Room, a Super Secret Room, or an Ultra
 -- Secret Room.
 function ____exports.isSecretRoomType(self, roomType)
@@ -31411,12 +32467,12 @@ function ____exports.setRoomCleared(self)
     for ____, door in ipairs(getDoors(nil)) do
         do
             if isHiddenSecretRoomDoor(nil, door) then
-                goto __continue93
+                goto __continue86
             end
             openDoorFast(nil, door)
             door.ExtraVisible = false
         end
-        ::__continue93::
+        ::__continue86::
     end
     sfxManager:Stop(SoundEffect.DOOR_HEAVY_OPEN)
     game:ShakeScreen(0)
@@ -31533,9 +32589,10 @@ end
 --   the room descriptor. (The safe grid index is defined as the top-left 1x1 section that the room
 --   overlaps with, or the top-right 1x1 section of a `RoomType.SHAPE_LTL` room.)
 -- - If the current room is outside of the grid, it will return the index from the
---   `Level.GetCurrentRoomIndex` method (since `SafeGridIndex` is bugged for these cases, as
+--   `Level.GetCurrentRoomIndex` method, since `SafeGridIndex` is bugged for these cases, as
 --   demonstrated by entering a Genesis room and entering `l
---   print(Game():GetLevel():GetCurrentRoomDesc().SafeGridIndex)` into the console).
+--   print(Game():GetLevel():GetCurrentRoomDesc().SafeGridIndex)` into the console. (It prints -1
+--   instead of -12.)
 -- 
 -- Use this function instead of the `Level.GetCurrentRoomIndex` method directly because the latter
 -- will return the specific 1x1 quadrant that the player entered the room at. For most situations,
@@ -31792,12 +32849,14 @@ local ____bitwise = require("lua_modules.isaacscript-common.dist.functions.bitwi
 local arrayToBitFlags = ____bitwise.arrayToBitFlags
 local ____direction = require("lua_modules.isaacscript-common.dist.functions.direction")
 local directionToVector = ____direction.directionToVector
+local ____enums = require("lua_modules.isaacscript-common.dist.functions.enums")
+local isEnumValue = ____enums.isEnumValue
 local ____flag = require("lua_modules.isaacscript-common.dist.functions.flag")
 local hasFlag = ____flag.hasFlag
 local ____tstlClass = require("lua_modules.isaacscript-common.dist.functions.tstlClass")
 local isTSTLSet = ____tstlClass.isTSTLSet
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asNumber = ____types.asNumber
+local parseIntSafe = ____types.parseIntSafe
 function ____exports.doorSlotToDirection(self, doorSlot)
     return DOOR_SLOT_TO_DIRECTION[doorSlot]
 end
@@ -31851,22 +32910,22 @@ end
 -- contains the hole to the Blue Womb. (In vanilla, the door will only appear in the It Lives Boss
 -- Room.)
 function ____exports.isBlueWombDoor(self, door)
-    return door.TargetRoomIndex == asNumber(nil, GridRoom.BLUE_WOMB)
+    return door.TargetRoomIndex == GridRoom.BLUE_WOMB
 end
 --- Helper function to check if the provided door is the one that leads to the Boss Rush room. (In
 -- vanilla, the door will only appear in the Boss Room of the sixth floor.)
 function ____exports.isBossRushDoor(self, door)
-    return door.TargetRoomIndex == asNumber(nil, GridRoom.BOSS_RUSH)
+    return door.TargetRoomIndex == GridRoom.BOSS_RUSH
 end
 --- Helper function to check if the provided door is the one that leads to the Mega Satan Boss Room.
 -- (In vanilla, the door will only appear in the starting room of The Chest / Dark Room.)
 function ____exports.isMegaSatanDoor(self, door)
-    return door.TargetRoomIndex == asNumber(nil, GridRoom.MEGA_SATAN)
+    return door.TargetRoomIndex == GridRoom.MEGA_SATAN
 end
 --- Helper function to check if the provided door leads to the "secret exit" off-grid room that takes
 -- you to the Repentance floor.
 function ____exports.isRepentanceDoor(self, door)
-    return door.TargetRoomIndex == asNumber(nil, GridRoom.SECRET_EXIT)
+    return door.TargetRoomIndex == GridRoom.SECRET_EXIT
 end
 --- This refers to the hole in the wall that appears after bombing the entrance to a secret room.
 -- Note that the door still exists before it has been bombed open. It has a sprite filename of
@@ -31882,7 +32941,7 @@ end
 --- Helper function to check if the provided door is the one that leads to the off-grid room that
 -- contains the portal to The Void. (In vanilla, the door will only appear in the Hush Boss Room.)
 function ____exports.isVoidDoor(self, door)
-    return door.TargetRoomIndex == asNumber(nil, GridRoom.VOID)
+    return door.TargetRoomIndex == GridRoom.VOID
 end
 --- Helper function to remove a single door.
 function ____exports.removeDoor(self, door)
@@ -32056,11 +33115,17 @@ function ____exports.getRoomShapeDoorSlot(self, roomShape, x, y)
     for ____, ____value in ipairs(__TS__ObjectEntries(doorSlotCoordinates)) do
         local doorSlotString = ____value[1]
         local coordinates = ____value[2]
-        local doorSlot = tonumber(doorSlotString)
-        local doorX, doorY = table.unpack(coordinates)
-        if x == doorX and y == doorY then
-            return doorSlot
+        do
+            local doorSlot = parseIntSafe(nil, doorSlotString)
+            if doorSlot == nil or not isEnumValue(nil, doorSlot, DoorSlot) then
+                goto __continue40
+            end
+            local doorX, doorY = table.unpack(coordinates)
+            if x == doorX and y == doorY then
+                return doorSlot
+            end
         end
+        ::__continue40::
     end
     return nil
 end
@@ -32603,14 +33668,23 @@ end
 function ____exports.getRoomShapeWidth(self, roomShape)
     return ROOM_SHAPE_TO_GRID_WIDTH[roomShape]
 end
+--- Helper function to determine if the provided room is equal to `RoomShape.1x2` (4) or
+-- `RoomShape.2x1` (6).
+function ____exports.is2x1RoomShape(self, roomShape)
+    return roomShape == RoomShape.SHAPE_1x2 or roomShape == RoomShape.SHAPE_2x1
+end
 --- Helper function to detect if the provided room shape is big. Specifically, this is all 1x2 rooms,
 -- 2x2 rooms, and L rooms.
 function ____exports.isBigRoomShape(self, roomShape)
     return BIG_ROOM_SHAPES_SET:has(roomShape)
 end
+--- Helper function to determine if the provided room is equal to `RoomShape.LTL` (9),
+-- `RoomShape.LTR` (10), `RoomShape.LBL` (11), or `RoomShape.LBR` (12).
 function ____exports.isLRoomShape(self, roomShape)
     return L_ROOM_SHAPES_SET:has(roomShape)
 end
+--- Helper function to determine if the provided room is equal to `RoomShape.IH` (2), `RoomShape.IV`
+-- (3), `RoomShape.IIV` (5), or `RoomShape.IIH` (7).
 function ____exports.isNarrowRoom(self, roomShape)
     return NARROW_ROOM_SHAPES_SET:has(roomShape)
 end
@@ -34154,11 +35228,16 @@ end
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.functions.pickupsSpecific"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArrayPushArray = ____lualib.__TS__ArrayPushArray
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
 local ____constants = require("lua_modules.isaacscript-common.dist.core.constants")
+local CHEST_PICKUP_VARIANTS = ____constants.CHEST_PICKUP_VARIANTS
 local VectorZero = ____constants.VectorZero
+local ____entities = require("lua_modules.isaacscript-common.dist.functions.entities")
+local removeEntities = ____entities.removeEntities
 local ____entitiesSpecific = require("lua_modules.isaacscript-common.dist.functions.entitiesSpecific")
 local getPickups = ____entitiesSpecific.getPickups
 local removeAllPickups = ____entitiesSpecific.removeAllPickups
@@ -34193,6 +35272,22 @@ function ____exports.getCards(self, cardType)
         cardType = -1
     end
     return getPickups(nil, PickupVariant.CARD, cardType)
+end
+--- Helper function to get all of the chest entities in the room. Specifically, this is all of the
+-- pickups with a variant in the `CHEST_PICKUP_VARIANTS` constant.
+-- 
+-- @param subType Optional. If specified, will only get the chests that match the sub-type. Default
+-- is -1, which matches every sub-type.
+function ____exports.getChests(self, subType)
+    if subType == nil then
+        subType = -1
+    end
+    local chests = {}
+    for ____, pickupVariant in ipairs(CHEST_PICKUP_VARIANTS) do
+        local pickups = getPickups(nil, pickupVariant, subType)
+        __TS__ArrayPushArray(chests, pickups)
+    end
+    return chests
 end
 --- Helper function to get all of the coin pickup entities in the room.
 -- 
@@ -34300,6 +35395,20 @@ function ____exports.removeAllCards(self, cardType, cap)
         cardType = -1
     end
     return removeAllPickups(nil, PickupVariant.CARD, cardType, cap)
+end
+--- Helper function to remove all of the chests in the room. Specifically, this is all of the pickups
+-- with a variant in the `CHEST_PICKUP_VARIANTS` constant.
+-- 
+-- @param subType Optional. If specified, will only remove chests that match this sub-type. Default
+-- is -1, which matches every sub-type.
+-- @param cap Optional. If specified, will only remove the given amount of chests.
+-- @returns The chests that were removed.
+function ____exports.removeAllChests(self, subType, cap)
+    if subType == nil then
+        subType = -1
+    end
+    local chests = ____exports.getChests(nil, subType)
+    return removeEntities(nil, chests, cap)
 end
 --- Helper function to remove all of the coins in the room.
 -- 
@@ -34681,8 +35790,8 @@ local isCircleIntersectingRectangle = ____math.isCircleIntersectingRectangle
 local ____rooms = require("lua_modules.isaacscript-common.dist.functions.rooms")
 local roomUpdateSafe = ____rooms.roomUpdateSafe
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asNumber = ____types.asNumber
 local isInteger = ____types.isInteger
+local parseIntSafe = ____types.parseIntSafe
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local assertDefined = ____utils.assertDefined
 local eRange = ____utils.eRange
@@ -35039,7 +36148,7 @@ function ____exports.removeGridEntity(self, gridEntityOrGridIndex, updateRoom)
         roomUpdateSafe(nil)
     end
     if gridEntityType == GridEntityType.STATUE then
-        local effectVariant = variant == asNumber(nil, StatueVariant.DEVIL) and EffectVariant.DEVIL or EffectVariant.ANGEL
+        local effectVariant = variant == StatueVariant.DEVIL and EffectVariant.DEVIL or EffectVariant.ANGEL
         local effects = getEffects(nil, effectVariant)
         local effectsOnTile = __TS__ArrayFilter(
             effects,
@@ -35185,21 +36294,15 @@ end
 function ____exports.getConstituentsFromGridEntityID(self, gridEntityID)
     local parts = __TS__StringSplit(gridEntityID, ".")
     if #parts ~= 2 then
-        error("Failed to get the constituents from grid entity ID: " .. gridEntityID)
+        error("Failed to get the constituents from a grid entity ID: " .. gridEntityID)
     end
     local gridEntityTypeString, variantString = table.unpack(parts)
-    local gridEntityType = tonumber(gridEntityTypeString)
-    assertDefined(
-        nil,
-        gridEntityType,
-        "Failed to convert the grid entity type to a number: " .. tostring(gridEntityTypeString)
-    )
-    local variant = tonumber(variantString)
-    assertDefined(
-        nil,
-        variant,
-        "Failed to convert the grid entity variant to a number: " .. tostring(variantString)
-    )
+    assertDefined(nil, gridEntityTypeString, "Failed to get the first constituent from a grid entity ID: " .. gridEntityID)
+    assertDefined(nil, variantString, "Failed to get the second constituent from a grid entity ID: " .. gridEntityID)
+    local gridEntityType = parseIntSafe(nil, gridEntityTypeString)
+    assertDefined(nil, gridEntityType, "Failed to convert the grid entity type to a number: " .. gridEntityTypeString)
+    local variant = parseIntSafe(nil, variantString)
+    assertDefined(nil, variant, "Failed to convert the grid entity variant to an integer: " .. variantString)
     return {gridEntityType, variant}
 end
 --- Helper function to get every grid entity in the current room.
@@ -37154,8 +38257,6 @@ local getGridEntities = ____gridEntities.getGridEntities
 local getMatchingGridEntities = ____gridEntities.getMatchingGridEntities
 local removeGridEntities = ____gridEntities.removeGridEntities
 local spawnGridEntityWithVariant = ____gridEntities.spawnGridEntityWithVariant
-local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asNumber = ____types.asNumber
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local assertDefined = ____utils.assertDefined
 --- Helper function to spawn a `GridEntityType.CRAWL_SPACE` (18) with a specific variant.
@@ -37245,7 +38346,7 @@ function ____exports.getCrawlSpaces(self, crawlSpaceVariant)
     if crawlSpaceVariant == nil then
         crawlSpaceVariant = -1
     end
-    if asNumber(nil, crawlSpaceVariant) == -1 then
+    if crawlSpaceVariant == -1 then
         return getGridEntities(nil, GridEntityType.CRAWL_SPACE)
     end
     return getMatchingGridEntities(nil, GridEntityType.CRAWL_SPACE, crawlSpaceVariant)
@@ -37263,7 +38364,7 @@ function ____exports.getPits(self, pitVariant)
         local pit = gridEntity:ToPit()
         if pit ~= nil then
             local thisPitVariant = pit:GetVariant()
-            if asNumber(nil, pitVariant) == -1 or pitVariant == thisPitVariant then
+            if pitVariant == -1 or pitVariant == thisPitVariant then
                 pits[#pits + 1] = pit
             end
         end
@@ -37283,7 +38384,7 @@ function ____exports.getPoops(self, poopVariant)
         local poop = gridEntity:ToPoop()
         if poop ~= nil then
             local thisPoopVariant = poop:GetVariant()
-            if asNumber(nil, poopVariant) == -1 or poopVariant == thisPoopVariant then
+            if poopVariant == -1 or poopVariant == thisPoopVariant then
                 poops[#poops + 1] = poop
             end
         end
@@ -37303,7 +38404,7 @@ function ____exports.getPressurePlates(self, pressurePlateVariant)
         local pressurePlate = gridEntity:ToPressurePlate()
         if pressurePlate ~= nil then
             local thisPressurePlateVariant = pressurePlate:GetVariant()
-            if asNumber(nil, pressurePlateVariant) == -1 or pressurePlateVariant == thisPressurePlateVariant then
+            if pressurePlateVariant == -1 or pressurePlateVariant == thisPressurePlateVariant then
                 pressurePlates[#pressurePlates + 1] = pressurePlate
             end
         end
@@ -37389,7 +38490,7 @@ function ____exports.getTrapdoors(self, trapdoorVariant)
     if trapdoorVariant == nil then
         trapdoorVariant = -1
     end
-    if asNumber(nil, trapdoorVariant) == -1 then
+    if trapdoorVariant == -1 then
         return getGridEntities(nil, GridEntityType.TRAPDOOR)
     end
     return getMatchingGridEntities(nil, GridEntityType.TRAPDOOR, trapdoorVariant)
@@ -37634,8 +38735,6 @@ local ____PocketItemType = require("lua_modules.isaacscript-common.dist.enums.Po
 local PocketItemType = ____PocketItemType.PocketItemType
 local ____players = require("lua_modules.isaacscript-common.dist.functions.players")
 local isCharacter = ____players.isCharacter
-local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asNumber = ____types.asNumber
 --- Use this helper function as a workaround for the `EntityPlayer.GetPocketItem` method not working
 -- correctly.
 -- 
@@ -37671,7 +38770,7 @@ function ____exports.getPocketItems(self, player)
         else
             pocketItems[#pocketItems + 1] = {slot = slot, type = PocketItemType.EMPTY, subType = 0}
         end
-        if asNumber(nil, slot) + 1 == maxPocketItems then
+        if slot + 1 == maxPocketItems then
             break
         end
     end
@@ -38363,6 +39462,7 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local __TS__ArraySlice = ____lualib.__TS__ArraySlice
 local ____exports = {}
+local HORSE_PILL_ADJUSTMENT
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local PillColor = ____isaac_2Dtypescript_2Ddefinitions.PillColor
 local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
@@ -38394,17 +39494,17 @@ local PILL_EFFECT_TYPES = ____pillEffectTypes.PILL_EFFECT_TYPES
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
 local asNumber = ____types.asNumber
 local asPillColor = ____types.asPillColor
+local asPillEffect = ____types.asPillEffect
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local iRange = ____utils.iRange
+--- Helper function to see if the given pill color is a horse pill.
+function ____exports.isHorsePill(self, pillColor)
+    return asNumber(nil, pillColor) > HORSE_PILL_ADJUSTMENT
+end
 function ____exports.isVanillaPillEffect(self, pillEffect)
     return pillEffect <= LAST_VANILLA_PILL_EFFECT
 end
---- Add this to a `PillColor` to get the corresponding giant pill color.
--- 
--- Corresponds to the vanilla `PillColor.GIANT_FLAG` value.
--- 
--- 1 << 11
-local HORSE_PILL_ADJUSTMENT = 2048
+HORSE_PILL_ADJUSTMENT = 2048
 --- Helper function to get an array with every non-null pill color. This includes all gold colors and
 -- all horse colors.
 function ____exports.getAllPillColors(self)
@@ -38421,7 +39521,7 @@ end
 -- For example, passing `PillColor.BLUE_BLUE` would result in 2049, which is the value that
 -- corresponds to the horse pill color for blue/blue.
 function ____exports.getHorsePillColor(self, pillColor)
-    return asNumber(nil, pillColor) + HORSE_PILL_ADJUSTMENT
+    return pillColor + HORSE_PILL_ADJUSTMENT
 end
 --- Helper function to get an array with every non-gold horse pill color.
 function ____exports.getHorsePillColors(self)
@@ -38433,11 +39533,7 @@ end
 -- 
 -- If called with a non-horse pill color, this function will return back the same color.
 function ____exports.getNormalPillColorFromHorse(self, pillColor)
-    local normalPillColor = asPillColor(
-        nil,
-        asNumber(nil, pillColor) - HORSE_PILL_ADJUSTMENT
-    )
-    return normalPillColor > PillColor.NULL and normalPillColor or pillColor
+    return ____exports.isHorsePill(nil, pillColor) and asPillColor(nil, pillColor - HORSE_PILL_ADJUSTMENT) or pillColor
 end
 --- Helper function to get an array with every non-gold and non-horse pill color.
 function ____exports.getNormalPillColors(self)
@@ -38518,12 +39614,13 @@ end
 function ____exports.isGoldPill(self, pillColor)
     return pillColor == PillColor.GOLD or pillColor == PillColor.HORSE_GOLD
 end
---- Helper function to see if the given pill color is a horse pill.
-function ____exports.isHorsePill(self, pillColor)
-    return asNumber(nil, pillColor) > HORSE_PILL_ADJUSTMENT
-end
 function ____exports.isModdedPillEffect(self, pillEffect)
     return not ____exports.isVanillaPillEffect(nil, pillEffect)
+end
+function ____exports.isValidPillEffect(self, pillEffect)
+    local potentialPillEffect = asPillEffect(nil, pillEffect)
+    local itemConfigPillEffect = itemConfig:GetPillEffect(potentialPillEffect)
+    return itemConfigPillEffect ~= nil
 end
 return ____exports
  end,
@@ -39125,8 +40222,6 @@ local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.types.Reado
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____entitiesSpecific = require("lua_modules.isaacscript-common.dist.functions.entitiesSpecific")
 local getNPCs = ____entitiesSpecific.getNPCs
-local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asNumber = ____types.asNumber
 --- Checks for specific NPCs that have "CanShutDoors" set to true naturally by the game, but should
 -- not actually keep the doors closed (like Death's scythes).
 function ____exports.isAliveExceptionNPC(self, npc)
@@ -39165,20 +40260,20 @@ end
 -- `NPCState.SPECIAL`, spit out their head, and then slowly fade away while shooting a burst of
 -- tears.
 function ____exports.isDyingDump(self, npc)
-    return npc.Type == EntityType.DUMP and npc.Variant == asNumber(nil, DumpVariant.DUMP) and npc.State == NPCState.SPECIAL
+    return npc.Type == EntityType.DUMP and npc.Variant == DumpVariant.DUMP and npc.State == NPCState.SPECIAL
 end
 --- Helper function to detect the custom death state of an Eggy. Eggies are never actually marked
 -- dead by the game. Instead, when Eggies take fatal damage, they go into NPCState.STATE_SUICIDE and
 -- spawn 14 Swarm Spiders while their StateFrame ticks upwards.
 function ____exports.isDyingEggyWithNoSpidersLeft(self, npc)
-    return npc.Type == EntityType.HOPPER and npc.Variant == asNumber(nil, HopperVariant.EGGY) and npc.State == NPCState.SUICIDE and npc.StateFrame >= EGGY_STATE_FRAME_OF_FINAL_SPIDER
+    return npc.Type == EntityType.HOPPER and npc.Variant == HopperVariant.EGGY and npc.State == NPCState.SUICIDE and npc.StateFrame >= EGGY_STATE_FRAME_OF_FINAL_SPIDER
 end
 --- Helper function to detect the custom death state of a Rag Man Ragling. When Rag Man Raglings die,
 -- they turn into a patch on the ground and can be revived by Rag Man at a later time. This causes
 -- them to show up as an "alive" enemy, so they should usually be filtered out of lists of alive
 -- enemies.
 function ____exports.isRaglingDeathPatch(self, npc)
-    return npc.Type == EntityType.RAGLING and npc.Variant == asNumber(nil, RaglingVariant.RAG_MANS_RAGLING) and npc.State == NPCState.SPECIAL
+    return npc.Type == EntityType.RAGLING and npc.Variant == RaglingVariant.RAG_MANS_RAGLING and npc.State == NPCState.SPECIAL
 end
 NON_ALIVE_NPCS_TYPE_VARIANT = __TS__New(
     ReadonlySet,
@@ -39375,8 +40470,6 @@ local ____stage = require("lua_modules.isaacscript-common.dist.functions.stage")
 local calculateStageType = ____stage.calculateStageType
 local calculateStageTypeRepentance = ____stage.calculateStageTypeRepentance
 local onRepentanceStage = ____stage.onRepentanceStage
-local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asNumber = ____types.asNumber
 --- Helper function to get the stage that a trapdoor or heaven door would take the player to, based
 -- on the current stage, room, and game state flags.
 -- 
@@ -39391,7 +40484,7 @@ function ____exports.getNextStage(self)
     local repentanceStage = onRepentanceStage(nil)
     local roomGridIndex = getRoomGridIndex(nil)
     if backwardsPath then
-        local nextStage = asNumber(nil, stage) - 1
+        local nextStage = stage - 1
         return nextStage == 0 and LevelStage.HOME or nextStage
     end
     repeat
@@ -39412,7 +40505,7 @@ function ____exports.getNextStage(self)
         if ____cond4 then
             do
                 if repentanceStage then
-                    return asNumber(nil, stage) + 1
+                    return stage + 1
                 end
                 if stage == LevelStage.DEPTHS_2 or stage == LevelStage.DEPTHS_1 and hasCurse(nil, LevelCurse.LABYRINTH) then
                     return LevelStage.DEPTHS_2
@@ -39442,7 +40535,7 @@ function ____exports.getNextStage(self)
     if stage == LevelStage.VOID then
         return LevelStage.VOID
     end
-    return asNumber(nil, stage) + 1
+    return stage + 1
 end
 --- Helper function to get the stage type that a trapdoor or heaven door would take the player to,
 -- based on the current stage, room, and game state flags.
@@ -39468,7 +40561,7 @@ function ____exports.getNextStageType(self, upwards)
     if backwardsPath then
         return calculateStageType(nil, nextStage)
     end
-    if roomGridIndex == asNumber(nil, GridRoom.SECRET_EXIT) then
+    if roomGridIndex == GridRoom.SECRET_EXIT then
         return calculateStageTypeRepentance(nil, nextStage)
     end
     if repentanceStage and (stage == LevelStage.BASEMENT_1 or stage == LevelStage.CAVES_1 or stage == LevelStage.DEPTHS_1 or stage == LevelStage.WOMB_1) then
@@ -41106,6 +42199,7 @@ local ____lualib = require("lualib_bundle")
 local Map = ____lualib.Map
 local __TS__New = ____lualib.__TS__New
 local __TS__Iterator = ____lualib.__TS__Iterator
+local __TS__ObjectEntries = ____lualib.__TS__ObjectEntries
 local __TS__Spread = ____lualib.__TS__Spread
 local ____exports = {}
 local ____array = require("lua_modules.isaacscript-common.dist.functions.array")
@@ -41167,6 +42261,40 @@ function ____exports.getReversedMap(self, map)
         reverseMap:set(value, key)
     end
     return reverseMap
+end
+--- Helper function to convert an object to a map.
+-- 
+-- This is useful when you need to construct a type safe object with the `satisfies` operator, but
+-- then later on you need to query it in a way where you expect the return value to be T or
+-- undefined. In this situation, by converting the object to a map, you can avoid unsafe type
+-- assertions.
+-- 
+-- Note that the map values will be inserted in a random order, due to how `pairs` works under the
+-- hood.
+-- 
+-- Also see the `objectToReadonlyMap` function.
+function ____exports.objectToMap(self, object)
+    local map = __TS__New(Map)
+    for ____, ____value in ipairs(__TS__ObjectEntries(object)) do
+        local key = ____value[1]
+        local value = ____value[2]
+        map:set(key, value)
+    end
+    return map
+end
+--- Helper function to convert an object to a read-only map.
+-- 
+-- This is useful when you need to construct a type safe object with the `satisfies` operator, but
+-- then later on you need to query it in a way where you expect the return value to be T or
+-- undefined. In this situation, by converting the object to a map, you can avoid unsafe type
+-- assertions.
+-- 
+-- Note that the map values will be inserted in a random order, due to how `pairs` works under the
+-- hood.
+-- 
+-- Also see the `objectToMap` function.
+function ____exports.objectToReadonlyMap(self, object)
+    return ____exports.objectToMap(nil, object)
 end
 --- Helper function to sum every value in a map together.
 function ____exports.sumMap(self, map)
@@ -41853,6 +42981,7 @@ local ITEM_POOL_TYPE_VALUES = ____cachedEnumValues.ITEM_POOL_TYPE_VALUES
 local itemPoolsJSON = require("lua_modules.isaacscript-common.dist.data.itempools")
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
 local asCollectibleType = ____types.asCollectibleType
+local parseIntSafe = ____types.parseIntSafe
 local ____itemPoolTypeToItemPoolName = require("lua_modules.isaacscript-common.dist.maps.itemPoolTypeToItemPoolName")
 local ITEM_POOL_TYPE_TO_ITEM_POOL_NAME = ____itemPoolTypeToItemPoolName.ITEM_POOL_TYPE_TO_ITEM_POOL_NAME
 function getItemPoolJSON(self, itemPoolType)
@@ -41872,11 +43001,11 @@ ____exports.ITEM_POOL_TYPE_TO_COLLECTIBLE_TYPES_SET = (function()
         else
             local collectibleTypesSet = __TS__New(Set)
             for ____, itemPoolJSONElement in ipairs(itemPoolJSON.Item) do
-                local collectibleTypeNumber = tonumber(itemPoolJSONElement["$"].Id)
-                if collectibleTypeNumber == nil then
+                local collectibleTypeInt = parseIntSafe(nil, itemPoolJSONElement["$"].Id)
+                if collectibleTypeInt == nil then
                     error("Failed to parse a collectible type in the \"itempools.json\" file: " .. itemPoolJSONElement["$"].Id)
                 end
-                local collectibleType = asCollectibleType(nil, collectibleTypeNumber)
+                local collectibleType = asCollectibleType(nil, collectibleTypeInt)
                 collectibleTypesSet:add(collectibleType)
             end
             itemPoolTypeToCollectibleTypes[itemPoolType] = collectibleTypesSet
@@ -44076,8 +45205,6 @@ local ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET = ____bossSets.ALL_BOSSES_EXCLUDING_
 local ALL_BOSSES_SET = ____bossSets.ALL_BOSSES_SET
 local STAGE_TO_COMBINED_BOSS_SET_MAP = ____bossSets.STAGE_TO_COMBINED_BOSS_SET_MAP
 local STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP = ____bossSets.STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP
-local STORY_BOSS_ENTITY_TYPES_SET = ____bossSets.STORY_BOSS_ENTITY_TYPES_SET
-local STORY_BOSS_IDS_SET = ____bossSets.STORY_BOSS_IDS_SET
 local ____repentanceBossIDsSet = require("lua_modules.isaacscript-common.dist.sets.repentanceBossIDsSet")
 local REPENTANCE_ONLY_BOSS_IDS_SET = ____repentanceBossIDsSet.REPENTANCE_ONLY_BOSS_IDS_SET
 local ____sinEntityTypesSet = require("lua_modules.isaacscript-common.dist.sets.sinEntityTypesSet")
@@ -44096,8 +45223,6 @@ local isRNG = ____rng.isRNG
 local ____rooms = require("lua_modules.isaacscript-common.dist.functions.rooms")
 local inBeastRoom = ____rooms.inBeastRoom
 local inDogmaRoom = ____rooms.inDogmaRoom
-local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asNumber = ____types.asNumber
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local ____repeat = ____utils["repeat"]
 local BOSSES_THAT_REQUIRE_MULTIPLE_SPAWNS = __TS__New(ReadonlySet, {
@@ -44274,7 +45399,7 @@ local function getNumBossSegments(self, entityType, variant, numSegments)
         ____cond22 = ____cond22 or ____switch22 == EntityType.LOKI
         if ____cond22 then
             do
-                return variant == asNumber(nil, LokiVariant.LOKII) and 2 or 1
+                return variant == LokiVariant.LOKII and 2 or 1
             end
         end
         ____cond22 = ____cond22 or ____switch22 == EntityType.GURGLING
@@ -44289,18 +45414,6 @@ local function getNumBossSegments(self, entityType, variant, numSegments)
             end
         end
     until true
-end
---- Helper function to determine if the specified entity type is an end-game story boss, like Isaac,
--- Blue Baby, Mega Satan, The Beast, and so on. This is useful because certain effects should only
--- apply to non-story bosses, like Vanishing Twin.
-function ____exports.isStoryBoss(self, entityType)
-    return STORY_BOSS_ENTITY_TYPES_SET:has(entityType)
-end
---- Helper function to determine if the specified boss ID is an end-game story boss, like Isaac, Blue
--- Baby, Mega Satan, The Beast, and so on. This is useful because certain effects should only apply
--- to non-story bosses, like Vanishing Twin.
-function ____exports.isStoryBossID(self, bossID)
-    return STORY_BOSS_IDS_SET:has(bossID)
 end
 --- Helper function to spawn a boss.
 -- 
@@ -44431,13 +45544,14 @@ local __TS__Spread = ____lualib.__TS__Spread
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
-local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
 local StageType = ____isaac_2Dtypescript_2Ddefinitions.StageType
 local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
 local BOSS_IDS = ____cachedEnumValues.BOSS_IDS
 local ____set = require("lua_modules.isaacscript-common.dist.functions.set")
 local combineSets = ____set.combineSets
+local ____storyBosses = require("lua_modules.isaacscript-common.dist.functions.storyBosses")
+local isStoryBossID = ____storyBosses.isStoryBossID
 local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.types.ReadonlyMap")
 local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.types.ReadonlySet")
@@ -44795,45 +45909,11 @@ ____exports.ALL_BOSSES_SET = __TS__New(
         function(____, bossID) return bossID ~= BossID.RAGLICH end
     )
 )
-____exports.STORY_BOSS_IDS_SET = __TS__New(ReadonlySet, {
-    BossID.MOM,
-    BossID.MOMS_HEART,
-    BossID.SATAN,
-    BossID.IT_LIVES,
-    BossID.ISAAC,
-    BossID.BLUE_BABY,
-    BossID.LAMB,
-    BossID.MEGA_SATAN,
-    BossID.ULTRA_GREED,
-    BossID.HUSH,
-    BossID.DELIRIUM,
-    BossID.ULTRA_GREEDIER,
-    BossID.MOTHER,
-    BossID.MAUSOLEUM_MOM,
-    BossID.MAUSOLEUM_MOMS_HEART,
-    BossID.DOGMA,
-    BossID.BEAST
-})
-____exports.STORY_BOSS_ENTITY_TYPES_SET = __TS__New(ReadonlySet, {
-    EntityType.MOM,
-    EntityType.MOMS_HEART,
-    EntityType.SATAN,
-    EntityType.ISAAC,
-    EntityType.LAMB,
-    EntityType.MEGA_SATAN,
-    EntityType.MEGA_SATAN_2,
-    EntityType.ULTRA_GREED,
-    EntityType.HUSH,
-    EntityType.DELIRIUM,
-    EntityType.MOTHER,
-    EntityType.DOGMA,
-    EntityType.BEAST
-})
 ____exports.ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET = __TS__New(
     ReadonlySet,
     __TS__ArrayFilter(
         {__TS__Spread(____exports.ALL_BOSSES_SET)},
-        function(____, bossID) return not ____exports.STORY_BOSS_IDS_SET:has(bossID) end
+        function(____, bossID) return not isStoryBossID(nil, bossID) end
     )
 )
 return ____exports
@@ -45719,7 +46799,10 @@ function ____exports.getAdjacentNonExistingRoomGridIndexes(self, roomGridIndex)
         function(____, adjacentRoomGridIndex) return getRoomData(nil, adjacentRoomGridIndex) == nil end
     )
 end
---- Helper function to get the room safe grid index for every room on the entire floor.
+--- Helper function to get the room safe grid index for every room on the entire floor. This includes
+-- off-grid rooms, such as the Devil Room.
+-- 
+-- Rooms without any data are assumed to be non-existent and are not included.
 function ____exports.getAllRoomGridIndexes(self)
     local rooms = getRooms(nil)
     return __TS__ArrayMap(
@@ -46045,6 +47128,8 @@ local ____log = require("lua_modules.isaacscript-common.dist.functions.log")
 local log = ____log.log
 local ____random = require("lua_modules.isaacscript-common.dist.functions.random")
 local getRandomFloat = ____random.getRandomFloat
+local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
+local parseIntSafe = ____types.parseIntSafe
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local assertDefined = ____utils.assertDefined
 function getTotalWeightOfJSONObject(self, jsonOjectArray)
@@ -46086,7 +47171,7 @@ end
 -- (A JSON room is an XML file converted to JSON so that it can be directly imported into your mod.)
 function ____exports.getJSONRoomDoorSlotFlags(self, jsonRoom)
     local roomShapeString = jsonRoom["$"].shape
-    local roomShape = tonumber(roomShapeString)
+    local roomShape = parseIntSafe(nil, roomShapeString)
     assertDefined(nil, roomShape, "Failed to parse the \"shape\" field of a JSON room: " .. roomShapeString)
     if not isEnumValue(nil, roomShape, RoomShape) then
         error("Failed to parse the \"shape\" field of a JSON room since it was an invalid number: " .. tostring(roomShape))
@@ -46102,10 +47187,10 @@ function ____exports.getJSONRoomDoorSlotFlags(self, jsonRoom)
                 goto __continue4
             end
             local xString = door["$"].x
-            local x = tonumber(xString)
+            local x = parseIntSafe(nil, xString)
             assertDefined(nil, x, "Failed to parse the \"x\" field of a JSON room door: " .. xString)
             local yString = door["$"].y
-            local y = tonumber(yString)
+            local y = parseIntSafe(nil, yString)
             assertDefined(nil, y, "Failed to parse the \"y\" field of a JSON room door: " .. yString)
             local doorSlot = getRoomShapeDoorSlot(nil, roomShape, x, y)
             assertDefined(
@@ -46132,7 +47217,10 @@ function ____exports.getJSONRoomOfVariant(self, jsonRooms, variant)
         jsonRooms,
         function(____, jsonRoom)
             local roomVariantString = jsonRoom["$"].variant
-            local roomVariant = tonumber(roomVariantString)
+            local roomVariant = parseIntSafe(nil, roomVariantString)
+            if roomVariant == nil then
+                error("Failed to convert a JSON room variant to an integer: " .. roomVariantString)
+            end
             return roomVariant == variant
         end
     )
@@ -46155,7 +47243,10 @@ function ____exports.getJSONRoomsOfSubType(self, jsonRooms, subType)
         jsonRooms,
         function(____, jsonRoom)
             local roomSubTypeString = jsonRoom["$"].subtype
-            local roomSubType = tonumber(roomSubTypeString)
+            local roomSubType = parseIntSafe(nil, roomSubTypeString)
+            if roomSubType == nil then
+                error("Failed to convert a JSON room sub-type to an integer: " .. roomSubTypeString)
+            end
             return roomSubType == subType
         end
     )
@@ -47580,98 +48671,6 @@ function ____exports.setTracebackFunctionsGlobal(self)
     local globals = _G
     globals.getTraceback = getTraceback
     globals.traceback = traceback
-end
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.functions.debugFunctions"] = function(...) 
-local ____exports = {}
-local ____log = require("lua_modules.isaacscript-common.dist.functions.log")
-local log = ____log.log
---- Helper function to get the current time for benchmarking / profiling purposes.
--- 
--- The return value will either be in seconds or milliseconds, depending on if the "--luadebug" flag
--- is turned on.
--- 
--- If the "--luadebug" flag is present, then this function will use the `socket.gettime` method,
--- which returns the epoch timestamp in seconds (e.g. "1640320492.5779"). This is preferable over
--- the more conventional `Isaac.GetTime` method, since it has one extra decimal point of precision.
--- 
--- If the "--luadebug" flag is not present, then this function will use the `Isaac.GetTime` method,
--- which returns the number of milliseconds since the computer's operating system was started (e.g.
--- "739454963").
--- 
--- @param useSocketIfAvailable Optional. Whether to use the `socket.gettime` method, if available.
--- Default is true. If set to false, the `Isaac.GetTime()` method will
--- always be used.
-function ____exports.getTime(self, useSocketIfAvailable)
-    if useSocketIfAvailable == nil then
-        useSocketIfAvailable = true
-    end
-    if useSocketIfAvailable then
-        if SandboxGetTime ~= nil then
-            return SandboxGetTime()
-        end
-        if ____exports.isLuaDebugEnabled(nil) then
-            local ok, requiredSocket = pcall(require, "socket")
-            if ok then
-                local socket = requiredSocket
-                return socket.gettime()
-            end
-        end
-    end
-    return Isaac.GetTime()
-end
---- Players can boot the game with an launch option called "--luadebug", which will enable additional
--- functionality that is considered to be unsafe. For more information about this flag, see the
--- wiki: https://bindingofisaacrebirth.fandom.com/wiki/Launch_Options
--- 
--- When this flag is enabled, the global environment will be slightly different. The differences are
--- documented here: https://wofsauge.github.io/IsaacDocs/rep/Globals.html
--- 
--- This function uses the `package` global variable as a proxy to determine if the "--luadebug" flag
--- is enabled.
--- 
--- Note that this function will return false if the Racing+ sandbox is enabled, even if the
--- "--luadebug" flag is really turned on. If checking for this case is needed, check for the
--- presence of the `sandboxGetTraceback` function.
-function ____exports.isLuaDebugEnabled(self)
-    return _G.package ~= nil
-end
---- Helper function to get the amount of elapsed time for benchmarking / profiling purposes.
--- 
--- For more information, see the documentation for the `getTime` helper function.
--- 
--- @param time The milliseconds (int) or fractional seconds (float).
--- @param useSocketIfAvailable Optional. Whether to use the `socket.gettime` method, if available.
--- Default is true. If set to false, the `Isaac.GetTime()` method will
--- always be used.
-function ____exports.getElapsedTimeSince(self, time, useSocketIfAvailable)
-    if useSocketIfAvailable == nil then
-        useSocketIfAvailable = true
-    end
-    return ____exports.getTime(nil, useSocketIfAvailable) - time
-end
---- Helper function to get a stack trace.
--- 
--- This will only work if the `--luadebug` launch option is enabled. If it isn't, then a error
--- string will be returned.
-function ____exports.getTraceback()
-    if SandboxGetTraceback ~= nil then
-        return SandboxGetTraceback()
-    end
-    if debug ~= nil then
-        return debug.traceback()
-    end
-    return "stack traceback:\n(the \"--luadebug\" flag is not enabled)"
-end
---- Helper function to log a stack trace to the "log.txt" file, similar to JavaScript's
--- `console.trace` function.
--- 
--- This will only work if the `--luadebug` launch option is enabled. If it isn't, then a error
--- string will be logged.
-function ____exports.traceback()
-    local tracebackOutput = ____exports.getTraceback()
-    log(tracebackOutput)
 end
 return ____exports
  end,
@@ -49247,10 +50246,16 @@ ____exports.CHALLENGE_BOSSES = {
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.functions.cards"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local Set = ____lualib.Set
+local __TS__New = ____lualib.__TS__New
+local __TS__ArraySome = ____lualib.__TS__ArraySome
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local ItemConfigCardType = ____isaac_2Dtypescript_2Ddefinitions.ItemConfigCardType
 local UseFlag = ____isaac_2Dtypescript_2Ddefinitions.UseFlag
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local POCKET_ITEM_SLOT_VALUES = ____cachedEnumValues.POCKET_ITEM_SLOT_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local itemConfig = ____cachedClasses.itemConfig
 local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.core.constantsFirstLast")
@@ -49261,10 +50266,12 @@ local DEFAULT_CARD_DESCRIPTION = ____cardDescriptions.DEFAULT_CARD_DESCRIPTION
 local ____cardNames = require("lua_modules.isaacscript-common.dist.objects.cardNames")
 local CARD_NAMES = ____cardNames.CARD_NAMES
 local DEFAULT_CARD_NAME = ____cardNames.DEFAULT_CARD_NAME
-local ____itemConfigCardTypesForCardsSet = require("lua_modules.isaacscript-common.dist.sets.itemConfigCardTypesForCardsSet")
-local ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET = ____itemConfigCardTypesForCardsSet.ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET
+local ____itemConfigCardTypesForCards = require("lua_modules.isaacscript-common.dist.sets.itemConfigCardTypesForCards")
+local ITEM_CONFIG_CARD_TYPES_FOR_CARDS = ____itemConfigCardTypesForCards.ITEM_CONFIG_CARD_TYPES_FOR_CARDS
 local ____flag = require("lua_modules.isaacscript-common.dist.functions.flag")
 local addFlag = ____flag.addFlag
+local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
+local asCardType = ____types.asCardType
 function ____exports.isVanillaCardType(self, cardType)
     return cardType <= LAST_VANILLA_CARD_TYPE
 end
@@ -49313,6 +50320,22 @@ function ____exports.getItemConfigCardType(self, cardType)
     end
     return itemConfigCard.CardType
 end
+--- Helper function to check if a player is holding a specific card in one of their pocket item
+-- slots.
+-- 
+-- This function is variadic, meaning that you can pass as many cards as you want to check for. The
+-- function will return true if the player has any of the cards.
+function ____exports.hasCard(self, player, ...)
+    local cardTypes = {...}
+    local cardTypesSet = __TS__New(Set, cardTypes)
+    return __TS__ArraySome(
+        POCKET_ITEM_SLOT_VALUES,
+        function(____, pocketItemSlot)
+            local cardType = player:GetCard(pocketItemSlot)
+            return cardTypesSet:has(cardType)
+        end
+    )
+end
 --- Returns true for card types that have the following item config card type:
 -- 
 -- - `ItemConfigCardType.TAROT` (0)
@@ -49324,7 +50347,7 @@ function ____exports.isCard(self, cardType)
     if itemConfigCardType == nil then
         return false
     end
-    return ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET:has(itemConfigCardType)
+    return ITEM_CONFIG_CARD_TYPES_FOR_CARDS:has(itemConfigCardType)
 end
 --- Returns whether the given card type matches the specified item config card type.
 function ____exports.isCardType(self, cardType, itemConfigCardType)
@@ -49358,6 +50381,11 @@ end
 function ____exports.isTarotCard(self, cardType)
     return ____exports.isCardType(nil, cardType, ItemConfigCardType.TAROT)
 end
+function ____exports.isValidCardType(self, cardType)
+    local potentialCardType = asCardType(nil, cardType)
+    local itemConfigCard = itemConfig:GetCard(potentialCardType)
+    return itemConfigCard ~= nil
+end
 --- Helper function to use a card without showing an animation and without the announcer voice
 -- playing.
 function ____exports.useCardTemp(self, player, cardType)
@@ -49366,7 +50394,7 @@ function ____exports.useCardTemp(self, player, cardType)
 end
 return ____exports
  end,
-["lua_modules.isaacscript-common.dist.sets.itemConfigCardTypesForCardsSet"] = function(...) 
+["lua_modules.isaacscript-common.dist.sets.itemConfigCardTypesForCards"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
@@ -49375,7 +50403,7 @@ local ItemConfigCardType = ____isaac_2Dtypescript_2Ddefinitions.ItemConfigCardTy
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 --- The set of all `ItemConfigCardType` values that are not a rune or special object.
-____exports.ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET = __TS__New(ReadonlySet, {ItemConfigCardType.TAROT, ItemConfigCardType.SUIT, ItemConfigCardType.SPECIAL, ItemConfigCardType.TAROT_REVERSE})
+____exports.ITEM_CONFIG_CARD_TYPES_FOR_CARDS = __TS__New(ReadonlySet, {ItemConfigCardType.TAROT, ItemConfigCardType.SUIT, ItemConfigCardType.SPECIAL, ItemConfigCardType.TAROT_REVERSE})
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.objects.cardNames"] = function(...) 
@@ -49893,27 +50921,29 @@ ____exports.ISCFeature.PREVENT_CHILD_ENTITIES = 43
 ____exports.ISCFeature[____exports.ISCFeature.PREVENT_CHILD_ENTITIES] = "PREVENT_CHILD_ENTITIES"
 ____exports.ISCFeature.PREVENT_GRID_ENTITY_RESPAWN = 44
 ____exports.ISCFeature[____exports.ISCFeature.PREVENT_GRID_ENTITY_RESPAWN] = "PREVENT_GRID_ENTITY_RESPAWN"
-____exports.ISCFeature.ROOM_CLEAR_FRAME = 45
+____exports.ISCFeature.RERUN_DETECTION = 45
+____exports.ISCFeature[____exports.ISCFeature.RERUN_DETECTION] = "RERUN_DETECTION"
+____exports.ISCFeature.ROOM_CLEAR_FRAME = 46
 ____exports.ISCFeature[____exports.ISCFeature.ROOM_CLEAR_FRAME] = "ROOM_CLEAR_FRAME"
-____exports.ISCFeature.ROOM_HISTORY = 46
+____exports.ISCFeature.ROOM_HISTORY = 47
 ____exports.ISCFeature[____exports.ISCFeature.ROOM_HISTORY] = "ROOM_HISTORY"
-____exports.ISCFeature.RUN_IN_N_FRAMES = 47
+____exports.ISCFeature.RUN_IN_N_FRAMES = 48
 ____exports.ISCFeature[____exports.ISCFeature.RUN_IN_N_FRAMES] = "RUN_IN_N_FRAMES"
-____exports.ISCFeature.RUN_NEXT_ROOM = 48
+____exports.ISCFeature.RUN_NEXT_ROOM = 49
 ____exports.ISCFeature[____exports.ISCFeature.RUN_NEXT_ROOM] = "RUN_NEXT_ROOM"
-____exports.ISCFeature.RUN_NEXT_RUN = 49
+____exports.ISCFeature.RUN_NEXT_RUN = 50
 ____exports.ISCFeature[____exports.ISCFeature.RUN_NEXT_RUN] = "RUN_NEXT_RUN"
-____exports.ISCFeature.SAVE_DATA_MANAGER = 50
+____exports.ISCFeature.SAVE_DATA_MANAGER = 51
 ____exports.ISCFeature[____exports.ISCFeature.SAVE_DATA_MANAGER] = "SAVE_DATA_MANAGER"
-____exports.ISCFeature.SPAWN_ALT_ROCK_REWARDS = 51
+____exports.ISCFeature.SPAWN_ALT_ROCK_REWARDS = 52
 ____exports.ISCFeature[____exports.ISCFeature.SPAWN_ALT_ROCK_REWARDS] = "SPAWN_ALT_ROCK_REWARDS"
-____exports.ISCFeature.STAGE_HISTORY = 52
+____exports.ISCFeature.STAGE_HISTORY = 53
 ____exports.ISCFeature[____exports.ISCFeature.STAGE_HISTORY] = "STAGE_HISTORY"
-____exports.ISCFeature.START_AMBUSH = 53
+____exports.ISCFeature.START_AMBUSH = 54
 ____exports.ISCFeature[____exports.ISCFeature.START_AMBUSH] = "START_AMBUSH"
-____exports.ISCFeature.TAINTED_LAZARUS_PLAYERS = 54
+____exports.ISCFeature.TAINTED_LAZARUS_PLAYERS = 55
 ____exports.ISCFeature[____exports.ISCFeature.TAINTED_LAZARUS_PLAYERS] = "TAINTED_LAZARUS_PLAYERS"
-____exports.ISCFeature.UNLOCK_ACHIEVEMENTS_DETECTION = 55
+____exports.ISCFeature.UNLOCK_ACHIEVEMENTS_DETECTION = 56
 ____exports.ISCFeature[____exports.ISCFeature.UNLOCK_ACHIEVEMENTS_DETECTION] = "UNLOCK_ACHIEVEMENTS_DETECTION"
 return ____exports
  end,
@@ -50102,12 +51132,16 @@ local getFeatures = ____features.getFeatures
 local ____debugFunctions = require("lua_modules.isaacscript-common.dist.functions.debugFunctions")
 local getElapsedTimeSince = ____debugFunctions.getElapsedTimeSince
 local getTime = ____debugFunctions.getTime
+local ____enums = require("lua_modules.isaacscript-common.dist.functions.enums")
+local isEnumValue = ____enums.isEnumValue
 local ____log = require("lua_modules.isaacscript-common.dist.functions.log")
 local getParentFunctionDescription = ____log.getParentFunctionDescription
 local log = ____log.log
 local ____tstlClass = require("lua_modules.isaacscript-common.dist.functions.tstlClass")
 local getTSTLClassConstructor = ____tstlClass.getTSTLClassConstructor
 local getTSTLClassName = ____tstlClass.getTSTLClassName
+local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
+local parseIntSafe = ____types.parseIntSafe
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local assertDefined = ____utils.assertDefined
 function getExportedMethodsFromFeature(self, featureClass)
@@ -50226,9 +51260,12 @@ function ModUpgraded.prototype.logUsedFeatures(self)
             if callbackClass.numConsumers == 0 then
                 goto __continue19
             end
-            local modCallbackCustom = tonumber(modCallbackCustomString)
-            assertDefined(nil, modCallbackCustom, "Failed to convert an index on the callbacks object to a number.")
-            log(((("- ModCallbackCustom." .. tostring(ModCallbackCustom[modCallbackCustom])) .. " (") .. tostring(modCallbackCustom)) .. ")")
+            local modCallbackCustom = parseIntSafe(nil, modCallbackCustomString)
+            assertDefined(nil, modCallbackCustom, ("Failed to convert the string \"" .. modCallbackCustomString) .. "\" representing a \"ModCallbackCustom\" value to a number.")
+            if not isEnumValue(nil, modCallbackCustom, ModCallbackCustom) then
+                error(("Failed to convert the number " .. tostring(modCallbackCustom)) .. " to a \"ModCallbackCustom\" value.")
+            end
+            log(((("- ModCallbackCustom." .. ModCallbackCustom[modCallbackCustom]) .. " (") .. tostring(modCallbackCustom)) .. ")")
         end
         ::__continue19::
     end
@@ -50237,13 +51274,16 @@ function ModUpgraded.prototype.logUsedFeatures(self)
         local featureClass = ____value[2]
         do
             if featureClass.numConsumers == 0 then
-                goto __continue22
+                goto __continue23
             end
-            local iscFeature = tonumber(iscFeatureString)
-            assertDefined(nil, iscFeature, "Failed to convert an index on the features object to a number.")
-            log(((("- ISCFeature." .. tostring(ISCFeature[iscFeature])) .. " (") .. tostring(iscFeature)) .. ")")
+            local iscFeature = parseIntSafe(nil, iscFeatureString)
+            assertDefined(nil, iscFeature, ("Failed to convert the string \"" .. iscFeatureString) .. "\" representing a \"ISCFeature\" value to a number.")
+            if not isEnumValue(nil, iscFeature, ISCFeature) then
+                error(("Failed to convert the number " .. tostring(iscFeature)) .. " to a \"ISCFeature\" value.")
+            end
+            log(((("- ISCFeature." .. ISCFeature[iscFeature]) .. " (") .. tostring(iscFeature)) .. ")")
         end
-        ::__continue22::
+        ::__continue23::
     end
 end
 function ModUpgraded.prototype.initFeature(self, feature)
@@ -50435,6 +51475,8 @@ local ____PreventChildEntities = require("lua_modules.isaacscript-common.dist.cl
 local PreventChildEntities = ____PreventChildEntities.PreventChildEntities
 local ____PreventGridEntityRespawn = require("lua_modules.isaacscript-common.dist.classes.features.other.PreventGridEntityRespawn")
 local PreventGridEntityRespawn = ____PreventGridEntityRespawn.PreventGridEntityRespawn
+local ____RerunDetection = require("lua_modules.isaacscript-common.dist.classes.features.other.RerunDetection")
+local RerunDetection = ____RerunDetection.RerunDetection
 local ____RoomClearFrame = require("lua_modules.isaacscript-common.dist.classes.features.other.RoomClearFrame")
 local RoomClearFrame = ____RoomClearFrame.RoomClearFrame
 local ____RoomHistory = require("lua_modules.isaacscript-common.dist.classes.features.other.RoomHistory")
@@ -50572,6 +51614,7 @@ function ____exports.getFeatures(self, mod, callbacks)
         [ISCFeature.PRESS_INPUT] = pressInput,
         [ISCFeature.PREVENT_CHILD_ENTITIES] = __TS__New(PreventChildEntities),
         [ISCFeature.PREVENT_GRID_ENTITY_RESPAWN] = preventGridEntityRespawn,
+        [ISCFeature.RERUN_DETECTION] = __TS__New(RerunDetection),
         [ISCFeature.ROOM_CLEAR_FRAME] = roomClearFrame,
         [ISCFeature.ROOM_HISTORY] = roomHistory,
         [ISCFeature.RUN_IN_N_FRAMES] = runInNFrames,
@@ -50819,8 +51862,6 @@ local getNextStageType = ____nextStage.getNextStageType
 local ____stage = require("lua_modules.isaacscript-common.dist.functions.stage")
 local calculateStageType = ____stage.calculateStageType
 local onRepentanceStage = ____stage.onRepentanceStage
-local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asNumber = ____types.asNumber
 local ____Feature = require("lua_modules.isaacscript-common.dist.classes.private.Feature")
 local Feature = ____Feature.Feature
 local v = {run = {stageHistory = {}}}
@@ -50967,7 +52008,7 @@ function StageHistory.prototype.getNextStageWithHistory(self)
         end
         return LevelStage.DEPTHS_1
     end
-    return asNumber(nil, stage) - 1
+    return stage - 1
 end
 __TS__DecorateLegacy({Exported}, StageHistory.prototype, "getNextStageWithHistory", true)
 function StageHistory.prototype.getStageHistory(self)
@@ -52380,7 +53421,7 @@ local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.enums
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
 local ____Feature = require("lua_modules.isaacscript-common.dist.classes.private.Feature")
 local Feature = ____Feature.Feature
-local v = {room = {roomClearGameFrame = nil, roomClearRoomFrame = nil}}
+local v = {room = {roomClearGameFrame = nil, roomClearRenderFrame = nil, roomClearRoomFrame = nil}}
 ____exports.RoomClearFrame = __TS__Class()
 local RoomClearFrame = ____exports.RoomClearFrame
 RoomClearFrame.name = "RoomClearFrame"
@@ -52392,7 +53433,9 @@ function RoomClearFrame.prototype.____constructor(self)
         local gameFrameCount = game:GetFrameCount()
         local room = game:GetRoom()
         local roomFrameCount = room:GetFrameCount()
+        local renderFrameCount = Isaac.GetFrameCount()
         v.room.roomClearGameFrame = gameFrameCount
+        v.room.roomClearRenderFrame = renderFrameCount
         v.room.roomClearRoomFrame = roomFrameCount
     end
     self.customCallbacksUsed = {{ModCallbackCustom.POST_ROOM_CLEAR_CHANGED, self.postRoomClearChangedTrue}}
@@ -52401,10 +53444,58 @@ function RoomClearFrame.prototype.getRoomClearGameFrame(self)
     return v.room.roomClearGameFrame
 end
 __TS__DecorateLegacy({Exported}, RoomClearFrame.prototype, "getRoomClearGameFrame", true)
+function RoomClearFrame.prototype.getRoomClearRenderFrame(self)
+    return v.room.roomClearRenderFrame
+end
+__TS__DecorateLegacy({Exported}, RoomClearFrame.prototype, "getRoomClearRenderFrame", true)
 function RoomClearFrame.prototype.getRoomClearRoomFrame(self)
-    return v.room.roomClearGameFrame
+    return v.room.roomClearRoomFrame
 end
 __TS__DecorateLegacy({Exported}, RoomClearFrame.prototype, "getRoomClearRoomFrame", true)
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.classes.features.other.RerunDetection"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__ClassExtends = ____lualib.__TS__ClassExtends
+local __TS__DecorateLegacy = ____lualib.__TS__DecorateLegacy
+local ____exports = {}
+local ____decorators = require("lua_modules.isaacscript-common.dist.decorators")
+local Exported = ____decorators.Exported
+local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.enums.ModCallbackCustom")
+local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
+local ____rooms = require("lua_modules.isaacscript-common.dist.functions.rooms")
+local inStartingRoom = ____rooms.inStartingRoom
+local ____stage = require("lua_modules.isaacscript-common.dist.functions.stage")
+local onFirstFloor = ____stage.onFirstFloor
+local ____Feature = require("lua_modules.isaacscript-common.dist.classes.private.Feature")
+local Feature = ____Feature.Feature
+local v = {persistent = {pastFirstFloor = false, onRerun = false}}
+____exports.RerunDetection = __TS__Class()
+local RerunDetection = ____exports.RerunDetection
+RerunDetection.name = "RerunDetection"
+__TS__ClassExtends(RerunDetection, Feature)
+function RerunDetection.prototype.____constructor(self)
+    Feature.prototype.____constructor(self)
+    self.v = v
+    self.postGameStartedReordered = function(____, isContinued)
+        if isContinued then
+            if onFirstFloor(nil) and inStartingRoom(nil) and v.persistent.pastFirstFloor then
+                v.persistent.onRerun = true
+            end
+        else
+            v.persistent.onRerun = false
+        end
+    end
+    self.postNewLevelReordered = function()
+        v.persistent.pastFirstFloor = not onFirstFloor(nil)
+    end
+    self.customCallbacksUsed = {{ModCallbackCustom.POST_GAME_STARTED_REORDERED, self.postGameStartedReordered}, {ModCallbackCustom.POST_NEW_LEVEL_REORDERED, self.postNewLevelReordered}}
+end
+function RerunDetection.prototype.onRerun(self)
+    return v.persistent.onRerun
+end
+__TS__DecorateLegacy({Exported}, RerunDetection.prototype, "onRerun", true)
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.classes.features.other.PreventGridEntityRespawn"] = function(...) 
@@ -53346,7 +54437,6 @@ local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local Set = ____lualib.Set
 local Map = ____lualib.Map
-local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__DecorateLegacy = ____lualib.__TS__DecorateLegacy
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
@@ -53375,6 +54465,9 @@ local ____decorators = require("lua_modules.isaacscript-common.dist.decorators")
 local Exported = ____decorators.Exported
 local ____ISCFeature = require("lua_modules.isaacscript-common.dist.enums.ISCFeature")
 local ISCFeature = ____ISCFeature.ISCFeature
+local ____array = require("lua_modules.isaacscript-common.dist.functions.array")
+local arrayRemove = ____array.arrayRemove
+local getRandomArrayElement = ____array.getRandomArrayElement
 local ____cards = require("lua_modules.isaacscript-common.dist.functions.cards")
 local getItemConfigCardType = ____cards.getItemConfigCardType
 local ____collectibleTag = require("lua_modules.isaacscript-common.dist.functions.collectibleTag")
@@ -53388,10 +54481,7 @@ local isPassiveOrFamiliarCollectible = ____collectibles.isPassiveOrFamiliarColle
 local ____flag = require("lua_modules.isaacscript-common.dist.functions.flag")
 local getFlagName = ____flag.getFlagName
 local ____set = require("lua_modules.isaacscript-common.dist.functions.set")
-local copySet = ____set.copySet
-local deleteSetsFromSet = ____set.deleteSetsFromSet
 local getRandomSetElement = ____set.getRandomSetElement
-local getSortedSetValues = ____set.getSortedSetValues
 local ____trinkets = require("lua_modules.isaacscript-common.dist.functions.trinkets")
 local trinketHasCacheFlag = ____trinkets.trinketHasCacheFlag
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
@@ -53403,12 +54493,10 @@ local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local assertDefined = ____utils.assertDefined
 local iRange = ____utils.iRange
 local ____repeat = ____utils["repeat"]
-local ____itemConfigCardTypesForCardsSet = require("lua_modules.isaacscript-common.dist.sets.itemConfigCardTypesForCardsSet")
-local ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET = ____itemConfigCardTypesForCardsSet.ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET
+local ____itemConfigCardTypesForCards = require("lua_modules.isaacscript-common.dist.sets.itemConfigCardTypesForCards")
+local ITEM_CONFIG_CARD_TYPES_FOR_CARDS = ____itemConfigCardTypesForCards.ITEM_CONFIG_CARD_TYPES_FOR_CARDS
 local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.types.ReadonlyMap")
 local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
-local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.types.ReadonlySet")
-local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____Feature = require("lua_modules.isaacscript-common.dist.classes.private.Feature")
 local Feature = ____Feature.Feature
 local CONDITIONAL_FLYING_COLLECTIBLE_TYPES = {CollectibleType.BIBLE, CollectibleType.EMPTY_VESSEL, CollectibleType.ASTRAL_PROJECTION, CollectibleType.RECALL}
@@ -53457,15 +54545,15 @@ function ModdedElementSets.prototype.____constructor(self, moddedElementDetectio
     self.moddedPillEffectsSet = __TS__New(Set)
     self.cacheFlagToCollectibleTypesMap = __TS__New(Map)
     self.cacheFlagToTrinketTypesMap = __TS__New(Map)
-    self.flyingCollectibleTypesSet = __TS__New(Set)
-    self.permanentFlyingCollectibleTypesSet = __TS__New(Set)
-    self.flyingTrinketTypesSet = __TS__New(Set)
+    self.flyingCollectibleTypes = {}
+    self.permanentFlyingCollectibleTypes = {}
+    self.flyingTrinketTypes = {}
     self.tagToCollectibleTypesMap = __TS__New(Map)
     self.edenActiveCollectibleTypesSet = __TS__New(Set)
     self.edenPassiveCollectibleTypesSet = __TS__New(Set)
     self.qualityToCollectibleTypesMap = __TS__New(Map)
     self.itemConfigCardTypeToCardTypeMap = __TS__New(Map)
-    self.cardSet = __TS__New(Set)
+    self.cardTypeCardArray = {}
     self.featuresUsed = {ISCFeature.MODDED_ELEMENT_DETECTION}
     self.moddedElementDetection = moddedElementDetection
 end
@@ -53589,10 +54677,7 @@ function ModdedElementSets.prototype.lazyInitModdedPillEffects(self)
 end
 function ModdedElementSets.prototype.lazyInitTagToCollectibleTypesMap(self)
     for ____, itemConfigTag in ipairs(ITEM_CONFIG_TAG_VALUES) do
-        self.tagToCollectibleTypesMap:set(
-            itemConfigTag,
-            __TS__New(Set)
-        )
+        self.tagToCollectibleTypesMap:set(itemConfigTag, {})
     end
     for ____, collectibleType in ipairs(self:getCollectibleTypes()) do
         for ____, itemConfigTag in ipairs(ITEM_CONFIG_TAG_VALUES) do
@@ -53600,12 +54685,12 @@ function ModdedElementSets.prototype.lazyInitTagToCollectibleTypesMap(self)
                 if not collectibleHasTag(nil, collectibleType, itemConfigTag) then
                     goto __continue37
                 end
-                local collectibleTypesSet = self.tagToCollectibleTypesMap:get(itemConfigTag)
-                if collectibleTypesSet == nil then
+                local collectibleTypes = self.tagToCollectibleTypesMap:get(itemConfigTag)
+                if collectibleTypes == nil then
                     local flagName = getFlagName(nil, itemConfigTag, ItemConfigTag)
                     error("Failed to get the collectible types for item tag: " .. tostring(flagName))
                 end
-                collectibleTypesSet:add(collectibleType)
+                collectibleTypes[#collectibleTypes + 1] = collectibleType
             end
             ::__continue37::
         end
@@ -53613,58 +54698,55 @@ function ModdedElementSets.prototype.lazyInitTagToCollectibleTypesMap(self)
 end
 function ModdedElementSets.prototype.lazyInitCacheFlagToCollectibleTypesMap(self)
     for ____, cacheFlag in ipairs(CACHE_FLAG_VALUES) do
-        local collectibleTypeSet = __TS__New(Set)
+        local collectibleTypes = {}
         for ____, collectibleType in ipairs(self:getCollectibleTypes()) do
             if collectibleHasCacheFlag(nil, collectibleType, cacheFlag) then
-                collectibleTypeSet:add(collectibleType)
+                collectibleTypes[#collectibleTypes + 1] = collectibleType
             end
         end
-        self.cacheFlagToCollectibleTypesMap:set(cacheFlag, collectibleTypeSet)
+        self.cacheFlagToCollectibleTypesMap:set(cacheFlag, collectibleTypes)
     end
 end
 function ModdedElementSets.prototype.lazyInitCacheFlagToTrinketTypesMap(self)
     for ____, cacheFlag in ipairs(CACHE_FLAG_VALUES) do
-        local trinketTypesSet = __TS__New(Set)
+        local trinketTypes = {}
         for ____, trinketType in ipairs(self:getTrinketTypes()) do
             if trinketHasCacheFlag(nil, trinketType, cacheFlag) then
-                trinketTypesSet:add(trinketType)
+                trinketTypes[#trinketTypes + 1] = trinketType
             end
         end
-        self.cacheFlagToTrinketTypesMap:set(cacheFlag, trinketTypesSet)
+        self.cacheFlagToTrinketTypesMap:set(cacheFlag, trinketTypes)
     end
 end
 function ModdedElementSets.prototype.lazyInitFlyingCollectibleTypesSet(self)
-    self.flyingCollectibleTypesSet = copySet(
+    local collectibleTypesWithFlyingCacheFlag = self:getCollectibleTypesWithCacheFlag(CacheFlag.FLYING)
+    local collectibleTypesWithAllCacheFlag = self:getCollectibleTypesWithCacheFlag(CacheFlag.ALL)
+    self.flyingCollectibleTypes = arrayRemove(
         nil,
-        self:getCollectibleTypesWithCacheFlag(CacheFlag.FLYING)
+        collectibleTypesWithFlyingCacheFlag,
+        table.unpack(collectibleTypesWithAllCacheFlag)
     )
-    local collectiblesWithAllCacheFlag = self:getCollectibleTypesWithCacheFlag(CacheFlag.ALL)
-    deleteSetsFromSet(nil, self.flyingCollectibleTypesSet, collectiblesWithAllCacheFlag)
-    local permanentFlyingCollectibleTypes = copySet(nil, self.flyingCollectibleTypesSet)
-    for ____, collectibleType in ipairs(CONDITIONAL_FLYING_COLLECTIBLE_TYPES) do
-        permanentFlyingCollectibleTypes:delete(collectibleType)
-    end
-    for ____, collectibleType in __TS__Iterator(permanentFlyingCollectibleTypes) do
-        self.permanentFlyingCollectibleTypesSet:add(collectibleType)
-    end
+    self.permanentFlyingCollectibleTypes = arrayRemove(
+        nil,
+        self.flyingCollectibleTypes,
+        table.unpack(CONDITIONAL_FLYING_COLLECTIBLE_TYPES)
+    )
 end
 function ModdedElementSets.prototype.lazyInitFlyingTrinketTypesSet(self)
-    self.flyingTrinketTypesSet = copySet(
+    local trinketTypesWithFlyingCacheFlag = self:getTrinketsTypesWithCacheFlag(CacheFlag.FLYING)
+    local trinketTypesWithAllCacheFlag = self:getTrinketsTypesWithCacheFlag(CacheFlag.ALL)
+    local trinketTypesWithAllCacheFlagThatDontGrantFlying = arrayRemove(nil, trinketTypesWithAllCacheFlag, TrinketType.AZAZELS_STUMP)
+    self.flyingTrinketTypes = arrayRemove(
         nil,
-        self:getTrinketsTypesWithCacheFlag(CacheFlag.FLYING)
+        trinketTypesWithFlyingCacheFlag,
+        table.unpack(trinketTypesWithAllCacheFlagThatDontGrantFlying)
     )
-    local trinketsWithAllCacheFlag = copySet(
-        nil,
-        self:getTrinketsTypesWithCacheFlag(CacheFlag.ALL)
-    )
-    trinketsWithAllCacheFlag:delete(TrinketType.AZAZELS_STUMP)
-    deleteSetsFromSet(nil, self.flyingTrinketTypesSet, trinketsWithAllCacheFlag)
 end
 function ModdedElementSets.prototype.lazyInitEdenCollectibleTypesSet(self)
     for ____, collectibleType in ipairs(self:getCollectibleTypes()) do
         do
             if isHiddenCollectible(nil, collectibleType) or collectibleHasTag(nil, collectibleType, ItemConfigTag.NO_EDEN) then
-                goto __continue61
+                goto __continue57
             end
             if isActiveCollectible(nil, collectibleType) then
                 self.edenActiveCollectibleTypesSet:add(collectibleType)
@@ -53673,40 +54755,38 @@ function ModdedElementSets.prototype.lazyInitEdenCollectibleTypesSet(self)
                 self.edenPassiveCollectibleTypesSet:add(collectibleType)
             end
         end
-        ::__continue61::
+        ::__continue57::
     end
 end
 function ModdedElementSets.prototype.lazyInitQualityToCollectibleTypesMap(self)
     for ____, quality in ipairs(QUALITIES) do
-        local collectibleTypesSet = __TS__New(Set)
+        local collectibleTypes = {}
         for ____, collectibleType in ipairs(self:getCollectibleTypes()) do
             local collectibleTypeQuality = getCollectibleQuality(nil, collectibleType)
             if collectibleTypeQuality == quality then
-                collectibleTypesSet:add(collectibleType)
+                collectibleTypes[#collectibleTypes + 1] = collectibleType
             end
         end
-        self.qualityToCollectibleTypesMap:set(quality, collectibleTypesSet)
+        self.qualityToCollectibleTypesMap:set(quality, collectibleTypes)
     end
 end
 function ModdedElementSets.prototype.lazyInitCardTypes(self)
     for ____, itemConfigCardType in ipairs(ITEM_CONFIG_CARD_TYPE_VALUES) do
-        self.itemConfigCardTypeToCardTypeMap:set(
-            itemConfigCardType,
-            __TS__New(Set)
-        )
+        self.itemConfigCardTypeToCardTypeMap:set(itemConfigCardType, {})
     end
     for ____, cardType in ipairs(self:getCardTypes()) do
         local itemConfigCardType = getItemConfigCardType(nil, cardType)
         if itemConfigCardType ~= nil then
-            local cardTypeSet = self.itemConfigCardTypeToCardTypeMap:get(itemConfigCardType)
+            local cardTypes = self.itemConfigCardTypeToCardTypeMap:get(itemConfigCardType)
             assertDefined(
                 nil,
-                cardTypeSet,
-                "Failed to get the card set for item config card type: " .. tostring(itemConfigCardType)
+                cardTypes,
+                "Failed to get the card types for item config card type: " .. tostring(itemConfigCardType)
             )
-            cardTypeSet:add(cardType)
-            if ITEM_CONFIG_CARD_TYPES_FOR_CARDS_SET:has(itemConfigCardType) then
-                self.cardSet:add(cardType)
+            cardTypes[#cardTypes + 1] = cardType
+            if ITEM_CONFIG_CARD_TYPES_FOR_CARDS:has(itemConfigCardType) then
+                local ____self_cardTypeCardArray_12 = self.cardTypeCardArray
+                ____self_cardTypeCardArray_12[#____self_cardTypeCardArray_12 + 1] = cardType
             end
         end
     end
@@ -53823,24 +54903,24 @@ function ModdedElementSets.prototype.getCollectibleTypesWithCacheFlag(self, cach
     self:lazyInit()
     local collectiblesSet = self.cacheFlagToCollectibleTypesMap:get(cacheFlag)
     if collectiblesSet == nil then
-        return __TS__New(ReadonlySet)
+        return {}
     end
     return collectiblesSet
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectibleTypesWithCacheFlag", true)
 function ModdedElementSets.prototype.getTrinketsTypesWithCacheFlag(self, cacheFlag)
     self:lazyInit()
-    local trinketsSet = self.cacheFlagToTrinketTypesMap:get(cacheFlag)
-    if trinketsSet == nil then
-        return __TS__New(ReadonlySet)
+    local trinketTypes = self.cacheFlagToTrinketTypesMap:get(cacheFlag)
+    if trinketTypes == nil then
+        return {}
     end
-    return trinketsSet
+    return trinketTypes
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getTrinketsTypesWithCacheFlag", true)
 function ModdedElementSets.prototype.getPlayerCollectiblesWithCacheFlag(self, player, cacheFlag)
     local collectiblesWithCacheFlag = self:getCollectibleTypesWithCacheFlag(cacheFlag)
     local playerCollectibles = {}
-    for ____, collectibleType in ipairs(getSortedSetValues(nil, collectiblesWithCacheFlag)) do
+    for ____, collectibleType in ipairs(collectiblesWithCacheFlag) do
         local numCollectibles = player:GetCollectibleNum(collectibleType, true)
         ____repeat(
             nil,
@@ -53856,7 +54936,7 @@ __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getPlayerCollecti
 function ModdedElementSets.prototype.getPlayerTrinketsWithCacheFlag(self, player, cacheFlag)
     local trinketTypesWithCacheFlag = self:getTrinketsTypesWithCacheFlag(cacheFlag)
     local playerTrinkets = __TS__New(Map)
-    for ____, trinketType in __TS__Iterator(trinketTypesWithCacheFlag) do
+    for ____, trinketType in ipairs(trinketTypesWithCacheFlag) do
         local trinketMultiplier = player:GetTrinketMultiplier(trinketType)
         if trinketMultiplier > 0 then
             playerTrinkets:set(trinketType, trinketMultiplier)
@@ -53867,12 +54947,12 @@ end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getPlayerTrinketsWithCacheFlag", true)
 function ModdedElementSets.prototype.getFlyingCollectibleTypes(self, includeConditionalItems)
     self:lazyInit()
-    return includeConditionalItems and self.flyingCollectibleTypesSet or self.permanentFlyingCollectibleTypesSet
+    return includeConditionalItems and self.flyingCollectibleTypes or self.permanentFlyingCollectibleTypes
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getFlyingCollectibleTypes", true)
 function ModdedElementSets.prototype.getFlyingTrinketTypes(self)
     self:lazyInit()
-    return self.flyingTrinketTypesSet
+    return self.flyingTrinketTypes
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getFlyingTrinketTypes", true)
 function ModdedElementSets.prototype.getCollectibleTypesWithTag(self, itemConfigTag)
@@ -53889,7 +54969,7 @@ __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectibleTyp
 function ModdedElementSets.prototype.getPlayerCollectiblesWithTag(self, player, itemConfigTag)
     local collectibleTypesWithTag = self:getCollectibleTypesWithTag(itemConfigTag)
     local playerCollectibles = {}
-    for ____, collectibleType in ipairs(getSortedSetValues(nil, collectibleTypesWithTag)) do
+    for ____, collectibleType in ipairs(collectibleTypesWithTag) do
         local numCollectibles = player:GetCollectibleNum(collectibleType, true)
         ____repeat(
             nil,
@@ -53915,7 +54995,7 @@ __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectibleTyp
 function ModdedElementSets.prototype.getPlayerCollectiblesForTransformation(self, player, playerForm)
     local collectibleForTransformation = self:getCollectibleTypesForTransformation(playerForm)
     local playerCollectibles = {}
-    for ____, collectibleType in ipairs(getSortedSetValues(nil, collectibleForTransformation)) do
+    for ____, collectibleType in ipairs(collectibleForTransformation) do
         local numCollectibles = player:GetCollectibleNum(collectibleType, true)
         ____repeat(
             nil,
@@ -53967,33 +55047,33 @@ end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getCollectibleTypesOfQuality", true)
 function ModdedElementSets.prototype.getPlayerCollectiblesOfQuality(self, player, quality)
     local collectibleTypesOfQuality = self:getCollectibleTypesOfQuality(quality)
-    local playerCollectibles = {}
-    for ____, collectibleType in ipairs(getSortedSetValues(nil, collectibleTypesOfQuality)) do
+    local playerCollectibleTypes = {}
+    for ____, collectibleType in ipairs(collectibleTypesOfQuality) do
         local numCollectibles = player:GetCollectibleNum(collectibleType, true)
         ____repeat(
             nil,
             numCollectibles,
             function()
-                playerCollectibles[#playerCollectibles + 1] = collectibleType
+                playerCollectibleTypes[#playerCollectibleTypes + 1] = collectibleType
             end
         )
     end
-    return playerCollectibles
+    return playerCollectibleTypes
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getPlayerCollectiblesOfQuality", true)
 function ModdedElementSets.prototype.getCardTypesOfType(self, ...)
     local itemConfigCardTypes = {...}
     self:lazyInit()
-    local matchingCardTypes = __TS__New(Set)
+    local matchingCardTypes = {}
     for ____, itemConfigCardType in ipairs(itemConfigCardTypes) do
-        local cardTypeSet = self.itemConfigCardTypeToCardTypeMap:get(itemConfigCardType)
+        local cardTypes = self.itemConfigCardTypeToCardTypeMap:get(itemConfigCardType)
         assertDefined(
             nil,
-            cardTypeSet,
-            "Failed to get the card type set for item config type: " .. tostring(itemConfigCardType)
+            cardTypes,
+            "Failed to get the card types for item config type: " .. tostring(itemConfigCardType)
         )
-        for ____, cardType in __TS__Iterator(cardTypeSet) do
-            matchingCardTypes:add(cardType)
+        for ____, cardType in ipairs(cardTypes) do
+            matchingCardTypes[#matchingCardTypes + 1] = cardType
         end
     end
     return matchingCardTypes
@@ -54003,8 +55083,8 @@ function ModdedElementSets.prototype.getRandomCardTypeOfType(self, itemConfigCar
     if exceptions == nil then
         exceptions = {}
     end
-    local cardTypeSet = self:getCardTypesOfType(itemConfigCardType)
-    return getRandomSetElement(nil, cardTypeSet, seedOrRNG, exceptions)
+    local cardTypes = self:getCardTypesOfType(itemConfigCardType)
+    return getRandomArrayElement(nil, cardTypes, seedOrRNG, exceptions)
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomCardTypeOfType", true)
 function ModdedElementSets.prototype.getRandomCard(self, seedOrRNG, exceptions)
@@ -54012,16 +55092,16 @@ function ModdedElementSets.prototype.getRandomCard(self, seedOrRNG, exceptions)
         exceptions = {}
     end
     self:lazyInit()
-    return getRandomSetElement(nil, self.cardSet, seedOrRNG, exceptions)
+    return getRandomArrayElement(nil, self.cardTypeCardArray, seedOrRNG, exceptions)
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomCard", true)
 function ModdedElementSets.prototype.getRandomRune(self, seedOrRNG, exceptions)
     if exceptions == nil then
         exceptions = {}
     end
-    local runesSet = self:getCardTypesOfType(ItemConfigCardType.RUNE)
-    runesSet:delete(CardType.RUNE_SHARD)
-    return getRandomSetElement(nil, runesSet, seedOrRNG, exceptions)
+    local runeCardTypes = self:getCardTypesOfType(ItemConfigCardType.RUNE)
+    exceptions[#exceptions + 1] = CardType.RUNE_SHARD
+    return getRandomArrayElement(nil, runeCardTypes, seedOrRNG, exceptions)
 end
 __TS__DecorateLegacy({Exported}, ModdedElementSets.prototype, "getRandomRune", true)
 return ____exports
@@ -54047,14 +55127,12 @@ local NUM_VANILLA_PILL_EFFECTS = ____constantsFirstLast.NUM_VANILLA_PILL_EFFECTS
 local NUM_VANILLA_TRINKET_TYPES = ____constantsFirstLast.NUM_VANILLA_TRINKET_TYPES
 local ____decorators = require("lua_modules.isaacscript-common.dist.decorators")
 local Exported = ____decorators.Exported
-local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asCardType = ____types.asCardType
-local asCollectibleType = ____types.asCollectibleType
-local asNumber = ____types.asNumber
-local asPillEffect = ____types.asPillEffect
-local asTrinketType = ____types.asTrinketType
 local ____Feature = require("lua_modules.isaacscript-common.dist.classes.private.Feature")
 local Feature = ____Feature.Feature
+local FIRST_MODDED_COLLECTIBLE_TYPE = LAST_VANILLA_COLLECTIBLE_TYPE + 1
+local FIRST_MODDED_TRINKET_TYPE = LAST_VANILLA_TRINKET_TYPE + 1
+local FIRST_MODDED_CARD_TYPE = LAST_VANILLA_CARD_TYPE + 1
+local FIRST_MODDED_PILL_EFFECT = LAST_VANILLA_PILL_EFFECT + 1
 --- Mods can add extra things to the game (e.g. collectibles, trinkets, and so on). Since mods load
 -- in alphabetical order, the total number of things can't be properly be known until at least one
 -- callback fires (which indicates that all mods have been loaded).
@@ -54082,16 +55160,12 @@ function ModdedElementDetection.prototype.errorIfNoCallbacksFired(self, constant
 end
 function ModdedElementDetection.prototype.getFirstModdedCollectibleType(self)
     self:errorIfNoCallbacksFired("collectible")
-    local firstModdedCollectibleType = asCollectibleType(
-        nil,
-        asNumber(nil, LAST_VANILLA_COLLECTIBLE_TYPE) + 1
-    )
-    local itemConfigItem = itemConfig:GetCollectible(firstModdedCollectibleType)
+    local itemConfigItem = itemConfig:GetCollectible(FIRST_MODDED_COLLECTIBLE_TYPE)
     local ____temp_0
     if itemConfigItem == nil then
         ____temp_0 = nil
     else
-        ____temp_0 = firstModdedCollectibleType
+        ____temp_0 = FIRST_MODDED_COLLECTIBLE_TYPE
     end
     return ____temp_0
 end
@@ -54103,28 +55177,22 @@ end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getLastCollectibleType", true)
 function ModdedElementDetection.prototype.getNumCollectibleTypes(self)
     self:errorIfNoCallbacksFired("collectible")
-    local numModdedCollectibleTypes = self:getNumModdedCollectibleTypes()
-    return NUM_VANILLA_COLLECTIBLE_TYPES + numModdedCollectibleTypes
+    return NUM_VANILLA_COLLECTIBLE_TYPES + self:getNumModdedCollectibleTypes()
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getNumCollectibleTypes", true)
 function ModdedElementDetection.prototype.getNumModdedCollectibleTypes(self)
     self:errorIfNoCallbacksFired("collectible")
-    local lastCollectibleType = self:getLastCollectibleType()
-    return lastCollectibleType - LAST_VANILLA_COLLECTIBLE_TYPE
+    return self:getLastCollectibleType() - LAST_VANILLA_COLLECTIBLE_TYPE
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getNumModdedCollectibleTypes", true)
 function ModdedElementDetection.prototype.getFirstModdedTrinketType(self)
     self:errorIfNoCallbacksFired("trinket")
-    local firstModdedTrinketType = asTrinketType(
-        nil,
-        asNumber(nil, LAST_VANILLA_TRINKET_TYPE) + 1
-    )
-    local itemConfigItem = itemConfig:GetTrinket(firstModdedTrinketType)
+    local itemConfigItem = itemConfig:GetTrinket(FIRST_MODDED_TRINKET_TYPE)
     local ____temp_1
     if itemConfigItem == nil then
         ____temp_1 = nil
     else
-        ____temp_1 = firstModdedTrinketType
+        ____temp_1 = FIRST_MODDED_TRINKET_TYPE
     end
     return ____temp_1
 end
@@ -54136,80 +55204,66 @@ end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getLastTrinketType", true)
 function ModdedElementDetection.prototype.getNumTrinketTypes(self)
     self:errorIfNoCallbacksFired("trinket")
-    local numModdedTrinketTypes = self:getNumModdedTrinketTypes()
-    return NUM_VANILLA_TRINKET_TYPES + numModdedTrinketTypes
+    return NUM_VANILLA_TRINKET_TYPES + self:getNumModdedTrinketTypes()
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getNumTrinketTypes", true)
 function ModdedElementDetection.prototype.getNumModdedTrinketTypes(self)
     self:errorIfNoCallbacksFired("trinket")
-    local lastTrinketType = self:getLastTrinketType()
-    return lastTrinketType - LAST_VANILLA_TRINKET_TYPE
+    return self:getLastTrinketType() - LAST_VANILLA_TRINKET_TYPE
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getNumModdedTrinketTypes", true)
 function ModdedElementDetection.prototype.getFirstModdedCardType(self)
     self:errorIfNoCallbacksFired("card")
-    local firstModdedCardType = asCardType(
-        nil,
-        asNumber(nil, LAST_VANILLA_CARD_TYPE) + 1
-    )
-    local itemConfigCard = itemConfig:GetCard(firstModdedCardType)
+    local itemConfigCard = itemConfig:GetCard(FIRST_MODDED_CARD_TYPE)
     local ____temp_2
     if itemConfigCard == nil then
         ____temp_2 = nil
     else
-        ____temp_2 = firstModdedCardType
+        ____temp_2 = FIRST_MODDED_CARD_TYPE
     end
     return ____temp_2
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getFirstModdedCardType", true)
 function ModdedElementDetection.prototype.getLastCardType(self)
     self:errorIfNoCallbacksFired("card")
-    local numCards = self:getNumCardTypes()
-    return asCardType(nil, numCards)
+    return itemConfig:GetCards().Size - 1
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getLastCardType", true)
 function ModdedElementDetection.prototype.getNumCardTypes(self)
     self:errorIfNoCallbacksFired("card")
-    return itemConfig:GetCards().Size - 1
+    return NUM_VANILLA_CARD_TYPES + self:getNumModdedCardTypes()
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getNumCardTypes", true)
 function ModdedElementDetection.prototype.getNumModdedCardTypes(self)
     self:errorIfNoCallbacksFired("card")
-    local numCardTypes = self:getNumCardTypes()
-    return numCardTypes - NUM_VANILLA_CARD_TYPES
+    return self:getLastCardType() - LAST_VANILLA_CARD_TYPE
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getNumModdedCardTypes", true)
 function ModdedElementDetection.prototype.getFirstModdedPillEffect(self)
     self:errorIfNoCallbacksFired("pill")
-    local firstModdedPillEffect = asPillEffect(
-        nil,
-        asNumber(nil, LAST_VANILLA_PILL_EFFECT) + 1
-    )
-    local itemConfigPillEffect = itemConfig:GetPillEffect(firstModdedPillEffect)
+    local itemConfigPillEffect = itemConfig:GetPillEffect(FIRST_MODDED_PILL_EFFECT)
     local ____temp_3
     if itemConfigPillEffect == nil then
         ____temp_3 = nil
     else
-        ____temp_3 = firstModdedPillEffect
+        ____temp_3 = FIRST_MODDED_PILL_EFFECT
     end
     return ____temp_3
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getFirstModdedPillEffect", true)
 function ModdedElementDetection.prototype.getLastPillEffect(self)
     self:errorIfNoCallbacksFired("pill")
-    local numPillEffects = self:getNumPillEffects()
-    return asPillEffect(nil, numPillEffects)
+    return itemConfig:GetPillEffects().Size - 1
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getLastPillEffect", true)
 function ModdedElementDetection.prototype.getNumPillEffects(self)
     self:errorIfNoCallbacksFired("pill")
-    return itemConfig:GetPillEffects().Size
+    return NUM_VANILLA_PILL_EFFECTS + self:getNumModdedPillEffects()
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getNumPillEffects", true)
 function ModdedElementDetection.prototype.getNumModdedPillEffects(self)
-    self:errorIfNoCallbacksFired("pill")
-    local numPillEffects = self:getNumPillEffects()
-    return numPillEffects - NUM_VANILLA_PILL_EFFECTS
+    self:errorIfNoCallbacksFired("card")
+    return self:getLastPillEffect() - LAST_VANILLA_PILL_EFFECT
 end
 __TS__DecorateLegacy({Exported}, ModdedElementDetection.prototype, "getNumModdedPillEffects", true)
 return ____exports
@@ -54400,7 +55454,6 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
-local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__DecorateLegacy = ____lualib.__TS__DecorateLegacy
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
@@ -54424,13 +55477,13 @@ end
 function FlyingDetection.prototype.hasFlyingTemporaryEffect(self, player)
     local effects = player:GetEffects()
     local flyingCollectibles = self.moddedElementSets:getFlyingCollectibleTypes(true)
-    for ____, collectibleType in __TS__Iterator(flyingCollectibles) do
+    for ____, collectibleType in ipairs(flyingCollectibles) do
         if effects:HasCollectibleEffect(collectibleType) then
             return true
         end
     end
     local flyingTrinkets = self.moddedElementSets:getFlyingTrinketTypes()
-    for ____, trinketType in __TS__Iterator(flyingTrinkets) do
+    for ____, trinketType in ipairs(flyingTrinkets) do
         if effects:HasTrinketEffect(trinketType) then
             return true
         end
@@ -54765,7 +55818,6 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local __TS__StringSplit = ____lualib.__TS__StringSplit
 local __TS__ArrayFind = ____lualib.__TS__ArrayFind
-local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local ActiveSlot = ____isaac_2Dtypescript_2Ddefinitions.ActiveSlot
@@ -54780,10 +55832,11 @@ local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local GridRoom = ____isaac_2Dtypescript_2Ddefinitions.GridRoom
 local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
 local PillColor = ____isaac_2Dtypescript_2Ddefinitions.PillColor
+local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
 local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
+local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
 local StageType = ____isaac_2Dtypescript_2Ddefinitions.StageType
 local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
-local ACTIVE_SLOT_VALUES = ____cachedEnumValues.ACTIVE_SLOT_VALUES
 local GRID_ENTITY_TYPE_VALUES = ____cachedEnumValues.GRID_ENTITY_TYPE_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -54794,21 +55847,14 @@ local MAX_LEVEL_GRID_INDEX = ____constants.MAX_LEVEL_GRID_INDEX
 local MAX_NUM_FAMILIARS = ____constants.MAX_NUM_FAMILIARS
 local ____constantsFirstLast = require("lua_modules.isaacscript-common.dist.core.constantsFirstLast")
 local FIRST_CARD_TYPE = ____constantsFirstLast.FIRST_CARD_TYPE
-local FIRST_CHARACTER = ____constantsFirstLast.FIRST_CHARACTER
 local FIRST_HORSE_PILL_COLOR = ____constantsFirstLast.FIRST_HORSE_PILL_COLOR
 local FIRST_PILL_COLOR = ____constantsFirstLast.FIRST_PILL_COLOR
-local FIRST_PILL_EFFECT = ____constantsFirstLast.FIRST_PILL_EFFECT
-local FIRST_ROOM_TYPE = ____constantsFirstLast.FIRST_ROOM_TYPE
-local FIRST_STAGE = ____constantsFirstLast.FIRST_STAGE
-local LAST_ROOM_TYPE = ____constantsFirstLast.LAST_ROOM_TYPE
-local LAST_STAGE = ____constantsFirstLast.LAST_STAGE
 local LAST_VANILLA_CARD_TYPE = ____constantsFirstLast.LAST_VANILLA_CARD_TYPE
-local LAST_VANILLA_CHARACTER = ____constantsFirstLast.LAST_VANILLA_CHARACTER
-local LAST_VANILLA_PILL_EFFECT = ____constantsFirstLast.LAST_VANILLA_PILL_EFFECT
 local ____HealthType = require("lua_modules.isaacscript-common.dist.enums.HealthType")
 local HealthType = ____HealthType.HealthType
 local ____cards = require("lua_modules.isaacscript-common.dist.functions.cards")
 local getCardName = ____cards.getCardName
+local isValidCardType = ____cards.isValidCardType
 local ____characters = require("lua_modules.isaacscript-common.dist.functions.characters")
 local getCharacterName = ____characters.getCharacterName
 local ____charge = require("lua_modules.isaacscript-common.dist.functions.charge")
@@ -54822,6 +55868,8 @@ local ____deepCopyTests = require("lua_modules.isaacscript-common.dist.functions
 local runDeepCopyTests = ____deepCopyTests.runDeepCopyTests
 local ____entitiesSpecific = require("lua_modules.isaacscript-common.dist.functions.entitiesSpecific")
 local getNPCs = ____entitiesSpecific.getNPCs
+local ____enums = require("lua_modules.isaacscript-common.dist.functions.enums")
+local isEnumValue = ____enums.isEnumValue
 local ____flag = require("lua_modules.isaacscript-common.dist.functions.flag")
 local addFlag = ____flag.addFlag
 local ____gridEntities = require("lua_modules.isaacscript-common.dist.functions.gridEntities")
@@ -54842,6 +55890,7 @@ local spawnPill = ____pickupsSpecific.spawnPill
 local spawnTrinketFunction = ____pickupsSpecific.spawnTrinket
 local ____pills = require("lua_modules.isaacscript-common.dist.functions.pills")
 local getPillEffectName = ____pills.getPillEffectName
+local isValidPillEffect = ____pills.isValidPillEffect
 local ____playerCollectibles = require("lua_modules.isaacscript-common.dist.functions.playerCollectibles")
 local addCollectibleCostume = ____playerCollectibles.addCollectibleCostume
 local removeCollectibleCostume = ____playerCollectibles.removeCollectibleCostume
@@ -54871,10 +55920,9 @@ local ____string = require("lua_modules.isaacscript-common.dist.functions.string
 local getMapPartialMatch = ____string.getMapPartialMatch
 local ____trinkets = require("lua_modules.isaacscript-common.dist.functions.trinkets")
 local getGoldenTrinketType = ____trinkets.getGoldenTrinketType
+local isValidTrinketType = ____trinkets.isValidTrinketType
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asCardType = ____types.asCardType
-local asCollectibleType = ____types.asCollectibleType
-local asTrinketType = ____types.asTrinketType
+local parseIntSafe = ____types.parseIntSafe
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local iRange = ____utils.iRange
 local ____cardNameToTypeMap = require("lua_modules.isaacscript-common.dist.maps.cardNameToTypeMap")
@@ -54970,9 +56018,9 @@ end
 function ____exports.poopMana(self, params)
     local charges = 1
     if params ~= "" then
-        local num = tonumber(params)
+        local num = parseIntSafe(nil, params)
         if num == nil then
-            print("That is an invalid amount of mana to add.")
+            print("Invalid mana amount: " .. tostring(num))
             return
         end
         charges = num
@@ -54985,9 +56033,9 @@ end
 -- For example:
 -- - sound 1 - Plays the 1-Up sound effect.
 function ____exports.sound(self, params)
-    local soundEffect = tonumber(params)
-    if soundEffect == nil then
-        print("That is an invalid sound effect ID.")
+    local soundEffect = parseIntSafe(nil, params)
+    if soundEffect == nil or not isEnumValue(nil, soundEffect, SoundEffect) then
+        print(("Invalid sound effect ID: " .. tostring(soundEffect)) .. ".")
         return
     end
     sfxManager:Play(soundEffect)
@@ -55008,9 +56056,9 @@ function ____exports.spawnCollectible(self, params)
         print("You must specify the collectible name or the number corresponding to the collectible type.")
         return
     end
-    local collectibleTypeNumber = tonumber(params)
+    local num = parseIntSafe(nil, params)
     local collectibleType
-    if collectibleTypeNumber == nil then
+    if num == nil then
         local match = getMapPartialMatch(nil, params, COLLECTIBLE_NAME_TO_TYPE_MAP)
         if match == nil then
             print("Unknown collectible: " .. params)
@@ -55018,7 +56066,10 @@ function ____exports.spawnCollectible(self, params)
         end
         collectibleType = match[2]
     else
-        collectibleType = asCollectibleType(nil, collectibleTypeNumber)
+        if not isValidCollectibleType(nil, num) then
+            print("Invalid collectible type: " .. tostring(num))
+        end
+        collectibleType = num
     end
     local roomClass = game:GetRoom()
     local centerPos = roomClass:GetCenterPos()
@@ -55050,9 +56101,9 @@ function ____exports.spawnTrinket(self, params, golden)
         print("You must specify the name or number corresponding to the trinket type.")
         return
     end
-    local trinketTypeNumber = tonumber(params)
+    local num = parseIntSafe(nil, params)
     local trinketType
-    if trinketTypeNumber == nil then
+    if num == nil then
         local match = getMapPartialMatch(nil, params, TRINKET_NAME_TO_TYPE_MAP)
         if match == nil then
             print("Unknown trinket: " .. params)
@@ -55060,7 +56111,11 @@ function ____exports.spawnTrinket(self, params, golden)
         end
         trinketType = match[2]
     else
-        trinketType = asTrinketType(nil, trinketTypeNumber)
+        if not isValidTrinketType(nil, num) then
+            print("Invalid trinket type: " .. tostring(num))
+            return
+        end
+        trinketType = num
     end
     local roomClass = game:GetRoom()
     local centerPos = roomClass:GetCenterPos()
@@ -55092,17 +56147,20 @@ function ____exports.spawnTrinketAt(self, params, golden)
         print("You must specify the number corresponding to the trinket type and the number corresponding to the grid tile location.")
         return
     end
-    local trinketTypeNumber = tonumber(args[1])
-    if trinketTypeNumber == nil or trinketTypeNumber < 0 then
-        print("Failed to parse the trinket type of: " .. tostring(args[1]))
+    local trinketTypeString, gridIndexString = table.unpack(args)
+    if trinketTypeString == nil or gridIndexString == nil then
         return
     end
-    local gridIndex = tonumber(args[2])
+    local trinketType = parseIntSafe(nil, trinketTypeString)
+    if trinketType == nil or not isValidTrinketType(nil, trinketType) then
+        print("Invalid trinket type: " .. trinketTypeString)
+        return
+    end
+    local gridIndex = parseIntSafe(nil, gridIndexString)
     if gridIndex == nil or gridIndex < 0 then
         print("Failed to parse the grid index of: " .. tostring(args[2]))
         return
     end
-    local trinketType = asTrinketType(nil, trinketTypeNumber)
     local goldenTrinketType = getGoldenTrinketType(nil, trinketType)
     local trinketTypeToSpawn = golden and goldenTrinketType or trinketType
     spawnTrinketFunction(nil, trinketTypeToSpawn, gridIndex)
@@ -55123,24 +56181,23 @@ function ____exports.addCharges(self, params)
     end
     local args = __TS__StringSplit(params, " ")
     if #args ~= 1 and #args ~= 2 then
-        print("That is an invalid amount of arguments.")
+        print("Invalid amount of arguments: " .. tostring(#args))
         return
     end
     local activeSlotString, numChargeString = table.unpack(args)
-    local activeSlot = tonumber(activeSlotString)
-    if activeSlot == nil then
-        print("The provided slot number is invalid: " .. tostring(activeSlotString))
+    if activeSlotString == nil then
         return
     end
-    if activeSlot < ActiveSlot.PRIMARY or activeSlot > ActiveSlot.POCKET_SINGLE_USE then
-        print("The provided slot number is invalid: " .. tostring(activeSlot))
+    local activeSlot = parseIntSafe(nil, activeSlotString)
+    if activeSlot == nil or not isEnumValue(nil, activeSlot, ActiveSlot) then
+        print("Invalid slot number: " .. tostring(activeSlot))
         return
     end
     local numCharges = 1
     if numChargeString ~= nil then
-        local numChargesAttempt = tonumber(numChargeString)
+        local numChargesAttempt = parseIntSafe(nil, numChargeString)
         if numChargesAttempt == nil then
-            print("The provided charge amount is invalid: " .. numChargeString)
+            print("Invalid charge amount: " .. numChargeString)
             return
         end
         numCharges = numChargesAttempt
@@ -55192,9 +56249,9 @@ end
 function ____exports.bloodCharges(self, params)
     local charges = 1
     if params ~= "" then
-        local num = tonumber(params)
+        local num = parseIntSafe(nil, params)
         if num == nil then
-            print("That is an invalid amount of charges to add.")
+            print("Invalid charge amount: " .. tostring(num))
             return
         end
         charges = num
@@ -55211,9 +56268,9 @@ end
 function ____exports.bomb(self, params)
     local numBombs = 1
     if params ~= "" then
-        local num = tonumber(params)
+        local num = parseIntSafe(nil, params)
         if num == nil then
-            print("That is an invalid amount of bombs to add.")
+            print("Invalid bomb amount: " .. tostring(num))
             return
         end
         numBombs = num
@@ -55226,9 +56283,9 @@ end
 function ____exports.bombs(self, params)
     local numBombs = 99
     if params ~= "" then
-        local num = tonumber(params)
+        local num = parseIntSafe(nil, params)
         if num == nil then
-            print("That is an invalid amount of bombs to add.")
+            print("Invalid bomb amount: " .. tostring(num))
             return
         end
         numBombs = num
@@ -55258,7 +56315,7 @@ end
 function ____exports.brokenHearts(self, params)
     addHeart(nil, params, HealthType.BROKEN)
 end
---- Gives the specified card. Accepts either the card sub-type or the partial name of the card.
+--- Gives the specified card. Accepts either the card type or the partial name of the card.
 -- 
 -- For example:
 -- - card 5 - Gives The Emperor.
@@ -55269,7 +56326,7 @@ function ____exports.card(self, params)
         return
     end
     local cardType
-    local num = tonumber(params)
+    local num = parseIntSafe(nil, params)
     if num == nil then
         local match = getMapPartialMatch(nil, params, CARD_NAME_TO_TYPE_MAP)
         if match == nil then
@@ -55278,8 +56335,8 @@ function ____exports.card(self, params)
         end
         cardType = match[2]
     else
-        if num < FIRST_CARD_TYPE or num > LAST_VANILLA_CARD_TYPE then
-            print("Invalid card sub-type: " .. tostring(num))
+        if not isValidCardType(nil, num) then
+            print("Invalid card type: " .. tostring(num))
             return
         end
         cardType = num
@@ -55301,11 +56358,7 @@ function ____exports.cards(self)
                         return
                     end
                     local worldPosition = gridCoordinatesToWorldPosition(nil, x, y)
-                    spawnCard(
-                        nil,
-                        asCardType(nil, cardType),
-                        worldPosition
-                    )
+                    spawnCard(nil, cardType, worldPosition)
                     cardType = cardType + 1
                     x = x + 1
                 end
@@ -55330,7 +56383,7 @@ function ____exports.character(self, params)
         return
     end
     local playerType
-    local num = tonumber(params)
+    local num = parseIntSafe(nil, params)
     if num == nil then
         local match = getMapPartialMatch(nil, params, CHARACTER_NAME_TO_TYPE_MAP)
         if match == nil then
@@ -55339,7 +56392,7 @@ function ____exports.character(self, params)
         end
         playerType = match[2]
     else
-        if num < FIRST_CHARACTER or num > LAST_VANILLA_CHARACTER then
+        if not isEnumValue(nil, num, PlayerType) or num == PlayerType.POSSESSOR then
             print("Invalid character number: " .. tostring(num))
             return
         end
@@ -55362,9 +56415,9 @@ end
 function ____exports.coin(self, params)
     local numCoins = 1
     if params ~= "" then
-        local num = tonumber(params)
+        local num = parseIntSafe(nil, params)
         if num == nil then
-            print("That is an invalid amount of coins to add.")
+            print("Invalid coin amount: " .. tostring(num))
             return
         end
         numCoins = num
@@ -55377,9 +56430,9 @@ end
 function ____exports.coins(self, params)
     local numCoins = 999
     if params ~= "" then
-        local num = tonumber(params)
+        local num = parseIntSafe(nil, params)
         if num == nil then
-            print("That is an invalid amount of coins to add.")
+            print("Invalid coin amount: " .. tostring(num))
             return
         end
         numCoins = num
@@ -55422,7 +56475,7 @@ function ____exports.damage(self, params)
     if params ~= "" then
         local num = tonumber(params)
         if num == nil then
-            print("The provided damage amount is invalid: " .. params)
+            print("Invalid damage amount: " .. params)
             return
         end
         v.persistent.damageAmount = num
@@ -55518,9 +56571,9 @@ end
 function ____exports.getCharge(self, params)
     local activeSlot = ActiveSlot.PRIMARY
     if params ~= "" then
-        local num = tonumber(params)
-        if num == nil then
-            print("The provided slot number is invalid: " .. params)
+        local num = parseIntSafe(nil, params)
+        if num == nil or not isEnumValue(nil, num, ActiveSlot) then
+            print("Invalid slot number: " .. params)
             return
         end
         activeSlot = num
@@ -55546,9 +56599,9 @@ end
 function ____exports.gigaBomb(self, params)
     local numBombs = 1
     if params ~= "" then
-        local num = tonumber(params)
+        local num = parseIntSafe(nil, params)
         if num == nil then
-            print("That is an invalid amount of Giga Bombs to add.")
+            print("Invalid Giga Bomb amount: " .. tostring(num))
             return
         end
         numBombs = num
@@ -55627,9 +56680,9 @@ end
 function ____exports.key(self, params)
     local numKeys = 1
     if params ~= "" then
-        local num = tonumber(params)
+        local num = parseIntSafe(nil, params)
         if num == nil then
-            print("That is an invalid amount of keys to add.")
+            print("Invalid key amount: " .. tostring(num))
             return
         end
         numKeys = num
@@ -55642,9 +56695,9 @@ end
 function ____exports.keys(self, params)
     local numKeys = 99
     if params ~= "" then
-        local num = tonumber(params)
+        local num = parseIntSafe(nil, params)
         if num == nil then
-            print("That is an invalid amount of keys to add.")
+            print("Invalid key amount: " .. tostring(num))
             return
         end
         numKeys = num
@@ -55754,7 +56807,7 @@ function ____exports.pill(self, params)
         return
     end
     local pillEffect
-    local num = tonumber(params)
+    local num = parseIntSafe(nil, params)
     if num == nil then
         local match = getMapPartialMatch(nil, params, PILL_NAME_TO_EFFECT_MAP)
         if match == nil then
@@ -55763,7 +56816,7 @@ function ____exports.pill(self, params)
         end
         pillEffect = match[2]
     else
-        if num < FIRST_PILL_EFFECT or num > LAST_VANILLA_PILL_EFFECT then
+        if not isValidPillEffect(nil, num) then
             print("Invalid pill effect ID: " .. tostring(num))
             return
         end
@@ -55825,13 +56878,9 @@ function ____exports.pocket(self, params)
         print("You must supply a collectible type to put as the pocket item.")
         return
     end
-    local collectibleType = tonumber(params)
-    if collectibleType == nil then
-        print("That is an invalid collectible type.")
-        return
-    end
-    if not isValidCollectibleType(nil, collectibleType) then
-        print("That is an invalid collectible type.")
+    local collectibleType = parseIntSafe(nil, params)
+    if collectibleType == nil or not isValidCollectibleType(nil, collectibleType) then
+        print("Invalid collectible type: " .. tostring(collectibleType))
         return
     end
     local player = Isaac.GetPlayer()
@@ -55899,13 +56948,9 @@ function ____exports.s(self, params)
         stageString = params
         stageTypeLetter = ""
     end
-    local stage = tonumber(stageString)
-    if stage == nil then
-        print("That is an invalid stage number: " .. tostring(stage))
-        return
-    end
-    if stage < FIRST_STAGE or stage > LAST_STAGE then
-        print(((("Invalid stage number; must be between " .. tostring(FIRST_STAGE)) .. " and ") .. tostring(LAST_STAGE)) .. ".")
+    local stage = parseIntSafe(nil, stageString)
+    if stage == nil or not isEnumValue(nil, stage, StageType) then
+        print("Invalid stage number: " .. tostring(stage))
         return
     end
     Isaac.ExecuteCommand(("stage " .. tostring(stage)) .. stageTypeLetter)
@@ -55947,26 +56992,25 @@ function ____exports.setCharges(self, params)
         return
     end
     if #args ~= 2 then
-        print("That is an invalid amount of arguments.")
+        print("Invalid amount of arguments: " .. tostring(#args))
         return
     end
     local activeSlotString, chargeString = table.unpack(args)
-    local activeSlot = tonumber(activeSlotString)
-    if activeSlot == nil then
-        print("The provided slot number is invalid: " .. tostring(activeSlotString))
+    if activeSlotString == nil or chargeString == nil then
         return
     end
-    if not __TS__ArrayIncludes(ACTIVE_SLOT_VALUES, activeSlot) then
-        print("The provided slot number is invalid: " .. tostring(activeSlot))
+    local activeSlot = parseIntSafe(nil, activeSlotString)
+    if activeSlot == nil or not isEnumValue(nil, activeSlot, ActiveSlot) then
+        print("Invalid slot number: " .. activeSlotString)
         return
     end
-    local chargeNum = tonumber(chargeString)
+    local chargeNum = parseIntSafe(nil, chargeString)
     if chargeNum == nil then
-        print("The provided charge amount is invalid: " .. tostring(chargeString))
+        print("Invalid charge amount: " .. chargeString)
         return
     end
     if chargeNum < 0 then
-        print("The provided charge amount is invalid: " .. tostring(chargeNum))
+        print("Invalid charge amount: " .. tostring(chargeNum))
         return
     end
     local player = Isaac.GetPlayer()
@@ -55987,14 +57031,17 @@ function ____exports.setPosition(self, params)
         return
     end
     local xString, yString = table.unpack(args)
-    local x = tonumber(xString)
-    if x == nil then
-        print("That is an invalid x value: " .. tostring(xString))
+    if xString == nil or yString == nil then
         return
     end
-    local y = tonumber(yString)
+    local x = parseIntSafe(nil, xString)
+    if x == nil then
+        print("Invalid x value: " .. xString)
+        return
+    end
+    local y = parseIntSafe(nil, yString)
     if y == nil then
-        print("That is an invalid y value: " .. tostring(yString))
+        print("Invalid y value: " .. yString)
         return
     end
     local player = Isaac.GetPlayer()
@@ -56015,9 +57062,9 @@ end
 function ____exports.soulCharges(self, params)
     local charges = 1
     if params ~= "" then
-        local num = tonumber(params)
+        local num = parseIntSafe(nil, params)
         if num == nil then
-            print("That is an invalid amount of charges to add.")
+            print("Invalid charges amount: " .. tostring(num))
             return
         end
         charges = num
@@ -56062,17 +57109,20 @@ function ____exports.spawnCollectibleAt(self, params)
         print("You must specify the number corresponding to the collectible type and the number corresponding to the grid tile location.")
         return
     end
-    local collectibleTypeNumber = tonumber(args[1])
-    if collectibleTypeNumber == nil or collectibleTypeNumber < 0 then
-        print("Failed to parse the collectible type of: " .. tostring(args[1]))
+    local collectibleTypeString, gridIndexString = table.unpack(args)
+    if collectibleTypeString == nil or gridIndexString == nil then
         return
     end
-    local gridIndex = tonumber(args[2])
+    local collectibleType = parseIntSafe(nil, collectibleTypeString)
+    if collectibleType == nil or not isValidCollectibleType(nil, collectibleType) then
+        print("Invalid collectible type: " .. tostring(args[1]))
+        return
+    end
+    local gridIndex = parseIntSafe(nil, gridIndexString)
     if gridIndex == nil or gridIndex < 0 then
         print("Failed to parse the grid index of: " .. tostring(args[2]))
         return
     end
-    local collectibleType = asCollectibleType(nil, collectibleTypeNumber)
     spawnCollectibleFunc(nil, collectibleType, gridIndex, nil)
 end
 --- Alias for the `spawnGoldenTrinket` command.
@@ -56092,7 +57142,7 @@ function ____exports.speed(self, params)
     if params ~= "" then
         local num = tonumber(params)
         if num == nil then
-            print("The provided speed amount is invalid: " .. params)
+            print("Invalid speed amount: " .. params)
             return
         end
         v.persistent.damageAmount = num
@@ -56126,7 +57176,7 @@ function ____exports.tears(self, params)
     if params ~= "" then
         local num = tonumber(params)
         if num == nil then
-            print("The provided tear delay amount is invalid: " .. params)
+            print("Invalid tear delay amount: " .. params)
             return
         end
         v.persistent.tearsAmount = num
@@ -56187,7 +57237,7 @@ function ____exports.warp(self, params)
         return
     end
     local roomType
-    local num = tonumber(params)
+    local num = parseIntSafe(nil, params)
     if num == nil then
         local match = getMapPartialMatch(nil, params, ROOM_NAME_TO_TYPE_MAP)
         if match == nil then
@@ -56196,7 +57246,7 @@ function ____exports.warp(self, params)
         end
         roomType = match[2]
     else
-        if num < FIRST_ROOM_TYPE or num > LAST_ROOM_TYPE then
+        if not isEnumValue(nil, num, RoomType) then
             print("Invalid room type: " .. tostring(num))
             return
         end
@@ -56239,13 +57289,15 @@ local getRoomData = ____roomData.getRoomData
 local getRoomDescriptor = ____roomData.getRoomDescriptor
 local ____rooms = require("lua_modules.isaacscript-common.dist.functions.rooms")
 local changeRoom = ____rooms.changeRoom
+local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
+local parseIntSafe = ____types.parseIntSafe
 local ____roomTypeNames = require("lua_modules.isaacscript-common.dist.objects.roomTypeNames")
 local ROOM_TYPE_NAMES = ____roomTypeNames.ROOM_TYPE_NAMES
 local DEFAULT_MOVE_UNITS = 0.5
 function ____exports.addHeart(self, params, healthType)
     local numHearts = healthType == HealthType.MAX_HEARTS and 2 or 1
     if params ~= "" then
-        local num = tonumber(params)
+        local num = parseIntSafe(nil, params)
         if num == nil then
             print("That is an invalid amount of hearts to add.")
             return
@@ -56276,7 +57328,7 @@ end
 function ____exports.listEntities(self, params, includeBackgroundEffects)
     local entityTypeFilter
     if params ~= "" then
-        entityTypeFilter = tonumber(params)
+        entityTypeFilter = parseIntSafe(nil, params)
         if entityTypeFilter == nil then
             print("That is an invalid entity type to filter by.")
             return
@@ -56288,7 +57340,7 @@ end
 function ____exports.listGridEntities(self, params, includeWalls)
     local gridEntityTypeFilter
     if params ~= "" then
-        gridEntityTypeFilter = tonumber(params)
+        gridEntityTypeFilter = parseIntSafe(nil, params)
         if gridEntityTypeFilter == nil then
             print("That is an invalid grid entity type to filter by.")
             return
@@ -56300,7 +57352,7 @@ end
 function ____exports.movePlayer(self, params, direction)
     local amount = DEFAULT_MOVE_UNITS
     if params ~= "" then
-        local num = tonumber(params)
+        local num = parseIntSafe(nil, params)
         if num == nil then
             print("That is an invalid amount of units to move.")
             return
@@ -56644,7 +57696,7 @@ local ____spawnCollectible = require("lua_modules.isaacscript-common.dist.functi
 local spawnCollectible = ____spawnCollectible.spawnCollectible
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
 local asCollectibleType = ____types.asCollectibleType
-local asNumber = ____types.asNumber
+local parseIntSafe = ____types.parseIntSafe
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local assertDefined = ____utils.assertDefined
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.types.ReadonlySet")
@@ -56798,28 +57850,28 @@ function DeployJSONRoom.prototype.spawnAllEntities(self, jsonRoom, rng, verbose)
     local shouldUnclearRoom = false
     for ____, jsonSpawn in ipairs(jsonRoom.spawn) do
         local xString = jsonSpawn["$"].x
-        local x = tonumber(xString)
-        assertDefined(nil, x, "Failed to convert the following x coordinate to a number (for a spawn): " .. xString)
+        local x = parseIntSafe(nil, xString)
+        assertDefined(nil, x, "Failed to convert the following x coordinate to an integer (for a spawn): " .. xString)
         local yString = jsonSpawn["$"].y
-        local y = tonumber(yString)
-        assertDefined(nil, y, "Failed to convert the following y coordinate to a number (for a spawn): " .. yString)
+        local y = parseIntSafe(nil, yString)
+        assertDefined(nil, y, "Failed to convert the following y coordinate to an integer (for a spawn): " .. yString)
         local jsonEntity = getRandomJSONEntity(nil, jsonSpawn.entity, rng)
         local entityTypeString = jsonEntity["$"].type
-        local entityTypeNumber = tonumber(entityTypeString)
-        assertDefined(nil, entityTypeNumber, "Failed to convert the entity type to a number: " .. entityTypeString)
+        local entityTypeNumber = parseIntSafe(nil, entityTypeString)
+        assertDefined(nil, entityTypeNumber, "Failed to convert the entity type to an integer: " .. entityTypeString)
         local variantString = jsonEntity["$"].variant
-        local variant = tonumber(variantString)
+        local variant = parseIntSafe(nil, variantString)
         assertDefined(
             nil,
             variant,
-            "Failed to convert the entity variant to a number: " .. tostring(variant)
+            "Failed to convert the entity variant to an integer: " .. tostring(variant)
         )
         local subTypeString = jsonEntity["$"].subtype
-        local subType = tonumber(subTypeString)
+        local subType = parseIntSafe(nil, subTypeString)
         assertDefined(
             nil,
             subType,
-            "Failed to convert the entity sub-type to a number: " .. tostring(subType)
+            "Failed to convert the entity sub-type to an integer: " .. tostring(subType)
         )
         local isGridEntity = GRID_ENTITY_XML_TYPE_SET:has(entityTypeNumber)
         if isGridEntity then
@@ -56869,11 +57921,12 @@ function DeployJSONRoom.prototype.spawnNormalEntityForJSONRoom(self, entityType,
     local position = gridCoordinatesToWorldPosition(nil, x, y)
     local seed = rng:Next()
     local entity
-    if entityType == EntityType.PICKUP and variant == asNumber(nil, PickupVariant.COLLECTIBLE) then
+    if entityType == EntityType.PICKUP and variant == PickupVariant.COLLECTIBLE then
+        local collectibleType = asCollectibleType(nil, subType)
         local options = roomType == RoomType.ANGEL
         entity = spawnCollectible(
             nil,
-            asCollectibleType(nil, subType),
+            collectibleType,
             position,
             seed,
             options
@@ -56888,7 +57941,7 @@ function DeployJSONRoom.prototype.spawnNormalEntityForJSONRoom(self, entityType,
             seed
         )
     end
-    if entityType == EntityType.PITFALL and variant == asNumber(nil, PitfallVariant.PITFALL) then
+    if entityType == EntityType.PITFALL and variant == PitfallVariant.PITFALL then
         entity.EntityCollisionClass = EntityCollisionClass.ENEMIES
         entity.GridCollisionClass = EntityGridCollisionClass.WALLS
     end
@@ -58264,8 +59317,6 @@ local ____sound = require("lua_modules.isaacscript-common.dist.functions.sound")
 local getMusicForStage = ____sound.getMusicForStage
 local ____stage = require("lua_modules.isaacscript-common.dist.functions.stage")
 local setStage = ____stage.setStage
-local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asNumber = ____types.asNumber
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local assertDefined = ____utils.assertDefined
 local ____Feature = require("lua_modules.isaacscript-common.dist.classes.private.Feature")
@@ -58591,7 +59642,7 @@ function CustomStages.prototype.setCustomStage(self, name, firstFloor, streakTex
         baseStage = baseStage + 1
     end
     local baseStageType = customStage.baseStageType == nil and DEFAULT_BASE_STAGE_TYPE or customStage.baseStageType
-    local reseed = asNumber(nil, stage) >= baseStage
+    local reseed = stage >= baseStage
     setStage(nil, baseStage, baseStageType, reseed)
     musicManager:Disable()
     self:setStageRoomsData(customStage, rng, verbose)
@@ -59809,8 +60860,6 @@ local getEntityID = ____entities.getEntityID
 local getEntityIDFromConstituents = ____entities.getEntityIDFromConstituents
 local ____entitiesSpecific = require("lua_modules.isaacscript-common.dist.functions.entitiesSpecific")
 local spawnEffect = ____entitiesSpecific.spawnEffect
-local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asNumber = ____types.asNumber
 local ____Feature = require("lua_modules.isaacscript-common.dist.classes.private.Feature")
 local Feature = ____Feature.Feature
 --- Normally, we would make a custom entity to represent a fading-away pickup, but we don't want to
@@ -59853,7 +60902,7 @@ function CustomPickups.prototype.____constructor(self)
         return nil
     end
     self.postEffectRenderPickupEffect = function(____, effect)
-        if effect.SubType ~= asNumber(nil, PICKUP_EFFECT_SUB_TYPE) then
+        if effect.SubType ~= PICKUP_EFFECT_SUB_TYPE then
             return
         end
         local sprite = effect:GetSprite()
@@ -62528,16 +63577,10 @@ local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__ArrayFindIndex = ____lualib.__TS__ArrayFindIndex
 local __TS__ArraySplice = ____lualib.__TS__ArraySplice
-local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
-local __TS__Iterator = ____lualib.__TS__Iterator
 local ____exports = {}
-local ____log = require("lua_modules.isaacscript-common.dist.functions.log")
-local log = ____log.log
 local ____sort = require("lua_modules.isaacscript-common.dist.functions.sort")
 local sortObjectArrayByKey = ____sort.sortObjectArrayByKey
 local stableSort = ____sort.stableSort
-local ____tstlClass = require("lua_modules.isaacscript-common.dist.functions.tstlClass")
-local getTSTLClassName = ____tstlClass.getTSTLClassName
 local ____Feature = require("lua_modules.isaacscript-common.dist.classes.private.Feature")
 local Feature = ____Feature.Feature
 --- The base class for a custom callback. Individual custom callbacks (and validation callbacks) will
@@ -62595,19 +63638,6 @@ function CustomCallback.prototype.removeSubscriber(self, callback)
     )
     if subscriptionIndexMatchingCallback ~= -1 then
         __TS__ArraySplice(self.subscriptions, subscriptionIndexMatchingCallback, 1)
-    end
-end
-function CustomCallback.prototype.logSubscriptions(self)
-    local tstlClassName = getTSTLClassName(nil, self)
-    log("Logging subscriptions for custom callback: " .. tostring(tstlClassName))
-    if #self.subscriptions == 0 then
-        log("- n/a (no subscriptions)")
-    else
-        for ____, ____value in __TS__Iterator(__TS__ArrayEntries(self.subscriptions)) do
-            local i = ____value[1]
-            local subscription = ____value[2]
-            log((("- " .. tostring(i + 1)) .. " - priority: ") .. tostring(subscription.priority))
-        end
     end
 end
 return ____exports
@@ -64394,11 +65424,10 @@ function PostPlayerInitFirst.prototype.____constructor(self)
     CustomCallback.prototype.____constructor(self)
     self.shouldFire = shouldFirePlayer
     self.postNewRoomReordered = function()
-        if not inGenesisRoom(nil) then
-            return
-        end
-        for ____, player in ipairs(getPlayers(nil)) do
-            self:fire(player)
+        if inGenesisRoom(nil) then
+            for ____, player in ipairs(getPlayers(nil)) do
+                self:fire(player)
+            end
         end
     end
     self.postPlayerInitLate = function(____, player)
@@ -65696,8 +66725,6 @@ local ____playerDataStructures = require("lua_modules.isaacscript-common.dist.fu
 local defaultMapGetPlayer = ____playerDataStructures.defaultMapGetPlayer
 local mapGetPlayer = ____playerDataStructures.mapGetPlayer
 local mapSetPlayer = ____playerDataStructures.mapSetPlayer
-local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local asNumber = ____types.asNumber
 local ____DefaultMap = require("lua_modules.isaacscript-common.dist.classes.DefaultMap")
 local DefaultMap = ____DefaultMap.DefaultMap
 local ____CustomCallback = require("lua_modules.isaacscript-common.dist.classes.private.CustomCallback")
@@ -65728,7 +66755,7 @@ function PostItemDischarge.prototype.____constructor(self)
         return callbackCollectibleType == nil or callbackCollectibleType == collectibleType
     end
     self.preNPCCollisionSucker = function(____, npc, collider)
-        if npc.Variant == asNumber(nil, SuckerVariant.BULB) then
+        if npc.Variant == SuckerVariant.BULB then
             return self:preNPCCollisionBulb(npc, collider)
         end
         return nil
@@ -68805,7 +69832,7 @@ function getGridIncrement(self, direction)
         ____cond9 = ____cond9 or ____switch9 == Direction.UP
         if ____cond9 then
             do
-                return -gridWidth
+                return gridWidth * -1
             end
         end
         ____cond9 = ____cond9 or ____switch9 == Direction.RIGHT
@@ -76193,7 +77220,7 @@ function ____exports.commandGameDescription(self, data)
     if g.game == nil then
         return
     end
-    g.game.players = data.players
+    g.game.players = {table.unpack(data.players)}
     g.game.started = data.started
     g.game.meeting = data.meeting
     local ourPlayer = getOurPlayer(nil)
@@ -76523,9 +77550,9 @@ function ____exports.commandReconnect(self, data)
         data.ownerUserID,
         data.character
     )
-    g.game.players = data.players
+    g.game.players = {table.unpack(data.players)}
     g.game.started = true
-    g.game.imposterUserIDs = data.imposterUserIDs
+    g.game.imposterUserIDs = {table.unpack(data.imposterUserIDs)}
     g.game.ourTasks = data.tasks
     g.game.role = #data.imposterUserIDs == 0 and Role.CREW or Role.IMPOSTER
     g.game.meeting = data.meeting
@@ -76535,7 +77562,7 @@ function ____exports.commandReconnect(self, data)
         return
     end
     g.game.usedEmergencyMeeting = player.usedEmergencyMeeting
-    g.game.bodies = data.bodies
+    g.game.bodies = {table.unpack(data.bodies)}
     disableSendingEvents(nil)
     loadMap(nil)
     enableMinimapAPI(nil)
@@ -76587,7 +77614,7 @@ function ____exports.commandStartMeeting(self, data)
         meetingType = data.meetingType,
         userIDInitiated = data.userIDInitiated,
         userIDKilled = data.userIDKilled,
-        playersKilledSinceLastMeeting = data.playersKilledSinceLastMeeting,
+        playersKilledSinceLastMeeting = {table.unpack(data.playersKilledSinceLastMeeting)},
         meetingPhase = MeetingPhase.PRE_VOTING,
         timePhaseStarted = data.timePhaseStarted,
         phaseLengthSeconds = data.phaseLengthSeconds,
@@ -76631,7 +77658,7 @@ function ____exports.commandStarted(self, data)
         return
     end
     g.game.started = true
-    g.game.imposterUserIDs = data.imposterUserIDs
+    g.game.imposterUserIDs = {table.unpack(data.imposterUserIDs)}
     g.game.role = #data.imposterUserIDs == 0 and Role.CREW or Role.IMPOSTER
     g.game.ourTasks = data.tasks
     addLocalChat(nil, "The game has started!")
@@ -76698,7 +77725,7 @@ function ____exports.commandVote(self, data)
     if g.game == nil or g.game.meeting == nil then
         return
     end
-    g.game.meeting.votes = data.votes
+    g.game.meeting.votes = {table.unpack(data.votes)}
 end
 return ____exports
  end,

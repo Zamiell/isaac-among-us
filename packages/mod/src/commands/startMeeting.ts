@@ -12,7 +12,7 @@ export function commandStartMeeting(data: StartMeetingDataToMod): void {
     meetingType: data.meetingType,
     userIDInitiated: data.userIDInitiated,
     userIDKilled: data.userIDKilled,
-    playersKilledSinceLastMeeting: data.playersKilledSinceLastMeeting,
+    playersKilledSinceLastMeeting: [...data.playersKilledSinceLastMeeting],
     meetingPhase: MeetingPhase.PRE_VOTING,
     timePhaseStarted: data.timePhaseStarted,
     phaseLengthSeconds: data.phaseLengthSeconds,

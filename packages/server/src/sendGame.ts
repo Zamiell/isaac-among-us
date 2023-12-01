@@ -25,7 +25,9 @@ export function sendNewGameDescription(game: Game): void {
   });
 }
 
-export function getGameDescriptionPlayers(game: Game): GameDescriptionPlayer[] {
+export function getGameDescriptionPlayers(
+  game: Game,
+): readonly GameDescriptionPlayer[] {
   const players: GameDescriptionPlayer[] = [];
   for (const player of game.players) {
     const playerDescription: GameDescriptionPlayer = {
@@ -195,7 +197,7 @@ function sendAllInGame<T extends SocketCommandServerToMod>(
   }
 }
 
-function getActiveSockets(game: Game) {
+function getActiveSockets(game: Game): readonly Socket[] {
   const sockets: Socket[] = [];
   for (const player of game.players) {
     const socket = getTCPSocketByUserID(player.userID);

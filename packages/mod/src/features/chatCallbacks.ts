@@ -85,7 +85,7 @@ function drawChat() {
   }
 }
 
-function wordWrap(line: string): string[] {
+function wordWrap(line: string): readonly string[] {
   let spaceLeft = MAX_TEXT_WIDTH;
   const words = line.split(" ");
   for (let i = 0; i < words.length; i++) {

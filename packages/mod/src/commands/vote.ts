@@ -6,5 +6,5 @@ export function commandVote(data: VoteDataToMod): void {
     return;
   }
 
-  g.game.meeting.votes = data.votes;
+  g.game.meeting.votes = [...data.votes];
 }

@@ -1,7 +1,6 @@
 import { IS_DEV, Role } from "common";
 import type { Game } from "./classes/Game.js";
-import { getRandomArrayIndex } from "./isaacScriptCommonTS.js";
-import { repeat } from "./utils.js";
+import { getRandomArrayIndex, repeat } from "./isaacScriptCommonTS.js";
 
 export function assignImpostors(game: Game): void {
   if (IS_DEV) {

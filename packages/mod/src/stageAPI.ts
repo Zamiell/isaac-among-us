@@ -43,7 +43,7 @@ export function getSkeldRoom(): SkeldRoom | undefined {
   return getSkeldRoomFromName(roomName);
 }
 
-export function getStageAPIDoors(): StageAPICustomGridEntity[] {
+export function getStageAPIDoors(): readonly StageAPICustomGridEntity[] {
   if (StageAPI === undefined) {
     error("StageAPI was not initialized.");
   }

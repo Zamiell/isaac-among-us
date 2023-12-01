@@ -59,7 +59,7 @@ export class UserConnectedDataToMod {
 }
 
 export class GameListDataToMod {
-  gameList!: GameListDescription[];
+  gameList!: readonly GameListDescription[];
 }
 
 export class GameListDescription {
@@ -93,7 +93,7 @@ export class LeftDataToMod {
 
 export class GameDescriptionDataToMod {
   gameID!: number;
-  players!: GameDescriptionPlayer[];
+  players!: readonly GameDescriptionPlayer[];
   started!: boolean;
   meeting!: Meeting | null;
 }
@@ -132,7 +132,7 @@ export class ChatDataToMod {
 
 export class StartedDataToMod {
   gameID!: number;
-  imposterUserIDs!: number[];
+  imposterUserIDs!: readonly number[];
   tasks!: TaskList;
 }
 
@@ -140,15 +140,15 @@ export class ReconnectDataToMod {
   gameID!: number;
   name!: string;
   ownerUserID!: number;
-  players!: GameDescriptionPlayer[];
-  imposterUserIDs!: number[];
+  players!: readonly GameDescriptionPlayer[];
+  imposterUserIDs!: readonly number[];
   meeting!: Meeting | null;
   emergencyButtonOnCooldown!: boolean;
   tasks!: TaskList;
   character!: PlayerTypeAllowed;
   room!: SkeldRoom;
   enterGridIndex!: number;
-  bodies!: PlayerBody[];
+  bodies!: readonly PlayerBody[];
 }
 
 export class EmergencyButtonCooldownDataToMod {
@@ -174,7 +174,7 @@ export class StartMeetingDataToMod {
   meetingType!: MeetingType;
   userIDInitiated!: number;
   userIDKilled!: number;
-  playersKilledSinceLastMeeting!: number[];
+  playersKilledSinceLastMeeting!: readonly number[];
   timePhaseStarted!: number;
   phaseLengthSeconds!: number;
   votes!: number[];
@@ -188,12 +188,12 @@ export class StartVotingDataToMod {
 
 export class VoteDataToMod {
   gameID!: number;
-  votes!: number[];
+  votes!: readonly number[];
 }
 
 export class TaskCompleteDataToMod {
   gameID!: number;
-  votes!: number[];
+  votes!: readonly number[];
 }
 
 export class EndMeetingDataToMod {
@@ -205,7 +205,7 @@ export class EndMeetingDataToMod {
 export class EndGameDataToMod {
   gameID!: number;
   winningRole!: Role;
-  imposterUserIDs!: number[];
+  imposterUserIDs!: readonly number[];
 }
 
 export class TerminatedDataToMod {

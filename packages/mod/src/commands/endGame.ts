@@ -14,7 +14,7 @@ export function commandEndGame(data: EndGameDataToMod): void {
   startEndGameCutscene();
 }
 
-function getImposterNames(game: AmongUsGame, imposterUserIDs: int[]) {
+function getImposterNames(game: AmongUsGame, imposterUserIDs: readonly int[]) {
   const names: string[] = [];
 
   for (const userID of imposterUserIDs) {

@@ -6,29 +6,32 @@
   "author": "Zamiell",
   "type": "commonjs",
   "scripts": {
-    "postinstall": "prisma generate --schema=packages/server/prisma/schema.prisma"
+    "build": "bash ./build.sh",
+    "postinstall": "prisma generate --schema=packages/server/prisma/schema.prisma",
+    "lint": "bash ./lint.sh",
+    "nuke": "isaacscript nuke",
+    "update": "isaacscript update"
   },
   "dependencies": {
-    "@prisma/client": "^5.5.2",
+    "@prisma/client": "^5.6.0",
     "argon2": "^0.31.2",
-    "isaac-typescript-definitions": "^38.0.0",
-    "isaacscript-common": "^76.0.0",
+    "isaac-typescript-definitions": "^39.0.5",
+    "isaacscript-common": "^81.0.1",
     "struct": "^0.0.12"
   },
   "devDependencies": {
-    "@types/node": "^20.9.0",
+    "@types/node": "^20.10.1",
     "@types/struct": "^0.0.8",
-    "isaacscript": "^3.19.2",
-    "isaacscript-lint": "^6.3.0",
-    "isaacscript-spell": "^1.10.0",
+    "isaacscript": "^3.29.0",
+    "isaacscript-lint": "^6.5.0",
+    "isaacscript-spell": "^1.11.0",
     "isaacscript-tsconfig": "^5.0.0",
-    "npm-check-updates": "^16.14.6",
-    "prisma": "^5.5.2",
+    "prisma": "^5.6.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.2.2",
-    "typescript-to-lua": "^1.21.0"
+    "typescript": "^5.3.2",
+    "typescript-to-lua": "^1.22.0"
   },
-  "packageManager": "yarn@4.0.1"
+  "packageManager": "yarn@4.0.2"
 }

@@ -28,7 +28,7 @@ export function spawnVents(): void {
   }
 }
 
-function getVentsForThisRoom(): VentDescription[] {
+function getVentsForThisRoom(): readonly VentDescription[] {
   const room = getSkeldRoom();
   if (room === undefined) {
     return [];

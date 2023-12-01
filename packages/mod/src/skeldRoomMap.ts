@@ -63,6 +63,6 @@ export function getSkeldRoomName(room: SkeldRoom): string {
   return SKELD_ROOM_REVERSE_MAP[room];
 }
 
-export function getSkeldRoomNames(): string[] {
+export function getSkeldRoomNames(): readonly string[] {
   return Object.values(SKELD_ROOM_REVERSE_MAP);
 }

@@ -75,7 +75,7 @@ function setupRound() {
   resetAllButtons();
 }
 
-function getRandomTrinkets(): TrinketType[] {
+function getRandomTrinkets(): readonly TrinketType[] {
   const randomTrinkets: TrinketType[] = [];
   repeat(NUM_RANDOM_TRINKETS, () => {
     const randomTrinket = getRandomArrayElement(

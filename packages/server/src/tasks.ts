@@ -1,4 +1,5 @@
 import { IS_DEV, TASK_DESCRIPTIONS, Task, TaskType } from "common";
+import { getEnumValues } from "isaacscript-common";
 import type { Game } from "./classes/Game.js";
 import type { Player } from "./classes/Player.js";
 import {
@@ -7,7 +8,6 @@ import {
   DEFAULT_NUM_SHORT_TASKS,
 } from "./constants.js";
 import { getRandomArrayElement } from "./isaacScriptCommonTS.js";
-import { getEnumValues } from "./utils.js";
 
 const DEV_TASK = undefined as Task | undefined;
 
@@ -86,7 +86,7 @@ function checkRefillTasks(tasks: Set<Task>, taskType: TaskType) {
   }
 }
 
-function getAllTasksOfType(taskType: TaskType): Task[] {
+function getAllTasksOfType(taskType: TaskType): readonly Task[] {
   const allTasksOfType: Task[] = [];
   for (const task of getEnumValues(Task)) {
     const taskDescription = TASK_DESCRIPTIONS[task];
