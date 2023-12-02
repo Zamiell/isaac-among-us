@@ -117,7 +117,7 @@ export function loadBackdrops(): void {
 
   const roomName = getStageAPIRoomName();
   if (roomName === undefined) {
-    return undefined;
+    return;
   }
 
   const room = getSkeldRoomFromName(roomName);
