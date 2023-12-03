@@ -52,7 +52,7 @@ export function spawnBlockLine(
   }
 }
 
-function getGridIncrement(direction: Direction) {
+function getGridIncrement(direction: Direction): int {
   const room = game.GetRoom();
   const gridWidth = room.GetGridWidth();
 

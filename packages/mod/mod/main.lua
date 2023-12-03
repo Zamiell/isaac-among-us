@@ -70295,7 +70295,7 @@ function ____exports.loadBackdrops(self)
     end
     local roomName = getStageAPIRoomName(nil)
     if roomName == nil then
-        return nil
+        return
     end
     local room = getSkeldRoomFromName(nil, roomName)
     if room == nil then
@@ -73104,13 +73104,13 @@ ____exports.chatCommandFunctionMap:set(
 )
 ____exports.chatCommandFunctionMap:set(
     "credits",
-    function(____, _args)
+    function()
         addLocalChat(nil, "The Among Us Mod was made by Zamiel. It makes use of DeadInfinity's StageAPI library, Sentinel's collision library, and Somdudewillson's stage backdrops; special thanks goes to them. Thanks also goes to JSG, im_tem, Wofsauge, and AgentCucco for providing technical assistance.")
     end
 )
 ____exports.chatCommandFunctionMap:set(
     "debug",
-    function(____, _args)
+    function()
         if g.game == nil then
             addLocalChat(nil, "You must be in a game to do that.")
             return
@@ -73120,7 +73120,7 @@ ____exports.chatCommandFunctionMap:set(
 )
 ____exports.chatCommandFunctionMap:set(
     "disconnect",
-    function(____, _args)
+    function()
         socketClient:disconnect()
     end
 )
@@ -73133,13 +73133,13 @@ ____exports.chatCommandFunctionMap:set(
 )
 ____exports.chatCommandFunctionMap:set(
     "gameList",
-    function(____, _args)
+    function()
         sendTCP(nil, SocketCommandModToServer.GAME_LIST, {})
     end
 )
 ____exports.chatCommandFunctionMap:set(
     "help",
-    function(____, _args)
+    function()
         if g.loggedIn then
             addLocalChat(nil, "To create a game, use the \"/create [name] [password]\" command. (Using a password is optional.)")
             addLocalChat(nil, "To join a game, use the \"/join [name] [password]\" command. (Using a password is optional.)")
@@ -73173,7 +73173,7 @@ ____exports.chatCommandFunctionMap:set(
 )
 ____exports.chatCommandFunctionMap:set(
     "killMe",
-    function(____, _args)
+    function()
         if g.game == nil or g.userID == nil then
             return
         end
@@ -73193,7 +73193,7 @@ ____exports.chatCommandFunctionMap:set(
 )
 ____exports.chatCommandFunctionMap:set(
     "leave",
-    function(____, _args)
+    function()
         if g.game == nil then
             addLocalChat(nil, "You are not in a game, so you cannot leave.")
             return
@@ -73203,7 +73203,7 @@ ____exports.chatCommandFunctionMap:set(
 )
 ____exports.chatCommandFunctionMap:set(
     "lights",
-    function(____, _args)
+    function()
         if g.game == nil then
             return
         end
@@ -73212,14 +73212,14 @@ ____exports.chatCommandFunctionMap:set(
 )
 ____exports.chatCommandFunctionMap:set(
     "log",
-    function(____, _args)
+    function()
         logTable(g.game)
     end
 )
 ____exports.chatCommandFunctionMap:set("password", passwordChatCommand)
 ____exports.chatCommandFunctionMap:set(
     "revive",
-    function(____, _args)
+    function()
         if g.game == nil then
             return
         end
@@ -73228,7 +73228,7 @@ ____exports.chatCommandFunctionMap:set(
 )
 ____exports.chatCommandFunctionMap:set(
     "start",
-    function(____, _args)
+    function()
         if g.game == nil then
             addLocalChat(nil, "You are not in a game, so you cannot start it.")
             return
@@ -73242,7 +73242,7 @@ ____exports.chatCommandFunctionMap:set(
 )
 ____exports.chatCommandFunctionMap:set(
     "terminate",
-    function(____, _args)
+    function()
         if g.game == nil then
             addLocalChat(nil, "You are not in a game, so you cannot terminate it.")
             return
@@ -73256,7 +73256,7 @@ ____exports.chatCommandFunctionMap:set(
 )
 ____exports.chatCommandFunctionMap:set(
     "userID",
-    function(____, _args)
+    function()
         addLocalChat(
             nil,
             "Your user ID is: " .. tostring(g.userID)
@@ -73306,7 +73306,7 @@ ____exports.chatCommandFunctionMap:set(
 )
 ____exports.chatCommandFunctionMap:set(
     "voteSkip",
-    function(____, _args)
+    function()
         if g.game == nil then
             addLocalChat(nil, "You can only perform that command in a game.")
             return

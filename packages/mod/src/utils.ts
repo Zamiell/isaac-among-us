@@ -80,7 +80,7 @@ export function getRoleName(role: Role, plural = false): string {
  * @param x From 0 to 1.
  * @param y From 0 to 1.
  */
-export function getScreenPosition(x: float, y: float): Vector {
+export function getScreenPosition(x: float, y: float): Readonly<Vector> {
   const bottomRightPos = getScreenBottomRightPos();
   return Vector(x * bottomRightPos.X, y * bottomRightPos.Y);
 }
