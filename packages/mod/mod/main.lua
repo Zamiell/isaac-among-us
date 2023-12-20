@@ -11952,6 +11952,9 @@ ____exports.TreasureRoomSubType[____exports.TreasureRoomSubType.KNIFE_PIECE] = "
 -- The enum is named `BossID` instead of `BossRoomSubType` in order to match the `Entity.GetBossID`,
 -- `Room.GetBossID` and `Room.GetSecondBossID` methods.
 -- 
+-- There is no BossID with a value of 0 because this is the default return value for "no boss ID"
+-- when using the `Room.GetBossID` method.
+-- 
 -- This enum is contiguous. (Every value is satisfied between 1 and 102, inclusive.)
 -- 
 -- Also see the `MinibossID` enum.
@@ -12917,7 +12920,20 @@ return ____exports
  end,
 ["lua_modules.isaac-typescript-definitions.dist.enums.StageID"] = function(...) 
 local ____exports = {}
---- This matches the filename used in the XML/STB file for the room.
+--- Corresponds to the filename used in the XML/STB file for the room. It also matches the "id"
+-- attribute in the "stages.xml" file.
+-- 
+-- This enum is not contiguous. In other words, the enum ranges from `StageID.SPECIAL_ROOMS` (0) to
+-- `StageID.BACKWARDS` (36), but there is no corresponding `StageID` with the following values:
+-- 
+-- - 18 (corresponds to Afterbirth+ "18.greed special.stb")
+-- - 19 (corresponds to Afterbirth+ "19.greed basement.stb")
+-- - 20 (corresponds to Afterbirth+ "20.greed caves.stb")
+-- - 21 (corresponds to Afterbirth+ "21.greed depths.stb")
+-- - 22 (corresponds to Afterbirth+ "22.greed womb.stb")
+-- - 23 (corresponds to Afterbirth+ "23.greed sheol.stb")
+-- 
+-- (These values are now unused in Repentance.)
 ____exports.StageID = {}
 ____exports.StageID.SPECIAL_ROOMS = 0
 ____exports.StageID[____exports.StageID.SPECIAL_ROOMS] = "SPECIAL_ROOMS"
@@ -12955,6 +12971,10 @@ ____exports.StageID.DARK_ROOM = 16
 ____exports.StageID[____exports.StageID.DARK_ROOM] = "DARK_ROOM"
 ____exports.StageID.CHEST = 17
 ____exports.StageID[____exports.StageID.CHEST] = "CHEST"
+____exports.StageID.SHOP = 24
+____exports.StageID[____exports.StageID.SHOP] = "SHOP"
+____exports.StageID.ULTRA_GREED = 25
+____exports.StageID[____exports.StageID.ULTRA_GREED] = "ULTRA_GREED"
 ____exports.StageID.VOID = 26
 ____exports.StageID[____exports.StageID.VOID] = "VOID"
 ____exports.StageID.DOWNPOUR = 27
@@ -14611,6 +14631,7 @@ return ____exports
  end,
 ["lua_modules.isaac-typescript-definitions.dist.enums.RoomType"] = function(...) 
 local ____exports = {}
+--- This enum is contiguous. (Every value is satisfied between 1 and 29, inclusive.)
 ____exports.RoomType = {}
 ____exports.RoomType.DEFAULT = 1
 ____exports.RoomType[____exports.RoomType.DEFAULT] = "DEFAULT"
@@ -14955,6 +14976,9 @@ return ____exports
 ["lua_modules.isaac-typescript-definitions.dist.enums.PillEffect"] = function(...) 
 local ____exports = {}
 --- This enum is contiguous. (Every value is satisfied between 0 and 49, inclusive.)
+-- 
+-- Note that the vanilla enum includes `NULL` (-1). Since it should be impossible to ever retrieve
+-- this value from the API, it is removed from the IsaacScript enum.
 ____exports.PillEffect = {}
 ____exports.PillEffect.BAD_GAS = 0
 ____exports.PillEffect[____exports.PillEffect.BAD_GAS] = "BAD_GAS"
@@ -19283,7 +19307,7 @@ end
 -- end and exclusive on the high end. (The "e" in the function name stands for exclusive.) Thus,
 -- this function works in a similar way as the built-in `range` function from Python.
 -- 
--- If the end is lower than the start, then the range will be reversed.
+-- If the end is lower than the start, an empty array will be returned.
 -- 
 -- For example:
 -- 
@@ -19292,7 +19316,8 @@ end
 -- - `eRange(-3)` returns `[0, -1, -2]`.
 -- - `eRange(1, 3)` returns `[1, 2]`.
 -- - `eRange(2, 5)` returns `[2, 3, 4]`.
--- - `eRange(5, 2)` returns `[5, 4, 3]`.
+-- - `eRange(5, 2)` returns `[]`.
+-- - `eRange(3, 3)` returns `[]`.
 -- 
 -- @param start The integer to start at.
 -- @param end Optional. The integer to end at. If not specified, then the start will be 0 and the
@@ -19306,21 +19331,11 @@ function ____exports.eRange(self, start, ____end, increment)
         return ____exports.eRange(nil, 0, start, increment)
     end
     local array = {}
-    if start < ____end then
-        do
-            local i = start
-            while i < ____end do
-                array[#array + 1] = i
-                i = i + increment
-            end
-        end
-    else
-        do
-            local i = start
-            while i > ____end do
-                array[#array + 1] = i
-                i = i - increment
-            end
+    do
+        local i = start
+        while i < ____end do
+            array[#array + 1] = i
+            i = i + increment
         end
     end
     return array
@@ -19337,7 +19352,7 @@ end
 --- Helper function to return an array of integers with the specified range, inclusive on both ends.
 -- (The "i" in the function name stands for inclusive.)
 -- 
--- If the end is lower than the start, then the range will be reversed.
+-- If the end is lower than the start, an empty array will be returned.
 -- 
 -- For example:
 -- 
@@ -19346,7 +19361,8 @@ end
 -- - `iRange(-3)` returns `[0, -1, -2, -3]`.
 -- - `iRange(1, 3)` returns `[1, 2, 3]`.
 -- - `iRange(2, 5)` returns `[2, 3, 4, 5]`.
--- - `iRange(5, 2)` returns `[5, 4, 3, 2]`.
+-- - `iRange(5, 2)` returns `[]`.
+-- - `iRange(3, 3)` returns `[3]`.
 -- 
 -- @param start The integer to start at.
 -- @param end Optional. The integer to end at. If not specified, then the start will be 0 and the
@@ -19359,8 +19375,7 @@ function ____exports.iRange(self, start, ____end, increment)
     if ____end == nil then
         return ____exports.iRange(nil, 0, start, increment)
     end
-    local rangeIncreasing = start <= ____end
-    local exclusiveEnd = rangeIncreasing and ____end + 1 or ____end - 1
+    local exclusiveEnd = ____end + 1
     return ____exports.eRange(nil, start, exclusiveEnd, increment)
 end
 --- Helper function to check if a variable is within a certain range, inclusive on both ends.
@@ -19449,6 +19464,8 @@ end
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.functions.types"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__TypeOf = ____lualib.__TS__TypeOf
 local ____exports = {}
 function ____exports.isNumber(self, variable)
     return type(variable) == "number"
@@ -19558,7 +19575,7 @@ function ____exports.isInteger(self, variable)
 end
 --- Helper function to detect if a variable is a boolean, number, or string.
 function ____exports.isPrimitive(self, variable)
-    local variableType = type(variable)
+    local variableType = __TS__TypeOf(variable)
     return variableType == "boolean" or variableType == "number" or variableType == "string"
 end
 function ____exports.isString(self, variable)
@@ -21863,6 +21880,9 @@ local __TS__ArraySlice = ____lualib.__TS__ArraySlice
 local __TS__SparseArrayNew = ____lualib.__TS__SparseArrayNew
 local __TS__SparseArrayPush = ____lualib.__TS__SparseArrayPush
 local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
+local Set = ____lualib.Set
+local __TS__Spread = ____lualib.__TS__Spread
+local __TS__ArraySort = ____lualib.__TS__ArraySort
 local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
 local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
 local __TS__ArraySome = ____lualib.__TS__ArraySome
@@ -21876,6 +21896,8 @@ local getRandomInt = ____random.getRandomInt
 local ____rng = require("lua_modules.isaacscript-common.dist.functions.rng")
 local isRNG = ____rng.isRNG
 local newRNG = ____rng.newRNG
+local ____sort = require("lua_modules.isaacscript-common.dist.functions.sort")
+local sortNormal = ____sort.sortNormal
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
 local isNumber = ____types.isNumber
 local isTable = ____types.isTable
@@ -22162,14 +22184,14 @@ end
 -- This is named `filterMap` after the Rust function:
 -- https://doc.rust-lang.org/std/iter/struct.FilterMap.html
 function ____exports.filterMap(self, array, func)
-    local newArray = {}
+    local filteredArray = {}
     for ____, element in ipairs(array) do
         local newElement = func(nil, element)
         if newElement ~= nil then
-            newArray[#newArray + 1] = newElement
+            filteredArray[#filteredArray + 1] = newElement
         end
     end
-    return newArray
+    return filteredArray
 end
 --- Helper function to get all possible combinations of the given array. This includes the
 -- combination of an empty array.
@@ -22221,6 +22243,20 @@ function ____exports.getArrayCombinations(self, array, includeEmptyArray, min, m
         __TS__ArrayUnshift(all, {})
     end
     return all
+end
+--- Helper function to get the duplicate elements in an array. Only one element for each value will
+-- be returned. The elements will be sorted before they are returned.
+function ____exports.getArrayDuplicateElements(self, array)
+    local duplicateElements = __TS__New(Set)
+    local set = __TS__New(Set)
+    for ____, element in ipairs(array) do
+        if set:has(element) then
+            duplicateElements:add(element)
+        end
+        set:add(element)
+    end
+    local values = {__TS__Spread(duplicateElements)}
+    return __TS__ArraySort(values, sortNormal)
 end
 --- Helper function to get an array containing the indexes of an array.
 -- 
@@ -22378,6 +22414,13 @@ function ____exports.isArrayContiguous(self, array)
     end
     return true
 end
+--- Helper function to check if all the elements of an array are unique within that array.
+-- 
+-- Under the hood, this is performed by converting the array to a set.
+function ____exports.isArrayElementsUnique(self, array)
+    local set = __TS__New(Set, array)
+    return set.size == #array
+end
 --- Checks if an array is in the provided 2-dimensional array.
 function ____exports.isArrayInArray(self, arrayToMatch, parentArray)
     return __TS__ArraySome(
@@ -22418,6 +22461,149 @@ function ____exports.sumArray(self, array)
         function(____, accumulator, element) return accumulator + element end,
         0
     )
+end
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.functions.sort"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__ArraySlice = ____lualib.__TS__ArraySlice
+local ____exports = {}
+local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
+local isNumber = ____types.isNumber
+local isString = ____types.isString
+local isTable = ____types.isTable
+function ____exports.sortNormal(self, a, b)
+    if not isNumber(nil, a) and not isString(nil, a) then
+        error("Failed to normal sort since the first value was not a number or string and was instead: " .. type(a))
+    end
+    if not isNumber(nil, b) and not isString(nil, b) then
+        error("Failed to normal sort since the second value was not a number or string and was instead: " .. type(b))
+    end
+    if a < b then
+        return -1
+    end
+    if a > b then
+        return 1
+    end
+    return 0
+end
+--- Helper function to sort an array of objects by one of the object keys.
+-- 
+-- For example:
+-- 
+-- ```ts
+-- const myArray = [
+--   {
+--     name: "alice",
+--     age: 30,
+--   },
+--   {
+--     name: "bob",
+--     age: 20,
+--   },
+-- ];
+-- myArray.sort(sortObjectArrayByKey("age"));
+-- ```
+function ____exports.sortObjectArrayByKey(self, key)
+    return function(____, a, b)
+        if not isTable(nil, a) then
+            error((("Failed to sort an object array by the key of \"" .. key) .. "\" since the first element was not a table and was instead: ") .. type(a))
+        end
+        if not isTable(nil, b) then
+            error(((("Failed to sort an object array by the key of \"" .. key) .. "\" since the second element was not a table and was instead: ") .. type(b)) .. ".")
+        end
+        local aValue = a[key]
+        local bValue = b[key]
+        return ____exports.sortNormal(nil, aValue, bValue)
+    end
+end
+--- Helper function to sort a two-dimensional array by the first element.
+-- 
+-- For example:
+-- 
+-- ```ts
+-- const myArray = [[1, 2], [2, 3], [3, 4]];
+-- myArray.sort(sortTwoDimensionalArray);
+-- ```
+-- 
+-- This function also properly handles when the array elements are strings or numbers (instead of
+-- another array).
+-- 
+-- From:
+-- https://stackoverflow.com/questions/16096872/how-to-sort-2-dimensional-array-by-column-value
+function ____exports.sortTwoDimensionalArray(self, a, b)
+    local aType = type(a)
+    local bType = type(b)
+    if aType ~= bType then
+        error(((((((("Failed to two-dimensional sort since the two elements were disparate types: " .. tostring(a)) .. " & ") .. tostring(b)) .. " (") .. aType) .. " & ") .. bType) .. ")")
+    end
+    if aType == "string" or aType == "number" then
+        return ____exports.sortNormal(nil, a, b)
+    end
+    if aType ~= "table" then
+        error("Failed to two-dimensional sort since the first element was not a string, number, or table.")
+    end
+    if bType ~= "table" then
+        error("Failed to two-dimensional sort since the second element was not a string, number, or table.")
+    end
+    local firstElement1 = a[1]
+    local firstElement2 = b[1]
+    if firstElement1 == nil or firstElement1 == nil then
+        error("Failed to two-dimensional sort since the first element of the first array was undefined.")
+    end
+    if firstElement2 == nil or firstElement2 == nil then
+        error("Failed to two-dimensional sort since the first element of the second array was undefined.")
+    end
+    local elementType1 = type(firstElement1)
+    local elementType2 = type(firstElement2)
+    if elementType1 ~= elementType2 then
+        error(((((((("Failed to two-dimensional sort since the first element of each array were disparate types: " .. tostring(firstElement1)) .. " & ") .. tostring(firstElement2)) .. " (") .. elementType1) .. " & ") .. elementType2) .. ")")
+    end
+    return ____exports.sortNormal(nil, firstElement1, firstElement2)
+end
+--- Helper function to sort an array in a stable way.
+-- 
+-- This is useful because by default, the transpiled `Array.sort` method from TSTL is not stable.
+-- 
+-- Under the hood, this uses the merge sort algorithm.
+function ____exports.stableSort(self, array, sortFunc)
+    if sortFunc == nil then
+        sortFunc = ____exports.sortNormal
+    end
+    if #array <= 1 then
+        return array
+    end
+    local middleIndex = math.floor(#array / 2)
+    local leftArray = __TS__ArraySlice(array, 0, middleIndex)
+    local rightArray = __TS__ArraySlice(array, middleIndex)
+    local sortedLeftArray = ____exports.stableSort(nil, leftArray, sortFunc)
+    local sortedRightArray = ____exports.stableSort(nil, rightArray, sortFunc)
+    local mergedArray = {}
+    local leftIndex = 0
+    local rightIndex = 0
+    while leftIndex < #sortedLeftArray and rightIndex < #sortedRightArray do
+        local left = sortedLeftArray[leftIndex + 1]
+        local right = sortedRightArray[rightIndex + 1]
+        local sortResult = sortFunc(nil, left, right)
+        if sortResult == -1 or sortResult == 0 then
+            mergedArray[#mergedArray + 1] = left
+            leftIndex = leftIndex + 1
+        else
+            mergedArray[#mergedArray + 1] = right
+            rightIndex = rightIndex + 1
+        end
+    end
+    while leftIndex < #sortedLeftArray do
+        local left = sortedLeftArray[leftIndex + 1]
+        mergedArray[#mergedArray + 1] = left
+        leftIndex = leftIndex + 1
+    end
+    while rightIndex < #sortedRightArray do
+        local right = sortedRightArray[rightIndex + 1]
+        mergedArray[#mergedArray + 1] = right
+        rightIndex = rightIndex + 1
+    end
+    return mergedArray
 end
 return ____exports
  end,
@@ -23340,9 +23526,7 @@ local TrinketType = ____isaac_2Dtypescript_2Ddefinitions.TrinketType
 local ____enums = require("lua_modules.isaacscript-common.dist.functions.enums")
 local getEnumLength = ____enums.getEnumLength
 local getHighestEnumValue = ____enums.getHighestEnumValue
-local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
-local iRange = ____utils.iRange
---- Equal to `CollectibleType.SAD_ONION`.
+--- Equal to `CollectibleType.SAD_ONION` (1).
 ____exports.FIRST_COLLECTIBLE_TYPE = CollectibleType.SAD_ONION
 --- Calculated from the `CollectibleType` enum.
 -- 
@@ -23351,7 +23535,7 @@ ____exports.FIRST_COLLECTIBLE_TYPE = CollectibleType.SAD_ONION
 ____exports.LAST_VANILLA_COLLECTIBLE_TYPE = getHighestEnumValue(nil, CollectibleType)
 --- Calculated from the `CollectibleType` enum. (`CollectibleType.NULL` is not included.)
 ____exports.NUM_VANILLA_COLLECTIBLE_TYPES = getEnumLength(nil, CollectibleType) - 1
---- Equal to `TrinketType.SWALLOWED_PENNY`.
+--- Equal to `TrinketType.SWALLOWED_PENNY` (1).
 ____exports.FIRST_TRINKET_TYPE = TrinketType.SWALLOWED_PENNY
 --- Calculated from the `TrinketType` enum.
 -- 
@@ -23360,35 +23544,37 @@ ____exports.FIRST_TRINKET_TYPE = TrinketType.SWALLOWED_PENNY
 ____exports.LAST_VANILLA_TRINKET_TYPE = getHighestEnumValue(nil, TrinketType)
 --- Calculated from the `TrinketType` enum. (`TrinketType.NULL` is not included.)
 ____exports.NUM_VANILLA_TRINKET_TYPES = getEnumLength(nil, TrinketType) - 1
---- Equal to `Card.FOOL`.
+--- Equal to `Card.FOOL` (1).
 ____exports.FIRST_CARD_TYPE = CardType.FOOL
 --- Calculated from the `CardType` enum.
 ____exports.LAST_VANILLA_CARD_TYPE = getHighestEnumValue(nil, CardType)
 --- Calculated from the `Card` enum. `Card.NULL` is not included.
 ____exports.NUM_VANILLA_CARD_TYPES = getEnumLength(nil, CardType) - 1
---- Equal to `PillEffect.BAD_GAS`.
+--- Equal to `PillEffect.BAD_GAS` (0).
 ____exports.FIRST_PILL_EFFECT = PillEffect.BAD_GAS
 --- Calculated from the `PillEffect` enum.
 ____exports.LAST_VANILLA_PILL_EFFECT = getHighestEnumValue(nil, PillEffect)
 --- Calculated from the `PillEffect` enum. (There is no `PillEffect.NULL` in the custom enum, so we
 -- do not have to subtract one here.)
 ____exports.NUM_VANILLA_PILL_EFFECTS = getEnumLength(nil, PillEffect)
---- Equal to `PillColor.BLUE_BLUE`.
+--- Equal to `PillColor.BLUE_BLUE` (1).
 ____exports.FIRST_PILL_COLOR = PillColor.BLUE_BLUE
---- Equal to `PillColor.WHITE_YELLOW`.
+--- Equal to `PillColor.WHITE_YELLOW` (13).
 -- 
 -- Note that `PillColor.GOLD` is technically higher, but that is not considered for the purposes of
 -- this constant.
 ____exports.LAST_NORMAL_PILL_COLOR = PillColor.WHITE_YELLOW
---- Equal to `PillColor.HORSE_BLUE_BLUE`.
+--- Equal to `PillColor.HORSE_BLUE_BLUE` (2049).
 ____exports.FIRST_HORSE_PILL_COLOR = PillColor.HORSE_BLUE_BLUE
---- Equal to `PillColor.HORSE_WHITE_YELLOW`.
+--- Equal to `PillColor.HORSE_WHITE_YELLOW` (2061).
 -- 
 -- Note that `PillColor.HORSE_GOLD` is technically higher, but that is not considered for the
 -- purposes of this constant.
 ____exports.LAST_HORSE_PILL_COLOR = PillColor.HORSE_WHITE_YELLOW
-____exports.NUM_NORMAL_PILL_COLORS = #iRange(nil, ____exports.FIRST_PILL_COLOR, ____exports.LAST_NORMAL_PILL_COLOR)
---- Equal to `PlayerType.ISAAC`.
+--- Calculated from the difference between the first pill color and the last pill color. This does
+-- not include Gold Pills. In Repentance, this should be equal to 13.
+____exports.NUM_NORMAL_PILL_COLORS = ____exports.LAST_NORMAL_PILL_COLOR - ____exports.FIRST_PILL_COLOR + 1
+--- Equal to `PlayerType.ISAAC` (0).
 ____exports.FIRST_CHARACTER = PlayerType.ISAAC
 --- Calculated from the `PlayerType` enum.
 ____exports.LAST_VANILLA_CHARACTER = getHighestEnumValue(nil, PlayerType)
@@ -23398,8 +23584,11 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.functions.enums"] = function(...) 
 local ____lualib = require("lualib_bundle")
+local __TS__ObjectEntries = ____lualib.__TS__ObjectEntries
+local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArraySort = ____lualib.__TS__ArraySort
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local __TS__ArrayToSorted = ____lualib.__TS__ArrayToSorted
 local __TS__ArrayAt = ____lualib.__TS__ArrayAt
 local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
 local __TS__New = ____lualib.__TS__New
@@ -23408,6 +23597,8 @@ local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.types.Reado
 local ReadonlySet = ____ReadonlySet.ReadonlySet
 local ____array = require("lua_modules.isaacscript-common.dist.functions.array")
 local getRandomArrayElement = ____array.getRandomArrayElement
+local ____sort = require("lua_modules.isaacscript-common.dist.functions.sort")
+local sortNormal = ____sort.sortNormal
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
 local isNumber = ____types.isNumber
 local isString = ____types.isString
@@ -23431,14 +23622,19 @@ local iRange = ____utils.iRange
 -- For a more in depth explanation, see:
 -- https://isaacscript.github.io/main/gotchas#iterating-over-enums
 function ____exports.getEnumEntries(self, transpiledEnum)
-    local enumEntries = {}
-    for key, value in pairs(transpiledEnum) do
-        if isString(nil, key) then
-            enumEntries[#enumEntries + 1] = {key, value}
+    local entries = __TS__ObjectEntries(transpiledEnum)
+    local numberEntries = __TS__ArrayFilter(
+        entries,
+        function(____, ____bindingPattern0)
+            local value
+            local _key = ____bindingPattern0[1]
+            value = ____bindingPattern0[2]
+            return type(value) == "number"
         end
-    end
+    )
+    local entriesToReturn = #numberEntries > 0 and numberEntries or entries
     __TS__ArraySort(
-        enumEntries,
+        entriesToReturn,
         function(____, ____bindingPattern0, ____bindingPattern1)
             local value1
             local _key1 = ____bindingPattern0[1]
@@ -23449,7 +23645,7 @@ function ____exports.getEnumEntries(self, transpiledEnum)
             return value1 < value2 and -1 or (value1 > value2 and 1 or 0)
         end
     )
-    return enumEntries
+    return entriesToReturn
 end
 --- TypeScriptToLua will transpile TypeScript number enums to Lua tables that have a double mapping.
 -- Thus, when you iterate over them, you will get both the names of the enums and the values of the
@@ -23543,8 +23739,9 @@ end
 -- Throws an error if the provided enum is empty.
 function ____exports.getHighestEnumValue(self, transpiledEnum)
     local enumValues = ____exports.getEnumValues(nil, transpiledEnum)
-    local lastElement = __TS__ArrayAt(enumValues, -1)
-    assertDefined(nil, lastElement, "Failed to get the last value from an enum since the enum was empty.")
+    local sortedValues = __TS__ArrayToSorted(enumValues, sortNormal)
+    local lastElement = __TS__ArrayAt(sortedValues, -1)
+    assertDefined(nil, lastElement, "Failed to get the highest value from an enum since the enum was empty.")
     return lastElement
 end
 --- Helper function to get the enum value with the lowest value.
@@ -23555,8 +23752,9 @@ end
 -- Throws an error if the provided enum is empty.
 function ____exports.getLowestEnumValue(self, transpiledEnum)
     local enumValues = ____exports.getEnumValues(nil, transpiledEnum)
-    local firstElement = enumValues[1]
-    assertDefined(nil, firstElement, "Failed to get the first value from an enum since the enum was empty.")
+    local sortedValues = __TS__ArrayToSorted(enumValues, sortNormal)
+    local firstElement = sortedValues[1]
+    assertDefined(nil, firstElement, "Failed to get the lowest value from an enum since the enum was empty.")
     return firstElement
 end
 --- Helper function to get a random value from the provided enum.
@@ -25700,7 +25898,7 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local ActiveSlot = ____isaac_2Dtypescript_2Ddefinitions.ActiveSlot
 local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local ACTIVE_SLOT_VALUES = ____cachedEnumValues.ACTIVE_SLOT_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -26436,6 +26634,7 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
+local MAIN_CHARACTERS_SET
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
 local ____constants = require("lua_modules.isaacscript-common.dist.core.constants")
@@ -26467,6 +26666,11 @@ local ____lostStyleCharactersSet = require("lua_modules.isaacscript-common.dist.
 local LOST_STYLE_CHARACTERS_SET = ____lostStyleCharactersSet.LOST_STYLE_CHARACTERS_SET
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
+--- Helper function to check if the provided character is one of the characters that are selectable
+-- from the main menu (and have achievements related to completing the various bosses and so on).
+function ____exports.isMainCharacter(self, character)
+    return MAIN_CHARACTERS_SET:has(character)
+end
 function ____exports.isModdedCharacter(self, character)
     return not ____exports.isVanillaCharacter(nil, character)
 end
@@ -26474,37 +26678,37 @@ function ____exports.isVanillaCharacter(self, character)
     return character <= LAST_VANILLA_CHARACTER
 end
 local FLYING_CHARACTERS_SET = __TS__New(ReadonlySet, FLYING_CHARACTERS)
-local MAIN_CHARACTERS_SET = __TS__New(ReadonlySet, MAIN_CHARACTERS)
+MAIN_CHARACTERS_SET = __TS__New(ReadonlySet, MAIN_CHARACTERS)
 local PNG_PATH_PREFIX = "characters/costumes"
 --- Helper function to determine if the given character can have red heart containers. Returns true
 -- for characters like Isaac, Magdalene, or Cain. Returns true for Keeper and Tainted Keeper, even
 -- though coin containers are not technically the same as red heart containers. Returns false for
 -- characters like Blue Baby. Returns false for The Lost and Tainted Lost.
-function ____exports.characterCanHaveRedHearts(self, character)
+function ____exports.canCharacterHaveRedHearts(self, character)
     return not CHARACTERS_WITH_NO_RED_HEARTS_SET:has(character)
 end
 --- Helper function to determine if the given character can have soul hearts. Returns true for
 -- characters like Isaac, Magdalene, or Cain. Returns false for characters like Bethany. Returns
 -- false for The Lost and Tainted Lost.
-function ____exports.characterCanHaveSoulHearts(self, character)
+function ____exports.canCharacterHaveSoulHearts(self, character)
     return not CHARACTERS_WITH_NO_SOUL_HEARTS_SET:has(character)
 end
 --- Helper function for determining whether the given character can take free Devil Deals. (e.g. The
 -- Lost, Tainted Lost, etc.)
-function ____exports.characterCanTakeFreeDevilDeals(self, character)
+function ____exports.canCharacterTakeFreeDevilDeals(self, character)
     return CHARACTERS_WITH_FREE_DEVIL_DEALS_SET:has(character)
 end
 --- Normally, characters get a red heart container upon reaching a new floor with an eternal heart,
 -- but some characters grant a black heart instead. Returns true for Dark Judas and Tainted Judas.
 -- Otherwise, returns false.
-function ____exports.characterGetsBlackHeartFromEternalHeart(self, character)
+function ____exports.doesCharacterGetBlackHeartFromEternalHeart(self, character)
     return CHARACTERS_WITH_BLACK_HEART_FROM_ETERNAL_HEART_SET:has(character)
 end
 --- Helper function to determine if the specified character starts with an active item.
 -- 
 -- For the purposes of this function, the save file is considered to be fully unlocked (e.g. Isaac
 -- is considered to starts with the D6, but this is not the case on a brand new save file).
-function ____exports.characterStartsWithActiveItem(self, character)
+function ____exports.doesCharacterStartWithActiveItem(self, character)
     return CHARACTERS_THAT_START_WITH_AN_ACTIVE_ITEM_SET:has(character)
 end
 --- Helper function to get the numerical damage multiplier for a character.
@@ -26582,13 +26786,72 @@ end
 function ____exports.getCharacterStartingTrinketType(self, character)
     return CHARACTER_STARTING_TRINKET_TYPE[character]
 end
+--- Helper function to get the "main" version of the character. In other words, this is the character
+-- that selectable from the main menu (and has achievements related to completing the various bosses
+-- and so on).
+-- 
+-- For example, the main character for `PlayerType.MAGDALENE` (1) is also `PlayerType.MAGDALENE`
+-- (1), but the main character for `PlayerType.LAZARUS_2` (11) would be `PlayerType.LAZARUS` (8).
+-- 
+-- For `PlayerType.POSSESSOR` (-1) and modded characters, the same character will be returned.
+function ____exports.getMainCharacter(self, character)
+    if ____exports.isMainCharacter(nil, character) or ____exports.isModdedCharacter(nil, character) then
+        return character
+    end
+    repeat
+        local ____switch24 = character
+        local ____cond24 = ____switch24 == PlayerType.POSSESSOR
+        if ____cond24 then
+            do
+                return PlayerType.POSSESSOR
+            end
+        end
+        ____cond24 = ____cond24 or ____switch24 == PlayerType.LAZARUS_2
+        if ____cond24 then
+            do
+                return PlayerType.LAZARUS
+            end
+        end
+        ____cond24 = ____cond24 or ____switch24 == PlayerType.DARK_JUDAS
+        if ____cond24 then
+            do
+                return PlayerType.JUDAS
+            end
+        end
+        ____cond24 = ____cond24 or ____switch24 == PlayerType.SOUL
+        if ____cond24 then
+            do
+                return PlayerType.FORGOTTEN
+            end
+        end
+        ____cond24 = ____cond24 or ____switch24 == PlayerType.ESAU
+        if ____cond24 then
+            do
+                return PlayerType.JACOB
+            end
+        end
+        ____cond24 = ____cond24 or ____switch24 == PlayerType.LAZARUS_2_B
+        if ____cond24 then
+            do
+                return PlayerType.LAZARUS_2
+            end
+        end
+        ____cond24 = ____cond24 or ____switch24 == PlayerType.JACOB_2_B
+        if ____cond24 then
+            do
+                return PlayerType.JACOB_B
+            end
+        end
+        ____cond24 = ____cond24 or ____switch24 == PlayerType.SOUL_B
+        if ____cond24 then
+            do
+                return PlayerType.FORGOTTEN_B
+            end
+        end
+    until true
+end
 function ____exports.isFlyingCharacter(self, character)
     return FLYING_CHARACTERS_SET:has(character)
-end
---- Helper function to check if the provided character is one of the characters that are selectable
--- from the main menu (and have achievements related to completing the various bosses and so on).
-function ____exports.isMainCharacter(self, character)
-    return MAIN_CHARACTERS_SET:has(character)
 end
 return ____exports
  end,
@@ -28341,7 +28604,7 @@ ____exports.VANILLA_PILL_EFFECTS = __TS__ArrayFilter(
 ____exports.VANILLA_PILL_EFFECTS_SET = __TS__New(ReadonlySet, ____exports.VANILLA_PILL_EFFECTS)
 return ____exports
  end,
-["lua_modules.isaacscript-common.dist.arrays.cachedEnumValues"] = function(...) 
+["lua_modules.isaacscript-common.dist.cachedEnumValues"] = function(...) 
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local ActiveSlot = ____isaac_2Dtypescript_2Ddefinitions.ActiveSlot
@@ -28374,7 +28637,7 @@ local SerializationBrand = ____SerializationBrand.SerializationBrand
 local ____enums = require("lua_modules.isaacscript-common.dist.functions.enums")
 local getEnumValues = ____enums.getEnumValues
 ____exports.ACTIVE_SLOT_VALUES = getEnumValues(nil, ActiveSlot)
-____exports.BOSS_IDS = getEnumValues(nil, BossID)
+____exports.BOSS_ID_VALUES = getEnumValues(nil, BossID)
 ____exports.CACHE_FLAG_VALUES = getEnumValues(nil, CacheFlag)
 ____exports.CONTROLLER_INDEX_VALUES = getEnumValues(nil, ControllerIndex)
 ____exports.DOOR_SLOT_FLAG_VALUES = getEnumValues(nil, DoorSlotFlag)
@@ -28758,7 +29021,7 @@ local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local ItemConfigTag = ____isaac_2Dtypescript_2Ddefinitions.ItemConfigTag
 local PlayerForm = ____isaac_2Dtypescript_2Ddefinitions.PlayerForm
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local PLAYER_FORM_VALUES = ____cachedEnumValues.PLAYER_FORM_VALUES
 local ____transformationNames = require("lua_modules.isaacscript-common.dist.objects.transformationNames")
 local TRANSFORMATION_NAMES = ____transformationNames.TRANSFORMATION_NAMES
@@ -29175,15 +29438,17 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local GameStateFlag = ____isaac_2Dtypescript_2Ddefinitions.GameStateFlag
 local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
 local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
+local StageID = ____isaac_2Dtypescript_2Ddefinitions.StageID
 local StageType = ____isaac_2Dtypescript_2Ddefinitions.StageType
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
-local ____levelNames = require("lua_modules.isaacscript-common.dist.objects.levelNames")
-local LEVEL_NAMES = ____levelNames.LEVEL_NAMES
 local ____roomTypeSpecialGotoPrefixes = require("lua_modules.isaacscript-common.dist.objects.roomTypeSpecialGotoPrefixes")
 local ROOM_TYPE_SPECIAL_GOTO_PREFIXES = ____roomTypeSpecialGotoPrefixes.ROOM_TYPE_SPECIAL_GOTO_PREFIXES
+local ____stageIDNames = require("lua_modules.isaacscript-common.dist.objects.stageIDNames")
+local STAGE_ID_NAMES = ____stageIDNames.STAGE_ID_NAMES
 local ____stageToStageID = require("lua_modules.isaacscript-common.dist.objects.stageToStageID")
 local STAGE_TO_STAGE_ID = ____stageToStageID.STAGE_TO_STAGE_ID
+local STAGE_TO_STAGE_ID_GREED_MODE = ____stageToStageID.STAGE_TO_STAGE_ID_GREED_MODE
 local ____stageTypeSuffixes = require("lua_modules.isaacscript-common.dist.objects.stageTypeSuffixes")
 local STAGE_TYPE_SUFFIXES = ____stageTypeSuffixes.STAGE_TYPE_SUFFIXES
 local ____log = require("lua_modules.isaacscript-common.dist.functions.log")
@@ -29192,6 +29457,45 @@ local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
 local asLevelStage = ____types.asLevelStage
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local inRange = ____utils.inRange
+--- Helper function to get the stage ID that corresponds to a particular stage and stage type.
+-- 
+-- This is useful because `getRoomStageID` will not correctly return the `StageID` if the player is
+-- in a special room.
+-- 
+-- This correctly handles the case of Greed Mode. In Greed Mode, if an undefined stage and stage
+-- type combination are passed, `StageID.SPECIAL_ROOMS` (0) will be returned.
+-- 
+-- @param stage Optional. If not specified, the stage corresponding to the current floor will be
+-- used.
+-- @param stageType Optional. If not specified, the stage type corresponding to the current floor
+-- will be used.
+function ____exports.getStageID(self, stage, stageType)
+    local level = game:GetLevel()
+    if stage == nil then
+        stage = level:GetStage()
+    end
+    if stageType == nil then
+        stageType = level:GetStageType()
+    end
+    if game:IsGreedMode() then
+        local stageTypeToStageID = STAGE_TO_STAGE_ID_GREED_MODE:get(stage)
+        if stageTypeToStageID == nil then
+            return StageID.SPECIAL_ROOMS
+        end
+        return stageTypeToStageID[stageType]
+    end
+    local stageTypeToStageID = STAGE_TO_STAGE_ID[stage]
+    return stageTypeToStageID[stageType]
+end
+--- Helper function to get the English name corresponding to a stage ID. For example, "Caves".
+-- 
+-- This is derived from the data in the "stages.xml" file.
+-- 
+-- Note that unlike "stages.xml", Blue Womb is specified with a name of "Blue Womb" instead of
+-- "???".
+function ____exports.getStageIDName(self, stageID)
+    return STAGE_ID_NAMES[stageID]
+end
 --- Helper function to check if the provided stage type is equal to `StageType.REPENTANCE` or
 -- `StageType.REPENTANCE_B`.
 function ____exports.isRepentanceStage(self, stageType)
@@ -29284,32 +29588,38 @@ function ____exports.getLevelName(self, stage, stageType)
     if stageType == nil then
         stageType = level:GetStageType()
     end
-    local stageNames = LEVEL_NAMES[stage]
-    return stageNames[stageType]
+    local stageID = ____exports.getStageID(nil, stage, stageType)
+    local stageIDName = ____exports.getStageIDName(nil, stageID)
+    local suffix
+    repeat
+        local ____switch14 = stage
+        local ____cond14 = ____switch14 == LevelStage.BASEMENT_1 or ____switch14 == LevelStage.CAVES_1 or ____switch14 == LevelStage.DEPTHS_1 or ____switch14 == LevelStage.WOMB_1
+        if ____cond14 then
+            do
+                suffix = " 1"
+                break
+            end
+        end
+        ____cond14 = ____cond14 or (____switch14 == LevelStage.BASEMENT_2 or ____switch14 == LevelStage.CAVES_2 or ____switch14 == LevelStage.DEPTHS_2 or ____switch14 == LevelStage.WOMB_2)
+        if ____cond14 then
+            do
+                suffix = " 2"
+                break
+            end
+        end
+        do
+            do
+                suffix = ""
+                break
+            end
+        end
+    until true
+    return stageIDName .. suffix
 end
 --- Alias for the `Level.GetStage` method.
 function ____exports.getStage(self)
     local level = game:GetLevel()
     return level:GetStage()
-end
---- Helper function to get the stage ID that corresponds to a particular floor. It does this by
--- manually converting `LevelStage` and `StageType` into `StageID`. This is useful because
--- `getRoomStageID` will not correctly return the `StageID` if the player is in a special room.
--- 
--- @param stage Optional. If not specified, the stage corresponding to the current floor will be
--- used.
--- @param stageType Optional. If not specified, the stage type corresponding to the current floor
--- will be used.
-function ____exports.getStageID(self, stage, stageType)
-    local level = game:GetLevel()
-    if stage == nil then
-        stage = level:GetStage()
-    end
-    if stageType == nil then
-        stageType = level:GetStageType()
-    end
-    local stageTypeToStageID = STAGE_TO_STAGE_ID[stage]
-    return stageTypeToStageID[stageType]
 end
 --- Alias for the `Level.GetStageType` method.
 function ____exports.getStageType(self)
@@ -29570,11 +29880,15 @@ ____exports.STAGE_TYPE_SUFFIXES = {
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.objects.stageToStageID"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__New = ____lualib.__TS__New
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
 local StageID = ____isaac_2Dtypescript_2Ddefinitions.StageID
 local StageType = ____isaac_2Dtypescript_2Ddefinitions.StageType
+local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.types.ReadonlyMap")
+local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 local BASEMENT_TO_STAGE_ID = {
     [StageType.ORIGINAL] = StageID.BASEMENT,
     [StageType.WRATH_OF_THE_LAMB] = StageID.CELLAR,
@@ -29662,6 +29976,74 @@ ____exports.STAGE_TO_STAGE_ID = {
     [LevelStage.VOID] = VOID_TO_STAGE_ID,
     [LevelStage.HOME] = HOME_TO_STAGE_ID
 }
+local SHOP_TO_STAGE_ID = {
+    [StageType.ORIGINAL] = StageID.SHOP,
+    [StageType.WRATH_OF_THE_LAMB] = StageID.SHOP,
+    [StageType.AFTERBIRTH] = StageID.SHOP,
+    [StageType.GREED_MODE] = StageID.SHOP,
+    [StageType.REPENTANCE] = StageID.SHOP,
+    [StageType.REPENTANCE_B] = StageID.SHOP
+}
+local ULTRA_GREED_TO_STAGE_ID = {
+    [StageType.ORIGINAL] = StageID.ULTRA_GREED,
+    [StageType.WRATH_OF_THE_LAMB] = StageID.ULTRA_GREED,
+    [StageType.AFTERBIRTH] = StageID.ULTRA_GREED,
+    [StageType.GREED_MODE] = StageID.ULTRA_GREED,
+    [StageType.REPENTANCE] = StageID.ULTRA_GREED,
+    [StageType.REPENTANCE_B] = StageID.ULTRA_GREED
+}
+____exports.STAGE_TO_STAGE_ID_GREED_MODE = __TS__New(ReadonlyMap, {
+    {LevelStage.BASEMENT_GREED_MODE, BASEMENT_TO_STAGE_ID},
+    {LevelStage.CAVES_GREED_MODE, CAVES_TO_STAGE_ID},
+    {LevelStage.DEPTHS_GREED_MODE, DEPTHS_TO_STAGE_ID},
+    {LevelStage.WOMB_GREED_MODE, WOMB_TO_STAGE_ID},
+    {LevelStage.SHEOL_GREED_MODE, SHEOL_CATHEDRAL_TO_STAGE_ID},
+    {LevelStage.SHOP_GREED_MODE, SHOP_TO_STAGE_ID},
+    {LevelStage.ULTRA_GREED_GREED_MODE, ULTRA_GREED_TO_STAGE_ID}
+})
+return ____exports
+ end,
+["lua_modules.isaacscript-common.dist.objects.stageIDNames"] = function(...) 
+local ____exports = {}
+local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
+local StageID = ____isaac_2Dtypescript_2Ddefinitions.StageID
+--- Derived from "stages.xml". Note that unlike "stages.xml":
+-- 
+-- - `StageID.BLUE_WOMB` (13) is specified with a name of "Blue Womb" instead of "???".
+-- - `StageID.StageID.BACKWARDS` (36) is specified with a name of "The Ascent" instead of "???".
+____exports.STAGE_ID_NAMES = {
+    [StageID.SPECIAL_ROOMS] = "Special Rooms",
+    [StageID.BASEMENT] = "Basement",
+    [StageID.CELLAR] = "Cellar",
+    [StageID.BURNING_BASEMENT] = "Burning Basement",
+    [StageID.CAVES] = "Caves",
+    [StageID.CATACOMBS] = "Catacombs",
+    [StageID.FLOODED_CAVES] = "Flooded Caves",
+    [StageID.DEPTHS] = "Depths",
+    [StageID.NECROPOLIS] = "Necropolis",
+    [StageID.DANK_DEPTHS] = "Dank Depths",
+    [StageID.WOMB] = "Womb",
+    [StageID.UTERO] = "Utero",
+    [StageID.SCARRED_WOMB] = "Scarred Womb",
+    [StageID.BLUE_WOMB] = "Blue Womb",
+    [StageID.SHEOL] = "Sheol",
+    [StageID.CATHEDRAL] = "Cathedral",
+    [StageID.DARK_ROOM] = "Dark Room",
+    [StageID.CHEST] = "Chest",
+    [StageID.SHOP] = "The Shop",
+    [StageID.ULTRA_GREED] = "Ultra Greed",
+    [StageID.VOID] = "The Void",
+    [StageID.DOWNPOUR] = "Downpour",
+    [StageID.DROSS] = "Dross",
+    [StageID.MINES] = "Mines",
+    [StageID.ASHPIT] = "Ashpit",
+    [StageID.MAUSOLEUM] = "Mausoleum",
+    [StageID.GEHENNA] = "Gehenna",
+    [StageID.CORPSE] = "Corpse",
+    [StageID.MORTIS] = "Mortis",
+    [StageID.HOME] = "Home",
+    [StageID.BACKWARDS] = "The Ascent"
+}
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.objects.roomTypeSpecialGotoPrefixes"] = function(...) 
@@ -29698,125 +30080,6 @@ ____exports.ROOM_TYPE_SPECIAL_GOTO_PREFIXES = {
     [RoomType.SECRET_EXIT] = "secretexit",
     [RoomType.BLUE] = "blue",
     [RoomType.ULTRA_SECRET] = "ultrasecret"
-}
-return ____exports
- end,
-["lua_modules.isaacscript-common.dist.objects.levelNames"] = function(...) 
-local ____exports = {}
-local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
-local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
-local StageType = ____isaac_2Dtypescript_2Ddefinitions.StageType
---- A mapping of stage and stage types to the corresponding English level name.
--- 
--- This is useful because the `Level.GetName` method returns a localized version of the level name,
--- which will not display correctly on some fonts.
--- 
--- Note that this contains "Blue Womb" instead of "???" for stage 9.
-____exports.LEVEL_NAMES = {
-    [LevelStage.BASEMENT_1] = {
-        [StageType.ORIGINAL] = "Basement 1",
-        [StageType.WRATH_OF_THE_LAMB] = "Cellar 1",
-        [StageType.AFTERBIRTH] = "Burning Basement 1",
-        [StageType.GREED_MODE] = "Basement",
-        [StageType.REPENTANCE] = "Downpour 1",
-        [StageType.REPENTANCE_B] = "Dross 1"
-    },
-    [LevelStage.BASEMENT_2] = {
-        [StageType.ORIGINAL] = "Basement 2",
-        [StageType.WRATH_OF_THE_LAMB] = "Cellar 2",
-        [StageType.AFTERBIRTH] = "Burning Basement 2",
-        [StageType.GREED_MODE] = "Basement",
-        [StageType.REPENTANCE] = "Downpour 2",
-        [StageType.REPENTANCE_B] = "Dross 2"
-    },
-    [LevelStage.CAVES_1] = {
-        [StageType.ORIGINAL] = "Caves 1",
-        [StageType.WRATH_OF_THE_LAMB] = "Catacombs 1",
-        [StageType.AFTERBIRTH] = "Flooded Caves 1",
-        [StageType.GREED_MODE] = "Caves",
-        [StageType.REPENTANCE] = "Mines 1",
-        [StageType.REPENTANCE_B] = "Ashpit 1"
-    },
-    [LevelStage.CAVES_2] = {
-        [StageType.ORIGINAL] = "Caves 2",
-        [StageType.WRATH_OF_THE_LAMB] = "Catacombs 2",
-        [StageType.AFTERBIRTH] = "Flooded Caves 2",
-        [StageType.GREED_MODE] = "Caves",
-        [StageType.REPENTANCE] = "Mines 2",
-        [StageType.REPENTANCE_B] = "Ashpit 2"
-    },
-    [LevelStage.DEPTHS_1] = {
-        [StageType.ORIGINAL] = "Depths 1",
-        [StageType.WRATH_OF_THE_LAMB] = "Necropolis 1",
-        [StageType.AFTERBIRTH] = "Dank Depths 1",
-        [StageType.GREED_MODE] = "Depths",
-        [StageType.REPENTANCE] = "Mausoleum 1",
-        [StageType.REPENTANCE_B] = "Gehenna 1"
-    },
-    [LevelStage.DEPTHS_2] = {
-        [StageType.ORIGINAL] = "Depths 2",
-        [StageType.WRATH_OF_THE_LAMB] = "Necropolis 2",
-        [StageType.AFTERBIRTH] = "Dank Depths 2",
-        [StageType.GREED_MODE] = "Depths",
-        [StageType.REPENTANCE] = "Mausoleum 2",
-        [StageType.REPENTANCE_B] = "Gehenna 2"
-    },
-    [LevelStage.WOMB_1] = {
-        [StageType.ORIGINAL] = "Womb 1",
-        [StageType.WRATH_OF_THE_LAMB] = "Utero 1",
-        [StageType.AFTERBIRTH] = "Scarred Womb 1",
-        [StageType.GREED_MODE] = "Womb",
-        [StageType.REPENTANCE] = "Corpse 1",
-        [StageType.REPENTANCE_B] = "Mortis 1"
-    },
-    [LevelStage.WOMB_2] = {
-        [StageType.ORIGINAL] = "Womb 2",
-        [StageType.WRATH_OF_THE_LAMB] = "Utero 2",
-        [StageType.AFTERBIRTH] = "Scarred Womb 2",
-        [StageType.GREED_MODE] = "Womb",
-        [StageType.REPENTANCE] = "Corpse 2",
-        [StageType.REPENTANCE_B] = "Mortis 2"
-    },
-    [LevelStage.BLUE_WOMB] = {
-        [StageType.ORIGINAL] = "Blue Womb",
-        [StageType.WRATH_OF_THE_LAMB] = "Blue Womb",
-        [StageType.AFTERBIRTH] = "Blue Womb",
-        [StageType.GREED_MODE] = "Blue Womb",
-        [StageType.REPENTANCE] = "Blue Womb",
-        [StageType.REPENTANCE_B] = "Blue Womb"
-    },
-    [LevelStage.SHEOL_CATHEDRAL] = {
-        [StageType.ORIGINAL] = "Sheol",
-        [StageType.WRATH_OF_THE_LAMB] = "Cathedral",
-        [StageType.AFTERBIRTH] = "Undefined",
-        [StageType.GREED_MODE] = "Sheol",
-        [StageType.REPENTANCE] = "Undefined",
-        [StageType.REPENTANCE_B] = "Undefined"
-    },
-    [LevelStage.DARK_ROOM_CHEST] = {
-        [StageType.ORIGINAL] = "Dark Room",
-        [StageType.WRATH_OF_THE_LAMB] = "The Chest",
-        [StageType.AFTERBIRTH] = "Undefined",
-        [StageType.GREED_MODE] = "The Shop",
-        [StageType.REPENTANCE] = "Undefined",
-        [StageType.REPENTANCE_B] = "Undefined"
-    },
-    [LevelStage.VOID] = {
-        [StageType.ORIGINAL] = "The Void",
-        [StageType.WRATH_OF_THE_LAMB] = "The Void",
-        [StageType.AFTERBIRTH] = "The Void",
-        [StageType.GREED_MODE] = "The Void",
-        [StageType.REPENTANCE] = "The Void",
-        [StageType.REPENTANCE_B] = "The Void"
-    },
-    [LevelStage.HOME] = {
-        [StageType.ORIGINAL] = "Home",
-        [StageType.WRATH_OF_THE_LAMB] = "Home",
-        [StageType.AFTERBIRTH] = "Home",
-        [StageType.GREED_MODE] = "Home",
-        [StageType.REPENTANCE] = "Home",
-        [StageType.REPENTANCE_B] = "Home"
-    }
 }
 return ____exports
  end,
@@ -30856,7 +31119,7 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.functions.sound"] = function(...) 
 local ____exports = {}
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local SOUND_EFFECT_VALUES = ____cachedEnumValues.SOUND_EFFECT_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -30994,149 +31257,6 @@ ____exports.STAGE_TO_MUSIC = {
 }
 return ____exports
  end,
-["lua_modules.isaacscript-common.dist.functions.sort"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__ArraySlice = ____lualib.__TS__ArraySlice
-local ____exports = {}
-local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
-local isNumber = ____types.isNumber
-local isString = ____types.isString
-local isTable = ____types.isTable
-local function sortNormal(self, a, b)
-    if not isNumber(nil, a) and not isString(nil, a) then
-        error("Failed to normal sort since the first value was not a number or string and was instead: " .. type(a))
-    end
-    if not isNumber(nil, b) and not isString(nil, b) then
-        error("Failed to normal sort since the second value was not a number or string and was instead: " .. type(b))
-    end
-    if a < b then
-        return -1
-    end
-    if a > b then
-        return 1
-    end
-    return 0
-end
---- Helper function to sort an array of objects by one of the object keys.
--- 
--- For example:
--- 
--- ```ts
--- const myArray = [
---   {
---     name: "alice",
---     age: 30,
---   },
---   {
---     name: "bob",
---     age: 20,
---   },
--- ];
--- myArray.sort(sortObjectArrayByKey("age"));
--- ```
-function ____exports.sortObjectArrayByKey(self, key)
-    return function(____, a, b)
-        if not isTable(nil, a) then
-            error((("Failed to sort an object array by the key of \"" .. key) .. "\" since the first element was not a table and was instead: ") .. type(a))
-        end
-        if not isTable(nil, b) then
-            error(((("Failed to sort an object array by the key of \"" .. key) .. "\" since the second element was not a table and was instead: ") .. type(b)) .. ".")
-        end
-        local aValue = a[key]
-        local bValue = b[key]
-        return sortNormal(nil, aValue, bValue)
-    end
-end
---- Helper function to sort a two-dimensional array by the first element.
--- 
--- For example:
--- 
--- ```ts
--- const myArray = [[1, 2], [2, 3], [3, 4]];
--- myArray.sort(twoDimensionalSort);
--- ```
--- 
--- This function also properly handles when the array elements are strings or numbers (instead of
--- another array).
--- 
--- From:
--- https://stackoverflow.com/questions/16096872/how-to-sort-2-dimensional-array-by-column-value
-function ____exports.sortTwoDimensionalArray(self, a, b)
-    local aType = type(a)
-    local bType = type(b)
-    if aType ~= bType then
-        error(((((((("Failed to two-dimensional sort since the two elements were disparate types: " .. tostring(a)) .. " & ") .. tostring(b)) .. " (") .. aType) .. " & ") .. bType) .. ")")
-    end
-    if aType == "string" or aType == "number" then
-        return sortNormal(nil, a, b)
-    end
-    if aType ~= "table" then
-        error("Failed to two-dimensional sort since the first element was not a string, number, or table.")
-    end
-    if bType ~= "table" then
-        error("Failed to two-dimensional sort since the second element was not a string, number, or table.")
-    end
-    local firstElement1 = a[1]
-    local firstElement2 = b[1]
-    if firstElement1 == nil or firstElement1 == nil then
-        error("Failed to two-dimensional sort since the first element of the first array was undefined.")
-    end
-    if firstElement2 == nil or firstElement2 == nil then
-        error("Failed to two-dimensional sort since the first element of the second array was undefined.")
-    end
-    local elementType1 = type(firstElement1)
-    local elementType2 = type(firstElement2)
-    if elementType1 ~= elementType2 then
-        error(((((((("Failed to two-dimensional sort since the first element of each array were disparate types: " .. tostring(firstElement1)) .. " & ") .. tostring(firstElement2)) .. " (") .. elementType1) .. " & ") .. elementType2) .. ")")
-    end
-    return sortNormal(nil, firstElement1, firstElement2)
-end
---- Helper function to sort an array in a stable way.
--- 
--- This is useful because by default, the transpiled `Array.sort` method from TSTL is not stable.
--- 
--- Under the hood, this uses the merge sort algorithm.
-function ____exports.stableSort(self, array, sortFunc)
-    if sortFunc == nil then
-        sortFunc = sortNormal
-    end
-    if #array <= 1 then
-        return array
-    end
-    local middleIndex = math.floor(#array / 2)
-    local leftArray = __TS__ArraySlice(array, 0, middleIndex)
-    local rightArray = __TS__ArraySlice(array, middleIndex)
-    local sortedLeftArray = ____exports.stableSort(nil, leftArray, sortFunc)
-    local sortedRightArray = ____exports.stableSort(nil, rightArray, sortFunc)
-    local mergedArray = {}
-    local leftIndex = 0
-    local rightIndex = 0
-    while leftIndex < #sortedLeftArray and rightIndex < #sortedRightArray do
-        local left = sortedLeftArray[leftIndex + 1]
-        local right = sortedRightArray[rightIndex + 1]
-        local sortResult = sortFunc(nil, left, right)
-        if sortResult == -1 or sortResult == 0 then
-            mergedArray[#mergedArray + 1] = left
-            leftIndex = leftIndex + 1
-        else
-            mergedArray[#mergedArray + 1] = right
-            rightIndex = rightIndex + 1
-        end
-    end
-    while leftIndex < #sortedLeftArray do
-        local left = sortedLeftArray[leftIndex + 1]
-        mergedArray[#mergedArray + 1] = left
-        leftIndex = leftIndex + 1
-    end
-    while rightIndex < #sortedRightArray do
-        local right = sortedRightArray[rightIndex + 1]
-        mergedArray[#mergedArray + 1] = right
-        rightIndex = rightIndex + 1
-    end
-    return mergedArray
-end
-return ____exports
- end,
 ["lua_modules.isaacscript-common.dist.functions.slots"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__New = ____lualib.__TS__New
@@ -31236,6 +31356,8 @@ local ____array = require("lua_modules.isaacscript-common.dist.functions.array")
 local getArrayCombinations = ____array.getArrayCombinations
 local getRandomArrayElement = ____array.getRandomArrayElement
 local sumArray = ____array.sumArray
+local ____sort = require("lua_modules.isaacscript-common.dist.functions.sort")
+local sortNormal = ____sort.sortNormal
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
 local isPrimitive = ____types.isPrimitive
 --- Helper function to get a sorted array based on the contents of a set.
@@ -31251,7 +31373,7 @@ function ____exports.getSortedSetValues(self, set)
             error(("Failed to get the sorted set values because the provided set was of type \"" .. tostring(arrayType)) .. "\". Having sets with non-primitive types doesn't make much sense in general, so you might need to rethink what you are doing.")
         end
     end
-    __TS__ArraySort(values)
+    __TS__ArraySort(values, sortNormal)
     return values
 end
 --- Helper function to convert the keys of an object to a set.
@@ -31712,7 +31834,7 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local Challenge = ____isaac_2Dtypescript_2Ddefinitions.Challenge
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
 local SeedEffect = ____isaac_2Dtypescript_2Ddefinitions.SeedEffect
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local SEED_EFFECTS = ____cachedEnumValues.SEED_EFFECTS
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -32545,7 +32667,7 @@ local ____lualib = require("lualib_bundle")
 local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local DOOR_SLOT_FLAG_VALUES = ____cachedEnumValues.DOOR_SLOT_FLAG_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -32824,7 +32946,7 @@ local DoorVariant = ____isaac_2Dtypescript_2Ddefinitions.DoorVariant
 local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local GridRoom = ____isaac_2Dtypescript_2Ddefinitions.GridRoom
 local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local DOOR_SLOT_FLAG_VALUES = ____cachedEnumValues.DOOR_SLOT_FLAG_VALUES
 local DOOR_SLOT_VALUES = ____cachedEnumValues.DOOR_SLOT_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
@@ -33299,6 +33421,8 @@ local __TS__ArrayUnshift = ____lualib.__TS__ArrayUnshift
 local ____exports = {}
 local ____flag = require("lua_modules.isaacscript-common.dist.functions.flag")
 local addFlag = ____flag.addFlag
+local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
+local parseIntSafe = ____types.parseIntSafe
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local assertDefined = ____utils.assertDefined
 --- Helper function to convert a set of flags to a single `BitFlags` object.
@@ -33325,7 +33449,7 @@ function ____exports.convertDecimalToBinary(self, num, minLength)
     local bits = {}
     local bitsString = __TS__NumberToString(num, 2)
     for ____, bitString in __TS__Iterator(bitsString) do
-        local bit = tonumber(bitString)
+        local bit = parseIntSafe(nil, bitString)
         assertDefined(
             nil,
             bit,
@@ -34590,7 +34714,7 @@ local getVanillaWallGridIndexSetForRectangleRoomShape
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
 local RoomShape = ____isaac_2Dtypescript_2Ddefinitions.RoomShape
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local ROOM_SHAPE_VALUES = ____cachedEnumValues.ROOM_SHAPE_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -34877,6 +35001,8 @@ local iRange = ____utils.iRange
 --- Helper function to get all of the grid indexes between two grid indexes on either a horizontal or
 -- vertical line, inclusive on both ends.
 -- 
+-- If the first grid index is greater than the second grid index, the two will be swapped.
+-- 
 -- This function will throw a run-time error if the two provided grid indexes are not on the same
 -- horizontal or vertical line.
 function ____exports.getGridIndexesBetween(self, gridIndex1, gridIndex2, roomShape)
@@ -35084,10 +35210,11 @@ function ____exports.round(self, num, numDecimalPlaces)
     if numDecimalPlaces == nil then
         numDecimalPlaces = 0
     end
-    local roundedNum = tonumber(string.format(
+    local roundedString = string.format(
         ("%." .. tostring(numDecimalPlaces)) .. "f",
         num
-    ))
+    )
+    local roundedNum = tonumber(roundedString)
     return roundedNum or 0
 end
 ---
@@ -35763,7 +35890,7 @@ local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local PoopGridEntityVariant = ____isaac_2Dtypescript_2Ddefinitions.PoopGridEntityVariant
 local StatueVariant = ____isaac_2Dtypescript_2Ddefinitions.StatueVariant
 local TrapdoorVariant = ____isaac_2Dtypescript_2Ddefinitions.TrapdoorVariant
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local GRID_ENTITY_XML_TYPE_VALUES = ____cachedEnumValues.GRID_ENTITY_XML_TYPE_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -36191,7 +36318,7 @@ function ____exports.spawnGridEntityWithVariant(self, gridEntityType, variant, g
         if removeExistingGridEntity then
             ____exports.removeGridEntity(nil, existingGridEntity, true)
         else
-            return
+            return nil
         end
     end
     local position = isVector(nil, gridIndexOrPosition) and gridIndexOrPosition or room:GetGridPosition(gridIndexOrPosition)
@@ -38731,7 +38858,7 @@ local CardType = ____isaac_2Dtypescript_2Ddefinitions.CardType
 local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
 local PillColor = ____isaac_2Dtypescript_2Ddefinitions.PillColor
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local POCKET_ITEM_SLOT_VALUES = ____cachedEnumValues.POCKET_ITEM_SLOT_VALUES
 local ____PocketItemType = require("lua_modules.isaacscript-common.dist.enums.PocketItemType")
 local PocketItemType = ____PocketItemType.PocketItemType
@@ -38891,7 +39018,7 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
 local TrinketSlot = ____isaac_2Dtypescript_2Ddefinitions.TrinketSlot
 local TrinketType = ____isaac_2Dtypescript_2Ddefinitions.TrinketType
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local TRINKET_SLOT_VALUES = ____cachedEnumValues.TRINKET_SLOT_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local itemConfig = ____cachedClasses.itemConfig
@@ -39464,10 +39591,10 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local __TS__ArraySlice = ____lualib.__TS__ArraySlice
 local ____exports = {}
-local HORSE_PILL_ADJUSTMENT
+local HORSE_PILL_COLOR_ADJUSTMENT
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local PillColor = ____isaac_2Dtypescript_2Ddefinitions.PillColor
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local PILL_COLOR_VALUES = ____cachedEnumValues.PILL_COLOR_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -39501,12 +39628,12 @@ local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local iRange = ____utils.iRange
 --- Helper function to see if the given pill color is a horse pill.
 function ____exports.isHorsePill(self, pillColor)
-    return asNumber(nil, pillColor) > HORSE_PILL_ADJUSTMENT
+    return asNumber(nil, pillColor) > HORSE_PILL_COLOR_ADJUSTMENT
 end
 function ____exports.isVanillaPillEffect(self, pillEffect)
     return pillEffect <= LAST_VANILLA_PILL_EFFECT
 end
-HORSE_PILL_ADJUSTMENT = 2048
+HORSE_PILL_COLOR_ADJUSTMENT = 2048
 --- Helper function to get an array with every non-null pill color. This includes all gold colors and
 -- all horse colors.
 function ____exports.getAllPillColors(self)
@@ -39522,8 +39649,10 @@ end
 -- 
 -- For example, passing `PillColor.BLUE_BLUE` would result in 2049, which is the value that
 -- corresponds to the horse pill color for blue/blue.
+-- 
+-- If passed a horse pill color, this function will return the unmodified pill color.
 function ____exports.getHorsePillColor(self, pillColor)
-    return pillColor + HORSE_PILL_ADJUSTMENT
+    return ____exports.isHorsePill(nil, pillColor) and pillColor or pillColor + HORSE_PILL_COLOR_ADJUSTMENT
 end
 --- Helper function to get an array with every non-gold horse pill color.
 function ____exports.getHorsePillColors(self)
@@ -39535,7 +39664,7 @@ end
 -- 
 -- If called with a non-horse pill color, this function will return back the same color.
 function ____exports.getNormalPillColorFromHorse(self, pillColor)
-    return ____exports.isHorsePill(nil, pillColor) and asPillColor(nil, pillColor - HORSE_PILL_ADJUSTMENT) or pillColor
+    return ____exports.isHorsePill(nil, pillColor) and asPillColor(nil, pillColor - HORSE_PILL_COLOR_ADJUSTMENT) or pillColor
 end
 --- Helper function to get an array with every non-gold and non-horse pill color.
 function ____exports.getNormalPillColors(self)
@@ -41268,7 +41397,7 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local SERIALIZATION_BRAND_VALUES = ____cachedEnumValues.SERIALIZATION_BRAND_VALUES
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
 local isString = ____types.isString
@@ -42307,17 +42436,17 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.functions.logMisc"] = function(...) 
 local ____lualib = require("lualib_bundle")
-local Map = ____lualib.Map
 local __TS__Spread = ____lualib.__TS__Spread
 local __TS__ArraySort = ____lualib.__TS__ArraySort
 local __TS__ArrayEntries = ____lualib.__TS__ArrayEntries
 local __TS__Iterator = ____lualib.__TS__Iterator
-local Set = ____lualib.Set
 local __TS__TypeOf = ____lualib.__TS__TypeOf
 local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
 local __TS__New = ____lualib.__TS__New
+local Set = ____lualib.Set
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
+local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
 local DamageFlag = ____isaac_2Dtypescript_2Ddefinitions.DamageFlag
 local DisplayFlag = ____isaac_2Dtypescript_2Ddefinitions.DisplayFlag
 local EntityFlag = ____isaac_2Dtypescript_2Ddefinitions.EntityFlag
@@ -42330,6 +42459,7 @@ local ProjectileFlag = ____isaac_2Dtypescript_2Ddefinitions.ProjectileFlag
 local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
 local SeedEffect = ____isaac_2Dtypescript_2Ddefinitions.SeedEffect
 local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
+local StageID = ____isaac_2Dtypescript_2Ddefinitions.StageID
 local TearFlag = ____isaac_2Dtypescript_2Ddefinitions.TearFlag
 local UseFlag = ____isaac_2Dtypescript_2Ddefinitions.UseFlag
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
@@ -42370,6 +42500,8 @@ local getRoomListIndex = ____roomData.getRoomListIndex
 local ____set = require("lua_modules.isaacscript-common.dist.functions.set")
 local combineSets = ____set.combineSets
 local getSortedSetValues = ____set.getSortedSetValues
+local ____sort = require("lua_modules.isaacscript-common.dist.functions.sort")
+local sortNormal = ____sort.sortNormal
 local ____table = require("lua_modules.isaacscript-common.dist.functions.table")
 local iterateTableInOrder = ____table.iterateTableInOrder
 local ____trinkets = require("lua_modules.isaacscript-common.dist.functions.trinkets")
@@ -42538,7 +42670,7 @@ function ____exports.logMap(map, name)
     local suffix = name == nil and "" or (" \"" .. name) .. "\""
     log(("Logging a TSTL map" .. suffix) .. ":")
     local mapKeys = {__TS__Spread(map:keys())}
-    __TS__ArraySort(mapKeys)
+    __TS__ArraySort(mapKeys, sortNormal)
     for ____, key in ipairs(mapKeys) do
         local value = map:get(key)
         log((("  " .. tostring(key)) .. " --> ") .. tostring(value))
@@ -42605,7 +42737,7 @@ function ____exports.logRoom()
     local roomListIndex = getRoomListIndex(nil)
     local roomData = getRoomData(nil)
     log("Logging room information:")
-    log("- Room stage ID: " .. tostring(roomData.StageID))
+    log(("- Room stage ID: " .. StageID[roomData.StageID]) .. " (roomData.StageID)")
     log(((("- Room type: " .. RoomType[roomData.Type]) .. " (") .. tostring(roomData.Type)) .. ")")
     log("- Variant: " .. tostring(roomData.Variant))
     log("- Sub-type: " .. tostring(roomData.Subtype))
@@ -42614,10 +42746,14 @@ function ____exports.logRoom()
     if roomGridIndexName == nil then
         log("- Grid index: " .. tostring(roomGridIndex))
     else
-        log(((("- Grid index: GridRoom." .. roomGridIndexName) .. " (") .. tostring(roomGridIndex)) .. ")")
+        log(((("- Grid index: " .. roomGridIndexName) .. " (") .. tostring(roomGridIndex)) .. ")")
     end
     log("- List index: " .. tostring(roomListIndex))
-    log("- Boss ID: " .. tostring(bossID))
+    if bossID == nil then
+        log("- Boss ID: undefined")
+    else
+        log(((("- Boss ID: " .. BossID[bossID]) .. " (") .. tostring(bossID)) .. ")")
+    end
 end
 --- Helper function for logging every seed effect (i.e. Easter Egg) that is turned on for the
 -- particular run.
@@ -42851,7 +42987,7 @@ local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local ItemPoolType = ____isaac_2Dtypescript_2Ddefinitions.ItemPoolType
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local ITEM_POOL_TYPE_VALUES = ____cachedEnumValues.ITEM_POOL_TYPE_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -42977,7 +43113,7 @@ local __TS__New = ____lualib.__TS__New
 local __TS__ArrayFind = ____lualib.__TS__ArrayFind
 local ____exports = {}
 local getItemPoolJSON
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local ITEM_POOL_TYPE_VALUES = ____cachedEnumValues.ITEM_POOL_TYPE_VALUES
 local itemPoolsJSON = require("lua_modules.isaacscript-common.dist.data.itempools")
 local ____types = require("lua_modules.isaacscript-common.dist.functions.types")
@@ -45202,10 +45338,11 @@ local ____bossNames = require("lua_modules.isaacscript-common.dist.objects.bossN
 local BOSS_NAMES = ____bossNames.BOSS_NAMES
 local DEFAULT_BOSS_NAME = ____bossNames.DEFAULT_BOSS_NAME
 local ____bossSets = require("lua_modules.isaacscript-common.dist.sets.bossSets")
-local ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET = ____bossSets.ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET
-local ALL_BOSSES_SET = ____bossSets.ALL_BOSSES_SET
+local ALL_BOSSES = ____bossSets.ALL_BOSSES
+local BOSS_ID_TO_STAGE_IDS = ____bossSets.BOSS_ID_TO_STAGE_IDS
+local NON_STORY_BOSSES = ____bossSets.NON_STORY_BOSSES
+local STAGE_ID_TO_BOSS_IDS = ____bossSets.STAGE_ID_TO_BOSS_IDS
 local STAGE_TO_COMBINED_BOSS_SET_MAP = ____bossSets.STAGE_TO_COMBINED_BOSS_SET_MAP
-local STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP = ____bossSets.STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP
 local ____repentanceBossIDsSet = require("lua_modules.isaacscript-common.dist.sets.repentanceBossIDsSet")
 local REPENTANCE_ONLY_BOSS_IDS_SET = ____repentanceBossIDsSet.REPENTANCE_ONLY_BOSS_IDS_SET
 local ____sinEntityTypesSet = require("lua_modules.isaacscript-common.dist.sets.sinEntityTypesSet")
@@ -45271,8 +45408,8 @@ function ____exports.getAliveBosses(self, entityType, variant, subType, ignoreFr
         function(____, aliveNPC) return aliveNPC:IsBoss() end
     )
 end
---- Helper function to get the set of every boss in the game (which is derived from the `BossID`
--- enum).
+--- Helper function to get an array with every boss in the game. This is derived from the `BossID`
+-- enum.
 -- 
 -- This includes:
 -- - Ultra Greed
@@ -45285,15 +45422,15 @@ end
 -- - sub-bosses of The Beast fight (e.g. Ultra Famine, Ultra Pestilence, Ultra War, Ultra Death)
 -- - bosses that do not have any Boss Rooms defined due to being unfinished (e.g. Raglich)
 -- 
--- Also see the `getBossSet` and `getCombinedBossSet` functions.
--- 
--- @param includeStoryBosses Optional. Whether to include "story" bosses like Mom and It Lives.
--- Default is true.
-function ____exports.getAllBossesSet(self, includeStoryBosses)
-    if includeStoryBosses == nil then
-        includeStoryBosses = true
-    end
-    return includeStoryBosses and ALL_BOSSES_SET or ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET
+-- Also see the `getAllNonStoryBosses` function.
+function ____exports.getAllBosses(self)
+    return ALL_BOSSES
+end
+--- Helper function to get an array with every boss in the game. This is derived from the `BossID`
+-- enum. This is the same thing as the `getAllBosses` helper function, but with story bosses
+-- filtered out.
+function ____exports.getAllNonStoryBosses(self)
+    return NON_STORY_BOSSES
 end
 --- Helper function to get the boss ID corresponding to the current room. Returns undefined if the
 -- current room is not a Boss Room.
@@ -45321,21 +45458,29 @@ function ____exports.getBossIDFromEntityTypeVariant(self, entityType, variant)
     local entityTypeVariant = (tostring(entityType) .. ".") .. tostring(variant)
     return ENTITY_TYPE_VARIANT_TO_BOSS_ID_MAP:get(entityTypeVariant)
 end
+--- Helper function to get the set of vanilla bosses for a particular stage across all of the stage
+-- types. For example, specifying `LevelStage.BASEMENT_2` will return a set with all of the bosses
+-- for Basement, Cellar, Burning Basement, Downpour, and Dross.
+-- 
+-- Also see the `getAllBossesSet` and `getBossIDsForStageID` functions.
+function ____exports.getBossIDsForStage(self, stage)
+    return STAGE_TO_COMBINED_BOSS_SET_MAP:get(stage)
+end
+--- Helper function to get the set of vanilla bosses that can randomly appear on a particular stage
+-- ID.
+-- 
+-- Also see the `getAllBossesSet` and `getBossIDsForStage` functions.
+function ____exports.getBossIDsForStageID(self, stageID)
+    return STAGE_ID_TO_BOSS_IDS:get(stageID)
+end
 --- Helper function to get the proper English name for a boss. For example, the name for
 -- `BossID.WRETCHED` (36) is "The Wretched".
 function ____exports.getBossName(self, bossID)
     return BOSS_NAMES[bossID] or DEFAULT_BOSS_NAME
 end
---- Helper function to get the set of vanilla bosses for a particular stage and stage type
--- combination.
--- 
--- Also see the `getAllBossesSet` and `getCombinedBossSet` functions.
-function ____exports.getBossSet(self, stage, stageType)
-    local stageTypeMap = STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP:get(stage)
-    if stageTypeMap == nil then
-        return nil
-    end
-    return stageTypeMap:get(stageType)
+--- Helper function to get the set of stage IDs that a particular boss naturally appears in.
+function ____exports.getBossStageIDs(self, bossID)
+    return BOSS_ID_TO_STAGE_IDS[bossID]
 end
 --- Helper function to get all of the bosses in the room.
 -- 
@@ -45362,14 +45507,6 @@ function ____exports.getBosses(self, entityType, variant, subType, ignoreFriendl
         function(____, npc) return npc:IsBoss() end
     )
 end
---- Helper function to get the set of vanilla bosses for a particular stage across all of the stage
--- types. For example, specifying `LevelStage.BASEMENT_2` will return a set with all of the bosses
--- for Basement, Cellar, Burning Basement, Downpour, and Dross.
--- 
--- Also see the `getAllBossesSet` and `getBossSet` functions.
-function ____exports.getCombinedBossSet(self, stage)
-    return STAGE_TO_COMBINED_BOSS_SET_MAP:get(stage)
-end
 function ____exports.getEntityTypeVariantFromBossID(self, bossID)
     return BOSS_ID_TO_ENTITY_TYPE_VARIANT[bossID]
 end
@@ -45390,21 +45527,21 @@ local function getNumBossSegments(self, entityType, variant, numSegments)
         return numSegments
     end
     repeat
-        local ____switch22 = entityType
-        local ____cond22 = ____switch22 == EntityType.CHUB
-        if ____cond22 then
+        local ____switch23 = entityType
+        local ____cond23 = ____switch23 == EntityType.CHUB
+        if ____cond23 then
             do
                 return 3
             end
         end
-        ____cond22 = ____cond22 or ____switch22 == EntityType.LOKI
-        if ____cond22 then
+        ____cond23 = ____cond23 or ____switch23 == EntityType.LOKI
+        if ____cond23 then
             do
                 return variant == LokiVariant.LOKII and 2 or 1
             end
         end
-        ____cond22 = ____cond22 or ____switch22 == EntityType.GURGLING
-        if ____cond22 then
+        ____cond23 = ____cond23 or ____switch23 == EntityType.GURGLING
+        if ____cond23 then
             do
                 return 2
             end
@@ -45539,26 +45676,29 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.sets.bossSets"] = function(...) 
 local ____lualib = require("lualib_bundle")
+local __TS__SparseArrayNew = ____lualib.__TS__SparseArrayNew
+local __TS__SparseArrayPush = ____lualib.__TS__SparseArrayPush
+local __TS__SparseArraySpread = ____lualib.__TS__SparseArraySpread
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
-local __TS__Spread = ____lualib.__TS__Spread
+local Set = ____lualib.Set
+local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
+local __TS__Iterator = ____lualib.__TS__Iterator
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
 local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
-local StageType = ____isaac_2Dtypescript_2Ddefinitions.StageType
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
-local BOSS_IDS = ____cachedEnumValues.BOSS_IDS
-local ____set = require("lua_modules.isaacscript-common.dist.functions.set")
-local combineSets = ____set.combineSets
+local StageID = ____isaac_2Dtypescript_2Ddefinitions.StageID
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
+local BOSS_ID_VALUES = ____cachedEnumValues.BOSS_ID_VALUES
 local ____storyBosses = require("lua_modules.isaacscript-common.dist.functions.storyBosses")
 local isStoryBossID = ____storyBosses.isStoryBossID
 local ____ReadonlyMap = require("lua_modules.isaacscript-common.dist.types.ReadonlyMap")
 local ReadonlyMap = ____ReadonlyMap.ReadonlyMap
 local ____ReadonlySet = require("lua_modules.isaacscript-common.dist.types.ReadonlySet")
 local ReadonlySet = ____ReadonlySet.ReadonlySet
---- Contains just the bosses in Basement (not e.g. Burning Basement).
-local BASEMENT_BOSSES_SET = __TS__New(ReadonlySet, {
+--- For `StageID.BASEMENT` (1).
+local BASEMENT_BOSSES = {
     BossID.MONSTRO,
     BossID.LARRY_JR,
     BossID.FAMINE,
@@ -45573,9 +45713,9 @@ local BASEMENT_BOSSES_SET = __TS__New(ReadonlySet, {
     BossID.DANGLE,
     BossID.TURDLING,
     BossID.BABY_PLUM
-})
---- Contains just the bosses in Cellar (not e.g. Burning Basement).
-local CELLAR_BOSSES_SET = __TS__New(ReadonlySet, {
+}
+--- For `StageID.CELLAR` (2).
+local CELLAR_BOSSES = {
     BossID.FAMINE,
     BossID.DUKE_OF_FLIES,
     BossID.HEADLESS_HORSEMAN,
@@ -45587,9 +45727,9 @@ local CELLAR_BOSSES_SET = __TS__New(ReadonlySet, {
     BossID.LITTLE_HORN,
     BossID.RAG_MAN,
     BossID.BABY_PLUM
-})
---- Contains just the bosses in Burning Basement (not e.g. Cellar).
-local BURNING_BASEMENT_BOSSES_SET = __TS__New(ReadonlySet, {
+}
+--- For `StageID.BURNING_BASEMENT` (3).
+local BURNING_BASEMENT_BOSSES = {
     BossID.MONSTRO,
     BossID.LARRY_JR,
     BossID.FAMINE,
@@ -45605,35 +45745,42 @@ local BURNING_BASEMENT_BOSSES_SET = __TS__New(ReadonlySet, {
     BossID.DANGLE,
     BossID.TURDLING,
     BossID.BABY_PLUM
-})
---- Contains just the bosses in Downpour (not e.g. Burning Basement).
-local DOWNPOUR_BOSSES_SET = __TS__New(ReadonlySet, {BossID.LIL_BLUB, BossID.WORMWOOD, BossID.RAINMAKER, BossID.MIN_MIN})
---- Contains just the bosses in Dross (not e.g. Burning Basement).
-local DROSS_BOSSES_SET = __TS__New(ReadonlySet, {
+}
+--- For `StageID.DOWNPOUR` (27).
+local DOWNPOUR_BOSSES = {BossID.LIL_BLUB, BossID.WORMWOOD, BossID.RAINMAKER, BossID.MIN_MIN}
+--- For `StageID.DROSS` (28).
+local DROSS_BOSSES = {
     BossID.LIL_BLUB,
     BossID.WORMWOOD,
     BossID.CLOG,
     BossID.COLOSTOMIA,
     BossID.TURDLET
-})
---- The set of unique bosses for Basement, Cellar, and so on.
-local ALL_BASEMENT_BOSSES_SET = combineSets(
-    nil,
-    BASEMENT_BOSSES_SET,
-    CELLAR_BOSSES_SET,
-    BURNING_BASEMENT_BOSSES_SET,
-    DOWNPOUR_BOSSES_SET,
-    DROSS_BOSSES_SET
+}
+local ____ReadonlySet_1 = ReadonlySet
+local ____array_0 = __TS__SparseArrayNew(table.unpack(BASEMENT_BOSSES))
+__TS__SparseArrayPush(
+    ____array_0,
+    table.unpack(CELLAR_BOSSES)
 )
-local BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
-    {StageType.ORIGINAL, BASEMENT_BOSSES_SET},
-    {StageType.WRATH_OF_THE_LAMB, CELLAR_BOSSES_SET},
-    {StageType.AFTERBIRTH, BURNING_BASEMENT_BOSSES_SET},
-    {StageType.REPENTANCE, DOWNPOUR_BOSSES_SET},
-    {StageType.REPENTANCE_B, DROSS_BOSSES_SET}
-})
---- Contains just the bosses in Caves (not e.g. Flooded Caves).
-local CAVES_BOSSES_SET = __TS__New(ReadonlySet, {
+__TS__SparseArrayPush(
+    ____array_0,
+    table.unpack(BURNING_BASEMENT_BOSSES)
+)
+__TS__SparseArrayPush(
+    ____array_0,
+    table.unpack(DOWNPOUR_BOSSES)
+)
+__TS__SparseArrayPush(
+    ____array_0,
+    table.unpack(DROSS_BOSSES)
+)
+--- The set of unique bosses for Basement, Cellar, Burning Basement, Downpour, and Dross.
+local ALL_BASEMENT_BOSSES_SET = __TS__New(
+    ____ReadonlySet_1,
+    {__TS__SparseArraySpread(____array_0)}
+)
+--- For `StageID.CAVES` (4).
+local CAVES_BOSSES = {
     BossID.CHUB,
     BossID.GURDY,
     BossID.PESTILENCE,
@@ -45649,9 +45796,9 @@ local CAVES_BOSSES_SET = __TS__New(ReadonlySet, {
     BossID.RAG_MEGA,
     BossID.BIG_HORN,
     BossID.BUMBINO
-})
---- Contains just the bosses in Catacombs (not e.g. Flooded Caves).
-local CATACOMBS_BOSSES_SET = __TS__New(ReadonlySet, {
+}
+--- For `StageID.CATACOMBS` (5).
+local CATACOMBS_BOSSES = {
     BossID.PESTILENCE,
     BossID.PEEP,
     BossID.HEADLESS_HORSEMAN,
@@ -45668,9 +45815,9 @@ local CATACOMBS_BOSSES_SET = __TS__New(ReadonlySet, {
     BossID.RAG_MEGA,
     BossID.BIG_HORN,
     BossID.BUMBINO
-})
---- Contains just the bosses in Flooded Caves (not e.g. Catacombs).
-local FLOODED_CAVES_BOSSES_SET = __TS__New(ReadonlySet, {
+}
+--- For `StageID.FLOODED_CAVES` (6).
+local FLOODED_CAVES_BOSSES = {
     BossID.CHUB,
     BossID.GURDY,
     BossID.PESTILENCE,
@@ -45688,37 +45835,44 @@ local FLOODED_CAVES_BOSSES_SET = __TS__New(ReadonlySet, {
     BossID.RAG_MEGA,
     BossID.BIG_HORN,
     BossID.BUMBINO
-})
---- Contains just the bosses in Mines (not e.g. Flooded Caves).
-local MINES_BOSSES_SET = __TS__New(ReadonlySet, {BossID.REAP_CREEP, BossID.TUFF_TWINS, BossID.HORNFEL, BossID.GREAT_GIDEON})
---- Contains just the bosses in Ashpit (not e.g. Flooded Caves).
-local ASHPIT_BOSSES_SET = __TS__New(ReadonlySet, {
+}
+--- For `StageID.MINES` (29).
+local MINES_BOSSES = {BossID.REAP_CREEP, BossID.TUFF_TWINS, BossID.HORNFEL, BossID.GREAT_GIDEON}
+--- For `StageID.ASHPIT` (30).
+local ASHPIT_BOSSES = {
     BossID.PILE,
     BossID.GREAT_GIDEON,
     BossID.SINGE,
     BossID.SHELL,
     BossID.CLUTCH
-})
---- The set of unique bosses for Caves, Catacombs, and so on.
-local ALL_CAVES_BOSSES_SET = combineSets(
-    nil,
-    CAVES_BOSSES_SET,
-    CATACOMBS_BOSSES_SET,
-    FLOODED_CAVES_BOSSES_SET,
-    MINES_BOSSES_SET,
-    ASHPIT_BOSSES_SET
+}
+local ____ReadonlySet_3 = ReadonlySet
+local ____array_2 = __TS__SparseArrayNew(table.unpack(CAVES_BOSSES))
+__TS__SparseArrayPush(
+    ____array_2,
+    table.unpack(CATACOMBS_BOSSES)
 )
-local CAVES_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
-    {StageType.ORIGINAL, CAVES_BOSSES_SET},
-    {StageType.WRATH_OF_THE_LAMB, CATACOMBS_BOSSES_SET},
-    {StageType.AFTERBIRTH, FLOODED_CAVES_BOSSES_SET},
-    {StageType.REPENTANCE, MINES_BOSSES_SET},
-    {StageType.REPENTANCE_B, ASHPIT_BOSSES_SET}
-})
---- Contains just the bosses in Depths (not e.g. Dank Depths).
+__TS__SparseArrayPush(
+    ____array_2,
+    table.unpack(FLOODED_CAVES_BOSSES)
+)
+__TS__SparseArrayPush(
+    ____array_2,
+    table.unpack(MINES_BOSSES)
+)
+__TS__SparseArrayPush(
+    ____array_2,
+    table.unpack(ASHPIT_BOSSES)
+)
+--- The set of unique bosses for Caves, Catacombs, Flooded Caves, Mines, and Ashpit.
+local ALL_CAVES_BOSSES_SET = __TS__New(
+    ____ReadonlySet_3,
+    {__TS__SparseArraySpread(____array_2)}
+)
+--- For `StageID.DEPTHS` (7).
 -- 
 -- Note that this set includes Mom, even though they are not technically in the boss pool.
-local DEPTHS_BOSSES_SET = __TS__New(ReadonlySet, {
+local DEPTHS_BOSSES = {
     BossID.MONSTRO_2,
     BossID.MOM,
     BossID.WAR,
@@ -45731,11 +45885,11 @@ local DEPTHS_BOSSES_SET = __TS__New(ReadonlySet, {
     BossID.BROWNIE,
     BossID.SISTERS_VIS,
     BossID.REAP_CREEP
-})
---- Contains just the bosses in Necropolis (not e.g. Dank Depths).
+}
+--- For `StageID.NECROPOLIS` (8).
 -- 
 -- Note that this set includes Mom, even though they are not technically in the boss pool.
-local NECROPOLIS_BOSSES_SET = __TS__New(ReadonlySet, {
+local NECROPOLIS_BOSSES = {
     BossID.MOM,
     BossID.WAR,
     BossID.LOKI,
@@ -45747,11 +45901,11 @@ local NECROPOLIS_BOSSES_SET = __TS__New(ReadonlySet, {
     BossID.BROWNIE,
     BossID.SISTERS_VIS,
     BossID.PILE
-})
---- Contains just the bosses in Dank Depths (not e.g. Necropolis).
+}
+--- For `StageID.DANK_DEPTHS` (9).
 -- 
 -- Note that this set includes Mom, even though they are not technically in the boss pool.
-local DANK_DEPTHS_BOSSES_SET = __TS__New(ReadonlySet, {
+local DANK_DEPTHS_BOSSES = {
     BossID.MONSTRO_2,
     BossID.MOM,
     BossID.WAR,
@@ -45764,36 +45918,43 @@ local DANK_DEPTHS_BOSSES_SET = __TS__New(ReadonlySet, {
     BossID.BROWNIE,
     BossID.SISTERS_VIS,
     BossID.REAP_CREEP
-})
---- Contains just the bosses in Mausoleum (not e.g. Dank Depths).
+}
+--- For `StageID.MAUSOLEUM` (31).
 -- 
 -- Note that this set includes Mausoleum Mom, even though they are not technically in the boss pool.
-local MAUSOLEUM_BOSSES_SET = __TS__New(ReadonlySet, {BossID.SIREN, BossID.HERETIC, BossID.MAUSOLEUM_MOM})
---- Contains just the bosses in Gehenna (not e.g. Dank Depths).
+local MAUSOLEUM_BOSSES = {BossID.SIREN, BossID.HERETIC, BossID.MAUSOLEUM_MOM}
+--- For `StageID.GEHENNA` (32).
 -- 
 -- Note that this set includes Mausoleum Mom, even though they are not technically in the boss pool.
-local GEHENNA_BOSSES_SET = __TS__New(ReadonlySet, {BossID.VISAGE, BossID.MAUSOLEUM_MOM, BossID.HORNY_BOYS})
---- The set of unique bosses for Depths, Necropolis, and so on.
-local ALL_DEPTHS_BOSSES_SET = combineSets(
-    nil,
-    DEPTHS_BOSSES_SET,
-    NECROPOLIS_BOSSES_SET,
-    DANK_DEPTHS_BOSSES_SET,
-    MAUSOLEUM_BOSSES_SET,
-    GEHENNA_BOSSES_SET
+local GEHENNA_BOSSES = {BossID.VISAGE, BossID.MAUSOLEUM_MOM, BossID.HORNY_BOYS}
+local ____ReadonlySet_5 = ReadonlySet
+local ____array_4 = __TS__SparseArrayNew(table.unpack(DEPTHS_BOSSES))
+__TS__SparseArrayPush(
+    ____array_4,
+    table.unpack(NECROPOLIS_BOSSES)
 )
-local DEPTHS_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
-    {StageType.ORIGINAL, DEPTHS_BOSSES_SET},
-    {StageType.WRATH_OF_THE_LAMB, NECROPOLIS_BOSSES_SET},
-    {StageType.AFTERBIRTH, DANK_DEPTHS_BOSSES_SET},
-    {StageType.REPENTANCE, MAUSOLEUM_BOSSES_SET},
-    {StageType.REPENTANCE_B, GEHENNA_BOSSES_SET}
-})
---- Contains just the bosses in Womb (not e.g. Scarred Womb).
+__TS__SparseArrayPush(
+    ____array_4,
+    table.unpack(DANK_DEPTHS_BOSSES)
+)
+__TS__SparseArrayPush(
+    ____array_4,
+    table.unpack(MAUSOLEUM_BOSSES)
+)
+__TS__SparseArrayPush(
+    ____array_4,
+    table.unpack(GEHENNA_BOSSES)
+)
+--- The set of unique bosses for Depths, Necropolis, Dank Depths, Mausoleum, and Gehenna.
+local ALL_DEPTHS_BOSSES_SET = __TS__New(
+    ____ReadonlySet_5,
+    {__TS__SparseArraySpread(____array_4)}
+)
+--- For `StageID.WOMB` (10).
 -- 
 -- Note that this set includes Mom's Heart & It Lives, even though they are not technically in the
 -- boss pool.
-local WOMB_BOSSES_SET = __TS__New(ReadonlySet, {
+local WOMB_BOSSES = {
     BossID.SCOLEX,
     BossID.MOMS_HEART,
     BossID.DEATH,
@@ -45806,12 +45967,12 @@ local WOMB_BOSSES_SET = __TS__New(ReadonlySet, {
     BossID.MAMA_GURDY,
     BossID.MR_FRED,
     BossID.MATRIARCH
-})
---- Contains just the bosses in Utero (not e.g. Scarred Womb).
+}
+--- For `StageID.UTERO` (11).
 -- 
 -- Note that this set includes Mom's Heart & It Lives, even though they are not technically in the
 -- boss pool.
-local UTERO_BOSSES_SET = __TS__New(ReadonlySet, {
+local UTERO_BOSSES = {
     BossID.MOMS_HEART,
     BossID.DEATH,
     BossID.HEADLESS_HORSEMAN,
@@ -45823,12 +45984,12 @@ local UTERO_BOSSES_SET = __TS__New(ReadonlySet, {
     BossID.CONQUEST,
     BossID.DADDY_LONG_LEGS,
     BossID.TRIACHNID
-})
---- Contains just the bosses in Scarred Womb (not e.g. Utero).
+}
+--- For `StageID.SCARRED_WOMB` (12).
 -- 
 -- Note that this set includes Mom's Heart & It Lives, even though they are not technically in the
 -- boss pool.
-local SCARRED_WOMB_BOSSES_SET = __TS__New(ReadonlySet, {
+local SCARRED_WOMB_BOSSES = {
     BossID.SCOLEX,
     BossID.MOMS_HEART,
     BossID.DEATH,
@@ -45842,51 +46003,100 @@ local SCARRED_WOMB_BOSSES_SET = __TS__New(ReadonlySet, {
     BossID.MAMA_GURDY,
     BossID.MR_FRED,
     BossID.MATRIARCH
-})
---- Contains just the bosses in Corpse (not e.g. Scarred Womb).
+}
+--- For `StageID.CORPSE` (33).
 -- 
--- Note that this set includes Mother, even though they are not technically in the boss pool.
-local CORPSE_BOSSES_SET = __TS__New(ReadonlySet, {BossID.SCOURGE, BossID.CHIMERA, BossID.ROTGUT, BossID.MOTHER})
---- The set of unique bosses for Womb, Utero, and so on.
-local ALL_WOMB_BOSSES_SET = combineSets(
-    nil,
-    WOMB_BOSSES_SET,
-    UTERO_BOSSES_SET,
-    SCARRED_WOMB_BOSSES_SET,
-    CORPSE_BOSSES_SET
+-- Note that this set includes Mother, even though she is not technically in the boss pool.
+local CORPSE_BOSSES = {BossID.SCOURGE, BossID.CHIMERA, BossID.ROTGUT, BossID.MOTHER}
+local ____ReadonlySet_7 = ReadonlySet
+local ____array_6 = __TS__SparseArrayNew(table.unpack(WOMB_BOSSES))
+__TS__SparseArrayPush(
+    ____array_6,
+    table.unpack(UTERO_BOSSES)
 )
-local WOMB_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, WOMB_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, UTERO_BOSSES_SET}, {StageType.AFTERBIRTH, SCARRED_WOMB_BOSSES_SET}, {StageType.REPENTANCE, CORPSE_BOSSES_SET}})
-local BLUE_WOMB_BOSSES_SET = __TS__New(ReadonlySet, {BossID.HUSH})
-local BLUE_WOMB_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, BLUE_WOMB_BOSSES_SET}})
-local SHEOL_BOSSES_SET = __TS__New(ReadonlySet, {BossID.SATAN})
-local CATHEDRAL_BOSSES_SET = __TS__New(ReadonlySet, {BossID.ISAAC})
-local ALL_STAGE_10_BOSSES_SET = combineSets(nil, SHEOL_BOSSES_SET, CATHEDRAL_BOSSES_SET)
-local STAGE_10_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, SHEOL_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, CATHEDRAL_BOSSES_SET}})
+__TS__SparseArrayPush(
+    ____array_6,
+    table.unpack(SCARRED_WOMB_BOSSES)
+)
+__TS__SparseArrayPush(
+    ____array_6,
+    table.unpack(CORPSE_BOSSES)
+)
+--- The set of unique bosses for Womb, Utero, Scarred Womb, and Corpse.
+local ALL_WOMB_BOSSES_SET = __TS__New(
+    ____ReadonlySet_7,
+    {__TS__SparseArraySpread(____array_6)}
+)
+local BLUE_WOMB_BOSSES = {BossID.HUSH}
+local ALL_BLUE_WOMB_BOSSES_SET = __TS__New(
+    ReadonlySet,
+    {table.unpack(BLUE_WOMB_BOSSES)}
+)
+local SHEOL_BOSSES = {BossID.SATAN}
+local CATHEDRAL_BOSSES = {BossID.ISAAC}
+local ____ReadonlySet_9 = ReadonlySet
+local ____array_8 = __TS__SparseArrayNew(table.unpack(SHEOL_BOSSES))
+__TS__SparseArrayPush(
+    ____array_8,
+    table.unpack(CATHEDRAL_BOSSES)
+)
+local ALL_STAGE_10_BOSSES_SET = __TS__New(
+    ____ReadonlySet_9,
+    {__TS__SparseArraySpread(____array_8)}
+)
 --- Note that this set includes Mega Satan, even though they are not technically in the boss pool.
-local DARK_ROOM_BOSSES_SET = __TS__New(ReadonlySet, {BossID.LAMB, BossID.MEGA_SATAN})
+local DARK_ROOM_BOSSES = {BossID.LAMB, BossID.MEGA_SATAN}
 --- Note that this set includes Mega Satan, even though they are not technically in the boss pool.
-local CHEST_BOSSES_SET = __TS__New(ReadonlySet, {BossID.BLUE_BABY, BossID.MEGA_SATAN})
-local ALL_STAGE_11_BOSSES_SET = combineSets(nil, DARK_ROOM_BOSSES_SET, CHEST_BOSSES_SET)
-local STAGE_11_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, DARK_ROOM_BOSSES_SET}, {StageType.WRATH_OF_THE_LAMB, CHEST_BOSSES_SET}})
-local VOID_BOSSES_SET = __TS__New(ReadonlySet, {BossID.DELIRIUM})
-local VOID_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, VOID_BOSSES_SET}})
---- Note that this does not include Ultra Famine, Ultra Pestilence, Ultra War, and Ultra Death.
-local HOME_BOSSES_SET = __TS__New(ReadonlySet, {BossID.DOGMA, BossID.BEAST})
-local HOME_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {{StageType.ORIGINAL, HOME_BOSSES_SET}})
-____exports.STAGE_TO_STAGE_TYPE_TO_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
-    {LevelStage.BASEMENT_1, BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.BASEMENT_2, BASEMENT_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.CAVES_1, CAVES_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.CAVES_2, CAVES_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.DEPTHS_1, DEPTHS_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.DEPTHS_2, DEPTHS_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.WOMB_1, WOMB_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.WOMB_2, WOMB_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.BLUE_WOMB, BLUE_WOMB_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.SHEOL_CATHEDRAL, STAGE_10_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.DARK_ROOM_CHEST, STAGE_11_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.VOID, VOID_STAGE_TYPE_TO_BOSS_SET_MAP},
-    {LevelStage.HOME, HOME_STAGE_TYPE_TO_BOSS_SET_MAP}
+local CHEST_BOSSES = {BossID.BLUE_BABY, BossID.MEGA_SATAN}
+local ____ReadonlySet_11 = ReadonlySet
+local ____array_10 = __TS__SparseArrayNew(table.unpack(DARK_ROOM_BOSSES))
+__TS__SparseArrayPush(
+    ____array_10,
+    table.unpack(CHEST_BOSSES)
+)
+local ALL_STAGE_11_BOSSES_SET = __TS__New(
+    ____ReadonlySet_11,
+    {__TS__SparseArraySpread(____array_10)}
+)
+local VOID_BOSSES = {BossID.DELIRIUM}
+local ALL_VOID_BOSSES_SET = __TS__New(
+    ReadonlySet,
+    {table.unpack(VOID_BOSSES)}
+)
+--- Includes Dogma and The Beast. Does not include Ultra Famine, Ultra Pestilence, Ultra War, and
+-- Ultra Death (since they do not have boss IDs).
+local HOME_BOSSES = {BossID.DOGMA, BossID.BEAST}
+local ALL_HOME_BOSSES_SET = __TS__New(
+    ReadonlySet,
+    {table.unpack(HOME_BOSSES)}
+)
+____exports.STAGE_ID_TO_BOSS_IDS = __TS__New(ReadonlyMap, {
+    {StageID.BASEMENT, BASEMENT_BOSSES},
+    {StageID.CELLAR, CELLAR_BOSSES},
+    {StageID.BURNING_BASEMENT, BURNING_BASEMENT_BOSSES},
+    {StageID.DOWNPOUR, DOWNPOUR_BOSSES},
+    {StageID.DROSS, DROSS_BOSSES},
+    {StageID.CAVES, CAVES_BOSSES},
+    {StageID.CATACOMBS, CATACOMBS_BOSSES},
+    {StageID.FLOODED_CAVES, FLOODED_CAVES_BOSSES},
+    {StageID.MINES, MINES_BOSSES},
+    {StageID.ASHPIT, ASHPIT_BOSSES},
+    {StageID.DEPTHS, DEPTHS_BOSSES},
+    {StageID.NECROPOLIS, NECROPOLIS_BOSSES},
+    {StageID.DANK_DEPTHS, DANK_DEPTHS_BOSSES},
+    {StageID.MAUSOLEUM, MAUSOLEUM_BOSSES},
+    {StageID.GEHENNA, GEHENNA_BOSSES},
+    {StageID.WOMB, WOMB_BOSSES},
+    {StageID.UTERO, UTERO_BOSSES},
+    {StageID.SCARRED_WOMB, SCARRED_WOMB_BOSSES},
+    {StageID.CORPSE, CORPSE_BOSSES},
+    {StageID.BLUE_WOMB, BLUE_WOMB_BOSSES},
+    {StageID.SHEOL, SHEOL_BOSSES},
+    {StageID.CATHEDRAL, CATHEDRAL_BOSSES},
+    {StageID.DARK_ROOM, DARK_ROOM_BOSSES},
+    {StageID.CHEST, CHEST_BOSSES},
+    {StageID.VOID, VOID_BOSSES},
+    {StageID.HOME, HOME_BOSSES}
 })
 ____exports.STAGE_TO_COMBINED_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
     {LevelStage.BASEMENT_1, ALL_BASEMENT_BOSSES_SET},
@@ -45897,26 +46107,40 @@ ____exports.STAGE_TO_COMBINED_BOSS_SET_MAP = __TS__New(ReadonlyMap, {
     {LevelStage.DEPTHS_2, ALL_DEPTHS_BOSSES_SET},
     {LevelStage.WOMB_1, ALL_WOMB_BOSSES_SET},
     {LevelStage.WOMB_2, ALL_WOMB_BOSSES_SET},
-    {LevelStage.BLUE_WOMB, BLUE_WOMB_BOSSES_SET},
+    {LevelStage.BLUE_WOMB, ALL_BLUE_WOMB_BOSSES_SET},
     {LevelStage.SHEOL_CATHEDRAL, ALL_STAGE_10_BOSSES_SET},
     {LevelStage.DARK_ROOM_CHEST, ALL_STAGE_11_BOSSES_SET},
-    {LevelStage.VOID, VOID_BOSSES_SET},
-    {LevelStage.HOME, HOME_BOSSES_SET}
+    {LevelStage.VOID, ALL_VOID_BOSSES_SET},
+    {LevelStage.HOME, ALL_HOME_BOSSES_SET}
 })
-____exports.ALL_BOSSES_SET = __TS__New(
-    ReadonlySet,
-    __TS__ArrayFilter(
-        BOSS_IDS,
-        function(____, bossID) return bossID ~= BossID.RAGLICH end
-    )
+____exports.ALL_BOSSES = __TS__ArrayFilter(
+    BOSS_ID_VALUES,
+    function(____, bossID) return bossID ~= BossID.RAGLICH end
 )
-____exports.ALL_BOSSES_EXCLUDING_STORY_BOSSES_SET = __TS__New(
-    ReadonlySet,
-    __TS__ArrayFilter(
-        {__TS__Spread(____exports.ALL_BOSSES_SET)},
-        function(____, bossID) return not isStoryBossID(nil, bossID) end
-    )
+____exports.NON_STORY_BOSSES = __TS__ArrayFilter(
+    ____exports.ALL_BOSSES,
+    function(____, bossID) return not isStoryBossID(nil, bossID) end
 )
+____exports.BOSS_ID_TO_STAGE_IDS = (function()
+    local partialBossIDsToStageIDs = {}
+    for ____, bossID in ipairs(BOSS_ID_VALUES) do
+        local stageIDs = __TS__New(Set)
+        for ____, ____value in __TS__Iterator(____exports.STAGE_ID_TO_BOSS_IDS) do
+            local stageID = ____value[1]
+            local bossIDs = ____value[2]
+            if __TS__ArrayIncludes(bossIDs, bossID) then
+                stageIDs:add(stageID)
+            end
+        end
+        partialBossIDsToStageIDs[bossID] = stageIDs
+    end
+    local bossIDsToStageIDs = partialBossIDsToStageIDs
+    bossIDsToStageIDs[BossID.ULTRA_GREED]:add(StageID.ULTRA_GREED)
+    bossIDsToStageIDs[BossID.ULTRA_GREEDIER]:add(StageID.ULTRA_GREED)
+    bossIDsToStageIDs[BossID.MAUSOLEUM_MOMS_HEART]:add(StageID.MAUSOLEUM)
+    bossIDsToStageIDs[BossID.MAUSOLEUM_MOMS_HEART]:add(StageID.GEHENNA)
+    return bossIDsToStageIDs
+end)(nil)
 return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.objects.bossNames"] = function(...) 
@@ -47010,7 +47234,7 @@ local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
 local StageID = ____isaac_2Dtypescript_2Ddefinitions.StageID
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local DOOR_SLOT_VALUES = ____cachedEnumValues.DOOR_SLOT_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -47785,7 +48009,7 @@ local ButtonAction = ____isaac_2Dtypescript_2Ddefinitions.ButtonAction
 local Controller = ____isaac_2Dtypescript_2Ddefinitions.Controller
 local ControllerIndex = ____isaac_2Dtypescript_2Ddefinitions.ControllerIndex
 local Keyboard = ____isaac_2Dtypescript_2Ddefinitions.Keyboard
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local CONTROLLER_INDEX_VALUES = ____cachedEnumValues.CONTROLLER_INDEX_VALUES
 local ____keyboardToStringMap = require("lua_modules.isaacscript-common.dist.maps.keyboardToStringMap")
 local KEYBOARD_TO_STRING_MAP = ____keyboardToStringMap.KEYBOARD_TO_STRING_MAP
@@ -49417,10 +49641,12 @@ function ____exports.PriorityCallback(self, modCallback, priority, ...)
             local tstlClassName = getTSTLClassName(nil, target) or "Unknown"
             error(("Failed to get the constructor for class \"" .. tstlClassName) .. "\". Did you decorate a static method? You can only decorate non-static class methods, because the \"Mod\" object is not present before the class is instantiated.")
         end
-        if not (constructor[MOD_FEATURE_CALLBACKS_KEY] ~= nil) then
-            constructor[MOD_FEATURE_CALLBACKS_KEY] = {}
+        local key = MOD_FEATURE_CALLBACKS_KEY
+        local callbackTuples = constructor[key]
+        if callbackTuples == nil then
+            callbackTuples = {}
+            constructor[key] = callbackTuples
         end
-        local callbackTuples = constructor[MOD_FEATURE_CALLBACKS_KEY]
         callbackTuples[#callbackTuples + 1] = callbackTuple
     end
 end
@@ -49440,10 +49666,12 @@ function ____exports.PriorityCallbackCustom(self, modCallbackCustom, priority, .
             local tstlClassName = getTSTLClassName(nil, target) or "Unknown"
             error(("Failed to get the constructor for class \"" .. tstlClassName) .. "\". Did you decorate a static method? You can only decorate non-static class methods, because the \"Mod\" object is not present before the class is instantiated.")
         end
-        if not (constructor[MOD_FEATURE_CUSTOM_CALLBACKS_KEY] ~= nil) then
-            constructor[MOD_FEATURE_CUSTOM_CALLBACKS_KEY] = {}
+        local key = MOD_FEATURE_CUSTOM_CALLBACKS_KEY
+        local callbackTuples = constructor[key]
+        if callbackTuples == nil then
+            callbackTuples = {}
+            constructor[key] = callbackTuples
         end
-        local callbackTuples = constructor[MOD_FEATURE_CUSTOM_CALLBACKS_KEY]
         callbackTuples[#callbackTuples + 1] = callbackTuple
     end
 end
@@ -50255,7 +50483,7 @@ local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local ItemConfigCardType = ____isaac_2Dtypescript_2Ddefinitions.ItemConfigCardType
 local UseFlag = ____isaac_2Dtypescript_2Ddefinitions.UseFlag
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local POCKET_ITEM_SLOT_VALUES = ____cachedEnumValues.POCKET_ITEM_SLOT_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local itemConfig = ____cachedClasses.itemConfig
@@ -51698,6 +51926,8 @@ return ____exports
  end,
 ["lua_modules.isaacscript-common.dist.decorators"] = function(...) 
 local ____exports = {}
+local ____tstlClass = require("lua_modules.isaacscript-common.dist.functions.tstlClass")
+local getTSTLClassName = ____tstlClass.getTSTLClassName
 ____exports.EXPORTED_METHOD_NAMES_KEY = "__exportedMethodNames"
 --- A decorator function that signifies that the decorated class method should be added to the
 -- `ModUpgraded` object.
@@ -51705,10 +51935,15 @@ ____exports.EXPORTED_METHOD_NAMES_KEY = "__exportedMethodNames"
 -- This is only meant to be used internally.
 function ____exports.Exported(self, target, propertyKey)
     local constructor = target.constructor
-    if not (constructor[____exports.EXPORTED_METHOD_NAMES_KEY] ~= nil) then
-        constructor[____exports.EXPORTED_METHOD_NAMES_KEY] = {}
+    if constructor == nil then
+        local tstlClassName = getTSTLClassName(nil, target) or "Unknown"
+        error(("Failed to get the constructor for class \"" .. tstlClassName) .. "\". Did you decorate a static method? You can only decorate non-static class methods.")
     end
     local exportedMethodNames = constructor[____exports.EXPORTED_METHOD_NAMES_KEY]
+    if exportedMethodNames == nil then
+        exportedMethodNames = {}
+        constructor[____exports.EXPORTED_METHOD_NAMES_KEY] = exportedMethodNames
+    end
     exportedMethodNames[#exportedMethodNames + 1] = propertyKey
 end
 return ____exports
@@ -53554,7 +53789,7 @@ function PreventGridEntityRespawn.prototype.____constructor(self, runInNFrames)
         end
         local roomListIndex = getRoomListIndex(nil)
         if not v.level.roomListIndexToDecorationGridIndexes:has(roomListIndex) then
-            return
+            return nil
         end
         local decorations = getGridEntities(nil, GridEntityType.DECORATION)
         for ____, decoration in ipairs(decorations) do
@@ -54270,10 +54505,10 @@ function Pause.prototype.____constructor(self, disableInputs)
     end
     self.inputActionGetActionValue = function(____, _entity, _inputHook, buttonAction)
         if buttonAction ~= ButtonAction.SHOOT_RIGHT then
-            return
+            return nil
         end
         if not v.run.shouldUnpause then
-            return
+            return nil
         end
         v.run.shouldUnpause = false
         return 1
@@ -54451,7 +54686,7 @@ local ItemConfigCardType = ____isaac_2Dtypescript_2Ddefinitions.ItemConfigCardTy
 local ItemConfigTag = ____isaac_2Dtypescript_2Ddefinitions.ItemConfigTag
 local PlayerForm = ____isaac_2Dtypescript_2Ddefinitions.PlayerForm
 local TrinketType = ____isaac_2Dtypescript_2Ddefinitions.TrinketType
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local CACHE_FLAG_VALUES = ____cachedEnumValues.CACHE_FLAG_VALUES
 local ITEM_CONFIG_CARD_TYPE_VALUES = ____cachedEnumValues.ITEM_CONFIG_CARD_TYPE_VALUES
 local ITEM_CONFIG_TAG_VALUES = ____cachedEnumValues.ITEM_CONFIG_TAG_VALUES
@@ -55839,10 +56074,11 @@ local GridRoom = ____isaac_2Dtypescript_2Ddefinitions.GridRoom
 local LevelStage = ____isaac_2Dtypescript_2Ddefinitions.LevelStage
 local PillColor = ____isaac_2Dtypescript_2Ddefinitions.PillColor
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
+local PocketItemSlot = ____isaac_2Dtypescript_2Ddefinitions.PocketItemSlot
 local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
 local SoundEffect = ____isaac_2Dtypescript_2Ddefinitions.SoundEffect
 local StageType = ____isaac_2Dtypescript_2Ddefinitions.StageType
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local GRID_ENTITY_TYPE_VALUES = ____cachedEnumValues.GRID_ENTITY_TYPE_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -55895,6 +56131,7 @@ local spawnCard = ____pickupsSpecific.spawnCard
 local spawnPill = ____pickupsSpecific.spawnPill
 local spawnTrinketFunction = ____pickupsSpecific.spawnTrinket
 local ____pills = require("lua_modules.isaacscript-common.dist.functions.pills")
+local getHorsePillColor = ____pills.getHorsePillColor
 local getPillEffectName = ____pills.getPillEffectName
 local isValidPillEffect = ____pills.isValidPillEffect
 local ____playerCollectibles = require("lua_modules.isaacscript-common.dist.functions.playerCollectibles")
@@ -56018,6 +56255,51 @@ function ____exports.oneHP(self)
         npc.HitPoints = 1
     end
     print("Set every NPC to 1 HP.")
+end
+--- Gives a pill with the specified pill effect. Accepts either the effect ID or the partial name of
+-- the effect.
+-- 
+-- For example:
+-- 
+-- - `pill 5` - Gives a "Full Health" pill.
+-- - `pill suns` - Gives a "Feels like I'm walking on sunshine" pill.
+function ____exports.pill(self, params, isHorse)
+    if isHorse == nil then
+        isHorse = false
+    end
+    if params == "" then
+        print("You must specify a pill name or number.")
+        return
+    end
+    local pillEffect
+    local num = parseIntSafe(nil, params)
+    if num == nil then
+        local match = getMapPartialMatch(nil, params, PILL_NAME_TO_EFFECT_MAP)
+        if match == nil then
+            print("Unknown pill effect: " .. params)
+            return
+        end
+        pillEffect = match[2]
+    else
+        if not isValidPillEffect(nil, num) then
+            print("Invalid pill effect ID: " .. tostring(num))
+            return
+        end
+        pillEffect = num
+    end
+    local pillEffectName = getPillEffectName(nil, pillEffect)
+    Isaac.ExecuteCommand("g p" .. tostring(pillEffect))
+    if isHorse then
+        local player = Isaac.GetPlayer()
+        local pillColor = player:GetPill(PocketItemSlot.SLOT_1)
+        local horsePillColor = getHorsePillColor(nil, pillColor)
+        player:SetPill(PocketItemSlot.SLOT_1, horsePillColor)
+    end
+    if isHorse then
+        print(((("Gave horse pill: " .. pillEffectName) .. " (") .. tostring(pillEffect)) .. ")")
+    else
+        print(((("Gave pill: " .. pillEffectName) .. " (") .. tostring(pillEffect)) .. ")")
+    end
 end
 --- Gives a poop mana charge. This only affects Tainted Blue Baby. Provide a number to give a custom
 -- amount of charges. (You can use negative numbers to remove charges.)
@@ -56676,6 +56958,10 @@ end
 function ____exports.hitboxes(self)
     Isaac.ExecuteCommand("debug 6")
 end
+--- The same thing as the `pill` command, but gives a horse pill instead of a normal pill.
+function ____exports.horse(self, params)
+    ____exports.pill(nil, params, true)
+end
 --- Warps to the Blue Womb Boss Room.
 function ____exports.hush(self)
     setStage(nil, LevelStage.BLUE_WOMB, StageType.ORIGINAL)
@@ -56799,38 +57085,6 @@ end
 --- Alias for the "disableCurses" command.
 function ____exports.noCurses(self)
     ____exports.disableCurses(nil)
-end
---- Gives a pill with the specified pill effect. Accepts either the effect ID or the partial name of
--- the effect.
--- 
--- For example:
--- 
--- - `pill 5` - Gives a "Full Health" pill.
--- - `pill suns` - Gives a "Feels like I'm walking on sunshine" pill.
-function ____exports.pill(self, params)
-    if params == "" then
-        print("You must specify a pill name or number.")
-        return
-    end
-    local pillEffect
-    local num = parseIntSafe(nil, params)
-    if num == nil then
-        local match = getMapPartialMatch(nil, params, PILL_NAME_TO_EFFECT_MAP)
-        if match == nil then
-            print("Unknown pill effect: " .. params)
-            return
-        end
-        pillEffect = match[2]
-    else
-        if not isValidPillEffect(nil, num) then
-            print("Invalid pill effect ID: " .. tostring(num))
-            return
-        end
-        pillEffect = num
-    end
-    local pillEffectName = getPillEffectName(nil, pillEffect)
-    Isaac.ExecuteCommand("g p" .. tostring(pillEffect))
-    print(((("Gave pill: " .. pillEffectName) .. " (") .. tostring(pillEffect)) .. ")")
 end
 --- Spawns every pill on the ground, starting at the top-left-most tile.
 function ____exports.pills(self)
@@ -57423,8 +57677,13 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____decorators = require("lua_modules.isaacscript-common.dist.decorators")
 local Exported = ____decorators.Exported
+local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.enums.ModCallbackCustom")
+local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
+local ____collectibles = require("lua_modules.isaacscript-common.dist.functions.collectibles")
+local isActiveCollectible = ____collectibles.isActiveCollectible
 local ____playerDataStructures = require("lua_modules.isaacscript-common.dist.functions.playerDataStructures")
 local mapGetPlayer = ____playerDataStructures.mapGetPlayer
+local mapHasPlayer = ____playerDataStructures.mapHasPlayer
 local mapSetPlayer = ____playerDataStructures.mapSetPlayer
 local ____playerHealth = require("lua_modules.isaacscript-common.dist.functions.playerHealth")
 local getPlayerHealth = ____playerHealth.getPlayerHealth
@@ -57435,6 +57694,8 @@ local getPlayerStats = ____stats.getPlayerStats
 local ____Feature = require("lua_modules.isaacscript-common.dist.classes.private.Feature")
 local Feature = ____Feature.Feature
 local v = {run = {
+    edenActiveCollectibles = __TS__New(Map),
+    edenPassiveCollectibles = __TS__New(Map),
     edenPlayerStats = __TS__New(Map),
     edenPlayerHealth = __TS__New(Map)
 }}
@@ -57452,7 +57713,17 @@ function EdenStartingStatsHealth.prototype.____constructor(self)
         self:getEdenStats(player)
         self:getEdenHealth(player)
     end
+    self.postPlayerCollectibleAdded = function(____, player, collectibleType)
+        if not isEden(nil, player) then
+            return
+        end
+        local map = isActiveCollectible(nil, collectibleType) and v.run.edenActiveCollectibles or v.run.edenPassiveCollectibles
+        if not mapHasPlayer(nil, map, player) then
+            mapSetPlayer(nil, map, player, collectibleType)
+        end
+    end
     self.callbacksUsed = {{ModCallback.POST_PLAYER_INIT, self.postPlayerInit}}
+    self.customCallbacksUsed = {{ModCallbackCustom.POST_PLAYER_COLLECTIBLE_ADDED, self.postPlayerCollectibleAdded}}
 end
 function EdenStartingStatsHealth.prototype.getEdenStats(self, player)
     local existingStatMap = mapGetPlayer(nil, v.run.edenPlayerStats, player)
@@ -57470,10 +57741,31 @@ function EdenStartingStatsHealth.prototype.getEdenHealth(self, player)
     local playerHealth = getPlayerHealth(nil, player)
     mapSetPlayer(nil, v.run.edenPlayerHealth, player, playerHealth)
 end
+function EdenStartingStatsHealth.prototype.getEdenStartingActiveCollectible(self, player)
+    return mapGetPlayer(nil, v.run.edenActiveCollectibles, player)
+end
+__TS__DecorateLegacy({Exported}, EdenStartingStatsHealth.prototype, "getEdenStartingActiveCollectible", true)
+function EdenStartingStatsHealth.prototype.getEdenStartingCollectibles(self, player)
+    local collectibleTypes = {}
+    local activeCollectibleType = mapGetPlayer(nil, v.run.edenActiveCollectibles, player)
+    if activeCollectibleType ~= nil then
+        collectibleTypes[#collectibleTypes + 1] = activeCollectibleType
+    end
+    local passiveCollectibleType = mapGetPlayer(nil, v.run.edenPassiveCollectibles, player)
+    if passiveCollectibleType ~= nil then
+        collectibleTypes[#collectibleTypes + 1] = passiveCollectibleType
+    end
+    return collectibleTypes
+end
+__TS__DecorateLegacy({Exported}, EdenStartingStatsHealth.prototype, "getEdenStartingCollectibles", true)
 function EdenStartingStatsHealth.prototype.getEdenStartingHealth(self, player)
     return mapGetPlayer(nil, v.run.edenPlayerHealth, player)
 end
 __TS__DecorateLegacy({Exported}, EdenStartingStatsHealth.prototype, "getEdenStartingHealth", true)
+function EdenStartingStatsHealth.prototype.getEdenStartingPassiveCollectible(self, player)
+    return mapGetPlayer(nil, v.run.edenPassiveCollectibles, player)
+end
+__TS__DecorateLegacy({Exported}, EdenStartingStatsHealth.prototype, "getEdenStartingPassiveCollectible", true)
 function EdenStartingStatsHealth.prototype.getEdenStartingStat(self, player, playerStat)
     local playerStats = mapGetPlayer(nil, v.run.edenPlayerStats, player)
     if playerStats == nil then
@@ -57669,7 +57961,7 @@ local GridEntityType = ____isaac_2Dtypescript_2Ddefinitions.GridEntityType
 local PickupVariant = ____isaac_2Dtypescript_2Ddefinitions.PickupVariant
 local PitfallVariant = ____isaac_2Dtypescript_2Ddefinitions.PitfallVariant
 local RoomType = ____isaac_2Dtypescript_2Ddefinitions.RoomType
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local GRID_ENTITY_XML_TYPE_VALUES = ____cachedEnumValues.GRID_ENTITY_XML_TYPE_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
@@ -59419,7 +59711,7 @@ function CustomStages.prototype.____constructor(self, customGridEntities, custom
             return nil
         end
         if not self.usingRedKey then
-            return
+            return nil
         end
         self.usingRedKey = false
         local level = game:GetLevel()
@@ -59439,7 +59731,7 @@ function CustomStages.prototype.____constructor(self, customGridEntities, custom
     self.getShaderParams = function(____, shaderName)
         local customStage = v.run.currentCustomStage
         if customStage == nil then
-            return
+            return nil
         end
         streakTextGetShaderParams(nil, customStage, shaderName)
         return nil
@@ -59981,28 +60273,35 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local StageID = ____isaac_2Dtypescript_2Ddefinitions.StageID
 local ____readOnly = require("lua_modules.isaacscript-common.dist.functions.readOnly")
 local newReadonlyColor = ____readOnly.newReadonlyColor
+local BASEMENT_COLOR = newReadonlyColor(nil, 201 / 255, 114 / 255, 96 / 255)
+local CAVES_COLOR = newReadonlyColor(nil, 167 / 255, 111 / 255, 75 / 255)
+local DEPTHS_COLOR = newReadonlyColor(nil, 70 / 255, 70 / 255, 72 / 255)
+local WOMB_COLOR = newReadonlyColor(nil, 241 / 255, 28 / 255, 28 / 255)
+local SHEOL_COLOR = newReadonlyColor(nil, 60 / 255, 54 / 255, 54 / 255)
 --- We arbitrarily specify a default color equal to that of Basement.
-local DEFAULT_COLOR = newReadonlyColor(nil, 201 / 255, 114 / 255, 96 / 255)
+local DEFAULT_COLOR = BASEMENT_COLOR
 --- These values are taken from StageAPI.
 ____exports.VERSUS_SCREEN_DIRT_SPOT_COLORS = {
     [StageID.SPECIAL_ROOMS] = DEFAULT_COLOR,
-    [StageID.BASEMENT] = newReadonlyColor(nil, 201 / 255, 114 / 255, 96 / 255),
+    [StageID.BASEMENT] = BASEMENT_COLOR,
     [StageID.CELLAR] = newReadonlyColor(nil, 229 / 255, 157 / 255, 111 / 255),
     [StageID.BURNING_BASEMENT] = newReadonlyColor(nil, 252 / 255, 108 / 255, 90 / 255),
-    [StageID.CAVES] = newReadonlyColor(nil, 167 / 255, 111 / 255, 75 / 255),
+    [StageID.CAVES] = CAVES_COLOR,
     [StageID.CATACOMBS] = newReadonlyColor(nil, 135 / 255, 90 / 255, 80 / 255),
     [StageID.FLOODED_CAVES] = newReadonlyColor(nil, 111 / 255, 147 / 255, 180 / 255),
-    [StageID.DEPTHS] = newReadonlyColor(nil, 70 / 255, 70 / 255, 72 / 255),
+    [StageID.DEPTHS] = DEPTHS_COLOR,
     [StageID.NECROPOLIS] = newReadonlyColor(nil, 88 / 255, 67 / 255, 54 / 255),
-    [StageID.DANK_DEPTHS] = newReadonlyColor(nil, 70 / 255, 70 / 255, 72 / 255),
-    [StageID.WOMB] = newReadonlyColor(nil, 241 / 255, 28 / 255, 28 / 255),
+    [StageID.DANK_DEPTHS] = DEPTHS_COLOR,
+    [StageID.WOMB] = WOMB_COLOR,
     [StageID.UTERO] = newReadonlyColor(nil, 199 / 255, 60 / 255, 48 / 255),
     [StageID.SCARRED_WOMB] = newReadonlyColor(nil, 247 / 255, 152 / 255, 88 / 255),
     [StageID.BLUE_WOMB] = newReadonlyColor(nil, 157 / 255, 209 / 255, 255 / 255),
-    [StageID.SHEOL] = newReadonlyColor(nil, 60 / 255, 54 / 255, 54 / 255),
+    [StageID.SHEOL] = SHEOL_COLOR,
     [StageID.CATHEDRAL] = newReadonlyColor(nil, 44 / 255, 100 / 255, 111 / 255),
     [StageID.DARK_ROOM] = newReadonlyColor(nil, 80 / 255, 38 / 255, 20 / 255),
     [StageID.CHEST] = newReadonlyColor(nil, 175 / 255, 108 / 255, 72 / 255),
+    [StageID.SHOP] = DEFAULT_COLOR,
+    [StageID.ULTRA_GREED] = DEFAULT_COLOR,
     [StageID.VOID] = newReadonlyColor(nil, 70 / 255, 5 / 255, 5 / 255),
     [StageID.DOWNPOUR] = newReadonlyColor(nil, 149 / 255, 157 / 255, 167 / 255),
     [StageID.DROSS] = newReadonlyColor(nil, 179 / 255, 179 / 255, 143 / 255),
@@ -60023,28 +60322,35 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local StageID = ____isaac_2Dtypescript_2Ddefinitions.StageID
 local ____readOnly = require("lua_modules.isaacscript-common.dist.functions.readOnly")
 local newReadonlyColor = ____readOnly.newReadonlyColor
+local BASEMENT_COLOR = newReadonlyColor(nil, 26 / 255, 14 / 255, 12 / 255)
+local CAVES_COLOR = newReadonlyColor(nil, 18 / 255, 13 / 255, 8 / 255)
+local DEPTHS_COLOR = newReadonlyColor(nil, 8 / 255, 8 / 255, 8 / 255)
+local WOMB_COLOR = newReadonlyColor(nil, 27 / 255, 3 / 255, 3 / 255)
+local SHEOL_COLOR = newReadonlyColor(nil, 6 / 255, 6 / 255, 6 / 255)
 --- We arbitrarily specify a default color equal to that of Basement.
-local DEFAULT_COLOR = newReadonlyColor(nil, 26 / 255, 14 / 255, 12 / 255)
+local DEFAULT_COLOR = BASEMENT_COLOR
 --- These values are taken from StageAPI.
 ____exports.VERSUS_SCREEN_BACKGROUND_COLORS = {
     [StageID.SPECIAL_ROOMS] = DEFAULT_COLOR,
-    [StageID.BASEMENT] = newReadonlyColor(nil, 26 / 255, 14 / 255, 12 / 255),
+    [StageID.BASEMENT] = BASEMENT_COLOR,
     [StageID.CELLAR] = newReadonlyColor(nil, 26 / 255, 17 / 255, 13 / 255),
     [StageID.BURNING_BASEMENT] = newReadonlyColor(nil, 28 / 255, 12 / 255, 10 / 255),
-    [StageID.CAVES] = newReadonlyColor(nil, 18 / 255, 13 / 255, 8 / 255),
+    [StageID.CAVES] = CAVES_COLOR,
     [StageID.CATACOMBS] = newReadonlyColor(nil, 15 / 255, 10 / 255, 8 / 255),
     [StageID.FLOODED_CAVES] = newReadonlyColor(nil, 21 / 255, 28 / 255, 35 / 255),
-    [StageID.DEPTHS] = newReadonlyColor(nil, 8 / 255, 8 / 255, 8 / 255),
+    [StageID.DEPTHS] = DEPTHS_COLOR,
     [StageID.NECROPOLIS] = newReadonlyColor(nil, 10 / 255, 6 / 255, 6 / 255),
-    [StageID.DANK_DEPTHS] = newReadonlyColor(nil, 8 / 255, 8 / 255, 8 / 255),
-    [StageID.WOMB] = newReadonlyColor(nil, 27 / 255, 3 / 255, 3 / 255),
+    [StageID.DANK_DEPTHS] = DEPTHS_COLOR,
+    [StageID.WOMB] = WOMB_COLOR,
     [StageID.UTERO] = newReadonlyColor(nil, 22 / 255, 6 / 255, 5 / 255),
     [StageID.SCARRED_WOMB] = newReadonlyColor(nil, 42 / 255, 19 / 255, 10 / 255),
     [StageID.BLUE_WOMB] = newReadonlyColor(nil, 26 / 255, 32 / 255, 40 / 255),
-    [StageID.SHEOL] = newReadonlyColor(nil, 6 / 255, 6 / 255, 6 / 255),
+    [StageID.SHEOL] = SHEOL_COLOR,
     [StageID.CATHEDRAL] = newReadonlyColor(nil, 6 / 255, 13 / 255, 17 / 255),
     [StageID.DARK_ROOM] = newReadonlyColor(nil, 9 / 255, 4 / 255, 3 / 255),
     [StageID.CHEST] = newReadonlyColor(nil, 15 / 255, 9 / 255, 6 / 255),
+    [StageID.SHOP] = DEFAULT_COLOR,
+    [StageID.ULTRA_GREED] = DEFAULT_COLOR,
     [StageID.VOID] = newReadonlyColor(nil, 0, 0, 0),
     [StageID.DOWNPOUR] = newReadonlyColor(nil, 29 / 255, 30 / 255, 32 / 255),
     [StageID.DROSS] = newReadonlyColor(nil, 35 / 255, 35 / 255, 29 / 255),
@@ -60150,7 +60456,7 @@ local ____exports = {}
 local checkEndTopStreakText, trackMapInputPressed, checkStartBottomStreakText, checkEndBottomStreakText, renderStreakText, UI_STREAK_ANIMATION_END_FRAMES, TEXT_STAY_FRAME, TEXT_OUT_FRAME, STREAK_TEXT_BOTTOM_Y_OFFSET, NUM_RENDER_FRAMES_MAP_HELD_BEFORE_STREAK_TEXT, TEXT_IN_ADJUSTMENTS, TEXT_OUT_ADJUSTMENTS, TEXT_IN_SCALES, TEXT_OUT_SCALES
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local ButtonAction = ____isaac_2Dtypescript_2Ddefinitions.ButtonAction
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local CONTROLLER_INDEX_VALUES = ____cachedEnumValues.CONTROLLER_INDEX_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local fonts = ____cachedClasses.fonts
@@ -61562,7 +61868,7 @@ local DamageFlag = ____isaac_2Dtypescript_2Ddefinitions.DamageFlag
 local ItemType = ____isaac_2Dtypescript_2Ddefinitions.ItemType
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local PlayerType = ____isaac_2Dtypescript_2Ddefinitions.PlayerType
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local ACTIVE_SLOT_VALUES = ____cachedEnumValues.ACTIVE_SLOT_VALUES
 local ____ISCFeature = require("lua_modules.isaacscript-common.dist.enums.ISCFeature")
 local ISCFeature = ____ISCFeature.ISCFeature
@@ -61577,6 +61883,8 @@ local defaultMapGetPlayer = ____playerDataStructures.defaultMapGetPlayer
 local mapSetPlayer = ____playerDataStructures.mapSetPlayer
 local ____players = require("lua_modules.isaacscript-common.dist.functions.players")
 local getPlayerFromPtr = ____players.getPlayerFromPtr
+local ____sort = require("lua_modules.isaacscript-common.dist.functions.sort")
+local sortNormal = ____sort.sortNormal
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local ____repeat = ____utils["repeat"]
 local ____DefaultMap = require("lua_modules.isaacscript-common.dist.classes.DefaultMap")
@@ -61700,8 +62008,8 @@ function PlayerCollectibleDetection.prototype.checkActiveItemsChanged(self, play
         oldCollectibleTypes[#oldCollectibleTypes + 1] = oldCollectibleType
         newCollectibleTypes[#newCollectibleTypes + 1] = newCollectibleType
     end
-    __TS__ArraySort(oldCollectibleTypes)
-    __TS__ArraySort(newCollectibleTypes)
+    __TS__ArraySort(oldCollectibleTypes, sortNormal)
+    __TS__ArraySort(newCollectibleTypes, sortNormal)
     if not arrayEquals(nil, oldCollectibleTypes, newCollectibleTypes) then
         self:updateCollectibleMapAndFire(player, nil)
     end
@@ -62689,7 +62997,7 @@ return ____exports
 local ____lualib = require("lualib_bundle")
 local __TS__New = ____lualib.__TS__New
 local ____exports = {}
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local MOD_CALLBACK_CUSTOM_VALUES = ____cachedEnumValues.MOD_CALLBACK_CUSTOM_VALUES
 local cc = require("lua_modules.isaacscript-common.dist.callbackClasses")
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.enums.ModCallbackCustom")
@@ -64338,7 +64646,7 @@ local __TS__New = ____lualib.__TS__New
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local PLAYER_FORM_VALUES = ____cachedEnumValues.PLAYER_FORM_VALUES
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
@@ -65458,12 +65766,15 @@ local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local BossID = ____isaac_2Dtypescript_2Ddefinitions.BossID
 local CollectibleType = ____isaac_2Dtypescript_2Ddefinitions.CollectibleType
+local DamageFlag = ____isaac_2Dtypescript_2Ddefinitions.DamageFlag
 local DamageFlagZero = ____isaac_2Dtypescript_2Ddefinitions.DamageFlagZero
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
+local ____flag = require("lua_modules.isaacscript-common.dist.functions.flag")
+local hasFlag = ____flag.hasFlag
 local ____playerDataStructures = require("lua_modules.isaacscript-common.dist.functions.playerDataStructures")
 local mapGetPlayer = ____playerDataStructures.mapGetPlayer
 local mapSetPlayer = ____playerDataStructures.mapSetPlayer
@@ -65513,6 +65824,9 @@ function PostPlayerFatalDamage.prototype.____constructor(self)
         local gameFrameCount = game:GetFrameCount()
         local lastDamageGameFrame = mapGetPlayer(nil, v.run.playersLastDamageGameFrame, player)
         mapSetPlayer(nil, v.run.playersLastDamageGameFrame, player, gameFrameCount)
+        if hasFlag(nil, damageFlags, DamageFlag.NO_KILL) then
+            return nil
+        end
         if willPlayerRevive(nil, player) then
             return nil
         end
@@ -65635,7 +65949,7 @@ local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
 local statEquals
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local PLAYER_STAT_VALUES = ____cachedEnumValues.PLAYER_STAT_VALUES
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
@@ -65732,7 +66046,7 @@ local __TS__New = ____lualib.__TS__New
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____exports = {}
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local HEALTH_TYPE_VALUES = ____cachedEnumValues.HEALTH_TYPE_VALUES
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
@@ -66645,7 +66959,7 @@ local __TS__Iterator = ____lualib.__TS__Iterator
 local ____exports = {}
 local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescript-definitions.dist.index")
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local KEYBOARD_VALUES = ____cachedEnumValues.KEYBOARD_VALUES
 local ____input = require("lua_modules.isaacscript-common.dist.functions.input")
 local isKeyboardPressed = ____input.isKeyboardPressed
@@ -66721,7 +67035,7 @@ local ____isaac_2Dtypescript_2Ddefinitions = require("lua_modules.isaac-typescri
 local EntityType = ____isaac_2Dtypescript_2Ddefinitions.EntityType
 local ModCallback = ____isaac_2Dtypescript_2Ddefinitions.ModCallback
 local SuckerVariant = ____isaac_2Dtypescript_2Ddefinitions.SuckerVariant
-local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.arrays.cachedEnumValues")
+local ____cachedEnumValues = require("lua_modules.isaacscript-common.dist.cachedEnumValues")
 local ACTIVE_SLOT_VALUES = ____cachedEnumValues.ACTIVE_SLOT_VALUES
 local ____cachedClasses = require("lua_modules.isaacscript-common.dist.core.cachedClasses")
 local game = ____cachedClasses.game

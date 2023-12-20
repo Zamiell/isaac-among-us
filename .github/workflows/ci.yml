@@ -11,17 +11,6 @@ jobs:
       # @template-ignore-next-line
       - run: bash ./build.sh
 
-      # @template-customization-start
-
-      - name: If publishing, upload mod output
-        if: "contains(github.event.head_commit.message, 'chore: release') && needs.pr-check.outputs.number != 'null'"
-        uses: actions/upload-artifact@v3
-        with:
-          name: mod-directory
-          path: ./mod
-
-      # @template-customization-end
-
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -31,29 +20,24 @@ jobs:
       - run: bash ./lint.sh
 
   # @template-customization-start
+
   publish:
     runs-on: ubuntu-latest
     needs: [build, lint]
-    if: "contains(github.event.head_commit.message, 'chore: release') && needs.pr-check.outputs.number != 'null'"
+    if: "contains(github.event.head_commit.message, 'chore: release') && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'"
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/workflows/setup
-
-      - name: Download mod output
-        uses: actions/download-artifact@v3
-        with:
-          name: mod-directory
-          path: ./mod
+      - run: bash ./packages/mod/build.sh
 
       - name: Upload the mod to Steam Workshop (if this is a release commit)
         uses: IsaacScript/isaac-steam-workshop-upload@v2
         with:
-          mod_path: mod
+          mod_path: packages/mod/mod
           change_note: "Version: {VERSION}\n\nChanges for this mod are [url=https://github.com/Zamiell/babies-mod]tracked on GitHub[/url]."
         env:
           CONFIG_VDF_CONTENTS: ${{ secrets.CONFIG_VDF_CONTENTS }}
 
-  # @template-customization-start
   discord:
     name: Discord Failure Notification
     needs: [build, lint, publish]
@@ -67,4 +51,5 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ env.WORKFLOW_CONCLUSION }}
           title: ""
+
   # @template-customization-end
