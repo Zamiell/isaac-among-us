@@ -1299,12 +1299,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.10.5":
-  version: 20.10.5
-  resolution: "@types/node@npm:20.10.5"
+"@types/node@npm:^20.10.6":
+  version: 20.10.6
+  resolution: "@types/node@npm:20.10.6"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: be30609aae0bfe492097815f166ccc07f465220cb604647fa4e5ec05a1d16c012a41b82b5f11ecfe2485cbb479d4d20384b95b809ca0bcff6d94d5bbafa645bb
+  checksum: 6692ccfa8552ef60c4069fda3c8de726c23e8d403cdf788e3c7efa769987e80fbda5f02723dd857f9de7df24a5fa40b3ed4580ec3c5cbac04eba44cf7b2ab1dc
   languageName: node
   linkType: hard
 
@@ -4436,11 +4436,11 @@ __metadata:
   resolution: "isaac-among-us@workspace:."
   dependencies:
     "@prisma/client": "npm:^5.7.1"
-    "@types/node": "npm:^20.10.5"
+    "@types/node": "npm:^20.10.6"
     "@types/struct": "npm:^0.0.8"
     argon2: "npm:^0.31.2"
     isaac-typescript-definitions: "npm:^40.0.4"
-    isaacscript: "npm:^3.36.1"
+    isaacscript: "npm:^3.37.0"
     isaacscript-common: "npm:^85.0.2"
     isaacscript-lint: "npm:^6.13.0"
     isaacscript-spell: "npm:^1.13.0"
@@ -4451,7 +4451,7 @@ __metadata:
     ts-node-dev: "npm:^2.0.0"
     tsconfig-paths: "npm:^4.2.0"
     typescript: "npm:^5.3.3"
-    typescript-to-lua: "npm:^1.22.0"
+    typescript-to-lua: "npm:^1.23.0"
   languageName: unknown
   linkType: soft
 
@@ -4500,12 +4500,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isaacscript-common-ts@npm:^13.1.0, isaacscript-common-ts@npm:^13.1.8, isaacscript-common-ts@npm:^13.5.1":
+"isaacscript-common-ts@npm:^13.1.0, isaacscript-common-ts@npm:^13.1.8":
   version: 13.5.1
   resolution: "isaacscript-common-ts@npm:13.5.1"
   dependencies:
     unidecode: "npm:^0.1.8"
   checksum: 9548aae891762b66ce83d7836be8c9b5ca1beabbb8db13a1ba63077cf73d87aca79081803bc4d96e41d3cc274bf448d0aa353343b2800deb421616aeede15a9b
+  languageName: node
+  linkType: hard
+
+"isaacscript-common-ts@npm:^13.6.0":
+  version: 13.9.0
+  resolution: "isaacscript-common-ts@npm:13.9.0"
+  dependencies:
+    unidecode: "npm:^0.1.8"
+  checksum: 7a67c2579990b09e21e952bfe2b5249fb5a7f855032690ddc86880dfd64fc38be5c26f0c9d98b82afac1b0456515515a6aa73cec8d8be764ea2810fc66e0b8fa
   languageName: node
   linkType: hard
 
@@ -4567,9 +4576,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isaacscript@npm:^3.36.1":
-  version: 3.36.1
-  resolution: "isaacscript@npm:3.36.1"
+"isaacscript@npm:^3.37.0":
+  version: 3.37.0
+  resolution: "isaacscript@npm:3.37.0"
   dependencies:
     "@commander-js/extra-typings": "npm:^11.1.0"
     "@zamiell/sync-directory": "npm:^6.0.5"
@@ -4578,10 +4587,10 @@ __metadata:
     commander: "npm:^11.1.0"
     figlet: "npm:^1.7.0"
     isaacscript-common-node: "npm:^3.0.0"
-    isaacscript-common-ts: "npm:^13.5.1"
+    isaacscript-common-ts: "npm:^13.6.0"
     jsonc-parser: "npm:^3.2.0"
     klaw-sync: "npm:^6.0.0"
-    moment: "npm:^2.29.4"
+    moment: "npm:^2.30.1"
     prompt: "npm:^1.3.0"
     source-map-support: "npm:^0.5.21"
     xml2js: "npm:^0.6.2"
@@ -4594,7 +4603,7 @@ __metadata:
       optional: true
   bin:
     isaacscript: dist/main.js
-  checksum: d6a57a3efce5aeacefc396f604e0fad44981702e04011702a96b34cbd825b5e4e38ea5bfb08070785d7d934447d3c620bc43b007b1e5c71165e9dc0ad49324cf
+  checksum: ab60069b5509908729188dc8ff0d2697f8bb731c7df9f5225e39e82133e99de6d0c9a5b4a87365dc547947c7e02b884aa7aaa4d00df0a75914a56d7ee1604388
   languageName: node
   linkType: hard
 
@@ -5391,10 +5400,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment@npm:^2.29.4":
-  version: 2.29.4
-  resolution: "moment@npm:2.29.4"
-  checksum: 844c6f3ce42862ac9467c8ca4f5e48a00750078682cc5bda1bc0e50cc7ca88e2115a0f932d65a06e4a90e26cb78892be9b3ca3dd6546ca2c4d994cebb787fc2b
+"moment@npm:^2.30.1":
+  version: 2.30.1
+  resolution: "moment@npm:2.30.1"
+  checksum: 865e4279418c6de666fca7786607705fd0189d8a7b7624e2e56be99290ac846f90878a6f602e34b4e0455c549b85385b1baf9966845962b313699e7cb847543a
   languageName: node
   linkType: hard
 
@@ -7524,9 +7533,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript-to-lua@npm:^1.22.0":
-  version: 1.22.0
-  resolution: "typescript-to-lua@npm:1.22.0"
+"typescript-to-lua@npm:^1.23.0":
+  version: 1.23.0
+  resolution: "typescript-to-lua@npm:1.23.0"
   dependencies:
     "@typescript-to-lua/language-extensions": "npm:1.19.0"
     enhanced-resolve: "npm:^5.8.2"
@@ -7534,10 +7543,10 @@ __metadata:
     resolve: "npm:^1.15.1"
     source-map: "npm:^0.7.3"
   peerDependencies:
-    typescript: 5.2.2
+    typescript: 5.3.3
   bin:
     tstl: dist/tstl.js
-  checksum: 32df916b964267bf802f6a53c6a91a2afae9da1ac08f014ffad812bf3ef7625a0a0fe3394f441363169fe0d837d5abce24ff734a44a1ecb2bfdb21f739d0daee
+  checksum: 01b2d705309caaf60cc1f1d790bd7f899d5b22f9201ab1ce45678c3c60de55ed08666a32b82f8dbb6d4c3b788b7be63e357c784b636e747370eff96ae53e0ee8
   languageName: node
   linkType: hard
 
