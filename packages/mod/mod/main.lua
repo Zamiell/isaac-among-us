@@ -631,6 +631,12 @@ local function __TS__ArrayWith(self, index, value)
     return copy
 end
 
+local function __TS__New(target, ...)
+    local instance = setmetatable({}, target.prototype)
+    instance:____constructor(...)
+    return instance
+end
+
 local function __TS__InstanceOf(obj, classTbl)
     if type(classTbl) ~= "table" then
         error("Right-hand side of 'instanceof' is not an object", 0)
@@ -650,12 +656,6 @@ local function __TS__InstanceOf(obj, classTbl)
     return false
 end
 
-local function __TS__New(target, ...)
-    local instance = setmetatable({}, target.prototype)
-    instance:____constructor(...)
-    return instance
-end
-
 local function __TS__Class(self)
     local c = {prototype = {}}
     c.prototype.__index = c.prototype
@@ -663,35 +663,27 @@ local function __TS__Class(self)
     return c
 end
 
-local function __TS__FunctionBind(fn, ...)
-    local boundArgs = {...}
-    return function(____, ...)
-        local args = {...}
-        __TS__ArrayUnshift(
-            args,
-            __TS__Unpack(boundArgs)
-        )
-        return fn(__TS__Unpack(args))
-    end
-end
-
 local __TS__Promise
 do
-    local function promiseDeferred(self)
+    local function makeDeferredPromiseFactory()
         local resolve
         local reject
-        local promise = __TS__New(
-            __TS__Promise,
-            function(____, res, rej)
-                resolve = res
-                reject = rej
-            end
-        )
-        return {promise = promise, resolve = resolve, reject = reject}
+        local function executor(____, res, rej)
+            resolve = res
+            reject = rej
+        end
+        return function()
+            local promise = __TS__New(__TS__Promise, executor)
+            return promise, resolve, reject
+        end
     end
-    local function isPromiseLike(self, thing)
-        return __TS__InstanceOf(thing, __TS__Promise)
+    local makeDeferredPromise = makeDeferredPromiseFactory()
+    local function isPromiseLike(value)
+        return __TS__InstanceOf(value, __TS__Promise)
     end
+    local function doNothing(self)
+    end
+    local ____pcall = _G.pcall
     __TS__Promise = __TS__Class()
     __TS__Promise.name = "__TS__Promise"
     function __TS__Promise.prototype.____constructor(self, executor)
@@ -699,206 +691,176 @@ do
         self.fulfilledCallbacks = {}
         self.rejectedCallbacks = {}
         self.finallyCallbacks = {}
-        do
-            local function ____catch(e)
-                self:reject(e)
-            end
-            local ____try, ____hasReturned = pcall(function()
-                executor(
-                    nil,
-                    __TS__FunctionBind(self.resolve, self),
-                    __TS__FunctionBind(self.reject, self)
-                )
-            end)
-            if not ____try then
-                ____catch(____hasReturned)
-            end
+        local success, ____error = ____pcall(
+            executor,
+            nil,
+            function(____, v) return self:resolve(v) end,
+            function(____, err) return self:reject(err) end
+        )
+        if not success then
+            self:reject(____error)
         end
     end
-    function __TS__Promise.resolve(data)
-        local promise = __TS__New(
-            __TS__Promise,
-            function()
-            end
-        )
+    function __TS__Promise.resolve(value)
+        if __TS__InstanceOf(value, __TS__Promise) then
+            return value
+        end
+        local promise = __TS__New(__TS__Promise, doNothing)
         promise.state = 1
-        promise.value = data
+        promise.value = value
         return promise
     end
     function __TS__Promise.reject(reason)
-        local promise = __TS__New(
-            __TS__Promise,
-            function()
-            end
-        )
+        local promise = __TS__New(__TS__Promise, doNothing)
         promise.state = 2
         promise.rejectionReason = reason
         return promise
     end
     __TS__Promise.prototype["then"] = function(self, onFulfilled, onRejected)
-        local ____promiseDeferred_result_0 = promiseDeferred(nil)
-        local promise = ____promiseDeferred_result_0.promise
-        local resolve = ____promiseDeferred_result_0.resolve
-        local reject = ____promiseDeferred_result_0.reject
-        local isFulfilled = self.state == 1
-        local isRejected = self.state == 2
-        if onFulfilled then
-            local internalCallback = self:createPromiseResolvingCallback(onFulfilled, resolve, reject)
-            local ____self_fulfilledCallbacks_1 = self.fulfilledCallbacks
-            ____self_fulfilledCallbacks_1[#____self_fulfilledCallbacks_1 + 1] = internalCallback
-            if isFulfilled then
-                internalCallback(nil, self.value)
-            end
-        else
-            local ____self_fulfilledCallbacks_2 = self.fulfilledCallbacks
-            ____self_fulfilledCallbacks_2[#____self_fulfilledCallbacks_2 + 1] = function(____, v) return resolve(nil, v) end
-        end
-        if onRejected then
-            local internalCallback = self:createPromiseResolvingCallback(onRejected, resolve, reject)
-            local ____self_rejectedCallbacks_3 = self.rejectedCallbacks
-            ____self_rejectedCallbacks_3[#____self_rejectedCallbacks_3 + 1] = internalCallback
-            if isRejected then
-                internalCallback(nil, self.rejectionReason)
-            end
-        else
-            local ____self_rejectedCallbacks_4 = self.rejectedCallbacks
-            ____self_rejectedCallbacks_4[#____self_rejectedCallbacks_4 + 1] = function(____, err) return reject(nil, err) end
-        end
-        if isFulfilled then
-            resolve(nil, self.value)
-        end
-        if isRejected then
-            reject(nil, self.rejectionReason)
-        end
+        local promise, resolve, reject = makeDeferredPromise()
+        self:addCallbacks(
+            onFulfilled and self:createPromiseResolvingCallback(onFulfilled, resolve, reject) or resolve,
+            onRejected and self:createPromiseResolvingCallback(onRejected, resolve, reject) or reject
+        )
         return promise
+    end
+    function __TS__Promise.prototype.addCallbacks(self, fulfilledCallback, rejectedCallback)
+        if self.state == 1 then
+            return fulfilledCallback(nil, self.value)
+        end
+        if self.state == 2 then
+            return rejectedCallback(nil, self.rejectionReason)
+        end
+        local ____self_fulfilledCallbacks_0 = self.fulfilledCallbacks
+        ____self_fulfilledCallbacks_0[#____self_fulfilledCallbacks_0 + 1] = fulfilledCallback
+        local ____self_rejectedCallbacks_1 = self.rejectedCallbacks
+        ____self_rejectedCallbacks_1[#____self_rejectedCallbacks_1 + 1] = rejectedCallback
     end
     function __TS__Promise.prototype.catch(self, onRejected)
         return self["then"](self, nil, onRejected)
     end
     function __TS__Promise.prototype.finally(self, onFinally)
         if onFinally then
-            local ____self_finallyCallbacks_5 = self.finallyCallbacks
-            ____self_finallyCallbacks_5[#____self_finallyCallbacks_5 + 1] = onFinally
+            local ____self_finallyCallbacks_2 = self.finallyCallbacks
+            ____self_finallyCallbacks_2[#____self_finallyCallbacks_2 + 1] = onFinally
             if self.state ~= 0 then
                 onFinally(nil)
             end
         end
         return self
     end
-    function __TS__Promise.prototype.resolve(self, data)
-        if __TS__InstanceOf(data, __TS__Promise) then
-            data["then"](
-                data,
+    function __TS__Promise.prototype.resolve(self, value)
+        if isPromiseLike(value) then
+            return value:addCallbacks(
                 function(____, v) return self:resolve(v) end,
                 function(____, err) return self:reject(err) end
             )
-            return
         end
         if self.state == 0 then
             self.state = 1
-            self.value = data
-            for ____, callback in ipairs(self.fulfilledCallbacks) do
-                callback(nil, data)
-            end
-            for ____, callback in ipairs(self.finallyCallbacks) do
-                callback(nil)
-            end
+            self.value = value
+            return self:invokeCallbacks(self.fulfilledCallbacks, value)
         end
     end
     function __TS__Promise.prototype.reject(self, reason)
         if self.state == 0 then
             self.state = 2
             self.rejectionReason = reason
-            for ____, callback in ipairs(self.rejectedCallbacks) do
-                callback(nil, reason)
+            return self:invokeCallbacks(self.rejectedCallbacks, reason)
+        end
+    end
+    function __TS__Promise.prototype.invokeCallbacks(self, callbacks, value)
+        local callbacksLength = #callbacks
+        local finallyCallbacks = self.finallyCallbacks
+        local finallyCallbacksLength = #finallyCallbacks
+        if callbacksLength ~= 0 then
+            for i = 1, callbacksLength - 1 do
+                callbacks[i](callbacks, value)
             end
-            for ____, callback in ipairs(self.finallyCallbacks) do
-                callback(nil)
+            if finallyCallbacksLength == 0 then
+                return callbacks[callbacksLength](callbacks, value)
             end
+            callbacks[callbacksLength](callbacks, value)
+        end
+        if finallyCallbacksLength ~= 0 then
+            for i = 1, finallyCallbacksLength - 1 do
+                finallyCallbacks[i](finallyCallbacks)
+            end
+            return finallyCallbacks[finallyCallbacksLength](finallyCallbacks)
         end
     end
     function __TS__Promise.prototype.createPromiseResolvingCallback(self, f, resolve, reject)
         return function(____, value)
-            do
-                local function ____catch(e)
-                    reject(nil, e)
-                end
-                local ____try, ____hasReturned = pcall(function()
-                    self:handleCallbackData(
-                        f(nil, value),
-                        resolve,
-                        reject
-                    )
-                end)
-                if not ____try then
-                    ____catch(____hasReturned)
-                end
+            local success, resultOrError = ____pcall(f, nil, value)
+            if not success then
+                return reject(nil, resultOrError)
             end
+            return self:handleCallbackValue(resultOrError, resolve, reject)
         end
     end
-    function __TS__Promise.prototype.handleCallbackData(self, data, resolve, reject)
-        if isPromiseLike(nil, data) then
-            local nextpromise = data
+    function __TS__Promise.prototype.handleCallbackValue(self, value, resolve, reject)
+        if isPromiseLike(value) then
+            local nextpromise = value
             if nextpromise.state == 1 then
-                resolve(nil, nextpromise.value)
+                return resolve(nil, nextpromise.value)
             elseif nextpromise.state == 2 then
-                reject(nil, nextpromise.rejectionReason)
+                return reject(nil, nextpromise.rejectionReason)
             else
-                data["then"](data, resolve, reject)
+                return nextpromise:addCallbacks(resolve, reject)
             end
         else
-            resolve(nil, data)
+            return resolve(nil, value)
         end
     end
 end
 
-local function __TS__AsyncAwaiter(generator)
-    return __TS__New(
-        __TS__Promise,
-        function(____, resolve, reject)
-            local adopt, fulfilled, step, resolved, asyncCoroutine
-            function adopt(self, value)
-                return __TS__InstanceOf(value, __TS__Promise) and value or __TS__Promise.resolve(value)
-            end
-            function fulfilled(self, value)
-                local success, resultOrError = coroutine.resume(asyncCoroutine, value)
+local __TS__AsyncAwaiter, __TS__Await
+do
+    local cocreate = coroutine.create
+    local coresume = coroutine.resume
+    local costatus = coroutine.status
+    local coyield = coroutine.yield
+    function __TS__AsyncAwaiter(generator)
+        return __TS__New(
+            __TS__Promise,
+            function(____, resolve, reject)
+                local fulfilled, step, resolved, asyncCoroutine
+                function fulfilled(self, value)
+                    local success, resultOrError = coresume(asyncCoroutine, value)
+                    if success then
+                        return step(resultOrError)
+                    end
+                    return reject(nil, resultOrError)
+                end
+                function step(result)
+                    if resolved then
+                        return
+                    end
+                    if costatus(asyncCoroutine) == "dead" then
+                        return resolve(nil, result)
+                    end
+                    return __TS__Promise.resolve(result):addCallbacks(fulfilled, reject)
+                end
+                resolved = false
+                asyncCoroutine = cocreate(generator)
+                local success, resultOrError = coresume(
+                    asyncCoroutine,
+                    function(____, v)
+                        resolved = true
+                        return __TS__Promise.resolve(v):addCallbacks(resolve, reject)
+                    end
+                )
                 if success then
-                    step(nil, resultOrError)
+                    return step(resultOrError)
                 else
-                    reject(nil, resultOrError)
+                    return reject(nil, resultOrError)
                 end
             end
-            function step(self, result)
-                if resolved then
-                    return
-                end
-                if coroutine.status(asyncCoroutine) == "dead" then
-                    resolve(nil, result)
-                else
-                    local ____self_0 = adopt(nil, result)
-                    ____self_0["then"](____self_0, fulfilled, reject)
-                end
-            end
-            resolved = false
-            asyncCoroutine = coroutine.create(generator)
-            local success, resultOrError = coroutine.resume(
-                asyncCoroutine,
-                function(____, v)
-                    resolved = true
-                    local ____self_1 = adopt(nil, v)
-                    ____self_1["then"](____self_1, resolve, reject)
-                end
-            )
-            if success then
-                step(nil, resultOrError)
-            else
-                reject(nil, resultOrError)
-            end
-        end
-    )
-end
-local function __TS__Await(thing)
-    return coroutine.yield(thing)
+        )
+    end
+    function __TS__Await(thing)
+        return coyield(thing)
+    end
 end
 
 local function __TS__ClassExtends(target, base)
@@ -996,20 +958,17 @@ local function __TS__ObjectGetOwnPropertyDescriptor(object, key)
     return rawget(metatable, "_descriptors")[key]
 end
 
-local __TS__SetDescriptor
+local __TS__DescriptorGet
 do
-    local function descriptorIndex(self, key)
-        local value = rawget(self, key)
-        if value ~= nil then
-            return value
-        end
-        local metatable = getmetatable(self)
+    local getmetatable = _G.getmetatable
+    local ____rawget = _G.rawget
+    function __TS__DescriptorGet(self, metatable, key)
         while metatable do
-            local rawResult = rawget(metatable, key)
+            local rawResult = ____rawget(metatable, key)
             if rawResult ~= nil then
                 return rawResult
             end
-            local descriptors = rawget(metatable, "_descriptors")
+            local descriptors = ____rawget(metatable, "_descriptors")
             if descriptors then
                 local descriptor = descriptors[key]
                 if descriptor ~= nil then
@@ -1022,10 +981,16 @@ do
             metatable = getmetatable(metatable)
         end
     end
-    local function descriptorNewIndex(self, key, value)
-        local metatable = getmetatable(self)
+end
+
+local __TS__DescriptorSet
+do
+    local getmetatable = _G.getmetatable
+    local ____rawget = _G.rawget
+    local rawset = _G.rawset
+    function __TS__DescriptorSet(self, metatable, key, value)
         while metatable do
-            local descriptors = rawget(metatable, "_descriptors")
+            local descriptors = ____rawget(metatable, "_descriptors")
             if descriptors then
                 local descriptor = descriptors[key]
                 if descriptor ~= nil then
@@ -1046,6 +1011,26 @@ do
             metatable = getmetatable(metatable)
         end
         rawset(self, key, value)
+    end
+end
+
+local __TS__SetDescriptor
+do
+    local getmetatable = _G.getmetatable
+    local function descriptorIndex(self, key)
+        return __TS__DescriptorGet(
+            self,
+            getmetatable(self),
+            key
+        )
+    end
+    local function descriptorNewIndex(self, key, value)
+        return __TS__DescriptorSet(
+            self,
+            getmetatable(self),
+            key,
+            value
+        )
     end
     function __TS__SetDescriptor(target, key, desc, isPrototype)
         if isPrototype == nil then
@@ -1272,6 +1257,18 @@ local function __TS__DelegatedYield(iterable)
         for ____, value in ipairs(iterable) do
             coroutine.yield(value)
         end
+    end
+end
+
+local function __TS__FunctionBind(fn, ...)
+    local boundArgs = {...}
+    return function(____, ...)
+        local args = {...}
+        __TS__ArrayUnshift(
+            args,
+            __TS__Unpack(boundArgs)
+        )
+        return fn(__TS__Unpack(args))
     end
 end
 
@@ -2594,6 +2591,8 @@ return {
   __TS__DecorateParam = __TS__DecorateParam,
   __TS__Delete = __TS__Delete,
   __TS__DelegatedYield = __TS__DelegatedYield,
+  __TS__DescriptorGet = __TS__DescriptorGet,
+  __TS__DescriptorSet = __TS__DescriptorSet,
   Error = Error,
   RangeError = RangeError,
   ReferenceError = ReferenceError,
@@ -5350,6 +5349,14 @@ do
 end
 do
     local ____export = require("lua_modules.isaac-typescript-definitions.dist.enums.ModCallback")
+    for ____exportKey, ____exportValue in pairs(____export) do
+        if ____exportKey ~= "default" then
+            ____exports[____exportKey] = ____exportValue
+        end
+    end
+end
+do
+    local ____export = require("lua_modules.isaac-typescript-definitions.dist.enums.ModCallbackRepentogon")
     for ____exportKey, ____exportValue in pairs(____export) do
         if ____exportKey ~= "default" then
             ____exports[____exportKey] = ____exportValue
@@ -16393,6 +16400,430 @@ ____exports.Mouse.BUTTON_8 = 7
 ____exports.Mouse[____exports.Mouse.BUTTON_8] = "BUTTON_8"
 return ____exports
  end,
+["lua_modules.isaac-typescript-definitions.dist.enums.ModCallbackRepentogon"] = function(...) 
+local ____exports = {}
+--- Callbacks for REPENTOGON, an exe-hack which expands the modding API.
+-- 
+-- @see https ://repentogon.com/index.html
+____exports.ModCallbackRepentogon = {}
+____exports.ModCallbackRepentogon.PRE_ADD_COLLECTIBLE = 1004
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_ADD_COLLECTIBLE] = "PRE_ADD_COLLECTIBLE"
+____exports.ModCallbackRepentogon.POST_ADD_COLLECTIBLE = 1005
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_ADD_COLLECTIBLE] = "POST_ADD_COLLECTIBLE"
+____exports.ModCallbackRepentogon.POST_ENTITY_TAKE_DMG = 1006
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_ENTITY_TAKE_DMG] = "POST_ENTITY_TAKE_DMG"
+____exports.ModCallbackRepentogon.PRE_ENTITY_TAKE_DMG = 1007
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_ENTITY_TAKE_DMG] = "PRE_ENTITY_TAKE_DMG"
+____exports.ModCallbackRepentogon.PRE_PLAYER_TAKE_DMG = 1008
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PLAYER_TAKE_DMG] = "PRE_PLAYER_TAKE_DMG"
+____exports.ModCallbackRepentogon.POST_GRID_ROCK_DESTROY = 1011
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ROCK_DESTROY] = "POST_GRID_ROCK_DESTROY"
+____exports.ModCallbackRepentogon.PRE_GRID_HURT_DAMAGE = 1012
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_HURT_DAMAGE] = "PRE_GRID_HURT_DAMAGE"
+____exports.ModCallbackRepentogon.POST_GRID_HURT_DAMAGE = 1013
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_HURT_DAMAGE] = "POST_GRID_HURT_DAMAGE"
+____exports.ModCallbackRepentogon.HUD_UPDATE = 1020
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.HUD_UPDATE] = "HUD_UPDATE"
+____exports.ModCallbackRepentogon.HUD_POST_UPDATE = 1021
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.HUD_POST_UPDATE] = "HUD_POST_UPDATE"
+____exports.ModCallbackRepentogon.POST_HUD_RENDER = 1022
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_HUD_RENDER] = "POST_HUD_RENDER"
+____exports.ModCallbackRepentogon.POST_MAIN_MENU_RENDER = 1023
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_MAIN_MENU_RENDER] = "POST_MAIN_MENU_RENDER"
+____exports.ModCallbackRepentogon.PRE_SFX_PLAY = 1030
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_SFX_PLAY] = "PRE_SFX_PLAY"
+____exports.ModCallbackRepentogon.POST_SFX_PLAY = 1031
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_SFX_PLAY] = "POST_SFX_PLAY"
+____exports.ModCallbackRepentogon.PRE_MUSIC_PLAY = 1034
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_MUSIC_PLAY] = "PRE_MUSIC_PLAY"
+____exports.ModCallbackRepentogon.PRE_MUSIC_LAYER_TOGGLE = 1035
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_MUSIC_LAYER_TOGGLE] = "PRE_MUSIC_LAYER_TOGGLE"
+____exports.ModCallbackRepentogon.PRE_RENDER_PLAYER_HEAD = 1038
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_RENDER_PLAYER_HEAD] = "PRE_RENDER_PLAYER_HEAD"
+____exports.ModCallbackRepentogon.PRE_RENDER_PLAYER_BODY = 1039
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_RENDER_PLAYER_BODY] = "PRE_RENDER_PLAYER_BODY"
+____exports.ModCallbackRepentogon.PRE_ENTITY_THROW = 1040
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_ENTITY_THROW] = "PRE_ENTITY_THROW"
+____exports.ModCallbackRepentogon.POST_ENTITY_THROW = 1041
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_ENTITY_THROW] = "POST_ENTITY_THROW"
+____exports.ModCallbackRepentogon.POST_PLAYER_LEVEL_STATS_INIT = 1042
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PLAYER_LEVEL_STATS_INIT] = "POST_PLAYER_LEVEL_STATS_INIT"
+____exports.ModCallbackRepentogon.PRE_ROOM_EXIT = 1043
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_ROOM_EXIT] = "PRE_ROOM_EXIT"
+____exports.ModCallbackRepentogon.PRE_LEVEL_INIT = 1060
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_LEVEL_INIT] = "PRE_LEVEL_INIT"
+____exports.ModCallbackRepentogon.PRE_TRIGGER_PLAYER_DEATH = 1050
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_TRIGGER_PLAYER_DEATH] = "PRE_TRIGGER_PLAYER_DEATH"
+____exports.ModCallbackRepentogon.PRE_RESTOCK_SHOP = 1070
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_RESTOCK_SHOP] = "PRE_RESTOCK_SHOP"
+____exports.ModCallbackRepentogon.POST_RESTOCK_SHOP = 1071
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_RESTOCK_SHOP] = "POST_RESTOCK_SHOP"
+____exports.ModCallbackRepentogon.PRE_CHANGE_ROOM = 1061
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_CHANGE_ROOM] = "PRE_CHANGE_ROOM"
+____exports.ModCallbackRepentogon.POST_PICKUP_SHOP_PURCHASE = 1062
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PICKUP_SHOP_PURCHASE] = "POST_PICKUP_SHOP_PURCHASE"
+____exports.ModCallbackRepentogon.GET_FOLLOWER_PRIORITY = 1063
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.GET_FOLLOWER_PRIORITY] = "GET_FOLLOWER_PRIORITY"
+____exports.ModCallbackRepentogon.PRE_NPC_MORPH = 1212
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_NPC_MORPH] = "PRE_NPC_MORPH"
+____exports.ModCallbackRepentogon.PRE_PICKUP_MORPH = 1213
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PICKUP_MORPH] = "PRE_PICKUP_MORPH"
+____exports.ModCallbackRepentogon.POST_NPC_MORPH = 1214
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_NPC_MORPH] = "POST_NPC_MORPH"
+____exports.ModCallbackRepentogon.POST_PICKUP_MORPH = 1215
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PICKUP_MORPH] = "POST_PICKUP_MORPH"
+____exports.ModCallbackRepentogon.PRE_COMPLETION_MARKS_RENDER = 1216
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_COMPLETION_MARKS_RENDER] = "PRE_COMPLETION_MARKS_RENDER"
+____exports.ModCallbackRepentogon.POST_COMPLETION_MARKS_RENDER = 1217
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_COMPLETION_MARKS_RENDER] = "POST_COMPLETION_MARKS_RENDER"
+____exports.ModCallbackRepentogon.PRE_PAUSE_SCREEN_RENDER = 1218
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PAUSE_SCREEN_RENDER] = "PRE_PAUSE_SCREEN_RENDER"
+____exports.ModCallbackRepentogon.POST_PAUSE_SCREEN_RENDER = 1219
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PAUSE_SCREEN_RENDER] = "POST_PAUSE_SCREEN_RENDER"
+____exports.ModCallbackRepentogon.PRE_USE_CARD = 1064
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_USE_CARD] = "PRE_USE_CARD"
+____exports.ModCallbackRepentogon.PRE_USE_PILL = 1065
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_USE_PILL] = "PRE_USE_PILL"
+____exports.ModCallbackRepentogon.GET_SHOP_ITEM_PRICE = 1066
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.GET_SHOP_ITEM_PRICE] = "GET_SHOP_ITEM_PRICE"
+____exports.ModCallbackRepentogon.PLAYER_GET_HEALTH_TYPE = 1067
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PLAYER_GET_HEALTH_TYPE] = "PLAYER_GET_HEALTH_TYPE"
+____exports.ModCallbackRepentogon.PRE_ROOM_TRIGGER_CLEAR = 1068
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_ROOM_TRIGGER_CLEAR] = "PRE_ROOM_TRIGGER_CLEAR"
+____exports.ModCallbackRepentogon.PRE_PLAYER_TRIGGER_ROOM_CLEAR = 1069
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PLAYER_TRIGGER_ROOM_CLEAR] = "PRE_PLAYER_TRIGGER_ROOM_CLEAR"
+____exports.ModCallbackRepentogon.PRE_FAMILIAR_RENDER = 1080
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_FAMILIAR_RENDER] = "PRE_FAMILIAR_RENDER"
+____exports.ModCallbackRepentogon.PRE_NPC_RENDER = 1081
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_NPC_RENDER] = "PRE_NPC_RENDER"
+____exports.ModCallbackRepentogon.PRE_PLAYER_RENDER = 1082
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PLAYER_RENDER] = "PRE_PLAYER_RENDER"
+____exports.ModCallbackRepentogon.PRE_PICKUP_RENDER = 1083
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PICKUP_RENDER] = "PRE_PICKUP_RENDER"
+____exports.ModCallbackRepentogon.PRE_TEAR_RENDER = 1084
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_TEAR_RENDER] = "PRE_TEAR_RENDER"
+____exports.ModCallbackRepentogon.PRE_PROJECTILE_RENDER = 1085
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PROJECTILE_RENDER] = "PRE_PROJECTILE_RENDER"
+____exports.ModCallbackRepentogon.PRE_KNIFE_RENDER = 1086
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_KNIFE_RENDER] = "PRE_KNIFE_RENDER"
+____exports.ModCallbackRepentogon.PRE_EFFECT_RENDER = 1087
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_EFFECT_RENDER] = "PRE_EFFECT_RENDER"
+____exports.ModCallbackRepentogon.PRE_BOMB_RENDER = 1088
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_BOMB_RENDER] = "PRE_BOMB_RENDER"
+____exports.ModCallbackRepentogon.PRE_SLOT_RENDER = 1089
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_SLOT_RENDER] = "PRE_SLOT_RENDER"
+____exports.ModCallbackRepentogon.POST_SLOT_RENDER = 1090
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_SLOT_RENDER] = "POST_SLOT_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_SPAWN = 1100
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_SPAWN] = "PRE_GRID_ENTITY_SPAWN"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_SPAWN = 1101
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_SPAWN] = "POST_GRID_ENTITY_SPAWN"
+____exports.ModCallbackRepentogon.PLAYER_GET_ACTIVE_MAX_CHARGE = 1072
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PLAYER_GET_ACTIVE_MAX_CHARGE] = "PLAYER_GET_ACTIVE_MAX_CHARGE"
+____exports.ModCallbackRepentogon.PLAYER_GET_ACTIVE_MIN_USABLE_CHARGE = 1073
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PLAYER_GET_ACTIVE_MIN_USABLE_CHARGE] = "PLAYER_GET_ACTIVE_MIN_USABLE_CHARGE"
+____exports.ModCallbackRepentogon.PLAYER_GET_HEART_LIMIT = 1074
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PLAYER_GET_HEART_LIMIT] = "PLAYER_GET_HEART_LIMIT"
+____exports.ModCallbackRepentogon.POST_ITEM_OVERLAY_UPDATE = 1075
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_ITEM_OVERLAY_UPDATE] = "POST_ITEM_OVERLAY_UPDATE"
+____exports.ModCallbackRepentogon.PRE_ITEM_OVERLAY_SHOW = 1076
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_ITEM_OVERLAY_SHOW] = "PRE_ITEM_OVERLAY_SHOW"
+____exports.ModCallbackRepentogon.POST_PLAYER_NEW_ROOM_TEMP_EFFECTS = 1077
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PLAYER_NEW_ROOM_TEMP_EFFECTS] = "POST_PLAYER_NEW_ROOM_TEMP_EFFECTS"
+____exports.ModCallbackRepentogon.POST_PLAYER_NEW_LEVEL = 1078
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PLAYER_NEW_LEVEL] = "POST_PLAYER_NEW_LEVEL"
+____exports.ModCallbackRepentogon.POST_PLAYER_GET_MULTI_SHOT_PARAMS = 1251
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PLAYER_GET_MULTI_SHOT_PARAMS] = "POST_PLAYER_GET_MULTI_SHOT_PARAMS"
+____exports.ModCallbackRepentogon.PRE_REPLACE_SPRITESHEET = 1116
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_REPLACE_SPRITESHEET] = "PRE_REPLACE_SPRITESHEET"
+____exports.ModCallbackRepentogon.POST_REPLACE_SPRITESHEET = 1117
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_REPLACE_SPRITESHEET] = "POST_REPLACE_SPRITESHEET"
+____exports.ModCallbackRepentogon.PRE_PLANETARIUM_APPLY_STAGE_PENALTY = 1110
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PLANETARIUM_APPLY_STAGE_PENALTY] = "PRE_PLANETARIUM_APPLY_STAGE_PENALTY"
+____exports.ModCallbackRepentogon.PRE_PLANETARIUM_APPLY_PLANETARIUM_PENALTY = 1111
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PLANETARIUM_APPLY_PLANETARIUM_PENALTY] = "PRE_PLANETARIUM_APPLY_PLANETARIUM_PENALTY"
+____exports.ModCallbackRepentogon.PRE_PLANETARIUM_APPLY_TREASURE_PENALTY = 1112
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PLANETARIUM_APPLY_TREASURE_PENALTY] = "PRE_PLANETARIUM_APPLY_TREASURE_PENALTY"
+____exports.ModCallbackRepentogon.PRE_PLANETARIUM_APPLY_ITEMS = 1113
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PLANETARIUM_APPLY_ITEMS] = "PRE_PLANETARIUM_APPLY_ITEMS"
+____exports.ModCallbackRepentogon.PRE_PLANETARIUM_APPLY_TELESCOPE_LENS = 1114
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PLANETARIUM_APPLY_TELESCOPE_LENS] = "PRE_PLANETARIUM_APPLY_TELESCOPE_LENS"
+____exports.ModCallbackRepentogon.POST_PLANETARIUM_CALCULATE = 1115
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PLANETARIUM_CALCULATE] = "POST_PLANETARIUM_CALCULATE"
+____exports.ModCallbackRepentogon.POST_SLOT_INIT = 1121
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_SLOT_INIT] = "POST_SLOT_INIT"
+____exports.ModCallbackRepentogon.POST_SLOT_UPDATE = 1122
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_SLOT_UPDATE] = "POST_SLOT_UPDATE"
+____exports.ModCallbackRepentogon.PRE_SLOT_CREATE_EXPLOSION_DROPS = 1123
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_SLOT_CREATE_EXPLOSION_DROPS] = "PRE_SLOT_CREATE_EXPLOSION_DROPS"
+____exports.ModCallbackRepentogon.POST_SLOT_CREATE_EXPLOSION_DROPS = 1124
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_SLOT_CREATE_EXPLOSION_DROPS] = "POST_SLOT_CREATE_EXPLOSION_DROPS"
+____exports.ModCallbackRepentogon.PRE_SLOT_SET_PRIZE_COLLECTIBLE = 1125
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_SLOT_SET_PRIZE_COLLECTIBLE] = "PRE_SLOT_SET_PRIZE_COLLECTIBLE"
+____exports.ModCallbackRepentogon.POST_SLOT_SET_PRIZE_COLLECTIBLE = 1126
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_SLOT_SET_PRIZE_COLLECTIBLE] = "POST_SLOT_SET_PRIZE_COLLECTIBLE"
+____exports.ModCallbackRepentogon.PRE_DEVIL_APPLY_ITEMS = 1130
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_DEVIL_APPLY_ITEMS] = "PRE_DEVIL_APPLY_ITEMS"
+____exports.ModCallbackRepentogon.PRE_DEVIL_APPLY_STAGE_PENALTY = 1131
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_DEVIL_APPLY_STAGE_PENALTY] = "PRE_DEVIL_APPLY_STAGE_PENALTY"
+____exports.ModCallbackRepentogon.PRE_DEVIL_APPLY_SPECIAL_ITEMS = 1132
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_DEVIL_APPLY_SPECIAL_ITEMS] = "PRE_DEVIL_APPLY_SPECIAL_ITEMS"
+____exports.ModCallbackRepentogon.POST_DEVIL_CALCULATE = 1133
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_DEVIL_CALCULATE] = "POST_DEVIL_CALCULATE"
+____exports.ModCallbackRepentogon.PRE_COMPLETION_MARK_GET = 1047
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_COMPLETION_MARK_GET] = "PRE_COMPLETION_MARK_GET"
+____exports.ModCallbackRepentogon.POST_COMPLETION_MARK_GET = 1048
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_COMPLETION_MARK_GET] = "POST_COMPLETION_MARK_GET"
+____exports.ModCallbackRepentogon.PRE_COMPLETION_EVENT = 1049
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_COMPLETION_EVENT] = "PRE_COMPLETION_EVENT"
+____exports.ModCallbackRepentogon.POST_USE_PILL = 1001
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_USE_PILL] = "POST_USE_PILL"
+____exports.ModCallbackRepentogon.POST_PLAYER_HUD_RENDER_ACTIVE_ITEM = 1079
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PLAYER_HUD_RENDER_ACTIVE_ITEM] = "POST_PLAYER_HUD_RENDER_ACTIVE_ITEM"
+____exports.ModCallbackRepentogon.POST_PLAYER_HUD_RENDER_HEARTS = 1091
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PLAYER_HUD_RENDER_HEARTS] = "POST_PLAYER_HUD_RENDER_HEARTS"
+____exports.ModCallbackRepentogon.PRE_GET_LIGHTING_ALPHA = 1150
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GET_LIGHTING_ALPHA] = "PRE_GET_LIGHTING_ALPHA"
+____exports.ModCallbackRepentogon.PRE_RENDER_GRID_LIGHTING = 1151
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_RENDER_GRID_LIGHTING] = "PRE_RENDER_GRID_LIGHTING"
+____exports.ModCallbackRepentogon.PRE_RENDER_ENTITY_LIGHTING = 1152
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_RENDER_ENTITY_LIGHTING] = "PRE_RENDER_ENTITY_LIGHTING"
+____exports.ModCallbackRepentogon.PRE_PLAYER_APPLY_INNATE_COLLECTIBLE_NUM = 1092
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PLAYER_APPLY_INNATE_COLLECTIBLE_NUM] = "PRE_PLAYER_APPLY_INNATE_COLLECTIBLE_NUM"
+____exports.ModCallbackRepentogon.PRE_MUSIC_PLAY_JINGLE = 1094
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_MUSIC_PLAY_JINGLE] = "PRE_MUSIC_PLAY_JINGLE"
+____exports.ModCallbackRepentogon.POST_TRIGGER_COLLECTIBLE_REMOVED = 1095
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_TRIGGER_COLLECTIBLE_REMOVED] = "POST_TRIGGER_COLLECTIBLE_REMOVED"
+____exports.ModCallbackRepentogon.POST_TRIGGER_TRINKET_ADDED = 1096
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_TRIGGER_TRINKET_ADDED] = "POST_TRIGGER_TRINKET_ADDED"
+____exports.ModCallbackRepentogon.POST_TRIGGER_TRINKET_REMOVED = 1097
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_TRIGGER_TRINKET_REMOVED] = "POST_TRIGGER_TRINKET_REMOVED"
+____exports.ModCallbackRepentogon.POST_TRIGGER_WEAPON_FIRED = 1098
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_TRIGGER_WEAPON_FIRED] = "POST_TRIGGER_WEAPON_FIRED"
+____exports.ModCallbackRepentogon.POST_LEVEL_LAYOUT_GENERATED = 1099
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_LEVEL_LAYOUT_GENERATED] = "POST_LEVEL_LAYOUT_GENERATED"
+____exports.ModCallbackRepentogon.POST_NIGHTMARE_SCENE_RENDER = 1102
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_NIGHTMARE_SCENE_RENDER] = "POST_NIGHTMARE_SCENE_RENDER"
+____exports.ModCallbackRepentogon.POST_NIGHTMARE_SCENE_SHOW = 1103
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_NIGHTMARE_SCENE_SHOW] = "POST_NIGHTMARE_SCENE_SHOW"
+____exports.ModCallbackRepentogon.MC_PRE_LEVEL_SELECT = 1104
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.MC_PRE_LEVEL_SELECT] = "MC_PRE_LEVEL_SELECT"
+____exports.ModCallbackRepentogon.POST_WEAPON_FIRE = 1105
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_WEAPON_FIRE] = "POST_WEAPON_FIRE"
+____exports.ModCallbackRepentogon.PRE_PLAYER_USE_BOMB = 1220
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PLAYER_USE_BOMB] = "PRE_PLAYER_USE_BOMB"
+____exports.ModCallbackRepentogon.POST_PLAYER_USE_BOMB = 1221
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PLAYER_USE_BOMB] = "POST_PLAYER_USE_BOMB"
+____exports.ModCallbackRepentogon.PRE_NPC_PICK_TARGET = 1222
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_NPC_PICK_TARGET] = "PRE_NPC_PICK_TARGET"
+____exports.ModCallbackRepentogon.PRE_PLAYER_COLLISION = 1230
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PLAYER_COLLISION] = "PRE_PLAYER_COLLISION"
+____exports.ModCallbackRepentogon.POST_PLAYER_COLLISION = 1231
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PLAYER_COLLISION] = "POST_PLAYER_COLLISION"
+____exports.ModCallbackRepentogon.PRE_TEAR_COLLISION = 1232
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_TEAR_COLLISION] = "PRE_TEAR_COLLISION"
+____exports.ModCallbackRepentogon.POST_TEAR_COLLISION = 1233
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_TEAR_COLLISION] = "POST_TEAR_COLLISION"
+____exports.ModCallbackRepentogon.PRE_FAMILIAR_COLLISION = 1234
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_FAMILIAR_COLLISION] = "PRE_FAMILIAR_COLLISION"
+____exports.ModCallbackRepentogon.POST_FAMILIAR_COLLISION = 1235
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_FAMILIAR_COLLISION] = "POST_FAMILIAR_COLLISION"
+____exports.ModCallbackRepentogon.PRE_BOMB_COLLISION = 1236
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_BOMB_COLLISION] = "PRE_BOMB_COLLISION"
+____exports.ModCallbackRepentogon.POST_BOMB_COLLISION = 1237
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_BOMB_COLLISION] = "POST_BOMB_COLLISION"
+____exports.ModCallbackRepentogon.PRE_PICKUP_COLLISION = 1238
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PICKUP_COLLISION] = "PRE_PICKUP_COLLISION"
+____exports.ModCallbackRepentogon.POST_PICKUP_COLLISION = 1239
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PICKUP_COLLISION] = "POST_PICKUP_COLLISION"
+____exports.ModCallbackRepentogon.PRE_SLOT_COLLISION = 1240
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_SLOT_COLLISION] = "PRE_SLOT_COLLISION"
+____exports.ModCallbackRepentogon.POST_SLOT_COLLISION = 1241
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_SLOT_COLLISION] = "POST_SLOT_COLLISION"
+____exports.ModCallbackRepentogon.PRE_KNIFE_COLLISION = 1242
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_KNIFE_COLLISION] = "PRE_KNIFE_COLLISION"
+____exports.ModCallbackRepentogon.POST_KNIFE_COLLISION = 1243
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_KNIFE_COLLISION] = "POST_KNIFE_COLLISION"
+____exports.ModCallbackRepentogon.PRE_PROJECTILE_COLLISION = 1244
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PROJECTILE_COLLISION] = "PRE_PROJECTILE_COLLISION"
+____exports.ModCallbackRepentogon.POST_PROJECTILE_COLLISION = 1245
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_PROJECTILE_COLLISION] = "POST_PROJECTILE_COLLISION"
+____exports.ModCallbackRepentogon.PRE_NPC_COLLISION = 1246
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_NPC_COLLISION] = "PRE_NPC_COLLISION"
+____exports.ModCallbackRepentogon.POST_NPC_COLLISION = 1247
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_NPC_COLLISION] = "POST_NPC_COLLISION"
+____exports.ModCallbackRepentogon.PRE_LASER_COLLISION = 1248
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_LASER_COLLISION] = "PRE_LASER_COLLISION"
+____exports.ModCallbackRepentogon.POST_LASER_COLLISION = 1249
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_LASER_COLLISION] = "POST_LASER_COLLISION"
+____exports.ModCallbackRepentogon.CONSOLE_AUTOCOMPLETE = 1120
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.CONSOLE_AUTOCOMPLETE] = "CONSOLE_AUTOCOMPLETE"
+____exports.ModCallbackRepentogon.PLAYER_INIT_PRE_LEVEL_INIT_STATS = 1127
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PLAYER_INIT_PRE_LEVEL_INIT_STATS] = "PLAYER_INIT_PRE_LEVEL_INIT_STATS"
+____exports.ModCallbackRepentogon.PRE_NEW_ROOM = 1200
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_NEW_ROOM] = "PRE_NEW_ROOM"
+____exports.ModCallbackRepentogon.PRE_MEGA_SATAN_ENDING = 1201
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_MEGA_SATAN_ENDING] = "PRE_MEGA_SATAN_ENDING"
+____exports.ModCallbackRepentogon.POST_MODS_LOADED = 1210
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_MODS_LOADED] = "POST_MODS_LOADED"
+____exports.ModCallbackRepentogon.POST_ITEM_OVERLAY_SHOW = 1134
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_ITEM_OVERLAY_SHOW] = "POST_ITEM_OVERLAY_SHOW"
+____exports.ModCallbackRepentogon.PRE_LEVEL_PLACE_ROOM = 1137
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_LEVEL_PLACE_ROOM] = "PRE_LEVEL_PLACE_ROOM"
+____exports.ModCallbackRepentogon.PRE_NPC_SPLIT = 1191
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_NPC_SPLIT] = "PRE_NPC_SPLIT"
+____exports.ModCallbackRepentogon.PRE_ROOM_GRID_ENTITY_SPAWN = 1192
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_ROOM_GRID_ENTITY_SPAWN] = "PRE_ROOM_GRID_ENTITY_SPAWN"
+____exports.ModCallbackRepentogon.POST_FAMILIAR_FIRE_PROJECTILE = 1252
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_FAMILIAR_FIRE_PROJECTILE] = "POST_FAMILIAR_FIRE_PROJECTILE"
+____exports.ModCallbackRepentogon.POST_FIRE_BOMB = 1253
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_FIRE_BOMB] = "POST_FIRE_BOMB"
+____exports.ModCallbackRepentogon.POST_FIRE_BONE_CLUB = 1254
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_FIRE_BONE_CLUB] = "POST_FIRE_BONE_CLUB"
+____exports.ModCallbackRepentogon.POST_FIRE_BRIMSTONE = 1255
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_FIRE_BRIMSTONE] = "POST_FIRE_BRIMSTONE"
+____exports.ModCallbackRepentogon.POST_FIRE_BRIMSTONE_BALL = 1256
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_FIRE_BRIMSTONE_BALL] = "POST_FIRE_BRIMSTONE_BALL"
+____exports.ModCallbackRepentogon.POST_FIRE_KNIFE = 1257
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_FIRE_KNIFE] = "POST_FIRE_KNIFE"
+____exports.ModCallbackRepentogon.POST_FIRE_SWORD = 1258
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_FIRE_SWORD] = "POST_FIRE_SWORD"
+____exports.ModCallbackRepentogon.POST_FIRE_TECH_LASER = 1259
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_FIRE_TECH_LASER] = "POST_FIRE_TECH_LASER"
+____exports.ModCallbackRepentogon.POST_FIRE_TECH_X_LASER = 1260
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_FIRE_TECH_X_LASER] = "POST_FIRE_TECH_X_LASER"
+____exports.ModCallbackRepentogon.POST_FAMILIAR_FIRE_BRIMSTONE = 1261
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_FAMILIAR_FIRE_BRIMSTONE] = "POST_FAMILIAR_FIRE_BRIMSTONE"
+____exports.ModCallbackRepentogon.POST_FAMILIAR_FIRE_TECH_LASER = 1262
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_FAMILIAR_FIRE_TECH_LASER] = "POST_FAMILIAR_FIRE_TECH_LASER"
+____exports.ModCallbackRepentogon.GET_IS_PERSISTENT_ROOM_ENTITY = 1263
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.GET_IS_PERSISTENT_ROOM_ENTITY] = "GET_IS_PERSISTENT_ROOM_ENTITY"
+____exports.ModCallbackRepentogon.PRE_PLAYER_HUD_TRINKET_RENDER = 1264
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_PLAYER_HUD_TRINKET_RENDER] = "PRE_PLAYER_HUD_TRINKET_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_DECORATION_UPDATE = 1400
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_DECORATION_UPDATE] = "PRE_GRID_ENTITY_DECORATION_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_DECORATION_UPDATE = 1401
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_DECORATION_UPDATE] = "POST_GRID_ENTITY_DECORATION_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_DOOR_UPDATE = 1402
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_DOOR_UPDATE] = "PRE_GRID_ENTITY_DOOR_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_DOOR_UPDATE = 1403
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_DOOR_UPDATE] = "POST_GRID_ENTITY_DOOR_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_FIRE_UPDATE = 1404
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_FIRE_UPDATE] = "PRE_GRID_ENTITY_FIRE_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_FIRE_UPDATE = 1405
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_FIRE_UPDATE] = "POST_GRID_ENTITY_FIRE_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_GRAVITY_UPDATE = 1406
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_GRAVITY_UPDATE] = "PRE_GRID_ENTITY_GRAVITY_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_GRAVITY_UPDATE = 1407
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_GRAVITY_UPDATE] = "POST_GRID_ENTITY_GRAVITY_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_LOCK_UPDATE = 1408
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_LOCK_UPDATE] = "PRE_GRID_ENTITY_LOCK_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_LOCK_UPDATE = 1409
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_LOCK_UPDATE] = "POST_GRID_ENTITY_LOCK_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_PIT_UPDATE = 1410
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_PIT_UPDATE] = "PRE_GRID_ENTITY_PIT_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_PIT_UPDATE = 1411
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_PIT_UPDATE] = "POST_GRID_ENTITY_PIT_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_POOP_UPDATE = 1412
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_POOP_UPDATE] = "PRE_GRID_ENTITY_POOP_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_POOP_UPDATE = 1413
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_POOP_UPDATE] = "POST_GRID_ENTITY_POOP_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_PRESSURE_PLATE_UPDATE = 1414
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_PRESSURE_PLATE_UPDATE] = "PRE_GRID_ENTITY_PRESSURE_PLATE_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_PRESSURE_PLATE_UPDATE = 1415
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_PRESSURE_PLATE_UPDATE] = "POST_GRID_ENTITY_PRESSURE_PLATE_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_ROCK_UPDATE = 1416
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_ROCK_UPDATE] = "PRE_GRID_ENTITY_ROCK_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_ROCK_UPDATE = 1417
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_ROCK_UPDATE] = "POST_GRID_ENTITY_ROCK_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_SPIKES_UPDATE = 1418
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_SPIKES_UPDATE] = "PRE_GRID_ENTITY_SPIKES_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_SPIKES_UPDATE = 1419
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_SPIKES_UPDATE] = "POST_GRID_ENTITY_SPIKES_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_STAIRCASE_UPDATE = 1420
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_STAIRCASE_UPDATE] = "PRE_GRID_ENTITY_STAIRCASE_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_STAIRCASE_UPDATE = 1421
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_STAIRCASE_UPDATE] = "POST_GRID_ENTITY_STAIRCASE_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_STATUE_UPDATE = 1422
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_STATUE_UPDATE] = "PRE_GRID_ENTITY_STATUE_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_STATUE_UPDATE = 1423
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_STATUE_UPDATE] = "POST_GRID_ENTITY_STATUE_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_TELEPORTER_UPDATE = 1424
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_TELEPORTER_UPDATE] = "PRE_GRID_ENTITY_TELEPORTER_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_TELEPORTER_UPDATE = 1425
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_TELEPORTER_UPDATE] = "POST_GRID_ENTITY_TELEPORTER_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_TRAPDOOR_UPDATE = 1426
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_TRAPDOOR_UPDATE] = "PRE_GRID_ENTITY_TRAPDOOR_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_TRAPDOOR_UPDATE = 1427
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_TRAPDOOR_UPDATE] = "POST_GRID_ENTITY_TRAPDOOR_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_WEB_UPDATE = 1428
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_WEB_UPDATE] = "PRE_GRID_ENTITY_WEB_UPDATE"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_WEB_UPDATE = 1429
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_WEB_UPDATE] = "POST_GRID_ENTITY_WEB_UPDATE"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_SPIKES_RENDER = 1432
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_SPIKES_RENDER] = "PRE_GRID_ENTITY_SPIKES_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_SPIKES_RENDER = 1433
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_SPIKES_RENDER] = "POST_GRID_ENTITY_SPIKES_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_WEB_RENDER = 1434
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_WEB_RENDER] = "PRE_GRID_ENTITY_WEB_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_WEB_RENDER = 1435
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_WEB_RENDER] = "POST_GRID_ENTITY_WEB_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_TNT_RENDER = 1436
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_TNT_RENDER] = "PRE_GRID_ENTITY_TNT_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_TNT_RENDER = 1437
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_TNT_RENDER] = "POST_GRID_ENTITY_TNT_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_TRAPDOOR_RENDER = 1438
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_TRAPDOOR_RENDER] = "PRE_GRID_ENTITY_TRAPDOOR_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_TRAPDOOR_RENDER = 1439
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_TRAPDOOR_RENDER] = "POST_GRID_ENTITY_TRAPDOOR_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_STAIRCASE_RENDER = 1440
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_STAIRCASE_RENDER] = "PRE_GRID_ENTITY_STAIRCASE_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_STAIRCASE_RENDER = 1441
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_STAIRCASE_RENDER] = "POST_GRID_ENTITY_STAIRCASE_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_DECORATION_RENDER = 1444
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_DECORATION_RENDER] = "PRE_GRID_ENTITY_DECORATION_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_DECORATION_RENDER = 1445
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_DECORATION_RENDER] = "POST_GRID_ENTITY_DECORATION_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_DOOR_RENDER = 1446
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_DOOR_RENDER] = "PRE_GRID_ENTITY_DOOR_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_DOOR_RENDER = 1447
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_DOOR_RENDER] = "POST_GRID_ENTITY_DOOR_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_FIRE_RENDER = 1448
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_FIRE_RENDER] = "PRE_GRID_ENTITY_FIRE_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_FIRE_RENDER = 1449
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_FIRE_RENDER] = "POST_GRID_ENTITY_FIRE_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_LOCK_RENDER = 1450
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_LOCK_RENDER] = "PRE_GRID_ENTITY_LOCK_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_LOCK_RENDER = 1451
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_LOCK_RENDER] = "POST_GRID_ENTITY_LOCK_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_TELEPORTER_RENDER = 1452
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_TELEPORTER_RENDER] = "PRE_GRID_ENTITY_TELEPORTER_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_TELEPORTER_RENDER = 1453
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_TELEPORTER_RENDER] = "POST_GRID_ENTITY_TELEPORTER_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_PIT_RENDER = 1454
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_PIT_RENDER] = "PRE_GRID_ENTITY_PIT_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_PIT_RENDER = 1455
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_PIT_RENDER] = "POST_GRID_ENTITY_PIT_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_POOP_RENDER = 1456
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_POOP_RENDER] = "PRE_GRID_ENTITY_POOP_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_POOP_RENDER = 1457
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_POOP_RENDER] = "POST_GRID_ENTITY_POOP_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_ROCK_RENDER = 1458
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_ROCK_RENDER] = "PRE_GRID_ENTITY_ROCK_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_ROCK_RENDER = 1459
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_ROCK_RENDER] = "POST_GRID_ENTITY_ROCK_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_PRESSURE_PLATE_RENDER = 1460
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_PRESSURE_PLATE_RENDER] = "PRE_GRID_ENTITY_PRESSURE_PLATE_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_PRESSURE_PLATE_RENDER = 1461
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_PRESSURE_PLATE_RENDER] = "POST_GRID_ENTITY_PRESSURE_PLATE_RENDER"
+____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_WALL_RENDER = 1462
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.PRE_GRID_ENTITY_WALL_RENDER] = "PRE_GRID_ENTITY_WALL_RENDER"
+____exports.ModCallbackRepentogon.POST_GRID_ENTITY_WALL_RENDER = 1463
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_GRID_ENTITY_WALL_RENDER] = "POST_GRID_ENTITY_WALL_RENDER"
+____exports.ModCallbackRepentogon.POST_SAVE_SLOT_LOAD = 1470
+____exports.ModCallbackRepentogon[____exports.ModCallbackRepentogon.POST_SAVE_SLOT_LOAD] = "POST_SAVE_SLOT_LOAD"
+return ____exports
+ end,
 ["lua_modules.isaac-typescript-definitions.dist.enums.ModCallback"] = function(...) 
 local ____exports = {}
 ____exports.ModCallback = {}
@@ -18416,6 +18847,7 @@ return ____exports
  end,
 ["lua_modules.isaac-typescript-definitions.dist.enums.CollectibleAnimation"] = function(...) 
 local ____exports = {}
+--- These are the animations in the "005.100_collectible.anm2" file.
 ____exports.CollectibleAnimation = {}
 ____exports.CollectibleAnimation.IDLE = "Idle"
 ____exports.CollectibleAnimation.EMPTY = "Empty"
@@ -22174,7 +22606,7 @@ end
 function ____exports.emptyArray(self, array)
     __TS__ArraySplice(array, 0, #array)
 end
---- Helper function to perform a map and a filter at the same time. Similar to `Array.map`, provide a
+--- Helper function to perform a filter and a map at the same time. Similar to `Array.map`, provide a
 -- function that transforms a value, but return `undefined` if the value should be skipped. (Thus,
 -- this function cannot be used in situations where `undefined` can be a valid array element.)
 -- 
@@ -23773,6 +24205,33 @@ function ____exports.getRandomEnumValue(self, transpiledEnum, seedOrRNG, excepti
     local enumValues = ____exports.getEnumValues(nil, transpiledEnum)
     return getRandomArrayElement(nil, enumValues, seedOrRNG, exceptions)
 end
+--- Helper function to validate that an interface contains all of the keys of an enum. You must
+-- specify both generic parameters in order for this to work properly (i.e. the interface and then
+-- the enum).
+-- 
+-- For example:
+-- 
+-- ```ts
+-- enum MyEnum {
+--   Value1,
+--   Value2,
+--   Value3,
+-- }
+-- 
+-- interface MyEnumToType {
+--   [MyEnum.Value1]: boolean;
+--   [MyEnum.Value2]: number;
+--   [MyEnum.Value3]: string;
+-- }
+-- 
+-- interfaceSatisfiesEnum<MyEnumToType, MyEnum>();
+-- ```
+-- 
+-- This function is only meant to be used with interfaces (i.e. types that will not exist at
+-- run-time). If you are generating an object that will contain all of the keys of an enum, use the
+-- `satisfies` operator with the `Record` type instead.
+function ____exports.interfaceSatisfiesEnum(self)
+end
 --- Helper function to validate that a particular value exists inside of an enum.
 function ____exports.isEnumValue(self, value, transpiledEnum)
     local enumValues = ____exports.getEnumValues(nil, transpiledEnum)
@@ -23816,33 +24275,6 @@ function ____exports.validateEnumContiguous(self, transpiledEnumName, transpiled
             error((("Failed to find a custom enum value of " .. tostring(value)) .. " for: ") .. transpiledEnumName)
         end
     end
-end
---- Helper function to validate that an interface contains all of the keys of an enum. You must
--- specify both generic parameters in order for this to work properly (i.e. the interface and then
--- the enum).
--- 
--- For example:
--- 
--- ```ts
--- enum MyEnum {
---   Value1,
---   Value2,
---   Value3,
--- }
--- 
--- interface MyEnumToType {
---   [MyEnum.Value1]: boolean;
---   [MyEnum.Value2]: number;
---   [MyEnum.Value3]: string;
--- }
--- 
--- validateInterfaceMatchesEnum<MyEnumToType, MyEnum>();
--- ```
--- 
--- This function is only meant to be used with interfaces (i.e. types that will not exist at
--- run-time). If you are generating an object that will contain all of the keys of an enum, use the
--- `satisfies` operator with the `Record` type instead.
-function ____exports.validateInterfaceMatchesEnum(self)
 end
 return ____exports
  end,
@@ -29383,6 +29815,11 @@ function ____exports.addPlayerStat(self, player, cacheFlag, amount)
         if ____cond4 then
             do
                 player.Luck = player.Luck + amount
+                break
+            end
+        end
+        do
+            do
                 break
             end
         end
@@ -39627,6 +40064,8 @@ local asPillEffect = ____types.asPillEffect
 local ____utils = require("lua_modules.isaacscript-common.dist.functions.utils")
 local iRange = ____utils.iRange
 --- Helper function to see if the given pill color is a horse pill.
+-- 
+-- Under the hood, this checks for `pillColor > 2048`.
 function ____exports.isHorsePill(self, pillColor)
     return asNumber(nil, pillColor) > HORSE_PILL_COLOR_ADJUSTMENT
 end
@@ -39747,6 +40186,13 @@ function ____exports.isGoldPill(self, pillColor)
 end
 function ____exports.isModdedPillEffect(self, pillEffect)
     return not ____exports.isVanillaPillEffect(nil, pillEffect)
+end
+--- Helper function to see if the given pill color is not a gold pill and not a horse pill and not
+-- the null value.
+-- 
+-- Under the hood, this checks using the `FIRST_PILL_COLOR` and `LAST_NORMAL_PILL_COLOR` constants.
+function ____exports.isNormalPillColor(self, pillColor)
+    return pillColor >= FIRST_PILL_COLOR and pillColor <= LAST_NORMAL_PILL_COLOR
 end
 function ____exports.isValidPillEffect(self, pillEffect)
     local potentialPillEffect = asPillEffect(nil, pillEffect)
@@ -40642,6 +41088,11 @@ function ____exports.getNextStage(self)
                     return LevelStage.DEPTHS_2
                 end
                 return stage
+            end
+        end
+        do
+            do
+                break
             end
         end
     until true
@@ -51733,8 +52184,8 @@ local ISCFeature = ____ISCFeature.ISCFeature
 local ____ModCallbackCustom = require("lua_modules.isaacscript-common.dist.enums.ModCallbackCustom")
 local ModCallbackCustom = ____ModCallbackCustom.ModCallbackCustom
 local ____enums = require("lua_modules.isaacscript-common.dist.functions.enums")
-local validateInterfaceMatchesEnum = ____enums.validateInterfaceMatchesEnum
-validateInterfaceMatchesEnum(nil)
+local interfaceSatisfiesEnum = ____enums.interfaceSatisfiesEnum
+interfaceSatisfiesEnum(nil)
 function ____exports.getFeatures(self, mod, callbacks)
     local gameReorderedCallbacks = __TS__New(
         GameReorderedCallbacks,
@@ -56241,6 +56692,11 @@ function ____exports.goldenKey(self)
     local player = Isaac.GetPlayer()
     player:AddGoldenKey()
 end
+--- Gives the player a golden pill.
+function ____exports.goldenPill(self)
+    local player = Isaac.GetPlayer()
+    player:AddPill(PillColor.GOLD)
+end
 --- Alias for the "debug 2" command. Useful for seeing the grid costs of each tile in the room.
 function ____exports.gridCosts(self)
     Isaac.ExecuteCommand("debug 2")
@@ -56909,6 +57365,10 @@ end
 function ____exports.goldKey(self)
     ____exports.goldenKey(nil)
 end
+--- Alias for the "goldenPill" command.
+function ____exports.goldPill(self)
+    ____exports.goldenPill(nil)
+end
 --- Alias for the "spawnGoldenTrinket" command.
 function ____exports.goldTrinket(self, params)
     ____exports.spawnGoldenTrinket(nil, params)
@@ -57072,6 +57532,10 @@ end
 function ____exports.maze(self)
     v.persistent.maze = not v.persistent.maze
     printEnabled(nil, v.persistent.maze, "permanent Curse of the Maze")
+end
+--- Warps to the Mega Satan room on the floor. (Every floor has a Mega Satan room.)
+function ____exports.megaSatan(self)
+    changeRoom(nil, GridRoom.MEGA_SATAN)
 end
 --- Warps to the first Miniboss Room on the floor.
 function ____exports.miniboss(self)
@@ -60750,86 +61214,90 @@ local ____constants = require("lua_modules.isaacscript-common.dist.classes.featu
 local DEFAULT_BASE_STAGE = ____constants.DEFAULT_BASE_STAGE
 function getNewDoorPNGPath(self, customStage, fileName)
     repeat
-        local ____switch26 = fileName
-        local ____cond26 = ____switch26 == "gfx/grid/door_01_normaldoor.anm2"
-        if ____cond26 then
+        local ____switch27 = fileName
+        local ____cond27 = ____switch27 == "gfx/grid/door_01_normaldoor.anm2"
+        if ____cond27 then
             do
                 local ____opt_0 = customStage.doorPNGPaths
                 return ____opt_0 and ____opt_0.normal
             end
         end
-        ____cond26 = ____cond26 or ____switch26 == "gfx/grid/door_02_treasureroomdoor.anm2"
-        if ____cond26 then
+        ____cond27 = ____cond27 or ____switch27 == "gfx/grid/door_02_treasureroomdoor.anm2"
+        if ____cond27 then
             do
                 local ____opt_2 = customStage.doorPNGPaths
                 return ____opt_2 and ____opt_2.treasureRoom
             end
         end
-        ____cond26 = ____cond26 or ____switch26 == "gfx/grid/door_03_ambushroomdoor.anm2"
-        if ____cond26 then
+        ____cond27 = ____cond27 or ____switch27 == "gfx/grid/door_03_ambushroomdoor.anm2"
+        if ____cond27 then
             do
                 local ____opt_4 = customStage.doorPNGPaths
                 return ____opt_4 and ____opt_4.normalChallengeRoom
             end
         end
-        ____cond26 = ____cond26 or ____switch26 == "gfx/grid/door_04_selfsacrificeroomdoor.anm2"
-        if ____cond26 then
+        ____cond27 = ____cond27 or ____switch27 == "gfx/grid/door_04_selfsacrificeroomdoor.anm2"
+        if ____cond27 then
             do
                 local ____opt_6 = customStage.doorPNGPaths
                 return ____opt_6 and ____opt_6.curseRoom
             end
         end
-        ____cond26 = ____cond26 or ____switch26 == "gfx/grid/door_05_arcaderoomdoor.anm2"
-        if ____cond26 then
+        ____cond27 = ____cond27 or ____switch27 == "gfx/grid/door_05_arcaderoomdoor.anm2"
+        if ____cond27 then
             do
                 local ____opt_8 = customStage.doorPNGPaths
                 return ____opt_8 and ____opt_8.arcade
             end
         end
-        ____cond26 = ____cond26 or ____switch26 == "gfx/grid/door_07_devilroomdoor.anm2"
-        if ____cond26 then
+        ____cond27 = ____cond27 or ____switch27 == "gfx/grid/door_07_devilroomdoor.anm2"
+        if ____cond27 then
             do
                 local ____opt_10 = customStage.doorPNGPaths
                 return ____opt_10 and ____opt_10.devilRoom
             end
         end
-        ____cond26 = ____cond26 or ____switch26 == "gfx/grid/door_07_holyroomdoor.anm2"
-        if ____cond26 then
+        ____cond27 = ____cond27 or ____switch27 == "gfx/grid/door_07_holyroomdoor.anm2"
+        if ____cond27 then
             do
                 local ____opt_12 = customStage.doorPNGPaths
                 return ____opt_12 and ____opt_12.angelRoom
             end
         end
-        ____cond26 = ____cond26 or ____switch26 == "gfx/grid/door_08_holeinwall.anm2"
-        if ____cond26 then
+        ____cond27 = ____cond27 or ____switch27 == "gfx/grid/door_08_holeinwall.anm2"
+        if ____cond27 then
             do
                 local ____opt_14 = customStage.doorPNGPaths
                 return ____opt_14 and ____opt_14.secretRoom
             end
         end
-        ____cond26 = ____cond26 or ____switch26 == "gfx/grid/door_09_bossambushroomdoor.anm2"
-        if ____cond26 then
+        ____cond27 = ____cond27 or ____switch27 == "gfx/grid/door_09_bossambushroomdoor.anm2"
+        if ____cond27 then
             do
                 local ____opt_16 = customStage.doorPNGPaths
                 return ____opt_16 and ____opt_16.bossChallengeRoom
             end
         end
-        ____cond26 = ____cond26 or ____switch26 == "gfx/grid/door_10_bossroomdoor.anm2"
-        if ____cond26 then
+        ____cond27 = ____cond27 or ____switch27 == "gfx/grid/door_10_bossroomdoor.anm2"
+        if ____cond27 then
             do
                 local ____opt_18 = customStage.doorPNGPaths
                 return ____opt_18 and ____opt_18.bossRoom
             end
         end
-        ____cond26 = ____cond26 or ____switch26 == "gfx/grid/door_15_bossrushdoor.anm2"
-        if ____cond26 then
+        ____cond27 = ____cond27 or ____switch27 == "gfx/grid/door_15_bossrushdoor.anm2"
+        if ____cond27 then
             do
                 local ____opt_20 = customStage.doorPNGPaths
                 return ____opt_20 and ____opt_20.bossRush
             end
         end
+        do
+            do
+                return nil
+            end
+        end
     until true
-    return nil
 end
 --- For `GridEntityType.DECORATION` (1).
 function ____exports.setCustomDecorationGraphics(self, customStage, gridEntity)
@@ -60889,6 +61357,11 @@ function ____exports.setCustomRockGraphics(self, customStage, gridEntity)
                     sprite:ReplaceSpritesheet(1, pngPath)
                     sprite:LoadGraphics()
                 end
+                break
+            end
+        end
+        do
+            do
                 break
             end
         end
