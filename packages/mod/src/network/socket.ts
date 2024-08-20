@@ -62,8 +62,7 @@ function readTCP() {
   if (commandFunction === undefined) {
     log(`Error: Received an unknown socket command: ${command}`);
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
-    commandFunction(dataObject as any);
+    commandFunction(dataObject as never);
   }
 
   return true;
