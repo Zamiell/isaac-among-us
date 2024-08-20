@@ -62,6 +62,8 @@ function readTCP() {
   if (commandFunction === undefined) {
     log(`Error: Received an unknown socket command: ${command}`);
   } else {
+    // TypeScript cannot see through the correspondence:
+    // https://gist.github.com/Zamiell/a7b51922385bbe811c339225d7a7fe7a
     commandFunction(dataObject as never);
   }
 
